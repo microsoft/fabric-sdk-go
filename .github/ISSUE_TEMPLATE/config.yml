@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-issue-config.json
 # https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository#configuring-the-template-chooser
 ---
-blank_issues_enabled: true
+blank_issues_enabled: false
 contact_links:
   - name: Security Bug Report
     url: https://aka.ms/opensource/security/create-report
