@@ -1,6 +1,7 @@
 # Microsoft Fabric SDK for Go
 
-[![GoDoc](https://godoc.org/github.com/microsoft/fabric-sdk-go/?status.svg)](https://pkg.go.dev/github.com/microsoft/fabric-sdk-go)
+[![GoDoc](https://pkg.go.dev/badge/github.com/microsoft/fabric-sdk-go)](https://pkg.go.dev/github.com/microsoft/fabric-sdk-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/microsoft/fabric-sdk-go)](https://goreportcard.com/report/github.com/microsoft/fabric-sdk-go)
 
 This project provides a data-plane Go SDK for [Microsoft Fabric](https://www.microsoft.com/microsoft-fabric). Microsoft Fabric is an all-in-one analytics solution for enterprises that covers everything from data movement to data science, Real-Time Analytics, and business intelligence. It offers a comprehensive suite of services, including data lake, data engineering, and data integration, all in one place.
 
@@ -384,4 +385,4 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 
 ## Trademarks
 
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft trademarks or logos is subject to and must follow[Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general). Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship. Any use of third-party trademarks or logos are subject to those third-party's policies.
+This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft trademarks or logos is subject to and must follow [Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general). Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship. Any use of third-party trademarks or logos are subject to those third-party's policies.
