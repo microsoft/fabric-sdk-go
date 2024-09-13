@@ -22,13 +22,15 @@ jobs:
     name: 🔍 Check PR title
     runs-on: ubuntu-latest
     steps:
-      - uses: amannn/action-semantic-pull-request@0723387faaf9b38adef4775cd42cfd5155ed6017 # v5.5.3
+      - name: 🔍 Run Semantic PR validation
+        uses: amannn/action-semantic-pull-request@0723387faaf9b38adef4775cd42cfd5155ed6017 # v5.5.3
         id: check_pr_title
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
-      - uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
+      - name: 💬 Comment on PR
         if: always() && (steps.check_pr_title.outputs.error_message != null)
+        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
         with:
           header: pr-title-check-error
           message: |
@@ -42,7 +44,8 @@ jobs:
             ${{ steps.check_pr_title.outputs.error_message }}
             ```
 
-      - if: ${{ steps.check_pr_title.outputs.error_message == null }}
+      - name: 🗑 Delete PR comment
+        if: ${{ steps.check_pr_title.outputs.error_message == null }}
         uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
         with:
           header: pr-title-check-error
