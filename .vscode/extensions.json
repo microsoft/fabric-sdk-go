@@ -1,0 +1,17 @@
+{
+  "recommendations": [
+    "GitHub.vscode-pull-request-github",
+    "GitHub.copilot-chat",
+    "GitHub.codespaces",
+    "GitHub.remotehub",
+    "GitHub.copilot",
+    "GitHub.vscode-github-actions",
+    "EditorConfig.EditorConfig",
+    "fnando.linter",
+    "redhat.vscode-yaml",
+    "DavidAnson.vscode-markdownlint",
+    "task.vscode-task",
+    "MS-SarifVSCode.sarif-viewer",
+    "golang.go"
+  ]
+}
