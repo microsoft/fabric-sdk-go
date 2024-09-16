@@ -305,7 +305,11 @@ func (client *ItemsClient) ListKQLQuerysets(ctx context.Context, workspaceID str
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []KQLQueryset{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []KQLQueryset{}, err
 	}
 	return list, nil
 }

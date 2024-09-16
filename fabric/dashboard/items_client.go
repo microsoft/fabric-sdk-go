@@ -17,6 +17,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 
+	"github.com/microsoft/fabric-sdk-go/fabric/core"
 	"github.com/microsoft/fabric-sdk-go/internal/iruntime"
 )
 
@@ -118,7 +119,11 @@ func (client *ItemsClient) ListDashboards(ctx context.Context, workspaceID strin
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []Dashboard{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []Dashboard{}, err
 	}
 	return list, nil
 }

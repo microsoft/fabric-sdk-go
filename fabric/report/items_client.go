@@ -549,7 +549,15 @@ func (client *ItemsClient) updateReportDefinitionCreateRequest(ctx context.Conte
 //   - createReportRequest - Create item request payload.
 //   - options - ItemsClientBeginCreateReportOptions contains the optional parameters for the ItemsClient.BeginCreateReport method.
 func (client *ItemsClient) CreateReport(ctx context.Context, workspaceID string, createReportRequest CreateReportRequest, options *ItemsClientBeginCreateReportOptions) (ItemsClientCreateReportResponse, error) {
-	return iruntime.NewLRO(client.BeginCreateReport(ctx, workspaceID, createReportRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginCreateReport(ctx, workspaceID, createReportRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientCreateReportResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientCreateReportResponse{}, err
+	}
+	return result, err
 }
 
 // beginCreateReport creates the createReport request.
@@ -615,7 +623,15 @@ func (client *ItemsClient) beginCreateReport(ctx context.Context, workspaceID st
 //   - reportID - The report ID.
 //   - options - ItemsClientBeginGetReportDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetReportDefinition method.
 func (client *ItemsClient) GetReportDefinition(ctx context.Context, workspaceID string, reportID string, options *ItemsClientBeginGetReportDefinitionOptions) (ItemsClientGetReportDefinitionResponse, error) {
-	return iruntime.NewLRO(client.BeginGetReportDefinition(ctx, workspaceID, reportID, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginGetReportDefinition(ctx, workspaceID, reportID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientGetReportDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientGetReportDefinitionResponse{}, err
+	}
+	return result, err
 }
 
 // beginGetReportDefinition creates the getReportDefinition request.
@@ -680,7 +696,15 @@ func (client *ItemsClient) beginGetReportDefinition(ctx context.Context, workspa
 //   - updateReportDefinitionRequest - Update report definition request payload.
 //   - options - ItemsClientBeginUpdateReportDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateReportDefinition method.
 func (client *ItemsClient) UpdateReportDefinition(ctx context.Context, workspaceID string, reportID string, updateReportDefinitionRequest UpdateReportDefinitionRequest, options *ItemsClientBeginUpdateReportDefinitionOptions) (ItemsClientUpdateReportDefinitionResponse, error) {
-	return iruntime.NewLRO(client.BeginUpdateReportDefinition(ctx, workspaceID, reportID, updateReportDefinitionRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginUpdateReportDefinition(ctx, workspaceID, reportID, updateReportDefinitionRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientUpdateReportDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientUpdateReportDefinitionResponse{}, err
+	}
+	return result, err
 }
 
 // beginUpdateReportDefinition creates the updateReportDefinition request.
@@ -746,7 +770,11 @@ func (client *ItemsClient) ListReports(ctx context.Context, workspaceID string, 
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []Report{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []Report{}, err
 	}
 	return list, nil
 }

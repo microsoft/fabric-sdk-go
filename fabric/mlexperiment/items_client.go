@@ -391,7 +391,15 @@ func (client *ItemsClient) updateMLExperimentHandleResponse(resp *http.Response)
 //   - createMLExperimentRequest - Create item request payload.
 //   - options - ItemsClientBeginCreateMLExperimentOptions contains the optional parameters for the ItemsClient.BeginCreateMLExperiment method.
 func (client *ItemsClient) CreateMLExperiment(ctx context.Context, workspaceID string, createMLExperimentRequest CreateMLExperimentRequest, options *ItemsClientBeginCreateMLExperimentOptions) (ItemsClientCreateMLExperimentResponse, error) {
-	return iruntime.NewLRO(client.BeginCreateMLExperiment(ctx, workspaceID, createMLExperimentRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginCreateMLExperiment(ctx, workspaceID, createMLExperimentRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientCreateMLExperimentResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientCreateMLExperimentResponse{}, err
+	}
+	return result, err
 }
 
 // beginCreateMLExperiment creates the createMLExperiment request.
@@ -457,7 +465,11 @@ func (client *ItemsClient) ListMLExperiments(ctx context.Context, workspaceID st
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []MLExperiment{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []MLExperiment{}, err
 	}
 	return list, nil
 }

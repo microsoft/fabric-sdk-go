@@ -386,7 +386,15 @@ func (client *ItemsClient) updateWarehouseHandleResponse(resp *http.Response) (I
 //   - createWarehouseRequest - Create item request payload.
 //   - options - ItemsClientBeginCreateWarehouseOptions contains the optional parameters for the ItemsClient.BeginCreateWarehouse method.
 func (client *ItemsClient) CreateWarehouse(ctx context.Context, workspaceID string, createWarehouseRequest CreateWarehouseRequest, options *ItemsClientBeginCreateWarehouseOptions) (ItemsClientCreateWarehouseResponse, error) {
-	return iruntime.NewLRO(client.BeginCreateWarehouse(ctx, workspaceID, createWarehouseRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginCreateWarehouse(ctx, workspaceID, createWarehouseRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientCreateWarehouseResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientCreateWarehouseResponse{}, err
+	}
+	return result, err
 }
 
 // beginCreateWarehouse creates the createWarehouse request.
@@ -452,7 +460,11 @@ func (client *ItemsClient) ListWarehouses(ctx context.Context, workspaceID strin
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []Warehouse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []Warehouse{}, err
 	}
 	return list, nil
 }

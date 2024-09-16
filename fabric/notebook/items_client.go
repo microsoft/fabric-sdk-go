@@ -552,7 +552,15 @@ func (client *ItemsClient) updateNotebookDefinitionCreateRequest(ctx context.Con
 //   - createNotebookRequest - Create item request payload.
 //   - options - ItemsClientBeginCreateNotebookOptions contains the optional parameters for the ItemsClient.BeginCreateNotebook method.
 func (client *ItemsClient) CreateNotebook(ctx context.Context, workspaceID string, createNotebookRequest CreateNotebookRequest, options *ItemsClientBeginCreateNotebookOptions) (ItemsClientCreateNotebookResponse, error) {
-	return iruntime.NewLRO(client.BeginCreateNotebook(ctx, workspaceID, createNotebookRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginCreateNotebook(ctx, workspaceID, createNotebookRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientCreateNotebookResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientCreateNotebookResponse{}, err
+	}
+	return result, err
 }
 
 // beginCreateNotebook creates the createNotebook request.
@@ -618,7 +626,15 @@ func (client *ItemsClient) beginCreateNotebook(ctx context.Context, workspaceID 
 //   - notebookID - The notebook ID.
 //   - options - ItemsClientBeginGetNotebookDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetNotebookDefinition method.
 func (client *ItemsClient) GetNotebookDefinition(ctx context.Context, workspaceID string, notebookID string, options *ItemsClientBeginGetNotebookDefinitionOptions) (ItemsClientGetNotebookDefinitionResponse, error) {
-	return iruntime.NewLRO(client.BeginGetNotebookDefinition(ctx, workspaceID, notebookID, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginGetNotebookDefinition(ctx, workspaceID, notebookID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientGetNotebookDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientGetNotebookDefinitionResponse{}, err
+	}
+	return result, err
 }
 
 // beginGetNotebookDefinition creates the getNotebookDefinition request.
@@ -683,7 +699,15 @@ func (client *ItemsClient) beginGetNotebookDefinition(ctx context.Context, works
 //   - updateNotebookDefinitionRequest - Update notebook definition request payload.
 //   - options - ItemsClientBeginUpdateNotebookDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateNotebookDefinition method.
 func (client *ItemsClient) UpdateNotebookDefinition(ctx context.Context, workspaceID string, notebookID string, updateNotebookDefinitionRequest UpdateNotebookDefinitionRequest, options *ItemsClientBeginUpdateNotebookDefinitionOptions) (ItemsClientUpdateNotebookDefinitionResponse, error) {
-	return iruntime.NewLRO(client.BeginUpdateNotebookDefinition(ctx, workspaceID, notebookID, updateNotebookDefinitionRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginUpdateNotebookDefinition(ctx, workspaceID, notebookID, updateNotebookDefinitionRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientUpdateNotebookDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientUpdateNotebookDefinitionResponse{}, err
+	}
+	return result, err
 }
 
 // beginUpdateNotebookDefinition creates the updateNotebookDefinition request.
@@ -749,7 +773,11 @@ func (client *ItemsClient) ListNotebooks(ctx context.Context, workspaceID string
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []Notebook{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []Notebook{}, err
 	}
 	return list, nil
 }

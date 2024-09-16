@@ -8,6 +8,7 @@ package core
 
 import (
 	"context"
+	"errors"
 	"net/http"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -106,7 +107,11 @@ func (client *CapacitiesClient) ListCapacities(ctx context.Context, options *Cap
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []Capacity{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []Capacity{}, err
 	}
 	return list, nil
 }

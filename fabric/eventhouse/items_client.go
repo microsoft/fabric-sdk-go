@@ -382,7 +382,15 @@ func (client *ItemsClient) updateEventhouseHandleResponse(resp *http.Response) (
 //   - createEventhouseRequest - Create eventhouse request payload.
 //   - options - ItemsClientBeginCreateEventhouseOptions contains the optional parameters for the ItemsClient.BeginCreateEventhouse method.
 func (client *ItemsClient) CreateEventhouse(ctx context.Context, workspaceID string, createEventhouseRequest CreateEventhouseRequest, options *ItemsClientBeginCreateEventhouseOptions) (ItemsClientCreateEventhouseResponse, error) {
-	return iruntime.NewLRO(client.BeginCreateEventhouse(ctx, workspaceID, createEventhouseRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginCreateEventhouse(ctx, workspaceID, createEventhouseRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientCreateEventhouseResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientCreateEventhouseResponse{}, err
+	}
+	return result, err
 }
 
 // beginCreateEventhouse creates the createEventhouse request.
@@ -448,7 +456,11 @@ func (client *ItemsClient) ListEventhouses(ctx context.Context, workspaceID stri
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []Eventhouse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []Eventhouse{}, err
 	}
 	return list, nil
 }

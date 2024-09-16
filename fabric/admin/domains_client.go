@@ -851,7 +851,15 @@ func (client *DomainsClient) updateDomainHandleResponse(resp *http.Response) (Do
 //   - assignDomainWorkspacesByCapacitiesRequest - The request payload for assigning workspaces to the domain by capacity.
 //   - options - DomainsClientBeginAssignDomainWorkspacesByCapacitiesOptions contains the optional parameters for the DomainsClient.BeginAssignDomainWorkspacesByCapacities method.
 func (client *DomainsClient) AssignDomainWorkspacesByCapacities(ctx context.Context, domainID string, assignDomainWorkspacesByCapacitiesRequest AssignDomainWorkspacesByCapacitiesRequest, options *DomainsClientBeginAssignDomainWorkspacesByCapacitiesOptions) (DomainsClientAssignDomainWorkspacesByCapacitiesResponse, error) {
-	return iruntime.NewLRO(client.BeginAssignDomainWorkspacesByCapacities(ctx, domainID, assignDomainWorkspacesByCapacitiesRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginAssignDomainWorkspacesByCapacities(ctx, domainID, assignDomainWorkspacesByCapacitiesRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return DomainsClientAssignDomainWorkspacesByCapacitiesResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return DomainsClientAssignDomainWorkspacesByCapacitiesResponse{}, err
+	}
+	return result, err
 }
 
 // beginAssignDomainWorkspacesByCapacities creates the assignDomainWorkspacesByCapacities request.
@@ -917,7 +925,15 @@ func (client *DomainsClient) beginAssignDomainWorkspacesByCapacities(ctx context
 //   - assignDomainWorkspacesByPrincipalsRequest - The request payload for assigning workspaces to the domain by principal.
 //   - options - DomainsClientBeginAssignDomainWorkspacesByPrincipalsOptions contains the optional parameters for the DomainsClient.BeginAssignDomainWorkspacesByPrincipals method.
 func (client *DomainsClient) AssignDomainWorkspacesByPrincipals(ctx context.Context, domainID string, assignDomainWorkspacesByPrincipalsRequest AssignDomainWorkspacesByPrincipalsRequest, options *DomainsClientBeginAssignDomainWorkspacesByPrincipalsOptions) (DomainsClientAssignDomainWorkspacesByPrincipalsResponse, error) {
-	return iruntime.NewLRO(client.BeginAssignDomainWorkspacesByPrincipals(ctx, domainID, assignDomainWorkspacesByPrincipalsRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginAssignDomainWorkspacesByPrincipals(ctx, domainID, assignDomainWorkspacesByPrincipalsRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return DomainsClientAssignDomainWorkspacesByPrincipalsResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return DomainsClientAssignDomainWorkspacesByPrincipalsResponse{}, err
+	}
+	return result, err
 }
 
 // beginAssignDomainWorkspacesByPrincipals creates the assignDomainWorkspacesByPrincipals request.
@@ -985,7 +1001,11 @@ func (client *DomainsClient) ListDomainWorkspaces(ctx context.Context, domainID 
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []DomainWorkspace{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []DomainWorkspace{}, err
 	}
 	return list, nil
 }

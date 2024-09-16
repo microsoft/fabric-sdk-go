@@ -17,6 +17,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 
+	"github.com/microsoft/fabric-sdk-go/fabric/core"
 	"github.com/microsoft/fabric-sdk-go/internal/iruntime"
 )
 
@@ -117,7 +118,11 @@ func (client *ItemsClient) ListDatamarts(ctx context.Context, workspaceID string
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []Datamart{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []Datamart{}, err
 	}
 	return list, nil
 }

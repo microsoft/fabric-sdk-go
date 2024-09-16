@@ -8,6 +8,7 @@ package admin
 
 import (
 	"context"
+	"errors"
 	"net/http"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -175,7 +176,11 @@ func (client *TenantsClient) ListCapacitiesTenantSettingsOverrides(ctx context.C
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []TenantSettingOverride{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []TenantSettingOverride{}, err
 	}
 	return list, nil
 }

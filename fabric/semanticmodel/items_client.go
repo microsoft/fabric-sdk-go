@@ -554,7 +554,15 @@ func (client *ItemsClient) updateSemanticModelDefinitionCreateRequest(ctx contex
 //   - createSemanticModelRequest - Create item request payload.
 //   - options - ItemsClientBeginCreateSemanticModelOptions contains the optional parameters for the ItemsClient.BeginCreateSemanticModel method.
 func (client *ItemsClient) CreateSemanticModel(ctx context.Context, workspaceID string, createSemanticModelRequest CreateSemanticModelRequest, options *ItemsClientBeginCreateSemanticModelOptions) (ItemsClientCreateSemanticModelResponse, error) {
-	return iruntime.NewLRO(client.BeginCreateSemanticModel(ctx, workspaceID, createSemanticModelRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginCreateSemanticModel(ctx, workspaceID, createSemanticModelRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientCreateSemanticModelResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientCreateSemanticModelResponse{}, err
+	}
+	return result, err
 }
 
 // beginCreateSemanticModel creates the createSemanticModel request.
@@ -620,7 +628,15 @@ func (client *ItemsClient) beginCreateSemanticModel(ctx context.Context, workspa
 //   - semanticModelID - The semantic model ID.
 //   - options - ItemsClientBeginGetSemanticModelDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetSemanticModelDefinition method.
 func (client *ItemsClient) GetSemanticModelDefinition(ctx context.Context, workspaceID string, semanticModelID string, options *ItemsClientBeginGetSemanticModelDefinitionOptions) (ItemsClientGetSemanticModelDefinitionResponse, error) {
-	return iruntime.NewLRO(client.BeginGetSemanticModelDefinition(ctx, workspaceID, semanticModelID, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginGetSemanticModelDefinition(ctx, workspaceID, semanticModelID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientGetSemanticModelDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientGetSemanticModelDefinitionResponse{}, err
+	}
+	return result, err
 }
 
 // beginGetSemanticModelDefinition creates the getSemanticModelDefinition request.
@@ -685,7 +701,15 @@ func (client *ItemsClient) beginGetSemanticModelDefinition(ctx context.Context, 
 //   - updateSemanticModelDefinitionRequest - Update semantic model definition request payload.
 //   - options - ItemsClientBeginUpdateSemanticModelDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateSemanticModelDefinition method.
 func (client *ItemsClient) UpdateSemanticModelDefinition(ctx context.Context, workspaceID string, semanticModelID string, updateSemanticModelDefinitionRequest UpdateSemanticModelDefinitionRequest, options *ItemsClientBeginUpdateSemanticModelDefinitionOptions) (ItemsClientUpdateSemanticModelDefinitionResponse, error) {
-	return iruntime.NewLRO(client.BeginUpdateSemanticModelDefinition(ctx, workspaceID, semanticModelID, updateSemanticModelDefinitionRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginUpdateSemanticModelDefinition(ctx, workspaceID, semanticModelID, updateSemanticModelDefinitionRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientUpdateSemanticModelDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientUpdateSemanticModelDefinitionResponse{}, err
+	}
+	return result, err
 }
 
 // beginUpdateSemanticModelDefinition creates the updateSemanticModelDefinition request.
@@ -751,7 +775,11 @@ func (client *ItemsClient) ListSemanticModels(ctx context.Context, workspaceID s
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []SemanticModel{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []SemanticModel{}, err
 	}
 	return list, nil
 }

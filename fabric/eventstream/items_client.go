@@ -386,7 +386,15 @@ func (client *ItemsClient) updateEventstreamHandleResponse(resp *http.Response) 
 //   - createEventstreamRequest - Create item request payload.
 //   - options - ItemsClientBeginCreateEventstreamOptions contains the optional parameters for the ItemsClient.BeginCreateEventstream method.
 func (client *ItemsClient) CreateEventstream(ctx context.Context, workspaceID string, createEventstreamRequest CreateEventstreamRequest, options *ItemsClientBeginCreateEventstreamOptions) (ItemsClientCreateEventstreamResponse, error) {
-	return iruntime.NewLRO(client.BeginCreateEventstream(ctx, workspaceID, createEventstreamRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginCreateEventstream(ctx, workspaceID, createEventstreamRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientCreateEventstreamResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientCreateEventstreamResponse{}, err
+	}
+	return result, err
 }
 
 // beginCreateEventstream creates the createEventstream request.
@@ -452,7 +460,11 @@ func (client *ItemsClient) ListEventstreams(ctx context.Context, workspaceID str
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []Eventstream{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []Eventstream{}, err
 	}
 	return list, nil
 }

@@ -340,7 +340,11 @@ func (client *OneLakeShortcutsClient) ListShortcuts(ctx context.Context, workspa
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []Shortcut{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []Shortcut{}, err
 	}
 	return list, nil
 }
