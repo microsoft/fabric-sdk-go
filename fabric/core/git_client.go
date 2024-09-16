@@ -522,7 +522,15 @@ func (client *GitClient) updateFromGitCreateRequest(ctx context.Context, workspa
 //   - commitToGitRequest - Commit to the Git request payload.
 //   - options - GitClientBeginCommitToGitOptions contains the optional parameters for the GitClient.BeginCommitToGit method.
 func (client *GitClient) CommitToGit(ctx context.Context, workspaceID string, commitToGitRequest CommitToGitRequest, options *GitClientBeginCommitToGitOptions) (GitClientCommitToGitResponse, error) {
-	return iruntime.NewLRO(client.BeginCommitToGit(ctx, workspaceID, commitToGitRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginCommitToGit(ctx, workspaceID, commitToGitRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return GitClientCommitToGitResponse{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return GitClientCommitToGitResponse{}, err
+	}
+	return result, err
 }
 
 // beginCommitToGit creates the commitToGit request.
@@ -585,7 +593,15 @@ func (client *GitClient) beginCommitToGit(ctx context.Context, workspaceID strin
 //   - workspaceID - The workspace ID.
 //   - options - GitClientBeginGetStatusOptions contains the optional parameters for the GitClient.BeginGetStatus method.
 func (client *GitClient) GetStatus(ctx context.Context, workspaceID string, options *GitClientBeginGetStatusOptions) (GitClientGetStatusResponse, error) {
-	return iruntime.NewLRO(client.BeginGetStatus(ctx, workspaceID, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginGetStatus(ctx, workspaceID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return GitClientGetStatusResponse{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return GitClientGetStatusResponse{}, err
+	}
+	return result, err
 }
 
 // beginGetStatus creates the getStatus request.
@@ -650,7 +666,15 @@ func (client *GitClient) beginGetStatus(ctx context.Context, workspaceID string,
 //   - workspaceID - The workspace ID.
 //   - options - GitClientBeginInitializeConnectionOptions contains the optional parameters for the GitClient.BeginInitializeConnection method.
 func (client *GitClient) InitializeConnection(ctx context.Context, workspaceID string, options *GitClientBeginInitializeConnectionOptions) (GitClientInitializeConnectionResponse, error) {
-	return iruntime.NewLRO(client.BeginInitializeConnection(ctx, workspaceID, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginInitializeConnection(ctx, workspaceID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return GitClientInitializeConnectionResponse{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return GitClientInitializeConnectionResponse{}, err
+	}
+	return result, err
 }
 
 // beginInitializeConnection creates the initializeConnection request.
@@ -715,7 +739,15 @@ func (client *GitClient) beginInitializeConnection(ctx context.Context, workspac
 //   - updateFromGitRequest - Update from a Git request payload.
 //   - options - GitClientBeginUpdateFromGitOptions contains the optional parameters for the GitClient.BeginUpdateFromGit method.
 func (client *GitClient) UpdateFromGit(ctx context.Context, workspaceID string, updateFromGitRequest UpdateFromGitRequest, options *GitClientBeginUpdateFromGitOptions) (GitClientUpdateFromGitResponse, error) {
-	return iruntime.NewLRO(client.BeginUpdateFromGit(ctx, workspaceID, updateFromGitRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginUpdateFromGit(ctx, workspaceID, updateFromGitRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return GitClientUpdateFromGitResponse{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return GitClientUpdateFromGitResponse{}, err
+	}
+	return result, err
 }
 
 // beginUpdateFromGit creates the updateFromGit request.

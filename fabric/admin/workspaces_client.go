@@ -255,7 +255,11 @@ func (client *WorkspacesClient) ListWorkspaces(ctx context.Context, options *Wor
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []Workspace{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []Workspace{}, err
 	}
 	return list, nil
 }

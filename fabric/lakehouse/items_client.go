@@ -377,7 +377,15 @@ func (client *ItemsClient) updateLakehouseHandleResponse(resp *http.Response) (I
 //   - createLakehouseRequest - Create item request payload.
 //   - options - ItemsClientBeginCreateLakehouseOptions contains the optional parameters for the ItemsClient.BeginCreateLakehouse method.
 func (client *ItemsClient) CreateLakehouse(ctx context.Context, workspaceID string, createLakehouseRequest CreateLakehouseRequest, options *ItemsClientBeginCreateLakehouseOptions) (ItemsClientCreateLakehouseResponse, error) {
-	return iruntime.NewLRO(client.BeginCreateLakehouse(ctx, workspaceID, createLakehouseRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginCreateLakehouse(ctx, workspaceID, createLakehouseRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientCreateLakehouseResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientCreateLakehouseResponse{}, err
+	}
+	return result, err
 }
 
 // beginCreateLakehouse creates the createLakehouse request.
@@ -443,7 +451,11 @@ func (client *ItemsClient) ListLakehouses(ctx context.Context, workspaceID strin
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []Lakehouse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []Lakehouse{}, err
 	}
 	return list, nil
 }

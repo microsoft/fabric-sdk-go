@@ -33,6 +33,32 @@ func NewResponseError(resp *http.Response) error {
 		return err
 	}
 
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(respBody, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling error: %v", err)
+	}
+
+	// handle LRO result error
+	if rawMsg["error"] != nil && rawMsg["status"] != nil {
+		var errorMap map[string]any
+		if err := json.Unmarshal(rawMsg["error"], &errorMap); err != nil {
+			return fmt.Errorf("unmarshalling error field: %v", err)
+		}
+
+		errorMap["requestId"] = resp.Header.Get("requestId")
+		errorMap["moreDetails"] = []map[string]any{
+			{
+				"errorCode": string(rawMsg["status"]),
+				"message":   "Long Running Operation: " + string(rawMsg["status"]),
+			},
+		}
+
+		respBody, err = json.Marshal(errorMap)
+		if err != nil {
+			return fmt.Errorf("marshalling error field: %v", err)
+		}
+	}
+
 	var errResp ErrorResponse
 	if err := errResp.UnmarshalJSON(respBody); err != nil {
 		return err

@@ -390,7 +390,15 @@ func (client *DeploymentPipelinesClient) listDeploymentPipelinesHandleResponse(r
 //   - deployRequest - The deploy request.
 //   - options - DeploymentPipelinesClientBeginDeployStageContentOptions contains the optional parameters for the DeploymentPipelinesClient.BeginDeployStageContent method.
 func (client *DeploymentPipelinesClient) DeployStageContent(ctx context.Context, deploymentPipelineID string, deployRequest DeployRequest, options *DeploymentPipelinesClientBeginDeployStageContentOptions) (DeploymentPipelinesClientDeployStageContentResponse, error) {
-	return iruntime.NewLRO(client.BeginDeployStageContent(ctx, deploymentPipelineID, deployRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginDeployStageContent(ctx, deploymentPipelineID, deployRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return DeploymentPipelinesClientDeployStageContentResponse{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return DeploymentPipelinesClientDeployStageContentResponse{}, err
+	}
+	return result, err
 }
 
 // beginDeployStageContent creates the deployStageContent request.
@@ -457,7 +465,11 @@ func (client *DeploymentPipelinesClient) ListDeploymentPipelineStageItems(ctx co
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []DeploymentPipelineStageItem{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []DeploymentPipelineStageItem{}, err
 	}
 	return list, nil
 }
@@ -481,7 +493,11 @@ func (client *DeploymentPipelinesClient) ListDeploymentPipelineStages(ctx contex
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []DeploymentPipelineStage{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []DeploymentPipelineStage{}, err
 	}
 	return list, nil
 }
@@ -504,7 +520,11 @@ func (client *DeploymentPipelinesClient) ListDeploymentPipelines(ctx context.Con
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []DeploymentPipeline{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []DeploymentPipeline{}, err
 	}
 	return list, nil
 }

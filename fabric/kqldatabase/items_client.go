@@ -382,7 +382,15 @@ func (client *ItemsClient) updateKQLDatabaseHandleResponse(resp *http.Response) 
 //   - createKQLDatabaseRequest - Create item request payload.
 //   - options - ItemsClientBeginCreateKQLDatabaseOptions contains the optional parameters for the ItemsClient.BeginCreateKQLDatabase method.
 func (client *ItemsClient) CreateKQLDatabase(ctx context.Context, workspaceID string, createKQLDatabaseRequest CreateKQLDatabaseRequest, options *ItemsClientBeginCreateKQLDatabaseOptions) (ItemsClientCreateKQLDatabaseResponse, error) {
-	return iruntime.NewLRO(client.BeginCreateKQLDatabase(ctx, workspaceID, createKQLDatabaseRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginCreateKQLDatabase(ctx, workspaceID, createKQLDatabaseRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientCreateKQLDatabaseResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientCreateKQLDatabaseResponse{}, err
+	}
+	return result, err
 }
 
 // beginCreateKQLDatabase creates the createKQLDatabase request.
@@ -448,7 +456,11 @@ func (client *ItemsClient) ListKQLDatabases(ctx context.Context, workspaceID str
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []KQLDatabase{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []KQLDatabase{}, err
 	}
 	return list, nil
 }

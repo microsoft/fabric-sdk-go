@@ -762,7 +762,15 @@ func (client *ItemsClient) updateItemDefinitionCreateRequest(ctx context.Context
 //   - createItemRequest - Create item request payload.
 //   - options - ItemsClientBeginCreateItemOptions contains the optional parameters for the ItemsClient.BeginCreateItem method.
 func (client *ItemsClient) CreateItem(ctx context.Context, workspaceID string, createItemRequest CreateItemRequest, options *ItemsClientBeginCreateItemOptions) (ItemsClientCreateItemResponse, error) {
-	return iruntime.NewLRO(client.BeginCreateItem(ctx, workspaceID, createItemRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginCreateItem(ctx, workspaceID, createItemRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientCreateItemResponse{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientCreateItemResponse{}, err
+	}
+	return result, err
 }
 
 // beginCreateItem creates the createItem request.
@@ -837,7 +845,15 @@ func (client *ItemsClient) beginCreateItem(ctx context.Context, workspaceID stri
 //   - itemID - The item ID.
 //   - options - ItemsClientBeginGetItemDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetItemDefinition method.
 func (client *ItemsClient) GetItemDefinition(ctx context.Context, workspaceID string, itemID string, options *ItemsClientBeginGetItemDefinitionOptions) (ItemsClientGetItemDefinitionResponse, error) {
-	return iruntime.NewLRO(client.BeginGetItemDefinition(ctx, workspaceID, itemID, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginGetItemDefinition(ctx, workspaceID, itemID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientGetItemDefinitionResponse{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientGetItemDefinitionResponse{}, err
+	}
+	return result, err
 }
 
 // beginGetItemDefinition creates the getItemDefinition request.
@@ -911,7 +927,15 @@ func (client *ItemsClient) beginGetItemDefinition(ctx context.Context, workspace
 //   - updateItemDefinitionRequest - Update item definition request payload.
 //   - options - ItemsClientBeginUpdateItemDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateItemDefinition method.
 func (client *ItemsClient) UpdateItemDefinition(ctx context.Context, workspaceID string, itemID string, updateItemDefinitionRequest UpdateItemDefinitionRequest, options *ItemsClientBeginUpdateItemDefinitionOptions) (ItemsClientUpdateItemDefinitionResponse, error) {
-	return iruntime.NewLRO(client.BeginUpdateItemDefinition(ctx, workspaceID, itemID, updateItemDefinitionRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginUpdateItemDefinition(ctx, workspaceID, itemID, updateItemDefinitionRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientUpdateItemDefinitionResponse{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientUpdateItemDefinitionResponse{}, err
+	}
+	return result, err
 }
 
 // beginUpdateItemDefinition creates the updateItemDefinition request.
@@ -986,7 +1010,11 @@ func (client *ItemsClient) ListItemConnections(ctx context.Context, workspaceID 
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []ItemConnection{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []ItemConnection{}, err
 	}
 	return list, nil
 }
@@ -1014,7 +1042,11 @@ func (client *ItemsClient) ListItems(ctx context.Context, workspaceID string, op
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []Item{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []Item{}, err
 	}
 	return list, nil
 }

@@ -186,7 +186,11 @@ func (client *ExternalDataSharesClient) ListExternalDataShares(ctx context.Conte
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []ExternalDataShare{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []ExternalDataShare{}, err
 	}
 	return list, nil
 }

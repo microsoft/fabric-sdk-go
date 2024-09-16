@@ -390,7 +390,15 @@ func (client *ItemsClient) updateMLModelHandleResponse(resp *http.Response) (Ite
 //   - createMLModelRequest - Create item request payload.
 //   - options - ItemsClientBeginCreateMLModelOptions contains the optional parameters for the ItemsClient.BeginCreateMLModel method.
 func (client *ItemsClient) CreateMLModel(ctx context.Context, workspaceID string, createMLModelRequest CreateMLModelRequest, options *ItemsClientBeginCreateMLModelOptions) (ItemsClientCreateMLModelResponse, error) {
-	return iruntime.NewLRO(client.BeginCreateMLModel(ctx, workspaceID, createMLModelRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginCreateMLModel(ctx, workspaceID, createMLModelRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientCreateMLModelResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientCreateMLModelResponse{}, err
+	}
+	return result, err
 }
 
 // beginCreateMLModel creates the createMLModel request.
@@ -456,7 +464,11 @@ func (client *ItemsClient) ListMLModels(ctx context.Context, workspaceID string,
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []MLModel{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []MLModel{}, err
 	}
 	return list, nil
 }

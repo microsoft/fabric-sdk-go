@@ -292,7 +292,11 @@ func (client *ItemsClient) ListItems(ctx context.Context, options *ItemsClientLi
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []Item{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []Item{}, err
 	}
 	return list, nil
 }

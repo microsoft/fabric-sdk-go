@@ -559,7 +559,15 @@ func (client *ItemsClient) updateSparkJobDefinitionDefinitionCreateRequest(ctx c
 //   - createSparkJobDefinitionRequest - Create item request payload.
 //   - options - ItemsClientBeginCreateSparkJobDefinitionOptions contains the optional parameters for the ItemsClient.BeginCreateSparkJobDefinition method.
 func (client *ItemsClient) CreateSparkJobDefinition(ctx context.Context, workspaceID string, createSparkJobDefinitionRequest CreateSparkJobDefinitionRequest, options *ItemsClientBeginCreateSparkJobDefinitionOptions) (ItemsClientCreateSparkJobDefinitionResponse, error) {
-	return iruntime.NewLRO(client.BeginCreateSparkJobDefinition(ctx, workspaceID, createSparkJobDefinitionRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginCreateSparkJobDefinition(ctx, workspaceID, createSparkJobDefinitionRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientCreateSparkJobDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientCreateSparkJobDefinitionResponse{}, err
+	}
+	return result, err
 }
 
 // beginCreateSparkJobDefinition creates the createSparkJobDefinition request.
@@ -625,7 +633,15 @@ func (client *ItemsClient) beginCreateSparkJobDefinition(ctx context.Context, wo
 //   - sparkJobDefinitionID - The spark job definition ID.
 //   - options - ItemsClientBeginGetSparkJobDefinitionDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetSparkJobDefinitionDefinition method.
 func (client *ItemsClient) GetSparkJobDefinitionDefinition(ctx context.Context, workspaceID string, sparkJobDefinitionID string, options *ItemsClientBeginGetSparkJobDefinitionDefinitionOptions) (ItemsClientGetSparkJobDefinitionDefinitionResponse, error) {
-	return iruntime.NewLRO(client.BeginGetSparkJobDefinitionDefinition(ctx, workspaceID, sparkJobDefinitionID, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginGetSparkJobDefinitionDefinition(ctx, workspaceID, sparkJobDefinitionID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientGetSparkJobDefinitionDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientGetSparkJobDefinitionDefinitionResponse{}, err
+	}
+	return result, err
 }
 
 // beginGetSparkJobDefinitionDefinition creates the getSparkJobDefinitionDefinition request.
@@ -690,7 +706,15 @@ func (client *ItemsClient) beginGetSparkJobDefinitionDefinition(ctx context.Cont
 //   - updateSparkJobDefinitionRequest - Update spark job definition definition request payload.
 //   - options - ItemsClientBeginUpdateSparkJobDefinitionDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateSparkJobDefinitionDefinition method.
 func (client *ItemsClient) UpdateSparkJobDefinitionDefinition(ctx context.Context, workspaceID string, sparkJobDefinitionID string, updateSparkJobDefinitionRequest UpdateSparkJobDefinitionDefinitionRequest, options *ItemsClientBeginUpdateSparkJobDefinitionDefinitionOptions) (ItemsClientUpdateSparkJobDefinitionDefinitionResponse, error) {
-	return iruntime.NewLRO(client.BeginUpdateSparkJobDefinitionDefinition(ctx, workspaceID, sparkJobDefinitionID, updateSparkJobDefinitionRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginUpdateSparkJobDefinitionDefinition(ctx, workspaceID, sparkJobDefinitionID, updateSparkJobDefinitionRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientUpdateSparkJobDefinitionDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientUpdateSparkJobDefinitionDefinitionResponse{}, err
+	}
+	return result, err
 }
 
 // beginUpdateSparkJobDefinitionDefinition creates the updateSparkJobDefinitionDefinition request.
@@ -756,7 +780,11 @@ func (client *ItemsClient) ListSparkJobDefinitions(ctx context.Context, workspac
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []SparkJobDefinition{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []SparkJobDefinition{}, err
 	}
 	return list, nil
 }

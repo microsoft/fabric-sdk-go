@@ -382,7 +382,15 @@ func (client *ItemsClient) updateDataPipelineHandleResponse(resp *http.Response)
 //   - createDataPipelineRequest - Create item request payload.
 //   - options - ItemsClientBeginCreateDataPipelineOptions contains the optional parameters for the ItemsClient.BeginCreateDataPipeline method.
 func (client *ItemsClient) CreateDataPipeline(ctx context.Context, workspaceID string, createDataPipelineRequest CreateDataPipelineRequest, options *ItemsClientBeginCreateDataPipelineOptions) (ItemsClientCreateDataPipelineResponse, error) {
-	return iruntime.NewLRO(client.BeginCreateDataPipeline(ctx, workspaceID, createDataPipelineRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginCreateDataPipeline(ctx, workspaceID, createDataPipelineRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientCreateDataPipelineResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientCreateDataPipelineResponse{}, err
+	}
+	return result, err
 }
 
 // beginCreateDataPipeline creates the createDataPipeline request.
@@ -448,7 +456,11 @@ func (client *ItemsClient) ListDataPipelines(ctx context.Context, workspaceID st
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []DataPipeline{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []DataPipeline{}, err
 	}
 	return list, nil
 }

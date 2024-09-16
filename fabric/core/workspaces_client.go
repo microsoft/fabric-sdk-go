@@ -932,7 +932,15 @@ func (client *WorkspacesClient) updateWorkspaceRoleAssignmentHandleResponse(resp
 //   - workspaceID - The ID of the workspace.
 //   - options - WorkspacesClientBeginDeprovisionIdentityOptions contains the optional parameters for the WorkspacesClient.BeginDeprovisionIdentity method.
 func (client *WorkspacesClient) DeprovisionIdentity(ctx context.Context, workspaceID string, options *WorkspacesClientBeginDeprovisionIdentityOptions) (WorkspacesClientDeprovisionIdentityResponse, error) {
-	return iruntime.NewLRO(client.BeginDeprovisionIdentity(ctx, workspaceID, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginDeprovisionIdentity(ctx, workspaceID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return WorkspacesClientDeprovisionIdentityResponse{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return WorkspacesClientDeprovisionIdentityResponse{}, err
+	}
+	return result, err
 }
 
 // beginDeprovisionIdentity creates the deprovisionIdentity request.
@@ -994,7 +1002,15 @@ func (client *WorkspacesClient) beginDeprovisionIdentity(ctx context.Context, wo
 //   - workspaceID - The ID of the workspace.
 //   - options - WorkspacesClientBeginProvisionIdentityOptions contains the optional parameters for the WorkspacesClient.BeginProvisionIdentity method.
 func (client *WorkspacesClient) ProvisionIdentity(ctx context.Context, workspaceID string, options *WorkspacesClientBeginProvisionIdentityOptions) (WorkspacesClientProvisionIdentityResponse, error) {
-	return iruntime.NewLRO(client.BeginProvisionIdentity(ctx, workspaceID, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginProvisionIdentity(ctx, workspaceID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return WorkspacesClientProvisionIdentityResponse{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return WorkspacesClientProvisionIdentityResponse{}, err
+	}
+	return result, err
 }
 
 // beginProvisionIdentity creates the provisionIdentity request.
@@ -1060,7 +1076,11 @@ func (client *WorkspacesClient) ListWorkspaceRoleAssignments(ctx context.Context
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []WorkspaceRoleAssignment{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []WorkspaceRoleAssignment{}, err
 	}
 	return list, nil
 }
@@ -1085,7 +1105,11 @@ func (client *WorkspacesClient) ListWorkspaces(ctx context.Context, options *Wor
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []Workspace{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []Workspace{}, err
 	}
 	return list, nil
 }

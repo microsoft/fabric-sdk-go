@@ -383,7 +383,15 @@ func (client *ItemsClient) updateEnvironmentHandleResponse(resp *http.Response) 
 //   - createEnvironmentRequest - Create item request payload.
 //   - options - ItemsClientBeginCreateEnvironmentOptions contains the optional parameters for the ItemsClient.BeginCreateEnvironment method.
 func (client *ItemsClient) CreateEnvironment(ctx context.Context, workspaceID string, createEnvironmentRequest CreateEnvironmentRequest, options *ItemsClientBeginCreateEnvironmentOptions) (ItemsClientCreateEnvironmentResponse, error) {
-	return iruntime.NewLRO(client.BeginCreateEnvironment(ctx, workspaceID, createEnvironmentRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginCreateEnvironment(ctx, workspaceID, createEnvironmentRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientCreateEnvironmentResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientCreateEnvironmentResponse{}, err
+	}
+	return result, err
 }
 
 // beginCreateEnvironment creates the createEnvironment request.
@@ -449,7 +457,11 @@ func (client *ItemsClient) ListEnvironments(ctx context.Context, workspaceID str
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []Environment{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []Environment{}, err
 	}
 	return list, nil
 }

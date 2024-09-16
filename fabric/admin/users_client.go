@@ -17,6 +17,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 
+	"github.com/microsoft/fabric-sdk-go/fabric/core"
 	"github.com/microsoft/fabric-sdk-go/internal/iruntime"
 )
 
@@ -146,7 +147,11 @@ func (client *UsersClient) ListAccessEntities(ctx context.Context, userID string
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []AccessEntity{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []AccessEntity{}, err
 	}
 	return list, nil
 }

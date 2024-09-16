@@ -17,6 +17,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 
+	"github.com/microsoft/fabric-sdk-go/fabric/core"
 	"github.com/microsoft/fabric-sdk-go/internal/iruntime"
 )
 
@@ -118,7 +119,11 @@ func (client *ItemsClient) ListMirroredWarehouses(ctx context.Context, workspace
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []MirroredWarehouse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []MirroredWarehouse{}, err
 	}
 	return list, nil
 }

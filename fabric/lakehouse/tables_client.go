@@ -206,7 +206,15 @@ func (client *TablesClient) loadTableCreateRequest(ctx context.Context, workspac
 //   - loadTableRequest - The load table request payload.
 //   - options - TablesClientBeginLoadTableOptions contains the optional parameters for the TablesClient.BeginLoadTable method.
 func (client *TablesClient) LoadTable(ctx context.Context, workspaceID string, lakehouseID string, tableName string, loadTableRequest LoadTableRequest, options *TablesClientBeginLoadTableOptions) (TablesClientLoadTableResponse, error) {
-	return iruntime.NewLRO(client.BeginLoadTable(ctx, workspaceID, lakehouseID, tableName, loadTableRequest, options)).Sync(ctx)
+	result, err := iruntime.NewLRO(client.BeginLoadTable(ctx, workspaceID, lakehouseID, tableName, loadTableRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return TablesClientLoadTableResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return TablesClientLoadTableResponse{}, err
+	}
+	return result, err
 }
 
 // beginLoadTable creates the loadTable request.
@@ -271,7 +279,11 @@ func (client *TablesClient) ListTables(ctx context.Context, workspaceID string, 
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []Table{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []Table{}, err
 	}
 	return list, nil
 }

@@ -188,7 +188,11 @@ func (client *ItemsClient) ListPaginatedReports(ctx context.Context, workspaceID
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
-		return nil, err
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []PaginatedReport{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []PaginatedReport{}, err
 	}
 	return list, nil
 }
