@@ -1075,6 +1075,7 @@ type PreDeploymentDiffInformation struct {
 	NoDifferenceItemsCount *int32
 }
 
+// Principal - Represents an identity or a Microsoft Entra group.
 type Principal struct {
 	// REQUIRED; The principal's ID.
 	ID *string
@@ -1389,7 +1390,7 @@ type WorkspaceRoleAssignment struct {
 }
 
 type WorkspaceRoleAssignments struct {
-	// REQUIRED; A list of workspace role assignments.
+	// REQUIRED
 	Value []WorkspaceRoleAssignment
 
 	// The token for the next result set batch. If there are no more records, it's removed from the response.

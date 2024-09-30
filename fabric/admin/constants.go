@@ -206,6 +206,8 @@ const (
 	ItemTypeEventhouse ItemType = "Eventhouse"
 	// ItemTypeEventstream - An eventstream.
 	ItemTypeEventstream ItemType = "Eventstream"
+	// ItemTypeKQLDashboard - A KQL dashboard.
+	ItemTypeKQLDashboard ItemType = "KQLDashboard"
 	// ItemTypeKQLDatabase - A KQL database.
 	ItemTypeKQLDatabase ItemType = "KQLDatabase"
 	// ItemTypeKQLQueryset - A KQL queryset.
@@ -243,6 +245,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeEnvironment,
 		ItemTypeEventhouse,
 		ItemTypeEventstream,
+		ItemTypeKQLDashboard,
 		ItemTypeKQLDatabase,
 		ItemTypeKQLQueryset,
 		ItemTypeLakehouse,

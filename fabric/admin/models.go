@@ -277,6 +277,7 @@ type ItemsChangeLabelResponse struct {
 	ItemsChangeLabelStatus []ItemChangeLabelStatus
 }
 
+// Principal - Represents an identity or a Microsoft Entra group.
 type Principal struct {
 	// REQUIRED; The principal's ID.
 	ID *string

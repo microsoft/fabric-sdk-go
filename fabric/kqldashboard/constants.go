@@ -4,7 +4,7 @@
 // Changes may cause incorrect behavior and will be lost if the code is regenerated.
 // SPDX-License-Identifier: MIT
 
-package semanticmodel
+package kqldashboard
 
 // ItemType - The type of the item. Additional item types may be added over time.
 type ItemType string
