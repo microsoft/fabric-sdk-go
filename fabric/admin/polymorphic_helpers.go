@@ -4,7 +4,7 @@
 // Changes may cause incorrect behavior and will be lost if the code is regenerated.
 // SPDX-License-Identifier: MIT
 
-package core
+package admin
 
 import "encoding/json"
 
@@ -24,31 +24,6 @@ func unmarshalGitProviderDetailsClassification(rawMsg json.RawMessage) (GitProvi
 		b = &GitHubDetails{}
 	default:
 		b = &GitProviderDetails{}
-	}
-	if err := json.Unmarshal(rawMsg, b); err != nil {
-		return nil, err
-	}
-	return b, nil
-}
-
-func unmarshalScheduleConfigClassification(rawMsg json.RawMessage) (ScheduleConfigClassification, error) {
-	if rawMsg == nil || string(rawMsg) == "null" {
-		return nil, nil
-	}
-	var m map[string]any
-	if err := json.Unmarshal(rawMsg, &m); err != nil {
-		return nil, err
-	}
-	var b ScheduleConfigClassification
-	switch m["type"] {
-	case string(ScheduleTypeCron):
-		b = &CronScheduleConfig{}
-	case string(ScheduleTypeDaily):
-		b = &DailyScheduleConfig{}
-	case string(ScheduleTypeWeekly):
-		b = &WeeklyScheduleConfig{}
-	default:
-		b = &ScheduleConfig{}
 	}
 	if err := json.Unmarshal(rawMsg, b); err != nil {
 		return nil, err

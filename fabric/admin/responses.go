@@ -141,6 +141,12 @@ type WorkspacesClientGetWorkspaceResponse struct {
 	Workspace
 }
 
+// WorkspacesClientListGitConnectionsResponse contains the response from method WorkspacesClient.NewListGitConnectionsPager.
+type WorkspacesClientListGitConnectionsResponse struct {
+	// A response wrapper for a list of all the Git connections for a given tenant with a continuous token.
+	GitConnections
+}
+
 // WorkspacesClientListWorkspaceAccessDetailsResponse contains the response from method WorkspacesClient.ListWorkspaceAccessDetails.
 type WorkspacesClientListWorkspaceAccessDetailsResponse struct {
 	// A list of users with access to a given entity.

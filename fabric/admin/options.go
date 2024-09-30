@@ -189,6 +189,13 @@ type WorkspacesClientGetWorkspaceOptions struct {
 	// placeholder for future optional parameters
 }
 
+// WorkspacesClientListGitConnectionsOptions contains the optional parameters for the WorkspacesClient.NewListGitConnectionsPager
+// method.
+type WorkspacesClientListGitConnectionsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
 // WorkspacesClientListWorkspaceAccessDetailsOptions contains the optional parameters for the WorkspacesClient.ListWorkspaceAccessDetails
 // method.
 type WorkspacesClientListWorkspaceAccessDetailsOptions struct {

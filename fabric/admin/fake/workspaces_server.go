@@ -29,6 +29,10 @@ type WorkspacesServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetWorkspace func(ctx context.Context, workspaceID string, options *admin.WorkspacesClientGetWorkspaceOptions) (resp azfake.Responder[admin.WorkspacesClientGetWorkspaceResponse], errResp azfake.ErrorResponder)
 
+	// NewListGitConnectionsPager is the fake for method WorkspacesClient.NewListGitConnectionsPager
+	// HTTP status codes to indicate success: http.StatusOK
+	NewListGitConnectionsPager func(options *admin.WorkspacesClientListGitConnectionsOptions) (resp azfake.PagerResponder[admin.WorkspacesClientListGitConnectionsResponse])
+
 	// ListWorkspaceAccessDetails is the fake for method WorkspacesClient.ListWorkspaceAccessDetails
 	// HTTP status codes to indicate success: http.StatusOK
 	ListWorkspaceAccessDetails func(ctx context.Context, workspaceID string, options *admin.WorkspacesClientListWorkspaceAccessDetailsOptions) (resp azfake.Responder[admin.WorkspacesClientListWorkspaceAccessDetailsResponse], errResp azfake.ErrorResponder)
@@ -43,16 +47,18 @@ type WorkspacesServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewWorkspacesServerTransport(srv *WorkspacesServer) *WorkspacesServerTransport {
 	return &WorkspacesServerTransport{
-		srv:                    srv,
-		newListWorkspacesPager: newTracker[azfake.PagerResponder[admin.WorkspacesClientListWorkspacesResponse]](),
+		srv:                        srv,
+		newListGitConnectionsPager: newTracker[azfake.PagerResponder[admin.WorkspacesClientListGitConnectionsResponse]](),
+		newListWorkspacesPager:     newTracker[azfake.PagerResponder[admin.WorkspacesClientListWorkspacesResponse]](),
 	}
 }
 
 // WorkspacesServerTransport connects instances of admin.WorkspacesClient to instances of WorkspacesServer.
 // Don't use this type directly, use NewWorkspacesServerTransport instead.
 type WorkspacesServerTransport struct {
-	srv                    *WorkspacesServer
-	newListWorkspacesPager *tracker[azfake.PagerResponder[admin.WorkspacesClientListWorkspacesResponse]]
+	srv                        *WorkspacesServer
+	newListGitConnectionsPager *tracker[azfake.PagerResponder[admin.WorkspacesClientListGitConnectionsResponse]]
+	newListWorkspacesPager     *tracker[azfake.PagerResponder[admin.WorkspacesClientListWorkspacesResponse]]
 }
 
 // Do implements the policy.Transporter interface for WorkspacesServerTransport.
@@ -75,6 +81,8 @@ func (w *WorkspacesServerTransport) dispatchToMethodFake(req *http.Request, meth
 	switch method {
 	case "WorkspacesClient.GetWorkspace":
 		resp, err = w.dispatchGetWorkspace(req)
+	case "WorkspacesClient.NewListGitConnectionsPager":
+		resp, err = w.dispatchNewListGitConnectionsPager(req)
 	case "WorkspacesClient.ListWorkspaceAccessDetails":
 		resp, err = w.dispatchListWorkspaceAccessDetails(req)
 	case "WorkspacesClient.NewListWorkspacesPager":
@@ -111,6 +119,45 @@ func (w *WorkspacesServerTransport) dispatchGetWorkspace(req *http.Request) (*ht
 	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).Workspace, req)
 	if err != nil {
 		return nil, err
+	}
+	return resp, nil
+}
+
+func (w *WorkspacesServerTransport) dispatchNewListGitConnectionsPager(req *http.Request) (*http.Response, error) {
+	if w.srv.NewListGitConnectionsPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListGitConnectionsPager not implemented")}
+	}
+	newListGitConnectionsPager := w.newListGitConnectionsPager.get(req)
+	if newListGitConnectionsPager == nil {
+		qp := req.URL.Query()
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *admin.WorkspacesClientListGitConnectionsOptions
+		if continuationTokenParam != nil {
+			options = &admin.WorkspacesClientListGitConnectionsOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := w.srv.NewListGitConnectionsPager(options)
+		newListGitConnectionsPager = &resp
+		w.newListGitConnectionsPager.add(req, newListGitConnectionsPager)
+		server.PagerResponderInjectNextLinks(newListGitConnectionsPager, req, func(page *admin.WorkspacesClientListGitConnectionsResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
+	}
+	resp, err := server.PagerResponderNext(newListGitConnectionsPager, req)
+	if err != nil {
+		return nil, err
+	}
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		w.newListGitConnectionsPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
+	}
+	if !server.PagerResponderMore(newListGitConnectionsPager) {
+		w.newListGitConnectionsPager.remove(req)
 	}
 	return resp, nil
 }

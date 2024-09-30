@@ -89,6 +89,70 @@ func (client *WorkspacesClient) getWorkspaceHandleResponse(resp *http.Response) 
 	return result, nil
 }
 
+// NewListGitConnectionsPager - This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 1,000 records
+// can be returned per request. With the continuous token provided in the response, you can get the next
+// 1,000 records.
+// PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
+// REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
+// LIMITATIONS Maximum 25 requests per minute.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes | |
+// INTERFACE
+//
+// Generated from API version v1
+//   - options - WorkspacesClientListGitConnectionsOptions contains the optional parameters for the WorkspacesClient.NewListGitConnectionsPager
+//     method.
+func (client *WorkspacesClient) NewListGitConnectionsPager(options *WorkspacesClientListGitConnectionsOptions) *runtime.Pager[WorkspacesClientListGitConnectionsResponse] {
+	return runtime.NewPager(runtime.PagingHandler[WorkspacesClientListGitConnectionsResponse]{
+		More: func(page WorkspacesClientListGitConnectionsResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *WorkspacesClientListGitConnectionsResponse) (WorkspacesClientListGitConnectionsResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "admin.WorkspacesClient.NewListGitConnectionsPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.listGitConnectionsCreateRequest(ctx, options)
+			}, nil)
+			if err != nil {
+				return WorkspacesClientListGitConnectionsResponse{}, err
+			}
+			return client.listGitConnectionsHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
+}
+
+// listGitConnectionsCreateRequest creates the ListGitConnections request.
+func (client *WorkspacesClient) listGitConnectionsCreateRequest(ctx context.Context, options *WorkspacesClientListGitConnectionsOptions) (*policy.Request, error) {
+	urlPath := "/v1/admin/workspaces/discoverGitConnections"
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// listGitConnectionsHandleResponse handles the ListGitConnections response.
+func (client *WorkspacesClient) listGitConnectionsHandleResponse(resp *http.Response) (WorkspacesClientListGitConnectionsResponse, error) {
+	result := WorkspacesClientListGitConnectionsResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.GitConnections); err != nil {
+		return WorkspacesClientListGitConnectionsResponse{}, err
+	}
+	return result, nil
+}
+
 // ListWorkspaceAccessDetails - PERMISSIONS The caller must have administrator rights (such as Office 365 Global administrator
 // or Fabric administrator) or authenticate using a service principal.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
@@ -229,6 +293,40 @@ func (client *WorkspacesClient) listWorkspacesHandleResponse(resp *http.Response
 }
 
 // Custom code starts below
+
+// ListGitConnections - returns array of GitConnectionDetails from all pages.
+// This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 1,000 records can be returned per request. With the continuous token provided in the response, you can get the next
+// 1,000 records.
+//
+// PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
+//
+// # REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
+//
+// LIMITATIONS Maximum 25 requests per minute.
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes | |
+//
+// INTERFACE
+// Generated from API version v1
+//   - options - WorkspacesClientListGitConnectionsOptions contains the optional parameters for the WorkspacesClient.NewListGitConnectionsPager method.
+func (client *WorkspacesClient) ListGitConnections(ctx context.Context, options *WorkspacesClientListGitConnectionsOptions) ([]GitConnectionDetails, error) {
+	pager := client.NewListGitConnectionsPager(options)
+	mapper := func(resp WorkspacesClientListGitConnectionsResponse) []GitConnectionDetails {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []GitConnectionDetails{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []GitConnectionDetails{}, err
+	}
+	return list, nil
+}
 
 // ListWorkspaces - returns array of Workspace from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records can be returned per request. With the continuous token provided in the response, you can get the next

@@ -1670,6 +1670,49 @@ func (g *GitConnection) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type GitHubDetails.
+func (g GitHubDetails) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "branchName", g.BranchName)
+	populate(objectMap, "directoryName", g.DirectoryName)
+	objectMap["gitProviderType"] = GitProviderTypeGitHub
+	populate(objectMap, "ownerName", g.OwnerName)
+	populate(objectMap, "repositoryName", g.RepositoryName)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type GitHubDetails.
+func (g *GitHubDetails) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", g, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "branchName":
+			err = unpopulate(val, "BranchName", &g.BranchName)
+			delete(rawMsg, key)
+		case "directoryName":
+			err = unpopulate(val, "DirectoryName", &g.DirectoryName)
+			delete(rawMsg, key)
+		case "gitProviderType":
+			err = unpopulate(val, "GitProviderType", &g.GitProviderType)
+			delete(rawMsg, key)
+		case "ownerName":
+			err = unpopulate(val, "OwnerName", &g.OwnerName)
+			delete(rawMsg, key)
+		case "repositoryName":
+			err = unpopulate(val, "RepositoryName", &g.RepositoryName)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", g, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type GitProviderDetails.
 func (g GitProviderDetails) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)

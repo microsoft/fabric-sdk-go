@@ -127,6 +127,24 @@ func PossibleExternalDataShareStatusValues() []ExternalDataShareStatus {
 	}
 }
 
+// GitProviderType - A Git provider type. Additional provider types may be added over time.
+type GitProviderType string
+
+const (
+	// GitProviderTypeAzureDevOps - Azure DevOps provider
+	GitProviderTypeAzureDevOps GitProviderType = "AzureDevOps"
+	// GitProviderTypeGitHub - GitHub provider
+	GitProviderTypeGitHub GitProviderType = "GitHub"
+)
+
+// PossibleGitProviderTypeValues returns the possible values for the GitProviderType const type.
+func PossibleGitProviderTypeValues() []GitProviderType {
+	return []GitProviderType{
+		GitProviderTypeAzureDevOps,
+		GitProviderTypeGitHub,
+	}
+}
+
 // GroupType - The type of the group. Additional group types may be added over time.
 type GroupType string
 

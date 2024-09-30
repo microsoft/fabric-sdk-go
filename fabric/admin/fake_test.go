@@ -250,6 +250,57 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ListWorkspaces() {
 	}
 }
 
+func (testsuite *FakeTestSuite) TestWorkspaces_ListGitConnections() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a list of Git connections for tenant example"},
+	})
+
+	exampleRes := admin.GitConnections{
+		ContinuationToken: to.Ptr("eyJMYXN0U2VlbkNvbm5lY3Rpb25JZCI6NX0="),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/admin/workspaces/discoverGitConnections?continuationToken=eyJMYXN0U2VlbkNvbm5lY3Rpb25JZCI6NX0="),
+		Value: []admin.GitConnectionDetails{
+			{
+				GitProviderDetails: &admin.AzureDevOpsDetails{
+					BranchName:       to.Ptr("Test Branch"),
+					DirectoryName:    to.Ptr("/Test Directory"),
+					GitProviderType:  to.Ptr(admin.GitProviderTypeAzureDevOps),
+					RepositoryName:   to.Ptr("Test Repo"),
+					OrganizationName: to.Ptr("Test Organization"),
+					ProjectName:      to.Ptr("Test Project"),
+				},
+				WorkspaceID: to.Ptr("41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"),
+			},
+			{
+				GitProviderDetails: &admin.GitHubDetails{
+					BranchName:      to.Ptr("Test Branch"),
+					DirectoryName:   to.Ptr("/"),
+					GitProviderType: to.Ptr(admin.GitProviderTypeGitHub),
+					RepositoryName:  to.Ptr("Test Repo"),
+					OwnerName:       to.Ptr("Test Owner"),
+				},
+				WorkspaceID: to.Ptr("17d8929d-ab32-46d1-858b-fdea74e93bf2"),
+			}},
+	}
+
+	testsuite.serverFactory.WorkspacesServer.NewListGitConnectionsPager = func(options *admin.WorkspacesClientListGitConnectionsOptions) (resp azfake.PagerResponder[admin.WorkspacesClientListGitConnectionsResponse]) {
+		resp = azfake.PagerResponder[admin.WorkspacesClientListGitConnectionsResponse]{}
+		resp.AddPage(http.StatusOK, admin.WorkspacesClientListGitConnectionsResponse{GitConnections: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	pager := client.NewListGitConnectionsPager(&admin.WorkspacesClientListGitConnectionsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.GitConnections))
+		if err == nil {
+			break
+		}
+	}
+}
+
 func (testsuite *FakeTestSuite) TestWorkspaces_GetWorkspace() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{

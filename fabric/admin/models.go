@@ -54,6 +54,37 @@ type AssignDomainWorkspacesByPrincipalsRequest struct {
 	Principals []Principal
 }
 
+// AzureDevOpsDetails - Azure DevOps provider details.
+type AzureDevOpsDetails struct {
+	// REQUIRED; The branch name. Maximum length is 250 characters.
+	BranchName *string
+
+	// REQUIRED; The directory name. Maximum length is 256 characters.
+	DirectoryName *string
+
+	// REQUIRED; A Git provider type. Additional provider types may be added over time.
+	GitProviderType *GitProviderType
+
+	// REQUIRED; The organization name. Maximum length is 100 characters.
+	OrganizationName *string
+
+	// REQUIRED; The project name. Maximum length is 100 characters.
+	ProjectName *string
+
+	// REQUIRED; The repository name. Maximum length is 128 characters.
+	RepositoryName *string
+}
+
+// GetGitProviderDetails implements the GitProviderDetailsClassification interface for type AzureDevOpsDetails.
+func (a *AzureDevOpsDetails) GetGitProviderDetails() *GitProviderDetails {
+	return &GitProviderDetails{
+		BranchName:      a.BranchName,
+		DirectoryName:   a.DirectoryName,
+		GitProviderType: a.GitProviderType,
+		RepositoryName:  a.RepositoryName,
+	}
+}
+
 // CreateDomainRequest - The request payload for creating a domain or subdomain.
 type CreateDomainRequest struct {
 	// REQUIRED; The domain display name. The display name cannot contain more than 40 characters.
@@ -178,6 +209,73 @@ type ExternalDataShares struct {
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
 }
+
+// GitConnectionDetails - Represents the details of a Git connection for a workspace.
+type GitConnectionDetails struct {
+	// REQUIRED; The provider details.
+	GitProviderDetails GitProviderDetailsClassification
+
+	// REQUIRED; The workspace ID.
+	WorkspaceID *string
+}
+
+// GitConnections - A response wrapper for a list of all the Git connections for a given tenant with a continuous token.
+type GitConnections struct {
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+
+	// The list of Git connections for a given tenant.
+	Value []GitConnectionDetails
+}
+
+// GitHubDetails - GitHub provider details.
+type GitHubDetails struct {
+	// REQUIRED; The branch name. Maximum length is 250 characters.
+	BranchName *string
+
+	// REQUIRED; The directory name. Maximum length is 256 characters.
+	DirectoryName *string
+
+	// REQUIRED; A Git provider type. Additional provider types may be added over time.
+	GitProviderType *GitProviderType
+
+	// REQUIRED; The owner name. Maximum length is 100 characters.
+	OwnerName *string
+
+	// REQUIRED; The repository name. Maximum length is 128 characters.
+	RepositoryName *string
+}
+
+// GetGitProviderDetails implements the GitProviderDetailsClassification interface for type GitHubDetails.
+func (g *GitHubDetails) GetGitProviderDetails() *GitProviderDetails {
+	return &GitProviderDetails{
+		BranchName:      g.BranchName,
+		DirectoryName:   g.DirectoryName,
+		GitProviderType: g.GitProviderType,
+		RepositoryName:  g.RepositoryName,
+	}
+}
+
+// GitProviderDetails - The Git provider details.
+type GitProviderDetails struct {
+	// REQUIRED; The branch name. Maximum length is 250 characters.
+	BranchName *string
+
+	// REQUIRED; The directory name. Maximum length is 256 characters.
+	DirectoryName *string
+
+	// REQUIRED; A Git provider type. Additional provider types may be added over time.
+	GitProviderType *GitProviderType
+
+	// REQUIRED; The repository name. Maximum length is 128 characters.
+	RepositoryName *string
+}
+
+// GetGitProviderDetails implements the GitProviderDetailsClassification interface for type GitProviderDetails.
+func (g *GitProviderDetails) GetGitProviderDetails() *GitProviderDetails { return g }
 
 // Item details.
 type Item struct {

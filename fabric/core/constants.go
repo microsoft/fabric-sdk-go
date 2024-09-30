@@ -334,12 +334,15 @@ type GitProviderType string
 const (
 	// GitProviderTypeAzureDevOps - Azure DevOps provider
 	GitProviderTypeAzureDevOps GitProviderType = "AzureDevOps"
+	// GitProviderTypeGitHub - GitHub provider
+	GitProviderTypeGitHub GitProviderType = "GitHub"
 )
 
 // PossibleGitProviderTypeValues returns the possible values for the GitProviderType const type.
 func PossibleGitProviderTypeValues() []GitProviderType {
 	return []GitProviderType{
 		GitProviderTypeAzureDevOps,
+		GitProviderTypeGitHub,
 	}
 }
 

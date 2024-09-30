@@ -718,6 +718,34 @@ type GitConnection struct {
 	GitSyncDetails *GitSyncDetails
 }
 
+// GitHubDetails - GitHub provider details.
+type GitHubDetails struct {
+	// REQUIRED; The branch name. Maximum length is 250 characters.
+	BranchName *string
+
+	// REQUIRED; The directory name. Maximum length is 256 characters.
+	DirectoryName *string
+
+	// REQUIRED; A Git provider type. Additional provider types may be added over time.
+	GitProviderType *GitProviderType
+
+	// REQUIRED; The owner name. Maximum length is 100 characters.
+	OwnerName *string
+
+	// REQUIRED; The repository name. Maximum length is 128 characters.
+	RepositoryName *string
+}
+
+// GetGitProviderDetails implements the GitProviderDetailsClassification interface for type GitHubDetails.
+func (g *GitHubDetails) GetGitProviderDetails() *GitProviderDetails {
+	return &GitProviderDetails{
+		BranchName:      g.BranchName,
+		DirectoryName:   g.DirectoryName,
+		GitProviderType: g.GitProviderType,
+		RepositoryName:  g.RepositoryName,
+	}
+}
+
 // GitProviderDetails - The Git provider details.
 type GitProviderDetails struct {
 	// REQUIRED; The branch name. Maximum length is 250 characters.

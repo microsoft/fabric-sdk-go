@@ -4,7 +4,7 @@
 // Changes may cause incorrect behavior and will be lost if the code is regenerated.
 // SPDX-License-Identifier: MIT
 
-package core
+package admin
 
 // GitProviderDetailsClassification provides polymorphic access to related types.
 // Call the interface's GetGitProviderDetails() method to access the common type.
@@ -13,13 +13,4 @@ package core
 type GitProviderDetailsClassification interface {
 	// GetGitProviderDetails returns the GitProviderDetails content of the underlying type.
 	GetGitProviderDetails() *GitProviderDetails
-}
-
-// ScheduleConfigClassification provides polymorphic access to related types.
-// Call the interface's GetScheduleConfig() method to access the common type.
-// Use a type switch to determine the concrete type.  The possible types are:
-// - *CronScheduleConfig, *DailyScheduleConfig, *ScheduleConfig, *WeeklyScheduleConfig
-type ScheduleConfigClassification interface {
-	// GetScheduleConfig returns the ScheduleConfig content of the underlying type.
-	GetScheduleConfig() *ScheduleConfig
 }
