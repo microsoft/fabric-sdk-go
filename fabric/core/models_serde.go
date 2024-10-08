@@ -2569,6 +2569,37 @@ func (o *OneLake) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type OneLakeEndpoints.
+func (o OneLakeEndpoints) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "blobEndpoint", o.BlobEndpoint)
+	populate(objectMap, "dfsEndpoint", o.DfsEndpoint)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type OneLakeEndpoints.
+func (o *OneLakeEndpoints) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", o, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "blobEndpoint":
+			err = unpopulate(val, "BlobEndpoint", &o.BlobEndpoint)
+			delete(rawMsg, key)
+		case "dfsEndpoint":
+			err = unpopulate(val, "DfsEndpoint", &o.DfsEndpoint)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", o, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type OperationState.
 func (o OperationState) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -3437,9 +3468,11 @@ func (w WorkspaceInfo) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "capacityAssignmentProgress", w.CapacityAssignmentProgress)
 	populate(objectMap, "capacityId", w.CapacityID)
+	populate(objectMap, "capacityRegion", w.CapacityRegion)
 	populate(objectMap, "description", w.Description)
 	populate(objectMap, "displayName", w.DisplayName)
 	populate(objectMap, "id", w.ID)
+	populate(objectMap, "oneLakeEndpoints", w.OneLakeEndpoints)
 	populate(objectMap, "type", w.Type)
 	populate(objectMap, "workspaceIdentity", w.WorkspaceIdentity)
 	return json.Marshal(objectMap)
@@ -3460,6 +3493,9 @@ func (w *WorkspaceInfo) UnmarshalJSON(data []byte) error {
 		case "capacityId":
 			err = unpopulate(val, "CapacityID", &w.CapacityID)
 			delete(rawMsg, key)
+		case "capacityRegion":
+			err = unpopulate(val, "CapacityRegion", &w.CapacityRegion)
+			delete(rawMsg, key)
 		case "description":
 			err = unpopulate(val, "Description", &w.Description)
 			delete(rawMsg, key)
@@ -3468,6 +3504,9 @@ func (w *WorkspaceInfo) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &w.ID)
+			delete(rawMsg, key)
+		case "oneLakeEndpoints":
+			err = unpopulate(val, "OneLakeEndpoints", &w.OneLakeEndpoints)
 			delete(rawMsg, key)
 		case "type":
 			err = unpopulate(val, "Type", &w.Type)

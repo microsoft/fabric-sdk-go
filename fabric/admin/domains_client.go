@@ -32,7 +32,7 @@ type DomainsClient struct {
 
 // BeginAssignDomainWorkspacesByCapacities - Preexisting domain assignments will be overridden unless bulk reassignment is
 // blocked by domain management tenant settings.
-// PERMISSIONS The caller must have administrator rights such as Office 365 Global administrator or Fabric administrator.
+// PERMISSIONS The caller must be a Fabric administrator.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 10 requests per one minute per principal.
@@ -55,7 +55,7 @@ func (client *DomainsClient) BeginAssignDomainWorkspacesByCapacities(ctx context
 
 // AssignDomainWorkspacesByCapacities - Preexisting domain assignments will be overridden unless bulk reassignment is blocked
 // by domain management tenant settings.
-// PERMISSIONS The caller must have administrator rights such as Office 365 Global administrator or Fabric administrator.
+// PERMISSIONS The caller must be a Fabric administrator.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 10 requests per one minute per principal.
@@ -109,7 +109,7 @@ func (client *DomainsClient) assignDomainWorkspacesByCapacitiesCreateRequest(ctx
 
 // AssignDomainWorkspacesByIDs - Preexisting domain assignments will be overridden unless bulk reassignment is blocked by
 // domain management tenant settings.
-// PERMISSIONS The caller must have administrator rights such as Office 365 Global administrator or Fabric administrator.
+// PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 10 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -166,7 +166,7 @@ func (client *DomainsClient) assignDomainWorkspacesByIDsCreateRequest(ctx contex
 
 // BeginAssignDomainWorkspacesByPrincipals - Preexisting domain assignments will be overridden unless bulk reassignment is
 // blocked by domain management tenant settings.
-// PERMISSIONS The caller must have administrator rights such as Office 365 Global administrator or Fabric administrator.
+// PERMISSIONS The caller must be a Fabric administrator.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 10 requests per one minute per principal.
@@ -189,7 +189,7 @@ func (client *DomainsClient) BeginAssignDomainWorkspacesByPrincipals(ctx context
 
 // AssignDomainWorkspacesByPrincipals - Preexisting domain assignments will be overridden unless bulk reassignment is blocked
 // by domain management tenant settings.
-// PERMISSIONS The caller must have administrator rights such as Office 365 Global administrator or Fabric administrator.
+// PERMISSIONS The caller must be a Fabric administrator.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 10 requests per one minute per principal.
@@ -241,8 +241,7 @@ func (client *DomainsClient) assignDomainWorkspacesByPrincipalsCreateRequest(ctx
 	return req, nil
 }
 
-// CreateDomain - PERMISSIONS The caller must have administrator rights such as Office 365 Global administrator or Fabric
-// administrator.
+// CreateDomain - PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -301,8 +300,7 @@ func (client *DomainsClient) createDomainHandleResponse(resp *http.Response) (Do
 	return result, nil
 }
 
-// DeleteDomain - PERMISSIONS The caller must have administrator rights such as Office 365 Global administrator or Fabric
-// administrator.
+// DeleteDomain - PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -352,7 +350,7 @@ func (client *DomainsClient) deleteDomainCreateRequest(ctx context.Context, doma
 	return req, nil
 }
 
-// GetDomain - PERMISSIONS The caller must have administrator rights such as Office 365 Global administrator or Fabric administrator.
+// GetDomain - PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -413,7 +411,7 @@ func (client *DomainsClient) getDomainHandleResponse(resp *http.Response) (Domai
 }
 
 // NewListDomainWorkspacesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have administrator rights such as Office 365 Global administrator or Fabric administrator.
+// PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -479,7 +477,7 @@ func (client *DomainsClient) listDomainWorkspacesHandleResponse(resp *http.Respo
 	return result, nil
 }
 
-// ListDomains - PERMISSIONS The caller must have administrator rights such as Office 365 Global administrator or Fabric administrator.
+// ListDomains - PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -539,8 +537,7 @@ func (client *DomainsClient) listDomainsHandleResponse(resp *http.Response) (Dom
 	return result, nil
 }
 
-// RoleAssignmentsBulkAssign - PERMISSIONS The caller must have administrator rights such as Office 365 Global administrator
-// or Fabric administrator.
+// RoleAssignmentsBulkAssign - PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -595,8 +592,7 @@ func (client *DomainsClient) roleAssignmentsBulkAssignCreateRequest(ctx context.
 	return req, nil
 }
 
-// RoleAssignmentsBulkUnassign - PERMISSIONS The caller must have administrator rights such as Office 365 Global administrator
-// or Fabric administrator.
+// RoleAssignmentsBulkUnassign - PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -651,8 +647,7 @@ func (client *DomainsClient) roleAssignmentsBulkUnassignCreateRequest(ctx contex
 	return req, nil
 }
 
-// UnassignAllDomainWorkspaces - PERMISSIONS The caller must have administrator rights such as Office 365 Global administrator
-// or Fabric administrator.
+// UnassignAllDomainWorkspaces - PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 10 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -703,8 +698,7 @@ func (client *DomainsClient) unassignAllDomainWorkspacesCreateRequest(ctx contex
 	return req, nil
 }
 
-// UnassignDomainWorkspacesByIDs - PERMISSIONS The caller must have administrator rights such as Office 365 Global administrator
-// or Fabric administrator.
+// UnassignDomainWorkspacesByIDs - PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -761,8 +755,7 @@ func (client *DomainsClient) unassignDomainWorkspacesByIDsCreateRequest(ctx cont
 	return req, nil
 }
 
-// UpdateDomain - PERMISSIONS The caller must have administrator rights such as Office 365 Global administrator or Fabric
-// administrator.
+// UpdateDomain - PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -831,7 +824,7 @@ func (client *DomainsClient) updateDomainHandleResponse(resp *http.Response) (Do
 // AssignDomainWorkspacesByCapacities - returns DomainsClientAssignDomainWorkspacesByCapacitiesResponse in sync mode.
 // Preexisting domain assignments will be overridden unless bulk reassignment is blocked by domain management tenant settings.
 //
-// PERMISSIONS The caller must have administrator rights such as Office 365 Global administrator or Fabric administrator.
+// PERMISSIONS The caller must be a Fabric administrator.
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
@@ -905,7 +898,7 @@ func (client *DomainsClient) beginAssignDomainWorkspacesByCapacities(ctx context
 // AssignDomainWorkspacesByPrincipals - returns DomainsClientAssignDomainWorkspacesByPrincipalsResponse in sync mode.
 // Preexisting domain assignments will be overridden unless bulk reassignment is blocked by domain management tenant settings.
 //
-// PERMISSIONS The caller must have administrator rights such as Office 365 Global administrator or Fabric administrator.
+// PERMISSIONS The caller must be a Fabric administrator.
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
@@ -979,7 +972,7 @@ func (client *DomainsClient) beginAssignDomainWorkspacesByPrincipals(ctx context
 // ListDomainWorkspaces - returns array of DomainWorkspace from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have administrator rights such as Office 365 Global administrator or Fabric administrator.
+// PERMISSIONS The caller must be a Fabric administrator.
 //
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All.
 //

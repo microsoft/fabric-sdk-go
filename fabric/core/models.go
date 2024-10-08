@@ -1056,6 +1056,19 @@ type OneLake struct {
 	WorkspaceID *string
 }
 
+// OneLakeEndpoints - The OneLake API endpoints associated with this workspace.
+type OneLakeEndpoints struct {
+	// READ-ONLY; The OneLake API endpoint available for Blob API operations. This is a region specific endpoint, unless the tenant
+	// has Private Link enabled and public access disabled, in which case the global endpoint
+	// is provided.
+	BlobEndpoint *string
+
+	// READ-ONLY; The OneLake API endpoint available for Distributed File System (DFS) or ADLSgen2 filesystem API operations.
+	// This is a region specific endpoint, unless the tenant has Private Link enabled and public
+	// access disabled, in which case the global endpoint is provided.
+	DfsEndpoint *string
+}
+
 // OperationState - An object describing the details and current state of a long running operation
 type OperationState struct {
 	// REQUIRED; The start date and time of the operation
@@ -1397,6 +1410,12 @@ type WorkspaceInfo struct {
 
 	// READ-ONLY; The ID of the capacity the workspace is assigned to.
 	CapacityID *string
+
+	// READ-ONLY; The region of the capacity associated with this workspace.
+	CapacityRegion *CapacityRegion
+
+	// READ-ONLY; The OneLake API endpoints associated with this workspace.
+	OneLakeEndpoints *OneLakeEndpoints
 
 	// READ-ONLY; The workspace type.
 	Type *WorkspaceType

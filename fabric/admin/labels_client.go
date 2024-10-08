@@ -26,7 +26,7 @@ type LabelsClient struct {
 
 // BulkRemoveLabels - For a usage example, see Set or remove sensitivity labels [/power-bi/admin/service-security-sensitivity-label-inheritance-set-remove-api].
 // PERMISSIONS
-// * The user must have administrator rights (such as Office 365 Global Administrator or Fabric Administrator).
+// * The user must be a Fabric Administrator.
 // * The admin user must have sufficient usage rights [/azure/information-protection/configure-usage-rights] to delete labels.
 // REQUIRED SCOPE Tenant.ReadWrite.All
 // LIMITATIONS
@@ -92,7 +92,7 @@ func (client *LabelsClient) bulkRemoveLabelsHandleResponse(resp *http.Response) 
 // the label included in their label policy [/purview/create-sensitivity-labels?view=o365-worldwide]
 // . For a usage example see: Set or remove sensitivity labels [/power-bi/admin/service-security-sensitivity-label-inheritance-set-remove-api].
 // PERMISSIONS
-// * The user must have administrator rights like Office 365 Global Administrator or Fabric Administrator.
+// * The user must be a Fabric Administrator.
 // * The admin user and the delegated user, if provided, must have sufficient usage rights [/azure/information-protection/configure-usage-rights]
 // to set labels.
 // REQUIRED SCOPE Tenant.ReadWrite.All

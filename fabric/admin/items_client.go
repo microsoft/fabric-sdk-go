@@ -28,8 +28,7 @@ type ItemsClient struct {
 	endpoint string
 }
 
-// GetItem - PERMISSIONS The caller must have administrator rights (such as Office 365 Global administrator or Fabric administrator)
-// or authenticate using a service principal.
+// GetItem - PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
 // LIMITATIONS Maximum 200 requests per hour.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -99,8 +98,7 @@ func (client *ItemsClient) getItemHandleResponse(resp *http.Response) (ItemsClie
 	return result, nil
 }
 
-// ListItemAccessDetails - PERMISSIONS The caller must have administrator rights (such as Office 365 Global administrator
-// or Fabric administrator) or authenticate using a service principal.
+// ListItemAccessDetails - PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
 // LIMITATIONS Maximum 200 requests per hour.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -182,8 +180,7 @@ func (client *ItemsClient) listItemAccessDetailsHandleResponse(resp *http.Respon
 // 5. SemanticModels
 // 6. Apps
 // 7. Dataflows
-// PERMISSIONS The caller must have administrator rights (such as Office 365 Global administrator or Fabric administrator)
-// or authenticate using a service principal.
+// PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
 // LIMITATIONS Maximum 200 requests per hour.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -271,7 +268,7 @@ func (client *ItemsClient) listItemsHandleResponse(resp *http.Response) (ItemsCl
 //  6. Apps
 //  7. Dataflows
 //
-// PERMISSIONS The caller must have administrator rights (such as Office 365 Global administrator or Fabric administrator) or authenticate using a service principal.
+// PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
 //
 // # REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
 //
