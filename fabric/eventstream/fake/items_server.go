@@ -26,7 +26,7 @@ import (
 // ItemsServer is a fake server for instances of the eventstream.ItemsClient type.
 type ItemsServer struct {
 	// BeginCreateEventstream is the fake for method ItemsClient.BeginCreateEventstream
-	// HTTP status codes to indicate success: http.StatusCreated, http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated, http.StatusAccepted
 	BeginCreateEventstream func(ctx context.Context, workspaceID string, createEventstreamRequest eventstream.CreateEventstreamRequest, options *eventstream.ItemsClientBeginCreateEventstreamOptions) (resp azfake.PollerResponder[eventstream.ItemsClientCreateEventstreamResponse], errResp azfake.ErrorResponder)
 
 	// DeleteEventstream is the fake for method ItemsClient.DeleteEventstream
@@ -79,25 +79,38 @@ func (i *ItemsServerTransport) Do(req *http.Request) (*http.Response, error) {
 }
 
 func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "ItemsClient.BeginCreateEventstream":
-		resp, err = i.dispatchBeginCreateEventstream(req)
-	case "ItemsClient.DeleteEventstream":
-		resp, err = i.dispatchDeleteEventstream(req)
-	case "ItemsClient.GetEventstream":
-		resp, err = i.dispatchGetEventstream(req)
-	case "ItemsClient.NewListEventstreamsPager":
-		resp, err = i.dispatchNewListEventstreamsPager(req)
-	case "ItemsClient.UpdateEventstream":
-		resp, err = i.dispatchUpdateEventstream(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "ItemsClient.BeginCreateEventstream":
+			res.resp, res.err = i.dispatchBeginCreateEventstream(req)
+		case "ItemsClient.DeleteEventstream":
+			res.resp, res.err = i.dispatchDeleteEventstream(req)
+		case "ItemsClient.GetEventstream":
+			res.resp, res.err = i.dispatchGetEventstream(req)
+		case "ItemsClient.NewListEventstreamsPager":
+			res.resp, res.err = i.dispatchNewListEventstreamsPager(req)
+		case "ItemsClient.UpdateEventstream":
+			res.resp, res.err = i.dispatchUpdateEventstream(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (i *ItemsServerTransport) dispatchBeginCreateEventstream(req *http.Request) (*http.Response, error) {
@@ -133,9 +146,9 @@ func (i *ItemsServerTransport) dispatchBeginCreateEventstream(req *http.Request)
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
 		i.beginCreateEventstream.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginCreateEventstream) {
 		i.beginCreateEventstream.remove(req)

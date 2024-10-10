@@ -14,7 +14,7 @@ type BackgroundJobsClientRunOnDemandTableMaintenanceOptions struct {
 
 // ItemsClientBeginCreateLakehouseOptions contains the optional parameters for the ItemsClient.BeginCreateLakehouse method.
 type ItemsClientBeginCreateLakehouseOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 
@@ -41,7 +41,7 @@ type ItemsClientUpdateLakehouseOptions struct {
 
 // TablesClientBeginLoadTableOptions contains the optional parameters for the TablesClient.BeginLoadTable method.
 type TablesClientBeginLoadTableOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 

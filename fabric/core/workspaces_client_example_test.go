@@ -214,6 +214,11 @@ func ExampleWorkspacesClient_GetWorkspace() {
 	// 	DisplayName: to.Ptr("New workspace"),
 	// 	ID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
 	// 	CapacityAssignmentProgress: to.Ptr(core.CapacityAssignmentProgressCompleted),
+	// 	CapacityRegion: to.Ptr(core.CapacityRegionEastUS),
+	// 	OneLakeEndpoints: &core.OneLakeEndpoints{
+	// 		BlobEndpoint: to.Ptr("https://eastus-onelake.blob.fabric.microsoft.com"),
+	// 		DfsEndpoint: to.Ptr("https://eastus-onelake.dfs.fabric.microsoft.com"),
+	// 	},
 	// 	WorkspaceIdentity: &core.WorkspaceIdentity{
 	// 		ApplicationID: to.Ptr("00a4a8f9-78d3-41b3-b87a-6ae5271c8d0d"),
 	// 		ServicePrincipalID: to.Ptr("5ba4ae58-d402-45c6-a848-0253e834fd78"),

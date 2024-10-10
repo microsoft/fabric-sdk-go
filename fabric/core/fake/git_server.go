@@ -26,7 +26,7 @@ import (
 // GitServer is a fake server for instances of the core.GitClient type.
 type GitServer struct {
 	// BeginCommitToGit is the fake for method GitClient.BeginCommitToGit
-	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
 	BeginCommitToGit func(ctx context.Context, workspaceID string, commitToGitRequest core.CommitToGitRequest, options *core.GitClientBeginCommitToGitOptions) (resp azfake.PollerResponder[core.GitClientCommitToGitResponse], errResp azfake.ErrorResponder)
 
 	// Connect is the fake for method GitClient.Connect
@@ -50,7 +50,7 @@ type GitServer struct {
 	BeginInitializeConnection func(ctx context.Context, workspaceID string, options *core.GitClientBeginInitializeConnectionOptions) (resp azfake.PollerResponder[core.GitClientInitializeConnectionResponse], errResp azfake.ErrorResponder)
 
 	// BeginUpdateFromGit is the fake for method GitClient.BeginUpdateFromGit
-	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
 	BeginUpdateFromGit func(ctx context.Context, workspaceID string, updateFromGitRequest core.UpdateFromGitRequest, options *core.GitClientBeginUpdateFromGitOptions) (resp azfake.PollerResponder[core.GitClientUpdateFromGitResponse], errResp azfake.ErrorResponder)
 }
 
@@ -91,29 +91,42 @@ func (g *GitServerTransport) Do(req *http.Request) (*http.Response, error) {
 }
 
 func (g *GitServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "GitClient.BeginCommitToGit":
-		resp, err = g.dispatchBeginCommitToGit(req)
-	case "GitClient.Connect":
-		resp, err = g.dispatchConnect(req)
-	case "GitClient.Disconnect":
-		resp, err = g.dispatchDisconnect(req)
-	case "GitClient.GetConnection":
-		resp, err = g.dispatchGetConnection(req)
-	case "GitClient.BeginGetStatus":
-		resp, err = g.dispatchBeginGetStatus(req)
-	case "GitClient.BeginInitializeConnection":
-		resp, err = g.dispatchBeginInitializeConnection(req)
-	case "GitClient.BeginUpdateFromGit":
-		resp, err = g.dispatchBeginUpdateFromGit(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "GitClient.BeginCommitToGit":
+			res.resp, res.err = g.dispatchBeginCommitToGit(req)
+		case "GitClient.Connect":
+			res.resp, res.err = g.dispatchConnect(req)
+		case "GitClient.Disconnect":
+			res.resp, res.err = g.dispatchDisconnect(req)
+		case "GitClient.GetConnection":
+			res.resp, res.err = g.dispatchGetConnection(req)
+		case "GitClient.BeginGetStatus":
+			res.resp, res.err = g.dispatchBeginGetStatus(req)
+		case "GitClient.BeginInitializeConnection":
+			res.resp, res.err = g.dispatchBeginInitializeConnection(req)
+		case "GitClient.BeginUpdateFromGit":
+			res.resp, res.err = g.dispatchBeginUpdateFromGit(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (g *GitServerTransport) dispatchBeginCommitToGit(req *http.Request) (*http.Response, error) {
@@ -149,9 +162,9 @@ func (g *GitServerTransport) dispatchBeginCommitToGit(req *http.Request) (*http.
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
 		g.beginCommitToGit.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginCommitToGit) {
 		g.beginCommitToGit.remove(req)
@@ -374,9 +387,9 @@ func (g *GitServerTransport) dispatchBeginUpdateFromGit(req *http.Request) (*htt
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
 		g.beginUpdateFromGit.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginUpdateFromGit) {
 		g.beginUpdateFromGit.remove(req)

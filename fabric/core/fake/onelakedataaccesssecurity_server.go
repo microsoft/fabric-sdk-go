@@ -61,19 +61,32 @@ func (o *OneLakeDataAccessSecurityServerTransport) Do(req *http.Request) (*http.
 }
 
 func (o *OneLakeDataAccessSecurityServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "OneLakeDataAccessSecurityClient.CreateOrUpdateDataAccessRoles":
-		resp, err = o.dispatchCreateOrUpdateDataAccessRoles(req)
-	case "OneLakeDataAccessSecurityClient.ListDataAccessRoles":
-		resp, err = o.dispatchListDataAccessRoles(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "OneLakeDataAccessSecurityClient.CreateOrUpdateDataAccessRoles":
+			res.resp, res.err = o.dispatchCreateOrUpdateDataAccessRoles(req)
+		case "OneLakeDataAccessSecurityClient.ListDataAccessRoles":
+			res.resp, res.err = o.dispatchListDataAccessRoles(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (o *OneLakeDataAccessSecurityServerTransport) dispatchCreateOrUpdateDataAccessRoles(req *http.Request) (*http.Response, error) {

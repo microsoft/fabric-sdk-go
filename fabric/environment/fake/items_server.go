@@ -26,7 +26,7 @@ import (
 // ItemsServer is a fake server for instances of the environment.ItemsClient type.
 type ItemsServer struct {
 	// BeginCreateEnvironment is the fake for method ItemsClient.BeginCreateEnvironment
-	// HTTP status codes to indicate success: http.StatusCreated, http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated, http.StatusAccepted
 	BeginCreateEnvironment func(ctx context.Context, workspaceID string, createEnvironmentRequest environment.CreateEnvironmentRequest, options *environment.ItemsClientBeginCreateEnvironmentOptions) (resp azfake.PollerResponder[environment.ItemsClientCreateEnvironmentResponse], errResp azfake.ErrorResponder)
 
 	// DeleteEnvironment is the fake for method ItemsClient.DeleteEnvironment
@@ -79,25 +79,38 @@ func (i *ItemsServerTransport) Do(req *http.Request) (*http.Response, error) {
 }
 
 func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "ItemsClient.BeginCreateEnvironment":
-		resp, err = i.dispatchBeginCreateEnvironment(req)
-	case "ItemsClient.DeleteEnvironment":
-		resp, err = i.dispatchDeleteEnvironment(req)
-	case "ItemsClient.GetEnvironment":
-		resp, err = i.dispatchGetEnvironment(req)
-	case "ItemsClient.NewListEnvironmentsPager":
-		resp, err = i.dispatchNewListEnvironmentsPager(req)
-	case "ItemsClient.UpdateEnvironment":
-		resp, err = i.dispatchUpdateEnvironment(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "ItemsClient.BeginCreateEnvironment":
+			res.resp, res.err = i.dispatchBeginCreateEnvironment(req)
+		case "ItemsClient.DeleteEnvironment":
+			res.resp, res.err = i.dispatchDeleteEnvironment(req)
+		case "ItemsClient.GetEnvironment":
+			res.resp, res.err = i.dispatchGetEnvironment(req)
+		case "ItemsClient.NewListEnvironmentsPager":
+			res.resp, res.err = i.dispatchNewListEnvironmentsPager(req)
+		case "ItemsClient.UpdateEnvironment":
+			res.resp, res.err = i.dispatchUpdateEnvironment(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (i *ItemsServerTransport) dispatchBeginCreateEnvironment(req *http.Request) (*http.Response, error) {
@@ -133,9 +146,9 @@ func (i *ItemsServerTransport) dispatchBeginCreateEnvironment(req *http.Request)
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
 		i.beginCreateEnvironment.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginCreateEnvironment) {
 		i.beginCreateEnvironment.remove(req)

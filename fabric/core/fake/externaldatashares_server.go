@@ -73,23 +73,36 @@ func (e *ExternalDataSharesServerTransport) Do(req *http.Request) (*http.Respons
 }
 
 func (e *ExternalDataSharesServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "ExternalDataSharesClient.CreateExternalDataShare":
-		resp, err = e.dispatchCreateExternalDataShare(req)
-	case "ExternalDataSharesClient.GetExternalDataShare":
-		resp, err = e.dispatchGetExternalDataShare(req)
-	case "ExternalDataSharesClient.NewListExternalDataSharesInItemPager":
-		resp, err = e.dispatchNewListExternalDataSharesInItemPager(req)
-	case "ExternalDataSharesClient.RevokeExternalDataShare":
-		resp, err = e.dispatchRevokeExternalDataShare(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "ExternalDataSharesClient.CreateExternalDataShare":
+			res.resp, res.err = e.dispatchCreateExternalDataShare(req)
+		case "ExternalDataSharesClient.GetExternalDataShare":
+			res.resp, res.err = e.dispatchGetExternalDataShare(req)
+		case "ExternalDataSharesClient.NewListExternalDataSharesInItemPager":
+			res.resp, res.err = e.dispatchNewListExternalDataSharesInItemPager(req)
+		case "ExternalDataSharesClient.RevokeExternalDataShare":
+			res.resp, res.err = e.dispatchRevokeExternalDataShare(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (e *ExternalDataSharesServerTransport) dispatchCreateExternalDataShare(req *http.Request) (*http.Response, error) {

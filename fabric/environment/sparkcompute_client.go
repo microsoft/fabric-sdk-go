@@ -65,7 +65,7 @@ func (client *SparkComputeClient) GetPublishedSettings(ctx context.Context, work
 }
 
 // getPublishedSettingsCreateRequest creates the GetPublishedSettings request.
-func (client *SparkComputeClient) getPublishedSettingsCreateRequest(ctx context.Context, workspaceID string, environmentID string, options *SparkComputeClientGetPublishedSettingsOptions) (*policy.Request, error) {
+func (client *SparkComputeClient) getPublishedSettingsCreateRequest(ctx context.Context, workspaceID string, environmentID string, _ *SparkComputeClientGetPublishedSettingsOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/sparkcompute"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -130,7 +130,7 @@ func (client *SparkComputeClient) GetStagingSettings(ctx context.Context, worksp
 }
 
 // getStagingSettingsCreateRequest creates the GetStagingSettings request.
-func (client *SparkComputeClient) getStagingSettingsCreateRequest(ctx context.Context, workspaceID string, environmentID string, options *SparkComputeClientGetStagingSettingsOptions) (*policy.Request, error) {
+func (client *SparkComputeClient) getStagingSettingsCreateRequest(ctx context.Context, workspaceID string, environmentID string, _ *SparkComputeClientGetStagingSettingsOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/staging/sparkcompute"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -196,7 +196,7 @@ func (client *SparkComputeClient) UpdateStagingSettings(ctx context.Context, wor
 }
 
 // updateStagingSettingsCreateRequest creates the UpdateStagingSettings request.
-func (client *SparkComputeClient) updateStagingSettingsCreateRequest(ctx context.Context, workspaceID string, environmentID string, updateEnvironmentSparkComputeRequest UpdateEnvironmentSparkComputeRequest, options *SparkComputeClientUpdateStagingSettingsOptions) (*policy.Request, error) {
+func (client *SparkComputeClient) updateStagingSettingsCreateRequest(ctx context.Context, workspaceID string, environmentID string, updateEnvironmentSparkComputeRequest UpdateEnvironmentSparkComputeRequest, _ *SparkComputeClientUpdateStagingSettingsOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/staging/sparkcompute"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")

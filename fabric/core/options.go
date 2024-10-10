@@ -16,7 +16,7 @@ type CapacitiesClientListCapacitiesOptions struct {
 // DeploymentPipelinesClientBeginDeployStageContentOptions contains the optional parameters for the DeploymentPipelinesClient.BeginDeployStageContent
 // method.
 type DeploymentPipelinesClientBeginDeployStageContentOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 
@@ -74,13 +74,13 @@ type ExternalDataSharesClientRevokeExternalDataShareOptions struct {
 
 // GitClientBeginCommitToGitOptions contains the optional parameters for the GitClient.BeginCommitToGit method.
 type GitClientBeginCommitToGitOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 
 // GitClientBeginGetStatusOptions contains the optional parameters for the GitClient.BeginGetStatus method.
 type GitClientBeginGetStatusOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 
@@ -90,13 +90,13 @@ type GitClientBeginInitializeConnectionOptions struct {
 	// Initialize the connection request payload.
 	GitInitializeConnectionRequest *InitializeGitConnectionRequest
 
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 
 // GitClientBeginUpdateFromGitOptions contains the optional parameters for the GitClient.BeginUpdateFromGit method.
 type GitClientBeginUpdateFromGitOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 
@@ -117,7 +117,7 @@ type GitClientGetConnectionOptions struct {
 
 // ItemsClientBeginCreateItemOptions contains the optional parameters for the ItemsClient.BeginCreateItem method.
 type ItemsClientBeginCreateItemOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 
@@ -126,14 +126,14 @@ type ItemsClientBeginGetItemDefinitionOptions struct {
 	// The format of the item definition.
 	Format *string
 
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 
 // ItemsClientBeginUpdateItemDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateItemDefinition
 // method.
 type ItemsClientBeginUpdateItemDefinitionOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 
 	// When set to true and the .platform file is provided as part of the definition, the item's metadata is updated using the
@@ -292,14 +292,14 @@ type WorkspacesClientAssignToCapacityOptions struct {
 // WorkspacesClientBeginDeprovisionIdentityOptions contains the optional parameters for the WorkspacesClient.BeginDeprovisionIdentity
 // method.
 type WorkspacesClientBeginDeprovisionIdentityOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 
 // WorkspacesClientBeginProvisionIdentityOptions contains the optional parameters for the WorkspacesClient.BeginProvisionIdentity
 // method.
 type WorkspacesClientBeginProvisionIdentityOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 

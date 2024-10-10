@@ -26,7 +26,7 @@ import (
 // ItemsServer is a fake server for instances of the warehouse.ItemsClient type.
 type ItemsServer struct {
 	// BeginCreateWarehouse is the fake for method ItemsClient.BeginCreateWarehouse
-	// HTTP status codes to indicate success: http.StatusCreated, http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated, http.StatusAccepted
 	BeginCreateWarehouse func(ctx context.Context, workspaceID string, createWarehouseRequest warehouse.CreateWarehouseRequest, options *warehouse.ItemsClientBeginCreateWarehouseOptions) (resp azfake.PollerResponder[warehouse.ItemsClientCreateWarehouseResponse], errResp azfake.ErrorResponder)
 
 	// DeleteWarehouse is the fake for method ItemsClient.DeleteWarehouse
@@ -79,25 +79,38 @@ func (i *ItemsServerTransport) Do(req *http.Request) (*http.Response, error) {
 }
 
 func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "ItemsClient.BeginCreateWarehouse":
-		resp, err = i.dispatchBeginCreateWarehouse(req)
-	case "ItemsClient.DeleteWarehouse":
-		resp, err = i.dispatchDeleteWarehouse(req)
-	case "ItemsClient.GetWarehouse":
-		resp, err = i.dispatchGetWarehouse(req)
-	case "ItemsClient.NewListWarehousesPager":
-		resp, err = i.dispatchNewListWarehousesPager(req)
-	case "ItemsClient.UpdateWarehouse":
-		resp, err = i.dispatchUpdateWarehouse(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "ItemsClient.BeginCreateWarehouse":
+			res.resp, res.err = i.dispatchBeginCreateWarehouse(req)
+		case "ItemsClient.DeleteWarehouse":
+			res.resp, res.err = i.dispatchDeleteWarehouse(req)
+		case "ItemsClient.GetWarehouse":
+			res.resp, res.err = i.dispatchGetWarehouse(req)
+		case "ItemsClient.NewListWarehousesPager":
+			res.resp, res.err = i.dispatchNewListWarehousesPager(req)
+		case "ItemsClient.UpdateWarehouse":
+			res.resp, res.err = i.dispatchUpdateWarehouse(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (i *ItemsServerTransport) dispatchBeginCreateWarehouse(req *http.Request) (*http.Response, error) {
@@ -133,9 +146,9 @@ func (i *ItemsServerTransport) dispatchBeginCreateWarehouse(req *http.Request) (
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
 		i.beginCreateWarehouse.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginCreateWarehouse) {
 		i.beginCreateWarehouse.remove(req)

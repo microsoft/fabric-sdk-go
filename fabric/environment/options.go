@@ -8,7 +8,7 @@ package environment
 
 // ItemsClientBeginCreateEnvironmentOptions contains the optional parameters for the ItemsClient.BeginCreateEnvironment method.
 type ItemsClientBeginCreateEnvironmentOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 

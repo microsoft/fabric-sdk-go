@@ -26,7 +26,7 @@ import (
 // ItemsServer is a fake server for instances of the datapipeline.ItemsClient type.
 type ItemsServer struct {
 	// BeginCreateDataPipeline is the fake for method ItemsClient.BeginCreateDataPipeline
-	// HTTP status codes to indicate success: http.StatusCreated, http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated, http.StatusAccepted
 	BeginCreateDataPipeline func(ctx context.Context, workspaceID string, createDataPipelineRequest datapipeline.CreateDataPipelineRequest, options *datapipeline.ItemsClientBeginCreateDataPipelineOptions) (resp azfake.PollerResponder[datapipeline.ItemsClientCreateDataPipelineResponse], errResp azfake.ErrorResponder)
 
 	// DeleteDataPipeline is the fake for method ItemsClient.DeleteDataPipeline
@@ -79,25 +79,38 @@ func (i *ItemsServerTransport) Do(req *http.Request) (*http.Response, error) {
 }
 
 func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "ItemsClient.BeginCreateDataPipeline":
-		resp, err = i.dispatchBeginCreateDataPipeline(req)
-	case "ItemsClient.DeleteDataPipeline":
-		resp, err = i.dispatchDeleteDataPipeline(req)
-	case "ItemsClient.GetDataPipeline":
-		resp, err = i.dispatchGetDataPipeline(req)
-	case "ItemsClient.NewListDataPipelinesPager":
-		resp, err = i.dispatchNewListDataPipelinesPager(req)
-	case "ItemsClient.UpdateDataPipeline":
-		resp, err = i.dispatchUpdateDataPipeline(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "ItemsClient.BeginCreateDataPipeline":
+			res.resp, res.err = i.dispatchBeginCreateDataPipeline(req)
+		case "ItemsClient.DeleteDataPipeline":
+			res.resp, res.err = i.dispatchDeleteDataPipeline(req)
+		case "ItemsClient.GetDataPipeline":
+			res.resp, res.err = i.dispatchGetDataPipeline(req)
+		case "ItemsClient.NewListDataPipelinesPager":
+			res.resp, res.err = i.dispatchNewListDataPipelinesPager(req)
+		case "ItemsClient.UpdateDataPipeline":
+			res.resp, res.err = i.dispatchUpdateDataPipeline(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (i *ItemsServerTransport) dispatchBeginCreateDataPipeline(req *http.Request) (*http.Response, error) {
@@ -133,9 +146,9 @@ func (i *ItemsServerTransport) dispatchBeginCreateDataPipeline(req *http.Request
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
 		i.beginCreateDataPipeline.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginCreateDataPipeline) {
 		i.beginCreateDataPipeline.remove(req)

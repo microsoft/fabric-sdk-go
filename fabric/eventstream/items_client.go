@@ -91,7 +91,7 @@ func (client *ItemsClient) createEventstream(ctx context.Context, workspaceID st
 }
 
 // createEventstreamCreateRequest creates the CreateEventstream request.
-func (client *ItemsClient) createEventstreamCreateRequest(ctx context.Context, workspaceID string, createEventstreamRequest CreateEventstreamRequest, options *ItemsClientBeginCreateEventstreamOptions) (*policy.Request, error) {
+func (client *ItemsClient) createEventstreamCreateRequest(ctx context.Context, workspaceID string, createEventstreamRequest CreateEventstreamRequest, _ *ItemsClientBeginCreateEventstreamOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/eventstreams"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -144,7 +144,7 @@ func (client *ItemsClient) DeleteEventstream(ctx context.Context, workspaceID st
 }
 
 // deleteEventstreamCreateRequest creates the DeleteEventstream request.
-func (client *ItemsClient) deleteEventstreamCreateRequest(ctx context.Context, workspaceID string, eventstreamID string, options *ItemsClientDeleteEventstreamOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteEventstreamCreateRequest(ctx context.Context, workspaceID string, eventstreamID string, _ *ItemsClientDeleteEventstreamOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/eventstreams/{eventstreamId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -199,7 +199,7 @@ func (client *ItemsClient) GetEventstream(ctx context.Context, workspaceID strin
 }
 
 // getEventstreamCreateRequest creates the GetEventstream request.
-func (client *ItemsClient) getEventstreamCreateRequest(ctx context.Context, workspaceID string, eventstreamID string, options *ItemsClientGetEventstreamOptions) (*policy.Request, error) {
+func (client *ItemsClient) getEventstreamCreateRequest(ctx context.Context, workspaceID string, eventstreamID string, _ *ItemsClientGetEventstreamOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/eventstreams/{eventstreamId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -330,7 +330,7 @@ func (client *ItemsClient) UpdateEventstream(ctx context.Context, workspaceID st
 }
 
 // updateEventstreamCreateRequest creates the UpdateEventstream request.
-func (client *ItemsClient) updateEventstreamCreateRequest(ctx context.Context, workspaceID string, eventstreamID string, updateEventstreamRequest UpdateEventstreamRequest, options *ItemsClientUpdateEventstreamOptions) (*policy.Request, error) {
+func (client *ItemsClient) updateEventstreamCreateRequest(ctx context.Context, workspaceID string, eventstreamID string, updateEventstreamRequest UpdateEventstreamRequest, _ *ItemsClientUpdateEventstreamOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/eventstreams/{eventstreamId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -380,7 +380,6 @@ func (client *ItemsClient) updateEventstreamHandleResponse(resp *http.Response) 
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - createEventstreamRequest - Create item request payload.

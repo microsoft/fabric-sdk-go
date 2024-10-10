@@ -63,7 +63,7 @@ func (client *LongRunningOperationsClient) GetOperationResult(ctx context.Contex
 }
 
 // getOperationResultCreateRequest creates the GetOperationResult request.
-func (client *LongRunningOperationsClient) getOperationResultCreateRequest(ctx context.Context, operationID string, options *LongRunningOperationsClientGetOperationResultOptions) (*policy.Request, error) {
+func (client *LongRunningOperationsClient) getOperationResultCreateRequest(ctx context.Context, operationID string, _ *LongRunningOperationsClientGetOperationResultOptions) (*policy.Request, error) {
 	urlPath := "/v1/operations/{operationId}/result"
 	if operationID == "" {
 		return nil, errors.New("parameter operationID cannot be empty")
@@ -118,7 +118,7 @@ func (client *LongRunningOperationsClient) GetOperationState(ctx context.Context
 }
 
 // getOperationStateCreateRequest creates the GetOperationState request.
-func (client *LongRunningOperationsClient) getOperationStateCreateRequest(ctx context.Context, operationID string, options *LongRunningOperationsClientGetOperationStateOptions) (*policy.Request, error) {
+func (client *LongRunningOperationsClient) getOperationStateCreateRequest(ctx context.Context, operationID string, _ *LongRunningOperationsClientGetOperationStateOptions) (*policy.Request, error) {
 	urlPath := "/v1/operations/{operationId}"
 	if operationID == "" {
 		return nil, errors.New("parameter operationID cannot be empty")

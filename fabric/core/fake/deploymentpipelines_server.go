@@ -83,25 +83,38 @@ func (d *DeploymentPipelinesServerTransport) Do(req *http.Request) (*http.Respon
 }
 
 func (d *DeploymentPipelinesServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "DeploymentPipelinesClient.BeginDeployStageContent":
-		resp, err = d.dispatchBeginDeployStageContent(req)
-	case "DeploymentPipelinesClient.GetDeploymentPipeline":
-		resp, err = d.dispatchGetDeploymentPipeline(req)
-	case "DeploymentPipelinesClient.NewListDeploymentPipelineStageItemsPager":
-		resp, err = d.dispatchNewListDeploymentPipelineStageItemsPager(req)
-	case "DeploymentPipelinesClient.NewListDeploymentPipelineStagesPager":
-		resp, err = d.dispatchNewListDeploymentPipelineStagesPager(req)
-	case "DeploymentPipelinesClient.NewListDeploymentPipelinesPager":
-		resp, err = d.dispatchNewListDeploymentPipelinesPager(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "DeploymentPipelinesClient.BeginDeployStageContent":
+			res.resp, res.err = d.dispatchBeginDeployStageContent(req)
+		case "DeploymentPipelinesClient.GetDeploymentPipeline":
+			res.resp, res.err = d.dispatchGetDeploymentPipeline(req)
+		case "DeploymentPipelinesClient.NewListDeploymentPipelineStageItemsPager":
+			res.resp, res.err = d.dispatchNewListDeploymentPipelineStageItemsPager(req)
+		case "DeploymentPipelinesClient.NewListDeploymentPipelineStagesPager":
+			res.resp, res.err = d.dispatchNewListDeploymentPipelineStagesPager(req)
+		case "DeploymentPipelinesClient.NewListDeploymentPipelinesPager":
+			res.resp, res.err = d.dispatchNewListDeploymentPipelinesPager(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (d *DeploymentPipelinesServerTransport) dispatchBeginDeployStageContent(req *http.Request) (*http.Response, error) {

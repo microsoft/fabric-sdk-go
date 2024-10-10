@@ -9,7 +9,7 @@ package core
 // GitProviderDetailsClassification provides polymorphic access to related types.
 // Call the interface's GetGitProviderDetails() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
-// - *AzureDevOpsDetails, *GitProviderDetails
+// - *AzureDevOpsDetails, *GitHubDetails, *GitProviderDetails
 type GitProviderDetailsClassification interface {
 	// GetGitProviderDetails returns the GitProviderDetails content of the underlying type.
 	GetGitProviderDetails() *GitProviderDetails

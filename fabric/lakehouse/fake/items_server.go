@@ -26,7 +26,7 @@ import (
 // ItemsServer is a fake server for instances of the lakehouse.ItemsClient type.
 type ItemsServer struct {
 	// BeginCreateLakehouse is the fake for method ItemsClient.BeginCreateLakehouse
-	// HTTP status codes to indicate success: http.StatusCreated, http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated, http.StatusAccepted
 	BeginCreateLakehouse func(ctx context.Context, workspaceID string, createLakehouseRequest lakehouse.CreateLakehouseRequest, options *lakehouse.ItemsClientBeginCreateLakehouseOptions) (resp azfake.PollerResponder[lakehouse.ItemsClientCreateLakehouseResponse], errResp azfake.ErrorResponder)
 
 	// DeleteLakehouse is the fake for method ItemsClient.DeleteLakehouse
@@ -79,25 +79,38 @@ func (i *ItemsServerTransport) Do(req *http.Request) (*http.Response, error) {
 }
 
 func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "ItemsClient.BeginCreateLakehouse":
-		resp, err = i.dispatchBeginCreateLakehouse(req)
-	case "ItemsClient.DeleteLakehouse":
-		resp, err = i.dispatchDeleteLakehouse(req)
-	case "ItemsClient.GetLakehouse":
-		resp, err = i.dispatchGetLakehouse(req)
-	case "ItemsClient.NewListLakehousesPager":
-		resp, err = i.dispatchNewListLakehousesPager(req)
-	case "ItemsClient.UpdateLakehouse":
-		resp, err = i.dispatchUpdateLakehouse(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "ItemsClient.BeginCreateLakehouse":
+			res.resp, res.err = i.dispatchBeginCreateLakehouse(req)
+		case "ItemsClient.DeleteLakehouse":
+			res.resp, res.err = i.dispatchDeleteLakehouse(req)
+		case "ItemsClient.GetLakehouse":
+			res.resp, res.err = i.dispatchGetLakehouse(req)
+		case "ItemsClient.NewListLakehousesPager":
+			res.resp, res.err = i.dispatchNewListLakehousesPager(req)
+		case "ItemsClient.UpdateLakehouse":
+			res.resp, res.err = i.dispatchUpdateLakehouse(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (i *ItemsServerTransport) dispatchBeginCreateLakehouse(req *http.Request) (*http.Response, error) {
@@ -133,9 +146,9 @@ func (i *ItemsServerTransport) dispatchBeginCreateLakehouse(req *http.Request) (
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
 		i.beginCreateLakehouse.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginCreateLakehouse) {
 		i.beginCreateLakehouse.remove(req)

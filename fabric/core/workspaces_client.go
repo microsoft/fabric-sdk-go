@@ -70,7 +70,7 @@ func (client *WorkspacesClient) AddWorkspaceRoleAssignment(ctx context.Context, 
 }
 
 // addWorkspaceRoleAssignmentCreateRequest creates the AddWorkspaceRoleAssignment request.
-func (client *WorkspacesClient) addWorkspaceRoleAssignmentCreateRequest(ctx context.Context, workspaceID string, workspaceRoleAssignmentRequest AddWorkspaceRoleAssignmentRequest, options *WorkspacesClientAddWorkspaceRoleAssignmentOptions) (*policy.Request, error) {
+func (client *WorkspacesClient) addWorkspaceRoleAssignmentCreateRequest(ctx context.Context, workspaceID string, workspaceRoleAssignmentRequest AddWorkspaceRoleAssignmentRequest, _ *WorkspacesClientAddWorkspaceRoleAssignmentOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/roleAssignments"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -143,7 +143,7 @@ func (client *WorkspacesClient) AssignToCapacity(ctx context.Context, workspaceI
 }
 
 // assignToCapacityCreateRequest creates the AssignToCapacity request.
-func (client *WorkspacesClient) assignToCapacityCreateRequest(ctx context.Context, workspaceID string, assignWorkspaceToCapacityRequest AssignWorkspaceToCapacityRequest, options *WorkspacesClientAssignToCapacityOptions) (*policy.Request, error) {
+func (client *WorkspacesClient) assignToCapacityCreateRequest(ctx context.Context, workspaceID string, assignWorkspaceToCapacityRequest AssignWorkspaceToCapacityRequest, _ *WorkspacesClientAssignToCapacityOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/assignToCapacity"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -202,7 +202,7 @@ func (client *WorkspacesClient) CreateWorkspace(ctx context.Context, createWorks
 }
 
 // createWorkspaceCreateRequest creates the CreateWorkspace request.
-func (client *WorkspacesClient) createWorkspaceCreateRequest(ctx context.Context, createWorkspaceRequest CreateWorkspaceRequest, options *WorkspacesClientCreateWorkspaceOptions) (*policy.Request, error) {
+func (client *WorkspacesClient) createWorkspaceCreateRequest(ctx context.Context, createWorkspaceRequest CreateWorkspaceRequest, _ *WorkspacesClientCreateWorkspaceOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces"
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
@@ -263,7 +263,7 @@ func (client *WorkspacesClient) DeleteWorkspace(ctx context.Context, workspaceID
 }
 
 // deleteWorkspaceCreateRequest creates the DeleteWorkspace request.
-func (client *WorkspacesClient) deleteWorkspaceCreateRequest(ctx context.Context, workspaceID string, options *WorkspacesClientDeleteWorkspaceOptions) (*policy.Request, error) {
+func (client *WorkspacesClient) deleteWorkspaceCreateRequest(ctx context.Context, workspaceID string, _ *WorkspacesClientDeleteWorkspaceOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -315,7 +315,7 @@ func (client *WorkspacesClient) DeleteWorkspaceRoleAssignment(ctx context.Contex
 }
 
 // deleteWorkspaceRoleAssignmentCreateRequest creates the DeleteWorkspaceRoleAssignment request.
-func (client *WorkspacesClient) deleteWorkspaceRoleAssignmentCreateRequest(ctx context.Context, workspaceID string, workspaceRoleAssignmentID string, options *WorkspacesClientDeleteWorkspaceRoleAssignmentOptions) (*policy.Request, error) {
+func (client *WorkspacesClient) deleteWorkspaceRoleAssignmentCreateRequest(ctx context.Context, workspaceID string, workspaceRoleAssignmentID string, _ *WorkspacesClientDeleteWorkspaceRoleAssignmentOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/roleAssignments/{workspaceRoleAssignmentId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -388,7 +388,7 @@ func (client *WorkspacesClient) deprovisionIdentity(ctx context.Context, workspa
 }
 
 // deprovisionIdentityCreateRequest creates the DeprovisionIdentity request.
-func (client *WorkspacesClient) deprovisionIdentityCreateRequest(ctx context.Context, workspaceID string, options *WorkspacesClientBeginDeprovisionIdentityOptions) (*policy.Request, error) {
+func (client *WorkspacesClient) deprovisionIdentityCreateRequest(ctx context.Context, workspaceID string, _ *WorkspacesClientBeginDeprovisionIdentityOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/deprovisionIdentity"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -438,7 +438,7 @@ func (client *WorkspacesClient) GetWorkspace(ctx context.Context, workspaceID st
 }
 
 // getWorkspaceCreateRequest creates the GetWorkspace request.
-func (client *WorkspacesClient) getWorkspaceCreateRequest(ctx context.Context, workspaceID string, options *WorkspacesClientGetWorkspaceOptions) (*policy.Request, error) {
+func (client *WorkspacesClient) getWorkspaceCreateRequest(ctx context.Context, workspaceID string, _ *WorkspacesClientGetWorkspaceOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -499,7 +499,7 @@ func (client *WorkspacesClient) GetWorkspaceRoleAssignment(ctx context.Context, 
 }
 
 // getWorkspaceRoleAssignmentCreateRequest creates the GetWorkspaceRoleAssignment request.
-func (client *WorkspacesClient) getWorkspaceRoleAssignmentCreateRequest(ctx context.Context, workspaceID string, workspaceRoleAssignmentID string, options *WorkspacesClientGetWorkspaceRoleAssignmentOptions) (*policy.Request, error) {
+func (client *WorkspacesClient) getWorkspaceRoleAssignmentCreateRequest(ctx context.Context, workspaceID string, workspaceRoleAssignmentID string, _ *WorkspacesClientGetWorkspaceRoleAssignmentOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/roleAssignments/{workspaceRoleAssignmentId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -710,7 +710,7 @@ func (client *WorkspacesClient) provisionIdentity(ctx context.Context, workspace
 }
 
 // provisionIdentityCreateRequest creates the ProvisionIdentity request.
-func (client *WorkspacesClient) provisionIdentityCreateRequest(ctx context.Context, workspaceID string, options *WorkspacesClientBeginProvisionIdentityOptions) (*policy.Request, error) {
+func (client *WorkspacesClient) provisionIdentityCreateRequest(ctx context.Context, workspaceID string, _ *WorkspacesClientBeginProvisionIdentityOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/provisionIdentity"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -763,7 +763,7 @@ func (client *WorkspacesClient) UnassignFromCapacity(ctx context.Context, worksp
 }
 
 // unassignFromCapacityCreateRequest creates the UnassignFromCapacity request.
-func (client *WorkspacesClient) unassignFromCapacityCreateRequest(ctx context.Context, workspaceID string, options *WorkspacesClientUnassignFromCapacityOptions) (*policy.Request, error) {
+func (client *WorkspacesClient) unassignFromCapacityCreateRequest(ctx context.Context, workspaceID string, _ *WorkspacesClientUnassignFromCapacityOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/unassignFromCapacity"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -815,7 +815,7 @@ func (client *WorkspacesClient) UpdateWorkspace(ctx context.Context, workspaceID
 }
 
 // updateWorkspaceCreateRequest creates the UpdateWorkspace request.
-func (client *WorkspacesClient) updateWorkspaceCreateRequest(ctx context.Context, workspaceID string, updateWorkspaceRequest UpdateWorkspaceRequest, options *WorkspacesClientUpdateWorkspaceOptions) (*policy.Request, error) {
+func (client *WorkspacesClient) updateWorkspaceCreateRequest(ctx context.Context, workspaceID string, updateWorkspaceRequest UpdateWorkspaceRequest, _ *WorkspacesClientUpdateWorkspaceOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -881,7 +881,7 @@ func (client *WorkspacesClient) UpdateWorkspaceRoleAssignment(ctx context.Contex
 }
 
 // updateWorkspaceRoleAssignmentCreateRequest creates the UpdateWorkspaceRoleAssignment request.
-func (client *WorkspacesClient) updateWorkspaceRoleAssignmentCreateRequest(ctx context.Context, workspaceID string, workspaceRoleAssignmentID string, updateWorkspaceRoleAssignmentRequest UpdateWorkspaceRoleAssignmentRequest, options *WorkspacesClientUpdateWorkspaceRoleAssignmentOptions) (*policy.Request, error) {
+func (client *WorkspacesClient) updateWorkspaceRoleAssignmentCreateRequest(ctx context.Context, workspaceID string, workspaceRoleAssignmentID string, updateWorkspaceRoleAssignmentRequest UpdateWorkspaceRoleAssignmentRequest, _ *WorkspacesClientUpdateWorkspaceRoleAssignmentOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/roleAssignments/{workspaceRoleAssignmentId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -927,7 +927,6 @@ func (client *WorkspacesClient) updateWorkspaceRoleAssignmentHandleResponse(resp
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The ID of the workspace.
 //   - options - WorkspacesClientBeginDeprovisionIdentityOptions contains the optional parameters for the WorkspacesClient.BeginDeprovisionIdentity method.
@@ -997,7 +996,6 @@ func (client *WorkspacesClient) beginDeprovisionIdentity(ctx context.Context, wo
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The ID of the workspace.
 //   - options - WorkspacesClientBeginProvisionIdentityOptions contains the optional parameters for the WorkspacesClient.BeginProvisionIdentity method.

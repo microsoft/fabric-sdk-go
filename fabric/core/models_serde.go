@@ -1670,6 +1670,49 @@ func (g *GitConnection) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type GitHubDetails.
+func (g GitHubDetails) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "branchName", g.BranchName)
+	populate(objectMap, "directoryName", g.DirectoryName)
+	objectMap["gitProviderType"] = GitProviderTypeGitHub
+	populate(objectMap, "ownerName", g.OwnerName)
+	populate(objectMap, "repositoryName", g.RepositoryName)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type GitHubDetails.
+func (g *GitHubDetails) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", g, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "branchName":
+			err = unpopulate(val, "BranchName", &g.BranchName)
+			delete(rawMsg, key)
+		case "directoryName":
+			err = unpopulate(val, "DirectoryName", &g.DirectoryName)
+			delete(rawMsg, key)
+		case "gitProviderType":
+			err = unpopulate(val, "GitProviderType", &g.GitProviderType)
+			delete(rawMsg, key)
+		case "ownerName":
+			err = unpopulate(val, "OwnerName", &g.OwnerName)
+			delete(rawMsg, key)
+		case "repositoryName":
+			err = unpopulate(val, "RepositoryName", &g.RepositoryName)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", g, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type GitProviderDetails.
 func (g GitProviderDetails) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -2517,6 +2560,37 @@ func (o *OneLake) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "workspaceId":
 			err = unpopulate(val, "WorkspaceID", &o.WorkspaceID)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", o, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type OneLakeEndpoints.
+func (o OneLakeEndpoints) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "blobEndpoint", o.BlobEndpoint)
+	populate(objectMap, "dfsEndpoint", o.DfsEndpoint)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type OneLakeEndpoints.
+func (o *OneLakeEndpoints) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", o, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "blobEndpoint":
+			err = unpopulate(val, "BlobEndpoint", &o.BlobEndpoint)
+			delete(rawMsg, key)
+		case "dfsEndpoint":
+			err = unpopulate(val, "DfsEndpoint", &o.DfsEndpoint)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -3394,9 +3468,11 @@ func (w WorkspaceInfo) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "capacityAssignmentProgress", w.CapacityAssignmentProgress)
 	populate(objectMap, "capacityId", w.CapacityID)
+	populate(objectMap, "capacityRegion", w.CapacityRegion)
 	populate(objectMap, "description", w.Description)
 	populate(objectMap, "displayName", w.DisplayName)
 	populate(objectMap, "id", w.ID)
+	populate(objectMap, "oneLakeEndpoints", w.OneLakeEndpoints)
 	populate(objectMap, "type", w.Type)
 	populate(objectMap, "workspaceIdentity", w.WorkspaceIdentity)
 	return json.Marshal(objectMap)
@@ -3417,6 +3493,9 @@ func (w *WorkspaceInfo) UnmarshalJSON(data []byte) error {
 		case "capacityId":
 			err = unpopulate(val, "CapacityID", &w.CapacityID)
 			delete(rawMsg, key)
+		case "capacityRegion":
+			err = unpopulate(val, "CapacityRegion", &w.CapacityRegion)
+			delete(rawMsg, key)
 		case "description":
 			err = unpopulate(val, "Description", &w.Description)
 			delete(rawMsg, key)
@@ -3425,6 +3504,9 @@ func (w *WorkspaceInfo) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &w.ID)
+			delete(rawMsg, key)
+		case "oneLakeEndpoints":
+			err = unpopulate(val, "OneLakeEndpoints", &w.OneLakeEndpoints)
 			delete(rawMsg, key)
 		case "type":
 			err = unpopulate(val, "Type", &w.Type)

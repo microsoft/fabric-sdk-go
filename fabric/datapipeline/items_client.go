@@ -87,7 +87,7 @@ func (client *ItemsClient) createDataPipeline(ctx context.Context, workspaceID s
 }
 
 // createDataPipelineCreateRequest creates the CreateDataPipeline request.
-func (client *ItemsClient) createDataPipelineCreateRequest(ctx context.Context, workspaceID string, createDataPipelineRequest CreateDataPipelineRequest, options *ItemsClientBeginCreateDataPipelineOptions) (*policy.Request, error) {
+func (client *ItemsClient) createDataPipelineCreateRequest(ctx context.Context, workspaceID string, createDataPipelineRequest CreateDataPipelineRequest, _ *ItemsClientBeginCreateDataPipelineOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/dataPipelines"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -141,7 +141,7 @@ func (client *ItemsClient) DeleteDataPipeline(ctx context.Context, workspaceID s
 }
 
 // deleteDataPipelineCreateRequest creates the DeleteDataPipeline request.
-func (client *ItemsClient) deleteDataPipelineCreateRequest(ctx context.Context, workspaceID string, dataPipelineID string, options *ItemsClientDeleteDataPipelineOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteDataPipelineCreateRequest(ctx context.Context, workspaceID string, dataPipelineID string, _ *ItemsClientDeleteDataPipelineOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/dataPipelines/{dataPipelineId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -196,7 +196,7 @@ func (client *ItemsClient) GetDataPipeline(ctx context.Context, workspaceID stri
 }
 
 // getDataPipelineCreateRequest creates the GetDataPipeline request.
-func (client *ItemsClient) getDataPipelineCreateRequest(ctx context.Context, workspaceID string, dataPipelineID string, options *ItemsClientGetDataPipelineOptions) (*policy.Request, error) {
+func (client *ItemsClient) getDataPipelineCreateRequest(ctx context.Context, workspaceID string, dataPipelineID string, _ *ItemsClientGetDataPipelineOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/dataPipelines/{dataPipelineId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -328,7 +328,7 @@ func (client *ItemsClient) UpdateDataPipeline(ctx context.Context, workspaceID s
 }
 
 // updateDataPipelineCreateRequest creates the UpdateDataPipeline request.
-func (client *ItemsClient) updateDataPipelineCreateRequest(ctx context.Context, workspaceID string, dataPipelineID string, updateDataPipelineRequest UpdateDataPipelineRequest, options *ItemsClientUpdateDataPipelineOptions) (*policy.Request, error) {
+func (client *ItemsClient) updateDataPipelineCreateRequest(ctx context.Context, workspaceID string, dataPipelineID string, updateDataPipelineRequest UpdateDataPipelineRequest, _ *ItemsClientUpdateDataPipelineOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/dataPipelines/{dataPipelineId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -376,7 +376,6 @@ func (client *ItemsClient) updateDataPipelineHandleResponse(resp *http.Response)
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - createDataPipelineRequest - Create item request payload.

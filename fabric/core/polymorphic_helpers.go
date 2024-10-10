@@ -20,6 +20,8 @@ func unmarshalGitProviderDetailsClassification(rawMsg json.RawMessage) (GitProvi
 	switch m["gitProviderType"] {
 	case string(GitProviderTypeAzureDevOps):
 		b = &AzureDevOpsDetails{}
+	case string(GitProviderTypeGitHub):
+		b = &GitHubDetails{}
 	default:
 		b = &GitProviderDetails{}
 	}

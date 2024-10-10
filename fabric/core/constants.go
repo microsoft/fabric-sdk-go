@@ -48,6 +48,187 @@ func PossibleCapacityAssignmentProgressValues() []CapacityAssignmentProgress {
 	}
 }
 
+// CapacityRegion - The region of the capacity associated with this workspace. Additional capacity region values may be added
+// over time.
+type CapacityRegion string
+
+const (
+	// CapacityRegionAustraliaEast - Australia East region
+	CapacityRegionAustraliaEast CapacityRegion = "Australia East"
+	// CapacityRegionAustraliaSoutheast - Australia Southeast region
+	CapacityRegionAustraliaSoutheast CapacityRegion = "Australia Southeast"
+	// CapacityRegionBrazilSouth - Brazil South region
+	CapacityRegionBrazilSouth CapacityRegion = "Brazil South"
+	// CapacityRegionBrazilSoutheast - Brazil Southeast region
+	CapacityRegionBrazilSoutheast CapacityRegion = "Brazil Southeast"
+	// CapacityRegionCanadaCentral - Canada Central region
+	CapacityRegionCanadaCentral CapacityRegion = "Canada Central"
+	// CapacityRegionCanadaEast - Canada East region
+	CapacityRegionCanadaEast CapacityRegion = "Canada East"
+	// CapacityRegionCentralIndia - Central India region
+	CapacityRegionCentralIndia CapacityRegion = "Central India"
+	// CapacityRegionCentralUS - Central US region
+	CapacityRegionCentralUS CapacityRegion = "Central US"
+	// CapacityRegionCentralUSEUAP - Central US EUAP region
+	CapacityRegionCentralUSEUAP CapacityRegion = "Central US EUAP"
+	// CapacityRegionChinaEast - China East region
+	CapacityRegionChinaEast CapacityRegion = "China East"
+	// CapacityRegionChinaEast2 - China East 2 region
+	CapacityRegionChinaEast2 CapacityRegion = "China East 2"
+	// CapacityRegionChinaEast3 - China East 3 region
+	CapacityRegionChinaEast3 CapacityRegion = "China East 3"
+	// CapacityRegionChinaNorth - China North region
+	CapacityRegionChinaNorth CapacityRegion = "China North"
+	// CapacityRegionChinaNorth2 - China North 2 region
+	CapacityRegionChinaNorth2 CapacityRegion = "China North 2"
+	// CapacityRegionChinaNorth3 - China North 3 region
+	CapacityRegionChinaNorth3 CapacityRegion = "China North 3"
+	// CapacityRegionEastAsia - East Asia region
+	CapacityRegionEastAsia CapacityRegion = "East Asia"
+	// CapacityRegionEastUS - East US region
+	CapacityRegionEastUS CapacityRegion = "East US"
+	// CapacityRegionEastUS2 - East US 2 region
+	CapacityRegionEastUS2 CapacityRegion = "East US 2"
+	// CapacityRegionFranceCentral - France Central region
+	CapacityRegionFranceCentral CapacityRegion = "France Central"
+	// CapacityRegionFranceSouth - France South region
+	CapacityRegionFranceSouth CapacityRegion = "France South"
+	// CapacityRegionGermanyCentral - Germany Central region
+	CapacityRegionGermanyCentral CapacityRegion = "Germany Central"
+	// CapacityRegionGermanyNorth - Germany North region
+	CapacityRegionGermanyNorth CapacityRegion = "Germany North"
+	// CapacityRegionGermanyNortheast - Germany Northeast region
+	CapacityRegionGermanyNortheast CapacityRegion = "Germany Northeast"
+	// CapacityRegionGermanyWestCentral - Germany West Central region
+	CapacityRegionGermanyWestCentral CapacityRegion = "Germany West Central"
+	// CapacityRegionIsraelCentral - Israel Central region
+	CapacityRegionIsraelCentral CapacityRegion = "Israel Central"
+	// CapacityRegionItalyNorth - Italy North region
+	CapacityRegionItalyNorth CapacityRegion = "Italy North"
+	// CapacityRegionJapanEast - Japan East region
+	CapacityRegionJapanEast CapacityRegion = "Japan East"
+	// CapacityRegionJapanWest - Japan West region
+	CapacityRegionJapanWest CapacityRegion = "Japan West"
+	// CapacityRegionKoreaCentral - Korea Central region
+	CapacityRegionKoreaCentral CapacityRegion = "Korea Central"
+	// CapacityRegionKoreaSouth - Korea South region
+	CapacityRegionKoreaSouth CapacityRegion = "Korea South"
+	// CapacityRegionMexicoCentral - Mexico Central region
+	CapacityRegionMexicoCentral CapacityRegion = "Mexico Central"
+	// CapacityRegionNorthCentralUS - North Central US region
+	CapacityRegionNorthCentralUS CapacityRegion = "North Central US"
+	// CapacityRegionNorthEurope - North Europe region
+	CapacityRegionNorthEurope CapacityRegion = "North Europe"
+	// CapacityRegionNorwayEast - Norway East region
+	CapacityRegionNorwayEast CapacityRegion = "Norway East"
+	// CapacityRegionNorwayWest - Norway West region
+	CapacityRegionNorwayWest CapacityRegion = "Norway West"
+	// CapacityRegionPolandCentral - Poland Central region
+	CapacityRegionPolandCentral CapacityRegion = "Poland Central"
+	// CapacityRegionQatarCentral - Qatar Central region
+	CapacityRegionQatarCentral CapacityRegion = "Qatar Central"
+	// CapacityRegionSouthAfricaNorth - South Africa North region
+	CapacityRegionSouthAfricaNorth CapacityRegion = "South Africa North"
+	// CapacityRegionSouthAfricaWest - South Africa West region
+	CapacityRegionSouthAfricaWest CapacityRegion = "South Africa West"
+	// CapacityRegionSouthCentralUS - South Central US region
+	CapacityRegionSouthCentralUS CapacityRegion = "South Central US"
+	// CapacityRegionSouthIndia - South India region
+	CapacityRegionSouthIndia CapacityRegion = "South India"
+	// CapacityRegionSoutheastAsia - Southeast Asia region
+	CapacityRegionSoutheastAsia CapacityRegion = "Southeast Asia"
+	// CapacityRegionSpainCentral - Spain Central region
+	CapacityRegionSpainCentral CapacityRegion = "Spain Central"
+	// CapacityRegionSwedenCentral - Sweden Central region
+	CapacityRegionSwedenCentral CapacityRegion = "Sweden Central"
+	// CapacityRegionSwitzerlandNorth - Switzerland North region
+	CapacityRegionSwitzerlandNorth CapacityRegion = "Switzerland North"
+	// CapacityRegionSwitzerlandWest - Switzerland West region
+	CapacityRegionSwitzerlandWest CapacityRegion = "Switzerland West"
+	// CapacityRegionUAECentral - UAE Central region
+	CapacityRegionUAECentral CapacityRegion = "UAE Central"
+	// CapacityRegionUAENorth - UAE North region
+	CapacityRegionUAENorth CapacityRegion = "UAE North"
+	// CapacityRegionUKSouth - UK South region
+	CapacityRegionUKSouth CapacityRegion = "UK South"
+	// CapacityRegionUKWest - UK West region
+	CapacityRegionUKWest CapacityRegion = "UK West"
+	// CapacityRegionWestCentralUS - West Central US region
+	CapacityRegionWestCentralUS CapacityRegion = "West Central US"
+	// CapacityRegionWestEurope - West Europe region
+	CapacityRegionWestEurope CapacityRegion = "West Europe"
+	// CapacityRegionWestIndia - West India region
+	CapacityRegionWestIndia CapacityRegion = "West India"
+	// CapacityRegionWestUS - West US region
+	CapacityRegionWestUS CapacityRegion = "West US"
+	// CapacityRegionWestUS2 - West US 2 region
+	CapacityRegionWestUS2 CapacityRegion = "West US 2"
+	// CapacityRegionWestUS3 - West US 3 region
+	CapacityRegionWestUS3 CapacityRegion = "West US 3"
+)
+
+// PossibleCapacityRegionValues returns the possible values for the CapacityRegion const type.
+func PossibleCapacityRegionValues() []CapacityRegion {
+	return []CapacityRegion{
+		CapacityRegionAustraliaEast,
+		CapacityRegionAustraliaSoutheast,
+		CapacityRegionBrazilSouth,
+		CapacityRegionBrazilSoutheast,
+		CapacityRegionCanadaCentral,
+		CapacityRegionCanadaEast,
+		CapacityRegionCentralIndia,
+		CapacityRegionCentralUS,
+		CapacityRegionCentralUSEUAP,
+		CapacityRegionChinaEast,
+		CapacityRegionChinaEast2,
+		CapacityRegionChinaEast3,
+		CapacityRegionChinaNorth,
+		CapacityRegionChinaNorth2,
+		CapacityRegionChinaNorth3,
+		CapacityRegionEastAsia,
+		CapacityRegionEastUS,
+		CapacityRegionEastUS2,
+		CapacityRegionFranceCentral,
+		CapacityRegionFranceSouth,
+		CapacityRegionGermanyCentral,
+		CapacityRegionGermanyNorth,
+		CapacityRegionGermanyNortheast,
+		CapacityRegionGermanyWestCentral,
+		CapacityRegionIsraelCentral,
+		CapacityRegionItalyNorth,
+		CapacityRegionJapanEast,
+		CapacityRegionJapanWest,
+		CapacityRegionKoreaCentral,
+		CapacityRegionKoreaSouth,
+		CapacityRegionMexicoCentral,
+		CapacityRegionNorthCentralUS,
+		CapacityRegionNorthEurope,
+		CapacityRegionNorwayEast,
+		CapacityRegionNorwayWest,
+		CapacityRegionPolandCentral,
+		CapacityRegionQatarCentral,
+		CapacityRegionSouthAfricaNorth,
+		CapacityRegionSouthAfricaWest,
+		CapacityRegionSouthCentralUS,
+		CapacityRegionSouthIndia,
+		CapacityRegionSoutheastAsia,
+		CapacityRegionSpainCentral,
+		CapacityRegionSwedenCentral,
+		CapacityRegionSwitzerlandNorth,
+		CapacityRegionSwitzerlandWest,
+		CapacityRegionUAECentral,
+		CapacityRegionUAENorth,
+		CapacityRegionUKSouth,
+		CapacityRegionUKWest,
+		CapacityRegionWestCentralUS,
+		CapacityRegionWestEurope,
+		CapacityRegionWestIndia,
+		CapacityRegionWestUS,
+		CapacityRegionWestUS2,
+		CapacityRegionWestUS3,
+	}
+}
+
 // CapacityState - A Capacity state. Additional capacity states may be added over time.
 type CapacityState string
 
@@ -334,12 +515,15 @@ type GitProviderType string
 const (
 	// GitProviderTypeAzureDevOps - Azure DevOps provider
 	GitProviderTypeAzureDevOps GitProviderType = "AzureDevOps"
+	// GitProviderTypeGitHub - GitHub provider
+	GitProviderTypeGitHub GitProviderType = "GitHub"
 )
 
 // PossibleGitProviderTypeValues returns the possible values for the GitProviderType const type.
 func PossibleGitProviderTypeValues() []GitProviderType {
 	return []GitProviderType{
 		GitProviderTypeAzureDevOps,
+		GitProviderTypeGitHub,
 	}
 }
 
@@ -473,6 +657,8 @@ const (
 	ItemTypeEventhouse ItemType = "Eventhouse"
 	// ItemTypeEventstream - An eventstream.
 	ItemTypeEventstream ItemType = "Eventstream"
+	// ItemTypeKQLDashboard - A KQL dashboard.
+	ItemTypeKQLDashboard ItemType = "KQLDashboard"
 	// ItemTypeKQLDatabase - A KQL database.
 	ItemTypeKQLDatabase ItemType = "KQLDatabase"
 	// ItemTypeKQLQueryset - A KQL queryset.
@@ -510,6 +696,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeEnvironment,
 		ItemTypeEventhouse,
 		ItemTypeEventstream,
+		ItemTypeKQLDashboard,
 		ItemTypeKQLDatabase,
 		ItemTypeKQLQueryset,
 		ItemTypeLakehouse,

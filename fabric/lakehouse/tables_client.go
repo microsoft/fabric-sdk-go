@@ -36,8 +36,8 @@ type TablesClient struct {
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 //
 // Generated from API version v1
@@ -109,8 +109,8 @@ func (client *TablesClient) listTablesHandleResponse(resp *http.Response) (Table
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -130,8 +130,8 @@ func (client *TablesClient) BeginLoadTable(ctx context.Context, workspaceID stri
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -158,7 +158,7 @@ func (client *TablesClient) loadTable(ctx context.Context, workspaceID string, l
 }
 
 // loadTableCreateRequest creates the LoadTable request.
-func (client *TablesClient) loadTableCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, tableName string, loadTableRequest LoadTableRequest, options *TablesClientBeginLoadTableOptions) (*policy.Request, error) {
+func (client *TablesClient) loadTableCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, tableName string, loadTableRequest LoadTableRequest, _ *TablesClientBeginLoadTableOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/tables/{tableName}/load"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -194,11 +194,10 @@ func (client *TablesClient) loadTableCreateRequest(ctx context.Context, workspac
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | No | | Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - lakehouseID - The lakehouse item ID.
@@ -264,8 +263,8 @@ func (client *TablesClient) beginLoadTable(ctx context.Context, workspaceID stri
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | No | | Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
 // Generated from API version v1

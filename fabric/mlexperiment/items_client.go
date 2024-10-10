@@ -93,7 +93,7 @@ func (client *ItemsClient) createMLExperiment(ctx context.Context, workspaceID s
 }
 
 // createMLExperimentCreateRequest creates the CreateMLExperiment request.
-func (client *ItemsClient) createMLExperimentCreateRequest(ctx context.Context, workspaceID string, createMLExperimentRequest CreateMLExperimentRequest, options *ItemsClientBeginCreateMLExperimentOptions) (*policy.Request, error) {
+func (client *ItemsClient) createMLExperimentCreateRequest(ctx context.Context, workspaceID string, createMLExperimentRequest CreateMLExperimentRequest, _ *ItemsClientBeginCreateMLExperimentOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/mlExperiments"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -147,7 +147,7 @@ func (client *ItemsClient) DeleteMLExperiment(ctx context.Context, workspaceID s
 }
 
 // deleteMLExperimentCreateRequest creates the DeleteMLExperiment request.
-func (client *ItemsClient) deleteMLExperimentCreateRequest(ctx context.Context, workspaceID string, mlExperimentID string, options *ItemsClientDeleteMLExperimentOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteMLExperimentCreateRequest(ctx context.Context, workspaceID string, mlExperimentID string, _ *ItemsClientDeleteMLExperimentOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/mlExperiments/{mlExperimentId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -202,7 +202,7 @@ func (client *ItemsClient) GetMLExperiment(ctx context.Context, workspaceID stri
 }
 
 // getMLExperimentCreateRequest creates the GetMLExperiment request.
-func (client *ItemsClient) getMLExperimentCreateRequest(ctx context.Context, workspaceID string, mlExperimentID string, options *ItemsClientGetMLExperimentOptions) (*policy.Request, error) {
+func (client *ItemsClient) getMLExperimentCreateRequest(ctx context.Context, workspaceID string, mlExperimentID string, _ *ItemsClientGetMLExperimentOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/mlExperiments/{mlExperimentId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -334,7 +334,7 @@ func (client *ItemsClient) UpdateMLExperiment(ctx context.Context, workspaceID s
 }
 
 // updateMLExperimentCreateRequest creates the UpdateMLExperiment request.
-func (client *ItemsClient) updateMLExperimentCreateRequest(ctx context.Context, workspaceID string, mlExperimentID string, updateMLExperimentRequest UpdateMLExperimentRequest, options *ItemsClientUpdateMLExperimentOptions) (*policy.Request, error) {
+func (client *ItemsClient) updateMLExperimentCreateRequest(ctx context.Context, workspaceID string, mlExperimentID string, updateMLExperimentRequest UpdateMLExperimentRequest, _ *ItemsClientUpdateMLExperimentOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/mlExperiments/{mlExperimentId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -385,7 +385,6 @@ func (client *ItemsClient) updateMLExperimentHandleResponse(resp *http.Response)
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - createMLExperimentRequest - Create item request payload.

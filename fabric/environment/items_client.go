@@ -89,7 +89,7 @@ func (client *ItemsClient) createEnvironment(ctx context.Context, workspaceID st
 }
 
 // createEnvironmentCreateRequest creates the CreateEnvironment request.
-func (client *ItemsClient) createEnvironmentCreateRequest(ctx context.Context, workspaceID string, createEnvironmentRequest CreateEnvironmentRequest, options *ItemsClientBeginCreateEnvironmentOptions) (*policy.Request, error) {
+func (client *ItemsClient) createEnvironmentCreateRequest(ctx context.Context, workspaceID string, createEnvironmentRequest CreateEnvironmentRequest, _ *ItemsClientBeginCreateEnvironmentOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -142,7 +142,7 @@ func (client *ItemsClient) DeleteEnvironment(ctx context.Context, workspaceID st
 }
 
 // deleteEnvironmentCreateRequest creates the DeleteEnvironment request.
-func (client *ItemsClient) deleteEnvironmentCreateRequest(ctx context.Context, workspaceID string, environmentID string, options *ItemsClientDeleteEnvironmentOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteEnvironmentCreateRequest(ctx context.Context, workspaceID string, environmentID string, _ *ItemsClientDeleteEnvironmentOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -196,7 +196,7 @@ func (client *ItemsClient) GetEnvironment(ctx context.Context, workspaceID strin
 }
 
 // getEnvironmentCreateRequest creates the GetEnvironment request.
-func (client *ItemsClient) getEnvironmentCreateRequest(ctx context.Context, workspaceID string, environmentID string, options *ItemsClientGetEnvironmentOptions) (*policy.Request, error) {
+func (client *ItemsClient) getEnvironmentCreateRequest(ctx context.Context, workspaceID string, environmentID string, _ *ItemsClientGetEnvironmentOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -327,7 +327,7 @@ func (client *ItemsClient) UpdateEnvironment(ctx context.Context, workspaceID st
 }
 
 // updateEnvironmentCreateRequest creates the UpdateEnvironment request.
-func (client *ItemsClient) updateEnvironmentCreateRequest(ctx context.Context, workspaceID string, environmentID string, updateEnvironmentRequest UpdateEnvironmentRequest, options *ItemsClientUpdateEnvironmentOptions) (*policy.Request, error) {
+func (client *ItemsClient) updateEnvironmentCreateRequest(ctx context.Context, workspaceID string, environmentID string, updateEnvironmentRequest UpdateEnvironmentRequest, _ *ItemsClientUpdateEnvironmentOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -377,7 +377,6 @@ func (client *ItemsClient) updateEnvironmentHandleResponse(resp *http.Response) 
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - createEnvironmentRequest - Create item request payload.

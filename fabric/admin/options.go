@@ -15,14 +15,14 @@ type DomainsClientAssignDomainWorkspacesByIDsOptions struct {
 // DomainsClientBeginAssignDomainWorkspacesByCapacitiesOptions contains the optional parameters for the DomainsClient.BeginAssignDomainWorkspacesByCapacities
 // method.
 type DomainsClientBeginAssignDomainWorkspacesByCapacitiesOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 
 // DomainsClientBeginAssignDomainWorkspacesByPrincipalsOptions contains the optional parameters for the DomainsClient.BeginAssignDomainWorkspacesByPrincipals
 // method.
 type DomainsClientBeginAssignDomainWorkspacesByPrincipalsOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 
@@ -187,6 +187,13 @@ type UsersClientListAccessEntitiesOptions struct {
 // WorkspacesClientGetWorkspaceOptions contains the optional parameters for the WorkspacesClient.GetWorkspace method.
 type WorkspacesClientGetWorkspaceOptions struct {
 	// placeholder for future optional parameters
+}
+
+// WorkspacesClientListGitConnectionsOptions contains the optional parameters for the WorkspacesClient.NewListGitConnectionsPager
+// method.
+type WorkspacesClientListGitConnectionsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
 }
 
 // WorkspacesClientListWorkspaceAccessDetailsOptions contains the optional parameters for the WorkspacesClient.ListWorkspaceAccessDetails

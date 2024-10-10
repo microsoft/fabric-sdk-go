@@ -61,19 +61,32 @@ func (l *LongRunningOperationsServerTransport) Do(req *http.Request) (*http.Resp
 }
 
 func (l *LongRunningOperationsServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "LongRunningOperationsClient.GetOperationResult":
-		resp, err = l.dispatchGetOperationResult(req)
-	case "LongRunningOperationsClient.GetOperationState":
-		resp, err = l.dispatchGetOperationState(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "LongRunningOperationsClient.GetOperationResult":
+			res.resp, res.err = l.dispatchGetOperationResult(req)
+		case "LongRunningOperationsClient.GetOperationState":
+			res.resp, res.err = l.dispatchGetOperationState(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (l *LongRunningOperationsServerTransport) dispatchGetOperationResult(req *http.Request) (*http.Response, error) {

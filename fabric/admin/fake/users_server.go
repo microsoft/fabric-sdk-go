@@ -60,17 +60,30 @@ func (u *UsersServerTransport) Do(req *http.Request) (*http.Response, error) {
 }
 
 func (u *UsersServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "UsersClient.NewListAccessEntitiesPager":
-		resp, err = u.dispatchNewListAccessEntitiesPager(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "UsersClient.NewListAccessEntitiesPager":
+			res.resp, res.err = u.dispatchNewListAccessEntitiesPager(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (u *UsersServerTransport) dispatchNewListAccessEntitiesPager(req *http.Request) (*http.Response, error) {

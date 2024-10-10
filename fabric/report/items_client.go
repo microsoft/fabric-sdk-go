@@ -91,7 +91,7 @@ func (client *ItemsClient) createReport(ctx context.Context, workspaceID string,
 }
 
 // createReportCreateRequest creates the CreateReport request.
-func (client *ItemsClient) createReportCreateRequest(ctx context.Context, workspaceID string, createReportRequest CreateReportRequest, options *ItemsClientBeginCreateReportOptions) (*policy.Request, error) {
+func (client *ItemsClient) createReportCreateRequest(ctx context.Context, workspaceID string, createReportRequest CreateReportRequest, _ *ItemsClientBeginCreateReportOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/reports"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -144,7 +144,7 @@ func (client *ItemsClient) DeleteReport(ctx context.Context, workspaceID string,
 }
 
 // deleteReportCreateRequest creates the DeleteReport request.
-func (client *ItemsClient) deleteReportCreateRequest(ctx context.Context, workspaceID string, reportID string, options *ItemsClientDeleteReportOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteReportCreateRequest(ctx context.Context, workspaceID string, reportID string, _ *ItemsClientDeleteReportOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/reports/{reportId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -199,7 +199,7 @@ func (client *ItemsClient) GetReport(ctx context.Context, workspaceID string, re
 }
 
 // getReportCreateRequest creates the GetReport request.
-func (client *ItemsClient) getReportCreateRequest(ctx context.Context, workspaceID string, reportID string, options *ItemsClientGetReportOptions) (*policy.Request, error) {
+func (client *ItemsClient) getReportCreateRequest(ctx context.Context, workspaceID string, reportID string, _ *ItemsClientGetReportOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/reports/{reportId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -410,7 +410,7 @@ func (client *ItemsClient) UpdateReport(ctx context.Context, workspaceID string,
 }
 
 // updateReportCreateRequest creates the UpdateReport request.
-func (client *ItemsClient) updateReportCreateRequest(ctx context.Context, workspaceID string, reportID string, updateReportRequest UpdateReportRequest, options *ItemsClientUpdateReportOptions) (*policy.Request, error) {
+func (client *ItemsClient) updateReportCreateRequest(ctx context.Context, workspaceID string, reportID string, updateReportRequest UpdateReportRequest, _ *ItemsClientUpdateReportOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/reports/{reportId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -543,7 +543,6 @@ func (client *ItemsClient) updateReportDefinitionCreateRequest(ctx context.Conte
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - createReportRequest - Create item request payload.
@@ -617,7 +616,6 @@ func (client *ItemsClient) beginCreateReport(ctx context.Context, workspaceID st
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - reportID - The report ID.
@@ -689,7 +687,6 @@ func (client *ItemsClient) beginGetReportDefinition(ctx context.Context, workspa
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - reportID - The report ID.

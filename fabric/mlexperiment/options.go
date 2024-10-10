@@ -9,7 +9,7 @@ package mlexperiment
 // ItemsClientBeginCreateMLExperimentOptions contains the optional parameters for the ItemsClient.BeginCreateMLExperiment
 // method.
 type ItemsClientBeginCreateMLExperimentOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 

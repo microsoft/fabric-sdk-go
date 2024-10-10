@@ -94,7 +94,7 @@ func (client *ItemsClient) createNotebook(ctx context.Context, workspaceID strin
 }
 
 // createNotebookCreateRequest creates the CreateNotebook request.
-func (client *ItemsClient) createNotebookCreateRequest(ctx context.Context, workspaceID string, createNotebookRequest CreateNotebookRequest, options *ItemsClientBeginCreateNotebookOptions) (*policy.Request, error) {
+func (client *ItemsClient) createNotebookCreateRequest(ctx context.Context, workspaceID string, createNotebookRequest CreateNotebookRequest, _ *ItemsClientBeginCreateNotebookOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/notebooks"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -147,7 +147,7 @@ func (client *ItemsClient) DeleteNotebook(ctx context.Context, workspaceID strin
 }
 
 // deleteNotebookCreateRequest creates the DeleteNotebook request.
-func (client *ItemsClient) deleteNotebookCreateRequest(ctx context.Context, workspaceID string, notebookID string, options *ItemsClientDeleteNotebookOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteNotebookCreateRequest(ctx context.Context, workspaceID string, notebookID string, _ *ItemsClientDeleteNotebookOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/notebooks/{notebookId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -202,7 +202,7 @@ func (client *ItemsClient) GetNotebook(ctx context.Context, workspaceID string, 
 }
 
 // getNotebookCreateRequest creates the GetNotebook request.
-func (client *ItemsClient) getNotebookCreateRequest(ctx context.Context, workspaceID string, notebookID string, options *ItemsClientGetNotebookOptions) (*policy.Request, error) {
+func (client *ItemsClient) getNotebookCreateRequest(ctx context.Context, workspaceID string, notebookID string, _ *ItemsClientGetNotebookOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/notebooks/{notebookId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -413,7 +413,7 @@ func (client *ItemsClient) UpdateNotebook(ctx context.Context, workspaceID strin
 }
 
 // updateNotebookCreateRequest creates the UpdateNotebook request.
-func (client *ItemsClient) updateNotebookCreateRequest(ctx context.Context, workspaceID string, notebookID string, updateNotebookRequest UpdateNotebookRequest, options *ItemsClientUpdateNotebookOptions) (*policy.Request, error) {
+func (client *ItemsClient) updateNotebookCreateRequest(ctx context.Context, workspaceID string, notebookID string, updateNotebookRequest UpdateNotebookRequest, _ *ItemsClientUpdateNotebookOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/notebooks/{notebookId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -546,7 +546,6 @@ func (client *ItemsClient) updateNotebookDefinitionCreateRequest(ctx context.Con
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - createNotebookRequest - Create item request payload.
@@ -620,7 +619,6 @@ func (client *ItemsClient) beginCreateNotebook(ctx context.Context, workspaceID 
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - notebookID - The notebook ID.
@@ -692,7 +690,6 @@ func (client *ItemsClient) beginGetNotebookDefinition(ctx context.Context, works
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - notebookID - The notebook ID.

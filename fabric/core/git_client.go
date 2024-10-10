@@ -87,7 +87,7 @@ func (client *GitClient) commitToGit(ctx context.Context, workspaceID string, co
 }
 
 // commitToGitCreateRequest creates the CommitToGit request.
-func (client *GitClient) commitToGitCreateRequest(ctx context.Context, workspaceID string, commitToGitRequest CommitToGitRequest, options *GitClientBeginCommitToGitOptions) (*policy.Request, error) {
+func (client *GitClient) commitToGitCreateRequest(ctx context.Context, workspaceID string, commitToGitRequest CommitToGitRequest, _ *GitClientBeginCommitToGitOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/git/commitToGit"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -144,7 +144,7 @@ func (client *GitClient) Connect(ctx context.Context, workspaceID string, gitCon
 }
 
 // connectCreateRequest creates the Connect request.
-func (client *GitClient) connectCreateRequest(ctx context.Context, workspaceID string, gitConnectRequest GitConnectRequest, options *GitClientConnectOptions) (*policy.Request, error) {
+func (client *GitClient) connectCreateRequest(ctx context.Context, workspaceID string, gitConnectRequest GitConnectRequest, _ *GitClientConnectOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/git/connect"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -196,7 +196,7 @@ func (client *GitClient) Disconnect(ctx context.Context, workspaceID string, opt
 }
 
 // disconnectCreateRequest creates the Disconnect request.
-func (client *GitClient) disconnectCreateRequest(ctx context.Context, workspaceID string, options *GitClientDisconnectOptions) (*policy.Request, error) {
+func (client *GitClient) disconnectCreateRequest(ctx context.Context, workspaceID string, _ *GitClientDisconnectOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/git/disconnect"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -246,7 +246,7 @@ func (client *GitClient) GetConnection(ctx context.Context, workspaceID string, 
 }
 
 // getConnectionCreateRequest creates the GetConnection request.
-func (client *GitClient) getConnectionCreateRequest(ctx context.Context, workspaceID string, options *GitClientGetConnectionOptions) (*policy.Request, error) {
+func (client *GitClient) getConnectionCreateRequest(ctx context.Context, workspaceID string, _ *GitClientGetConnectionOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/git/connection"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -325,7 +325,7 @@ func (client *GitClient) getStatus(ctx context.Context, workspaceID string, opti
 }
 
 // getStatusCreateRequest creates the GetStatus request.
-func (client *GitClient) getStatusCreateRequest(ctx context.Context, workspaceID string, options *GitClientBeginGetStatusOptions) (*policy.Request, error) {
+func (client *GitClient) getStatusCreateRequest(ctx context.Context, workspaceID string, _ *GitClientBeginGetStatusOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/git/status"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -481,7 +481,7 @@ func (client *GitClient) updateFromGit(ctx context.Context, workspaceID string, 
 }
 
 // updateFromGitCreateRequest creates the UpdateFromGit request.
-func (client *GitClient) updateFromGitCreateRequest(ctx context.Context, workspaceID string, updateFromGitRequest UpdateFromGitRequest, options *GitClientBeginUpdateFromGitOptions) (*policy.Request, error) {
+func (client *GitClient) updateFromGitCreateRequest(ctx context.Context, workspaceID string, updateFromGitRequest UpdateFromGitRequest, _ *GitClientBeginUpdateFromGitOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/git/updateFromGit"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -516,7 +516,6 @@ func (client *GitClient) updateFromGitCreateRequest(ctx context.Context, workspa
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - commitToGitRequest - Commit to the Git request payload.
@@ -588,7 +587,6 @@ func (client *GitClient) beginCommitToGit(ctx context.Context, workspaceID strin
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - options - GitClientBeginGetStatusOptions contains the optional parameters for the GitClient.BeginGetStatus method.
@@ -661,7 +659,6 @@ func (client *GitClient) beginGetStatus(ctx context.Context, workspaceID string,
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - options - GitClientBeginInitializeConnectionOptions contains the optional parameters for the GitClient.BeginInitializeConnection method.
@@ -733,7 +730,6 @@ func (client *GitClient) beginInitializeConnection(ctx context.Context, workspac
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - updateFromGitRequest - Update from a Git request payload.

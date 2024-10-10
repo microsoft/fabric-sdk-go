@@ -27,7 +27,7 @@ import (
 // ItemsServer is a fake server for instances of the core.ItemsClient type.
 type ItemsServer struct {
 	// BeginCreateItem is the fake for method ItemsClient.BeginCreateItem
-	// HTTP status codes to indicate success: http.StatusCreated, http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated, http.StatusAccepted
 	BeginCreateItem func(ctx context.Context, workspaceID string, createItemRequest core.CreateItemRequest, options *core.ItemsClientBeginCreateItemOptions) (resp azfake.PollerResponder[core.ItemsClientCreateItemResponse], errResp azfake.ErrorResponder)
 
 	// DeleteItem is the fake for method ItemsClient.DeleteItem
@@ -55,7 +55,7 @@ type ItemsServer struct {
 	UpdateItem func(ctx context.Context, workspaceID string, itemID string, updateItemRequest core.UpdateItemRequest, options *core.ItemsClientUpdateItemOptions) (resp azfake.Responder[core.ItemsClientUpdateItemResponse], errResp azfake.ErrorResponder)
 
 	// BeginUpdateItemDefinition is the fake for method ItemsClient.BeginUpdateItemDefinition
-	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
 	BeginUpdateItemDefinition func(ctx context.Context, workspaceID string, itemID string, updateItemDefinitionRequest core.UpdateItemDefinitionRequest, options *core.ItemsClientBeginUpdateItemDefinitionOptions) (resp azfake.PollerResponder[core.ItemsClientUpdateItemDefinitionResponse], errResp azfake.ErrorResponder)
 }
 
@@ -98,31 +98,44 @@ func (i *ItemsServerTransport) Do(req *http.Request) (*http.Response, error) {
 }
 
 func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "ItemsClient.BeginCreateItem":
-		resp, err = i.dispatchBeginCreateItem(req)
-	case "ItemsClient.DeleteItem":
-		resp, err = i.dispatchDeleteItem(req)
-	case "ItemsClient.GetItem":
-		resp, err = i.dispatchGetItem(req)
-	case "ItemsClient.BeginGetItemDefinition":
-		resp, err = i.dispatchBeginGetItemDefinition(req)
-	case "ItemsClient.NewListItemConnectionsPager":
-		resp, err = i.dispatchNewListItemConnectionsPager(req)
-	case "ItemsClient.NewListItemsPager":
-		resp, err = i.dispatchNewListItemsPager(req)
-	case "ItemsClient.UpdateItem":
-		resp, err = i.dispatchUpdateItem(req)
-	case "ItemsClient.BeginUpdateItemDefinition":
-		resp, err = i.dispatchBeginUpdateItemDefinition(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "ItemsClient.BeginCreateItem":
+			res.resp, res.err = i.dispatchBeginCreateItem(req)
+		case "ItemsClient.DeleteItem":
+			res.resp, res.err = i.dispatchDeleteItem(req)
+		case "ItemsClient.GetItem":
+			res.resp, res.err = i.dispatchGetItem(req)
+		case "ItemsClient.BeginGetItemDefinition":
+			res.resp, res.err = i.dispatchBeginGetItemDefinition(req)
+		case "ItemsClient.NewListItemConnectionsPager":
+			res.resp, res.err = i.dispatchNewListItemConnectionsPager(req)
+		case "ItemsClient.NewListItemsPager":
+			res.resp, res.err = i.dispatchNewListItemsPager(req)
+		case "ItemsClient.UpdateItem":
+			res.resp, res.err = i.dispatchUpdateItem(req)
+		case "ItemsClient.BeginUpdateItemDefinition":
+			res.resp, res.err = i.dispatchBeginUpdateItemDefinition(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (i *ItemsServerTransport) dispatchBeginCreateItem(req *http.Request) (*http.Response, error) {
@@ -158,9 +171,9 @@ func (i *ItemsServerTransport) dispatchBeginCreateItem(req *http.Request) (*http
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
 		i.beginCreateItem.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginCreateItem) {
 		i.beginCreateItem.remove(req)
@@ -488,9 +501,9 @@ func (i *ItemsServerTransport) dispatchBeginUpdateItemDefinition(req *http.Reque
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
 		i.beginUpdateItemDefinition.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginUpdateItemDefinition) {
 		i.beginUpdateItemDefinition.remove(req)

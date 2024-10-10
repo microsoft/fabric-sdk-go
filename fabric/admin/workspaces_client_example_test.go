@@ -99,6 +99,57 @@ func ExampleWorkspacesClient_NewListWorkspacesPager_getAListOfWorkspacesUsingSta
 }
 
 // Generated from example definition
+func ExampleWorkspacesClient_NewListGitConnectionsPager() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := admin.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewWorkspacesClient().NewListGitConnectionsPager(&admin.WorkspacesClientListGitConnectionsOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.GitConnections = admin.GitConnections{
+		// 	ContinuationToken: to.Ptr("eyJMYXN0U2VlbkNvbm5lY3Rpb25JZCI6NX0="),
+		// 	ContinuationURI: to.Ptr("https://api.fabric.microsoft.com/v1/admin/workspaces/discoverGitConnections?continuationToken=eyJMYXN0U2VlbkNvbm5lY3Rpb25JZCI6NX0="),
+		// 	Value: []admin.GitConnectionDetails{
+		// 		{
+		// 			GitProviderDetails: &admin.AzureDevOpsDetails{
+		// 				BranchName: to.Ptr("Test Branch"),
+		// 				DirectoryName: to.Ptr("/Test Directory"),
+		// 				GitProviderType: to.Ptr(admin.GitProviderTypeAzureDevOps),
+		// 				RepositoryName: to.Ptr("Test Repo"),
+		// 				OrganizationName: to.Ptr("Test Organization"),
+		// 				ProjectName: to.Ptr("Test Project"),
+		// 			},
+		// 			WorkspaceID: to.Ptr("41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"),
+		// 		},
+		// 		{
+		// 			GitProviderDetails: &admin.GitHubDetails{
+		// 				BranchName: to.Ptr("Test Branch"),
+		// 				DirectoryName: to.Ptr("/"),
+		// 				GitProviderType: to.Ptr(admin.GitProviderTypeGitHub),
+		// 				RepositoryName: to.Ptr("Test Repo"),
+		// 				OwnerName: to.Ptr("Test Owner"),
+		// 			},
+		// 			WorkspaceID: to.Ptr("17d8929d-ab32-46d1-858b-fdea74e93bf2"),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
 func ExampleWorkspacesClient_GetWorkspace() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {

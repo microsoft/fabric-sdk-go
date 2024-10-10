@@ -30,8 +30,7 @@ type TenantsClient struct {
 // maximum of 10,000 records can be returned per request. With the continuation token provided in the response, you can get
 // the next
 // 10,000 records.
-// The user must have administrator rights (such as Office 365 Global Administrator or Fabric Service Administrator) or authenticate
-// using a service principal.
+// The user must be a Fabric Service Administrator or authenticate using a service principal.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
 // LIMITATIONS Maximum 100 requests per hour.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -92,8 +91,7 @@ func (client *TenantsClient) listCapacitiesTenantSettingsOverridesHandleResponse
 	return result, nil
 }
 
-// ListTenantSettings - PERMISSIONS The caller must have administrator rights (such as Office 365 Global administrator or
-// Fabric administrator) or authenticate using a service principal.
+// ListTenantSettings - PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
 // LIMITATIONS Maximum 200 requests per hour.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -130,7 +128,7 @@ func (client *TenantsClient) ListTenantSettings(ctx context.Context, options *Te
 }
 
 // listTenantSettingsCreateRequest creates the ListTenantSettings request.
-func (client *TenantsClient) listTenantSettingsCreateRequest(ctx context.Context, options *TenantsClientListTenantSettingsOptions) (*policy.Request, error) {
+func (client *TenantsClient) listTenantSettingsCreateRequest(ctx context.Context, _ *TenantsClientListTenantSettingsOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/tenantsettings"
 	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
@@ -155,7 +153,7 @@ func (client *TenantsClient) listTenantSettingsHandleResponse(resp *http.Respons
 // This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records can be returned per request. With the continuation token provided in the response, you can get the next
 // 10,000 records.
 //
-// The user must have administrator rights (such as Office 365 Global Administrator or Fabric Service Administrator) or authenticate using a service principal.
+// The user must be a Fabric Service Administrator or authenticate using a service principal.
 //
 // # REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
 //

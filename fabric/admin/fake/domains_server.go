@@ -28,7 +28,7 @@ import (
 // DomainsServer is a fake server for instances of the admin.DomainsClient type.
 type DomainsServer struct {
 	// BeginAssignDomainWorkspacesByCapacities is the fake for method DomainsClient.BeginAssignDomainWorkspacesByCapacities
-	// HTTP status codes to indicate success: http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
 	BeginAssignDomainWorkspacesByCapacities func(ctx context.Context, domainID string, assignDomainWorkspacesByCapacitiesRequest admin.AssignDomainWorkspacesByCapacitiesRequest, options *admin.DomainsClientBeginAssignDomainWorkspacesByCapacitiesOptions) (resp azfake.PollerResponder[admin.DomainsClientAssignDomainWorkspacesByCapacitiesResponse], errResp azfake.ErrorResponder)
 
 	// AssignDomainWorkspacesByIDs is the fake for method DomainsClient.AssignDomainWorkspacesByIDs
@@ -36,7 +36,7 @@ type DomainsServer struct {
 	AssignDomainWorkspacesByIDs func(ctx context.Context, domainID string, assignDomainWorkspacesByIDsRequest admin.AssignDomainWorkspacesByIDsRequest, options *admin.DomainsClientAssignDomainWorkspacesByIDsOptions) (resp azfake.Responder[admin.DomainsClientAssignDomainWorkspacesByIDsResponse], errResp azfake.ErrorResponder)
 
 	// BeginAssignDomainWorkspacesByPrincipals is the fake for method DomainsClient.BeginAssignDomainWorkspacesByPrincipals
-	// HTTP status codes to indicate success: http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
 	BeginAssignDomainWorkspacesByPrincipals func(ctx context.Context, domainID string, assignDomainWorkspacesByPrincipalsRequest admin.AssignDomainWorkspacesByPrincipalsRequest, options *admin.DomainsClientBeginAssignDomainWorkspacesByPrincipalsOptions) (resp azfake.PollerResponder[admin.DomainsClientAssignDomainWorkspacesByPrincipalsResponse], errResp azfake.ErrorResponder)
 
 	// CreateDomain is the fake for method DomainsClient.CreateDomain
@@ -115,41 +115,54 @@ func (d *DomainsServerTransport) Do(req *http.Request) (*http.Response, error) {
 }
 
 func (d *DomainsServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "DomainsClient.BeginAssignDomainWorkspacesByCapacities":
-		resp, err = d.dispatchBeginAssignDomainWorkspacesByCapacities(req)
-	case "DomainsClient.AssignDomainWorkspacesByIDs":
-		resp, err = d.dispatchAssignDomainWorkspacesByIDs(req)
-	case "DomainsClient.BeginAssignDomainWorkspacesByPrincipals":
-		resp, err = d.dispatchBeginAssignDomainWorkspacesByPrincipals(req)
-	case "DomainsClient.CreateDomain":
-		resp, err = d.dispatchCreateDomain(req)
-	case "DomainsClient.DeleteDomain":
-		resp, err = d.dispatchDeleteDomain(req)
-	case "DomainsClient.GetDomain":
-		resp, err = d.dispatchGetDomain(req)
-	case "DomainsClient.NewListDomainWorkspacesPager":
-		resp, err = d.dispatchNewListDomainWorkspacesPager(req)
-	case "DomainsClient.ListDomains":
-		resp, err = d.dispatchListDomains(req)
-	case "DomainsClient.RoleAssignmentsBulkAssign":
-		resp, err = d.dispatchRoleAssignmentsBulkAssign(req)
-	case "DomainsClient.RoleAssignmentsBulkUnassign":
-		resp, err = d.dispatchRoleAssignmentsBulkUnassign(req)
-	case "DomainsClient.UnassignAllDomainWorkspaces":
-		resp, err = d.dispatchUnassignAllDomainWorkspaces(req)
-	case "DomainsClient.UnassignDomainWorkspacesByIDs":
-		resp, err = d.dispatchUnassignDomainWorkspacesByIDs(req)
-	case "DomainsClient.UpdateDomain":
-		resp, err = d.dispatchUpdateDomain(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "DomainsClient.BeginAssignDomainWorkspacesByCapacities":
+			res.resp, res.err = d.dispatchBeginAssignDomainWorkspacesByCapacities(req)
+		case "DomainsClient.AssignDomainWorkspacesByIDs":
+			res.resp, res.err = d.dispatchAssignDomainWorkspacesByIDs(req)
+		case "DomainsClient.BeginAssignDomainWorkspacesByPrincipals":
+			res.resp, res.err = d.dispatchBeginAssignDomainWorkspacesByPrincipals(req)
+		case "DomainsClient.CreateDomain":
+			res.resp, res.err = d.dispatchCreateDomain(req)
+		case "DomainsClient.DeleteDomain":
+			res.resp, res.err = d.dispatchDeleteDomain(req)
+		case "DomainsClient.GetDomain":
+			res.resp, res.err = d.dispatchGetDomain(req)
+		case "DomainsClient.NewListDomainWorkspacesPager":
+			res.resp, res.err = d.dispatchNewListDomainWorkspacesPager(req)
+		case "DomainsClient.ListDomains":
+			res.resp, res.err = d.dispatchListDomains(req)
+		case "DomainsClient.RoleAssignmentsBulkAssign":
+			res.resp, res.err = d.dispatchRoleAssignmentsBulkAssign(req)
+		case "DomainsClient.RoleAssignmentsBulkUnassign":
+			res.resp, res.err = d.dispatchRoleAssignmentsBulkUnassign(req)
+		case "DomainsClient.UnassignAllDomainWorkspaces":
+			res.resp, res.err = d.dispatchUnassignAllDomainWorkspaces(req)
+		case "DomainsClient.UnassignDomainWorkspacesByIDs":
+			res.resp, res.err = d.dispatchUnassignDomainWorkspacesByIDs(req)
+		case "DomainsClient.UpdateDomain":
+			res.resp, res.err = d.dispatchUpdateDomain(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (d *DomainsServerTransport) dispatchBeginAssignDomainWorkspacesByCapacities(req *http.Request) (*http.Response, error) {
@@ -185,9 +198,9 @@ func (d *DomainsServerTransport) dispatchBeginAssignDomainWorkspacesByCapacities
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
 		d.beginAssignDomainWorkspacesByCapacities.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginAssignDomainWorkspacesByCapacities) {
 		d.beginAssignDomainWorkspacesByCapacities.remove(req)
@@ -262,9 +275,9 @@ func (d *DomainsServerTransport) dispatchBeginAssignDomainWorkspacesByPrincipals
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
 		d.beginAssignDomainWorkspacesByPrincipals.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginAssignDomainWorkspacesByPrincipals) {
 		d.beginAssignDomainWorkspacesByPrincipals.remove(req)

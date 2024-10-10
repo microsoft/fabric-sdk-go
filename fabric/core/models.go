@@ -718,6 +718,34 @@ type GitConnection struct {
 	GitSyncDetails *GitSyncDetails
 }
 
+// GitHubDetails - GitHub provider details.
+type GitHubDetails struct {
+	// REQUIRED; The branch name. Maximum length is 250 characters.
+	BranchName *string
+
+	// REQUIRED; The directory name. Maximum length is 256 characters.
+	DirectoryName *string
+
+	// REQUIRED; A Git provider type. Additional provider types may be added over time.
+	GitProviderType *GitProviderType
+
+	// REQUIRED; The owner name. Maximum length is 100 characters.
+	OwnerName *string
+
+	// REQUIRED; The repository name. Maximum length is 128 characters.
+	RepositoryName *string
+}
+
+// GetGitProviderDetails implements the GitProviderDetailsClassification interface for type GitHubDetails.
+func (g *GitHubDetails) GetGitProviderDetails() *GitProviderDetails {
+	return &GitProviderDetails{
+		BranchName:      g.BranchName,
+		DirectoryName:   g.DirectoryName,
+		GitProviderType: g.GitProviderType,
+		RepositoryName:  g.RepositoryName,
+	}
+}
+
 // GitProviderDetails - The Git provider details.
 type GitProviderDetails struct {
 	// REQUIRED; The branch name. Maximum length is 250 characters.
@@ -1028,6 +1056,19 @@ type OneLake struct {
 	WorkspaceID *string
 }
 
+// OneLakeEndpoints - The OneLake API endpoints associated with this workspace.
+type OneLakeEndpoints struct {
+	// READ-ONLY; The OneLake API endpoint available for Blob API operations. This is a region specific endpoint, unless the tenant
+	// has Private Link enabled and public access disabled, in which case the global endpoint
+	// is provided.
+	BlobEndpoint *string
+
+	// READ-ONLY; The OneLake API endpoint available for Distributed File System (DFS) or ADLSgen2 filesystem API operations.
+	// This is a region specific endpoint, unless the tenant has Private Link enabled and public
+	// access disabled, in which case the global endpoint is provided.
+	DfsEndpoint *string
+}
+
 // OperationState - An object describing the details and current state of a long running operation
 type OperationState struct {
 	// REQUIRED; The start date and time of the operation
@@ -1075,6 +1116,7 @@ type PreDeploymentDiffInformation struct {
 	NoDifferenceItemsCount *int32
 }
 
+// Principal - Represents an identity or a Microsoft Entra group.
 type Principal struct {
 	// REQUIRED; The principal's ID.
 	ID *string
@@ -1369,6 +1411,12 @@ type WorkspaceInfo struct {
 	// READ-ONLY; The ID of the capacity the workspace is assigned to.
 	CapacityID *string
 
+	// READ-ONLY; The region of the capacity associated with this workspace.
+	CapacityRegion *CapacityRegion
+
+	// READ-ONLY; The OneLake API endpoints associated with this workspace.
+	OneLakeEndpoints *OneLakeEndpoints
+
 	// READ-ONLY; The workspace type.
 	Type *WorkspaceType
 
@@ -1389,7 +1437,7 @@ type WorkspaceRoleAssignment struct {
 }
 
 type WorkspaceRoleAssignments struct {
-	// REQUIRED; A list of workspace role assignments.
+	// REQUIRED
 	Value []WorkspaceRoleAssignment
 
 	// The token for the next result set batch. If there are no more records, it's removed from the response.

@@ -15,7 +15,7 @@ type BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions struct {
 // ItemsClientBeginCreateSparkJobDefinitionOptions contains the optional parameters for the ItemsClient.BeginCreateSparkJobDefinition
 // method.
 type ItemsClientBeginCreateSparkJobDefinitionOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 
@@ -25,14 +25,14 @@ type ItemsClientBeginGetSparkJobDefinitionDefinitionOptions struct {
 	// The format of the spark job definition public definition.
 	Format *string
 
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 
 // ItemsClientBeginUpdateSparkJobDefinitionDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateSparkJobDefinitionDefinition
 // method.
 type ItemsClientBeginUpdateSparkJobDefinitionDefinitionOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 
 	// When set to true and the .platform file is provided as part of the definition, the item's metadata is updated using the

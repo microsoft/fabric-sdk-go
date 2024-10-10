@@ -89,7 +89,7 @@ func (client *ItemsClient) createEventhouse(ctx context.Context, workspaceID str
 }
 
 // createEventhouseCreateRequest creates the CreateEventhouse request.
-func (client *ItemsClient) createEventhouseCreateRequest(ctx context.Context, workspaceID string, createEventhouseRequest CreateEventhouseRequest, options *ItemsClientBeginCreateEventhouseOptions) (*policy.Request, error) {
+func (client *ItemsClient) createEventhouseCreateRequest(ctx context.Context, workspaceID string, createEventhouseRequest CreateEventhouseRequest, _ *ItemsClientBeginCreateEventhouseOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/eventhouses"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -142,7 +142,7 @@ func (client *ItemsClient) DeleteEventhouse(ctx context.Context, workspaceID str
 }
 
 // deleteEventhouseCreateRequest creates the DeleteEventhouse request.
-func (client *ItemsClient) deleteEventhouseCreateRequest(ctx context.Context, workspaceID string, eventhouseID string, options *ItemsClientDeleteEventhouseOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteEventhouseCreateRequest(ctx context.Context, workspaceID string, eventhouseID string, _ *ItemsClientDeleteEventhouseOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/eventhouses/{eventhouseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -197,7 +197,7 @@ func (client *ItemsClient) GetEventhouse(ctx context.Context, workspaceID string
 }
 
 // getEventhouseCreateRequest creates the GetEventhouse request.
-func (client *ItemsClient) getEventhouseCreateRequest(ctx context.Context, workspaceID string, eventhouseID string, options *ItemsClientGetEventhouseOptions) (*policy.Request, error) {
+func (client *ItemsClient) getEventhouseCreateRequest(ctx context.Context, workspaceID string, eventhouseID string, _ *ItemsClientGetEventhouseOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/eventhouses/{eventhouseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -328,7 +328,7 @@ func (client *ItemsClient) UpdateEventhouse(ctx context.Context, workspaceID str
 }
 
 // updateEventhouseCreateRequest creates the UpdateEventhouse request.
-func (client *ItemsClient) updateEventhouseCreateRequest(ctx context.Context, workspaceID string, eventhouseID string, updateEventhouseRequest UpdateEventhouseRequest, options *ItemsClientUpdateEventhouseOptions) (*policy.Request, error) {
+func (client *ItemsClient) updateEventhouseCreateRequest(ctx context.Context, workspaceID string, eventhouseID string, updateEventhouseRequest UpdateEventhouseRequest, _ *ItemsClientUpdateEventhouseOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/eventhouses/{eventhouseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -376,7 +376,6 @@ func (client *ItemsClient) updateEventhouseHandleResponse(resp *http.Response) (
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - createEventhouseRequest - Create eventhouse request payload.

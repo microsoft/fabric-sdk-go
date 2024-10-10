@@ -92,7 +92,7 @@ func (client *ItemsClient) createSemanticModel(ctx context.Context, workspaceID 
 }
 
 // createSemanticModelCreateRequest creates the CreateSemanticModel request.
-func (client *ItemsClient) createSemanticModelCreateRequest(ctx context.Context, workspaceID string, createSemanticModelRequest CreateSemanticModelRequest, options *ItemsClientBeginCreateSemanticModelOptions) (*policy.Request, error) {
+func (client *ItemsClient) createSemanticModelCreateRequest(ctx context.Context, workspaceID string, createSemanticModelRequest CreateSemanticModelRequest, _ *ItemsClientBeginCreateSemanticModelOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/semanticModels"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -146,7 +146,7 @@ func (client *ItemsClient) DeleteSemanticModel(ctx context.Context, workspaceID 
 }
 
 // deleteSemanticModelCreateRequest creates the DeleteSemanticModel request.
-func (client *ItemsClient) deleteSemanticModelCreateRequest(ctx context.Context, workspaceID string, semanticModelID string, options *ItemsClientDeleteSemanticModelOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteSemanticModelCreateRequest(ctx context.Context, workspaceID string, semanticModelID string, _ *ItemsClientDeleteSemanticModelOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/semanticModels/{semanticModelId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -201,7 +201,7 @@ func (client *ItemsClient) GetSemanticModel(ctx context.Context, workspaceID str
 }
 
 // getSemanticModelCreateRequest creates the GetSemanticModel request.
-func (client *ItemsClient) getSemanticModelCreateRequest(ctx context.Context, workspaceID string, semanticModelID string, options *ItemsClientGetSemanticModelOptions) (*policy.Request, error) {
+func (client *ItemsClient) getSemanticModelCreateRequest(ctx context.Context, workspaceID string, semanticModelID string, _ *ItemsClientGetSemanticModelOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/semanticModels/{semanticModelId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -414,7 +414,7 @@ func (client *ItemsClient) UpdateSemanticModel(ctx context.Context, workspaceID 
 }
 
 // updateSemanticModelCreateRequest creates the UpdateSemanticModel request.
-func (client *ItemsClient) updateSemanticModelCreateRequest(ctx context.Context, workspaceID string, semanticModelID string, updateSemanticModelRequest UpdateSemanticModelRequest, options *ItemsClientUpdateSemanticModelOptions) (*policy.Request, error) {
+func (client *ItemsClient) updateSemanticModelCreateRequest(ctx context.Context, workspaceID string, semanticModelID string, updateSemanticModelRequest UpdateSemanticModelRequest, _ *ItemsClientUpdateSemanticModelOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/semanticModels/{semanticModelId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -548,7 +548,6 @@ func (client *ItemsClient) updateSemanticModelDefinitionCreateRequest(ctx contex
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - createSemanticModelRequest - Create item request payload.
@@ -622,7 +621,6 @@ func (client *ItemsClient) beginCreateSemanticModel(ctx context.Context, workspa
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - semanticModelID - The semantic model ID.
@@ -694,7 +692,6 @@ func (client *ItemsClient) beginGetSemanticModelDefinition(ctx context.Context, 
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - semanticModelID - The semantic model ID.

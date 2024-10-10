@@ -77,25 +77,38 @@ func (c *CustomPoolsServerTransport) Do(req *http.Request) (*http.Response, erro
 }
 
 func (c *CustomPoolsServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "CustomPoolsClient.CreateWorkspaceCustomPool":
-		resp, err = c.dispatchCreateWorkspaceCustomPool(req)
-	case "CustomPoolsClient.DeleteWorkspaceCustomPool":
-		resp, err = c.dispatchDeleteWorkspaceCustomPool(req)
-	case "CustomPoolsClient.GetWorkspaceCustomPool":
-		resp, err = c.dispatchGetWorkspaceCustomPool(req)
-	case "CustomPoolsClient.NewListWorkspaceCustomPoolsPager":
-		resp, err = c.dispatchNewListWorkspaceCustomPoolsPager(req)
-	case "CustomPoolsClient.UpdateWorkspaceCustomPool":
-		resp, err = c.dispatchUpdateWorkspaceCustomPool(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "CustomPoolsClient.CreateWorkspaceCustomPool":
+			res.resp, res.err = c.dispatchCreateWorkspaceCustomPool(req)
+		case "CustomPoolsClient.DeleteWorkspaceCustomPool":
+			res.resp, res.err = c.dispatchDeleteWorkspaceCustomPool(req)
+		case "CustomPoolsClient.GetWorkspaceCustomPool":
+			res.resp, res.err = c.dispatchGetWorkspaceCustomPool(req)
+		case "CustomPoolsClient.NewListWorkspaceCustomPoolsPager":
+			res.resp, res.err = c.dispatchNewListWorkspaceCustomPoolsPager(req)
+		case "CustomPoolsClient.UpdateWorkspaceCustomPool":
+			res.resp, res.err = c.dispatchUpdateWorkspaceCustomPool(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (c *CustomPoolsServerTransport) dispatchCreateWorkspaceCustomPool(req *http.Request) (*http.Response, error) {

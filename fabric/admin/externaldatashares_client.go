@@ -31,8 +31,7 @@ type ExternalDataSharesClient struct {
 // NewListExternalDataSharesPager - This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000
 // records can be returned per request. With the continuous token provided in the response, you can get the next
 // 10,000 records.
-// PERMISSIONS The caller must have administrator rights (such as Microsoft 365 global administrator or Microsoft Fabric administrator)
-// or authenticate using a service principal.
+// PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All
 // REQUIRED TENANT SETTINGS To use this API, enable the 'External data sharing' admin switch for the calling principal.
 // LIMITATIONS Maximum 10 requests per minute.
@@ -94,8 +93,7 @@ func (client *ExternalDataSharesClient) listExternalDataSharesHandleResponse(res
 	return result, nil
 }
 
-// RevokeExternalDataShare - PERMISSIONS The caller must have administrator rights (such as Microsoft 365 global administrator
-// or Microsoft Fabric administrator).
+// RevokeExternalDataShare - PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All
 // REQUIRED TENANT SETTINGS To use this API, enable the 'External data sharing' admin switch for the calling principal.
 // LIMITATIONS Maximum 10 requests per minute.
@@ -135,7 +133,7 @@ func (client *ExternalDataSharesClient) RevokeExternalDataShare(ctx context.Cont
 }
 
 // revokeExternalDataShareCreateRequest creates the RevokeExternalDataShare request.
-func (client *ExternalDataSharesClient) revokeExternalDataShareCreateRequest(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, options *ExternalDataSharesClientRevokeExternalDataShareOptions) (*policy.Request, error) {
+func (client *ExternalDataSharesClient) revokeExternalDataShareCreateRequest(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, _ *ExternalDataSharesClientRevokeExternalDataShareOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/workspaces/{workspaceId}/items/{itemId}/externalDataShares/{externalDataShareId}/revoke"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -163,7 +161,7 @@ func (client *ExternalDataSharesClient) revokeExternalDataShareCreateRequest(ctx
 // This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records can be returned per request. With the continuous token provided in the response, you can get the next
 // 10,000 records.
 //
-// PERMISSIONS The caller must have administrator rights (such as Microsoft 365 global administrator or Microsoft Fabric administrator) or authenticate using a service principal.
+// PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
 //
 // # REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All
 //

@@ -67,7 +67,7 @@ func (client *BackgroundJobsClient) RunOnDemandTableMaintenance(ctx context.Cont
 }
 
 // runOnDemandTableMaintenanceCreateRequest creates the RunOnDemandTableMaintenance request.
-func (client *BackgroundJobsClient) runOnDemandTableMaintenanceCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, jobType string, runOnDemandTableMaintenanceRequest RunOnDemandTableMaintenanceRequest, options *BackgroundJobsClientRunOnDemandTableMaintenanceOptions) (*policy.Request, error) {
+func (client *BackgroundJobsClient) runOnDemandTableMaintenanceCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, jobType string, runOnDemandTableMaintenanceRequest RunOnDemandTableMaintenanceRequest, _ *BackgroundJobsClientRunOnDemandTableMaintenanceOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/jobs/instances"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")

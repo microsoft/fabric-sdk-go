@@ -78,7 +78,7 @@ func (client *ExternalDataSharesClient) CreateExternalDataShare(ctx context.Cont
 }
 
 // createExternalDataShareCreateRequest creates the CreateExternalDataShare request.
-func (client *ExternalDataSharesClient) createExternalDataShareCreateRequest(ctx context.Context, workspaceID string, itemID string, createExternalDataShareRequest CreateExternalDataShareRequest, options *ExternalDataSharesClientCreateExternalDataShareOptions) (*policy.Request, error) {
+func (client *ExternalDataSharesClient) createExternalDataShareCreateRequest(ctx context.Context, workspaceID string, itemID string, createExternalDataShareRequest CreateExternalDataShareRequest, _ *ExternalDataSharesClientCreateExternalDataShareOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/externalDataShares"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -158,7 +158,7 @@ func (client *ExternalDataSharesClient) GetExternalDataShare(ctx context.Context
 }
 
 // getExternalDataShareCreateRequest creates the GetExternalDataShare request.
-func (client *ExternalDataSharesClient) getExternalDataShareCreateRequest(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, options *ExternalDataSharesClientGetExternalDataShareOptions) (*policy.Request, error) {
+func (client *ExternalDataSharesClient) getExternalDataShareCreateRequest(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, _ *ExternalDataSharesClientGetExternalDataShareOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/externalDataShares/{externalDataShareId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -314,7 +314,7 @@ func (client *ExternalDataSharesClient) RevokeExternalDataShare(ctx context.Cont
 }
 
 // revokeExternalDataShareCreateRequest creates the RevokeExternalDataShare request.
-func (client *ExternalDataSharesClient) revokeExternalDataShareCreateRequest(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, options *ExternalDataSharesClientRevokeExternalDataShareOptions) (*policy.Request, error) {
+func (client *ExternalDataSharesClient) revokeExternalDataShareCreateRequest(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, _ *ExternalDataSharesClientRevokeExternalDataShareOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/externalDataShares/{externalDataShareId}/revoke"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")

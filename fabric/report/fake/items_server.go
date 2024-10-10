@@ -27,7 +27,7 @@ import (
 // ItemsServer is a fake server for instances of the report.ItemsClient type.
 type ItemsServer struct {
 	// BeginCreateReport is the fake for method ItemsClient.BeginCreateReport
-	// HTTP status codes to indicate success: http.StatusCreated, http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated, http.StatusAccepted
 	BeginCreateReport func(ctx context.Context, workspaceID string, createReportRequest report.CreateReportRequest, options *report.ItemsClientBeginCreateReportOptions) (resp azfake.PollerResponder[report.ItemsClientCreateReportResponse], errResp azfake.ErrorResponder)
 
 	// DeleteReport is the fake for method ItemsClient.DeleteReport
@@ -51,7 +51,7 @@ type ItemsServer struct {
 	UpdateReport func(ctx context.Context, workspaceID string, reportID string, updateReportRequest report.UpdateReportRequest, options *report.ItemsClientUpdateReportOptions) (resp azfake.Responder[report.ItemsClientUpdateReportResponse], errResp azfake.ErrorResponder)
 
 	// BeginUpdateReportDefinition is the fake for method ItemsClient.BeginUpdateReportDefinition
-	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
 	BeginUpdateReportDefinition func(ctx context.Context, workspaceID string, reportID string, updateReportDefinitionRequest report.UpdateReportDefinitionRequest, options *report.ItemsClientBeginUpdateReportDefinitionOptions) (resp azfake.PollerResponder[report.ItemsClientUpdateReportDefinitionResponse], errResp azfake.ErrorResponder)
 }
 
@@ -92,29 +92,42 @@ func (i *ItemsServerTransport) Do(req *http.Request) (*http.Response, error) {
 }
 
 func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "ItemsClient.BeginCreateReport":
-		resp, err = i.dispatchBeginCreateReport(req)
-	case "ItemsClient.DeleteReport":
-		resp, err = i.dispatchDeleteReport(req)
-	case "ItemsClient.GetReport":
-		resp, err = i.dispatchGetReport(req)
-	case "ItemsClient.BeginGetReportDefinition":
-		resp, err = i.dispatchBeginGetReportDefinition(req)
-	case "ItemsClient.NewListReportsPager":
-		resp, err = i.dispatchNewListReportsPager(req)
-	case "ItemsClient.UpdateReport":
-		resp, err = i.dispatchUpdateReport(req)
-	case "ItemsClient.BeginUpdateReportDefinition":
-		resp, err = i.dispatchBeginUpdateReportDefinition(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "ItemsClient.BeginCreateReport":
+			res.resp, res.err = i.dispatchBeginCreateReport(req)
+		case "ItemsClient.DeleteReport":
+			res.resp, res.err = i.dispatchDeleteReport(req)
+		case "ItemsClient.GetReport":
+			res.resp, res.err = i.dispatchGetReport(req)
+		case "ItemsClient.BeginGetReportDefinition":
+			res.resp, res.err = i.dispatchBeginGetReportDefinition(req)
+		case "ItemsClient.NewListReportsPager":
+			res.resp, res.err = i.dispatchNewListReportsPager(req)
+		case "ItemsClient.UpdateReport":
+			res.resp, res.err = i.dispatchUpdateReport(req)
+		case "ItemsClient.BeginUpdateReportDefinition":
+			res.resp, res.err = i.dispatchBeginUpdateReportDefinition(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (i *ItemsServerTransport) dispatchBeginCreateReport(req *http.Request) (*http.Response, error) {
@@ -150,9 +163,9 @@ func (i *ItemsServerTransport) dispatchBeginCreateReport(req *http.Request) (*ht
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
 		i.beginCreateReport.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginCreateReport) {
 		i.beginCreateReport.remove(req)
@@ -421,9 +434,9 @@ func (i *ItemsServerTransport) dispatchBeginUpdateReportDefinition(req *http.Req
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
 		i.beginUpdateReportDefinition.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginUpdateReportDefinition) {
 		i.beginUpdateReportDefinition.remove(req)

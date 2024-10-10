@@ -27,7 +27,7 @@ import (
 // ItemsServer is a fake server for instances of the semanticmodel.ItemsClient type.
 type ItemsServer struct {
 	// BeginCreateSemanticModel is the fake for method ItemsClient.BeginCreateSemanticModel
-	// HTTP status codes to indicate success: http.StatusCreated, http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated, http.StatusAccepted
 	BeginCreateSemanticModel func(ctx context.Context, workspaceID string, createSemanticModelRequest semanticmodel.CreateSemanticModelRequest, options *semanticmodel.ItemsClientBeginCreateSemanticModelOptions) (resp azfake.PollerResponder[semanticmodel.ItemsClientCreateSemanticModelResponse], errResp azfake.ErrorResponder)
 
 	// DeleteSemanticModel is the fake for method ItemsClient.DeleteSemanticModel
@@ -51,7 +51,7 @@ type ItemsServer struct {
 	UpdateSemanticModel func(ctx context.Context, workspaceID string, semanticModelID string, updateSemanticModelRequest semanticmodel.UpdateSemanticModelRequest, options *semanticmodel.ItemsClientUpdateSemanticModelOptions) (resp azfake.Responder[semanticmodel.ItemsClientUpdateSemanticModelResponse], errResp azfake.ErrorResponder)
 
 	// BeginUpdateSemanticModelDefinition is the fake for method ItemsClient.BeginUpdateSemanticModelDefinition
-	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
 	BeginUpdateSemanticModelDefinition func(ctx context.Context, workspaceID string, semanticModelID string, updateSemanticModelDefinitionRequest semanticmodel.UpdateSemanticModelDefinitionRequest, options *semanticmodel.ItemsClientBeginUpdateSemanticModelDefinitionOptions) (resp azfake.PollerResponder[semanticmodel.ItemsClientUpdateSemanticModelDefinitionResponse], errResp azfake.ErrorResponder)
 }
 
@@ -92,29 +92,42 @@ func (i *ItemsServerTransport) Do(req *http.Request) (*http.Response, error) {
 }
 
 func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "ItemsClient.BeginCreateSemanticModel":
-		resp, err = i.dispatchBeginCreateSemanticModel(req)
-	case "ItemsClient.DeleteSemanticModel":
-		resp, err = i.dispatchDeleteSemanticModel(req)
-	case "ItemsClient.GetSemanticModel":
-		resp, err = i.dispatchGetSemanticModel(req)
-	case "ItemsClient.BeginGetSemanticModelDefinition":
-		resp, err = i.dispatchBeginGetSemanticModelDefinition(req)
-	case "ItemsClient.NewListSemanticModelsPager":
-		resp, err = i.dispatchNewListSemanticModelsPager(req)
-	case "ItemsClient.UpdateSemanticModel":
-		resp, err = i.dispatchUpdateSemanticModel(req)
-	case "ItemsClient.BeginUpdateSemanticModelDefinition":
-		resp, err = i.dispatchBeginUpdateSemanticModelDefinition(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "ItemsClient.BeginCreateSemanticModel":
+			res.resp, res.err = i.dispatchBeginCreateSemanticModel(req)
+		case "ItemsClient.DeleteSemanticModel":
+			res.resp, res.err = i.dispatchDeleteSemanticModel(req)
+		case "ItemsClient.GetSemanticModel":
+			res.resp, res.err = i.dispatchGetSemanticModel(req)
+		case "ItemsClient.BeginGetSemanticModelDefinition":
+			res.resp, res.err = i.dispatchBeginGetSemanticModelDefinition(req)
+		case "ItemsClient.NewListSemanticModelsPager":
+			res.resp, res.err = i.dispatchNewListSemanticModelsPager(req)
+		case "ItemsClient.UpdateSemanticModel":
+			res.resp, res.err = i.dispatchUpdateSemanticModel(req)
+		case "ItemsClient.BeginUpdateSemanticModelDefinition":
+			res.resp, res.err = i.dispatchBeginUpdateSemanticModelDefinition(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (i *ItemsServerTransport) dispatchBeginCreateSemanticModel(req *http.Request) (*http.Response, error) {
@@ -150,9 +163,9 @@ func (i *ItemsServerTransport) dispatchBeginCreateSemanticModel(req *http.Reques
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
 		i.beginCreateSemanticModel.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginCreateSemanticModel) {
 		i.beginCreateSemanticModel.remove(req)
@@ -421,9 +434,9 @@ func (i *ItemsServerTransport) dispatchBeginUpdateSemanticModelDefinition(req *h
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
 		i.beginUpdateSemanticModelDefinition.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginUpdateSemanticModelDefinition) {
 		i.beginUpdateSemanticModelDefinition.remove(req)

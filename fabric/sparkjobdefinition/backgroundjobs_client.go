@@ -66,7 +66,7 @@ func (client *BackgroundJobsClient) RunOnDemandSparkJobDefinition(ctx context.Co
 }
 
 // runOnDemandSparkJobDefinitionCreateRequest creates the RunOnDemandSparkJobDefinition request.
-func (client *BackgroundJobsClient) runOnDemandSparkJobDefinitionCreateRequest(ctx context.Context, workspaceID string, sparkJobDefinitionID string, jobType string, options *BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions) (*policy.Request, error) {
+func (client *BackgroundJobsClient) runOnDemandSparkJobDefinitionCreateRequest(ctx context.Context, workspaceID string, sparkJobDefinitionID string, jobType string, _ *BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/sparkJobDefinitions/{sparkJobDefinitionId}/jobs/instances"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")

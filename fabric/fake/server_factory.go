@@ -23,6 +23,7 @@ import (
 	environmentfake "github.com/microsoft/fabric-sdk-go/fabric/environment/fake"
 	eventhousefake "github.com/microsoft/fabric-sdk-go/fabric/eventhouse/fake"
 	eventstreamfake "github.com/microsoft/fabric-sdk-go/fabric/eventstream/fake"
+	kqldashboardfake "github.com/microsoft/fabric-sdk-go/fabric/kqldashboard/fake"
 	kqldatabasefake "github.com/microsoft/fabric-sdk-go/fabric/kqldatabase/fake"
 	kqlquerysetfake "github.com/microsoft/fabric-sdk-go/fabric/kqlqueryset/fake"
 	lakehousefake "github.com/microsoft/fabric-sdk-go/fabric/lakehouse/fake"
@@ -49,6 +50,7 @@ type ServerFactory struct {
 	Environment        environmentfake.ServerFactory
 	Eventhouse         eventhousefake.ServerFactory
 	Eventstream        eventstreamfake.ServerFactory
+	KQLDashboard       kqldashboardfake.ServerFactory
 	KQLDatabase        kqldatabasefake.ServerFactory
 	KQLQueryset        kqlquerysetfake.ServerFactory
 	Lakehouse          lakehousefake.ServerFactory
@@ -78,6 +80,7 @@ type ServerFactoryTransport struct {
 	trEnvironment        *environmentfake.ServerFactoryTransport
 	trEventhouse         *eventhousefake.ServerFactoryTransport
 	trEventstream        *eventstreamfake.ServerFactoryTransport
+	trKQLDashboard       *kqldashboardfake.ServerFactoryTransport
 	trKQLDatabase        *kqldatabasefake.ServerFactoryTransport
 	trKQLQueryset        *kqlquerysetfake.ServerFactoryTransport
 	trLakehouse          *lakehousefake.ServerFactoryTransport
@@ -153,6 +156,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return eventstreamfake.NewServerFactoryTransport(&s.srv.Eventstream)
 		})
 		resp, err = s.trEventstream.Do(req)
+	case "kqldashboard":
+		initServer(s, &s.trKQLDashboard, func() *kqldashboardfake.ServerFactoryTransport {
+			return kqldashboardfake.NewServerFactoryTransport(&s.srv.KQLDashboard)
+		})
+		resp, err = s.trKQLDashboard.Do(req)
 	case "kqldatabase":
 		initServer(s, &s.trKQLDatabase, func() *kqldatabasefake.ServerFactoryTransport {
 			return kqldatabasefake.NewServerFactoryTransport(&s.srv.KQLDatabase)

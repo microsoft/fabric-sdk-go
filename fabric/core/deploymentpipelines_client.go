@@ -92,7 +92,7 @@ func (client *DeploymentPipelinesClient) deployStageContent(ctx context.Context,
 }
 
 // deployStageContentCreateRequest creates the DeployStageContent request.
-func (client *DeploymentPipelinesClient) deployStageContentCreateRequest(ctx context.Context, deploymentPipelineID string, deployRequest DeployRequest, options *DeploymentPipelinesClientBeginDeployStageContentOptions) (*policy.Request, error) {
+func (client *DeploymentPipelinesClient) deployStageContentCreateRequest(ctx context.Context, deploymentPipelineID string, deployRequest DeployRequest, _ *DeploymentPipelinesClientBeginDeployStageContentOptions) (*policy.Request, error) {
 	urlPath := "/v1/deploymentPipelines/{deploymentPipelineId}/deploy"
 	if deploymentPipelineID == "" {
 		return nil, errors.New("parameter deploymentPipelineID cannot be empty")
@@ -145,7 +145,7 @@ func (client *DeploymentPipelinesClient) GetDeploymentPipeline(ctx context.Conte
 }
 
 // getDeploymentPipelineCreateRequest creates the GetDeploymentPipeline request.
-func (client *DeploymentPipelinesClient) getDeploymentPipelineCreateRequest(ctx context.Context, deploymentPipelineID string, options *DeploymentPipelinesClientGetDeploymentPipelineOptions) (*policy.Request, error) {
+func (client *DeploymentPipelinesClient) getDeploymentPipelineCreateRequest(ctx context.Context, deploymentPipelineID string, _ *DeploymentPipelinesClientGetDeploymentPipelineOptions) (*policy.Request, error) {
 	urlPath := "/v1/deploymentPipelines/{deploymentPipelineId}"
 	if deploymentPipelineID == "" {
 		return nil, errors.New("parameter deploymentPipelineID cannot be empty")
@@ -384,7 +384,6 @@ func (client *DeploymentPipelinesClient) listDeploymentPipelinesHandleResponse(r
 // [/rest/api/fabric/articles/item-management/item-management-overview#power-bi] are supported |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - deploymentPipelineID - The deployment pipeline ID.
 //   - deployRequest - The deploy request.

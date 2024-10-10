@@ -73,23 +73,36 @@ func (i *ItemsServerTransport) Do(req *http.Request) (*http.Response, error) {
 }
 
 func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "ItemsClient.DeleteKQLQueryset":
-		resp, err = i.dispatchDeleteKQLQueryset(req)
-	case "ItemsClient.GetKQLQueryset":
-		resp, err = i.dispatchGetKQLQueryset(req)
-	case "ItemsClient.NewListKQLQuerysetsPager":
-		resp, err = i.dispatchNewListKQLQuerysetsPager(req)
-	case "ItemsClient.UpdateKQLQueryset":
-		resp, err = i.dispatchUpdateKQLQueryset(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "ItemsClient.DeleteKQLQueryset":
+			res.resp, res.err = i.dispatchDeleteKQLQueryset(req)
+		case "ItemsClient.GetKQLQueryset":
+			res.resp, res.err = i.dispatchGetKQLQueryset(req)
+		case "ItemsClient.NewListKQLQuerysetsPager":
+			res.resp, res.err = i.dispatchNewListKQLQuerysetsPager(req)
+		case "ItemsClient.UpdateKQLQueryset":
+			res.resp, res.err = i.dispatchUpdateKQLQueryset(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (i *ItemsServerTransport) dispatchDeleteKQLQueryset(req *http.Request) (*http.Response, error) {

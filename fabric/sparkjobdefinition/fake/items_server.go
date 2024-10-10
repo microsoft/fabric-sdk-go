@@ -27,7 +27,7 @@ import (
 // ItemsServer is a fake server for instances of the sparkjobdefinition.ItemsClient type.
 type ItemsServer struct {
 	// BeginCreateSparkJobDefinition is the fake for method ItemsClient.BeginCreateSparkJobDefinition
-	// HTTP status codes to indicate success: http.StatusCreated, http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated, http.StatusAccepted
 	BeginCreateSparkJobDefinition func(ctx context.Context, workspaceID string, createSparkJobDefinitionRequest sparkjobdefinition.CreateSparkJobDefinitionRequest, options *sparkjobdefinition.ItemsClientBeginCreateSparkJobDefinitionOptions) (resp azfake.PollerResponder[sparkjobdefinition.ItemsClientCreateSparkJobDefinitionResponse], errResp azfake.ErrorResponder)
 
 	// DeleteSparkJobDefinition is the fake for method ItemsClient.DeleteSparkJobDefinition
@@ -51,7 +51,7 @@ type ItemsServer struct {
 	UpdateSparkJobDefinition func(ctx context.Context, workspaceID string, sparkJobDefinitionID string, updateSparkJobDefinitionRequest sparkjobdefinition.UpdateSparkJobDefinitionRequest, options *sparkjobdefinition.ItemsClientUpdateSparkJobDefinitionOptions) (resp azfake.Responder[sparkjobdefinition.ItemsClientUpdateSparkJobDefinitionResponse], errResp azfake.ErrorResponder)
 
 	// BeginUpdateSparkJobDefinitionDefinition is the fake for method ItemsClient.BeginUpdateSparkJobDefinitionDefinition
-	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
 	BeginUpdateSparkJobDefinitionDefinition func(ctx context.Context, workspaceID string, sparkJobDefinitionID string, updateSparkJobDefinitionRequest sparkjobdefinition.UpdateSparkJobDefinitionDefinitionRequest, options *sparkjobdefinition.ItemsClientBeginUpdateSparkJobDefinitionDefinitionOptions) (resp azfake.PollerResponder[sparkjobdefinition.ItemsClientUpdateSparkJobDefinitionDefinitionResponse], errResp azfake.ErrorResponder)
 }
 
@@ -92,29 +92,42 @@ func (i *ItemsServerTransport) Do(req *http.Request) (*http.Response, error) {
 }
 
 func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "ItemsClient.BeginCreateSparkJobDefinition":
-		resp, err = i.dispatchBeginCreateSparkJobDefinition(req)
-	case "ItemsClient.DeleteSparkJobDefinition":
-		resp, err = i.dispatchDeleteSparkJobDefinition(req)
-	case "ItemsClient.GetSparkJobDefinition":
-		resp, err = i.dispatchGetSparkJobDefinition(req)
-	case "ItemsClient.BeginGetSparkJobDefinitionDefinition":
-		resp, err = i.dispatchBeginGetSparkJobDefinitionDefinition(req)
-	case "ItemsClient.NewListSparkJobDefinitionsPager":
-		resp, err = i.dispatchNewListSparkJobDefinitionsPager(req)
-	case "ItemsClient.UpdateSparkJobDefinition":
-		resp, err = i.dispatchUpdateSparkJobDefinition(req)
-	case "ItemsClient.BeginUpdateSparkJobDefinitionDefinition":
-		resp, err = i.dispatchBeginUpdateSparkJobDefinitionDefinition(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "ItemsClient.BeginCreateSparkJobDefinition":
+			res.resp, res.err = i.dispatchBeginCreateSparkJobDefinition(req)
+		case "ItemsClient.DeleteSparkJobDefinition":
+			res.resp, res.err = i.dispatchDeleteSparkJobDefinition(req)
+		case "ItemsClient.GetSparkJobDefinition":
+			res.resp, res.err = i.dispatchGetSparkJobDefinition(req)
+		case "ItemsClient.BeginGetSparkJobDefinitionDefinition":
+			res.resp, res.err = i.dispatchBeginGetSparkJobDefinitionDefinition(req)
+		case "ItemsClient.NewListSparkJobDefinitionsPager":
+			res.resp, res.err = i.dispatchNewListSparkJobDefinitionsPager(req)
+		case "ItemsClient.UpdateSparkJobDefinition":
+			res.resp, res.err = i.dispatchUpdateSparkJobDefinition(req)
+		case "ItemsClient.BeginUpdateSparkJobDefinitionDefinition":
+			res.resp, res.err = i.dispatchBeginUpdateSparkJobDefinitionDefinition(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (i *ItemsServerTransport) dispatchBeginCreateSparkJobDefinition(req *http.Request) (*http.Response, error) {
@@ -150,9 +163,9 @@ func (i *ItemsServerTransport) dispatchBeginCreateSparkJobDefinition(req *http.R
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
 		i.beginCreateSparkJobDefinition.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginCreateSparkJobDefinition) {
 		i.beginCreateSparkJobDefinition.remove(req)
@@ -421,9 +434,9 @@ func (i *ItemsServerTransport) dispatchBeginUpdateSparkJobDefinitionDefinition(r
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
 		i.beginUpdateSparkJobDefinitionDefinition.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginUpdateSparkJobDefinitionDefinition) {
 		i.beginUpdateSparkJobDefinitionDefinition.remove(req)
