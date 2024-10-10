@@ -65,7 +65,7 @@ func (client *WorkspacesClient) GetWorkspace(ctx context.Context, workspaceID st
 }
 
 // getWorkspaceCreateRequest creates the GetWorkspace request.
-func (client *WorkspacesClient) getWorkspaceCreateRequest(ctx context.Context, workspaceID string, options *WorkspacesClientGetWorkspaceOptions) (*policy.Request, error) {
+func (client *WorkspacesClient) getWorkspaceCreateRequest(ctx context.Context, workspaceID string, _ *WorkspacesClientGetWorkspaceOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/workspaces/{workspaceId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -190,7 +190,7 @@ func (client *WorkspacesClient) ListWorkspaceAccessDetails(ctx context.Context, 
 }
 
 // listWorkspaceAccessDetailsCreateRequest creates the ListWorkspaceAccessDetails request.
-func (client *WorkspacesClient) listWorkspaceAccessDetailsCreateRequest(ctx context.Context, workspaceID string, options *WorkspacesClientListWorkspaceAccessDetailsOptions) (*policy.Request, error) {
+func (client *WorkspacesClient) listWorkspaceAccessDetailsCreateRequest(ctx context.Context, workspaceID string, _ *WorkspacesClientListWorkspaceAccessDetailsOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/workspaces/{workspaceId}/users"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")

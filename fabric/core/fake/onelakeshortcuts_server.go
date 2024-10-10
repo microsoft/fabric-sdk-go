@@ -73,23 +73,36 @@ func (o *OneLakeShortcutsServerTransport) Do(req *http.Request) (*http.Response,
 }
 
 func (o *OneLakeShortcutsServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "OneLakeShortcutsClient.CreateShortcut":
-		resp, err = o.dispatchCreateShortcut(req)
-	case "OneLakeShortcutsClient.DeleteShortcut":
-		resp, err = o.dispatchDeleteShortcut(req)
-	case "OneLakeShortcutsClient.GetShortcut":
-		resp, err = o.dispatchGetShortcut(req)
-	case "OneLakeShortcutsClient.NewListShortcutsPager":
-		resp, err = o.dispatchNewListShortcutsPager(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "OneLakeShortcutsClient.CreateShortcut":
+			res.resp, res.err = o.dispatchCreateShortcut(req)
+		case "OneLakeShortcutsClient.DeleteShortcut":
+			res.resp, res.err = o.dispatchDeleteShortcut(req)
+		case "OneLakeShortcutsClient.GetShortcut":
+			res.resp, res.err = o.dispatchGetShortcut(req)
+		case "OneLakeShortcutsClient.NewListShortcutsPager":
+			res.resp, res.err = o.dispatchNewListShortcutsPager(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (o *OneLakeShortcutsServerTransport) dispatchCreateShortcut(req *http.Request) (*http.Response, error) {

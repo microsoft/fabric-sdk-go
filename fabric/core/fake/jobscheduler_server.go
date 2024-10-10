@@ -82,29 +82,42 @@ func (j *JobSchedulerServerTransport) Do(req *http.Request) (*http.Response, err
 }
 
 func (j *JobSchedulerServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "JobSchedulerClient.CancelItemJobInstance":
-		resp, err = j.dispatchCancelItemJobInstance(req)
-	case "JobSchedulerClient.CreateItemSchedule":
-		resp, err = j.dispatchCreateItemSchedule(req)
-	case "JobSchedulerClient.GetItemJobInstance":
-		resp, err = j.dispatchGetItemJobInstance(req)
-	case "JobSchedulerClient.GetItemSchedule":
-		resp, err = j.dispatchGetItemSchedule(req)
-	case "JobSchedulerClient.ListItemSchedules":
-		resp, err = j.dispatchListItemSchedules(req)
-	case "JobSchedulerClient.RunOnDemandItemJob":
-		resp, err = j.dispatchRunOnDemandItemJob(req)
-	case "JobSchedulerClient.UpdateItemSchedule":
-		resp, err = j.dispatchUpdateItemSchedule(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "JobSchedulerClient.CancelItemJobInstance":
+			res.resp, res.err = j.dispatchCancelItemJobInstance(req)
+		case "JobSchedulerClient.CreateItemSchedule":
+			res.resp, res.err = j.dispatchCreateItemSchedule(req)
+		case "JobSchedulerClient.GetItemJobInstance":
+			res.resp, res.err = j.dispatchGetItemJobInstance(req)
+		case "JobSchedulerClient.GetItemSchedule":
+			res.resp, res.err = j.dispatchGetItemSchedule(req)
+		case "JobSchedulerClient.ListItemSchedules":
+			res.resp, res.err = j.dispatchListItemSchedules(req)
+		case "JobSchedulerClient.RunOnDemandItemJob":
+			res.resp, res.err = j.dispatchRunOnDemandItemJob(req)
+		case "JobSchedulerClient.UpdateItemSchedule":
+			res.resp, res.err = j.dispatchUpdateItemSchedule(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (j *JobSchedulerServerTransport) dispatchCancelItemJobInstance(req *http.Request) (*http.Response, error) {

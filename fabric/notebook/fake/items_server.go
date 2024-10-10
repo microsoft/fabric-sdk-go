@@ -27,7 +27,7 @@ import (
 // ItemsServer is a fake server for instances of the notebook.ItemsClient type.
 type ItemsServer struct {
 	// BeginCreateNotebook is the fake for method ItemsClient.BeginCreateNotebook
-	// HTTP status codes to indicate success: http.StatusCreated, http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated, http.StatusAccepted
 	BeginCreateNotebook func(ctx context.Context, workspaceID string, createNotebookRequest notebook.CreateNotebookRequest, options *notebook.ItemsClientBeginCreateNotebookOptions) (resp azfake.PollerResponder[notebook.ItemsClientCreateNotebookResponse], errResp azfake.ErrorResponder)
 
 	// DeleteNotebook is the fake for method ItemsClient.DeleteNotebook
@@ -51,7 +51,7 @@ type ItemsServer struct {
 	UpdateNotebook func(ctx context.Context, workspaceID string, notebookID string, updateNotebookRequest notebook.UpdateNotebookRequest, options *notebook.ItemsClientUpdateNotebookOptions) (resp azfake.Responder[notebook.ItemsClientUpdateNotebookResponse], errResp azfake.ErrorResponder)
 
 	// BeginUpdateNotebookDefinition is the fake for method ItemsClient.BeginUpdateNotebookDefinition
-	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
 	BeginUpdateNotebookDefinition func(ctx context.Context, workspaceID string, notebookID string, updateNotebookDefinitionRequest notebook.UpdateNotebookDefinitionRequest, options *notebook.ItemsClientBeginUpdateNotebookDefinitionOptions) (resp azfake.PollerResponder[notebook.ItemsClientUpdateNotebookDefinitionResponse], errResp azfake.ErrorResponder)
 }
 
@@ -92,29 +92,42 @@ func (i *ItemsServerTransport) Do(req *http.Request) (*http.Response, error) {
 }
 
 func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "ItemsClient.BeginCreateNotebook":
-		resp, err = i.dispatchBeginCreateNotebook(req)
-	case "ItemsClient.DeleteNotebook":
-		resp, err = i.dispatchDeleteNotebook(req)
-	case "ItemsClient.GetNotebook":
-		resp, err = i.dispatchGetNotebook(req)
-	case "ItemsClient.BeginGetNotebookDefinition":
-		resp, err = i.dispatchBeginGetNotebookDefinition(req)
-	case "ItemsClient.NewListNotebooksPager":
-		resp, err = i.dispatchNewListNotebooksPager(req)
-	case "ItemsClient.UpdateNotebook":
-		resp, err = i.dispatchUpdateNotebook(req)
-	case "ItemsClient.BeginUpdateNotebookDefinition":
-		resp, err = i.dispatchBeginUpdateNotebookDefinition(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "ItemsClient.BeginCreateNotebook":
+			res.resp, res.err = i.dispatchBeginCreateNotebook(req)
+		case "ItemsClient.DeleteNotebook":
+			res.resp, res.err = i.dispatchDeleteNotebook(req)
+		case "ItemsClient.GetNotebook":
+			res.resp, res.err = i.dispatchGetNotebook(req)
+		case "ItemsClient.BeginGetNotebookDefinition":
+			res.resp, res.err = i.dispatchBeginGetNotebookDefinition(req)
+		case "ItemsClient.NewListNotebooksPager":
+			res.resp, res.err = i.dispatchNewListNotebooksPager(req)
+		case "ItemsClient.UpdateNotebook":
+			res.resp, res.err = i.dispatchUpdateNotebook(req)
+		case "ItemsClient.BeginUpdateNotebookDefinition":
+			res.resp, res.err = i.dispatchBeginUpdateNotebookDefinition(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (i *ItemsServerTransport) dispatchBeginCreateNotebook(req *http.Request) (*http.Response, error) {
@@ -150,9 +163,9 @@ func (i *ItemsServerTransport) dispatchBeginCreateNotebook(req *http.Request) (*
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
 		i.beginCreateNotebook.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginCreateNotebook) {
 		i.beginCreateNotebook.remove(req)
@@ -421,9 +434,9 @@ func (i *ItemsServerTransport) dispatchBeginUpdateNotebookDefinition(req *http.R
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
 		i.beginUpdateNotebookDefinition.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginUpdateNotebookDefinition) {
 		i.beginUpdateNotebookDefinition.remove(req)

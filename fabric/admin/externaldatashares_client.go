@@ -133,7 +133,7 @@ func (client *ExternalDataSharesClient) RevokeExternalDataShare(ctx context.Cont
 }
 
 // revokeExternalDataShareCreateRequest creates the RevokeExternalDataShare request.
-func (client *ExternalDataSharesClient) revokeExternalDataShareCreateRequest(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, options *ExternalDataSharesClientRevokeExternalDataShareOptions) (*policy.Request, error) {
+func (client *ExternalDataSharesClient) revokeExternalDataShareCreateRequest(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, _ *ExternalDataSharesClientRevokeExternalDataShareOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/workspaces/{workspaceId}/items/{itemId}/externalDataShares/{externalDataShareId}/revoke"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")

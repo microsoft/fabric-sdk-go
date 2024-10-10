@@ -60,19 +60,32 @@ func (w *WorkspaceSettingsServerTransport) Do(req *http.Request) (*http.Response
 }
 
 func (w *WorkspaceSettingsServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "WorkspaceSettingsClient.GetSparkSettings":
-		resp, err = w.dispatchGetSparkSettings(req)
-	case "WorkspaceSettingsClient.UpdateSparkSettings":
-		resp, err = w.dispatchUpdateSparkSettings(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "WorkspaceSettingsClient.GetSparkSettings":
+			res.resp, res.err = w.dispatchGetSparkSettings(req)
+		case "WorkspaceSettingsClient.UpdateSparkSettings":
+			res.resp, res.err = w.dispatchUpdateSparkSettings(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (w *WorkspaceSettingsServerTransport) dispatchGetSparkSettings(req *http.Request) (*http.Response, error) {

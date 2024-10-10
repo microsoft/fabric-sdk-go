@@ -70,7 +70,7 @@ func (client *JobSchedulerClient) CancelItemJobInstance(ctx context.Context, wor
 }
 
 // cancelItemJobInstanceCreateRequest creates the CancelItemJobInstance request.
-func (client *JobSchedulerClient) cancelItemJobInstanceCreateRequest(ctx context.Context, workspaceID string, itemID string, jobInstanceID string, options *JobSchedulerClientCancelItemJobInstanceOptions) (*policy.Request, error) {
+func (client *JobSchedulerClient) cancelItemJobInstanceCreateRequest(ctx context.Context, workspaceID string, itemID string, jobInstanceID string, _ *JobSchedulerClientCancelItemJobInstanceOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/jobs/instances/{jobInstanceId}/cancel"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -148,7 +148,7 @@ func (client *JobSchedulerClient) CreateItemSchedule(ctx context.Context, worksp
 }
 
 // createItemScheduleCreateRequest creates the CreateItemSchedule request.
-func (client *JobSchedulerClient) createItemScheduleCreateRequest(ctx context.Context, workspaceID string, itemID string, jobType string, createScheduleRequest CreateScheduleRequest, options *JobSchedulerClientCreateItemScheduleOptions) (*policy.Request, error) {
+func (client *JobSchedulerClient) createItemScheduleCreateRequest(ctx context.Context, workspaceID string, itemID string, jobType string, createScheduleRequest CreateScheduleRequest, _ *JobSchedulerClientCreateItemScheduleOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/jobs/{jobType}/schedules"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -229,7 +229,7 @@ func (client *JobSchedulerClient) GetItemJobInstance(ctx context.Context, worksp
 }
 
 // getItemJobInstanceCreateRequest creates the GetItemJobInstance request.
-func (client *JobSchedulerClient) getItemJobInstanceCreateRequest(ctx context.Context, workspaceID string, itemID string, jobInstanceID string, options *JobSchedulerClientGetItemJobInstanceOptions) (*policy.Request, error) {
+func (client *JobSchedulerClient) getItemJobInstanceCreateRequest(ctx context.Context, workspaceID string, itemID string, jobInstanceID string, _ *JobSchedulerClientGetItemJobInstanceOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/jobs/instances/{jobInstanceId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -305,7 +305,7 @@ func (client *JobSchedulerClient) GetItemSchedule(ctx context.Context, workspace
 }
 
 // getItemScheduleCreateRequest creates the GetItemSchedule request.
-func (client *JobSchedulerClient) getItemScheduleCreateRequest(ctx context.Context, workspaceID string, itemID string, jobType string, scheduleID string, options *JobSchedulerClientGetItemScheduleOptions) (*policy.Request, error) {
+func (client *JobSchedulerClient) getItemScheduleCreateRequest(ctx context.Context, workspaceID string, itemID string, jobType string, scheduleID string, _ *JobSchedulerClientGetItemScheduleOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/jobs/{jobType}/schedules/{scheduleId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -385,7 +385,7 @@ func (client *JobSchedulerClient) ListItemSchedules(ctx context.Context, workspa
 }
 
 // listItemSchedulesCreateRequest creates the ListItemSchedules request.
-func (client *JobSchedulerClient) listItemSchedulesCreateRequest(ctx context.Context, workspaceID string, itemID string, jobType string, options *JobSchedulerClientListItemSchedulesOptions) (*policy.Request, error) {
+func (client *JobSchedulerClient) listItemSchedulesCreateRequest(ctx context.Context, workspaceID string, itemID string, jobType string, _ *JobSchedulerClientListItemSchedulesOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/jobs/{jobType}/schedules"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -544,7 +544,7 @@ func (client *JobSchedulerClient) UpdateItemSchedule(ctx context.Context, worksp
 }
 
 // updateItemScheduleCreateRequest creates the UpdateItemSchedule request.
-func (client *JobSchedulerClient) updateItemScheduleCreateRequest(ctx context.Context, workspaceID string, itemID string, jobType string, scheduleID string, updateScheduleRequest UpdateScheduleRequest, options *JobSchedulerClientUpdateItemScheduleOptions) (*policy.Request, error) {
+func (client *JobSchedulerClient) updateItemScheduleCreateRequest(ctx context.Context, workspaceID string, itemID string, jobType string, scheduleID string, updateScheduleRequest UpdateScheduleRequest, _ *JobSchedulerClientUpdateItemScheduleOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/jobs/{jobType}/schedules/{scheduleId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")

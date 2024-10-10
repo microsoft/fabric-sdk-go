@@ -96,7 +96,7 @@ func (client *ItemsClient) createSparkJobDefinition(ctx context.Context, workspa
 }
 
 // createSparkJobDefinitionCreateRequest creates the CreateSparkJobDefinition request.
-func (client *ItemsClient) createSparkJobDefinitionCreateRequest(ctx context.Context, workspaceID string, createSparkJobDefinitionRequest CreateSparkJobDefinitionRequest, options *ItemsClientBeginCreateSparkJobDefinitionOptions) (*policy.Request, error) {
+func (client *ItemsClient) createSparkJobDefinitionCreateRequest(ctx context.Context, workspaceID string, createSparkJobDefinitionRequest CreateSparkJobDefinitionRequest, _ *ItemsClientBeginCreateSparkJobDefinitionOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/sparkJobDefinitions"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -150,7 +150,7 @@ func (client *ItemsClient) DeleteSparkJobDefinition(ctx context.Context, workspa
 }
 
 // deleteSparkJobDefinitionCreateRequest creates the DeleteSparkJobDefinition request.
-func (client *ItemsClient) deleteSparkJobDefinitionCreateRequest(ctx context.Context, workspaceID string, sparkJobDefinitionID string, options *ItemsClientDeleteSparkJobDefinitionOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteSparkJobDefinitionCreateRequest(ctx context.Context, workspaceID string, sparkJobDefinitionID string, _ *ItemsClientDeleteSparkJobDefinitionOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/sparkJobDefinitions/{sparkJobDefinitionId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -206,7 +206,7 @@ func (client *ItemsClient) GetSparkJobDefinition(ctx context.Context, workspaceI
 }
 
 // getSparkJobDefinitionCreateRequest creates the GetSparkJobDefinition request.
-func (client *ItemsClient) getSparkJobDefinitionCreateRequest(ctx context.Context, workspaceID string, sparkJobDefinitionID string, options *ItemsClientGetSparkJobDefinitionOptions) (*policy.Request, error) {
+func (client *ItemsClient) getSparkJobDefinitionCreateRequest(ctx context.Context, workspaceID string, sparkJobDefinitionID string, _ *ItemsClientGetSparkJobDefinitionOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/sparkJobDefinitions/{sparkJobDefinitionId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -419,7 +419,7 @@ func (client *ItemsClient) UpdateSparkJobDefinition(ctx context.Context, workspa
 }
 
 // updateSparkJobDefinitionCreateRequest creates the UpdateSparkJobDefinition request.
-func (client *ItemsClient) updateSparkJobDefinitionCreateRequest(ctx context.Context, workspaceID string, sparkJobDefinitionID string, updateSparkJobDefinitionRequest UpdateSparkJobDefinitionRequest, options *ItemsClientUpdateSparkJobDefinitionOptions) (*policy.Request, error) {
+func (client *ItemsClient) updateSparkJobDefinitionCreateRequest(ctx context.Context, workspaceID string, sparkJobDefinitionID string, updateSparkJobDefinitionRequest UpdateSparkJobDefinitionRequest, _ *ItemsClientUpdateSparkJobDefinitionOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/sparkJobDefinitions/{sparkJobDefinitionId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -553,7 +553,6 @@ func (client *ItemsClient) updateSparkJobDefinitionDefinitionCreateRequest(ctx c
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - createSparkJobDefinitionRequest - Create item request payload.
@@ -627,7 +626,6 @@ func (client *ItemsClient) beginCreateSparkJobDefinition(ctx context.Context, wo
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - sparkJobDefinitionID - The spark job definition ID.
@@ -699,7 +697,6 @@ func (client *ItemsClient) beginGetSparkJobDefinitionDefinition(ctx context.Cont
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - sparkJobDefinitionID - The spark job definition ID.

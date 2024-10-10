@@ -66,7 +66,7 @@ func (client *SparkLibrariesClient) CancelPublish(ctx context.Context, workspace
 }
 
 // cancelPublishCreateRequest creates the CancelPublish request.
-func (client *SparkLibrariesClient) cancelPublishCreateRequest(ctx context.Context, workspaceID string, environmentID string, options *SparkLibrariesClientCancelPublishOptions) (*policy.Request, error) {
+func (client *SparkLibrariesClient) cancelPublishCreateRequest(ctx context.Context, workspaceID string, environmentID string, _ *SparkLibrariesClientCancelPublishOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/staging/cancelPublish"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -131,7 +131,7 @@ func (client *SparkLibrariesClient) DeleteStagingLibrary(ctx context.Context, wo
 }
 
 // deleteStagingLibraryCreateRequest creates the DeleteStagingLibrary request.
-func (client *SparkLibrariesClient) deleteStagingLibraryCreateRequest(ctx context.Context, workspaceID string, environmentID string, libraryToDelete string, options *SparkLibrariesClientDeleteStagingLibraryOptions) (*policy.Request, error) {
+func (client *SparkLibrariesClient) deleteStagingLibraryCreateRequest(ctx context.Context, workspaceID string, environmentID string, libraryToDelete string, _ *SparkLibrariesClientDeleteStagingLibraryOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/staging/libraries"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -190,7 +190,7 @@ func (client *SparkLibrariesClient) GetPublishedLibraries(ctx context.Context, w
 }
 
 // getPublishedLibrariesCreateRequest creates the GetPublishedLibraries request.
-func (client *SparkLibrariesClient) getPublishedLibrariesCreateRequest(ctx context.Context, workspaceID string, environmentID string, options *SparkLibrariesClientGetPublishedLibrariesOptions) (*policy.Request, error) {
+func (client *SparkLibrariesClient) getPublishedLibrariesCreateRequest(ctx context.Context, workspaceID string, environmentID string, _ *SparkLibrariesClientGetPublishedLibrariesOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/libraries"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -255,7 +255,7 @@ func (client *SparkLibrariesClient) GetStagingLibraries(ctx context.Context, wor
 }
 
 // getStagingLibrariesCreateRequest creates the GetStagingLibraries request.
-func (client *SparkLibrariesClient) getStagingLibrariesCreateRequest(ctx context.Context, workspaceID string, environmentID string, options *SparkLibrariesClientGetStagingLibrariesOptions) (*policy.Request, error) {
+func (client *SparkLibrariesClient) getStagingLibrariesCreateRequest(ctx context.Context, workspaceID string, environmentID string, _ *SparkLibrariesClientGetStagingLibrariesOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/staging/libraries"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -320,7 +320,7 @@ func (client *SparkLibrariesClient) PublishEnvironment(ctx context.Context, work
 }
 
 // publishEnvironmentCreateRequest creates the PublishEnvironment request.
-func (client *SparkLibrariesClient) publishEnvironmentCreateRequest(ctx context.Context, workspaceID string, environmentID string, options *SparkLibrariesClientPublishEnvironmentOptions) (*policy.Request, error) {
+func (client *SparkLibrariesClient) publishEnvironmentCreateRequest(ctx context.Context, workspaceID string, environmentID string, _ *SparkLibrariesClientPublishEnvironmentOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/staging/publish"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -399,7 +399,7 @@ func (client *SparkLibrariesClient) UploadStagingLibrary(ctx context.Context, wo
 }
 
 // uploadStagingLibraryCreateRequest creates the UploadStagingLibrary request.
-func (client *SparkLibrariesClient) uploadStagingLibraryCreateRequest(ctx context.Context, workspaceID string, environmentID string, options *SparkLibrariesClientUploadStagingLibraryOptions) (*policy.Request, error) {
+func (client *SparkLibrariesClient) uploadStagingLibraryCreateRequest(ctx context.Context, workspaceID string, environmentID string, _ *SparkLibrariesClientUploadStagingLibraryOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/staging/libraries"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")

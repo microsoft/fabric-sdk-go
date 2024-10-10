@@ -85,7 +85,7 @@ func (client *ItemsClient) createLakehouse(ctx context.Context, workspaceID stri
 }
 
 // createLakehouseCreateRequest creates the CreateLakehouse request.
-func (client *ItemsClient) createLakehouseCreateRequest(ctx context.Context, workspaceID string, createLakehouseRequest CreateLakehouseRequest, options *ItemsClientBeginCreateLakehouseOptions) (*policy.Request, error) {
+func (client *ItemsClient) createLakehouseCreateRequest(ctx context.Context, workspaceID string, createLakehouseRequest CreateLakehouseRequest, _ *ItemsClientBeginCreateLakehouseOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/lakehouses"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -138,7 +138,7 @@ func (client *ItemsClient) DeleteLakehouse(ctx context.Context, workspaceID stri
 }
 
 // deleteLakehouseCreateRequest creates the DeleteLakehouse request.
-func (client *ItemsClient) deleteLakehouseCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, options *ItemsClientDeleteLakehouseOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteLakehouseCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, _ *ItemsClientDeleteLakehouseOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -193,7 +193,7 @@ func (client *ItemsClient) GetLakehouse(ctx context.Context, workspaceID string,
 }
 
 // getLakehouseCreateRequest creates the GetLakehouse request.
-func (client *ItemsClient) getLakehouseCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, options *ItemsClientGetLakehouseOptions) (*policy.Request, error) {
+func (client *ItemsClient) getLakehouseCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, _ *ItemsClientGetLakehouseOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -324,7 +324,7 @@ func (client *ItemsClient) UpdateLakehouse(ctx context.Context, workspaceID stri
 }
 
 // updateLakehouseCreateRequest creates the UpdateLakehouse request.
-func (client *ItemsClient) updateLakehouseCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, updateLakehouseRequest UpdateLakehouseRequest, options *ItemsClientUpdateLakehouseOptions) (*policy.Request, error) {
+func (client *ItemsClient) updateLakehouseCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, updateLakehouseRequest UpdateLakehouseRequest, _ *ItemsClientUpdateLakehouseOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -371,7 +371,6 @@ func (client *ItemsClient) updateLakehouseHandleResponse(resp *http.Response) (I
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - createLakehouseRequest - Create item request payload.

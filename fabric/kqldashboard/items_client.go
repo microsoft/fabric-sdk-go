@@ -69,7 +69,7 @@ func (client *ItemsClient) CreateKQLDashboard(ctx context.Context, workspaceID s
 }
 
 // createKQLDashboardCreateRequest creates the CreateKQLDashboard request.
-func (client *ItemsClient) createKQLDashboardCreateRequest(ctx context.Context, workspaceID string, createKQLDashboardRequest CreateKQLDashboardRequest, options *ItemsClientCreateKQLDashboardOptions) (*policy.Request, error) {
+func (client *ItemsClient) createKQLDashboardCreateRequest(ctx context.Context, workspaceID string, createKQLDashboardRequest CreateKQLDashboardRequest, _ *ItemsClientCreateKQLDashboardOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/kqlDashboards"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -135,7 +135,7 @@ func (client *ItemsClient) DeleteKQLDashboard(ctx context.Context, workspaceID s
 }
 
 // deleteKQLDashboardCreateRequest creates the DeleteKQLDashboard request.
-func (client *ItemsClient) deleteKQLDashboardCreateRequest(ctx context.Context, workspaceID string, kqlDashboardID string, options *ItemsClientDeleteKQLDashboardOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteKQLDashboardCreateRequest(ctx context.Context, workspaceID string, kqlDashboardID string, _ *ItemsClientDeleteKQLDashboardOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/kqlDashboards/{kqlDashboardId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -190,7 +190,7 @@ func (client *ItemsClient) GetKQLDashboard(ctx context.Context, workspaceID stri
 }
 
 // getKQLDashboardCreateRequest creates the GetKQLDashboard request.
-func (client *ItemsClient) getKQLDashboardCreateRequest(ctx context.Context, workspaceID string, kqlDashboardID string, options *ItemsClientGetKQLDashboardOptions) (*policy.Request, error) {
+func (client *ItemsClient) getKQLDashboardCreateRequest(ctx context.Context, workspaceID string, kqlDashboardID string, _ *ItemsClientGetKQLDashboardOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/kqlDashboards/{kqlDashboardId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -392,7 +392,7 @@ func (client *ItemsClient) UpdateKQLDashboard(ctx context.Context, workspaceID s
 }
 
 // updateKQLDashboardCreateRequest creates the UpdateKQLDashboard request.
-func (client *ItemsClient) updateKQLDashboardCreateRequest(ctx context.Context, workspaceID string, kqlDashboardID string, updateKQLDashboardRequest UpdateKQLDashboardRequest, options *ItemsClientUpdateKQLDashboardOptions) (*policy.Request, error) {
+func (client *ItemsClient) updateKQLDashboardCreateRequest(ctx context.Context, workspaceID string, kqlDashboardID string, updateKQLDashboardRequest UpdateKQLDashboardRequest, _ *ItemsClientUpdateKQLDashboardOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/kqlDashboards/{kqlDashboardId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")

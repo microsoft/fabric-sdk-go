@@ -158,7 +158,7 @@ func (client *TablesClient) loadTable(ctx context.Context, workspaceID string, l
 }
 
 // loadTableCreateRequest creates the LoadTable request.
-func (client *TablesClient) loadTableCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, tableName string, loadTableRequest LoadTableRequest, options *TablesClientBeginLoadTableOptions) (*policy.Request, error) {
+func (client *TablesClient) loadTableCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, tableName string, loadTableRequest LoadTableRequest, _ *TablesClientBeginLoadTableOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/tables/{tableName}/load"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -198,7 +198,6 @@ func (client *TablesClient) loadTableCreateRequest(ctx context.Context, workspac
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - lakehouseID - The lakehouse item ID.

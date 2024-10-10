@@ -122,7 +122,7 @@ func (client *ItemsClient) createItem(ctx context.Context, workspaceID string, c
 }
 
 // createItemCreateRequest creates the CreateItem request.
-func (client *ItemsClient) createItemCreateRequest(ctx context.Context, workspaceID string, createItemRequest CreateItemRequest, options *ItemsClientBeginCreateItemOptions) (*policy.Request, error) {
+func (client *ItemsClient) createItemCreateRequest(ctx context.Context, workspaceID string, createItemRequest CreateItemRequest, _ *ItemsClientBeginCreateItemOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/items"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -188,7 +188,7 @@ func (client *ItemsClient) DeleteItem(ctx context.Context, workspaceID string, i
 }
 
 // deleteItemCreateRequest creates the DeleteItem request.
-func (client *ItemsClient) deleteItemCreateRequest(ctx context.Context, workspaceID string, itemID string, options *ItemsClientDeleteItemOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteItemCreateRequest(ctx context.Context, workspaceID string, itemID string, _ *ItemsClientDeleteItemOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -251,7 +251,7 @@ func (client *ItemsClient) GetItem(ctx context.Context, workspaceID string, item
 }
 
 // getItemCreateRequest creates the GetItem request.
-func (client *ItemsClient) getItemCreateRequest(ctx context.Context, workspaceID string, itemID string, options *ItemsClientGetItemOptions) (*policy.Request, error) {
+func (client *ItemsClient) getItemCreateRequest(ctx context.Context, workspaceID string, itemID string, _ *ItemsClientGetItemOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -585,7 +585,7 @@ func (client *ItemsClient) UpdateItem(ctx context.Context, workspaceID string, i
 }
 
 // updateItemCreateRequest creates the UpdateItem request.
-func (client *ItemsClient) updateItemCreateRequest(ctx context.Context, workspaceID string, itemID string, updateItemRequest UpdateItemRequest, options *ItemsClientUpdateItemOptions) (*policy.Request, error) {
+func (client *ItemsClient) updateItemCreateRequest(ctx context.Context, workspaceID string, itemID string, updateItemRequest UpdateItemRequest, _ *ItemsClientUpdateItemOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -756,7 +756,6 @@ func (client *ItemsClient) updateItemDefinitionCreateRequest(ctx context.Context
 // supported. For example, semantic models are supported. |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - createItemRequest - Create item request payload.
@@ -839,7 +838,6 @@ func (client *ItemsClient) beginCreateItem(ctx context.Context, workspaceID stri
 // supported. For example, semantic models are supported. |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - itemID - The item ID.
@@ -920,7 +918,6 @@ func (client *ItemsClient) beginGetItemDefinition(ctx context.Context, workspace
 // supported. For example, semantic models are supported. |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - itemID - The item ID.

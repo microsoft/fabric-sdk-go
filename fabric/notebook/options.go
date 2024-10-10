@@ -8,7 +8,7 @@ package notebook
 
 // ItemsClientBeginCreateNotebookOptions contains the optional parameters for the ItemsClient.BeginCreateNotebook method.
 type ItemsClientBeginCreateNotebookOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 
@@ -18,14 +18,14 @@ type ItemsClientBeginGetNotebookDefinitionOptions struct {
 	// The format of the notebook public definition.
 	Format *string
 
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 
 // ItemsClientBeginUpdateNotebookDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateNotebookDefinition
 // method.
 type ItemsClientBeginUpdateNotebookDefinitionOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 
 	// When set to true and the .platform file is provided as part of the definition, the item's metadata is updated using the

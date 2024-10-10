@@ -8,7 +8,7 @@ package warehouse
 
 // ItemsClientBeginCreateWarehouseOptions contains the optional parameters for the ItemsClient.BeginCreateWarehouse method.
 type ItemsClientBeginCreateWarehouseOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 

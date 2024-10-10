@@ -64,7 +64,7 @@ func (client *ItemsClient) DeleteKQLQueryset(ctx context.Context, workspaceID st
 }
 
 // deleteKQLQuerysetCreateRequest creates the DeleteKQLQueryset request.
-func (client *ItemsClient) deleteKQLQuerysetCreateRequest(ctx context.Context, workspaceID string, kqlQuerysetID string, options *ItemsClientDeleteKQLQuerysetOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteKQLQuerysetCreateRequest(ctx context.Context, workspaceID string, kqlQuerysetID string, _ *ItemsClientDeleteKQLQuerysetOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/kqlQuerysets/{kqlQuerysetId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -119,7 +119,7 @@ func (client *ItemsClient) GetKQLQueryset(ctx context.Context, workspaceID strin
 }
 
 // getKQLQuerysetCreateRequest creates the GetKQLQueryset request.
-func (client *ItemsClient) getKQLQuerysetCreateRequest(ctx context.Context, workspaceID string, kqlQuerysetID string, options *ItemsClientGetKQLQuerysetOptions) (*policy.Request, error) {
+func (client *ItemsClient) getKQLQuerysetCreateRequest(ctx context.Context, workspaceID string, kqlQuerysetID string, _ *ItemsClientGetKQLQuerysetOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/kqlQuerysets/{kqlQuerysetId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -250,7 +250,7 @@ func (client *ItemsClient) UpdateKQLQueryset(ctx context.Context, workspaceID st
 }
 
 // updateKQLQuerysetCreateRequest creates the UpdateKQLQueryset request.
-func (client *ItemsClient) updateKQLQuerysetCreateRequest(ctx context.Context, workspaceID string, kqlQuerysetID string, updateKQLQuerysetRequest UpdateKQLQuerysetRequest, options *ItemsClientUpdateKQLQuerysetOptions) (*policy.Request, error) {
+func (client *ItemsClient) updateKQLQuerysetCreateRequest(ctx context.Context, workspaceID string, kqlQuerysetID string, updateKQLQuerysetRequest UpdateKQLQuerysetRequest, _ *ItemsClientUpdateKQLQuerysetOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/kqlQuerysets/{kqlQuerysetId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")

@@ -46,7 +46,7 @@ type WorkspacesServer struct {
 	DeleteWorkspaceRoleAssignment func(ctx context.Context, workspaceID string, workspaceRoleAssignmentID string, options *core.WorkspacesClientDeleteWorkspaceRoleAssignmentOptions) (resp azfake.Responder[core.WorkspacesClientDeleteWorkspaceRoleAssignmentResponse], errResp azfake.ErrorResponder)
 
 	// BeginDeprovisionIdentity is the fake for method WorkspacesClient.BeginDeprovisionIdentity
-	// HTTP status codes to indicate success: http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
 	BeginDeprovisionIdentity func(ctx context.Context, workspaceID string, options *core.WorkspacesClientBeginDeprovisionIdentityOptions) (resp azfake.PollerResponder[core.WorkspacesClientDeprovisionIdentityResponse], errResp azfake.ErrorResponder)
 
 	// GetWorkspace is the fake for method WorkspacesClient.GetWorkspace
@@ -119,43 +119,56 @@ func (w *WorkspacesServerTransport) Do(req *http.Request) (*http.Response, error
 }
 
 func (w *WorkspacesServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "WorkspacesClient.AddWorkspaceRoleAssignment":
-		resp, err = w.dispatchAddWorkspaceRoleAssignment(req)
-	case "WorkspacesClient.AssignToCapacity":
-		resp, err = w.dispatchAssignToCapacity(req)
-	case "WorkspacesClient.CreateWorkspace":
-		resp, err = w.dispatchCreateWorkspace(req)
-	case "WorkspacesClient.DeleteWorkspace":
-		resp, err = w.dispatchDeleteWorkspace(req)
-	case "WorkspacesClient.DeleteWorkspaceRoleAssignment":
-		resp, err = w.dispatchDeleteWorkspaceRoleAssignment(req)
-	case "WorkspacesClient.BeginDeprovisionIdentity":
-		resp, err = w.dispatchBeginDeprovisionIdentity(req)
-	case "WorkspacesClient.GetWorkspace":
-		resp, err = w.dispatchGetWorkspace(req)
-	case "WorkspacesClient.GetWorkspaceRoleAssignment":
-		resp, err = w.dispatchGetWorkspaceRoleAssignment(req)
-	case "WorkspacesClient.NewListWorkspaceRoleAssignmentsPager":
-		resp, err = w.dispatchNewListWorkspaceRoleAssignmentsPager(req)
-	case "WorkspacesClient.NewListWorkspacesPager":
-		resp, err = w.dispatchNewListWorkspacesPager(req)
-	case "WorkspacesClient.BeginProvisionIdentity":
-		resp, err = w.dispatchBeginProvisionIdentity(req)
-	case "WorkspacesClient.UnassignFromCapacity":
-		resp, err = w.dispatchUnassignFromCapacity(req)
-	case "WorkspacesClient.UpdateWorkspace":
-		resp, err = w.dispatchUpdateWorkspace(req)
-	case "WorkspacesClient.UpdateWorkspaceRoleAssignment":
-		resp, err = w.dispatchUpdateWorkspaceRoleAssignment(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "WorkspacesClient.AddWorkspaceRoleAssignment":
+			res.resp, res.err = w.dispatchAddWorkspaceRoleAssignment(req)
+		case "WorkspacesClient.AssignToCapacity":
+			res.resp, res.err = w.dispatchAssignToCapacity(req)
+		case "WorkspacesClient.CreateWorkspace":
+			res.resp, res.err = w.dispatchCreateWorkspace(req)
+		case "WorkspacesClient.DeleteWorkspace":
+			res.resp, res.err = w.dispatchDeleteWorkspace(req)
+		case "WorkspacesClient.DeleteWorkspaceRoleAssignment":
+			res.resp, res.err = w.dispatchDeleteWorkspaceRoleAssignment(req)
+		case "WorkspacesClient.BeginDeprovisionIdentity":
+			res.resp, res.err = w.dispatchBeginDeprovisionIdentity(req)
+		case "WorkspacesClient.GetWorkspace":
+			res.resp, res.err = w.dispatchGetWorkspace(req)
+		case "WorkspacesClient.GetWorkspaceRoleAssignment":
+			res.resp, res.err = w.dispatchGetWorkspaceRoleAssignment(req)
+		case "WorkspacesClient.NewListWorkspaceRoleAssignmentsPager":
+			res.resp, res.err = w.dispatchNewListWorkspaceRoleAssignmentsPager(req)
+		case "WorkspacesClient.NewListWorkspacesPager":
+			res.resp, res.err = w.dispatchNewListWorkspacesPager(req)
+		case "WorkspacesClient.BeginProvisionIdentity":
+			res.resp, res.err = w.dispatchBeginProvisionIdentity(req)
+		case "WorkspacesClient.UnassignFromCapacity":
+			res.resp, res.err = w.dispatchUnassignFromCapacity(req)
+		case "WorkspacesClient.UpdateWorkspace":
+			res.resp, res.err = w.dispatchUpdateWorkspace(req)
+		case "WorkspacesClient.UpdateWorkspaceRoleAssignment":
+			res.resp, res.err = w.dispatchUpdateWorkspaceRoleAssignment(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (w *WorkspacesServerTransport) dispatchAddWorkspaceRoleAssignment(req *http.Request) (*http.Response, error) {
@@ -344,9 +357,9 @@ func (w *WorkspacesServerTransport) dispatchBeginDeprovisionIdentity(req *http.R
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
 		w.beginDeprovisionIdentity.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginDeprovisionIdentity) {
 		w.beginDeprovisionIdentity.remove(req)

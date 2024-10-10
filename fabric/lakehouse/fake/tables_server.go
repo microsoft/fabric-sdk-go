@@ -31,7 +31,7 @@ type TablesServer struct {
 	NewListTablesPager func(workspaceID string, lakehouseID string, options *lakehouse.TablesClientListTablesOptions) (resp azfake.PagerResponder[lakehouse.TablesClientListTablesResponse])
 
 	// BeginLoadTable is the fake for method TablesClient.BeginLoadTable
-	// HTTP status codes to indicate success: http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
 	BeginLoadTable func(ctx context.Context, workspaceID string, lakehouseID string, tableName string, loadTableRequest lakehouse.LoadTableRequest, options *lakehouse.TablesClientBeginLoadTableOptions) (resp azfake.PollerResponder[lakehouse.TablesClientLoadTableResponse], errResp azfake.ErrorResponder)
 }
 
@@ -68,19 +68,32 @@ func (t *TablesServerTransport) Do(req *http.Request) (*http.Response, error) {
 }
 
 func (t *TablesServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "TablesClient.NewListTablesPager":
-		resp, err = t.dispatchNewListTablesPager(req)
-	case "TablesClient.BeginLoadTable":
-		resp, err = t.dispatchBeginLoadTable(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "TablesClient.NewListTablesPager":
+			res.resp, res.err = t.dispatchNewListTablesPager(req)
+		case "TablesClient.BeginLoadTable":
+			res.resp, res.err = t.dispatchBeginLoadTable(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (t *TablesServerTransport) dispatchNewListTablesPager(req *http.Request) (*http.Response, error) {
@@ -192,9 +205,9 @@ func (t *TablesServerTransport) dispatchBeginLoadTable(req *http.Request) (*http
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
 		t.beginLoadTable.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginLoadTable) {
 		t.beginLoadTable.remove(req)

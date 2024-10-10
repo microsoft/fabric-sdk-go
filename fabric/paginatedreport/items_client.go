@@ -133,7 +133,7 @@ func (client *ItemsClient) UpdatePaginatedReport(ctx context.Context, workspaceI
 }
 
 // updatePaginatedReportCreateRequest creates the UpdatePaginatedReport request.
-func (client *ItemsClient) updatePaginatedReportCreateRequest(ctx context.Context, workspaceID string, paginatedReportID string, updatePaginatedReportRequest UpdatePaginatedReportRequest, options *ItemsClientUpdatePaginatedReportOptions) (*policy.Request, error) {
+func (client *ItemsClient) updatePaginatedReportCreateRequest(ctx context.Context, workspaceID string, paginatedReportID string, updatePaginatedReportRequest UpdatePaginatedReportRequest, _ *ItemsClientUpdatePaginatedReportOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/paginatedReports/{paginatedReportId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")

@@ -26,7 +26,7 @@ import (
 // ItemsServer is a fake server for instances of the eventhouse.ItemsClient type.
 type ItemsServer struct {
 	// BeginCreateEventhouse is the fake for method ItemsClient.BeginCreateEventhouse
-	// HTTP status codes to indicate success: http.StatusCreated, http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated, http.StatusAccepted
 	BeginCreateEventhouse func(ctx context.Context, workspaceID string, createEventhouseRequest eventhouse.CreateEventhouseRequest, options *eventhouse.ItemsClientBeginCreateEventhouseOptions) (resp azfake.PollerResponder[eventhouse.ItemsClientCreateEventhouseResponse], errResp azfake.ErrorResponder)
 
 	// DeleteEventhouse is the fake for method ItemsClient.DeleteEventhouse
@@ -79,25 +79,38 @@ func (i *ItemsServerTransport) Do(req *http.Request) (*http.Response, error) {
 }
 
 func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "ItemsClient.BeginCreateEventhouse":
-		resp, err = i.dispatchBeginCreateEventhouse(req)
-	case "ItemsClient.DeleteEventhouse":
-		resp, err = i.dispatchDeleteEventhouse(req)
-	case "ItemsClient.GetEventhouse":
-		resp, err = i.dispatchGetEventhouse(req)
-	case "ItemsClient.NewListEventhousesPager":
-		resp, err = i.dispatchNewListEventhousesPager(req)
-	case "ItemsClient.UpdateEventhouse":
-		resp, err = i.dispatchUpdateEventhouse(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "ItemsClient.BeginCreateEventhouse":
+			res.resp, res.err = i.dispatchBeginCreateEventhouse(req)
+		case "ItemsClient.DeleteEventhouse":
+			res.resp, res.err = i.dispatchDeleteEventhouse(req)
+		case "ItemsClient.GetEventhouse":
+			res.resp, res.err = i.dispatchGetEventhouse(req)
+		case "ItemsClient.NewListEventhousesPager":
+			res.resp, res.err = i.dispatchNewListEventhousesPager(req)
+		case "ItemsClient.UpdateEventhouse":
+			res.resp, res.err = i.dispatchUpdateEventhouse(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (i *ItemsServerTransport) dispatchBeginCreateEventhouse(req *http.Request) (*http.Response, error) {
@@ -133,9 +146,9 @@ func (i *ItemsServerTransport) dispatchBeginCreateEventhouse(req *http.Request) 
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
 		i.beginCreateEventhouse.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginCreateEventhouse) {
 		i.beginCreateEventhouse.remove(req)

@@ -75,23 +75,36 @@ func (w *WorkspacesServerTransport) Do(req *http.Request) (*http.Response, error
 }
 
 func (w *WorkspacesServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "WorkspacesClient.GetWorkspace":
-		resp, err = w.dispatchGetWorkspace(req)
-	case "WorkspacesClient.NewListGitConnectionsPager":
-		resp, err = w.dispatchNewListGitConnectionsPager(req)
-	case "WorkspacesClient.ListWorkspaceAccessDetails":
-		resp, err = w.dispatchListWorkspaceAccessDetails(req)
-	case "WorkspacesClient.NewListWorkspacesPager":
-		resp, err = w.dispatchNewListWorkspacesPager(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "WorkspacesClient.GetWorkspace":
+			res.resp, res.err = w.dispatchGetWorkspace(req)
+		case "WorkspacesClient.NewListGitConnectionsPager":
+			res.resp, res.err = w.dispatchNewListGitConnectionsPager(req)
+		case "WorkspacesClient.ListWorkspaceAccessDetails":
+			res.resp, res.err = w.dispatchListWorkspaceAccessDetails(req)
+		case "WorkspacesClient.NewListWorkspacesPager":
+			res.resp, res.err = w.dispatchNewListWorkspacesPager(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (w *WorkspacesServerTransport) dispatchGetWorkspace(req *http.Request) (*http.Response, error) {

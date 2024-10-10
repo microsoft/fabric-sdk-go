@@ -86,29 +86,42 @@ func (i *ItemsServerTransport) Do(req *http.Request) (*http.Response, error) {
 }
 
 func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "ItemsClient.CreateKQLDashboard":
-		resp, err = i.dispatchCreateKQLDashboard(req)
-	case "ItemsClient.DeleteKQLDashboard":
-		resp, err = i.dispatchDeleteKQLDashboard(req)
-	case "ItemsClient.GetKQLDashboard":
-		resp, err = i.dispatchGetKQLDashboard(req)
-	case "ItemsClient.GetKQLDashboardDefinition":
-		resp, err = i.dispatchGetKQLDashboardDefinition(req)
-	case "ItemsClient.NewListKQLDashboardsPager":
-		resp, err = i.dispatchNewListKQLDashboardsPager(req)
-	case "ItemsClient.UpdateKQLDashboard":
-		resp, err = i.dispatchUpdateKQLDashboard(req)
-	case "ItemsClient.UpdateKQLDashboardDefinition":
-		resp, err = i.dispatchUpdateKQLDashboardDefinition(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "ItemsClient.CreateKQLDashboard":
+			res.resp, res.err = i.dispatchCreateKQLDashboard(req)
+		case "ItemsClient.DeleteKQLDashboard":
+			res.resp, res.err = i.dispatchDeleteKQLDashboard(req)
+		case "ItemsClient.GetKQLDashboard":
+			res.resp, res.err = i.dispatchGetKQLDashboard(req)
+		case "ItemsClient.GetKQLDashboardDefinition":
+			res.resp, res.err = i.dispatchGetKQLDashboardDefinition(req)
+		case "ItemsClient.NewListKQLDashboardsPager":
+			res.resp, res.err = i.dispatchNewListKQLDashboardsPager(req)
+		case "ItemsClient.UpdateKQLDashboard":
+			res.resp, res.err = i.dispatchUpdateKQLDashboard(req)
+		case "ItemsClient.UpdateKQLDashboardDefinition":
+			res.resp, res.err = i.dispatchUpdateKQLDashboardDefinition(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (i *ItemsServerTransport) dispatchCreateKQLDashboard(req *http.Request) (*http.Response, error) {

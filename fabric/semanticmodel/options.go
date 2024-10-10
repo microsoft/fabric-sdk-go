@@ -9,7 +9,7 @@ package semanticmodel
 // ItemsClientBeginCreateSemanticModelOptions contains the optional parameters for the ItemsClient.BeginCreateSemanticModel
 // method.
 type ItemsClientBeginCreateSemanticModelOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 
@@ -26,14 +26,14 @@ type ItemsClientBeginGetSemanticModelDefinitionOptions struct {
 	// If not specified, the default is 'TMDL'.
 	Format *string
 
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 
 // ItemsClientBeginUpdateSemanticModelDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateSemanticModelDefinition
 // method.
 type ItemsClientBeginUpdateSemanticModelDefinitionOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 
 	// When set to true and the .platform file is provided as part of the definition, the item's metadata is updated using the

@@ -64,21 +64,34 @@ func (s *SparkComputeServerTransport) Do(req *http.Request) (*http.Response, err
 }
 
 func (s *SparkComputeServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "SparkComputeClient.GetPublishedSettings":
-		resp, err = s.dispatchGetPublishedSettings(req)
-	case "SparkComputeClient.GetStagingSettings":
-		resp, err = s.dispatchGetStagingSettings(req)
-	case "SparkComputeClient.UpdateStagingSettings":
-		resp, err = s.dispatchUpdateStagingSettings(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "SparkComputeClient.GetPublishedSettings":
+			res.resp, res.err = s.dispatchGetPublishedSettings(req)
+		case "SparkComputeClient.GetStagingSettings":
+			res.resp, res.err = s.dispatchGetStagingSettings(req)
+		case "SparkComputeClient.UpdateStagingSettings":
+			res.resp, res.err = s.dispatchUpdateStagingSettings(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (s *SparkComputeServerTransport) dispatchGetPublishedSettings(req *http.Request) (*http.Response, error) {

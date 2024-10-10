@@ -57,17 +57,30 @@ func (b *BackgroundJobsServerTransport) Do(req *http.Request) (*http.Response, e
 }
 
 func (b *BackgroundJobsServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "BackgroundJobsClient.RunOnDemandTableMaintenance":
-		resp, err = b.dispatchRunOnDemandTableMaintenance(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "BackgroundJobsClient.RunOnDemandTableMaintenance":
+			res.resp, res.err = b.dispatchRunOnDemandTableMaintenance(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (b *BackgroundJobsServerTransport) dispatchRunOnDemandTableMaintenance(req *http.Request) (*http.Response, error) {

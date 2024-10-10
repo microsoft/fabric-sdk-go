@@ -26,7 +26,7 @@ import (
 // ItemsServer is a fake server for instances of the mlexperiment.ItemsClient type.
 type ItemsServer struct {
 	// BeginCreateMLExperiment is the fake for method ItemsClient.BeginCreateMLExperiment
-	// HTTP status codes to indicate success: http.StatusCreated, http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated, http.StatusAccepted
 	BeginCreateMLExperiment func(ctx context.Context, workspaceID string, createMLExperimentRequest mlexperiment.CreateMLExperimentRequest, options *mlexperiment.ItemsClientBeginCreateMLExperimentOptions) (resp azfake.PollerResponder[mlexperiment.ItemsClientCreateMLExperimentResponse], errResp azfake.ErrorResponder)
 
 	// DeleteMLExperiment is the fake for method ItemsClient.DeleteMLExperiment
@@ -79,25 +79,38 @@ func (i *ItemsServerTransport) Do(req *http.Request) (*http.Response, error) {
 }
 
 func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "ItemsClient.BeginCreateMLExperiment":
-		resp, err = i.dispatchBeginCreateMLExperiment(req)
-	case "ItemsClient.DeleteMLExperiment":
-		resp, err = i.dispatchDeleteMLExperiment(req)
-	case "ItemsClient.GetMLExperiment":
-		resp, err = i.dispatchGetMLExperiment(req)
-	case "ItemsClient.NewListMLExperimentsPager":
-		resp, err = i.dispatchNewListMLExperimentsPager(req)
-	case "ItemsClient.UpdateMLExperiment":
-		resp, err = i.dispatchUpdateMLExperiment(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "ItemsClient.BeginCreateMLExperiment":
+			res.resp, res.err = i.dispatchBeginCreateMLExperiment(req)
+		case "ItemsClient.DeleteMLExperiment":
+			res.resp, res.err = i.dispatchDeleteMLExperiment(req)
+		case "ItemsClient.GetMLExperiment":
+			res.resp, res.err = i.dispatchGetMLExperiment(req)
+		case "ItemsClient.NewListMLExperimentsPager":
+			res.resp, res.err = i.dispatchNewListMLExperimentsPager(req)
+		case "ItemsClient.UpdateMLExperiment":
+			res.resp, res.err = i.dispatchUpdateMLExperiment(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (i *ItemsServerTransport) dispatchBeginCreateMLExperiment(req *http.Request) (*http.Response, error) {
@@ -133,9 +146,9 @@ func (i *ItemsServerTransport) dispatchBeginCreateMLExperiment(req *http.Request
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
 		i.beginCreateMLExperiment.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginCreateMLExperiment) {
 		i.beginCreateMLExperiment.remove(req)

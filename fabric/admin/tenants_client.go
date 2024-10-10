@@ -128,7 +128,7 @@ func (client *TenantsClient) ListTenantSettings(ctx context.Context, options *Te
 }
 
 // listTenantSettingsCreateRequest creates the ListTenantSettings request.
-func (client *TenantsClient) listTenantSettingsCreateRequest(ctx context.Context, options *TenantsClientListTenantSettingsOptions) (*policy.Request, error) {
+func (client *TenantsClient) listTenantSettingsCreateRequest(ctx context.Context, _ *TenantsClientListTenantSettingsOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/tenantsettings"
 	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {

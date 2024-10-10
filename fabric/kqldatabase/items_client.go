@@ -89,7 +89,7 @@ func (client *ItemsClient) createKQLDatabase(ctx context.Context, workspaceID st
 }
 
 // createKQLDatabaseCreateRequest creates the CreateKQLDatabase request.
-func (client *ItemsClient) createKQLDatabaseCreateRequest(ctx context.Context, workspaceID string, createKQLDatabaseRequest CreateKQLDatabaseRequest, options *ItemsClientBeginCreateKQLDatabaseOptions) (*policy.Request, error) {
+func (client *ItemsClient) createKQLDatabaseCreateRequest(ctx context.Context, workspaceID string, createKQLDatabaseRequest CreateKQLDatabaseRequest, _ *ItemsClientBeginCreateKQLDatabaseOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/kqlDatabases"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -142,7 +142,7 @@ func (client *ItemsClient) DeleteKQLDatabase(ctx context.Context, workspaceID st
 }
 
 // deleteKQLDatabaseCreateRequest creates the DeleteKQLDatabase request.
-func (client *ItemsClient) deleteKQLDatabaseCreateRequest(ctx context.Context, workspaceID string, kqlDatabaseID string, options *ItemsClientDeleteKQLDatabaseOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteKQLDatabaseCreateRequest(ctx context.Context, workspaceID string, kqlDatabaseID string, _ *ItemsClientDeleteKQLDatabaseOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/kqlDatabases/{kqlDatabaseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -197,7 +197,7 @@ func (client *ItemsClient) GetKQLDatabase(ctx context.Context, workspaceID strin
 }
 
 // getKQLDatabaseCreateRequest creates the GetKQLDatabase request.
-func (client *ItemsClient) getKQLDatabaseCreateRequest(ctx context.Context, workspaceID string, kqlDatabaseID string, options *ItemsClientGetKQLDatabaseOptions) (*policy.Request, error) {
+func (client *ItemsClient) getKQLDatabaseCreateRequest(ctx context.Context, workspaceID string, kqlDatabaseID string, _ *ItemsClientGetKQLDatabaseOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/kqlDatabases/{kqlDatabaseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -328,7 +328,7 @@ func (client *ItemsClient) UpdateKQLDatabase(ctx context.Context, workspaceID st
 }
 
 // updateKQLDatabaseCreateRequest creates the UpdateKQLDatabase request.
-func (client *ItemsClient) updateKQLDatabaseCreateRequest(ctx context.Context, workspaceID string, kqlDatabaseID string, updateKQLDatabaseRequest UpdateKQLDatabaseRequest, options *ItemsClientUpdateKQLDatabaseOptions) (*policy.Request, error) {
+func (client *ItemsClient) updateKQLDatabaseCreateRequest(ctx context.Context, workspaceID string, kqlDatabaseID string, updateKQLDatabaseRequest UpdateKQLDatabaseRequest, _ *ItemsClientUpdateKQLDatabaseOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/kqlDatabases/{kqlDatabaseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -376,7 +376,6 @@ func (client *ItemsClient) updateKQLDatabaseHandleResponse(resp *http.Response) 
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - createKQLDatabaseRequest - Create item request payload.

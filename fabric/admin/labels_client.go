@@ -66,7 +66,7 @@ func (client *LabelsClient) BulkRemoveLabels(ctx context.Context, removeLabelsRe
 }
 
 // bulkRemoveLabelsCreateRequest creates the BulkRemoveLabels request.
-func (client *LabelsClient) bulkRemoveLabelsCreateRequest(ctx context.Context, removeLabelsRequest RemoveLabelsRequest, options *LabelsClientBulkRemoveLabelsOptions) (*policy.Request, error) {
+func (client *LabelsClient) bulkRemoveLabelsCreateRequest(ctx context.Context, removeLabelsRequest RemoveLabelsRequest, _ *LabelsClientBulkRemoveLabelsOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/items/bulkRemoveLabels"
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
@@ -133,7 +133,7 @@ func (client *LabelsClient) BulkSetLabels(ctx context.Context, setLabelsRequest 
 }
 
 // bulkSetLabelsCreateRequest creates the BulkSetLabels request.
-func (client *LabelsClient) bulkSetLabelsCreateRequest(ctx context.Context, setLabelsRequest SetLabelsRequest, options *LabelsClientBulkSetLabelsOptions) (*policy.Request, error) {
+func (client *LabelsClient) bulkSetLabelsCreateRequest(ctx context.Context, setLabelsRequest SetLabelsRequest, _ *LabelsClientBulkSetLabelsOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/items/bulkSetLabels"
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {

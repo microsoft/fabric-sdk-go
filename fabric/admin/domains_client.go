@@ -90,7 +90,7 @@ func (client *DomainsClient) assignDomainWorkspacesByCapacities(ctx context.Cont
 }
 
 // assignDomainWorkspacesByCapacitiesCreateRequest creates the AssignDomainWorkspacesByCapacities request.
-func (client *DomainsClient) assignDomainWorkspacesByCapacitiesCreateRequest(ctx context.Context, domainID string, assignDomainWorkspacesByCapacitiesRequest AssignDomainWorkspacesByCapacitiesRequest, options *DomainsClientBeginAssignDomainWorkspacesByCapacitiesOptions) (*policy.Request, error) {
+func (client *DomainsClient) assignDomainWorkspacesByCapacitiesCreateRequest(ctx context.Context, domainID string, assignDomainWorkspacesByCapacitiesRequest AssignDomainWorkspacesByCapacitiesRequest, _ *DomainsClientBeginAssignDomainWorkspacesByCapacitiesOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/domains/{domainId}/assignWorkspacesByCapacities"
 	if domainID == "" {
 		return nil, errors.New("parameter domainID cannot be empty")
@@ -147,7 +147,7 @@ func (client *DomainsClient) AssignDomainWorkspacesByIDs(ctx context.Context, do
 }
 
 // assignDomainWorkspacesByIDsCreateRequest creates the AssignDomainWorkspacesByIDs request.
-func (client *DomainsClient) assignDomainWorkspacesByIDsCreateRequest(ctx context.Context, domainID string, assignDomainWorkspacesByIDsRequest AssignDomainWorkspacesByIDsRequest, options *DomainsClientAssignDomainWorkspacesByIDsOptions) (*policy.Request, error) {
+func (client *DomainsClient) assignDomainWorkspacesByIDsCreateRequest(ctx context.Context, domainID string, assignDomainWorkspacesByIDsRequest AssignDomainWorkspacesByIDsRequest, _ *DomainsClientAssignDomainWorkspacesByIDsOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/domains/{domainId}/assignWorkspaces"
 	if domainID == "" {
 		return nil, errors.New("parameter domainID cannot be empty")
@@ -224,7 +224,7 @@ func (client *DomainsClient) assignDomainWorkspacesByPrincipals(ctx context.Cont
 }
 
 // assignDomainWorkspacesByPrincipalsCreateRequest creates the AssignDomainWorkspacesByPrincipals request.
-func (client *DomainsClient) assignDomainWorkspacesByPrincipalsCreateRequest(ctx context.Context, domainID string, assignDomainWorkspacesByPrincipalsRequest AssignDomainWorkspacesByPrincipalsRequest, options *DomainsClientBeginAssignDomainWorkspacesByPrincipalsOptions) (*policy.Request, error) {
+func (client *DomainsClient) assignDomainWorkspacesByPrincipalsCreateRequest(ctx context.Context, domainID string, assignDomainWorkspacesByPrincipalsRequest AssignDomainWorkspacesByPrincipalsRequest, _ *DomainsClientBeginAssignDomainWorkspacesByPrincipalsOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/domains/{domainId}/assignWorkspacesByPrincipals"
 	if domainID == "" {
 		return nil, errors.New("parameter domainID cannot be empty")
@@ -278,7 +278,7 @@ func (client *DomainsClient) CreateDomain(ctx context.Context, createDomainReque
 }
 
 // createDomainCreateRequest creates the CreateDomain request.
-func (client *DomainsClient) createDomainCreateRequest(ctx context.Context, createDomainRequest CreateDomainRequest, options *DomainsClientCreateDomainOptions) (*policy.Request, error) {
+func (client *DomainsClient) createDomainCreateRequest(ctx context.Context, createDomainRequest CreateDomainRequest, _ *DomainsClientCreateDomainOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/domains"
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
@@ -336,7 +336,7 @@ func (client *DomainsClient) DeleteDomain(ctx context.Context, domainID string, 
 }
 
 // deleteDomainCreateRequest creates the DeleteDomain request.
-func (client *DomainsClient) deleteDomainCreateRequest(ctx context.Context, domainID string, options *DomainsClientDeleteDomainOptions) (*policy.Request, error) {
+func (client *DomainsClient) deleteDomainCreateRequest(ctx context.Context, domainID string, _ *DomainsClientDeleteDomainOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/domains/{domainId}"
 	if domainID == "" {
 		return nil, errors.New("parameter domainID cannot be empty")
@@ -387,7 +387,7 @@ func (client *DomainsClient) GetDomain(ctx context.Context, domainID string, opt
 }
 
 // getDomainCreateRequest creates the GetDomain request.
-func (client *DomainsClient) getDomainCreateRequest(ctx context.Context, domainID string, options *DomainsClientGetDomainOptions) (*policy.Request, error) {
+func (client *DomainsClient) getDomainCreateRequest(ctx context.Context, domainID string, _ *DomainsClientGetDomainOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/domains/{domainId}"
 	if domainID == "" {
 		return nil, errors.New("parameter domainID cannot be empty")
@@ -575,7 +575,7 @@ func (client *DomainsClient) RoleAssignmentsBulkAssign(ctx context.Context, doma
 }
 
 // roleAssignmentsBulkAssignCreateRequest creates the RoleAssignmentsBulkAssign request.
-func (client *DomainsClient) roleAssignmentsBulkAssignCreateRequest(ctx context.Context, domainID string, domainRoleAssignmentRequest DomainRoleAssignmentRequest, options *DomainsClientRoleAssignmentsBulkAssignOptions) (*policy.Request, error) {
+func (client *DomainsClient) roleAssignmentsBulkAssignCreateRequest(ctx context.Context, domainID string, domainRoleAssignmentRequest DomainRoleAssignmentRequest, _ *DomainsClientRoleAssignmentsBulkAssignOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/domains/{domainId}/roleAssignments/bulkAssign"
 	if domainID == "" {
 		return nil, errors.New("parameter domainID cannot be empty")
@@ -630,7 +630,7 @@ func (client *DomainsClient) RoleAssignmentsBulkUnassign(ctx context.Context, do
 }
 
 // roleAssignmentsBulkUnassignCreateRequest creates the RoleAssignmentsBulkUnassign request.
-func (client *DomainsClient) roleAssignmentsBulkUnassignCreateRequest(ctx context.Context, domainID string, domainRoleUnassignmentRequest DomainRoleUnassignmentRequest, options *DomainsClientRoleAssignmentsBulkUnassignOptions) (*policy.Request, error) {
+func (client *DomainsClient) roleAssignmentsBulkUnassignCreateRequest(ctx context.Context, domainID string, domainRoleUnassignmentRequest DomainRoleUnassignmentRequest, _ *DomainsClientRoleAssignmentsBulkUnassignOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/domains/{domainId}/roleAssignments/bulkUnassign"
 	if domainID == "" {
 		return nil, errors.New("parameter domainID cannot be empty")
@@ -684,7 +684,7 @@ func (client *DomainsClient) UnassignAllDomainWorkspaces(ctx context.Context, do
 }
 
 // unassignAllDomainWorkspacesCreateRequest creates the UnassignAllDomainWorkspaces request.
-func (client *DomainsClient) unassignAllDomainWorkspacesCreateRequest(ctx context.Context, domainID string, options *DomainsClientUnassignAllDomainWorkspacesOptions) (*policy.Request, error) {
+func (client *DomainsClient) unassignAllDomainWorkspacesCreateRequest(ctx context.Context, domainID string, _ *DomainsClientUnassignAllDomainWorkspacesOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/domains/{domainId}/unassignAllWorkspaces"
 	if domainID == "" {
 		return nil, errors.New("parameter domainID cannot be empty")
@@ -793,7 +793,7 @@ func (client *DomainsClient) UpdateDomain(ctx context.Context, domainID string, 
 }
 
 // updateDomainCreateRequest creates the UpdateDomain request.
-func (client *DomainsClient) updateDomainCreateRequest(ctx context.Context, domainID string, updateDomainRequest UpdateDomainRequest, options *DomainsClientUpdateDomainOptions) (*policy.Request, error) {
+func (client *DomainsClient) updateDomainCreateRequest(ctx context.Context, domainID string, updateDomainRequest UpdateDomainRequest, _ *DomainsClientUpdateDomainOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/domains/{domainId}"
 	if domainID == "" {
 		return nil, errors.New("parameter domainID cannot be empty")
@@ -838,7 +838,6 @@ func (client *DomainsClient) updateDomainHandleResponse(resp *http.Response) (Do
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - domainID - The domain ID.
 //   - assignDomainWorkspacesByCapacitiesRequest - The request payload for assigning workspaces to the domain by capacity.
@@ -912,7 +911,6 @@ func (client *DomainsClient) beginAssignDomainWorkspacesByCapacities(ctx context
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - domainID - The domain ID.
 //   - assignDomainWorkspacesByPrincipalsRequest - The request payload for assigning workspaces to the domain by principal.

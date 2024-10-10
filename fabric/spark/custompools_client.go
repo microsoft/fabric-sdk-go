@@ -66,7 +66,7 @@ func (client *CustomPoolsClient) CreateWorkspaceCustomPool(ctx context.Context, 
 }
 
 // createWorkspaceCustomPoolCreateRequest creates the CreateWorkspaceCustomPool request.
-func (client *CustomPoolsClient) createWorkspaceCustomPoolCreateRequest(ctx context.Context, workspaceID string, createCustomPoolRequest CreateCustomPoolRequest, options *CustomPoolsClientCreateWorkspaceCustomPoolOptions) (*policy.Request, error) {
+func (client *CustomPoolsClient) createWorkspaceCustomPoolCreateRequest(ctx context.Context, workspaceID string, createCustomPoolRequest CreateCustomPoolRequest, _ *CustomPoolsClientCreateWorkspaceCustomPoolOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/spark/pools"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -132,7 +132,7 @@ func (client *CustomPoolsClient) DeleteWorkspaceCustomPool(ctx context.Context, 
 }
 
 // deleteWorkspaceCustomPoolCreateRequest creates the DeleteWorkspaceCustomPool request.
-func (client *CustomPoolsClient) deleteWorkspaceCustomPoolCreateRequest(ctx context.Context, workspaceID string, poolID string, options *CustomPoolsClientDeleteWorkspaceCustomPoolOptions) (*policy.Request, error) {
+func (client *CustomPoolsClient) deleteWorkspaceCustomPoolCreateRequest(ctx context.Context, workspaceID string, poolID string, _ *CustomPoolsClientDeleteWorkspaceCustomPoolOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/spark/pools/{poolId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -188,7 +188,7 @@ func (client *CustomPoolsClient) GetWorkspaceCustomPool(ctx context.Context, wor
 }
 
 // getWorkspaceCustomPoolCreateRequest creates the GetWorkspaceCustomPool request.
-func (client *CustomPoolsClient) getWorkspaceCustomPoolCreateRequest(ctx context.Context, workspaceID string, poolID string, options *CustomPoolsClientGetWorkspaceCustomPoolOptions) (*policy.Request, error) {
+func (client *CustomPoolsClient) getWorkspaceCustomPoolCreateRequest(ctx context.Context, workspaceID string, poolID string, _ *CustomPoolsClientGetWorkspaceCustomPoolOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/spark/pools/{poolId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -319,7 +319,7 @@ func (client *CustomPoolsClient) UpdateWorkspaceCustomPool(ctx context.Context, 
 }
 
 // updateWorkspaceCustomPoolCreateRequest creates the UpdateWorkspaceCustomPool request.
-func (client *CustomPoolsClient) updateWorkspaceCustomPoolCreateRequest(ctx context.Context, workspaceID string, poolID string, updateCustomPoolRequest UpdateCustomPoolRequest, options *CustomPoolsClientUpdateWorkspaceCustomPoolOptions) (*policy.Request, error) {
+func (client *CustomPoolsClient) updateWorkspaceCustomPoolCreateRequest(ctx context.Context, workspaceID string, poolID string, updateCustomPoolRequest UpdateCustomPoolRequest, _ *CustomPoolsClientUpdateWorkspaceCustomPoolOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/spark/pools/{poolId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")

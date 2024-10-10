@@ -77,27 +77,40 @@ func (s *SparkLibrariesServerTransport) Do(req *http.Request) (*http.Response, e
 }
 
 func (s *SparkLibrariesServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
-	var resp *http.Response
-	var err error
+	resultChan := make(chan result)
+	defer close(resultChan)
 
-	switch method {
-	case "SparkLibrariesClient.CancelPublish":
-		resp, err = s.dispatchCancelPublish(req)
-	case "SparkLibrariesClient.DeleteStagingLibrary":
-		resp, err = s.dispatchDeleteStagingLibrary(req)
-	case "SparkLibrariesClient.GetPublishedLibraries":
-		resp, err = s.dispatchGetPublishedLibraries(req)
-	case "SparkLibrariesClient.GetStagingLibraries":
-		resp, err = s.dispatchGetStagingLibraries(req)
-	case "SparkLibrariesClient.PublishEnvironment":
-		resp, err = s.dispatchPublishEnvironment(req)
-	case "SparkLibrariesClient.UploadStagingLibrary":
-		resp, err = s.dispatchUploadStagingLibrary(req)
-	default:
-		err = fmt.Errorf("unhandled API %s", method)
+	go func() {
+		var res result
+		switch method {
+		case "SparkLibrariesClient.CancelPublish":
+			res.resp, res.err = s.dispatchCancelPublish(req)
+		case "SparkLibrariesClient.DeleteStagingLibrary":
+			res.resp, res.err = s.dispatchDeleteStagingLibrary(req)
+		case "SparkLibrariesClient.GetPublishedLibraries":
+			res.resp, res.err = s.dispatchGetPublishedLibraries(req)
+		case "SparkLibrariesClient.GetStagingLibraries":
+			res.resp, res.err = s.dispatchGetStagingLibraries(req)
+		case "SparkLibrariesClient.PublishEnvironment":
+			res.resp, res.err = s.dispatchPublishEnvironment(req)
+		case "SparkLibrariesClient.UploadStagingLibrary":
+			res.resp, res.err = s.dispatchUploadStagingLibrary(req)
+		default:
+			res.err = fmt.Errorf("unhandled API %s", method)
+		}
+
+		select {
+		case resultChan <- res:
+		case <-req.Context().Done():
+		}
+	}()
+
+	select {
+	case <-req.Context().Done():
+		return nil, req.Context().Err()
+	case res := <-resultChan:
+		return res.resp, res.err
 	}
-
-	return resp, err
 }
 
 func (s *SparkLibrariesServerTransport) dispatchCancelPublish(req *http.Request) (*http.Response, error) {

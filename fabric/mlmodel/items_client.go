@@ -93,7 +93,7 @@ func (client *ItemsClient) createMLModel(ctx context.Context, workspaceID string
 }
 
 // createMLModelCreateRequest creates the CreateMLModel request.
-func (client *ItemsClient) createMLModelCreateRequest(ctx context.Context, workspaceID string, createMLModelRequest CreateMLModelRequest, options *ItemsClientBeginCreateMLModelOptions) (*policy.Request, error) {
+func (client *ItemsClient) createMLModelCreateRequest(ctx context.Context, workspaceID string, createMLModelRequest CreateMLModelRequest, _ *ItemsClientBeginCreateMLModelOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/mlModels"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -146,7 +146,7 @@ func (client *ItemsClient) DeleteMLModel(ctx context.Context, workspaceID string
 }
 
 // deleteMLModelCreateRequest creates the DeleteMLModel request.
-func (client *ItemsClient) deleteMLModelCreateRequest(ctx context.Context, workspaceID string, mlModelID string, options *ItemsClientDeleteMLModelOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteMLModelCreateRequest(ctx context.Context, workspaceID string, mlModelID string, _ *ItemsClientDeleteMLModelOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/mlModels/{mlModelId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -201,7 +201,7 @@ func (client *ItemsClient) GetMLModel(ctx context.Context, workspaceID string, m
 }
 
 // getMLModelCreateRequest creates the GetMLModel request.
-func (client *ItemsClient) getMLModelCreateRequest(ctx context.Context, workspaceID string, mlModelID string, options *ItemsClientGetMLModelOptions) (*policy.Request, error) {
+func (client *ItemsClient) getMLModelCreateRequest(ctx context.Context, workspaceID string, mlModelID string, _ *ItemsClientGetMLModelOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/mlModels/{mlModelId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -333,7 +333,7 @@ func (client *ItemsClient) UpdateMLModel(ctx context.Context, workspaceID string
 }
 
 // updateMLModelCreateRequest creates the UpdateMLModel request.
-func (client *ItemsClient) updateMLModelCreateRequest(ctx context.Context, workspaceID string, mlModelID string, updateMLModelRequest UpdateMLModelRequest, options *ItemsClientUpdateMLModelOptions) (*policy.Request, error) {
+func (client *ItemsClient) updateMLModelCreateRequest(ctx context.Context, workspaceID string, mlModelID string, updateMLModelRequest UpdateMLModelRequest, _ *ItemsClientUpdateMLModelOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/mlModels/{mlModelId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -384,7 +384,6 @@ func (client *ItemsClient) updateMLModelHandleResponse(resp *http.Response) (Ite
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - createMLModelRequest - Create item request payload.

@@ -145,7 +145,7 @@ func (client *OneLakeShortcutsClient) DeleteShortcut(ctx context.Context, worksp
 }
 
 // deleteShortcutCreateRequest creates the DeleteShortcut request.
-func (client *OneLakeShortcutsClient) deleteShortcutCreateRequest(ctx context.Context, workspaceID string, itemID string, shortcutPath string, shortcutName string, options *OneLakeShortcutsClientDeleteShortcutOptions) (*policy.Request, error) {
+func (client *OneLakeShortcutsClient) deleteShortcutCreateRequest(ctx context.Context, workspaceID string, itemID string, shortcutPath string, shortcutName string, _ *OneLakeShortcutsClientDeleteShortcutOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/shortcuts/{shortcutPath}/{shortcutName}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -211,7 +211,7 @@ func (client *OneLakeShortcutsClient) GetShortcut(ctx context.Context, workspace
 }
 
 // getShortcutCreateRequest creates the GetShortcut request.
-func (client *OneLakeShortcutsClient) getShortcutCreateRequest(ctx context.Context, workspaceID string, itemID string, shortcutPath string, shortcutName string, options *OneLakeShortcutsClientGetShortcutOptions) (*policy.Request, error) {
+func (client *OneLakeShortcutsClient) getShortcutCreateRequest(ctx context.Context, workspaceID string, itemID string, shortcutPath string, shortcutName string, _ *OneLakeShortcutsClientGetShortcutOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/shortcuts/{shortcutPath}/{shortcutName}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")

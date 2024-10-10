@@ -64,7 +64,7 @@ func (client *WorkspaceSettingsClient) GetSparkSettings(ctx context.Context, wor
 }
 
 // getSparkSettingsCreateRequest creates the GetSparkSettings request.
-func (client *WorkspaceSettingsClient) getSparkSettingsCreateRequest(ctx context.Context, workspaceID string, options *WorkspaceSettingsClientGetSparkSettingsOptions) (*policy.Request, error) {
+func (client *WorkspaceSettingsClient) getSparkSettingsCreateRequest(ctx context.Context, workspaceID string, _ *WorkspaceSettingsClientGetSparkSettingsOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/spark/settings"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -125,7 +125,7 @@ func (client *WorkspaceSettingsClient) UpdateSparkSettings(ctx context.Context, 
 }
 
 // updateSparkSettingsCreateRequest creates the UpdateSparkSettings request.
-func (client *WorkspaceSettingsClient) updateSparkSettingsCreateRequest(ctx context.Context, workspaceID string, updateWorkspaceSettingsRequest UpdateWorkspaceSparkSettingsRequest, options *WorkspaceSettingsClientUpdateSparkSettingsOptions) (*policy.Request, error) {
+func (client *WorkspaceSettingsClient) updateSparkSettingsCreateRequest(ctx context.Context, workspaceID string, updateWorkspaceSettingsRequest UpdateWorkspaceSparkSettingsRequest, _ *WorkspaceSettingsClientUpdateSparkSettingsOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/spark/settings"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")

@@ -91,7 +91,7 @@ func (client *ItemsClient) createWarehouse(ctx context.Context, workspaceID stri
 }
 
 // createWarehouseCreateRequest creates the CreateWarehouse request.
-func (client *ItemsClient) createWarehouseCreateRequest(ctx context.Context, workspaceID string, createWarehouseRequest CreateWarehouseRequest, options *ItemsClientBeginCreateWarehouseOptions) (*policy.Request, error) {
+func (client *ItemsClient) createWarehouseCreateRequest(ctx context.Context, workspaceID string, createWarehouseRequest CreateWarehouseRequest, _ *ItemsClientBeginCreateWarehouseOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/warehouses"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -144,7 +144,7 @@ func (client *ItemsClient) DeleteWarehouse(ctx context.Context, workspaceID stri
 }
 
 // deleteWarehouseCreateRequest creates the DeleteWarehouse request.
-func (client *ItemsClient) deleteWarehouseCreateRequest(ctx context.Context, workspaceID string, warehouseID string, options *ItemsClientDeleteWarehouseOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteWarehouseCreateRequest(ctx context.Context, workspaceID string, warehouseID string, _ *ItemsClientDeleteWarehouseOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/warehouses/{warehouseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -199,7 +199,7 @@ func (client *ItemsClient) GetWarehouse(ctx context.Context, workspaceID string,
 }
 
 // getWarehouseCreateRequest creates the GetWarehouse request.
-func (client *ItemsClient) getWarehouseCreateRequest(ctx context.Context, workspaceID string, warehouseID string, options *ItemsClientGetWarehouseOptions) (*policy.Request, error) {
+func (client *ItemsClient) getWarehouseCreateRequest(ctx context.Context, workspaceID string, warehouseID string, _ *ItemsClientGetWarehouseOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/warehouses/{warehouseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -330,7 +330,7 @@ func (client *ItemsClient) UpdateWarehouse(ctx context.Context, workspaceID stri
 }
 
 // updateWarehouseCreateRequest creates the UpdateWarehouse request.
-func (client *ItemsClient) updateWarehouseCreateRequest(ctx context.Context, workspaceID string, warehouseID string, updateWarehouseRequest UpdateWarehouseRequest, options *ItemsClientUpdateWarehouseOptions) (*policy.Request, error) {
+func (client *ItemsClient) updateWarehouseCreateRequest(ctx context.Context, workspaceID string, warehouseID string, updateWarehouseRequest UpdateWarehouseRequest, _ *ItemsClientUpdateWarehouseOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/warehouses/{warehouseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -380,7 +380,6 @@ func (client *ItemsClient) updateWarehouseHandleResponse(resp *http.Response) (I
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 //
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - createWarehouseRequest - Create item request payload.

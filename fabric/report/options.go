@@ -8,7 +8,7 @@ package report
 
 // ItemsClientBeginCreateReportOptions contains the optional parameters for the ItemsClient.BeginCreateReport method.
 type ItemsClientBeginCreateReportOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 
@@ -18,14 +18,14 @@ type ItemsClientBeginGetReportDefinitionOptions struct {
 	// The format of the report public definition.
 	Format *string
 
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 
 // ItemsClientBeginUpdateReportDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateReportDefinition
 // method.
 type ItemsClientBeginUpdateReportDefinitionOptions struct {
-	// Resumes the LRO from the provided token.
+	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 
 	// When set to true and the .platform file is provided as part of the definition, the item's metadata is updated using the
