@@ -5,6 +5,7 @@
 *.sh text eol=lf
 *.go text eol=lf
 *.ps1 text eol=lf
+*.md text eol=lf
 
 # Declare files that will always have CRLF line endings on checkout.
 *.{cmd,[cC][mM][dD]} text eol=crlf

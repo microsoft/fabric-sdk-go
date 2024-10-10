@@ -19,7 +19,7 @@ import (
 )
 
 const (
-	moduleVersion      = "0.1.0-beta.3"
+	moduleVersion      = "0.1.0-beta.4"
 	defaultApiEndpoint = "https://api.fabric.microsoft.com"
 )
 

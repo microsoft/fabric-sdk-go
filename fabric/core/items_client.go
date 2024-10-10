@@ -444,7 +444,7 @@ func (client *ItemsClient) listItemConnectionsCreateRequest(ctx context.Context,
 		return nil, errors.New("parameter itemID cannot be empty")
 	}
 	urlPath = strings.ReplaceAll(urlPath, "{itemId}", url.PathEscape(itemID))
-	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
 	}

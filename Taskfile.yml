@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+# docs: https://taskfile.dev
+#
+# Windows:
+# winget install Task.Task
+#
+# Linux:
+# sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+# echo 'command -v task >/dev/null || export PATH="$PATH:$HOME/.local/bin"' >> ~/.profile
+# source ~/.profile
+#
+# macOS:
+# brew install go-task/tap/go-task
+---
+version: "3"
+
+vars:
+  PWSH: pwsh -NonInteractive -NoProfile -NoLogo -Command
+
+tasks:
+  test:
+    desc: Run tests
+    cmds:
+      - go clean -testcache
+      - '{{if eq .GITHUB_ACTIONS "true"}}gotestsum --format-hivis --format github-actions --junitfile "testresults.xml" -- ./... -p 4 -timeout 10m -coverprofile="coverage.out" -covermode atomic{{end}}'
+      - '{{if ne .GITHUB_ACTIONS "true"}}gotestsum --format-hivis --format pkgname-and-test-fails --junitfile "testresults.xml" -- ./... -p 4 -timeout 10m -coverprofile="coverage.out" -covermode atomic{{end}}'
+      - task: test:getcover
+
+  test:getcover:
+    desc: Get test coverage results
+    internal: true
+    cmds:
+      - gocov convert coverage.out > coverage.json
+      - gocov report coverage.json > coverage.txt
+      - cmd: |
+          {{ .PWSH }} 'Get-Content coverage.json | gocov-xml > coverage.xml'
+        platforms: [windows]
+      - cmd: gocov-xml < coverage.json > coverage.xml
+        platforms: [linux, darwin]
+      - go tool cover -html coverage.out -o coverage.html
+
+  test:tools:
+    desc: Install Test Tools
+    dir: "{{.goSdkOutput}}"
+    cmds:
+      - for: [gotestsum, gocov, gocov-xml]
+        task: install:{{.ITEM}}
+
+  install:gotestsum:
+    desc: Install GoTestSum
+    cmds:
+      - go install gotest.tools/gotestsum@latest
+
+  install:gocov:
+    desc: Install gocov
+    cmds:
+      - go install github.com/axw/gocov/gocov@latest
+
+  install:gocov-xml:
+    desc: Install gocov-xml
+    cmds:
+      - go install github.com/AlekSi/gocov-xml@latest
