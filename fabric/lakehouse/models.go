@@ -180,11 +180,15 @@ type Table struct {
 
 // TableMaintenanceExecutionData - Run on demand lakehouse table maintenance instance payload
 type TableMaintenanceExecutionData struct {
-	// REQUIRED; Name of the table to run maintenance on.
+	// REQUIRED; Name of the table to run maintenance on. Max length of 256 character alphanumeric string with underscores.
 	TableName *string
 
 	// Configures the optimization settings of the maintenance job. To skip table optimization, leave this parameter empty.
 	OptimizeSettings *OptimizeSettings
+
+	// Name of the schema under which the table is created. This property is applicable only for a schema enabled Lakehouse. Max
+	// length of 128 character alphanumeric string with underscores.
+	SchemaName *string
 
 	// Configures the vacuum [https://docs.delta.io/latest/delta-utility.html#-delta-vacuum] settings of the maintenance job.
 	// To skip table vacuum, leave this parameter empty.

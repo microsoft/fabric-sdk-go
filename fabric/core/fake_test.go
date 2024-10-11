@@ -1354,6 +1354,111 @@ func (testsuite *FakeTestSuite) TestJobScheduler_GetItemJobInstance() {
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ItemJobInstance))
 }
 
+func (testsuite *FakeTestSuite) TestJobScheduler_ListItemJobInstances() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List item job instances example"},
+	})
+	var exampleWorkspaceID string
+	var exampleItemID string
+	exampleWorkspaceID = "4b218778-e7a5-4d73-8187-f10824047715"
+	exampleItemID = "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"
+
+	exampleRes := core.ItemJobInstances{
+		Value: []core.ItemJobInstance{
+			{
+				EndTimeUTC:     to.Ptr("2024-06-22T06:35:00.8033333"),
+				ID:             to.Ptr("f2d65699-dd22-4889-980c-15226deb0e1b"),
+				InvokeType:     to.Ptr(core.InvokeTypeManual),
+				ItemID:         to.Ptr("431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"),
+				JobType:        to.Ptr("DefaultJob"),
+				RootActivityID: to.Ptr("8c2ee553-53a4-7edb-1042-0d8189a9e0ca"),
+				StartTimeUTC:   to.Ptr("2024-06-22T06:35:00.7812154"),
+				Status:         to.Ptr(core.StatusCompleted),
+			},
+			{
+				EndTimeUTC:     to.Ptr("2024-06-22T07:35:00.8033333"),
+				ID:             to.Ptr("c0c99aed-be56-4fe0-a6e5-6de5fe277f16"),
+				InvokeType:     to.Ptr(core.InvokeTypeManual),
+				ItemID:         to.Ptr("431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"),
+				JobType:        to.Ptr("DefaultJob"),
+				RootActivityID: to.Ptr("c0c99aed-be56-4fe0-a6e5-6de5fe277f16"),
+				StartTimeUTC:   to.Ptr("2024-06-22T06:35:00.7812154"),
+				Status:         to.Ptr(core.StatusCompleted),
+			}},
+	}
+
+	testsuite.serverFactory.JobSchedulerServer.NewListItemJobInstancesPager = func(workspaceID string, itemID string, options *core.JobSchedulerClientListItemJobInstancesOptions) (resp azfake.PagerResponder[core.JobSchedulerClientListItemJobInstancesResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		resp = azfake.PagerResponder[core.JobSchedulerClientListItemJobInstancesResponse]{}
+		resp.AddPage(http.StatusOK, core.JobSchedulerClientListItemJobInstancesResponse{ItemJobInstances: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewJobSchedulerClient()
+	pager := client.NewListItemJobInstancesPager(exampleWorkspaceID, exampleItemID, &core.JobSchedulerClientListItemJobInstancesOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.ItemJobInstances))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List item job instances with continuation example"},
+	})
+	exampleWorkspaceID = "4b218778-e7a5-4d73-8187-f10824047715"
+	exampleItemID = "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"
+
+	exampleRes = core.ItemJobInstances{
+		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/workspaces/4b218778-e7a5-4d73-8187-f10824047715/items/431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7/jobs/instances?continuationToken=LDEsMTAwMDAwLDA%3D"),
+		Value: []core.ItemJobInstance{
+			{
+				EndTimeUTC:     to.Ptr("2024-06-22T06:35:00.8033333"),
+				ID:             to.Ptr("f2d65699-dd22-4889-980c-15226deb0e1b"),
+				InvokeType:     to.Ptr(core.InvokeTypeManual),
+				ItemID:         to.Ptr("431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"),
+				JobType:        to.Ptr("DefaultJob"),
+				RootActivityID: to.Ptr("8c2ee553-53a4-7edb-1042-0d8189a9e0ca"),
+				StartTimeUTC:   to.Ptr("2024-06-22T06:35:00.7812154"),
+				Status:         to.Ptr(core.StatusCompleted),
+			},
+			{
+				EndTimeUTC:     to.Ptr("2024-06-22T07:35:00.8033333"),
+				ID:             to.Ptr("c0c99aed-be56-4fe0-a6e5-6de5fe277f16"),
+				InvokeType:     to.Ptr(core.InvokeTypeManual),
+				ItemID:         to.Ptr("431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"),
+				JobType:        to.Ptr("DefaultJob"),
+				RootActivityID: to.Ptr("c0c99aed-be56-4fe0-a6e5-6de5fe277f16"),
+				StartTimeUTC:   to.Ptr("2024-06-22T06:35:00.7812154"),
+				Status:         to.Ptr(core.StatusCompleted),
+			}},
+	}
+
+	testsuite.serverFactory.JobSchedulerServer.NewListItemJobInstancesPager = func(workspaceID string, itemID string, options *core.JobSchedulerClientListItemJobInstancesOptions) (resp azfake.PagerResponder[core.JobSchedulerClientListItemJobInstancesResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		resp = azfake.PagerResponder[core.JobSchedulerClientListItemJobInstancesResponse]{}
+		resp.AddPage(http.StatusOK, core.JobSchedulerClientListItemJobInstancesResponse{ItemJobInstances: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListItemJobInstancesPager(exampleWorkspaceID, exampleItemID, &core.JobSchedulerClientListItemJobInstancesOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.ItemJobInstances))
+		if err == nil {
+			break
+		}
+	}
+}
+
 func (testsuite *FakeTestSuite) TestJobScheduler_RunOnDemandItemJob() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{

@@ -234,6 +234,104 @@ func ExampleJobSchedulerClient_GetItemJobInstance() {
 }
 
 // Generated from example definition
+func ExampleJobSchedulerClient_NewListItemJobInstancesPager_listItemJobInstancesExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewJobSchedulerClient().NewListItemJobInstancesPager("4b218778-e7a5-4d73-8187-f10824047715", "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7", &core.JobSchedulerClientListItemJobInstancesOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.ItemJobInstances = core.ItemJobInstances{
+		// 	Value: []core.ItemJobInstance{
+		// 		{
+		// 			EndTimeUTC: to.Ptr("2024-06-22T06:35:00.8033333"),
+		// 			ID: to.Ptr("f2d65699-dd22-4889-980c-15226deb0e1b"),
+		// 			InvokeType: to.Ptr(core.InvokeTypeManual),
+		// 			ItemID: to.Ptr("431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"),
+		// 			JobType: to.Ptr("DefaultJob"),
+		// 			RootActivityID: to.Ptr("8c2ee553-53a4-7edb-1042-0d8189a9e0ca"),
+		// 			StartTimeUTC: to.Ptr("2024-06-22T06:35:00.7812154"),
+		// 			Status: to.Ptr(core.StatusCompleted),
+		// 		},
+		// 		{
+		// 			EndTimeUTC: to.Ptr("2024-06-22T07:35:00.8033333"),
+		// 			ID: to.Ptr("c0c99aed-be56-4fe0-a6e5-6de5fe277f16"),
+		// 			InvokeType: to.Ptr(core.InvokeTypeManual),
+		// 			ItemID: to.Ptr("431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"),
+		// 			JobType: to.Ptr("DefaultJob"),
+		// 			RootActivityID: to.Ptr("c0c99aed-be56-4fe0-a6e5-6de5fe277f16"),
+		// 			StartTimeUTC: to.Ptr("2024-06-22T06:35:00.7812154"),
+		// 			Status: to.Ptr(core.StatusCompleted),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
+func ExampleJobSchedulerClient_NewListItemJobInstancesPager_listItemJobInstancesWithContinuationExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewJobSchedulerClient().NewListItemJobInstancesPager("4b218778-e7a5-4d73-8187-f10824047715", "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7", &core.JobSchedulerClientListItemJobInstancesOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.ItemJobInstances = core.ItemJobInstances{
+		// 	ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		// 	ContinuationURI: to.Ptr("https://api.fabric.microsoft.com/v1/workspaces/4b218778-e7a5-4d73-8187-f10824047715/items/431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7/jobs/instances?continuationToken=LDEsMTAwMDAwLDA%3D"),
+		// 	Value: []core.ItemJobInstance{
+		// 		{
+		// 			EndTimeUTC: to.Ptr("2024-06-22T06:35:00.8033333"),
+		// 			ID: to.Ptr("f2d65699-dd22-4889-980c-15226deb0e1b"),
+		// 			InvokeType: to.Ptr(core.InvokeTypeManual),
+		// 			ItemID: to.Ptr("431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"),
+		// 			JobType: to.Ptr("DefaultJob"),
+		// 			RootActivityID: to.Ptr("8c2ee553-53a4-7edb-1042-0d8189a9e0ca"),
+		// 			StartTimeUTC: to.Ptr("2024-06-22T06:35:00.7812154"),
+		// 			Status: to.Ptr(core.StatusCompleted),
+		// 		},
+		// 		{
+		// 			EndTimeUTC: to.Ptr("2024-06-22T07:35:00.8033333"),
+		// 			ID: to.Ptr("c0c99aed-be56-4fe0-a6e5-6de5fe277f16"),
+		// 			InvokeType: to.Ptr(core.InvokeTypeManual),
+		// 			ItemID: to.Ptr("431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"),
+		// 			JobType: to.Ptr("DefaultJob"),
+		// 			RootActivityID: to.Ptr("c0c99aed-be56-4fe0-a6e5-6de5fe277f16"),
+		// 			StartTimeUTC: to.Ptr("2024-06-22T06:35:00.7812154"),
+		// 			Status: to.Ptr(core.StatusCompleted),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
 func ExampleJobSchedulerClient_RunOnDemandItemJob_runItemJobInstanceWithNoRequestBodyExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {

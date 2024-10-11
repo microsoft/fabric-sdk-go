@@ -17,6 +17,8 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
+
+	"github.com/microsoft/fabric-sdk-go/internal/iruntime"
 )
 
 // JobSchedulerClient contains the methods for the JobScheduler group.
@@ -340,6 +342,81 @@ func (client *JobSchedulerClient) getItemScheduleHandleResponse(resp *http.Respo
 	return result, nil
 }
 
+// NewListItemJobInstancesPager - REQUIRED DELEGATED SCOPES For item APIs use these scope types:
+// * Generic scope: Item.ReadWrite.All or Item.Read.All
+//
+// * Specific scope: itemType.ReadWrite.All or itemType.Read.All (for example: Notebook.ReadWrite.All)
+//
+// for more information about scopes, see scopes article [/rest/api/fabric/articles/scopes].
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// | No | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// INTERFACE
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - itemID - The item ID.
+//   - options - JobSchedulerClientListItemJobInstancesOptions contains the optional parameters for the JobSchedulerClient.NewListItemJobInstancesPager
+//     method.
+func (client *JobSchedulerClient) NewListItemJobInstancesPager(workspaceID string, itemID string, options *JobSchedulerClientListItemJobInstancesOptions) *runtime.Pager[JobSchedulerClientListItemJobInstancesResponse] {
+	return runtime.NewPager(runtime.PagingHandler[JobSchedulerClientListItemJobInstancesResponse]{
+		More: func(page JobSchedulerClientListItemJobInstancesResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *JobSchedulerClientListItemJobInstancesResponse) (JobSchedulerClientListItemJobInstancesResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "core.JobSchedulerClient.NewListItemJobInstancesPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.listItemJobInstancesCreateRequest(ctx, workspaceID, itemID, options)
+			}, nil)
+			if err != nil {
+				return JobSchedulerClientListItemJobInstancesResponse{}, err
+			}
+			return client.listItemJobInstancesHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
+}
+
+// listItemJobInstancesCreateRequest creates the ListItemJobInstances request.
+func (client *JobSchedulerClient) listItemJobInstancesCreateRequest(ctx context.Context, workspaceID string, itemID string, options *JobSchedulerClientListItemJobInstancesOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/jobs/instances"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if itemID == "" {
+		return nil, errors.New("parameter itemID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{itemId}", url.PathEscape(itemID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// listItemJobInstancesHandleResponse handles the ListItemJobInstances response.
+func (client *JobSchedulerClient) listItemJobInstancesHandleResponse(resp *http.Response) (JobSchedulerClientListItemJobInstancesResponse, error) {
+	result := JobSchedulerClientListItemJobInstancesResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.ItemJobInstances); err != nil {
+		return JobSchedulerClientListItemJobInstancesResponse{}, err
+	}
+	return result, nil
+}
+
 // ListItemSchedules - This API supports pagination [/rest/api/fabric/articles/pagination].
 // REQUIRED DELEGATED SCOPES For item APIs use these scope types:
 // * Generic scope: Item.ReadWrite.All or Item.Read.All
@@ -583,3 +660,38 @@ func (client *JobSchedulerClient) updateItemScheduleHandleResponse(resp *http.Re
 }
 
 // Custom code starts below
+
+// ListItemJobInstances - returns array of ItemJobInstance from all pages.
+// REQUIRED DELEGATED SCOPES For item APIs use these scope types:
+//
+//   - Generic scope: Item.ReadWrite.All or Item.Read.All
+//
+//   - Specific scope: itemType.ReadWrite.All or itemType.Read.All (for example: Notebook.ReadWrite.All)
+//
+//     for more information about scopes, see scopes article [/rest/api/fabric/articles/scopes].
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | No | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | No |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - itemID - The item ID.
+//   - options - JobSchedulerClientListItemJobInstancesOptions contains the optional parameters for the JobSchedulerClient.NewListItemJobInstancesPager method.
+func (client *JobSchedulerClient) ListItemJobInstances(ctx context.Context, workspaceID string, itemID string, options *JobSchedulerClientListItemJobInstancesOptions) ([]ItemJobInstance, error) {
+	pager := client.NewListItemJobInstancesPager(workspaceID, itemID, options)
+	mapper := func(resp JobSchedulerClientListItemJobInstancesResponse) []ItemJobInstance {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []ItemJobInstance{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []ItemJobInstance{}, err
+	}
+	return list, nil
+}

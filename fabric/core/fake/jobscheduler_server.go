@@ -20,6 +20,7 @@ import (
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/fake/server"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 
 	"github.com/microsoft/fabric-sdk-go/fabric/core"
 )
@@ -42,6 +43,10 @@ type JobSchedulerServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetItemSchedule func(ctx context.Context, workspaceID string, itemID string, jobType string, scheduleID string, options *core.JobSchedulerClientGetItemScheduleOptions) (resp azfake.Responder[core.JobSchedulerClientGetItemScheduleResponse], errResp azfake.ErrorResponder)
 
+	// NewListItemJobInstancesPager is the fake for method JobSchedulerClient.NewListItemJobInstancesPager
+	// HTTP status codes to indicate success: http.StatusOK
+	NewListItemJobInstancesPager func(workspaceID string, itemID string, options *core.JobSchedulerClientListItemJobInstancesOptions) (resp azfake.PagerResponder[core.JobSchedulerClientListItemJobInstancesResponse])
+
 	// ListItemSchedules is the fake for method JobSchedulerClient.ListItemSchedules
 	// HTTP status codes to indicate success: http.StatusOK
 	ListItemSchedules func(ctx context.Context, workspaceID string, itemID string, jobType string, options *core.JobSchedulerClientListItemSchedulesOptions) (resp azfake.Responder[core.JobSchedulerClientListItemSchedulesResponse], errResp azfake.ErrorResponder)
@@ -59,13 +64,17 @@ type JobSchedulerServer struct {
 // The returned JobSchedulerServerTransport instance is connected to an instance of core.JobSchedulerClient via the
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewJobSchedulerServerTransport(srv *JobSchedulerServer) *JobSchedulerServerTransport {
-	return &JobSchedulerServerTransport{srv: srv}
+	return &JobSchedulerServerTransport{
+		srv:                          srv,
+		newListItemJobInstancesPager: newTracker[azfake.PagerResponder[core.JobSchedulerClientListItemJobInstancesResponse]](),
+	}
 }
 
 // JobSchedulerServerTransport connects instances of core.JobSchedulerClient to instances of JobSchedulerServer.
 // Don't use this type directly, use NewJobSchedulerServerTransport instead.
 type JobSchedulerServerTransport struct {
-	srv *JobSchedulerServer
+	srv                          *JobSchedulerServer
+	newListItemJobInstancesPager *tracker[azfake.PagerResponder[core.JobSchedulerClientListItemJobInstancesResponse]]
 }
 
 // Do implements the policy.Transporter interface for JobSchedulerServerTransport.
@@ -96,6 +105,8 @@ func (j *JobSchedulerServerTransport) dispatchToMethodFake(req *http.Request, me
 			res.resp, res.err = j.dispatchGetItemJobInstance(req)
 		case "JobSchedulerClient.GetItemSchedule":
 			res.resp, res.err = j.dispatchGetItemSchedule(req)
+		case "JobSchedulerClient.NewListItemJobInstancesPager":
+			res.resp, res.err = j.dispatchNewListItemJobInstancesPager(req)
 		case "JobSchedulerClient.ListItemSchedules":
 			res.resp, res.err = j.dispatchListItemSchedules(req)
 		case "JobSchedulerClient.RunOnDemandItemJob":
@@ -281,6 +292,59 @@ func (j *JobSchedulerServerTransport) dispatchGetItemSchedule(req *http.Request)
 	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).ItemSchedule, req)
 	if err != nil {
 		return nil, err
+	}
+	return resp, nil
+}
+
+func (j *JobSchedulerServerTransport) dispatchNewListItemJobInstancesPager(req *http.Request) (*http.Response, error) {
+	if j.srv.NewListItemJobInstancesPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListItemJobInstancesPager not implemented")}
+	}
+	newListItemJobInstancesPager := j.newListItemJobInstancesPager.get(req)
+	if newListItemJobInstancesPager == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/items/(?P<itemId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/instances`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		itemIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("itemId")])
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *core.JobSchedulerClientListItemJobInstancesOptions
+		if continuationTokenParam != nil {
+			options = &core.JobSchedulerClientListItemJobInstancesOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := j.srv.NewListItemJobInstancesPager(workspaceIDParam, itemIDParam, options)
+		newListItemJobInstancesPager = &resp
+		j.newListItemJobInstancesPager.add(req, newListItemJobInstancesPager)
+		server.PagerResponderInjectNextLinks(newListItemJobInstancesPager, req, func(page *core.JobSchedulerClientListItemJobInstancesResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
+	}
+	resp, err := server.PagerResponderNext(newListItemJobInstancesPager, req)
+	if err != nil {
+		return nil, err
+	}
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		j.newListItemJobInstancesPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
+	}
+	if !server.PagerResponderMore(newListItemJobInstancesPager) {
+		j.newListItemJobInstancesPager.remove(req)
 	}
 	return resp, nil
 }
