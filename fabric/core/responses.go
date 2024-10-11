@@ -181,6 +181,11 @@ type JobSchedulerClientGetItemScheduleResponse struct {
 	ItemSchedule
 }
 
+// JobSchedulerClientListItemJobInstancesResponse contains the response from method JobSchedulerClient.NewListItemJobInstancesPager.
+type JobSchedulerClientListItemJobInstancesResponse struct {
+	ItemJobInstances
+}
+
 // JobSchedulerClientListItemSchedulesResponse contains the response from method JobSchedulerClient.ListItemSchedules.
 type JobSchedulerClientListItemSchedulesResponse struct {
 	// list of schedules for this item.

@@ -355,12 +355,48 @@ func (testsuite *FakeTestSuite) TestTables_ListTables() {
 func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandTableMaintenance() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Run table maintenance with optimize Z-Order and vacuum enabled."},
+		"example-id": {"Run table maintenance with optimize Z-Order and vacuum enabled for schema enabled lakehouse."},
 	})
 	var exampleWorkspaceID string
 	var exampleLakehouseID string
 	var exampleJobType string
 	var exampleRunOnDemandTableMaintenanceRequest lakehouse.RunOnDemandTableMaintenanceRequest
+	exampleWorkspaceID = "4b218778-e7a5-4d73-8187-f10824047715"
+	exampleLakehouseID = "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"
+	exampleJobType = "TableMaintenance"
+	exampleRunOnDemandTableMaintenanceRequest = lakehouse.RunOnDemandTableMaintenanceRequest{
+		ExecutionData: &lakehouse.TableMaintenanceExecutionData{
+			OptimizeSettings: &lakehouse.OptimizeSettings{
+				VOrder: to.Ptr(true),
+				ZOrderBy: []string{
+					"tipAmount"},
+			},
+			SchemaName: to.Ptr("dbo"),
+			TableName:  to.Ptr("table1"),
+			VacuumSettings: &lakehouse.VacuumSettings{
+				RetentionPeriod: to.Ptr("7:01:00:00"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandTableMaintenance = func(ctx context.Context, workspaceID string, lakehouseID string, jobType string, runOnDemandTableMaintenanceRequest lakehouse.RunOnDemandTableMaintenanceRequest, options *lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleLakehouseID, lakehouseID)
+		testsuite.Require().Equal(exampleJobType, jobType)
+		testsuite.Require().True(reflect.DeepEqual(exampleRunOnDemandTableMaintenanceRequest, runOnDemandTableMaintenanceRequest))
+		resp = azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceResponse]{}
+		resp.SetResponse(http.StatusAccepted, lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewBackgroundJobsClient()
+	_, err = client.RunOnDemandTableMaintenance(ctx, exampleWorkspaceID, exampleLakehouseID, exampleJobType, exampleRunOnDemandTableMaintenanceRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Run table maintenance with optimize Z-Order and vacuum enabled."},
+	})
 	exampleWorkspaceID = "4b218778-e7a5-4d73-8187-f10824047715"
 	exampleLakehouseID = "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"
 	exampleJobType = "TableMaintenance"
@@ -388,7 +424,6 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandTableMaintenance()
 		return
 	}
 
-	client := testsuite.clientFactory.NewBackgroundJobsClient()
 	_, err = client.RunOnDemandTableMaintenance(ctx, exampleWorkspaceID, exampleLakehouseID, exampleJobType, exampleRunOnDemandTableMaintenanceRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 

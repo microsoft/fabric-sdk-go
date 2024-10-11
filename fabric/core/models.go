@@ -957,6 +957,17 @@ type ItemJobInstance struct {
 	FailureReason *ErrorResponse
 }
 
+type ItemJobInstances struct {
+	// REQUIRED; A list of item job instances.
+	Value []ItemJobInstance
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
 // ItemMetadata - Contains the item metadata.
 type ItemMetadata struct {
 	// READ-ONLY; The display name of the item. Prefers the workspace item's display name if it exists, otherwise displayName
