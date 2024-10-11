@@ -69,6 +69,9 @@ jobs:
           output: both
           thresholds: "40 60"
 
+      - name: 📢 Publish coverage results
+        run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+
       - name: 📤 Upload test results
         if: always()
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
@@ -92,6 +95,3 @@ jobs:
             code-coverage-results.md
           if-no-files-found: warn
           overwrite: true
-
-      - name: 📢 Publish coverage results
-        run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
