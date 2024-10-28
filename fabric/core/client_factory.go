@@ -103,6 +103,14 @@ func (c *ClientFactory) NewLongRunningOperationsClient() *LongRunningOperationsC
 	}
 }
 
+// NewManagedPrivateEndpointsClient creates a new instance of ManagedPrivateEndpointsClient.
+func (c *ClientFactory) NewManagedPrivateEndpointsClient() *ManagedPrivateEndpointsClient {
+	return &ManagedPrivateEndpointsClient{
+		internal: c.internal.WithClientName("core.ManagedPrivateEndpointsClient"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewOneLakeDataAccessSecurityClient creates a new instance of OneLakeDataAccessSecurityClient.
 func (c *ClientFactory) NewOneLakeDataAccessSecurityClient() *OneLakeDataAccessSecurityClient {
 	return &OneLakeDataAccessSecurityClient{

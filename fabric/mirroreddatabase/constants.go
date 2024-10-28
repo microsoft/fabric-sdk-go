@@ -4,25 +4,7 @@
 // Changes may cause incorrect behavior and will be lost if the code is regenerated.
 // SPDX-License-Identifier: MIT
 
-package lakehouse
-
-// FileFormat - Data file format name. Additional file format types may be added over time.
-type FileFormat string
-
-const (
-	// FileFormatCSV - CSV format name.
-	FileFormatCSV FileFormat = "Csv"
-	// FileFormatParquet - Parquet format name.
-	FileFormatParquet FileFormat = "Parquet"
-)
-
-// PossibleFileFormatValues returns the possible values for the FileFormat const type.
-func PossibleFileFormatValues() []FileFormat {
-	return []FileFormat{
-		FileFormatCSV,
-		FileFormatParquet,
-	}
-}
+package mirroreddatabase
 
 // ItemType - The type of the item. Additional item types may be added over time.
 type ItemType string
@@ -99,39 +81,49 @@ func PossibleItemTypeValues() []ItemType {
 	}
 }
 
-// ModeType - The load table operation mode, overwrite or append. Additional mode types may be added over time.
-type ModeType string
+// MirroringStatus - The mirroring status type. Additional MirroringStatus types may be added over time.
+type MirroringStatus string
 
 const (
-	// ModeTypeAppend - load table in append mode.
-	ModeTypeAppend ModeType = "Append"
-	// ModeTypeOverwrite - load table in overwrite mode.
-	ModeTypeOverwrite ModeType = "Overwrite"
+	// MirroringStatusInitialized - The associated SQL endpoint provisioning is succeeded and the mirrored database is ready for
+	// start.
+	MirroringStatusInitialized MirroringStatus = "Initialized"
+	// MirroringStatusInitializing - The associated SQL endpoint provisioning is in progress.
+	MirroringStatusInitializing MirroringStatus = "Initializing"
+	// MirroringStatusRunning - The mirroring instance for the mirrored database is running.
+	MirroringStatusRunning MirroringStatus = "Running"
+	// MirroringStatusStarting - The mirroring instance for the mirrored database is starting.
+	MirroringStatusStarting MirroringStatus = "Starting"
+	// MirroringStatusStopped - The mirroring instance for the mirrored database is stopped.
+	MirroringStatusStopped MirroringStatus = "Stopped"
+	// MirroringStatusStopping - The mirroring instance for the mirrored database is stopping.
+	MirroringStatusStopping MirroringStatus = "Stopping"
 )
 
-// PossibleModeTypeValues returns the possible values for the ModeType const type.
-func PossibleModeTypeValues() []ModeType {
-	return []ModeType{
-		ModeTypeAppend,
-		ModeTypeOverwrite,
+// PossibleMirroringStatusValues returns the possible values for the MirroringStatus const type.
+func PossibleMirroringStatusValues() []MirroringStatus {
+	return []MirroringStatus{
+		MirroringStatusInitialized,
+		MirroringStatusInitializing,
+		MirroringStatusRunning,
+		MirroringStatusStarting,
+		MirroringStatusStopped,
+		MirroringStatusStopping,
 	}
 }
 
-// PathType - The type of relativePath, either file or folder. Additional PathType types may be added over time.
-type PathType string
+// PayloadType - The type of the definition part payload. Additional payload types may be added over time.
+type PayloadType string
 
 const (
-	// PathTypeFile - load table from file.
-	PathTypeFile PathType = "File"
-	// PathTypeFolder - load table from folder.
-	PathTypeFolder PathType = "Folder"
+	// PayloadTypeInlineBase64 - Inline Base 64.
+	PayloadTypeInlineBase64 PayloadType = "InlineBase64"
 )
 
-// PossiblePathTypeValues returns the possible values for the PathType const type.
-func PossiblePathTypeValues() []PathType {
-	return []PathType{
-		PathTypeFile,
-		PathTypeFolder,
+// PossiblePayloadTypeValues returns the possible values for the PayloadType const type.
+func PossiblePayloadTypeValues() []PayloadType {
+	return []PayloadType{
+		PayloadTypeInlineBase64,
 	}
 }
 
@@ -157,20 +149,32 @@ func PossibleSQLEndpointProvisioningStatusValues() []SQLEndpointProvisioningStat
 	}
 }
 
-// TableType - The table type. Additional TableType types may be added over time.
-type TableType string
+// TableMirroringStatus - The table mirroring status type. Additional TableMirroringStatus types may be added over time.
+type TableMirroringStatus string
 
 const (
-	// TableTypeExternal - External table.
-	TableTypeExternal TableType = "External"
-	// TableTypeManaged - Managed table.
-	TableTypeManaged TableType = "Managed"
+	// TableMirroringStatusFailed - Mirroing of the table failed with error.
+	TableMirroringStatusFailed TableMirroringStatus = "Failed"
+	// TableMirroringStatusInitialized - Mirroing of the table is initialized.
+	TableMirroringStatusInitialized TableMirroringStatus = "Initialized"
+	// TableMirroringStatusReplicating - The table is replicating.
+	TableMirroringStatusReplicating TableMirroringStatus = "Replicating"
+	// TableMirroringStatusReseeding - The table is reseeding.
+	TableMirroringStatusReseeding TableMirroringStatus = "Reseeding"
+	// TableMirroringStatusSnapshotting - The table is snapshotting.
+	TableMirroringStatusSnapshotting TableMirroringStatus = "Snapshotting"
+	// TableMirroringStatusStopped - Mirroring of the table is stopped.
+	TableMirroringStatusStopped TableMirroringStatus = "Stopped"
 )
 
-// PossibleTableTypeValues returns the possible values for the TableType const type.
-func PossibleTableTypeValues() []TableType {
-	return []TableType{
-		TableTypeExternal,
-		TableTypeManaged,
+// PossibleTableMirroringStatusValues returns the possible values for the TableMirroringStatus const type.
+func PossibleTableMirroringStatusValues() []TableMirroringStatus {
+	return []TableMirroringStatus{
+		TableMirroringStatusFailed,
+		TableMirroringStatusInitialized,
+		TableMirroringStatusReplicating,
+		TableMirroringStatusReseeding,
+		TableMirroringStatusSnapshotting,
+		TableMirroringStatusStopped,
 	}
 }

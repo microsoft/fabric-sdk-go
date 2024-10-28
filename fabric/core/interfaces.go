@@ -6,6 +6,25 @@
 
 package core
 
+// GitCredentialsClassification provides polymorphic access to related types.
+// Call the interface's GetGitCredentials() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *AutomaticGitCredentials, *ConfiguredConnectionGitCredentials, *GitCredentials
+type GitCredentialsClassification interface {
+	// GetGitCredentials returns the GitCredentials content of the underlying type.
+	GetGitCredentials() *GitCredentials
+}
+
+// GitCredentialsConfigurationResponseClassification provides polymorphic access to related types.
+// Call the interface's GetGitCredentialsConfigurationResponse() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *AutomaticGitCredentialsResponse, *ConfiguredConnectionGitCredentialsResponse, *GitCredentialsConfigurationResponse,
+// - *NoneGitCredentialsResponse
+type GitCredentialsConfigurationResponseClassification interface {
+	// GetGitCredentialsConfigurationResponse returns the GitCredentialsConfigurationResponse content of the underlying type.
+	GetGitCredentialsConfigurationResponse() *GitCredentialsConfigurationResponse
+}
+
 // GitProviderDetailsClassification provides polymorphic access to related types.
 // Call the interface's GetGitProviderDetails() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
@@ -22,4 +41,14 @@ type GitProviderDetailsClassification interface {
 type ScheduleConfigClassification interface {
 	// GetScheduleConfig returns the ScheduleConfig content of the underlying type.
 	GetScheduleConfig() *ScheduleConfig
+}
+
+// UpdateGitCredentialsRequestClassification provides polymorphic access to related types.
+// Call the interface's GetUpdateGitCredentialsRequest() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *UpdateGitCredentialsRequest, *UpdateGitCredentialsToAutomaticRequest, *UpdateGitCredentialsToConfiguredConnectionRequest,
+// - *UpdateGitCredentialsToNoneRequest
+type UpdateGitCredentialsRequestClassification interface {
+	// GetUpdateGitCredentialsRequest returns the UpdateGitCredentialsRequest content of the underlying type.
+	GetUpdateGitCredentialsRequest() *UpdateGitCredentialsRequest
 }

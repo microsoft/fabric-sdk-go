@@ -1581,21 +1581,26 @@ func (testsuite *FakeTestSuite) TestGit_GetConnection() {
 	})
 	exampleWorkspaceID = "1455b6a2-c120-4c1c-dda7-92bafe99bec3"
 
+	exampleRes = core.GitConnection{
+		GitConnectionState: to.Ptr(core.GitConnectionStateNotConnected),
+	}
+
 	testsuite.serverFactory.GitServer.GetConnection = func(ctx context.Context, workspaceID string, options *core.GitClientGetConnectionOptions) (resp azfake.Responder[core.GitClientGetConnectionResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		resp = azfake.Responder[core.GitClientGetConnectionResponse]{}
-		resp.SetResponse(http.StatusOK, core.GitClientGetConnectionResponse{}, nil)
+		resp.SetResponse(http.StatusOK, core.GitClientGetConnectionResponse{GitConnection: exampleRes}, nil)
 		return
 	}
 
-	_, err = client.GetConnection(ctx, exampleWorkspaceID, nil)
+	res, err = client.GetConnection(ctx, exampleWorkspaceID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.GitConnection))
 }
 
 func (testsuite *FakeTestSuite) TestGit_Connect() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Connect a workspace to a Git example"},
+		"example-id": {"Connect a workspace to Azure DevOps example"},
 	})
 	var exampleWorkspaceID string
 	var exampleGitConnectRequest core.GitConnectRequest
@@ -1620,6 +1625,36 @@ func (testsuite *FakeTestSuite) TestGit_Connect() {
 	}
 
 	client := testsuite.clientFactory.NewGitClient()
+	_, err = client.Connect(ctx, exampleWorkspaceID, exampleGitConnectRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Connect a workspace to GitHub example"},
+	})
+	exampleWorkspaceID = "1565e6a3-c020-4c0c-dda7-92bafe99eec5"
+	exampleGitConnectRequest = core.GitConnectRequest{
+		GitProviderDetails: &core.GitHubDetails{
+			BranchName:      to.Ptr("Test Branch"),
+			DirectoryName:   to.Ptr("Test Directory/Test Subdirectory"),
+			GitProviderType: to.Ptr(core.GitProviderTypeGitHub),
+			RepositoryName:  to.Ptr("Test Repo"),
+			OwnerName:       to.Ptr("Test Owner"),
+		},
+		MyGitCredentials: &core.ConfiguredConnectionGitCredentials{
+			Source:       to.Ptr(core.GitCredentialsSourceConfiguredConnection),
+			ConnectionID: to.Ptr("3f2504e0-4f89-11d3-9a0c-0305e82c3301"),
+		},
+	}
+
+	testsuite.serverFactory.GitServer.Connect = func(ctx context.Context, workspaceID string, gitConnectRequest core.GitConnectRequest, options *core.GitClientConnectOptions) (resp azfake.Responder[core.GitClientConnectResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleGitConnectRequest, gitConnectRequest))
+		resp = azfake.Responder[core.GitClientConnectResponse]{}
+		resp.SetResponse(http.StatusOK, core.GitClientConnectResponse{}, nil)
+		return
+	}
+
 	_, err = client.Connect(ctx, exampleWorkspaceID, exampleGitConnectRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
@@ -1893,6 +1928,141 @@ func (testsuite *FakeTestSuite) TestGit_CommitToGit() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestGit_GetMyGitCredentials() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get the user's Git credentials configuration for Azure DevOps when it is automatic example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "1565e6a3-c020-4c0c-dda7-92bafe99eec5"
+
+	exampleRes := core.GitClientGetMyGitCredentialsResponse{
+		GitCredentialsConfigurationResponseClassification: &core.AutomaticGitCredentialsResponse{
+			Source: to.Ptr(core.GitCredentialsSourceAutomatic),
+		},
+	}
+
+	testsuite.serverFactory.GitServer.GetMyGitCredentials = func(ctx context.Context, workspaceID string, options *core.GitClientGetMyGitCredentialsOptions) (resp azfake.Responder[core.GitClientGetMyGitCredentialsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.GitClientGetMyGitCredentialsResponse]{}
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGitClient()
+	res, err := client.GetMyGitCredentials(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get the user's Git credentials configuration for GitHub when it is configured by connection example"},
+	})
+	exampleWorkspaceID = "1565e6a3-c020-4c0c-dda7-92bafe99eec5"
+
+	exampleRes = core.GitClientGetMyGitCredentialsResponse{
+		GitCredentialsConfigurationResponseClassification: &core.ConfiguredConnectionGitCredentialsResponse{
+			Source:       to.Ptr(core.GitCredentialsSourceConfiguredConnection),
+			ConnectionID: to.Ptr("3f2504e0-4f89-11d3-9a0c-0305e82c3301"),
+		},
+	}
+
+	testsuite.serverFactory.GitServer.GetMyGitCredentials = func(ctx context.Context, workspaceID string, options *core.GitClientGetMyGitCredentialsOptions) (resp azfake.Responder[core.GitClientGetMyGitCredentialsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.GitClientGetMyGitCredentialsResponse]{}
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
+		return
+	}
+
+	res, err = client.GetMyGitCredentials(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get the user's Git credentials configuration for GitHub when it is not configured example"},
+	})
+	exampleWorkspaceID = "1565e6a3-c020-4c0c-dda7-92bafe99eec5"
+
+	exampleRes = core.GitClientGetMyGitCredentialsResponse{
+		GitCredentialsConfigurationResponseClassification: &core.NoneGitCredentialsResponse{
+			Source: to.Ptr(core.GitCredentialsSourceNone),
+		},
+	}
+
+	testsuite.serverFactory.GitServer.GetMyGitCredentials = func(ctx context.Context, workspaceID string, options *core.GitClientGetMyGitCredentialsOptions) (resp azfake.Responder[core.GitClientGetMyGitCredentialsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.GitClientGetMyGitCredentialsResponse]{}
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
+		return
+	}
+
+	res, err = client.GetMyGitCredentials(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
+}
+
+func (testsuite *FakeTestSuite) TestGit_UpdateMyGitCredentials() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update user's Git credentials to ConfiguredConnection example"},
+	})
+	var exampleWorkspaceID string
+	var exampleUpdateGitCredentialsRequest core.UpdateGitCredentialsRequestClassification
+	exampleWorkspaceID = "1565e6a3-c020-4c0c-dda7-92bafe99eec5"
+	exampleUpdateGitCredentialsRequest = &core.UpdateGitCredentialsToConfiguredConnectionRequest{
+		Source:       to.Ptr(core.GitCredentialsSourceConfiguredConnection),
+		ConnectionID: to.Ptr("3f2504e0-4f89-11d3-9a0c-0305e82c3301"),
+	}
+
+	exampleRes := core.GitClientUpdateMyGitCredentialsResponse{
+		GitCredentialsConfigurationResponseClassification: &core.ConfiguredConnectionGitCredentialsResponse{
+			Source:       to.Ptr(core.GitCredentialsSourceConfiguredConnection),
+			ConnectionID: to.Ptr("3f2504e0-4f89-11d3-9a0c-0305e82c3301"),
+		},
+	}
+
+	testsuite.serverFactory.GitServer.UpdateMyGitCredentials = func(ctx context.Context, workspaceID string, updateGitCredentialsRequest core.UpdateGitCredentialsRequestClassification, options *core.GitClientUpdateMyGitCredentialsOptions) (resp azfake.Responder[core.GitClientUpdateMyGitCredentialsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateGitCredentialsRequest, updateGitCredentialsRequest))
+		resp = azfake.Responder[core.GitClientUpdateMyGitCredentialsResponse]{}
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGitClient()
+	res, err := client.UpdateMyGitCredentials(ctx, exampleWorkspaceID, exampleUpdateGitCredentialsRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update user's Git credentials to None example"},
+	})
+	exampleWorkspaceID = "1565e6a3-c020-4c0c-dda7-92bafe99eec5"
+	exampleUpdateGitCredentialsRequest = &core.UpdateGitCredentialsToNoneRequest{
+		Source: to.Ptr(core.GitCredentialsSourceNone),
+	}
+
+	exampleRes = core.GitClientUpdateMyGitCredentialsResponse{
+		GitCredentialsConfigurationResponseClassification: &core.NoneGitCredentialsResponse{
+			Source: to.Ptr(core.GitCredentialsSourceNone),
+		},
+	}
+
+	testsuite.serverFactory.GitServer.UpdateMyGitCredentials = func(ctx context.Context, workspaceID string, updateGitCredentialsRequest core.UpdateGitCredentialsRequestClassification, options *core.GitClientUpdateMyGitCredentialsOptions) (resp azfake.Responder[core.GitClientUpdateMyGitCredentialsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateGitCredentialsRequest, updateGitCredentialsRequest))
+		resp = azfake.Responder[core.GitClientUpdateMyGitCredentialsResponse]{}
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
+		return
+	}
+
+	res, err = client.UpdateMyGitCredentials(ctx, exampleWorkspaceID, exampleUpdateGitCredentialsRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
 }
 
 func (testsuite *FakeTestSuite) TestCapacities_ListCapacities() {
@@ -3489,4 +3659,195 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_RevokeExternalDataShare()
 	client := testsuite.clientFactory.NewExternalDataSharesClient()
 	_, err = client.RevokeExternalDataShare(ctx, exampleWorkspaceID, exampleItemID, exampleExternalDataShareID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestManagedPrivateEndpoints_ListWorkspaceManagedPrivateEndpoints() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List managed private endpoints in workspace example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+
+	exampleRes := core.ManagedPrivateEndpoints{
+		Value: []core.ManagedPrivateEndpoint{
+			{
+				Name: to.Ptr("SqlPE"),
+				ConnectionState: &core.PrivateEndpointConnectionState{
+					Description: to.Ptr("Endpoint approved"),
+					Status:      to.Ptr(core.ConnectionStatusApproved),
+				},
+				ID:                          to.Ptr("59a92b06-6e5a-468c-b748-e28c8ff28da3"),
+				ProvisioningState:           to.Ptr(core.PrivateEndpointProvisioningStateSucceeded),
+				TargetPrivateLinkResourceID: to.Ptr("/subscriptions/e3bf3f1a-4d64-4e42-85e9-aa1b84e3874/resourceGroups/testRG/providers/Microsoft.SqlServer/SqlServer/sql1"),
+				TargetSubresourceType:       to.Ptr("sqlServer"),
+			},
+			{
+				Name: to.Ptr("BlobPE"),
+				ConnectionState: &core.PrivateEndpointConnectionState{
+					Description: to.Ptr("Endpoint approval provided"),
+					Status:      to.Ptr(core.ConnectionStatusApproved),
+				},
+				ID:                          to.Ptr("1b56faf6-9cb8-4506-8c6c-83e0aece804f"),
+				ProvisioningState:           to.Ptr(core.PrivateEndpointProvisioningStateSucceeded),
+				TargetPrivateLinkResourceID: to.Ptr("/subscriptions/73310022-c811-4844-8b73-f9baa17c0d08/resourceGroups/testRG2/providers/Microsoft.Storage/storageAccounts/storage1"),
+				TargetSubresourceType:       to.Ptr("blob"),
+			}},
+	}
+
+	testsuite.serverFactory.ManagedPrivateEndpointsServer.NewListWorkspaceManagedPrivateEndpointsPager = func(workspaceID string, options *core.ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsOptions) (resp azfake.PagerResponder[core.ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.PagerResponder[core.ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsResponse]{}
+		resp.AddPage(http.StatusOK, core.ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsResponse{ManagedPrivateEndpoints: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewManagedPrivateEndpointsClient()
+	pager := client.NewListWorkspaceManagedPrivateEndpointsPager(exampleWorkspaceID, &core.ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.ManagedPrivateEndpoints))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List managed private endpoints in workspace with continuation example"},
+	})
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+
+	exampleRes = core.ManagedPrivateEndpoints{
+		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/workspaces/47482db6-4583-4672-86dd-999d0f8f4d7a/managedPrivateEndpoints?continuationToken=LDEsMTAwMDAwLDA%3D"),
+		Value: []core.ManagedPrivateEndpoint{
+			{
+				Name: to.Ptr("SqlPE"),
+				ConnectionState: &core.PrivateEndpointConnectionState{
+					Description: to.Ptr("Endpoint approved"),
+					Status:      to.Ptr(core.ConnectionStatusApproved),
+				},
+				ID:                          to.Ptr("59a92b06-6e5a-468c-b748-e28c8ff28da3"),
+				ProvisioningState:           to.Ptr(core.PrivateEndpointProvisioningStateSucceeded),
+				TargetPrivateLinkResourceID: to.Ptr("/subscriptions/e3bf3f1a-4d64-4e42-85e9-aa1b84e3874/resourceGroups/testRG/providers/Microsoft.SqlServer/SqlServer/sql1"),
+				TargetSubresourceType:       to.Ptr("sqlServer"),
+			},
+			{
+				Name: to.Ptr("BlobPE"),
+				ConnectionState: &core.PrivateEndpointConnectionState{
+					Description: to.Ptr("Endpoint approval provided"),
+					Status:      to.Ptr(core.ConnectionStatusApproved),
+				},
+				ID:                          to.Ptr("1b56faf6-9cb8-4506-8c6c-83e0aece804f"),
+				ProvisioningState:           to.Ptr(core.PrivateEndpointProvisioningStateSucceeded),
+				TargetPrivateLinkResourceID: to.Ptr("/subscriptions/73310022-c811-4844-8b73-f9baa17c0d08/resourceGroups/testRG2/providers/Microsoft.Storage/storageAccounts/storage1"),
+				TargetSubresourceType:       to.Ptr("blob"),
+			}},
+	}
+
+	testsuite.serverFactory.ManagedPrivateEndpointsServer.NewListWorkspaceManagedPrivateEndpointsPager = func(workspaceID string, options *core.ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsOptions) (resp azfake.PagerResponder[core.ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.PagerResponder[core.ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsResponse]{}
+		resp.AddPage(http.StatusOK, core.ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsResponse{ManagedPrivateEndpoints: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListWorkspaceManagedPrivateEndpointsPager(exampleWorkspaceID, &core.ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.ManagedPrivateEndpoints))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestManagedPrivateEndpoints_CreateWorkspaceManagedPrivateEndpoint() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a managed private endpoint example"},
+	})
+	var exampleWorkspaceID string
+	var exampleCreateManagedPrivateEndpointRequest core.CreateManagedPrivateEndpointRequest
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+	exampleCreateManagedPrivateEndpointRequest = core.CreateManagedPrivateEndpointRequest{
+		Name:                        to.Ptr("testprivatendpoint1"),
+		RequestMessage:              to.Ptr("Request message to approve private endpoint"),
+		TargetPrivateLinkResourceID: to.Ptr("/subscriptions/2374e587-d28b-4898-a39c-6070e078ae31/resourceGroups/testrg/providers/Microsoft.Sql/servers/testsql1"),
+		TargetSubresourceType:       to.Ptr("sqlServer"),
+	}
+
+	testsuite.serverFactory.ManagedPrivateEndpointsServer.CreateWorkspaceManagedPrivateEndpoint = func(ctx context.Context, workspaceID string, createManagedPrivateEndpointRequest core.CreateManagedPrivateEndpointRequest, options *core.ManagedPrivateEndpointsClientCreateWorkspaceManagedPrivateEndpointOptions) (resp azfake.Responder[core.ManagedPrivateEndpointsClientCreateWorkspaceManagedPrivateEndpointResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateManagedPrivateEndpointRequest, createManagedPrivateEndpointRequest))
+		resp = azfake.Responder[core.ManagedPrivateEndpointsClientCreateWorkspaceManagedPrivateEndpointResponse]{}
+		resp.SetResponse(http.StatusCreated, core.ManagedPrivateEndpointsClientCreateWorkspaceManagedPrivateEndpointResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewManagedPrivateEndpointsClient()
+	_, err = client.CreateWorkspaceManagedPrivateEndpoint(ctx, exampleWorkspaceID, exampleCreateManagedPrivateEndpointRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestManagedPrivateEndpoints_DeleteWorkspaceManagedPrivateEndpoint() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete managed private endpoint example"},
+	})
+	var exampleWorkspaceID string
+	var exampleManagedPrivateEndpointID string
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+	exampleManagedPrivateEndpointID = "59a92b06-6e5a-468c-b748-e28c8ff28da3"
+
+	testsuite.serverFactory.ManagedPrivateEndpointsServer.DeleteWorkspaceManagedPrivateEndpoint = func(ctx context.Context, workspaceID string, managedPrivateEndpointID string, options *core.ManagedPrivateEndpointsClientDeleteWorkspaceManagedPrivateEndpointOptions) (resp azfake.Responder[core.ManagedPrivateEndpointsClientDeleteWorkspaceManagedPrivateEndpointResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleManagedPrivateEndpointID, managedPrivateEndpointID)
+		resp = azfake.Responder[core.ManagedPrivateEndpointsClientDeleteWorkspaceManagedPrivateEndpointResponse]{}
+		resp.SetResponse(http.StatusOK, core.ManagedPrivateEndpointsClientDeleteWorkspaceManagedPrivateEndpointResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewManagedPrivateEndpointsClient()
+	_, err = client.DeleteWorkspaceManagedPrivateEndpoint(ctx, exampleWorkspaceID, exampleManagedPrivateEndpointID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestManagedPrivateEndpoints_GetWorkspaceManagedPrivateEndpoint() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get managed private endpoint example"},
+	})
+	var exampleWorkspaceID string
+	var exampleManagedPrivateEndpointID string
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+	exampleManagedPrivateEndpointID = "59a92b06-6e5a-468c-b748-e28c8ff28da3"
+
+	exampleRes := core.ManagedPrivateEndpoint{
+		Name: to.Ptr("SqlPE"),
+		ConnectionState: &core.PrivateEndpointConnectionState{
+			Description: to.Ptr("Endpoint approved"),
+			Status:      to.Ptr(core.ConnectionStatusApproved),
+		},
+		ID:                          to.Ptr("59a92b06-6e5a-468c-b748-e28c8ff28da3"),
+		ProvisioningState:           to.Ptr(core.PrivateEndpointProvisioningStateSucceeded),
+		TargetPrivateLinkResourceID: to.Ptr("/subscriptions/e3bf3f1a-4d64-4e42-85e9-aa1b84e3874/resourceGroups/testRG/providers/Microsoft.SqlServer/SqlServer/sql1"),
+		TargetSubresourceType:       to.Ptr("sqlServer"),
+	}
+
+	testsuite.serverFactory.ManagedPrivateEndpointsServer.GetWorkspaceManagedPrivateEndpoint = func(ctx context.Context, workspaceID string, managedPrivateEndpointID string, options *core.ManagedPrivateEndpointsClientGetWorkspaceManagedPrivateEndpointOptions) (resp azfake.Responder[core.ManagedPrivateEndpointsClientGetWorkspaceManagedPrivateEndpointResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleManagedPrivateEndpointID, managedPrivateEndpointID)
+		resp = azfake.Responder[core.ManagedPrivateEndpointsClientGetWorkspaceManagedPrivateEndpointResponse]{}
+		resp.SetResponse(http.StatusOK, core.ManagedPrivateEndpointsClientGetWorkspaceManagedPrivateEndpointResponse{ManagedPrivateEndpoint: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewManagedPrivateEndpointsClient()
+	res, err := client.GetWorkspaceManagedPrivateEndpoint(ctx, exampleWorkspaceID, exampleManagedPrivateEndpointID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ManagedPrivateEndpoint))
 }

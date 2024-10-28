@@ -90,6 +90,12 @@ type GitClientGetConnectionResponse struct {
 	GitConnection
 }
 
+// GitClientGetMyGitCredentialsResponse contains the response from method GitClient.GetMyGitCredentials.
+type GitClientGetMyGitCredentialsResponse struct {
+	// The Git credentials configuration.
+	GitCredentialsConfigurationResponseClassification
+}
+
 // GitClientGetStatusResponse contains the response from method GitClient.BeginGetStatus.
 type GitClientGetStatusResponse struct {
 	// Contains the status response.
@@ -105,6 +111,12 @@ type GitClientInitializeConnectionResponse struct {
 // GitClientUpdateFromGitResponse contains the response from method GitClient.BeginUpdateFromGit.
 type GitClientUpdateFromGitResponse struct {
 	// placeholder for future response values
+}
+
+// GitClientUpdateMyGitCredentialsResponse contains the response from method GitClient.UpdateMyGitCredentials.
+type GitClientUpdateMyGitCredentialsResponse struct {
+	// The Git credentials configuration.
+	GitCredentialsConfigurationResponseClassification
 }
 
 // ItemsClientCreateItemResponse contains the response from method ItemsClient.BeginCreateItem.
@@ -226,6 +238,31 @@ type LongRunningOperationsClientGetOperationStateResponse struct {
 
 	// XMSOperationID contains the information returned from the x-ms-operation-id header response.
 	XMSOperationID *string
+}
+
+// ManagedPrivateEndpointsClientCreateWorkspaceManagedPrivateEndpointResponse contains the response from method ManagedPrivateEndpointsClient.CreateWorkspaceManagedPrivateEndpoint.
+type ManagedPrivateEndpointsClientCreateWorkspaceManagedPrivateEndpointResponse struct {
+	// Managed private endpoint.
+	ManagedPrivateEndpoint
+
+	// Location contains the information returned from the Location header response.
+	Location *string
+}
+
+// ManagedPrivateEndpointsClientDeleteWorkspaceManagedPrivateEndpointResponse contains the response from method ManagedPrivateEndpointsClient.DeleteWorkspaceManagedPrivateEndpoint.
+type ManagedPrivateEndpointsClientDeleteWorkspaceManagedPrivateEndpointResponse struct {
+	// placeholder for future response values
+}
+
+// ManagedPrivateEndpointsClientGetWorkspaceManagedPrivateEndpointResponse contains the response from method ManagedPrivateEndpointsClient.GetWorkspaceManagedPrivateEndpoint.
+type ManagedPrivateEndpointsClientGetWorkspaceManagedPrivateEndpointResponse struct {
+	// Managed private endpoint.
+	ManagedPrivateEndpoint
+}
+
+// ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsResponse contains the response from method ManagedPrivateEndpointsClient.NewListWorkspaceManagedPrivateEndpointsPager.
+type ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsResponse struct {
+	ManagedPrivateEndpoints
 }
 
 // OneLakeDataAccessSecurityClientCreateOrUpdateDataAccessRolesResponse contains the response from method OneLakeDataAccessSecurityClient.CreateOrUpdateDataAccessRoles.

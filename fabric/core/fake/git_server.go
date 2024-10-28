@@ -41,6 +41,10 @@ type GitServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetConnection func(ctx context.Context, workspaceID string, options *core.GitClientGetConnectionOptions) (resp azfake.Responder[core.GitClientGetConnectionResponse], errResp azfake.ErrorResponder)
 
+	// GetMyGitCredentials is the fake for method GitClient.GetMyGitCredentials
+	// HTTP status codes to indicate success: http.StatusOK
+	GetMyGitCredentials func(ctx context.Context, workspaceID string, options *core.GitClientGetMyGitCredentialsOptions) (resp azfake.Responder[core.GitClientGetMyGitCredentialsResponse], errResp azfake.ErrorResponder)
+
 	// BeginGetStatus is the fake for method GitClient.BeginGetStatus
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
 	BeginGetStatus func(ctx context.Context, workspaceID string, options *core.GitClientBeginGetStatusOptions) (resp azfake.PollerResponder[core.GitClientGetStatusResponse], errResp azfake.ErrorResponder)
@@ -52,6 +56,10 @@ type GitServer struct {
 	// BeginUpdateFromGit is the fake for method GitClient.BeginUpdateFromGit
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
 	BeginUpdateFromGit func(ctx context.Context, workspaceID string, updateFromGitRequest core.UpdateFromGitRequest, options *core.GitClientBeginUpdateFromGitOptions) (resp azfake.PollerResponder[core.GitClientUpdateFromGitResponse], errResp azfake.ErrorResponder)
+
+	// UpdateMyGitCredentials is the fake for method GitClient.UpdateMyGitCredentials
+	// HTTP status codes to indicate success: http.StatusOK
+	UpdateMyGitCredentials func(ctx context.Context, workspaceID string, updateGitCredentialsRequest core.UpdateGitCredentialsRequestClassification, options *core.GitClientUpdateMyGitCredentialsOptions) (resp azfake.Responder[core.GitClientUpdateMyGitCredentialsResponse], errResp azfake.ErrorResponder)
 }
 
 // NewGitServerTransport creates a new instance of GitServerTransport with the provided implementation.
@@ -105,12 +113,16 @@ func (g *GitServerTransport) dispatchToMethodFake(req *http.Request, method stri
 			res.resp, res.err = g.dispatchDisconnect(req)
 		case "GitClient.GetConnection":
 			res.resp, res.err = g.dispatchGetConnection(req)
+		case "GitClient.GetMyGitCredentials":
+			res.resp, res.err = g.dispatchGetMyGitCredentials(req)
 		case "GitClient.BeginGetStatus":
 			res.resp, res.err = g.dispatchBeginGetStatus(req)
 		case "GitClient.BeginInitializeConnection":
 			res.resp, res.err = g.dispatchBeginInitializeConnection(req)
 		case "GitClient.BeginUpdateFromGit":
 			res.resp, res.err = g.dispatchBeginUpdateFromGit(req)
+		case "GitClient.UpdateMyGitCredentials":
+			res.resp, res.err = g.dispatchUpdateMyGitCredentials(req)
 		default:
 			res.err = fmt.Errorf("unhandled API %s", method)
 		}
@@ -264,6 +276,35 @@ func (g *GitServerTransport) dispatchGetConnection(req *http.Request) (*http.Res
 	return resp, nil
 }
 
+func (g *GitServerTransport) dispatchGetMyGitCredentials(req *http.Request) (*http.Response, error) {
+	if g.srv.GetMyGitCredentials == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetMyGitCredentials not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/git/myGitCredentials`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 1 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := g.srv.GetMyGitCredentials(req.Context(), workspaceIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).GitCredentialsConfigurationResponseClassification, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
 func (g *GitServerTransport) dispatchBeginGetStatus(req *http.Request) (*http.Response, error) {
 	if g.srv.BeginGetStatus == nil {
 		return nil, &nonRetriableError{errors.New("fake for method BeginGetStatus not implemented")}
@@ -395,5 +436,42 @@ func (g *GitServerTransport) dispatchBeginUpdateFromGit(req *http.Request) (*htt
 		g.beginUpdateFromGit.remove(req)
 	}
 
+	return resp, nil
+}
+
+func (g *GitServerTransport) dispatchUpdateMyGitCredentials(req *http.Request) (*http.Response, error) {
+	if g.srv.UpdateMyGitCredentials == nil {
+		return nil, &nonRetriableError{errors.New("fake for method UpdateMyGitCredentials not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/git/myGitCredentials`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 1 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	raw, err := readRequestBody(req)
+	if err != nil {
+		return nil, err
+	}
+	body, err := unmarshalUpdateGitCredentialsRequestClassification(raw)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := g.srv.UpdateMyGitCredentials(req.Context(), workspaceIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).GitCredentialsConfigurationResponseClassification, req)
+	if err != nil {
+		return nil, err
+	}
 	return resp, nil
 }

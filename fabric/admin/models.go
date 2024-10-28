@@ -59,7 +59,7 @@ type AzureDevOpsDetails struct {
 	// REQUIRED; The branch name. Maximum length is 250 characters.
 	BranchName *string
 
-	// REQUIRED; The directory name. Maximum length is 256 characters.
+	// REQUIRED; The relative path to the directory. Maximum length is 256 characters.
 	DirectoryName *string
 
 	// REQUIRED; A Git provider type. Additional provider types may be added over time.
@@ -236,7 +236,7 @@ type GitHubDetails struct {
 	// REQUIRED; The branch name. Maximum length is 250 characters.
 	BranchName *string
 
-	// REQUIRED; The directory name. Maximum length is 256 characters.
+	// REQUIRED; The relative path to the directory. Maximum length is 256 characters.
 	DirectoryName *string
 
 	// REQUIRED; A Git provider type. Additional provider types may be added over time.
@@ -264,7 +264,7 @@ type GitProviderDetails struct {
 	// REQUIRED; The branch name. Maximum length is 250 characters.
 	BranchName *string
 
-	// REQUIRED; The directory name. Maximum length is 256 characters.
+	// REQUIRED; The relative path to the directory. Maximum length is 256 characters.
 	DirectoryName *string
 
 	// REQUIRED; A Git provider type. Additional provider types may be added over time.

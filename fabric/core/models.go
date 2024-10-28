@@ -60,12 +60,39 @@ type AssignWorkspaceToCapacityRequest struct {
 	CapacityID *string
 }
 
+// AutomaticGitCredentials - Automatic Git credentials.
+type AutomaticGitCredentials struct {
+	// REQUIRED; The Git credentials source.
+	Source *GitCredentialsSource
+}
+
+// GetGitCredentials implements the GitCredentialsClassification interface for type AutomaticGitCredentials.
+func (a *AutomaticGitCredentials) GetGitCredentials() *GitCredentials {
+	return &GitCredentials{
+		Source: a.Source,
+	}
+}
+
+// AutomaticGitCredentialsResponse - Automatic Git credentials.
+type AutomaticGitCredentialsResponse struct {
+	// REQUIRED; The Git credentials source.
+	Source *GitCredentialsSource
+}
+
+// GetGitCredentialsConfigurationResponse implements the GitCredentialsConfigurationResponseClassification interface for type
+// AutomaticGitCredentialsResponse.
+func (a *AutomaticGitCredentialsResponse) GetGitCredentialsConfigurationResponse() *GitCredentialsConfigurationResponse {
+	return &GitCredentialsConfigurationResponse{
+		Source: a.Source,
+	}
+}
+
 // AzureDevOpsDetails - Azure DevOps provider details.
 type AzureDevOpsDetails struct {
 	// REQUIRED; The branch name. Maximum length is 250 characters.
 	BranchName *string
 
-	// REQUIRED; The directory name. Maximum length is 256 characters.
+	// REQUIRED; The relative path to the directory. Maximum length is 256 characters.
 	DirectoryName *string
 
 	// REQUIRED; A Git provider type. Additional provider types may be added over time.
@@ -135,6 +162,39 @@ type CommitToGitRequest struct {
 	WorkspaceHead *string
 }
 
+// ConfiguredConnectionGitCredentials - Configured connection Git credentials.
+type ConfiguredConnectionGitCredentials struct {
+	// REQUIRED; The object ID of the connection.
+	ConnectionID *string
+
+	// REQUIRED; The Git credentials source.
+	Source *GitCredentialsSource
+}
+
+// GetGitCredentials implements the GitCredentialsClassification interface for type ConfiguredConnectionGitCredentials.
+func (c *ConfiguredConnectionGitCredentials) GetGitCredentials() *GitCredentials {
+	return &GitCredentials{
+		Source: c.Source,
+	}
+}
+
+// ConfiguredConnectionGitCredentialsResponse - Configured connection Git credentials.
+type ConfiguredConnectionGitCredentialsResponse struct {
+	// REQUIRED; The object ID of the connection.
+	ConnectionID *string
+
+	// REQUIRED; The Git credentials source.
+	Source *GitCredentialsSource
+}
+
+// GetGitCredentialsConfigurationResponse implements the GitCredentialsConfigurationResponseClassification interface for type
+// ConfiguredConnectionGitCredentialsResponse.
+func (c *ConfiguredConnectionGitCredentialsResponse) GetGitCredentialsConfigurationResponse() *GitCredentialsConfigurationResponse {
+	return &GitCredentialsConfigurationResponse{
+		Source: c.Source,
+	}
+}
+
 // CreatableShortcutTarget - An object that contains the target datasource, and must specify exactly one of the supported
 // destinations as described in the table below.
 type CreatableShortcutTarget struct {
@@ -182,6 +242,21 @@ type CreateItemRequest struct {
 
 	// The item description. Maximum length is 256 characters.
 	Description *string
+}
+
+// CreateManagedPrivateEndpointRequest - Create managed private endpoint request payload.
+type CreateManagedPrivateEndpointRequest struct {
+	// REQUIRED; The private endpoint name. Should not be more than 64 characters.
+	Name *string
+
+	// REQUIRED; Resource Id of data source for which private endpoint needs to be created.
+	TargetPrivateLinkResourceID *string
+
+	// REQUIRED; Sub-resource pointing to Private-link resoure [/azure/private-link/private-endpoint-overview#private-link-resource].
+	TargetSubresourceType *string
+
+	// Message to approve private endpoint request. Should not be more than 140 characters.
+	RequestMessage *string
 }
 
 // CreateOrUpdateDataAccessRolesRequest - Contains definition of Roles that are used to manage data access security and ensure
@@ -704,6 +779,11 @@ type FabricItemMember struct {
 type GitConnectRequest struct {
 	// REQUIRED; The Git provider details.
 	GitProviderDetails GitProviderDetailsClassification
+
+	// User-specific Git credentials for authentication to the GitProvider. These credentials are not shared with other workspace
+	// contributors. For AzureDevOps, the default value is AutomaticGitCredentials.
+	// For GitHub, this property is required.
+	MyGitCredentials GitCredentialsClassification
 }
 
 // GitConnection - Contains the Git connection details.
@@ -718,12 +798,33 @@ type GitConnection struct {
 	GitSyncDetails *GitSyncDetails
 }
 
+// GitCredentials - The Git credentials.
+type GitCredentials struct {
+	// REQUIRED; The Git credentials source.
+	Source *GitCredentialsSource
+}
+
+// GetGitCredentials implements the GitCredentialsClassification interface for type GitCredentials.
+func (g *GitCredentials) GetGitCredentials() *GitCredentials { return g }
+
+// GitCredentialsConfigurationResponse - The Git credentials configuration.
+type GitCredentialsConfigurationResponse struct {
+	// REQUIRED; The Git credentials source.
+	Source *GitCredentialsSource
+}
+
+// GetGitCredentialsConfigurationResponse implements the GitCredentialsConfigurationResponseClassification interface for type
+// GitCredentialsConfigurationResponse.
+func (g *GitCredentialsConfigurationResponse) GetGitCredentialsConfigurationResponse() *GitCredentialsConfigurationResponse {
+	return g
+}
+
 // GitHubDetails - GitHub provider details.
 type GitHubDetails struct {
 	// REQUIRED; The branch name. Maximum length is 250 characters.
 	BranchName *string
 
-	// REQUIRED; The directory name. Maximum length is 256 characters.
+	// REQUIRED; The relative path to the directory. Maximum length is 256 characters.
 	DirectoryName *string
 
 	// REQUIRED; A Git provider type. Additional provider types may be added over time.
@@ -751,7 +852,7 @@ type GitProviderDetails struct {
 	// REQUIRED; The branch name. Maximum length is 250 characters.
 	BranchName *string
 
-	// REQUIRED; The directory name. Maximum length is 256 characters.
+	// REQUIRED; The relative path to the directory. Maximum length is 256 characters.
 	DirectoryName *string
 
 	// REQUIRED; A Git provider type. Additional provider types may be added over time.
@@ -1031,6 +1132,38 @@ type ListConnectionDetails struct {
 	Type *string
 }
 
+// ManagedPrivateEndpoint - Managed private endpoint.
+type ManagedPrivateEndpoint struct {
+	// Endpoint connection state of provisioned endpoints.
+	ConnectionState *PrivateEndpointConnectionState
+
+	// Managed private endpoint Id.
+	ID *string
+
+	// The private endpoint name.
+	Name *string
+
+	// Provisioning state of endpoint.
+	ProvisioningState *PrivateEndpointProvisioningState
+
+	// Resource Id of data source for which private endpoint is created
+	TargetPrivateLinkResourceID *string
+
+	// Sub-resource pointing to Private-link resoure [/azure/private-link/private-endpoint-overview#private-link-resource].
+	TargetSubresourceType *string
+}
+
+type ManagedPrivateEndpoints struct {
+	// REQUIRED; A list of managed private endpoints.
+	Value []ManagedPrivateEndpoint
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
 // Members - The members object which contains the members of the role as arrays of different member types.
 type Members struct {
 	// A list of members who have a certain permission set in Microsoft Fabric. All members with that permission set are added
@@ -1051,6 +1184,20 @@ type MicrosoftEntraMember struct {
 
 	// The type of Microsoft Entra ID object. Additional objectType types may be added over time.
 	ObjectType *ObjectType
+}
+
+// NoneGitCredentialsResponse - Not configured Git credentials.
+type NoneGitCredentialsResponse struct {
+	// REQUIRED; The Git credentials source.
+	Source *GitCredentialsSource
+}
+
+// GetGitCredentialsConfigurationResponse implements the GitCredentialsConfigurationResponseClassification interface for type
+// NoneGitCredentialsResponse.
+func (n *NoneGitCredentialsResponse) GetGitCredentialsConfigurationResponse() *GitCredentialsConfigurationResponse {
+	return &GitCredentialsConfigurationResponse{
+		Source: n.Source,
+	}
 }
 
 // OneLake - An object containing the properties of the target OneLake data source.
@@ -1175,6 +1322,18 @@ type PrincipalUserDetails struct {
 	UserPrincipalName *string
 }
 
+// PrivateEndpointConnectionState - Private endpoint connection state
+type PrivateEndpointConnectionState struct {
+	// Actions required to establish connection.
+	ActionsRequired *string
+
+	// Description message (if any) provided on approving or rejecting the end point.
+	Description *string
+
+	// Connection status
+	Status *ConnectionStatus
+}
+
 // RunOnDemandItemJobRequest - Run on demand item job instance payload
 type RunOnDemandItemJobRequest struct {
 	// Payload for run on-demand job request. Needed only if the job type requires a payload.
@@ -1286,6 +1445,60 @@ type UpdateFromGitRequest struct {
 	// the system will validate that the given value is aligned with the head known to
 	// the system.
 	WorkspaceHead *string
+}
+
+// UpdateGitCredentialsRequest - Contains the request data to update the Git credentials configuration.
+type UpdateGitCredentialsRequest struct {
+	// REQUIRED; The Git credentials source.
+	Source *GitCredentialsSource
+}
+
+// GetUpdateGitCredentialsRequest implements the UpdateGitCredentialsRequestClassification interface for type UpdateGitCredentialsRequest.
+func (u *UpdateGitCredentialsRequest) GetUpdateGitCredentialsRequest() *UpdateGitCredentialsRequest {
+	return u
+}
+
+// UpdateGitCredentialsToAutomaticRequest - Contains the request data to update the Git credentials to automatic.
+type UpdateGitCredentialsToAutomaticRequest struct {
+	// REQUIRED; The Git credentials source.
+	Source *GitCredentialsSource
+}
+
+// GetUpdateGitCredentialsRequest implements the UpdateGitCredentialsRequestClassification interface for type UpdateGitCredentialsToAutomaticRequest.
+func (u *UpdateGitCredentialsToAutomaticRequest) GetUpdateGitCredentialsRequest() *UpdateGitCredentialsRequest {
+	return &UpdateGitCredentialsRequest{
+		Source: u.Source,
+	}
+}
+
+// UpdateGitCredentialsToConfiguredConnectionRequest - Contains the request data to update the Git credentials to configured
+// connection.
+type UpdateGitCredentialsToConfiguredConnectionRequest struct {
+	// REQUIRED; The object ID of the connection.
+	ConnectionID *string
+
+	// REQUIRED; The Git credentials source.
+	Source *GitCredentialsSource
+}
+
+// GetUpdateGitCredentialsRequest implements the UpdateGitCredentialsRequestClassification interface for type UpdateGitCredentialsToConfiguredConnectionRequest.
+func (u *UpdateGitCredentialsToConfiguredConnectionRequest) GetUpdateGitCredentialsRequest() *UpdateGitCredentialsRequest {
+	return &UpdateGitCredentialsRequest{
+		Source: u.Source,
+	}
+}
+
+// UpdateGitCredentialsToNoneRequest - Contains the request data to update the Git credentials to none.
+type UpdateGitCredentialsToNoneRequest struct {
+	// REQUIRED; The Git credentials source.
+	Source *GitCredentialsSource
+}
+
+// GetUpdateGitCredentialsRequest implements the UpdateGitCredentialsRequestClassification interface for type UpdateGitCredentialsToNoneRequest.
+func (u *UpdateGitCredentialsToNoneRequest) GetUpdateGitCredentialsRequest() *UpdateGitCredentialsRequest {
+	return &UpdateGitCredentialsRequest{
+		Source: u.Source,
+	}
 }
 
 // UpdateItemDefinitionRequest - Update item definition request payload.

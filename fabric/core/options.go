@@ -115,6 +115,16 @@ type GitClientGetConnectionOptions struct {
 	// placeholder for future optional parameters
 }
 
+// GitClientGetMyGitCredentialsOptions contains the optional parameters for the GitClient.GetMyGitCredentials method.
+type GitClientGetMyGitCredentialsOptions struct {
+	// placeholder for future optional parameters
+}
+
+// GitClientUpdateMyGitCredentialsOptions contains the optional parameters for the GitClient.UpdateMyGitCredentials method.
+type GitClientUpdateMyGitCredentialsOptions struct {
+	// placeholder for future optional parameters
+}
+
 // ItemsClientBeginCreateItemOptions contains the optional parameters for the ItemsClient.BeginCreateItem method.
 type ItemsClientBeginCreateItemOptions struct {
 	// Resumes the long-running operation from the provided token.
@@ -231,6 +241,31 @@ type LongRunningOperationsClientGetOperationResultOptions struct {
 // method.
 type LongRunningOperationsClientGetOperationStateOptions struct {
 	// placeholder for future optional parameters
+}
+
+// ManagedPrivateEndpointsClientCreateWorkspaceManagedPrivateEndpointOptions contains the optional parameters for the ManagedPrivateEndpointsClient.CreateWorkspaceManagedPrivateEndpoint
+// method.
+type ManagedPrivateEndpointsClientCreateWorkspaceManagedPrivateEndpointOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ManagedPrivateEndpointsClientDeleteWorkspaceManagedPrivateEndpointOptions contains the optional parameters for the ManagedPrivateEndpointsClient.DeleteWorkspaceManagedPrivateEndpoint
+// method.
+type ManagedPrivateEndpointsClientDeleteWorkspaceManagedPrivateEndpointOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ManagedPrivateEndpointsClientGetWorkspaceManagedPrivateEndpointOptions contains the optional parameters for the ManagedPrivateEndpointsClient.GetWorkspaceManagedPrivateEndpoint
+// method.
+type ManagedPrivateEndpointsClientGetWorkspaceManagedPrivateEndpointOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsOptions contains the optional parameters for the ManagedPrivateEndpointsClient.NewListWorkspaceManagedPrivateEndpointsPager
+// method.
+type ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
 }
 
 // OneLakeDataAccessSecurityClientCreateOrUpdateDataAccessRolesOptions contains the optional parameters for the OneLakeDataAccessSecurityClient.CreateOrUpdateDataAccessRoles

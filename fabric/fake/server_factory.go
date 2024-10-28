@@ -27,6 +27,7 @@ import (
 	kqldatabasefake "github.com/microsoft/fabric-sdk-go/fabric/kqldatabase/fake"
 	kqlquerysetfake "github.com/microsoft/fabric-sdk-go/fabric/kqlqueryset/fake"
 	lakehousefake "github.com/microsoft/fabric-sdk-go/fabric/lakehouse/fake"
+	mirroreddatabasefake "github.com/microsoft/fabric-sdk-go/fabric/mirroreddatabase/fake"
 	mirroredwarehousefake "github.com/microsoft/fabric-sdk-go/fabric/mirroredwarehouse/fake"
 	mlexperimentfake "github.com/microsoft/fabric-sdk-go/fabric/mlexperiment/fake"
 	mlmodelfake "github.com/microsoft/fabric-sdk-go/fabric/mlmodel/fake"
@@ -54,6 +55,7 @@ type ServerFactory struct {
 	KQLDatabase        kqldatabasefake.ServerFactory
 	KQLQueryset        kqlquerysetfake.ServerFactory
 	Lakehouse          lakehousefake.ServerFactory
+	MirroredDatabase   mirroreddatabasefake.ServerFactory
 	MirroredWarehouse  mirroredwarehousefake.ServerFactory
 	MLExperiment       mlexperimentfake.ServerFactory
 	MLModel            mlmodelfake.ServerFactory
@@ -84,6 +86,7 @@ type ServerFactoryTransport struct {
 	trKQLDatabase        *kqldatabasefake.ServerFactoryTransport
 	trKQLQueryset        *kqlquerysetfake.ServerFactoryTransport
 	trLakehouse          *lakehousefake.ServerFactoryTransport
+	trMirroredDatabase   *mirroreddatabasefake.ServerFactoryTransport
 	trMirroredWarehouse  *mirroredwarehousefake.ServerFactoryTransport
 	trMLExperiment       *mlexperimentfake.ServerFactoryTransport
 	trMLModel            *mlmodelfake.ServerFactoryTransport
@@ -176,6 +179,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return lakehousefake.NewServerFactoryTransport(&s.srv.Lakehouse)
 		})
 		resp, err = s.trLakehouse.Do(req)
+	case "mirroreddatabase":
+		initServer(s, &s.trMirroredDatabase, func() *mirroreddatabasefake.ServerFactoryTransport {
+			return mirroreddatabasefake.NewServerFactoryTransport(&s.srv.MirroredDatabase)
+		})
+		resp, err = s.trMirroredDatabase.Do(req)
 	case "mirroredwarehouse":
 		initServer(s, &s.trMirroredWarehouse, func() *mirroredwarehousefake.ServerFactoryTransport {
 			return mirroredwarehousefake.NewServerFactoryTransport(&s.srv.MirroredWarehouse)

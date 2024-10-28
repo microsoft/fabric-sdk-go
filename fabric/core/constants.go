@@ -340,6 +340,30 @@ func PossibleConflictTypeValues() []ConflictType {
 	}
 }
 
+// ConnectionStatus - Private endpoint connection status. Additional connection status may be added over time.
+type ConnectionStatus string
+
+const (
+	// ConnectionStatusApproved - Endpoint approved
+	ConnectionStatusApproved ConnectionStatus = "Approved"
+	// ConnectionStatusDisconnected - Endpoint disconnected
+	ConnectionStatusDisconnected ConnectionStatus = "Disconnected"
+	// ConnectionStatusPending - Pending approval
+	ConnectionStatusPending ConnectionStatus = "Pending"
+	// ConnectionStatusRejected - Endpoint rejected
+	ConnectionStatusRejected ConnectionStatus = "Rejected"
+)
+
+// PossibleConnectionStatusValues returns the possible values for the ConnectionStatus const type.
+func PossibleConnectionStatusValues() []ConnectionStatus {
+	return []ConnectionStatus{
+		ConnectionStatusApproved,
+		ConnectionStatusDisconnected,
+		ConnectionStatusPending,
+		ConnectionStatusRejected,
+	}
+}
+
 // ConnectivityType - The connectivity type of the connection. Additional connectivity types may be added over time.
 type ConnectivityType string
 
@@ -509,6 +533,28 @@ func PossibleGitConnectionStateValues() []GitConnectionState {
 	}
 }
 
+// GitCredentialsSource - The Git credentials source. Additional Git credentials sources may be added over time.
+type GitCredentialsSource string
+
+const (
+	// GitCredentialsSourceAutomatic - The Git credentials are automatically obtained by the system, using default credentials
+	// if available.
+	GitCredentialsSourceAutomatic GitCredentialsSource = "Automatic"
+	// GitCredentialsSourceConfiguredConnection - The Git credentials are obtained through a configured connection.
+	GitCredentialsSourceConfiguredConnection GitCredentialsSource = "ConfiguredConnection"
+	// GitCredentialsSourceNone - The Git credentials are not configured.
+	GitCredentialsSourceNone GitCredentialsSource = "None"
+)
+
+// PossibleGitCredentialsSourceValues returns the possible values for the GitCredentialsSource const type.
+func PossibleGitCredentialsSourceValues() []GitCredentialsSource {
+	return []GitCredentialsSource{
+		GitCredentialsSourceAutomatic,
+		GitCredentialsSourceConfiguredConnection,
+		GitCredentialsSourceNone,
+	}
+}
+
 // GitProviderType - A Git provider type. Additional provider types may be added over time.
 type GitProviderType string
 
@@ -669,6 +715,8 @@ const (
 	ItemTypeMLExperiment ItemType = "MLExperiment"
 	// ItemTypeMLModel - A machine learning model.
 	ItemTypeMLModel ItemType = "MLModel"
+	// ItemTypeMirroredDatabase - A mirrored database.
+	ItemTypeMirroredDatabase ItemType = "MirroredDatabase"
 	// ItemTypeMirroredWarehouse - A mirrored warehouse.
 	ItemTypeMirroredWarehouse ItemType = "MirroredWarehouse"
 	// ItemTypeNotebook - A notebook.
@@ -702,6 +750,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeLakehouse,
 		ItemTypeMLExperiment,
 		ItemTypeMLModel,
+		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
 		ItemTypeNotebook,
 		ItemTypePaginatedReport,
@@ -800,6 +849,34 @@ func PossiblePrincipalTypeValues() []PrincipalType {
 		PrincipalTypeServicePrincipal,
 		PrincipalTypeServicePrincipalProfile,
 		PrincipalTypeUser,
+	}
+}
+
+// PrivateEndpointProvisioningState - PrivateEndpointProvisioningState type. Additional Provisioning state may be added over
+// time.
+type PrivateEndpointProvisioningState string
+
+const (
+	// PrivateEndpointProvisioningStateDeleting - Private endpoint deleting
+	PrivateEndpointProvisioningStateDeleting PrivateEndpointProvisioningState = "Deleting"
+	// PrivateEndpointProvisioningStateFailed - Private endpoint provisioning failed
+	PrivateEndpointProvisioningStateFailed PrivateEndpointProvisioningState = "Failed"
+	// PrivateEndpointProvisioningStateProvisioning - Private endpoint in provisioning is in-progress
+	PrivateEndpointProvisioningStateProvisioning PrivateEndpointProvisioningState = "Provisioning"
+	// PrivateEndpointProvisioningStateSucceeded - Private endpoint provisioning Succeeded
+	PrivateEndpointProvisioningStateSucceeded PrivateEndpointProvisioningState = "Succeeded"
+	// PrivateEndpointProvisioningStateUpdating - Private endpoint updating
+	PrivateEndpointProvisioningStateUpdating PrivateEndpointProvisioningState = "Updating"
+)
+
+// PossiblePrivateEndpointProvisioningStateValues returns the possible values for the PrivateEndpointProvisioningState const type.
+func PossiblePrivateEndpointProvisioningStateValues() []PrivateEndpointProvisioningState {
+	return []PrivateEndpointProvisioningState{
+		PrivateEndpointProvisioningStateDeleting,
+		PrivateEndpointProvisioningStateFailed,
+		PrivateEndpointProvisioningStateProvisioning,
+		PrivateEndpointProvisioningStateSucceeded,
+		PrivateEndpointProvisioningStateUpdating,
 	}
 }
 

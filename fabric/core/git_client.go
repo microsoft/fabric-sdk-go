@@ -108,7 +108,9 @@ func (client *GitClient) commitToGitCreateRequest(ctx context.Context, workspace
 // Connection [/rest/api/fabric/core/git/initialize-connection] operation and follow
 // with either the Commit To Git [/rest/api/fabric/core/git/commit-to-git] or the Update From Git [/rest/api/fabric/core/git/update-from-git]
 // operation.
+// To get started with GitHub, see: Get started with Git integration [/fabric/cicd/git-integration/git-get-started?tabs=github].
 // PERMISSIONS The caller must have an admin role for the workspace.
+// For configured connection Git credentials, the caller must have permission for the connection.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -265,6 +267,68 @@ func (client *GitClient) getConnectionHandleResponse(resp *http.Response) (GitCl
 	result := GitClientGetConnectionResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.GitConnection); err != nil {
 		return GitClientGetConnectionResponse{}, err
+	}
+	return result, nil
+}
+
+// GetMyGitCredentials - Indicates how the user's credentials are obtained for accessing the relevant Git provider, automatically
+// or through configured connection. If the user's credentials aren't configured, go to Update My
+// Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials].
+// PERMISSIONS The caller must have a contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// | No | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - options - GitClientGetMyGitCredentialsOptions contains the optional parameters for the GitClient.GetMyGitCredentials method.
+func (client *GitClient) GetMyGitCredentials(ctx context.Context, workspaceID string, options *GitClientGetMyGitCredentialsOptions) (GitClientGetMyGitCredentialsResponse, error) {
+	var err error
+	const operationName = "core.GitClient.GetMyGitCredentials"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getMyGitCredentialsCreateRequest(ctx, workspaceID, options)
+	if err != nil {
+		return GitClientGetMyGitCredentialsResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return GitClientGetMyGitCredentialsResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return GitClientGetMyGitCredentialsResponse{}, err
+	}
+	resp, err := client.getMyGitCredentialsHandleResponse(httpResp)
+	return resp, err
+}
+
+// getMyGitCredentialsCreateRequest creates the GetMyGitCredentials request.
+func (client *GitClient) getMyGitCredentialsCreateRequest(ctx context.Context, workspaceID string, _ *GitClientGetMyGitCredentialsOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/git/myGitCredentials"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getMyGitCredentialsHandleResponse handles the GetMyGitCredentials response.
+func (client *GitClient) getMyGitCredentialsHandleResponse(resp *http.Response) (GitClientGetMyGitCredentialsResponse, error) {
+	result := GitClientGetMyGitCredentialsResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result); err != nil {
+		return GitClientGetMyGitCredentialsResponse{}, err
 	}
 	return result, nil
 }
@@ -496,6 +560,73 @@ func (client *GitClient) updateFromGitCreateRequest(ctx context.Context, workspa
 		return nil, err
 	}
 	return req, nil
+}
+
+// UpdateMyGitCredentials - Each user in the workspace has their own configured Git credentials. You can use Get My Git Credentials
+// [/rest/api/fabric/core/git/get-my-git-credentials] to get the Git credentials configuration.
+// PERMISSIONS The caller must have a contributor or higher workspace role.
+// For configured connection Git credentials, the caller must have permission for the connection.
+// REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// | No | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - updateGitCredentialsRequest - Updates the user's Git credentials request payload.
+//   - options - GitClientUpdateMyGitCredentialsOptions contains the optional parameters for the GitClient.UpdateMyGitCredentials
+//     method.
+func (client *GitClient) UpdateMyGitCredentials(ctx context.Context, workspaceID string, updateGitCredentialsRequest UpdateGitCredentialsRequestClassification, options *GitClientUpdateMyGitCredentialsOptions) (GitClientUpdateMyGitCredentialsResponse, error) {
+	var err error
+	const operationName = "core.GitClient.UpdateMyGitCredentials"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateMyGitCredentialsCreateRequest(ctx, workspaceID, updateGitCredentialsRequest, options)
+	if err != nil {
+		return GitClientUpdateMyGitCredentialsResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return GitClientUpdateMyGitCredentialsResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return GitClientUpdateMyGitCredentialsResponse{}, err
+	}
+	resp, err := client.updateMyGitCredentialsHandleResponse(httpResp)
+	return resp, err
+}
+
+// updateMyGitCredentialsCreateRequest creates the UpdateMyGitCredentials request.
+func (client *GitClient) updateMyGitCredentialsCreateRequest(ctx context.Context, workspaceID string, updateGitCredentialsRequest UpdateGitCredentialsRequestClassification, _ *GitClientUpdateMyGitCredentialsOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/git/myGitCredentials"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateGitCredentialsRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// updateMyGitCredentialsHandleResponse handles the UpdateMyGitCredentials response.
+func (client *GitClient) updateMyGitCredentialsHandleResponse(resp *http.Response) (GitClientUpdateMyGitCredentialsResponse, error) {
+	result := GitClientUpdateMyGitCredentialsResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result); err != nil {
+		return GitClientUpdateMyGitCredentialsResponse{}, err
+	}
+	return result, nil
 }
 
 // Custom code starts below

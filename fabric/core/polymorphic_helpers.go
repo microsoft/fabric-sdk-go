@@ -8,6 +8,54 @@ package core
 
 import "encoding/json"
 
+func unmarshalGitCredentialsClassification(rawMsg json.RawMessage) (GitCredentialsClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b GitCredentialsClassification
+	switch m["source"] {
+	case string(GitCredentialsSourceAutomatic):
+		b = &AutomaticGitCredentials{}
+	case string(GitCredentialsSourceConfiguredConnection):
+		b = &ConfiguredConnectionGitCredentials{}
+	default:
+		b = &GitCredentials{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalGitCredentialsConfigurationResponseClassification(rawMsg json.RawMessage) (GitCredentialsConfigurationResponseClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b GitCredentialsConfigurationResponseClassification
+	switch m["source"] {
+	case string(GitCredentialsSourceAutomatic):
+		b = &AutomaticGitCredentialsResponse{}
+	case string(GitCredentialsSourceConfiguredConnection):
+		b = &ConfiguredConnectionGitCredentialsResponse{}
+	case string(GitCredentialsSourceNone):
+		b = &NoneGitCredentialsResponse{}
+	default:
+		b = &GitCredentialsConfigurationResponse{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
 func unmarshalGitProviderDetailsClassification(rawMsg json.RawMessage) (GitProviderDetailsClassification, error) {
 	if rawMsg == nil || string(rawMsg) == "null" {
 		return nil, nil

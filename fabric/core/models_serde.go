@@ -142,6 +142,60 @@ func (a *AssignWorkspaceToCapacityRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type AutomaticGitCredentials.
+func (a AutomaticGitCredentials) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["source"] = GitCredentialsSourceAutomatic
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type AutomaticGitCredentials.
+func (a *AutomaticGitCredentials) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", a, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "source":
+			err = unpopulate(val, "Source", &a.Source)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", a, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type AutomaticGitCredentialsResponse.
+func (a AutomaticGitCredentialsResponse) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["source"] = GitCredentialsSourceAutomatic
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type AutomaticGitCredentialsResponse.
+func (a *AutomaticGitCredentialsResponse) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", a, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "source":
+			err = unpopulate(val, "Source", &a.Source)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", a, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type AzureDevOpsDetails.
 func (a AzureDevOpsDetails) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -306,6 +360,68 @@ func (c *CommitToGitRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type ConfiguredConnectionGitCredentials.
+func (c ConfiguredConnectionGitCredentials) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "connectionId", c.ConnectionID)
+	objectMap["source"] = GitCredentialsSourceConfiguredConnection
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ConfiguredConnectionGitCredentials.
+func (c *ConfiguredConnectionGitCredentials) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "connectionId":
+			err = unpopulate(val, "ConnectionID", &c.ConnectionID)
+			delete(rawMsg, key)
+		case "source":
+			err = unpopulate(val, "Source", &c.Source)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type ConfiguredConnectionGitCredentialsResponse.
+func (c ConfiguredConnectionGitCredentialsResponse) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "connectionId", c.ConnectionID)
+	objectMap["source"] = GitCredentialsSourceConfiguredConnection
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ConfiguredConnectionGitCredentialsResponse.
+func (c *ConfiguredConnectionGitCredentialsResponse) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "connectionId":
+			err = unpopulate(val, "ConnectionID", &c.ConnectionID)
+			delete(rawMsg, key)
+		case "source":
+			err = unpopulate(val, "Source", &c.Source)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type CreatableShortcutTarget.
 func (c CreatableShortcutTarget) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -418,6 +534,45 @@ func (c *CreateItemRequest) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "type":
 			err = unpopulate(val, "Type", &c.Type)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type CreateManagedPrivateEndpointRequest.
+func (c CreateManagedPrivateEndpointRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "name", c.Name)
+	populate(objectMap, "requestMessage", c.RequestMessage)
+	populate(objectMap, "targetPrivateLinkResourceId", c.TargetPrivateLinkResourceID)
+	populate(objectMap, "targetSubresourceType", c.TargetSubresourceType)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CreateManagedPrivateEndpointRequest.
+func (c *CreateManagedPrivateEndpointRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "name":
+			err = unpopulate(val, "Name", &c.Name)
+			delete(rawMsg, key)
+		case "requestMessage":
+			err = unpopulate(val, "RequestMessage", &c.RequestMessage)
+			delete(rawMsg, key)
+		case "targetPrivateLinkResourceId":
+			err = unpopulate(val, "TargetPrivateLinkResourceID", &c.TargetPrivateLinkResourceID)
+			delete(rawMsg, key)
+		case "targetSubresourceType":
+			err = unpopulate(val, "TargetSubresourceType", &c.TargetSubresourceType)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -1612,6 +1767,7 @@ func (f *FabricItemMember) UnmarshalJSON(data []byte) error {
 func (g GitConnectRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "gitProviderDetails", g.GitProviderDetails)
+	populate(objectMap, "myGitCredentials", g.MyGitCredentials)
 	return json.Marshal(objectMap)
 }
 
@@ -1626,6 +1782,9 @@ func (g *GitConnectRequest) UnmarshalJSON(data []byte) error {
 		switch key {
 		case "gitProviderDetails":
 			g.GitProviderDetails, err = unmarshalGitProviderDetailsClassification(val)
+			delete(rawMsg, key)
+		case "myGitCredentials":
+			g.MyGitCredentials, err = unmarshalGitCredentialsClassification(val)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -1661,6 +1820,60 @@ func (g *GitConnection) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "gitSyncDetails":
 			err = unpopulate(val, "GitSyncDetails", &g.GitSyncDetails)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", g, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type GitCredentials.
+func (g GitCredentials) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["source"] = g.Source
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type GitCredentials.
+func (g *GitCredentials) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", g, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "source":
+			err = unpopulate(val, "Source", &g.Source)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", g, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type GitCredentialsConfigurationResponse.
+func (g GitCredentialsConfigurationResponse) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["source"] = g.Source
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type GitCredentialsConfigurationResponse.
+func (g *GitCredentialsConfigurationResponse) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", g, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "source":
+			err = unpopulate(val, "Source", &g.Source)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -2503,6 +2716,88 @@ func (l *ListConnectionDetails) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type ManagedPrivateEndpoint.
+func (m ManagedPrivateEndpoint) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "connectionState", m.ConnectionState)
+	populate(objectMap, "id", m.ID)
+	populate(objectMap, "name", m.Name)
+	populate(objectMap, "provisioningState", m.ProvisioningState)
+	populate(objectMap, "targetPrivateLinkResourceId", m.TargetPrivateLinkResourceID)
+	populate(objectMap, "targetSubresourceType", m.TargetSubresourceType)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ManagedPrivateEndpoint.
+func (m *ManagedPrivateEndpoint) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", m, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "connectionState":
+			err = unpopulate(val, "ConnectionState", &m.ConnectionState)
+			delete(rawMsg, key)
+		case "id":
+			err = unpopulate(val, "ID", &m.ID)
+			delete(rawMsg, key)
+		case "name":
+			err = unpopulate(val, "Name", &m.Name)
+			delete(rawMsg, key)
+		case "provisioningState":
+			err = unpopulate(val, "ProvisioningState", &m.ProvisioningState)
+			delete(rawMsg, key)
+		case "targetPrivateLinkResourceId":
+			err = unpopulate(val, "TargetPrivateLinkResourceID", &m.TargetPrivateLinkResourceID)
+			delete(rawMsg, key)
+		case "targetSubresourceType":
+			err = unpopulate(val, "TargetSubresourceType", &m.TargetSubresourceType)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", m, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type ManagedPrivateEndpoints.
+func (m ManagedPrivateEndpoints) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "continuationToken", m.ContinuationToken)
+	populate(objectMap, "continuationUri", m.ContinuationURI)
+	populate(objectMap, "value", m.Value)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ManagedPrivateEndpoints.
+func (m *ManagedPrivateEndpoints) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", m, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "continuationToken":
+			err = unpopulate(val, "ContinuationToken", &m.ContinuationToken)
+			delete(rawMsg, key)
+		case "continuationUri":
+			err = unpopulate(val, "ContinuationURI", &m.ContinuationURI)
+			delete(rawMsg, key)
+		case "value":
+			err = unpopulate(val, "Value", &m.Value)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", m, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type Members.
 func (m Members) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -2564,6 +2859,33 @@ func (m *MicrosoftEntraMember) UnmarshalJSON(data []byte) error {
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", m, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type NoneGitCredentialsResponse.
+func (n NoneGitCredentialsResponse) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["source"] = GitCredentialsSourceNone
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type NoneGitCredentialsResponse.
+func (n *NoneGitCredentialsResponse) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", n, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "source":
+			err = unpopulate(val, "Source", &n.Source)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", n, err)
 		}
 	}
 	return nil
@@ -2903,6 +3225,41 @@ func (p *PrincipalUserDetails) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type PrivateEndpointConnectionState.
+func (p PrivateEndpointConnectionState) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "actionsRequired", p.ActionsRequired)
+	populate(objectMap, "description", p.Description)
+	populate(objectMap, "status", p.Status)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type PrivateEndpointConnectionState.
+func (p *PrivateEndpointConnectionState) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", p, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "actionsRequired":
+			err = unpopulate(val, "ActionsRequired", &p.ActionsRequired)
+			delete(rawMsg, key)
+		case "description":
+			err = unpopulate(val, "Description", &p.Description)
+			delete(rawMsg, key)
+		case "status":
+			err = unpopulate(val, "Status", &p.Status)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", p, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type RunOnDemandItemJobRequest.
 func (r RunOnDemandItemJobRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -3163,6 +3520,118 @@ func (u *UpdateFromGitRequest) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "workspaceHead":
 			err = unpopulate(val, "WorkspaceHead", &u.WorkspaceHead)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", u, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type UpdateGitCredentialsRequest.
+func (u UpdateGitCredentialsRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["source"] = u.Source
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type UpdateGitCredentialsRequest.
+func (u *UpdateGitCredentialsRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", u, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "source":
+			err = unpopulate(val, "Source", &u.Source)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", u, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type UpdateGitCredentialsToAutomaticRequest.
+func (u UpdateGitCredentialsToAutomaticRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["source"] = GitCredentialsSourceAutomatic
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type UpdateGitCredentialsToAutomaticRequest.
+func (u *UpdateGitCredentialsToAutomaticRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", u, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "source":
+			err = unpopulate(val, "Source", &u.Source)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", u, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type UpdateGitCredentialsToConfiguredConnectionRequest.
+func (u UpdateGitCredentialsToConfiguredConnectionRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "connectionId", u.ConnectionID)
+	objectMap["source"] = GitCredentialsSourceConfiguredConnection
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type UpdateGitCredentialsToConfiguredConnectionRequest.
+func (u *UpdateGitCredentialsToConfiguredConnectionRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", u, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "connectionId":
+			err = unpopulate(val, "ConnectionID", &u.ConnectionID)
+			delete(rawMsg, key)
+		case "source":
+			err = unpopulate(val, "Source", &u.Source)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", u, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type UpdateGitCredentialsToNoneRequest.
+func (u UpdateGitCredentialsToNoneRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["source"] = GitCredentialsSourceNone
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type UpdateGitCredentialsToNoneRequest.
+func (u *UpdateGitCredentialsToNoneRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", u, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "source":
+			err = unpopulate(val, "Source", &u.Source)
 			delete(rawMsg, key)
 		}
 		if err != nil {

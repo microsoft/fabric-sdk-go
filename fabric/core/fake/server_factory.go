@@ -25,6 +25,7 @@ type ServerFactory struct {
 	ItemsServer                     ItemsServer
 	JobSchedulerServer              JobSchedulerServer
 	LongRunningOperationsServer     LongRunningOperationsServer
+	ManagedPrivateEndpointsServer   ManagedPrivateEndpointsServer
 	OneLakeDataAccessSecurityServer OneLakeDataAccessSecurityServer
 	OneLakeShortcutsServer          OneLakeShortcutsServer
 	WorkspacesServer                WorkspacesServer
@@ -42,6 +43,7 @@ type ServerFactoryTransport struct {
 	trItemsServer                     *ItemsServerTransport
 	trJobSchedulerServer              *JobSchedulerServerTransport
 	trLongRunningOperationsServer     *LongRunningOperationsServerTransport
+	trManagedPrivateEndpointsServer   *ManagedPrivateEndpointsServerTransport
 	trOneLakeDataAccessSecurityServer *OneLakeDataAccessSecurityServerTransport
 	trOneLakeShortcutsServer          *OneLakeShortcutsServerTransport
 	trWorkspacesServer                *WorkspacesServerTransport
@@ -97,6 +99,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return NewLongRunningOperationsServerTransport(&s.srv.LongRunningOperationsServer)
 		})
 		resp, err = s.trLongRunningOperationsServer.Do(req)
+	case "ManagedPrivateEndpointsClient":
+		initServer(s, &s.trManagedPrivateEndpointsServer, func() *ManagedPrivateEndpointsServerTransport {
+			return NewManagedPrivateEndpointsServerTransport(&s.srv.ManagedPrivateEndpointsServer)
+		})
+		resp, err = s.trManagedPrivateEndpointsServer.Do(req)
 	case "OneLakeDataAccessSecurityClient":
 		initServer(s, &s.trOneLakeDataAccessSecurityServer, func() *OneLakeDataAccessSecurityServerTransport {
 			return NewOneLakeDataAccessSecurityServerTransport(&s.srv.OneLakeDataAccessSecurityServer)
