@@ -40,6 +40,10 @@ type WorkspacesServer struct {
 	// NewListWorkspacesPager is the fake for method WorkspacesClient.NewListWorkspacesPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListWorkspacesPager func(options *admin.WorkspacesClientListWorkspacesOptions) (resp azfake.PagerResponder[admin.WorkspacesClientListWorkspacesResponse])
+
+	// RestoreWorkspace is the fake for method WorkspacesClient.RestoreWorkspace
+	// HTTP status codes to indicate success: http.StatusOK
+	RestoreWorkspace func(ctx context.Context, workspaceID string, restoreWorkspaceRequest admin.RestoreWorkspaceRequest, options *admin.WorkspacesClientRestoreWorkspaceOptions) (resp azfake.Responder[admin.WorkspacesClientRestoreWorkspaceResponse], errResp azfake.ErrorResponder)
 }
 
 // NewWorkspacesServerTransport creates a new instance of WorkspacesServerTransport with the provided implementation.
@@ -89,6 +93,8 @@ func (w *WorkspacesServerTransport) dispatchToMethodFake(req *http.Request, meth
 			res.resp, res.err = w.dispatchListWorkspaceAccessDetails(req)
 		case "WorkspacesClient.NewListWorkspacesPager":
 			res.resp, res.err = w.dispatchNewListWorkspacesPager(req)
+		case "WorkspacesClient.RestoreWorkspace":
+			res.resp, res.err = w.dispatchRestoreWorkspace(req)
 		default:
 			res.err = fmt.Errorf("unhandled API %s", method)
 		}
@@ -263,6 +269,39 @@ func (w *WorkspacesServerTransport) dispatchNewListWorkspacesPager(req *http.Req
 	}
 	if !server.PagerResponderMore(newListWorkspacesPager) {
 		w.newListWorkspacesPager.remove(req)
+	}
+	return resp, nil
+}
+
+func (w *WorkspacesServerTransport) dispatchRestoreWorkspace(req *http.Request) (*http.Response, error) {
+	if w.srv.RestoreWorkspace == nil {
+		return nil, &nonRetriableError{errors.New("fake for method RestoreWorkspace not implemented")}
+	}
+	const regexStr = `/v1/admin/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/restore`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 1 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[admin.RestoreWorkspaceRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := w.srv.RestoreWorkspace(req.Context(), workspaceIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
 	}
 	return resp, nil
 }

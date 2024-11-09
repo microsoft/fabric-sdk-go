@@ -240,3 +240,26 @@ func ExampleWorkspacesClient_ListWorkspaceAccessDetails() {
 	// 	}},
 	// }
 }
+
+// Generated from example definition
+func ExampleWorkspacesClient_RestoreWorkspace() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := admin.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewWorkspacesClient().RestoreWorkspace(ctx, "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f", admin.RestoreWorkspaceRequest{
+		NewWorkspaceAdminPrincipal: &admin.Principal{
+			Type: to.Ptr(admin.PrincipalTypeUser),
+			ID:   to.Ptr("17dd1e38-a4c6-41ed-bc4f-1e383f8ddd01"),
+		},
+		NewWorkspaceName: to.Ptr("Contoso Workspace"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}

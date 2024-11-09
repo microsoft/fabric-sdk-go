@@ -158,3 +158,8 @@ type WorkspacesClientListWorkspacesResponse struct {
 	// A list of workspaces.
 	Workspaces
 }
+
+// WorkspacesClientRestoreWorkspaceResponse contains the response from method WorkspacesClient.RestoreWorkspace.
+type WorkspacesClientRestoreWorkspaceResponse struct {
+	// placeholder for future response values
+}

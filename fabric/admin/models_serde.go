@@ -1196,6 +1196,37 @@ func (r *RemoveLabelsRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type RestoreWorkspaceRequest.
+func (r RestoreWorkspaceRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "newWorkspaceAdminPrincipal", r.NewWorkspaceAdminPrincipal)
+	populate(objectMap, "newWorkspaceName", r.NewWorkspaceName)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type RestoreWorkspaceRequest.
+func (r *RestoreWorkspaceRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", r, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "newWorkspaceAdminPrincipal":
+			err = unpopulate(val, "NewWorkspaceAdminPrincipal", &r.NewWorkspaceAdminPrincipal)
+			delete(rawMsg, key)
+		case "newWorkspaceName":
+			err = unpopulate(val, "NewWorkspaceName", &r.NewWorkspaceName)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", r, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type SetLabelsRequest.
 func (s SetLabelsRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)

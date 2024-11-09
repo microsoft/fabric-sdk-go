@@ -430,6 +430,15 @@ type RemoveLabelsRequest struct {
 	Items []ItemInfo
 }
 
+// RestoreWorkspaceRequest - The request to restore a deleted workspace.
+type RestoreWorkspaceRequest struct {
+	// The workspace's admin.
+	NewWorkspaceAdminPrincipal *Principal
+
+	// The name of the workspace. Mandatory if the restore request is for My workspace.
+	NewWorkspaceName *string
+}
+
 // SetLabelsRequest - A composite of label information required to update an information protection label.
 type SetLabelsRequest struct {
 	// REQUIRED; A list of items. The list includes item ID and type.

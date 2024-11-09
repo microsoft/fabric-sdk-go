@@ -220,3 +220,8 @@ type WorkspacesClientListWorkspacesOptions struct {
 	// The workspace type. Supported types are personal, workspace, adminworkspace.
 	Type *string
 }
+
+// WorkspacesClientRestoreWorkspaceOptions contains the optional parameters for the WorkspacesClient.RestoreWorkspace method.
+type WorkspacesClientRestoreWorkspaceOptions struct {
+	// placeholder for future optional parameters
+}
