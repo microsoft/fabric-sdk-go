@@ -8,12 +8,15 @@ package kqldatabase
 
 // CreateKQLDatabaseRequest - Create KQL database request payload.
 type CreateKQLDatabaseRequest struct {
-	// REQUIRED; The KQL database creation payload.
-	CreationPayload CreationPayloadClassification
-
 	// REQUIRED; The KQL database display name. The database name can contain alphanumeric characters, underscores, periods, and
 	// hyphens. Special characters aren't supported.
 	DisplayName *string
+
+	// The KQL database creation payload. Use definition or creationPayload. You can't use both at the same time.
+	CreationPayload CreationPayloadClassification
+
+	// The KQL database public definition. Use creationPayload or definition. You can't use both at the same time.
+	Definition *Definition
 
 	// The KQL database description. Maximum length is 256 characters.
 	Description *string
@@ -30,6 +33,33 @@ type CreationPayload struct {
 
 // GetCreationPayload implements the CreationPayloadClassification interface for type CreationPayload.
 func (c *CreationPayload) GetCreationPayload() *CreationPayload { return c }
+
+// Definition - KQL database public definition object.
+type Definition struct {
+	// REQUIRED; A list of definition parts.
+	Parts []DefinitionPart
+
+	// The format of the item definition.
+	Format *string
+}
+
+// DefinitionPart - KQL database definition part object.
+type DefinitionPart struct {
+	// The KQL database part path.
+	Path *string
+
+	// The KQL database part payload.
+	Payload *string
+
+	// The payload type.
+	PayloadType *PayloadType
+}
+
+// DefinitionResponse - KQL database public definition response.
+type DefinitionResponse struct {
+	// READ-ONLY; KQL database public definition object.
+	Definition *Definition
+}
 
 // KQLDatabase - A KQL database object.
 type KQLDatabase struct {
@@ -120,6 +150,12 @@ func (s *ShortcutDatabaseCreationPayload) GetCreationPayload() *CreationPayload 
 		DatabaseType:           s.DatabaseType,
 		ParentEventhouseItemID: s.ParentEventhouseItemID,
 	}
+}
+
+// UpdateKQLDatabaseDefinitionRequest - Update KQL database public definition request payload.
+type UpdateKQLDatabaseDefinitionRequest struct {
+	// REQUIRED; KQL database public definition object.
+	Definition *Definition
 }
 
 // UpdateKQLDatabaseRequest - Update KQL database request.

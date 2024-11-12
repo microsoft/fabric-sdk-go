@@ -209,3 +209,87 @@ func (testsuite *FakeTestSuite) TestItems_DeleteEventhouse() {
 	_, err = client.DeleteEventhouse(ctx, exampleWorkspaceID, exampleEventhouseID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
+
+func (testsuite *FakeTestSuite) TestItems_GetEventhouseDefinition() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get an eventhouse definition example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEventhouseID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleEventhouseID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	exampleRes := eventhouse.DefinitionResponse{
+		Definition: &eventhouse.Definition{
+			Parts: []eventhouse.DefinitionPart{
+				{
+					Path:        to.Ptr("EventhouseProperties.json"),
+					Payload:     to.Ptr("e30="),
+					PayloadType: to.Ptr(eventhouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc"),
+					PayloadType: to.Ptr(eventhouse.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginGetEventhouseDefinition = func(ctx context.Context, workspaceID string, eventhouseID string, options *eventhouse.ItemsClientBeginGetEventhouseDefinitionOptions) (resp azfake.PollerResponder[eventhouse.ItemsClientGetEventhouseDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEventhouseID, eventhouseID)
+		resp = azfake.PollerResponder[eventhouse.ItemsClientGetEventhouseDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, eventhouse.ItemsClientGetEventhouseDefinitionResponse{DefinitionResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	poller, err := client.BeginGetEventhouseDefinition(ctx, exampleWorkspaceID, exampleEventhouseID, &eventhouse.ItemsClientBeginGetEventhouseDefinitionOptions{Format: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DefinitionResponse))
+}
+
+func (testsuite *FakeTestSuite) TestItems_UpdateEventhouseDefinition() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update an eventhouse definition example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEventhouseID string
+	var exampleUpdateEventhouseDefinitionRequest eventhouse.UpdateEventhouseDefinitionRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleEventhouseID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleUpdateEventhouseDefinitionRequest = eventhouse.UpdateEventhouseDefinitionRequest{
+		Definition: &eventhouse.Definition{
+			Parts: []eventhouse.DefinitionPart{
+				{
+					Path:        to.Ptr("EventhouseProperties.json"),
+					Payload:     to.Ptr("e30="),
+					PayloadType: to.Ptr(eventhouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(eventhouse.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginUpdateEventhouseDefinition = func(ctx context.Context, workspaceID string, eventhouseID string, updateEventhouseDefinitionRequest eventhouse.UpdateEventhouseDefinitionRequest, options *eventhouse.ItemsClientBeginUpdateEventhouseDefinitionOptions) (resp azfake.PollerResponder[eventhouse.ItemsClientUpdateEventhouseDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEventhouseID, eventhouseID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateEventhouseDefinitionRequest, updateEventhouseDefinitionRequest))
+		resp = azfake.PollerResponder[eventhouse.ItemsClientUpdateEventhouseDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, eventhouse.ItemsClientUpdateEventhouseDefinitionResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	poller, err := client.BeginUpdateEventhouseDefinition(ctx, exampleWorkspaceID, exampleEventhouseID, exampleUpdateEventhouseDefinitionRequest, &eventhouse.ItemsClientBeginUpdateEventhouseDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}

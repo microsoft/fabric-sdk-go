@@ -17,6 +17,12 @@ type ItemsClientDeleteEventhouseResponse struct {
 	// placeholder for future response values
 }
 
+// ItemsClientGetEventhouseDefinitionResponse contains the response from method ItemsClient.BeginGetEventhouseDefinition.
+type ItemsClientGetEventhouseDefinitionResponse struct {
+	// Eventhouse public definition response.
+	DefinitionResponse
+}
+
 // ItemsClientGetEventhouseResponse contains the response from method ItemsClient.GetEventhouse.
 type ItemsClientGetEventhouseResponse struct {
 	// An eventhouse object.
@@ -27,6 +33,11 @@ type ItemsClientGetEventhouseResponse struct {
 type ItemsClientListEventhousesResponse struct {
 	// A list of eventhouses.
 	Eventhouses
+}
+
+// ItemsClientUpdateEventhouseDefinitionResponse contains the response from method ItemsClient.BeginUpdateEventhouseDefinition.
+type ItemsClientUpdateEventhouseDefinitionResponse struct {
+	// placeholder for future response values
 }
 
 // ItemsClientUpdateEventhouseResponse contains the response from method ItemsClient.UpdateEventhouse.

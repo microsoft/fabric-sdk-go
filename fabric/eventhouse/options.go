@@ -12,6 +12,27 @@ type ItemsClientBeginCreateEventhouseOptions struct {
 	ResumeToken string
 }
 
+// ItemsClientBeginGetEventhouseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetEventhouseDefinition
+// method.
+type ItemsClientBeginGetEventhouseDefinitionOptions struct {
+	// The format of the eventhouse public definition.
+	Format *string
+
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// ItemsClientBeginUpdateEventhouseDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateEventhouseDefinition
+// method.
+type ItemsClientBeginUpdateEventhouseDefinitionOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+
+	// When set to true and the .platform file is provided as part of the definition, the item's metadata is updated using the
+	// metadata in the .platform file
+	UpdateMetadata *bool
+}
+
 // ItemsClientDeleteEventhouseOptions contains the optional parameters for the ItemsClient.DeleteEventhouse method.
 type ItemsClientDeleteEventhouseOptions struct {
 	// placeholder for future optional parameters

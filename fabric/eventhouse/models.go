@@ -12,8 +12,38 @@ type CreateEventhouseRequest struct {
 	// hyphens. Special characters aren't supported.
 	DisplayName *string
 
+	// The eventhouse public definition.
+	Definition *Definition
+
 	// The eventhouse description. Maximum length is 256 characters.
 	Description *string
+}
+
+// Definition - Eventhouse public definition object.
+type Definition struct {
+	// REQUIRED; A list of definition parts.
+	Parts []DefinitionPart
+
+	// The format of the item definition.
+	Format *string
+}
+
+// DefinitionPart - Eventhouse definition part object.
+type DefinitionPart struct {
+	// REQUIRED; The eventhouse part path.
+	Path *string
+
+	// REQUIRED; The eventhouse part payload.
+	Payload *string
+
+	// REQUIRED; The payload type.
+	PayloadType *PayloadType
+}
+
+// DefinitionResponse - Eventhouse public definition response.
+type DefinitionResponse struct {
+	// READ-ONLY; Eventhouse public definition object.
+	Definition *Definition
 }
 
 // Eventhouse - An eventhouse object.
@@ -59,6 +89,12 @@ type Properties struct {
 
 	// List of all KQL database children
 	DatabasesItemIDs []string
+}
+
+// UpdateEventhouseDefinitionRequest - Update eventhouse public definition request payload.
+type UpdateEventhouseDefinitionRequest struct {
+	// REQUIRED; Eventhouse public definition object.
+	Definition *Definition
 }
 
 // UpdateEventhouseRequest - Update eventhouse request.

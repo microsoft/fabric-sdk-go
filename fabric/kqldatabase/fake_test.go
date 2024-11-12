@@ -142,6 +142,47 @@ func (testsuite *FakeTestSuite) TestItems_CreateKQLDatabase() {
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a ReadWrite KQL database with definition example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCreateKQLDatabaseRequest = kqldatabase.CreateKQLDatabaseRequest{
+		Description: to.Ptr("A KQL database description."),
+		Definition: &kqldatabase.Definition{
+			Parts: []kqldatabase.DefinitionPart{
+				{
+					Path:        to.Ptr("DatabaseProperties.json"),
+					Payload:     to.Ptr("ewogICJkYXRhYmFzZVR5cGUiOiAiUmVhZFdyaXRlIiwKICAicGFyZW50RXZlbnRob3VzZUl0ZW1JZCI6ICI1YjIxODc3OC1lN2E1LTRkNzMtODE4Ny1mMTA4MjQwNDc4MzYiLAogICJvbmVMYWtlQ2FjaGluZ1BlcmlvZCI6ICJQMzY1MDBEIiwKICAib25lTGFrZVN0YW5kYXJkU3RvcmFnZVBlcmlvZCI6ICJQMzY1MDBEIgp9"),
+					PayloadType: to.Ptr(kqldatabase.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("DatabaseSchema.kql"),
+					Payload:     to.Ptr("Ly8gS1FMIHNjcmlwdAovLyBVc2UgbWFuYWdlbWVudCBjb21tYW5kcyBpbiB0aGlzIHNjcmlwdCB0byBjb25maWd1cmUgeW91ciBkYXRhYmFzZSBpdGVtcywgc3VjaCBhcyB0YWJsZXMsIGZ1bmN0aW9ucywgbWF0ZXJpYWxpemVkIHZpZXdzLCBhbmQgbW9yZS4KCi5jcmVhdGUtbWVyZ2UgdGFibGUgTXlMb2dzIChMZXZlbDpzdHJpbmcsIFRpbWVzdGFtcDpkYXRldGltZSwgVXNlcklkOnN0cmluZywgVHJhY2VJZDpzdHJpbmcsIE1lc3NhZ2U6c3RyaW5nLCBQcm9jZXNzSWQ6aW50KQ=="),
+					PayloadType: to.Ptr(kqldatabase.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(kqldatabase.PayloadTypeInlineBase64),
+				}},
+		},
+		DisplayName: to.Ptr("KQLDatabase_1"),
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginCreateKQLDatabase = func(ctx context.Context, workspaceID string, createKQLDatabaseRequest kqldatabase.CreateKQLDatabaseRequest, options *kqldatabase.ItemsClientBeginCreateKQLDatabaseOptions) (resp azfake.PollerResponder[kqldatabase.ItemsClientCreateKQLDatabaseResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateKQLDatabaseRequest, createKQLDatabaseRequest))
+		resp = azfake.PollerResponder[kqldatabase.ItemsClientCreateKQLDatabaseResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, kqldatabase.ItemsClientCreateKQLDatabaseResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateKQLDatabase(ctx, exampleWorkspaceID, exampleCreateKQLDatabaseRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Create a Shortcut KQL database to source Azure Data Explorer cluster example"},
 	})
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
@@ -323,4 +364,98 @@ func (testsuite *FakeTestSuite) TestItems_DeleteKQLDatabase() {
 	client := testsuite.clientFactory.NewItemsClient()
 	_, err = client.DeleteKQLDatabase(ctx, exampleWorkspaceID, exampleKqlDatabaseID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestItems_GetKQLDatabaseDefinition() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a ReadWrite KQL database definition example"},
+	})
+	var exampleWorkspaceID string
+	var exampleKqlDatabaseID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleKqlDatabaseID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	exampleRes := kqldatabase.DefinitionResponse{
+		Definition: &kqldatabase.Definition{
+			Parts: []kqldatabase.DefinitionPart{
+				{
+					Path:        to.Ptr("DatabaseProperties.json"),
+					Payload:     to.Ptr("ewogICJkYXRhYmFzZVR5cGUiOiAiUmVhZFdyaXRlIiwKICAicGFyZW50RXZlbnRob3VzZUl0ZW1JZCI6ICI1YjIxODc3OC1lN2E1LTRkNzMtODE4Ny1mMTA4MjQwNDc4MzYiLAogICJvbmVMYWtlQ2FjaGluZ1BlcmlvZCI6ICJQMzY1MDBEIiwKICAib25lTGFrZVN0YW5kYXJkU3RvcmFnZVBlcmlvZCI6ICJQMzY1MDBEIgp9"),
+					PayloadType: to.Ptr(kqldatabase.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("DatabaseSchema.kql"),
+					Payload:     to.Ptr("Ly8gS1FMIHNjcmlwdAovLyBVc2UgbWFuYWdlbWVudCBjb21tYW5kcyBpbiB0aGlzIHNjcmlwdCB0byBjb25maWd1cmUgeW91ciBkYXRhYmFzZSBpdGVtcywgc3VjaCBhcyB0YWJsZXMsIGZ1bmN0aW9ucywgbWF0ZXJpYWxpemVkIHZpZXdzLCBhbmQgbW9yZS4KCi5jcmVhdGUtbWVyZ2UgdGFibGUgTXlMb2dzIChMZXZlbDpzdHJpbmcsIFRpbWVzdGFtcDpkYXRldGltZSwgVXNlcklkOnN0cmluZywgVHJhY2VJZDpzdHJpbmcsIE1lc3NhZ2U6c3RyaW5nLCBQcm9jZXNzSWQ6aW50KQ"),
+					PayloadType: to.Ptr(kqldatabase.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc"),
+					PayloadType: to.Ptr(kqldatabase.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginGetKQLDatabaseDefinition = func(ctx context.Context, workspaceID string, kqlDatabaseID string, options *kqldatabase.ItemsClientBeginGetKQLDatabaseDefinitionOptions) (resp azfake.PollerResponder[kqldatabase.ItemsClientGetKQLDatabaseDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleKqlDatabaseID, kqlDatabaseID)
+		resp = azfake.PollerResponder[kqldatabase.ItemsClientGetKQLDatabaseDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, kqldatabase.ItemsClientGetKQLDatabaseDefinitionResponse{DefinitionResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	poller, err := client.BeginGetKQLDatabaseDefinition(ctx, exampleWorkspaceID, exampleKqlDatabaseID, &kqldatabase.ItemsClientBeginGetKQLDatabaseDefinitionOptions{Format: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DefinitionResponse))
+}
+
+func (testsuite *FakeTestSuite) TestItems_UpdateKQLDatabaseDefinition() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update a ReadWrite KQL database definition example"},
+	})
+	var exampleWorkspaceID string
+	var exampleKqlDatabaseID string
+	var exampleUpdateKQLDatabaseDefinitionRequest kqldatabase.UpdateKQLDatabaseDefinitionRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleKqlDatabaseID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleUpdateKQLDatabaseDefinitionRequest = kqldatabase.UpdateKQLDatabaseDefinitionRequest{
+		Definition: &kqldatabase.Definition{
+			Parts: []kqldatabase.DefinitionPart{
+				{
+					Path:        to.Ptr("DatabaseProperties.json"),
+					Payload:     to.Ptr("ewogICJkYXRhYmFzZVR5cGUiOiAiUmVhZFdyaXRlIiwKICAicGFyZW50RXZlbnRob3VzZUl0ZW1JZCI6ICI1YjIxODc3OC1lN2E1LTRkNzMtODE4Ny1mMTA4MjQwNDc4MzYiLAogICJvbmVMYWtlQ2FjaGluZ1BlcmlvZCI6ICJQMzY1MDBEIiwKICAib25lTGFrZVN0YW5kYXJkU3RvcmFnZVBlcmlvZCI6ICJQMzY1MDBEIgp9"),
+					PayloadType: to.Ptr(kqldatabase.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("DatabaseSchema.kql"),
+					Payload:     to.Ptr("Ly8gS1FMIHNjcmlwdAovLyBVc2UgbWFuYWdlbWVudCBjb21tYW5kcyBpbiB0aGlzIHNjcmlwdCB0byBjb25maWd1cmUgeW91ciBkYXRhYmFzZSBpdGVtcywgc3VjaCBhcyB0YWJsZXMsIGZ1bmN0aW9ucywgbWF0ZXJpYWxpemVkIHZpZXdzLCBhbmQgbW9yZS4KCi5jcmVhdGUtbWVyZ2UgdGFibGUgTXlMb2dzIChMZXZlbDpzdHJpbmcsIFRpbWVzdGFtcDpkYXRldGltZSwgVXNlcklkOnN0cmluZywgVHJhY2VJZDpzdHJpbmcsIE1lc3NhZ2U6c3RyaW5nLCBQcm9jZXNzSWQ6aW50KQ=="),
+					PayloadType: to.Ptr(kqldatabase.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(kqldatabase.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginUpdateKQLDatabaseDefinition = func(ctx context.Context, workspaceID string, kqlDatabaseID string, updateKQLDatabaseDefinitionRequest kqldatabase.UpdateKQLDatabaseDefinitionRequest, options *kqldatabase.ItemsClientBeginUpdateKQLDatabaseDefinitionOptions) (resp azfake.PollerResponder[kqldatabase.ItemsClientUpdateKQLDatabaseDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleKqlDatabaseID, kqlDatabaseID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateKQLDatabaseDefinitionRequest, updateKQLDatabaseDefinitionRequest))
+		resp = azfake.PollerResponder[kqldatabase.ItemsClientUpdateKQLDatabaseDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, kqldatabase.ItemsClientUpdateKQLDatabaseDefinitionResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	poller, err := client.BeginUpdateKQLDatabaseDefinition(ctx, exampleWorkspaceID, exampleKqlDatabaseID, exampleUpdateKQLDatabaseDefinitionRequest, &kqldatabase.ItemsClientBeginUpdateKQLDatabaseDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }

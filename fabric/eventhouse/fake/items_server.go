@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
@@ -37,6 +38,10 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetEventhouse func(ctx context.Context, workspaceID string, eventhouseID string, options *eventhouse.ItemsClientGetEventhouseOptions) (resp azfake.Responder[eventhouse.ItemsClientGetEventhouseResponse], errResp azfake.ErrorResponder)
 
+	// BeginGetEventhouseDefinition is the fake for method ItemsClient.BeginGetEventhouseDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	BeginGetEventhouseDefinition func(ctx context.Context, workspaceID string, eventhouseID string, options *eventhouse.ItemsClientBeginGetEventhouseDefinitionOptions) (resp azfake.PollerResponder[eventhouse.ItemsClientGetEventhouseDefinitionResponse], errResp azfake.ErrorResponder)
+
 	// NewListEventhousesPager is the fake for method ItemsClient.NewListEventhousesPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListEventhousesPager func(workspaceID string, options *eventhouse.ItemsClientListEventhousesOptions) (resp azfake.PagerResponder[eventhouse.ItemsClientListEventhousesResponse])
@@ -44,6 +49,10 @@ type ItemsServer struct {
 	// UpdateEventhouse is the fake for method ItemsClient.UpdateEventhouse
 	// HTTP status codes to indicate success: http.StatusOK
 	UpdateEventhouse func(ctx context.Context, workspaceID string, eventhouseID string, updateEventhouseRequest eventhouse.UpdateEventhouseRequest, options *eventhouse.ItemsClientUpdateEventhouseOptions) (resp azfake.Responder[eventhouse.ItemsClientUpdateEventhouseResponse], errResp azfake.ErrorResponder)
+
+	// BeginUpdateEventhouseDefinition is the fake for method ItemsClient.BeginUpdateEventhouseDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
+	BeginUpdateEventhouseDefinition func(ctx context.Context, workspaceID string, eventhouseID string, updateEventhouseDefinitionRequest eventhouse.UpdateEventhouseDefinitionRequest, options *eventhouse.ItemsClientBeginUpdateEventhouseDefinitionOptions) (resp azfake.PollerResponder[eventhouse.ItemsClientUpdateEventhouseDefinitionResponse], errResp azfake.ErrorResponder)
 }
 
 // NewItemsServerTransport creates a new instance of ItemsServerTransport with the provided implementation.
@@ -51,18 +60,22 @@ type ItemsServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewItemsServerTransport(srv *ItemsServer) *ItemsServerTransport {
 	return &ItemsServerTransport{
-		srv:                     srv,
-		beginCreateEventhouse:   newTracker[azfake.PollerResponder[eventhouse.ItemsClientCreateEventhouseResponse]](),
-		newListEventhousesPager: newTracker[azfake.PagerResponder[eventhouse.ItemsClientListEventhousesResponse]](),
+		srv:                             srv,
+		beginCreateEventhouse:           newTracker[azfake.PollerResponder[eventhouse.ItemsClientCreateEventhouseResponse]](),
+		beginGetEventhouseDefinition:    newTracker[azfake.PollerResponder[eventhouse.ItemsClientGetEventhouseDefinitionResponse]](),
+		newListEventhousesPager:         newTracker[azfake.PagerResponder[eventhouse.ItemsClientListEventhousesResponse]](),
+		beginUpdateEventhouseDefinition: newTracker[azfake.PollerResponder[eventhouse.ItemsClientUpdateEventhouseDefinitionResponse]](),
 	}
 }
 
 // ItemsServerTransport connects instances of eventhouse.ItemsClient to instances of ItemsServer.
 // Don't use this type directly, use NewItemsServerTransport instead.
 type ItemsServerTransport struct {
-	srv                     *ItemsServer
-	beginCreateEventhouse   *tracker[azfake.PollerResponder[eventhouse.ItemsClientCreateEventhouseResponse]]
-	newListEventhousesPager *tracker[azfake.PagerResponder[eventhouse.ItemsClientListEventhousesResponse]]
+	srv                             *ItemsServer
+	beginCreateEventhouse           *tracker[azfake.PollerResponder[eventhouse.ItemsClientCreateEventhouseResponse]]
+	beginGetEventhouseDefinition    *tracker[azfake.PollerResponder[eventhouse.ItemsClientGetEventhouseDefinitionResponse]]
+	newListEventhousesPager         *tracker[azfake.PagerResponder[eventhouse.ItemsClientListEventhousesResponse]]
+	beginUpdateEventhouseDefinition *tracker[azfake.PollerResponder[eventhouse.ItemsClientUpdateEventhouseDefinitionResponse]]
 }
 
 // Do implements the policy.Transporter interface for ItemsServerTransport.
@@ -96,10 +109,14 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 				res.resp, res.err = i.dispatchDeleteEventhouse(req)
 			case "ItemsClient.GetEventhouse":
 				res.resp, res.err = i.dispatchGetEventhouse(req)
+			case "ItemsClient.BeginGetEventhouseDefinition":
+				res.resp, res.err = i.dispatchBeginGetEventhouseDefinition(req)
 			case "ItemsClient.NewListEventhousesPager":
 				res.resp, res.err = i.dispatchNewListEventhousesPager(req)
 			case "ItemsClient.UpdateEventhouse":
 				res.resp, res.err = i.dispatchUpdateEventhouse(req)
+			case "ItemsClient.BeginUpdateEventhouseDefinition":
+				res.resp, res.err = i.dispatchBeginUpdateEventhouseDefinition(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -229,6 +246,62 @@ func (i *ItemsServerTransport) dispatchGetEventhouse(req *http.Request) (*http.R
 	return resp, nil
 }
 
+func (i *ItemsServerTransport) dispatchBeginGetEventhouseDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginGetEventhouseDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginGetEventhouseDefinition not implemented")}
+	}
+	beginGetEventhouseDefinition := i.beginGetEventhouseDefinition.get(req)
+	if beginGetEventhouseDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/eventhouses/(?P<eventhouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		eventhouseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("eventhouseId")])
+		if err != nil {
+			return nil, err
+		}
+		formatUnescaped, err := url.QueryUnescape(qp.Get("format"))
+		if err != nil {
+			return nil, err
+		}
+		formatParam := getOptional(formatUnescaped)
+		var options *eventhouse.ItemsClientBeginGetEventhouseDefinitionOptions
+		if formatParam != nil {
+			options = &eventhouse.ItemsClientBeginGetEventhouseDefinitionOptions{
+				Format: formatParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginGetEventhouseDefinition(req.Context(), workspaceIDParam, eventhouseIDParam, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginGetEventhouseDefinition = &respr
+		i.beginGetEventhouseDefinition.add(req, beginGetEventhouseDefinition)
+	}
+
+	resp, err := server.PollerResponderNext(beginGetEventhouseDefinition, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+		i.beginGetEventhouseDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginGetEventhouseDefinition) {
+		i.beginGetEventhouseDefinition.remove(req)
+	}
+
+	return resp, nil
+}
+
 func (i *ItemsServerTransport) dispatchNewListEventhousesPager(req *http.Request) (*http.Response, error) {
 	if i.srv.NewListEventhousesPager == nil {
 		return nil, &nonRetriableError{errors.New("fake for method NewListEventhousesPager not implemented")}
@@ -312,6 +385,69 @@ func (i *ItemsServerTransport) dispatchUpdateEventhouse(req *http.Request) (*htt
 	if err != nil {
 		return nil, err
 	}
+	return resp, nil
+}
+
+func (i *ItemsServerTransport) dispatchBeginUpdateEventhouseDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginUpdateEventhouseDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginUpdateEventhouseDefinition not implemented")}
+	}
+	beginUpdateEventhouseDefinition := i.beginUpdateEventhouseDefinition.get(req)
+	if beginUpdateEventhouseDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/eventhouses/(?P<eventhouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		body, err := server.UnmarshalRequestAsJSON[eventhouse.UpdateEventhouseDefinitionRequest](req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		eventhouseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("eventhouseId")])
+		if err != nil {
+			return nil, err
+		}
+		updateMetadataUnescaped, err := url.QueryUnescape(qp.Get("updateMetadata"))
+		if err != nil {
+			return nil, err
+		}
+		updateMetadataParam, err := parseOptional(updateMetadataUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		var options *eventhouse.ItemsClientBeginUpdateEventhouseDefinitionOptions
+		if updateMetadataParam != nil {
+			options = &eventhouse.ItemsClientBeginUpdateEventhouseDefinitionOptions{
+				UpdateMetadata: updateMetadataParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginUpdateEventhouseDefinition(req.Context(), workspaceIDParam, eventhouseIDParam, body, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginUpdateEventhouseDefinition = &respr
+		i.beginUpdateEventhouseDefinition.add(req, beginUpdateEventhouseDefinition)
+	}
+
+	resp, err := server.PollerResponderNext(beginUpdateEventhouseDefinition, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
+		i.beginUpdateEventhouseDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginUpdateEventhouseDefinition) {
+		i.beginUpdateEventhouseDefinition.remove(req)
+	}
+
 	return resp, nil
 }
 

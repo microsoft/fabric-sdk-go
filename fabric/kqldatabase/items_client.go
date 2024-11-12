@@ -11,6 +11,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -224,6 +225,83 @@ func (client *ItemsClient) getKQLDatabaseHandleResponse(resp *http.Response) (It
 	return result, nil
 }
 
+// BeginGetKQLDatabaseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES KQLDatabase.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - kqlDatabaseID - The KQL database ID.
+//   - options - ItemsClientBeginGetKQLDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetKQLDatabaseDefinition
+//     method.
+func (client *ItemsClient) BeginGetKQLDatabaseDefinition(ctx context.Context, workspaceID string, kqlDatabaseID string, options *ItemsClientBeginGetKQLDatabaseDefinitionOptions) (*runtime.Poller[ItemsClientGetKQLDatabaseDefinitionResponse], error) {
+	return client.beginGetKQLDatabaseDefinition(ctx, workspaceID, kqlDatabaseID, options)
+}
+
+// GetKQLDatabaseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES KQLDatabase.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) getKQLDatabaseDefinition(ctx context.Context, workspaceID string, kqlDatabaseID string, options *ItemsClientBeginGetKQLDatabaseDefinitionOptions) (*http.Response, error) {
+	var err error
+	const operationName = "kqldatabase.ItemsClient.BeginGetKQLDatabaseDefinition"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getKQLDatabaseDefinitionCreateRequest(ctx, workspaceID, kqlDatabaseID, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// getKQLDatabaseDefinitionCreateRequest creates the GetKQLDatabaseDefinition request.
+func (client *ItemsClient) getKQLDatabaseDefinitionCreateRequest(ctx context.Context, workspaceID string, kqlDatabaseID string, options *ItemsClientBeginGetKQLDatabaseDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/kqlDatabases/{kqlDatabaseId}/getDefinition"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if kqlDatabaseID == "" {
+		return nil, errors.New("parameter kqlDatabaseID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{kqlDatabaseId}", url.PathEscape(kqlDatabaseID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.Format != nil {
+		reqQP.Set("format", *options.Format)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
 // NewListKQLDatabasesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
@@ -358,6 +436,87 @@ func (client *ItemsClient) updateKQLDatabaseHandleResponse(resp *http.Response) 
 	return result, nil
 }
 
+// BeginUpdateKQLDatabaseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES KQLDatabase.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - kqlDatabaseID - The KQL database ID.
+//   - updateKQLDatabaseDefinitionRequest - Update KQL database definition request payload.
+//   - options - ItemsClientBeginUpdateKQLDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateKQLDatabaseDefinition
+//     method.
+func (client *ItemsClient) BeginUpdateKQLDatabaseDefinition(ctx context.Context, workspaceID string, kqlDatabaseID string, updateKQLDatabaseDefinitionRequest UpdateKQLDatabaseDefinitionRequest, options *ItemsClientBeginUpdateKQLDatabaseDefinitionOptions) (*runtime.Poller[ItemsClientUpdateKQLDatabaseDefinitionResponse], error) {
+	return client.beginUpdateKQLDatabaseDefinition(ctx, workspaceID, kqlDatabaseID, updateKQLDatabaseDefinitionRequest, options)
+}
+
+// UpdateKQLDatabaseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES KQLDatabase.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) updateKQLDatabaseDefinition(ctx context.Context, workspaceID string, kqlDatabaseID string, updateKQLDatabaseDefinitionRequest UpdateKQLDatabaseDefinitionRequest, options *ItemsClientBeginUpdateKQLDatabaseDefinitionOptions) (*http.Response, error) {
+	var err error
+	const operationName = "kqldatabase.ItemsClient.BeginUpdateKQLDatabaseDefinition"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateKQLDatabaseDefinitionCreateRequest(ctx, workspaceID, kqlDatabaseID, updateKQLDatabaseDefinitionRequest, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// updateKQLDatabaseDefinitionCreateRequest creates the UpdateKQLDatabaseDefinition request.
+func (client *ItemsClient) updateKQLDatabaseDefinitionCreateRequest(ctx context.Context, workspaceID string, kqlDatabaseID string, updateKQLDatabaseDefinitionRequest UpdateKQLDatabaseDefinitionRequest, options *ItemsClientBeginUpdateKQLDatabaseDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/kqlDatabases/{kqlDatabaseId}/updateDefinition"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if kqlDatabaseID == "" {
+		return nil, errors.New("parameter kqlDatabaseID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{kqlDatabaseId}", url.PathEscape(kqlDatabaseID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.UpdateMetadata != nil {
+		reqQP.Set("updateMetadata", strconv.FormatBool(*options.UpdateMetadata))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateKQLDatabaseDefinitionRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // Custom code starts below
 
 // CreateKQLDatabase - returns ItemsClientCreateKQLDatabaseResponse in sync mode.
@@ -426,6 +585,145 @@ func (client *ItemsClient) beginCreateKQLDatabase(ctx context.Context, workspace
 			return nil, err
 		}
 		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientCreateKQLDatabaseResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// GetKQLDatabaseDefinition - returns ItemsClientGetKQLDatabaseDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS The caller must have contributor or higher workspace role.
+//
+// # REQUIRED DELEGATED SCOPES KQLDatabase.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - kqlDatabaseID - The KQL database ID.
+//   - options - ItemsClientBeginGetKQLDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetKQLDatabaseDefinition method.
+func (client *ItemsClient) GetKQLDatabaseDefinition(ctx context.Context, workspaceID string, kqlDatabaseID string, options *ItemsClientBeginGetKQLDatabaseDefinitionOptions) (ItemsClientGetKQLDatabaseDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginGetKQLDatabaseDefinition(ctx, workspaceID, kqlDatabaseID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientGetKQLDatabaseDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientGetKQLDatabaseDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginGetKQLDatabaseDefinition creates the getKQLDatabaseDefinition request.
+func (client *ItemsClient) beginGetKQLDatabaseDefinition(ctx context.Context, workspaceID string, kqlDatabaseID string, options *ItemsClientBeginGetKQLDatabaseDefinitionOptions) (*runtime.Poller[ItemsClientGetKQLDatabaseDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.getKQLDatabaseDefinition(ctx, workspaceID, kqlDatabaseID, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientGetKQLDatabaseDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientGetKQLDatabaseDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientGetKQLDatabaseDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientGetKQLDatabaseDefinitionResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// UpdateKQLDatabaseDefinition - returns ItemsClientUpdateKQLDatabaseDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS The caller must have contributor or higher workspace role.
+//
+// # REQUIRED DELEGATED SCOPES KQLDatabase.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - kqlDatabaseID - The KQL database ID.
+//   - updateKQLDatabaseDefinitionRequest - Update KQL database definition request payload.
+//   - options - ItemsClientBeginUpdateKQLDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateKQLDatabaseDefinition method.
+func (client *ItemsClient) UpdateKQLDatabaseDefinition(ctx context.Context, workspaceID string, kqlDatabaseID string, updateKQLDatabaseDefinitionRequest UpdateKQLDatabaseDefinitionRequest, options *ItemsClientBeginUpdateKQLDatabaseDefinitionOptions) (ItemsClientUpdateKQLDatabaseDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginUpdateKQLDatabaseDefinition(ctx, workspaceID, kqlDatabaseID, updateKQLDatabaseDefinitionRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientUpdateKQLDatabaseDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientUpdateKQLDatabaseDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginUpdateKQLDatabaseDefinition creates the updateKQLDatabaseDefinition request.
+func (client *ItemsClient) beginUpdateKQLDatabaseDefinition(ctx context.Context, workspaceID string, kqlDatabaseID string, updateKQLDatabaseDefinitionRequest UpdateKQLDatabaseDefinitionRequest, options *ItemsClientBeginUpdateKQLDatabaseDefinitionOptions) (*runtime.Poller[ItemsClientUpdateKQLDatabaseDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.updateKQLDatabaseDefinition(ctx, workspaceID, kqlDatabaseID, updateKQLDatabaseDefinitionRequest, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateKQLDatabaseDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientUpdateKQLDatabaseDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateKQLDatabaseDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientUpdateKQLDatabaseDefinitionResponse]{
 			Handler: handler,
 			Tracer:  client.internal.Tracer(),
 		})
