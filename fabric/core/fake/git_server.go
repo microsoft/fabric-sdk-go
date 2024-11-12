@@ -103,30 +103,36 @@ func (g *GitServerTransport) dispatchToMethodFake(req *http.Request, method stri
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "GitClient.BeginCommitToGit":
-			res.resp, res.err = g.dispatchBeginCommitToGit(req)
-		case "GitClient.Connect":
-			res.resp, res.err = g.dispatchConnect(req)
-		case "GitClient.Disconnect":
-			res.resp, res.err = g.dispatchDisconnect(req)
-		case "GitClient.GetConnection":
-			res.resp, res.err = g.dispatchGetConnection(req)
-		case "GitClient.GetMyGitCredentials":
-			res.resp, res.err = g.dispatchGetMyGitCredentials(req)
-		case "GitClient.BeginGetStatus":
-			res.resp, res.err = g.dispatchBeginGetStatus(req)
-		case "GitClient.BeginInitializeConnection":
-			res.resp, res.err = g.dispatchBeginInitializeConnection(req)
-		case "GitClient.BeginUpdateFromGit":
-			res.resp, res.err = g.dispatchBeginUpdateFromGit(req)
-		case "GitClient.UpdateMyGitCredentials":
-			res.resp, res.err = g.dispatchUpdateMyGitCredentials(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if gitServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = gitServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "GitClient.BeginCommitToGit":
+				res.resp, res.err = g.dispatchBeginCommitToGit(req)
+			case "GitClient.Connect":
+				res.resp, res.err = g.dispatchConnect(req)
+			case "GitClient.Disconnect":
+				res.resp, res.err = g.dispatchDisconnect(req)
+			case "GitClient.GetConnection":
+				res.resp, res.err = g.dispatchGetConnection(req)
+			case "GitClient.GetMyGitCredentials":
+				res.resp, res.err = g.dispatchGetMyGitCredentials(req)
+			case "GitClient.BeginGetStatus":
+				res.resp, res.err = g.dispatchBeginGetStatus(req)
+			case "GitClient.BeginInitializeConnection":
+				res.resp, res.err = g.dispatchBeginInitializeConnection(req)
+			case "GitClient.BeginUpdateFromGit":
+				res.resp, res.err = g.dispatchBeginUpdateFromGit(req)
+			case "GitClient.UpdateMyGitCredentials":
+				res.resp, res.err = g.dispatchUpdateMyGitCredentials(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -474,4 +480,10 @@ func (g *GitServerTransport) dispatchUpdateMyGitCredentials(req *http.Request) (
 		return nil, err
 	}
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to GitServerTransport
+var gitServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

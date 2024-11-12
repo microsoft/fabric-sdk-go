@@ -77,20 +77,26 @@ func (e *ExternalDataSharesServerTransport) dispatchToMethodFake(req *http.Reque
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "ExternalDataSharesClient.CreateExternalDataShare":
-			res.resp, res.err = e.dispatchCreateExternalDataShare(req)
-		case "ExternalDataSharesClient.GetExternalDataShare":
-			res.resp, res.err = e.dispatchGetExternalDataShare(req)
-		case "ExternalDataSharesClient.NewListExternalDataSharesInItemPager":
-			res.resp, res.err = e.dispatchNewListExternalDataSharesInItemPager(req)
-		case "ExternalDataSharesClient.RevokeExternalDataShare":
-			res.resp, res.err = e.dispatchRevokeExternalDataShare(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if externalDataSharesServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = externalDataSharesServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "ExternalDataSharesClient.CreateExternalDataShare":
+				res.resp, res.err = e.dispatchCreateExternalDataShare(req)
+			case "ExternalDataSharesClient.GetExternalDataShare":
+				res.resp, res.err = e.dispatchGetExternalDataShare(req)
+			case "ExternalDataSharesClient.NewListExternalDataSharesInItemPager":
+				res.resp, res.err = e.dispatchNewListExternalDataSharesInItemPager(req)
+			case "ExternalDataSharesClient.RevokeExternalDataShare":
+				res.resp, res.err = e.dispatchRevokeExternalDataShare(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -270,4 +276,10 @@ func (e *ExternalDataSharesServerTransport) dispatchRevokeExternalDataShare(req 
 		return nil, err
 	}
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to ExternalDataSharesServerTransport
+var externalDataSharesServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

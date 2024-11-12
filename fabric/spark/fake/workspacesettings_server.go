@@ -64,16 +64,22 @@ func (w *WorkspaceSettingsServerTransport) dispatchToMethodFake(req *http.Reques
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "WorkspaceSettingsClient.GetSparkSettings":
-			res.resp, res.err = w.dispatchGetSparkSettings(req)
-		case "WorkspaceSettingsClient.UpdateSparkSettings":
-			res.resp, res.err = w.dispatchUpdateSparkSettings(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if workspaceSettingsServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = workspaceSettingsServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "WorkspaceSettingsClient.GetSparkSettings":
+				res.resp, res.err = w.dispatchGetSparkSettings(req)
+			case "WorkspaceSettingsClient.UpdateSparkSettings":
+				res.resp, res.err = w.dispatchUpdateSparkSettings(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -148,4 +154,10 @@ func (w *WorkspaceSettingsServerTransport) dispatchUpdateSparkSettings(req *http
 		return nil, err
 	}
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to WorkspaceSettingsServerTransport
+var workspaceSettingsServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

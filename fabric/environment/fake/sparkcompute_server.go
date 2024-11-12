@@ -68,18 +68,24 @@ func (s *SparkComputeServerTransport) dispatchToMethodFake(req *http.Request, me
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "SparkComputeClient.GetPublishedSettings":
-			res.resp, res.err = s.dispatchGetPublishedSettings(req)
-		case "SparkComputeClient.GetStagingSettings":
-			res.resp, res.err = s.dispatchGetStagingSettings(req)
-		case "SparkComputeClient.UpdateStagingSettings":
-			res.resp, res.err = s.dispatchUpdateStagingSettings(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if sparkComputeServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = sparkComputeServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "SparkComputeClient.GetPublishedSettings":
+				res.resp, res.err = s.dispatchGetPublishedSettings(req)
+			case "SparkComputeClient.GetStagingSettings":
+				res.resp, res.err = s.dispatchGetStagingSettings(req)
+			case "SparkComputeClient.UpdateStagingSettings":
+				res.resp, res.err = s.dispatchUpdateStagingSettings(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -195,4 +201,10 @@ func (s *SparkComputeServerTransport) dispatchUpdateStagingSettings(req *http.Re
 		return nil, err
 	}
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to SparkComputeServerTransport
+var sparkComputeServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

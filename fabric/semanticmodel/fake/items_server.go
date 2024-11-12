@@ -96,26 +96,32 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "ItemsClient.BeginCreateSemanticModel":
-			res.resp, res.err = i.dispatchBeginCreateSemanticModel(req)
-		case "ItemsClient.DeleteSemanticModel":
-			res.resp, res.err = i.dispatchDeleteSemanticModel(req)
-		case "ItemsClient.GetSemanticModel":
-			res.resp, res.err = i.dispatchGetSemanticModel(req)
-		case "ItemsClient.BeginGetSemanticModelDefinition":
-			res.resp, res.err = i.dispatchBeginGetSemanticModelDefinition(req)
-		case "ItemsClient.NewListSemanticModelsPager":
-			res.resp, res.err = i.dispatchNewListSemanticModelsPager(req)
-		case "ItemsClient.UpdateSemanticModel":
-			res.resp, res.err = i.dispatchUpdateSemanticModel(req)
-		case "ItemsClient.BeginUpdateSemanticModelDefinition":
-			res.resp, res.err = i.dispatchBeginUpdateSemanticModelDefinition(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if itemsServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = itemsServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "ItemsClient.BeginCreateSemanticModel":
+				res.resp, res.err = i.dispatchBeginCreateSemanticModel(req)
+			case "ItemsClient.DeleteSemanticModel":
+				res.resp, res.err = i.dispatchDeleteSemanticModel(req)
+			case "ItemsClient.GetSemanticModel":
+				res.resp, res.err = i.dispatchGetSemanticModel(req)
+			case "ItemsClient.BeginGetSemanticModelDefinition":
+				res.resp, res.err = i.dispatchBeginGetSemanticModelDefinition(req)
+			case "ItemsClient.NewListSemanticModelsPager":
+				res.resp, res.err = i.dispatchNewListSemanticModelsPager(req)
+			case "ItemsClient.UpdateSemanticModel":
+				res.resp, res.err = i.dispatchUpdateSemanticModel(req)
+			case "ItemsClient.BeginUpdateSemanticModelDefinition":
+				res.resp, res.err = i.dispatchBeginUpdateSemanticModelDefinition(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -443,4 +449,10 @@ func (i *ItemsServerTransport) dispatchBeginUpdateSemanticModelDefinition(req *h
 	}
 
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to ItemsServerTransport
+var itemsServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

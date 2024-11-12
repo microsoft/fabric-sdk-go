@@ -68,16 +68,22 @@ func (t *TenantsServerTransport) dispatchToMethodFake(req *http.Request, method 
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "TenantsClient.NewListCapacitiesTenantSettingsOverridesPager":
-			res.resp, res.err = t.dispatchNewListCapacitiesTenantSettingsOverridesPager(req)
-		case "TenantsClient.ListTenantSettings":
-			res.resp, res.err = t.dispatchListTenantSettings(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if tenantsServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = tenantsServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "TenantsClient.NewListCapacitiesTenantSettingsOverridesPager":
+				res.resp, res.err = t.dispatchNewListCapacitiesTenantSettingsOverridesPager(req)
+			case "TenantsClient.ListTenantSettings":
+				res.resp, res.err = t.dispatchListTenantSettings(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -148,4 +154,10 @@ func (t *TenantsServerTransport) dispatchListTenantSettings(req *http.Request) (
 		return nil, err
 	}
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to TenantsServerTransport
+var tenantsServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

@@ -81,24 +81,30 @@ func (s *SparkLibrariesServerTransport) dispatchToMethodFake(req *http.Request, 
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "SparkLibrariesClient.CancelPublish":
-			res.resp, res.err = s.dispatchCancelPublish(req)
-		case "SparkLibrariesClient.DeleteStagingLibrary":
-			res.resp, res.err = s.dispatchDeleteStagingLibrary(req)
-		case "SparkLibrariesClient.GetPublishedLibraries":
-			res.resp, res.err = s.dispatchGetPublishedLibraries(req)
-		case "SparkLibrariesClient.GetStagingLibraries":
-			res.resp, res.err = s.dispatchGetStagingLibraries(req)
-		case "SparkLibrariesClient.PublishEnvironment":
-			res.resp, res.err = s.dispatchPublishEnvironment(req)
-		case "SparkLibrariesClient.UploadStagingLibrary":
-			res.resp, res.err = s.dispatchUploadStagingLibrary(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if sparkLibrariesServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = sparkLibrariesServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "SparkLibrariesClient.CancelPublish":
+				res.resp, res.err = s.dispatchCancelPublish(req)
+			case "SparkLibrariesClient.DeleteStagingLibrary":
+				res.resp, res.err = s.dispatchDeleteStagingLibrary(req)
+			case "SparkLibrariesClient.GetPublishedLibraries":
+				res.resp, res.err = s.dispatchGetPublishedLibraries(req)
+			case "SparkLibrariesClient.GetStagingLibraries":
+				res.resp, res.err = s.dispatchGetStagingLibraries(req)
+			case "SparkLibrariesClient.PublishEnvironment":
+				res.resp, res.err = s.dispatchPublishEnvironment(req)
+			case "SparkLibrariesClient.UploadStagingLibrary":
+				res.resp, res.err = s.dispatchUploadStagingLibrary(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -320,4 +326,10 @@ func (s *SparkLibrariesServerTransport) dispatchUploadStagingLibrary(req *http.R
 		return nil, err
 	}
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to SparkLibrariesServerTransport
+var sparkLibrariesServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

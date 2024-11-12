@@ -119,38 +119,44 @@ func (d *DomainsServerTransport) dispatchToMethodFake(req *http.Request, method 
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "DomainsClient.BeginAssignDomainWorkspacesByCapacities":
-			res.resp, res.err = d.dispatchBeginAssignDomainWorkspacesByCapacities(req)
-		case "DomainsClient.AssignDomainWorkspacesByIDs":
-			res.resp, res.err = d.dispatchAssignDomainWorkspacesByIDs(req)
-		case "DomainsClient.BeginAssignDomainWorkspacesByPrincipals":
-			res.resp, res.err = d.dispatchBeginAssignDomainWorkspacesByPrincipals(req)
-		case "DomainsClient.CreateDomain":
-			res.resp, res.err = d.dispatchCreateDomain(req)
-		case "DomainsClient.DeleteDomain":
-			res.resp, res.err = d.dispatchDeleteDomain(req)
-		case "DomainsClient.GetDomain":
-			res.resp, res.err = d.dispatchGetDomain(req)
-		case "DomainsClient.NewListDomainWorkspacesPager":
-			res.resp, res.err = d.dispatchNewListDomainWorkspacesPager(req)
-		case "DomainsClient.ListDomains":
-			res.resp, res.err = d.dispatchListDomains(req)
-		case "DomainsClient.RoleAssignmentsBulkAssign":
-			res.resp, res.err = d.dispatchRoleAssignmentsBulkAssign(req)
-		case "DomainsClient.RoleAssignmentsBulkUnassign":
-			res.resp, res.err = d.dispatchRoleAssignmentsBulkUnassign(req)
-		case "DomainsClient.UnassignAllDomainWorkspaces":
-			res.resp, res.err = d.dispatchUnassignAllDomainWorkspaces(req)
-		case "DomainsClient.UnassignDomainWorkspacesByIDs":
-			res.resp, res.err = d.dispatchUnassignDomainWorkspacesByIDs(req)
-		case "DomainsClient.UpdateDomain":
-			res.resp, res.err = d.dispatchUpdateDomain(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if domainsServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = domainsServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "DomainsClient.BeginAssignDomainWorkspacesByCapacities":
+				res.resp, res.err = d.dispatchBeginAssignDomainWorkspacesByCapacities(req)
+			case "DomainsClient.AssignDomainWorkspacesByIDs":
+				res.resp, res.err = d.dispatchAssignDomainWorkspacesByIDs(req)
+			case "DomainsClient.BeginAssignDomainWorkspacesByPrincipals":
+				res.resp, res.err = d.dispatchBeginAssignDomainWorkspacesByPrincipals(req)
+			case "DomainsClient.CreateDomain":
+				res.resp, res.err = d.dispatchCreateDomain(req)
+			case "DomainsClient.DeleteDomain":
+				res.resp, res.err = d.dispatchDeleteDomain(req)
+			case "DomainsClient.GetDomain":
+				res.resp, res.err = d.dispatchGetDomain(req)
+			case "DomainsClient.NewListDomainWorkspacesPager":
+				res.resp, res.err = d.dispatchNewListDomainWorkspacesPager(req)
+			case "DomainsClient.ListDomains":
+				res.resp, res.err = d.dispatchListDomains(req)
+			case "DomainsClient.RoleAssignmentsBulkAssign":
+				res.resp, res.err = d.dispatchRoleAssignmentsBulkAssign(req)
+			case "DomainsClient.RoleAssignmentsBulkUnassign":
+				res.resp, res.err = d.dispatchRoleAssignmentsBulkUnassign(req)
+			case "DomainsClient.UnassignAllDomainWorkspaces":
+				res.resp, res.err = d.dispatchUnassignAllDomainWorkspaces(req)
+			case "DomainsClient.UnassignDomainWorkspacesByIDs":
+				res.resp, res.err = d.dispatchUnassignDomainWorkspacesByIDs(req)
+			case "DomainsClient.UpdateDomain":
+				res.resp, res.err = d.dispatchUpdateDomain(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -615,4 +621,10 @@ func (d *DomainsServerTransport) dispatchUpdateDomain(req *http.Request) (*http.
 		return nil, err
 	}
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to DomainsServerTransport
+var domainsServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

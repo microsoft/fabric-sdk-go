@@ -63,14 +63,20 @@ func (c *CapacitiesServerTransport) dispatchToMethodFake(req *http.Request, meth
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "CapacitiesClient.NewListCapacitiesPager":
-			res.resp, res.err = c.dispatchNewListCapacitiesPager(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if capacitiesServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = capacitiesServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "CapacitiesClient.NewListCapacitiesPager":
+				res.resp, res.err = c.dispatchNewListCapacitiesPager(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -122,4 +128,10 @@ func (c *CapacitiesServerTransport) dispatchNewListCapacitiesPager(req *http.Req
 		c.newListCapacitiesPager.remove(req)
 	}
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to CapacitiesServerTransport
+var capacitiesServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

@@ -72,16 +72,22 @@ func (t *TablesServerTransport) dispatchToMethodFake(req *http.Request, method s
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "TablesClient.NewListTablesPager":
-			res.resp, res.err = t.dispatchNewListTablesPager(req)
-		case "TablesClient.BeginLoadTable":
-			res.resp, res.err = t.dispatchBeginLoadTable(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if tablesServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = tablesServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "TablesClient.NewListTablesPager":
+				res.resp, res.err = t.dispatchNewListTablesPager(req)
+			case "TablesClient.BeginLoadTable":
+				res.resp, res.err = t.dispatchBeginLoadTable(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -214,4 +220,10 @@ func (t *TablesServerTransport) dispatchBeginLoadTable(req *http.Request) (*http
 	}
 
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to TablesServerTransport
+var tablesServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

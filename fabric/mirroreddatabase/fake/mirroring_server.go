@@ -72,20 +72,26 @@ func (m *MirroringServerTransport) dispatchToMethodFake(req *http.Request, metho
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "MirroringClient.GetMirroringStatus":
-			res.resp, res.err = m.dispatchGetMirroringStatus(req)
-		case "MirroringClient.GetTablesMirroringStatus":
-			res.resp, res.err = m.dispatchGetTablesMirroringStatus(req)
-		case "MirroringClient.StartMirroring":
-			res.resp, res.err = m.dispatchStartMirroring(req)
-		case "MirroringClient.StopMirroring":
-			res.resp, res.err = m.dispatchStopMirroring(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if mirroringServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = mirroringServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "MirroringClient.GetMirroringStatus":
+				res.resp, res.err = m.dispatchGetMirroringStatus(req)
+			case "MirroringClient.GetTablesMirroringStatus":
+				res.resp, res.err = m.dispatchGetTablesMirroringStatus(req)
+			case "MirroringClient.StartMirroring":
+				res.resp, res.err = m.dispatchStartMirroring(req)
+			case "MirroringClient.StopMirroring":
+				res.resp, res.err = m.dispatchStopMirroring(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -230,4 +236,10 @@ func (m *MirroringServerTransport) dispatchStopMirroring(req *http.Request) (*ht
 		return nil, err
 	}
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to MirroringServerTransport
+var mirroringServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

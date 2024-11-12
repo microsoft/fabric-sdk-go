@@ -102,28 +102,34 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "ItemsClient.BeginCreateItem":
-			res.resp, res.err = i.dispatchBeginCreateItem(req)
-		case "ItemsClient.DeleteItem":
-			res.resp, res.err = i.dispatchDeleteItem(req)
-		case "ItemsClient.GetItem":
-			res.resp, res.err = i.dispatchGetItem(req)
-		case "ItemsClient.BeginGetItemDefinition":
-			res.resp, res.err = i.dispatchBeginGetItemDefinition(req)
-		case "ItemsClient.NewListItemConnectionsPager":
-			res.resp, res.err = i.dispatchNewListItemConnectionsPager(req)
-		case "ItemsClient.NewListItemsPager":
-			res.resp, res.err = i.dispatchNewListItemsPager(req)
-		case "ItemsClient.UpdateItem":
-			res.resp, res.err = i.dispatchUpdateItem(req)
-		case "ItemsClient.BeginUpdateItemDefinition":
-			res.resp, res.err = i.dispatchBeginUpdateItemDefinition(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if itemsServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = itemsServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "ItemsClient.BeginCreateItem":
+				res.resp, res.err = i.dispatchBeginCreateItem(req)
+			case "ItemsClient.DeleteItem":
+				res.resp, res.err = i.dispatchDeleteItem(req)
+			case "ItemsClient.GetItem":
+				res.resp, res.err = i.dispatchGetItem(req)
+			case "ItemsClient.BeginGetItemDefinition":
+				res.resp, res.err = i.dispatchBeginGetItemDefinition(req)
+			case "ItemsClient.NewListItemConnectionsPager":
+				res.resp, res.err = i.dispatchNewListItemConnectionsPager(req)
+			case "ItemsClient.NewListItemsPager":
+				res.resp, res.err = i.dispatchNewListItemsPager(req)
+			case "ItemsClient.UpdateItem":
+				res.resp, res.err = i.dispatchUpdateItem(req)
+			case "ItemsClient.BeginUpdateItemDefinition":
+				res.resp, res.err = i.dispatchBeginUpdateItemDefinition(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -510,4 +516,10 @@ func (i *ItemsServerTransport) dispatchBeginUpdateItemDefinition(req *http.Reque
 	}
 
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to ItemsServerTransport
+var itemsServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

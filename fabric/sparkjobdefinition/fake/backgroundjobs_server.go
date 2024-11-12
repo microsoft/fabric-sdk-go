@@ -61,14 +61,20 @@ func (b *BackgroundJobsServerTransport) dispatchToMethodFake(req *http.Request, 
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "BackgroundJobsClient.RunOnDemandSparkJobDefinition":
-			res.resp, res.err = b.dispatchRunOnDemandSparkJobDefinition(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if backgroundJobsServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = backgroundJobsServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "BackgroundJobsClient.RunOnDemandSparkJobDefinition":
+				res.resp, res.err = b.dispatchRunOnDemandSparkJobDefinition(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -125,4 +131,10 @@ func (b *BackgroundJobsServerTransport) dispatchRunOnDemandSparkJobDefinition(re
 		resp.Header.Set("Retry-After", strconv.FormatInt(int64(*val), 10))
 	}
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to BackgroundJobsServerTransport
+var backgroundJobsServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

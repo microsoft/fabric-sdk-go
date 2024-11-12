@@ -89,26 +89,32 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "ItemsClient.CreateMirroredDatabase":
-			res.resp, res.err = i.dispatchCreateMirroredDatabase(req)
-		case "ItemsClient.DeleteMirroredDatabase":
-			res.resp, res.err = i.dispatchDeleteMirroredDatabase(req)
-		case "ItemsClient.GetMirroredDatabase":
-			res.resp, res.err = i.dispatchGetMirroredDatabase(req)
-		case "ItemsClient.GetMirroredDatabaseDefinition":
-			res.resp, res.err = i.dispatchGetMirroredDatabaseDefinition(req)
-		case "ItemsClient.NewListMirroredDatabasesPager":
-			res.resp, res.err = i.dispatchNewListMirroredDatabasesPager(req)
-		case "ItemsClient.UpdateMirroredDatabase":
-			res.resp, res.err = i.dispatchUpdateMirroredDatabase(req)
-		case "ItemsClient.UpdateMirroredDatabaseDefinition":
-			res.resp, res.err = i.dispatchUpdateMirroredDatabaseDefinition(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if itemsServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = itemsServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "ItemsClient.CreateMirroredDatabase":
+				res.resp, res.err = i.dispatchCreateMirroredDatabase(req)
+			case "ItemsClient.DeleteMirroredDatabase":
+				res.resp, res.err = i.dispatchDeleteMirroredDatabase(req)
+			case "ItemsClient.GetMirroredDatabase":
+				res.resp, res.err = i.dispatchGetMirroredDatabase(req)
+			case "ItemsClient.GetMirroredDatabaseDefinition":
+				res.resp, res.err = i.dispatchGetMirroredDatabaseDefinition(req)
+			case "ItemsClient.NewListMirroredDatabasesPager":
+				res.resp, res.err = i.dispatchNewListMirroredDatabasesPager(req)
+			case "ItemsClient.UpdateMirroredDatabase":
+				res.resp, res.err = i.dispatchUpdateMirroredDatabase(req)
+			case "ItemsClient.UpdateMirroredDatabaseDefinition":
+				res.resp, res.err = i.dispatchUpdateMirroredDatabaseDefinition(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -376,4 +382,10 @@ func (i *ItemsServerTransport) dispatchUpdateMirroredDatabaseDefinition(req *htt
 		return nil, err
 	}
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to ItemsServerTransport
+var itemsServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

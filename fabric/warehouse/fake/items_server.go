@@ -83,22 +83,28 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "ItemsClient.BeginCreateWarehouse":
-			res.resp, res.err = i.dispatchBeginCreateWarehouse(req)
-		case "ItemsClient.DeleteWarehouse":
-			res.resp, res.err = i.dispatchDeleteWarehouse(req)
-		case "ItemsClient.GetWarehouse":
-			res.resp, res.err = i.dispatchGetWarehouse(req)
-		case "ItemsClient.NewListWarehousesPager":
-			res.resp, res.err = i.dispatchNewListWarehousesPager(req)
-		case "ItemsClient.UpdateWarehouse":
-			res.resp, res.err = i.dispatchUpdateWarehouse(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if itemsServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = itemsServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "ItemsClient.BeginCreateWarehouse":
+				res.resp, res.err = i.dispatchBeginCreateWarehouse(req)
+			case "ItemsClient.DeleteWarehouse":
+				res.resp, res.err = i.dispatchDeleteWarehouse(req)
+			case "ItemsClient.GetWarehouse":
+				res.resp, res.err = i.dispatchGetWarehouse(req)
+			case "ItemsClient.NewListWarehousesPager":
+				res.resp, res.err = i.dispatchNewListWarehousesPager(req)
+			case "ItemsClient.UpdateWarehouse":
+				res.resp, res.err = i.dispatchUpdateWarehouse(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -307,4 +313,10 @@ func (i *ItemsServerTransport) dispatchUpdateWarehouse(req *http.Request) (*http
 		return nil, err
 	}
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to ItemsServerTransport
+var itemsServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

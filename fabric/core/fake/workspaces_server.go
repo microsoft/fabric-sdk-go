@@ -123,40 +123,46 @@ func (w *WorkspacesServerTransport) dispatchToMethodFake(req *http.Request, meth
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "WorkspacesClient.AddWorkspaceRoleAssignment":
-			res.resp, res.err = w.dispatchAddWorkspaceRoleAssignment(req)
-		case "WorkspacesClient.AssignToCapacity":
-			res.resp, res.err = w.dispatchAssignToCapacity(req)
-		case "WorkspacesClient.CreateWorkspace":
-			res.resp, res.err = w.dispatchCreateWorkspace(req)
-		case "WorkspacesClient.DeleteWorkspace":
-			res.resp, res.err = w.dispatchDeleteWorkspace(req)
-		case "WorkspacesClient.DeleteWorkspaceRoleAssignment":
-			res.resp, res.err = w.dispatchDeleteWorkspaceRoleAssignment(req)
-		case "WorkspacesClient.BeginDeprovisionIdentity":
-			res.resp, res.err = w.dispatchBeginDeprovisionIdentity(req)
-		case "WorkspacesClient.GetWorkspace":
-			res.resp, res.err = w.dispatchGetWorkspace(req)
-		case "WorkspacesClient.GetWorkspaceRoleAssignment":
-			res.resp, res.err = w.dispatchGetWorkspaceRoleAssignment(req)
-		case "WorkspacesClient.NewListWorkspaceRoleAssignmentsPager":
-			res.resp, res.err = w.dispatchNewListWorkspaceRoleAssignmentsPager(req)
-		case "WorkspacesClient.NewListWorkspacesPager":
-			res.resp, res.err = w.dispatchNewListWorkspacesPager(req)
-		case "WorkspacesClient.BeginProvisionIdentity":
-			res.resp, res.err = w.dispatchBeginProvisionIdentity(req)
-		case "WorkspacesClient.UnassignFromCapacity":
-			res.resp, res.err = w.dispatchUnassignFromCapacity(req)
-		case "WorkspacesClient.UpdateWorkspace":
-			res.resp, res.err = w.dispatchUpdateWorkspace(req)
-		case "WorkspacesClient.UpdateWorkspaceRoleAssignment":
-			res.resp, res.err = w.dispatchUpdateWorkspaceRoleAssignment(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if workspacesServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = workspacesServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "WorkspacesClient.AddWorkspaceRoleAssignment":
+				res.resp, res.err = w.dispatchAddWorkspaceRoleAssignment(req)
+			case "WorkspacesClient.AssignToCapacity":
+				res.resp, res.err = w.dispatchAssignToCapacity(req)
+			case "WorkspacesClient.CreateWorkspace":
+				res.resp, res.err = w.dispatchCreateWorkspace(req)
+			case "WorkspacesClient.DeleteWorkspace":
+				res.resp, res.err = w.dispatchDeleteWorkspace(req)
+			case "WorkspacesClient.DeleteWorkspaceRoleAssignment":
+				res.resp, res.err = w.dispatchDeleteWorkspaceRoleAssignment(req)
+			case "WorkspacesClient.BeginDeprovisionIdentity":
+				res.resp, res.err = w.dispatchBeginDeprovisionIdentity(req)
+			case "WorkspacesClient.GetWorkspace":
+				res.resp, res.err = w.dispatchGetWorkspace(req)
+			case "WorkspacesClient.GetWorkspaceRoleAssignment":
+				res.resp, res.err = w.dispatchGetWorkspaceRoleAssignment(req)
+			case "WorkspacesClient.NewListWorkspaceRoleAssignmentsPager":
+				res.resp, res.err = w.dispatchNewListWorkspaceRoleAssignmentsPager(req)
+			case "WorkspacesClient.NewListWorkspacesPager":
+				res.resp, res.err = w.dispatchNewListWorkspacesPager(req)
+			case "WorkspacesClient.BeginProvisionIdentity":
+				res.resp, res.err = w.dispatchBeginProvisionIdentity(req)
+			case "WorkspacesClient.UnassignFromCapacity":
+				res.resp, res.err = w.dispatchUnassignFromCapacity(req)
+			case "WorkspacesClient.UpdateWorkspace":
+				res.resp, res.err = w.dispatchUpdateWorkspace(req)
+			case "WorkspacesClient.UpdateWorkspaceRoleAssignment":
+				res.resp, res.err = w.dispatchUpdateWorkspaceRoleAssignment(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -661,4 +667,10 @@ func (w *WorkspacesServerTransport) dispatchUpdateWorkspaceRoleAssignment(req *h
 		return nil, err
 	}
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to WorkspacesServerTransport
+var workspacesServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

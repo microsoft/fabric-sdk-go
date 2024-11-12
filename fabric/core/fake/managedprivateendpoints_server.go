@@ -77,20 +77,26 @@ func (m *ManagedPrivateEndpointsServerTransport) dispatchToMethodFake(req *http.
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "ManagedPrivateEndpointsClient.CreateWorkspaceManagedPrivateEndpoint":
-			res.resp, res.err = m.dispatchCreateWorkspaceManagedPrivateEndpoint(req)
-		case "ManagedPrivateEndpointsClient.DeleteWorkspaceManagedPrivateEndpoint":
-			res.resp, res.err = m.dispatchDeleteWorkspaceManagedPrivateEndpoint(req)
-		case "ManagedPrivateEndpointsClient.GetWorkspaceManagedPrivateEndpoint":
-			res.resp, res.err = m.dispatchGetWorkspaceManagedPrivateEndpoint(req)
-		case "ManagedPrivateEndpointsClient.NewListWorkspaceManagedPrivateEndpointsPager":
-			res.resp, res.err = m.dispatchNewListWorkspaceManagedPrivateEndpointsPager(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if managedPrivateEndpointsServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = managedPrivateEndpointsServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "ManagedPrivateEndpointsClient.CreateWorkspaceManagedPrivateEndpoint":
+				res.resp, res.err = m.dispatchCreateWorkspaceManagedPrivateEndpoint(req)
+			case "ManagedPrivateEndpointsClient.DeleteWorkspaceManagedPrivateEndpoint":
+				res.resp, res.err = m.dispatchDeleteWorkspaceManagedPrivateEndpoint(req)
+			case "ManagedPrivateEndpointsClient.GetWorkspaceManagedPrivateEndpoint":
+				res.resp, res.err = m.dispatchGetWorkspaceManagedPrivateEndpoint(req)
+			case "ManagedPrivateEndpointsClient.NewListWorkspaceManagedPrivateEndpointsPager":
+				res.resp, res.err = m.dispatchNewListWorkspaceManagedPrivateEndpointsPager(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -254,4 +260,10 @@ func (m *ManagedPrivateEndpointsServerTransport) dispatchNewListWorkspaceManaged
 		m.newListWorkspaceManagedPrivateEndpointsPager.remove(req)
 	}
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to ManagedPrivateEndpointsServerTransport
+var managedPrivateEndpointsServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }
