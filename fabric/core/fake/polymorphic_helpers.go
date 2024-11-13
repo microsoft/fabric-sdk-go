@@ -12,6 +12,104 @@ import (
 	"github.com/microsoft/fabric-sdk-go/fabric/core"
 )
 
+func unmarshalCreateConnectionRequestClassification(rawMsg json.RawMessage) (core.CreateConnectionRequestClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b core.CreateConnectionRequestClassification
+	switch m["connectivityType"] {
+	case string(core.ConnectivityTypeOnPremisesGateway):
+		b = &core.CreateOnPremisesConnectionRequest{}
+	case string(core.ConnectivityTypeShareableCloud):
+		b = &core.CreateCloudConnectionRequest{}
+	case string(core.ConnectivityTypeVirtualNetworkGateway):
+		b = &core.CreateVirtualNetworkGatewayConnectionRequest{}
+	default:
+		b = &core.CreateConnectionRequest{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalCreateGatewayRequestClassification(rawMsg json.RawMessage) (core.CreateGatewayRequestClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b core.CreateGatewayRequestClassification
+	switch m["type"] {
+	case string(core.GatewayTypeVirtualNetwork):
+		b = &core.CreateVirtualNetworkGatewayRequest{}
+	default:
+		b = &core.CreateGatewayRequest{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalUpdateConnectionRequestClassification(rawMsg json.RawMessage) (core.UpdateConnectionRequestClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b core.UpdateConnectionRequestClassification
+	switch m["connectivityType"] {
+	case string(core.ConnectivityTypeOnPremisesGateway):
+		b = &core.UpdateOnPremisesGatewayConnectionRequest{}
+	case string(core.ConnectivityTypeOnPremisesGatewayPersonal):
+		b = &core.UpdateOnPremisesGatewayPersonalConnectionRequest{}
+	case string(core.ConnectivityTypePersonalCloud):
+		b = &core.UpdatePersonalCloudConnectionRequest{}
+	case string(core.ConnectivityTypeShareableCloud):
+		b = &core.UpdateShareableCloudConnectionRequest{}
+	case string(core.ConnectivityTypeVirtualNetworkGateway):
+		b = &core.UpdateVirtualNetworkGatewayConnectionRequest{}
+	default:
+		b = &core.UpdateConnectionRequest{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalUpdateGatewayRequestClassification(rawMsg json.RawMessage) (core.UpdateGatewayRequestClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b core.UpdateGatewayRequestClassification
+	switch m["type"] {
+	case string(core.GatewayTypeOnPremises):
+		b = &core.UpdateOnPremisesGatewayRequest{}
+	case string(core.GatewayTypeVirtualNetwork):
+		b = &core.UpdateVirtualNetworkGatewayRequest{}
+	default:
+		b = &core.UpdateGatewayRequest{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
 func unmarshalUpdateGitCredentialsRequestClassification(rawMsg json.RawMessage) (core.UpdateGitCredentialsRequestClassification, error) {
 	if rawMsg == nil || string(rawMsg) == "null" {
 		return nil, nil

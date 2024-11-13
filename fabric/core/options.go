@@ -13,6 +13,78 @@ type CapacitiesClientListCapacitiesOptions struct {
 	ContinuationToken *string
 }
 
+// ConnectionsClientAddConnectionRoleAssignmentOptions contains the optional parameters for the ConnectionsClient.AddConnectionRoleAssignment
+// method.
+type ConnectionsClientAddConnectionRoleAssignmentOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ConnectionsClientCreateConnectionOptions contains the optional parameters for the ConnectionsClient.CreateConnection method.
+type ConnectionsClientCreateConnectionOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ConnectionsClientDeleteConnectionOptions contains the optional parameters for the ConnectionsClient.DeleteConnection method.
+type ConnectionsClientDeleteConnectionOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ConnectionsClientDeleteConnectionRoleAssignmentOptions contains the optional parameters for the ConnectionsClient.DeleteConnectionRoleAssignment
+// method.
+type ConnectionsClientDeleteConnectionRoleAssignmentOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ConnectionsClientGetConnectionOptions contains the optional parameters for the ConnectionsClient.GetConnection method.
+type ConnectionsClientGetConnectionOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ConnectionsClientGetConnectionRoleAssignmentOptions contains the optional parameters for the ConnectionsClient.GetConnectionRoleAssignment
+// method.
+type ConnectionsClientGetConnectionRoleAssignmentOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ConnectionsClientListConnectionRoleAssignmentsOptions contains the optional parameters for the ConnectionsClient.NewListConnectionRoleAssignmentsPager
+// method.
+type ConnectionsClientListConnectionRoleAssignmentsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// ConnectionsClientListConnectionsOptions contains the optional parameters for the ConnectionsClient.NewListConnectionsPager
+// method.
+type ConnectionsClientListConnectionsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// ConnectionsClientListSupportedConnectionTypesOptions contains the optional parameters for the ConnectionsClient.NewListSupportedConnectionTypesPager
+// method.
+type ConnectionsClientListSupportedConnectionTypesOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+
+	// The gateway to list supported connection types. If omitted, the API lists supported connection types in the cloud.
+	GatewayID *string
+
+	// Setting that controls whether to show all creation methods. True - Show all creation methods, False - Show only recommended
+	// creation methods.
+	ShowAllCreationMethods *bool
+}
+
+// ConnectionsClientUpdateConnectionOptions contains the optional parameters for the ConnectionsClient.UpdateConnection method.
+type ConnectionsClientUpdateConnectionOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ConnectionsClientUpdateConnectionRoleAssignmentOptions contains the optional parameters for the ConnectionsClient.UpdateConnectionRoleAssignment
+// method.
+type ConnectionsClientUpdateConnectionRoleAssignmentOptions struct {
+	// placeholder for future optional parameters
+}
+
 // DeploymentPipelinesClientBeginDeployStageContentOptions contains the optional parameters for the DeploymentPipelinesClient.BeginDeployStageContent
 // method.
 type DeploymentPipelinesClientBeginDeployStageContentOptions struct {
@@ -69,6 +141,78 @@ type ExternalDataSharesClientListExternalDataSharesInItemOptions struct {
 // ExternalDataSharesClientRevokeExternalDataShareOptions contains the optional parameters for the ExternalDataSharesClient.RevokeExternalDataShare
 // method.
 type ExternalDataSharesClientRevokeExternalDataShareOptions struct {
+	// placeholder for future optional parameters
+}
+
+// GatewaysClientAddGatewayRoleAssignmentOptions contains the optional parameters for the GatewaysClient.AddGatewayRoleAssignment
+// method.
+type GatewaysClientAddGatewayRoleAssignmentOptions struct {
+	// placeholder for future optional parameters
+}
+
+// GatewaysClientCreateGatewayOptions contains the optional parameters for the GatewaysClient.CreateGateway method.
+type GatewaysClientCreateGatewayOptions struct {
+	// placeholder for future optional parameters
+}
+
+// GatewaysClientDeleteGatewayMemberOptions contains the optional parameters for the GatewaysClient.DeleteGatewayMember method.
+type GatewaysClientDeleteGatewayMemberOptions struct {
+	// placeholder for future optional parameters
+}
+
+// GatewaysClientDeleteGatewayOptions contains the optional parameters for the GatewaysClient.DeleteGateway method.
+type GatewaysClientDeleteGatewayOptions struct {
+	// placeholder for future optional parameters
+}
+
+// GatewaysClientDeleteGatewayRoleAssignmentOptions contains the optional parameters for the GatewaysClient.DeleteGatewayRoleAssignment
+// method.
+type GatewaysClientDeleteGatewayRoleAssignmentOptions struct {
+	// placeholder for future optional parameters
+}
+
+// GatewaysClientGetGatewayOptions contains the optional parameters for the GatewaysClient.GetGateway method.
+type GatewaysClientGetGatewayOptions struct {
+	// placeholder for future optional parameters
+}
+
+// GatewaysClientGetGatewayRoleAssignmentOptions contains the optional parameters for the GatewaysClient.GetGatewayRoleAssignment
+// method.
+type GatewaysClientGetGatewayRoleAssignmentOptions struct {
+	// placeholder for future optional parameters
+}
+
+// GatewaysClientListGatewayMembersOptions contains the optional parameters for the GatewaysClient.ListGatewayMembers method.
+type GatewaysClientListGatewayMembersOptions struct {
+	// placeholder for future optional parameters
+}
+
+// GatewaysClientListGatewayRoleAssignmentsOptions contains the optional parameters for the GatewaysClient.NewListGatewayRoleAssignmentsPager
+// method.
+type GatewaysClientListGatewayRoleAssignmentsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// GatewaysClientListGatewaysOptions contains the optional parameters for the GatewaysClient.NewListGatewaysPager method.
+type GatewaysClientListGatewaysOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// GatewaysClientUpdateGatewayMemberOptions contains the optional parameters for the GatewaysClient.UpdateGatewayMember method.
+type GatewaysClientUpdateGatewayMemberOptions struct {
+	// placeholder for future optional parameters
+}
+
+// GatewaysClientUpdateGatewayOptions contains the optional parameters for the GatewaysClient.UpdateGateway method.
+type GatewaysClientUpdateGatewayOptions struct {
+	// placeholder for future optional parameters
+}
+
+// GatewaysClientUpdateGatewayRoleAssignmentOptions contains the optional parameters for the GatewaysClient.UpdateGatewayRoleAssignment
+// method.
+type GatewaysClientUpdateGatewayRoleAssignmentOptions struct {
 	// placeholder for future optional parameters
 }
 

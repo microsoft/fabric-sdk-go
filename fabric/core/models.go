@@ -8,6 +8,24 @@ package core
 
 import "time"
 
+// AddConnectionRoleAssignmentRequest - The add connection role assignment request for a principal.
+type AddConnectionRoleAssignmentRequest struct {
+	// REQUIRED; The principal.
+	Principal *Principal
+
+	// REQUIRED; The connection role of the principal.
+	Role *ConnectionRole
+}
+
+// AddGatewayRoleAssignmentRequest - The add gateway role assignment request for a principal.
+type AddGatewayRoleAssignmentRequest struct {
+	// REQUIRED; The principal.
+	Principal *Principal
+
+	// REQUIRED; The gateway role of the principal.
+	Role *GatewayRole
+}
+
 // AddWorkspaceRoleAssignmentRequest - Add workspace role assignment request payload.
 type AddWorkspaceRoleAssignmentRequest struct {
 	// REQUIRED; The principal.
@@ -52,6 +70,19 @@ type AmazonS3 struct {
 
 	// Specifies a target folder or subfolder within the S3 bucket.
 	Subpath *string
+}
+
+// AnonymousCredentials - Credentials for Anonymous CredentialType.
+type AnonymousCredentials struct {
+	// REQUIRED; The credential type of the connection.
+	CredentialType *CredentialType
+}
+
+// GetCredentials implements the CredentialsClassification interface for type AnonymousCredentials.
+func (a *AnonymousCredentials) GetCredentials() *Credentials {
+	return &Credentials{
+		CredentialType: a.CredentialType,
+	}
 }
 
 // AssignWorkspaceToCapacityRequest - A capacity assignment request.
@@ -115,6 +146,25 @@ func (a *AzureDevOpsDetails) GetGitProviderDetails() *GitProviderDetails {
 		DirectoryName:   a.DirectoryName,
 		GitProviderType: a.GitProviderType,
 		RepositoryName:  a.RepositoryName,
+	}
+}
+
+// BasicCredentials - Credentials for Basic CredentialType.
+type BasicCredentials struct {
+	// REQUIRED; The credential type of the connection.
+	CredentialType *CredentialType
+
+	// REQUIRED; The password.
+	Password *string
+
+	// REQUIRED; The username.
+	Username *string
+}
+
+// GetCredentials implements the CredentialsClassification interface for type BasicCredentials.
+func (b *BasicCredentials) GetCredentials() *Credentials {
+	return &Credentials{
+		CredentialType: b.CredentialType,
 	}
 }
 
@@ -195,6 +245,268 @@ func (c *ConfiguredConnectionGitCredentialsResponse) GetGitCredentialsConfigurat
 	}
 }
 
+type Connection struct {
+	// REQUIRED; The connection details of the connection.
+	ConnectionDetails *ListConnectionDetails
+
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// REQUIRED; The object ID of the connection.
+	ID *string
+
+	// REQUIRED; The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+
+	// The credential details of the connection.
+	CredentialDetails *ListCredentialDetails
+
+	// The display name of the connection.
+	DisplayName *string
+
+	// The gateway object ID of the connection.
+	GatewayID *string
+}
+
+type ConnectionCreationMetadata struct {
+	// REQUIRED; A list of creation methods for the connection.
+	CreationMethods []ConnectionCreationMethod
+
+	// REQUIRED; A list of connection encryption values that the connection supports.
+	SupportedConnectionEncryptionTypes []ConnectionEncryption
+
+	// REQUIRED; A list of credential type values that the connection supports.
+	SupportedCredentialTypes []CredentialType
+
+	// REQUIRED; Whether the connection type supports skip test connection. True - The connection type supports skip test connection,
+	// False - The connection type does not support skip test connection.
+	SupportsSkipTestConnection *bool
+
+	// REQUIRED; The type of the connection.
+	Type *string
+}
+
+type ConnectionCreationMethod struct {
+	// REQUIRED; The name of the creation method.
+	Name *string
+
+	// REQUIRED; A list of creation method parameters for the connection.
+	Parameters []ConnectionCreationParameter
+}
+
+type ConnectionCreationParameter struct {
+	// REQUIRED; The data type of the connection creation parameter.
+	DataType *DataType
+
+	// REQUIRED; The name of the connection creation parameter.
+	Name *string
+
+	// REQUIRED; Whether the connection creation parameter is required. True - The connection creation parameter is required,
+	// False - The connection creation parameter is not required.
+	Required *bool
+
+	// A list of allowed values for the connection creation parameter.
+	AllowedValues []string
+}
+
+// ConnectionDetailsBooleanParameter - ConnectionDetailsParameter for boolean dataType.
+type ConnectionDetailsBooleanParameter struct {
+	// REQUIRED; The data type of the parameter.
+	DataType *DataType
+
+	// REQUIRED; The name of the parameter.
+	Name *string
+
+	// REQUIRED; The boolean value.
+	Value *bool
+}
+
+// GetConnectionDetailsParameter implements the ConnectionDetailsParameterClassification interface for type ConnectionDetailsBooleanParameter.
+func (c *ConnectionDetailsBooleanParameter) GetConnectionDetailsParameter() *ConnectionDetailsParameter {
+	return &ConnectionDetailsParameter{
+		DataType: c.DataType,
+		Name:     c.Name,
+	}
+}
+
+// ConnectionDetailsDateParameter - ConnectionDetailsParameter for date dataType.
+type ConnectionDetailsDateParameter struct {
+	// REQUIRED; The data type of the parameter.
+	DataType *DataType
+
+	// REQUIRED; The name of the parameter.
+	Name *string
+
+	// REQUIRED; The date value using YYYY-MM-DD format.
+	Value *time.Time
+}
+
+// GetConnectionDetailsParameter implements the ConnectionDetailsParameterClassification interface for type ConnectionDetailsDateParameter.
+func (c *ConnectionDetailsDateParameter) GetConnectionDetailsParameter() *ConnectionDetailsParameter {
+	return &ConnectionDetailsParameter{
+		DataType: c.DataType,
+		Name:     c.Name,
+	}
+}
+
+// ConnectionDetailsDateTimeParameter - ConnectionDetailsParameter for dateTime dataType.
+type ConnectionDetailsDateTimeParameter struct {
+	// REQUIRED; The data type of the parameter.
+	DataType *DataType
+
+	// REQUIRED; The name of the parameter.
+	Name *string
+
+	// REQUIRED; The date time value using YYYY-MM-DDTHH:mm:ss.FFFZ format.
+	Value *time.Time
+}
+
+// GetConnectionDetailsParameter implements the ConnectionDetailsParameterClassification interface for type ConnectionDetailsDateTimeParameter.
+func (c *ConnectionDetailsDateTimeParameter) GetConnectionDetailsParameter() *ConnectionDetailsParameter {
+	return &ConnectionDetailsParameter{
+		DataType: c.DataType,
+		Name:     c.Name,
+	}
+}
+
+// ConnectionDetailsDateTimeZoneParameter - ConnectionDetailsParameter for dateTimeZone dataType.
+type ConnectionDetailsDateTimeZoneParameter struct {
+	// REQUIRED; The data type of the parameter.
+	DataType *DataType
+
+	// REQUIRED; The name of the parameter.
+	Name *string
+
+	// REQUIRED; The date time zone value using YYYY-MM-DDTHH:mm:ss.FFF±hh:mm format.
+	Value *string
+}
+
+// GetConnectionDetailsParameter implements the ConnectionDetailsParameterClassification interface for type ConnectionDetailsDateTimeZoneParameter.
+func (c *ConnectionDetailsDateTimeZoneParameter) GetConnectionDetailsParameter() *ConnectionDetailsParameter {
+	return &ConnectionDetailsParameter{
+		DataType: c.DataType,
+		Name:     c.Name,
+	}
+}
+
+// ConnectionDetailsDurationParameter - ConnectionDetailsParameter for duration dataType.
+type ConnectionDetailsDurationParameter struct {
+	// REQUIRED; The data type of the parameter.
+	DataType *DataType
+
+	// REQUIRED; The name of the parameter.
+	Name *string
+
+	// REQUIRED; The duration value using [-]P(n)DT(n)H(n)M(n)S format. For example: P3DT4H30M10S (for 3 days, 4 hours, 30 minutes,
+	// and 10 seconds).
+	Value *string
+}
+
+// GetConnectionDetailsParameter implements the ConnectionDetailsParameterClassification interface for type ConnectionDetailsDurationParameter.
+func (c *ConnectionDetailsDurationParameter) GetConnectionDetailsParameter() *ConnectionDetailsParameter {
+	return &ConnectionDetailsParameter{
+		DataType: c.DataType,
+		Name:     c.Name,
+	}
+}
+
+// ConnectionDetailsNumberParameter - ConnectionDetailsParameter for number dataType.
+type ConnectionDetailsNumberParameter struct {
+	// REQUIRED; The data type of the parameter.
+	DataType *DataType
+
+	// REQUIRED; The name of the parameter.
+	Name *string
+
+	// REQUIRED; The number value.
+	Value *float32
+}
+
+// GetConnectionDetailsParameter implements the ConnectionDetailsParameterClassification interface for type ConnectionDetailsNumberParameter.
+func (c *ConnectionDetailsNumberParameter) GetConnectionDetailsParameter() *ConnectionDetailsParameter {
+	return &ConnectionDetailsParameter{
+		DataType: c.DataType,
+		Name:     c.Name,
+	}
+}
+
+// ConnectionDetailsParameter - The base object of ConnectionDetailsParameter.
+type ConnectionDetailsParameter struct {
+	// REQUIRED; The data type of the parameter.
+	DataType *DataType
+
+	// REQUIRED; The name of the parameter.
+	Name *string
+}
+
+// GetConnectionDetailsParameter implements the ConnectionDetailsParameterClassification interface for type ConnectionDetailsParameter.
+func (c *ConnectionDetailsParameter) GetConnectionDetailsParameter() *ConnectionDetailsParameter {
+	return c
+}
+
+// ConnectionDetailsTextParameter - ConnectionDetailsParameter for text dataType.
+type ConnectionDetailsTextParameter struct {
+	// REQUIRED; The data type of the parameter.
+	DataType *DataType
+
+	// REQUIRED; The name of the parameter.
+	Name *string
+
+	// REQUIRED; The text value.
+	Value *string
+}
+
+// GetConnectionDetailsParameter implements the ConnectionDetailsParameterClassification interface for type ConnectionDetailsTextParameter.
+func (c *ConnectionDetailsTextParameter) GetConnectionDetailsParameter() *ConnectionDetailsParameter {
+	return &ConnectionDetailsParameter{
+		DataType: c.DataType,
+		Name:     c.Name,
+	}
+}
+
+// ConnectionDetailsTimeParameter - ConnectionDetailsParameter for time dataType.
+type ConnectionDetailsTimeParameter struct {
+	// REQUIRED; The data type of the parameter.
+	DataType *DataType
+
+	// REQUIRED; The name of the parameter.
+	Name *string
+
+	// REQUIRED; The time value using HH:mm:ss.FFFZ format.
+	Value *time.Time
+}
+
+// GetConnectionDetailsParameter implements the ConnectionDetailsParameterClassification interface for type ConnectionDetailsTimeParameter.
+func (c *ConnectionDetailsTimeParameter) GetConnectionDetailsParameter() *ConnectionDetailsParameter {
+	return &ConnectionDetailsParameter{
+		DataType: c.DataType,
+		Name:     c.Name,
+	}
+}
+
+// ConnectionRoleAssignment - The connection role assignment for a principal.
+type ConnectionRoleAssignment struct {
+	// REQUIRED; The object ID of the connection role assignment.
+	ID *string
+
+	// REQUIRED; The principal.
+	Principal *Principal
+
+	// REQUIRED; The connection role of the principal.
+	Role *ConnectionRole
+}
+
+type ConnectionRoleAssignments struct {
+	// REQUIRED; A list of connection role assignments.
+	Value []ConnectionRoleAssignment
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
 // CreatableShortcutTarget - An object that contains the target datasource, and must specify exactly one of the supported
 // destinations as described in the table below.
 type CreatableShortcutTarget struct {
@@ -217,6 +529,79 @@ type CreatableShortcutTarget struct {
 	S3Compatible *S3Compatible
 }
 
+type CreateCloudConnectionRequest struct {
+	// REQUIRED; The connection details of the connection.
+	ConnectionDetails *CreateConnectionDetails
+
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// REQUIRED; The credential details of the connection.
+	CredentialDetails *CreateCredentialDetails
+
+	// REQUIRED; The display name of the connection. Maximum length is 200 characters.
+	DisplayName *string
+
+	// REQUIRED; The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+}
+
+// GetCreateConnectionRequest implements the CreateConnectionRequestClassification interface for type CreateCloudConnectionRequest.
+func (c *CreateCloudConnectionRequest) GetCreateConnectionRequest() *CreateConnectionRequest {
+	return &CreateConnectionRequest{
+		ConnectionDetails: c.ConnectionDetails,
+		ConnectivityType:  c.ConnectivityType,
+		DisplayName:       c.DisplayName,
+		PrivacyLevel:      c.PrivacyLevel,
+	}
+}
+
+// CreateConnectionDetails - The connection details input for create operations.
+type CreateConnectionDetails struct {
+	// REQUIRED; The creation method used to create the connection.
+	CreationMethod *string
+
+	// REQUIRED; The list of connection parameters.
+	Parameters []ConnectionDetailsParameterClassification
+
+	// REQUIRED; The type of the connection.
+	Type *string
+}
+
+// CreateConnectionRequest - The base object of create connection request.
+type CreateConnectionRequest struct {
+	// REQUIRED; The connection details of the connection.
+	ConnectionDetails *CreateConnectionDetails
+
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// REQUIRED; The display name of the connection. Maximum length is 200 characters.
+	DisplayName *string
+
+	// REQUIRED; The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+}
+
+// GetCreateConnectionRequest implements the CreateConnectionRequestClassification interface for type CreateConnectionRequest.
+func (c *CreateConnectionRequest) GetCreateConnectionRequest() *CreateConnectionRequest { return c }
+
+// CreateCredentialDetails - The credential details input for creating a connection.
+type CreateCredentialDetails struct {
+	// REQUIRED; The credentials of the connection.
+	Credentials CredentialsClassification
+
+	// The connection encryption setting that is used during the test connection.
+	ConnectionEncryption *ConnectionEncryption
+
+	// The single sign-on type of the connection.
+	SingleSignOnType *SingleSignOnType
+
+	// Whether the connection should skip the test connection during creation and update. True - Skip the test connection, False
+	// - Do not skip the test connection.
+	SkipTestConnection *bool
+}
+
 // CreateExternalDataShareRequest - The request payload for creating an external data share.
 type CreateExternalDataShareRequest struct {
 	// REQUIRED; The path or list of paths that are to be externally shared. Currently, only a single path is supported.
@@ -225,6 +610,15 @@ type CreateExternalDataShareRequest struct {
 	// REQUIRED; The recipient who is invited to accept the external data share.
 	Recipient *ExternalDataShareRecipient
 }
+
+// CreateGatewayRequest - The base object of create gateway request.
+type CreateGatewayRequest struct {
+	// REQUIRED; The type of the gateway.
+	Type *GatewayType
+}
+
+// GetCreateGatewayRequest implements the CreateGatewayRequestClassification interface for type CreateGatewayRequest.
+func (c *CreateGatewayRequest) GetCreateGatewayRequest() *CreateGatewayRequest { return c }
 
 // CreateItemRequest - Create item request payload.
 type CreateItemRequest struct {
@@ -257,6 +651,52 @@ type CreateManagedPrivateEndpointRequest struct {
 
 	// Message to approve private endpoint request. Should not be more than 140 characters.
 	RequestMessage *string
+}
+
+type CreateOnPremisesConnectionRequest struct {
+	// REQUIRED; The connection details of the connection.
+	ConnectionDetails *CreateConnectionDetails
+
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// REQUIRED; The credential details of the connection.
+	CredentialDetails *CreateOnPremisesCredentialDetails
+
+	// REQUIRED; The display name of the connection. Maximum length is 200 characters.
+	DisplayName *string
+
+	// REQUIRED; The object ID of the primary gateway of the on-premises gateway that the connection is created under.
+	GatewayID *string
+
+	// REQUIRED; The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+}
+
+// GetCreateConnectionRequest implements the CreateConnectionRequestClassification interface for type CreateOnPremisesConnectionRequest.
+func (c *CreateOnPremisesConnectionRequest) GetCreateConnectionRequest() *CreateConnectionRequest {
+	return &CreateConnectionRequest{
+		ConnectionDetails: c.ConnectionDetails,
+		ConnectivityType:  c.ConnectivityType,
+		DisplayName:       c.DisplayName,
+		PrivacyLevel:      c.PrivacyLevel,
+	}
+}
+
+// CreateOnPremisesCredentialDetails - The credential details input for creating an on-premises gateway connection.
+type CreateOnPremisesCredentialDetails struct {
+	// REQUIRED; The credentials of the connection.
+	Credentials *OnPremisesGatewayCredentials
+
+	// The connection encryption setting that is used during the test connection.
+	ConnectionEncryption *ConnectionEncryption
+
+	// The single sign-on type of the connection.
+	SingleSignOnType *SingleSignOnType
+
+	// Whether the connection should skip the test connection during creation and update. True - Skip the test connection, False
+	// - Do not skip the test connection.
+	SkipTestConnection *bool
 }
 
 // CreateOrUpdateDataAccessRolesRequest - Contains definition of Roles that are used to manage data access security and ensure
@@ -294,6 +734,64 @@ type CreateShortcutRequest struct {
 	Target *CreatableShortcutTarget
 }
 
+type CreateVirtualNetworkGatewayConnectionRequest struct {
+	// REQUIRED; The connection details of the connection.
+	ConnectionDetails *CreateConnectionDetails
+
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// REQUIRED; The credential details of the connection.
+	CredentialDetails *CreateCredentialDetails
+
+	// REQUIRED; The display name of the connection. Maximum length is 200 characters.
+	DisplayName *string
+
+	// REQUIRED; The object ID of the virtual network gateway that the connection is created under.
+	GatewayID *string
+
+	// REQUIRED; The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+}
+
+// GetCreateConnectionRequest implements the CreateConnectionRequestClassification interface for type CreateVirtualNetworkGatewayConnectionRequest.
+func (c *CreateVirtualNetworkGatewayConnectionRequest) GetCreateConnectionRequest() *CreateConnectionRequest {
+	return &CreateConnectionRequest{
+		ConnectionDetails: c.ConnectionDetails,
+		ConnectivityType:  c.ConnectivityType,
+		DisplayName:       c.DisplayName,
+		PrivacyLevel:      c.PrivacyLevel,
+	}
+}
+
+type CreateVirtualNetworkGatewayRequest struct {
+	// REQUIRED; The object ID of the Fabric license capacity.
+	CapacityID *string
+
+	// REQUIRED; The display name of the virtual network gateway. Maximum length is 200 characters.
+	DisplayName *string
+
+	// REQUIRED; The minutes of inactivity before the virtual network gateway goes into auto-sleep. Must be one of the following
+	// values: 30, 60, 90, 120, 150, 240, 360, 480, 720, 1440.
+	InactivityMinutesBeforeSleep *int32
+
+	// REQUIRED; The number of member gateways. A number between 1 and 7.
+	NumberOfMemberGateways *int32
+
+	// REQUIRED; The type of the gateway.
+	Type *GatewayType
+
+	// REQUIRED; The Azure virtual network resource.
+	VirtualNetworkAzureResource *VirtualNetworkAzureResource
+}
+
+// GetCreateGatewayRequest implements the CreateGatewayRequestClassification interface for type CreateVirtualNetworkGatewayRequest.
+func (c *CreateVirtualNetworkGatewayRequest) GetCreateGatewayRequest() *CreateGatewayRequest {
+	return &CreateGatewayRequest{
+		Type: c.Type,
+	}
+}
+
 // CreateWorkspaceRequest - Create workspace request payload.
 type CreateWorkspaceRequest struct {
 	// REQUIRED; The workspace display name.
@@ -309,6 +807,15 @@ type CreateWorkspaceRequest struct {
 	// The description cannot contain more than 4000 characters.
 	Description *string
 }
+
+// Credentials - The base object of credentials.
+type Credentials struct {
+	// REQUIRED; The credential type of the connection.
+	CredentialType *CredentialType
+}
+
+// GetCredentials implements the CredentialsClassification interface for type Credentials.
+func (c *Credentials) GetCredentials() *Credentials { return c }
 
 type CronScheduleConfig struct {
 	// REQUIRED; The end time for this schedule. The end time must be later than the start time.
@@ -775,6 +1282,41 @@ type FabricItemMember struct {
 	SourcePath *string
 }
 
+// Gateway - The base object of gateway.
+type Gateway struct {
+	// REQUIRED; The object ID of the gateway.
+	ID *string
+
+	// REQUIRED; The type of the gateway.
+	Type *GatewayType
+}
+
+// GetGateway implements the GatewayClassification interface for type Gateway.
+func (g *Gateway) GetGateway() *Gateway { return g }
+
+// GatewayRoleAssignment - The gateway role assignment for a principal.
+type GatewayRoleAssignment struct {
+	// REQUIRED; The object ID of the gateway role assignment.
+	ID *string
+
+	// REQUIRED; The principal.
+	Principal *Principal
+
+	// REQUIRED; The gateway role of the principal.
+	Role *GatewayRole
+}
+
+type GatewayRoleAssignments struct {
+	// REQUIRED; A list of gateway role assignments.
+	Value []GatewayRoleAssignment
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
 // GitConnectRequest - Contains the Git connect request data.
 type GitConnectRequest struct {
 	// REQUIRED; The Git provider details.
@@ -1123,6 +1665,22 @@ type Items struct {
 	ContinuationURI *string
 }
 
+// KeyCredentials - Credentials for Key CredentialType.
+type KeyCredentials struct {
+	// REQUIRED; The credential type of the connection.
+	CredentialType *CredentialType
+
+	// REQUIRED; The key.
+	Key *string
+}
+
+// GetCredentials implements the CredentialsClassification interface for type KeyCredentials.
+func (k *KeyCredentials) GetCredentials() *Credentials {
+	return &Credentials{
+		CredentialType: k.CredentialType,
+	}
+}
+
 // ListConnectionDetails - The connection details output for list operations.
 type ListConnectionDetails struct {
 	// REQUIRED; The path of the connection.
@@ -1130,6 +1688,66 @@ type ListConnectionDetails struct {
 
 	// REQUIRED; The type of the connection.
 	Type *string
+}
+
+type ListConnectionsResponse struct {
+	// REQUIRED; A list of connections returned.
+	Value []Connection
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
+// ListCredentialDetails - The credential details returned when fetching a connection.
+type ListCredentialDetails struct {
+	// The connection encryption setting that is used during the test connection.
+	ConnectionEncryption *ConnectionEncryption
+
+	// The credential type of the connection.
+	CredentialType *CredentialType
+
+	// The single sign-on type of the connection.
+	SingleSignOnType *SingleSignOnType
+
+	// Whether the connection should skip the test connection during creation and update. True - Skip the test connection, False
+	// - Do not skip the test connection.
+	SkipTestConnection *bool
+}
+
+type ListGatewayMembersResponse struct {
+	// REQUIRED; A list of gateway cluster members returned.
+	Value []OnPremisesGatewayMember
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
+type ListGatewaysResponse struct {
+	// REQUIRED; A list of gateways returned.
+	Value []GatewayClassification
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
+type ListSupportedConnectionTypesResponse struct {
+	// REQUIRED; A list of supported connection types returned.
+	Value []ConnectionCreationMetadata
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
 }
 
 // ManagedPrivateEndpoint - Managed private endpoint.
@@ -1197,6 +1815,129 @@ type NoneGitCredentialsResponse struct {
 func (n *NoneGitCredentialsResponse) GetGitCredentialsConfigurationResponse() *GitCredentialsConfigurationResponse {
 	return &GitCredentialsConfigurationResponse{
 		Source: n.Source,
+	}
+}
+
+// OnPremisesCredentialEntry - A gateway ID and its encrypted serialized credentials.
+type OnPremisesCredentialEntry struct {
+	// REQUIRED; The encrypted serialized .json of the list of name value pairs. Name is a credential name and value is a credential
+	// value. Encryption is performed using the Rivest-Shamir-Adleman (RSA) encryption
+	// algorithm with the on-premises gateway member's public key.
+	EncryptedCredentials *string
+
+	// REQUIRED; The object ID of the gateway.
+	GatewayID *string
+}
+
+type OnPremisesGateway struct {
+	// REQUIRED; Whether to allow cloud connections to refresh through this on-premises gateway. True - Allow, False - Do not
+	// allow.
+	AllowCloudConnectionRefresh *bool
+
+	// REQUIRED; Whether to allow custom connectors to be used with this on-premises gateway. True - Allow, False - Do not allow.
+	AllowCustomConnectors *bool
+
+	// REQUIRED; The display name of the on-premises gateway.
+	DisplayName *string
+
+	// REQUIRED; The object ID of the gateway.
+	ID *string
+
+	// REQUIRED; The load balancing setting of the on-premises gateway.
+	LoadBalancingSetting *LoadBalancingSetting
+
+	// REQUIRED; The number of gateway members in the on-premises gateway.
+	NumberOfMemberGateways *int32
+
+	// REQUIRED; The public key of the primary gateway member. Used to encrypt the credentials for creating and updating connections.
+	PublicKey *PublicKey
+
+	// REQUIRED; The type of the gateway.
+	Type *GatewayType
+
+	// REQUIRED; The version of the installed primary gateway member.
+	Version *string
+}
+
+// GetGateway implements the GatewayClassification interface for type OnPremisesGateway.
+func (o *OnPremisesGateway) GetGateway() *Gateway {
+	return &Gateway{
+		ID:   o.ID,
+		Type: o.Type,
+	}
+}
+
+// OnPremisesGatewayCredentials - Credentials for authenticating through an on-premises gateway.
+type OnPremisesGatewayCredentials struct {
+	// REQUIRED; The credential type of the connection.
+	CredentialType *CredentialType
+
+	// REQUIRED; The credential payload to send to the on-premises gateway.
+	Values []OnPremisesCredentialEntry
+}
+
+// GetCredentials implements the CredentialsClassification interface for type OnPremisesGatewayCredentials.
+func (o *OnPremisesGatewayCredentials) GetCredentials() *Credentials {
+	return &Credentials{
+		CredentialType: o.CredentialType,
+	}
+}
+
+// OnPremisesGatewayMember - The gateway member information.
+type OnPremisesGatewayMember struct {
+	// REQUIRED; The display name of the gateway member.
+	DisplayName *string
+
+	// REQUIRED; Whether the gateway member is enabled. True - Enabled, False - Not enabled.
+	Enabled *bool
+
+	// REQUIRED; The object ID of the gateway member.
+	ID *string
+
+	// REQUIRED; The public key of the gateway member. Used to encrypt the credentials for creating and updating connections.
+	PublicKey *PublicKey
+
+	// REQUIRED; The version of the installed gateway member.
+	Version *string
+}
+
+type OnPremisesGatewayPersonal struct {
+	// REQUIRED; The object ID of the gateway.
+	ID *string
+
+	// REQUIRED; The public key of the gateway. Used to encrypt the credentials for creating and updating connections.
+	PublicKey *PublicKey
+
+	// REQUIRED; The type of the gateway.
+	Type *GatewayType
+
+	// REQUIRED; The version of the gateway.
+	Version *string
+}
+
+// GetGateway implements the GatewayClassification interface for type OnPremisesGatewayPersonal.
+func (o *OnPremisesGatewayPersonal) GetGateway() *Gateway {
+	return &Gateway{
+		ID:   o.ID,
+		Type: o.Type,
+	}
+}
+
+// OnPremisesGatewayPersonalCredentials - Credentials for authenticating through an on-premises gateway (personal mode).
+type OnPremisesGatewayPersonalCredentials struct {
+	// REQUIRED; The credential type of the connection.
+	CredentialType *CredentialType
+
+	// REQUIRED; The encrypted serialized .json of the list of name value pairs. Name is a credential name and value is a credential
+	// value. Encryption is performed using the Rivest-Shamir-Adleman (RSA) encryption
+	// algorithm with the on-premises gateway's public key.
+	EncryptedCredentials *string
+}
+
+// GetCredentials implements the CredentialsClassification interface for type OnPremisesGatewayPersonalCredentials.
+func (o *OnPremisesGatewayPersonalCredentials) GetCredentials() *Credentials {
+	return &Credentials{
+		CredentialType: o.CredentialType,
 	}
 }
 
@@ -1334,6 +2075,15 @@ type PrivateEndpointConnectionState struct {
 	Status *ConnectionStatus
 }
 
+// PublicKey - The public key of the on-premises gateway.
+type PublicKey struct {
+	// REQUIRED; The exponent of the public key.
+	Exponent *string
+
+	// REQUIRED; The modulus of the public key.
+	Modulus *string
+}
+
 // RunOnDemandItemJobRequest - Run on demand item job instance payload
 type RunOnDemandItemJobRequest struct {
 	// Payload for run on-demand job request. Needed only if the job type requires a payload.
@@ -1375,6 +2125,44 @@ type ScheduleConfig struct {
 
 // GetScheduleConfig implements the ScheduleConfigClassification interface for type ScheduleConfig.
 func (s *ScheduleConfig) GetScheduleConfig() *ScheduleConfig { return s }
+
+// ServicePrincipalCredentials - Credentials for ServicePrincipal CredentialType.
+type ServicePrincipalCredentials struct {
+	// REQUIRED; The credential type of the connection.
+	CredentialType *CredentialType
+
+	// REQUIRED; The client ID of the service principal.
+	ServicePrincipalClientID *string
+
+	// REQUIRED; The secret of the service principal.
+	ServicePrincipalSecret *string
+
+	// REQUIRED; The tenant ID of the service principal.
+	TenantID *string
+}
+
+// GetCredentials implements the CredentialsClassification interface for type ServicePrincipalCredentials.
+func (s *ServicePrincipalCredentials) GetCredentials() *Credentials {
+	return &Credentials{
+		CredentialType: s.CredentialType,
+	}
+}
+
+// SharedAccessSignatureCredentials - Credentials for SharedAccessSignature CredentialType.
+type SharedAccessSignatureCredentials struct {
+	// REQUIRED; The credential type of the connection.
+	CredentialType *CredentialType
+
+	// REQUIRED; The token.
+	Token *string
+}
+
+// GetCredentials implements the CredentialsClassification interface for type SharedAccessSignatureCredentials.
+func (s *SharedAccessSignatureCredentials) GetCredentials() *Credentials {
+	return &Credentials{
+		CredentialType: s.CredentialType,
+	}
+}
 
 // Shortcut - An object representing a reference that points to other storage locations which can be internal or external
 // to OneLake. Shortcut is defined by name, path where the shortcut is created and target
@@ -1429,6 +2217,40 @@ type Target struct {
 	S3Compatible *S3Compatible
 }
 
+// UpdateConnectionRequest - The base object of update connection request.
+type UpdateConnectionRequest struct {
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+}
+
+// GetUpdateConnectionRequest implements the UpdateConnectionRequestClassification interface for type UpdateConnectionRequest.
+func (u *UpdateConnectionRequest) GetUpdateConnectionRequest() *UpdateConnectionRequest { return u }
+
+// UpdateConnectionRoleAssignmentRequest - An update connection role assignment request payload.
+type UpdateConnectionRoleAssignmentRequest struct {
+	// REQUIRED; The connection role of the principal.
+	Role *ConnectionRole
+}
+
+// UpdateCredentialDetails - The credential details input for updating a connection.
+type UpdateCredentialDetails struct {
+	// The connection encryption setting that is used during the test connection.
+	ConnectionEncryption *ConnectionEncryption
+
+	// The credentials of the connection.
+	Credentials CredentialsClassification
+
+	// The single sign-on type of the connection.
+	SingleSignOnType *SingleSignOnType
+
+	// Whether the connection should skip the test connection during creation and update. True - Skip the test connection, False
+	// - Do not skip the test connection.
+	SkipTestConnection *bool
+}
+
 // UpdateFromGitRequest - Contains the update from Git request data.
 type UpdateFromGitRequest struct {
 	// REQUIRED; Remote full SHA commit hash.
@@ -1445,6 +2267,32 @@ type UpdateFromGitRequest struct {
 	// the system will validate that the given value is aligned with the head known to
 	// the system.
 	WorkspaceHead *string
+}
+
+type UpdateGatewayMemberRequest struct {
+	// The display name of the gateway member. Maximum length is 200 characters.
+	DisplayName *string
+
+	// Whether the gateway member is enabled. True - Enabled, False - Not enabled.
+	Enabled *bool
+}
+
+// UpdateGatewayRequest - The base object of update gateway request.
+type UpdateGatewayRequest struct {
+	// REQUIRED; The type of the gateway.
+	Type *GatewayType
+
+	// The name of the gateway. Maximum length is 200 characters.
+	DisplayName *string
+}
+
+// GetUpdateGatewayRequest implements the UpdateGatewayRequestClassification interface for type UpdateGatewayRequest.
+func (u *UpdateGatewayRequest) GetUpdateGatewayRequest() *UpdateGatewayRequest { return u }
+
+// UpdateGatewayRoleAssignmentRequest - An update gateway role assignment request payload.
+type UpdateGatewayRoleAssignmentRequest struct {
+	// REQUIRED; The gateway role of the principal.
+	Role *GatewayRole
 }
 
 // UpdateGitCredentialsRequest - Contains the request data to update the Git credentials configuration.
@@ -1516,12 +2364,129 @@ type UpdateItemRequest struct {
 	DisplayName *string
 }
 
+type UpdateOnPremisesGatewayConnectionRequest struct {
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// The credential details of the connection.
+	CredentialDetails *UpdateOnPremisesGatewayCredentialDetails
+
+	// The display name of the connection. Maximum length is 200 characters.
+	DisplayName *string
+
+	// The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+}
+
+// GetUpdateConnectionRequest implements the UpdateConnectionRequestClassification interface for type UpdateOnPremisesGatewayConnectionRequest.
+func (u *UpdateOnPremisesGatewayConnectionRequest) GetUpdateConnectionRequest() *UpdateConnectionRequest {
+	return &UpdateConnectionRequest{
+		ConnectivityType: u.ConnectivityType,
+		PrivacyLevel:     u.PrivacyLevel,
+	}
+}
+
+// UpdateOnPremisesGatewayCredentialDetails - The credential details input for updating an on-premises gateway connection.
+type UpdateOnPremisesGatewayCredentialDetails struct {
+	// The connection encryption setting that is used during the test connection.
+	ConnectionEncryption *ConnectionEncryption
+
+	// The credentials of the connection.
+	Credentials *OnPremisesGatewayCredentials
+
+	// The single sign-on type of the connection.
+	SingleSignOnType *SingleSignOnType
+
+	// Whether the connection should skip the test connection during creation and update. True - Skip the test connection, False
+	// - Do not skip the test connection.
+	SkipTestConnection *bool
+}
+
+type UpdateOnPremisesGatewayPersonalConnectionRequest struct {
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// The credential details of the connection.
+	CredentialDetails *UpdateOnPremisesGatewayPersonalCredentialDetails
+
+	// The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+}
+
+// GetUpdateConnectionRequest implements the UpdateConnectionRequestClassification interface for type UpdateOnPremisesGatewayPersonalConnectionRequest.
+func (u *UpdateOnPremisesGatewayPersonalConnectionRequest) GetUpdateConnectionRequest() *UpdateConnectionRequest {
+	return &UpdateConnectionRequest{
+		ConnectivityType: u.ConnectivityType,
+		PrivacyLevel:     u.PrivacyLevel,
+	}
+}
+
+// UpdateOnPremisesGatewayPersonalCredentialDetails - The credential details input for updating an on-premises gateway connection.
+type UpdateOnPremisesGatewayPersonalCredentialDetails struct {
+	// The connection encryption setting that is used during the test connection.
+	ConnectionEncryption *ConnectionEncryption
+
+	// The credentials of the connection.
+	Credentials *OnPremisesGatewayPersonalCredentials
+
+	// The single sign-on type of the connection.
+	SingleSignOnType *SingleSignOnType
+
+	// Whether the connection should skip the test connection during creation and update. True - Skip the test connection, False
+	// - Do not skip the test connection.
+	SkipTestConnection *bool
+}
+
+type UpdateOnPremisesGatewayRequest struct {
+	// REQUIRED; The type of the gateway.
+	Type *GatewayType
+
+	// Whether to allow cloud connections to refresh through this on-premises gateway. True - Allow, False - Do not allow.
+	AllowCloudConnectionRefresh *bool
+
+	// Whether to allow custom connectors to be used with this on-premises gateway. True - Allow, False - Do not allow.
+	AllowCustomConnectors *bool
+
+	// The name of the gateway. Maximum length is 200 characters.
+	DisplayName *string
+
+	// The load balancing setting of the on-premises gateway.
+	LoadBalancingSetting *LoadBalancingSetting
+}
+
+// GetUpdateGatewayRequest implements the UpdateGatewayRequestClassification interface for type UpdateOnPremisesGatewayRequest.
+func (u *UpdateOnPremisesGatewayRequest) GetUpdateGatewayRequest() *UpdateGatewayRequest {
+	return &UpdateGatewayRequest{
+		DisplayName: u.DisplayName,
+		Type:        u.Type,
+	}
+}
+
 // UpdateOptions - Contains the options that are enabled for the update from Git.
 type UpdateOptions struct {
 	// User consent to override incoming items during the update from Git process. When incoming items are present and the allow
 	// override items is not specified or is provided as false, the update operation
 	// will not start. Default value is false.
 	AllowOverrideItems *bool
+}
+
+type UpdatePersonalCloudConnectionRequest struct {
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// The credential details of the connection.
+	CredentialDetails *UpdateCredentialDetails
+
+	// The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+}
+
+// GetUpdateConnectionRequest implements the UpdateConnectionRequestClassification interface for type UpdatePersonalCloudConnectionRequest.
+func (u *UpdatePersonalCloudConnectionRequest) GetUpdateConnectionRequest() *UpdateConnectionRequest {
+	return &UpdateConnectionRequest{
+		ConnectivityType: u.ConnectivityType,
+		PrivacyLevel:     u.PrivacyLevel,
+	}
 }
 
 // UpdateScheduleRequest - Update item schedule plan request payload.
@@ -1531,6 +2496,76 @@ type UpdateScheduleRequest struct {
 
 	// REQUIRED; Whether this schedule is enabled. True - Enabled, False - Disabled.
 	Enabled *bool
+}
+
+type UpdateShareableCloudConnectionRequest struct {
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// The credential details of the connection.
+	CredentialDetails *UpdateCredentialDetails
+
+	// The display name of the connection. Maximum length is 200 characters.
+	DisplayName *string
+
+	// The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+}
+
+// GetUpdateConnectionRequest implements the UpdateConnectionRequestClassification interface for type UpdateShareableCloudConnectionRequest.
+func (u *UpdateShareableCloudConnectionRequest) GetUpdateConnectionRequest() *UpdateConnectionRequest {
+	return &UpdateConnectionRequest{
+		ConnectivityType: u.ConnectivityType,
+		PrivacyLevel:     u.PrivacyLevel,
+	}
+}
+
+type UpdateVirtualNetworkGatewayConnectionRequest struct {
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// The credential details of the connection.
+	CredentialDetails *UpdateCredentialDetails
+
+	// The display name of the connection. Maximum length is 200 characters.
+	DisplayName *string
+
+	// The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+}
+
+// GetUpdateConnectionRequest implements the UpdateConnectionRequestClassification interface for type UpdateVirtualNetworkGatewayConnectionRequest.
+func (u *UpdateVirtualNetworkGatewayConnectionRequest) GetUpdateConnectionRequest() *UpdateConnectionRequest {
+	return &UpdateConnectionRequest{
+		ConnectivityType: u.ConnectivityType,
+		PrivacyLevel:     u.PrivacyLevel,
+	}
+}
+
+type UpdateVirtualNetworkGatewayRequest struct {
+	// REQUIRED; The type of the gateway.
+	Type *GatewayType
+
+	// The object ID of the Fabric license capacity.
+	CapacityID *string
+
+	// The name of the gateway. Maximum length is 200 characters.
+	DisplayName *string
+
+	// The minutes of inactivity before the virtual network gateway goes into auto-sleep. Must be one of the following values:
+	// 30, 60, 90, 120, 150, 240, 360, 480, 720, 1440.
+	InactivityMinutesBeforeSleep *int32
+
+	// The number of member gateways. A number between 1 and 7.
+	NumberOfMemberGateways *int32
+}
+
+// GetUpdateGatewayRequest implements the UpdateGatewayRequestClassification interface for type UpdateVirtualNetworkGatewayRequest.
+func (u *UpdateVirtualNetworkGatewayRequest) GetUpdateGatewayRequest() *UpdateGatewayRequest {
+	return &UpdateGatewayRequest{
+		DisplayName: u.DisplayName,
+		Type:        u.Type,
+	}
 }
 
 // UpdateWorkspaceRequest - Update workspace request payload.
@@ -1550,6 +2585,52 @@ type UpdateWorkspaceRequest struct {
 type UpdateWorkspaceRoleAssignmentRequest struct {
 	// REQUIRED; The workspace role of the principal.
 	Role *WorkspaceRole
+}
+
+// VirtualNetworkAzureResource - The properties of a Virtual Network Azure resource
+type VirtualNetworkAzureResource struct {
+	// REQUIRED; The name of the resource group
+	ResourceGroupName *string
+
+	// REQUIRED; The name of the subnet
+	SubnetName *string
+
+	// REQUIRED; The subscription ID
+	SubscriptionID *string
+
+	// REQUIRED; The name of the virtual network
+	VirtualNetworkName *string
+}
+
+type VirtualNetworkGateway struct {
+	// REQUIRED; The display name of the virtual network gateway.
+	DisplayName *string
+
+	// REQUIRED; The object ID of the gateway.
+	ID *string
+
+	// REQUIRED; The minutes of inactivity before the virtual network gateway goes into auto-sleep.
+	InactivityMinutesBeforeSleep *int32
+
+	// REQUIRED; The number of member gateways.
+	NumberOfMemberGateways *int32
+
+	// REQUIRED; The type of the gateway.
+	Type *GatewayType
+
+	// REQUIRED; The Azure virtual network resource.
+	VirtualNetworkAzureResource *VirtualNetworkAzureResource
+
+	// The object ID of the Fabric license capacity.
+	CapacityID *string
+}
+
+// GetGateway implements the GatewayClassification interface for type VirtualNetworkGateway.
+func (v *VirtualNetworkGateway) GetGateway() *Gateway {
+	return &Gateway{
+		ID:   v.ID,
+		Type: v.Type,
+	}
 }
 
 type WeeklyScheduleConfig struct {
@@ -1579,6 +2660,38 @@ func (w *WeeklyScheduleConfig) GetScheduleConfig() *ScheduleConfig {
 		LocalTimeZoneID: w.LocalTimeZoneID,
 		StartDateTime:   w.StartDateTime,
 		Type:            w.Type,
+	}
+}
+
+// WindowsCredentials - Credentials for Windows CredentialType.
+type WindowsCredentials struct {
+	// REQUIRED; The credential type of the connection.
+	CredentialType *CredentialType
+
+	// REQUIRED; The password.
+	Password *string
+
+	// REQUIRED; The username.
+	Username *string
+}
+
+// GetCredentials implements the CredentialsClassification interface for type WindowsCredentials.
+func (w *WindowsCredentials) GetCredentials() *Credentials {
+	return &Credentials{
+		CredentialType: w.CredentialType,
+	}
+}
+
+// WindowsWithoutImpersonationCredentials - Credentials for WindowsWithoutImpersonation CredentialType.
+type WindowsWithoutImpersonationCredentials struct {
+	// REQUIRED; The credential type of the connection.
+	CredentialType *CredentialType
+}
+
+// GetCredentials implements the CredentialsClassification interface for type WindowsWithoutImpersonationCredentials.
+func (w *WindowsWithoutImpersonationCredentials) GetCredentials() *Credentials {
+	return &Credentials{
+		CredentialType: w.CredentialType,
 	}
 }
 
@@ -1616,6 +2729,19 @@ type WorkspaceIdentity struct {
 
 	// READ-ONLY; The service principal ID.
 	ServicePrincipalID *string
+}
+
+// WorkspaceIdentityCredentials - Credentials for WorkspaceIdentity CredentialType.
+type WorkspaceIdentityCredentials struct {
+	// REQUIRED; The credential type of the connection.
+	CredentialType *CredentialType
+}
+
+// GetCredentials implements the CredentialsClassification interface for type WorkspaceIdentityCredentials.
+func (w *WorkspaceIdentityCredentials) GetCredentials() *Credentials {
+	return &Credentials{
+		CredentialType: w.CredentialType,
+	}
 }
 
 // WorkspaceInfo - A workspace object.

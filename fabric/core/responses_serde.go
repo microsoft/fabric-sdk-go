@@ -6,6 +6,36 @@
 
 package core
 
+// UnmarshalJSON implements the json.Unmarshaller interface for type GatewaysClientCreateGatewayResponse.
+func (g *GatewaysClientCreateGatewayResponse) UnmarshalJSON(data []byte) error {
+	res, err := unmarshalGatewayClassification(data)
+	if err != nil {
+		return err
+	}
+	g.GatewayClassification = res
+	return nil
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type GatewaysClientGetGatewayResponse.
+func (g *GatewaysClientGetGatewayResponse) UnmarshalJSON(data []byte) error {
+	res, err := unmarshalGatewayClassification(data)
+	if err != nil {
+		return err
+	}
+	g.GatewayClassification = res
+	return nil
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type GatewaysClientUpdateGatewayResponse.
+func (g *GatewaysClientUpdateGatewayResponse) UnmarshalJSON(data []byte) error {
+	res, err := unmarshalGatewayClassification(data)
+	if err != nil {
+		return err
+	}
+	g.GatewayClassification = res
+	return nil
+}
+
 // UnmarshalJSON implements the json.Unmarshaller interface for type GitClientGetMyGitCredentialsResponse.
 func (g *GitClientGetMyGitCredentialsResponse) UnmarshalJSON(data []byte) error {
 	res, err := unmarshalGitCredentialsConfigurationResponseClassification(data)

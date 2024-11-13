@@ -13,6 +13,67 @@ type CapacitiesClientListCapacitiesResponse struct {
 	Capacities
 }
 
+// ConnectionsClientAddConnectionRoleAssignmentResponse contains the response from method ConnectionsClient.AddConnectionRoleAssignment.
+type ConnectionsClientAddConnectionRoleAssignmentResponse struct {
+	// The connection role assignment for a principal.
+	ConnectionRoleAssignment
+
+	// Location contains the information returned from the Location header response.
+	Location *string
+}
+
+// ConnectionsClientCreateConnectionResponse contains the response from method ConnectionsClient.CreateConnection.
+type ConnectionsClientCreateConnectionResponse struct {
+	Connection
+}
+
+// ConnectionsClientDeleteConnectionResponse contains the response from method ConnectionsClient.DeleteConnection.
+type ConnectionsClientDeleteConnectionResponse struct {
+	// placeholder for future response values
+}
+
+// ConnectionsClientDeleteConnectionRoleAssignmentResponse contains the response from method ConnectionsClient.DeleteConnectionRoleAssignment.
+type ConnectionsClientDeleteConnectionRoleAssignmentResponse struct {
+	// placeholder for future response values
+}
+
+// ConnectionsClientGetConnectionResponse contains the response from method ConnectionsClient.GetConnection.
+type ConnectionsClientGetConnectionResponse struct {
+	Connection
+}
+
+// ConnectionsClientGetConnectionRoleAssignmentResponse contains the response from method ConnectionsClient.GetConnectionRoleAssignment.
+type ConnectionsClientGetConnectionRoleAssignmentResponse struct {
+	// The connection role assignment for a principal.
+	ConnectionRoleAssignment
+}
+
+// ConnectionsClientListConnectionRoleAssignmentsResponse contains the response from method ConnectionsClient.NewListConnectionRoleAssignmentsPager.
+type ConnectionsClientListConnectionRoleAssignmentsResponse struct {
+	ConnectionRoleAssignments
+}
+
+// ConnectionsClientListConnectionsResponse contains the response from method ConnectionsClient.NewListConnectionsPager.
+type ConnectionsClientListConnectionsResponse struct {
+	ListConnectionsResponse
+}
+
+// ConnectionsClientListSupportedConnectionTypesResponse contains the response from method ConnectionsClient.NewListSupportedConnectionTypesPager.
+type ConnectionsClientListSupportedConnectionTypesResponse struct {
+	ListSupportedConnectionTypesResponse
+}
+
+// ConnectionsClientUpdateConnectionResponse contains the response from method ConnectionsClient.UpdateConnection.
+type ConnectionsClientUpdateConnectionResponse struct {
+	Connection
+}
+
+// ConnectionsClientUpdateConnectionRoleAssignmentResponse contains the response from method ConnectionsClient.UpdateConnectionRoleAssignment.
+type ConnectionsClientUpdateConnectionRoleAssignmentResponse struct {
+	// The connection role assignment for a principal.
+	ConnectionRoleAssignment
+}
+
 // DeploymentPipelinesClientDeployStageContentResponse contains the response from method DeploymentPipelinesClient.BeginDeployStageContent.
 type DeploymentPipelinesClientDeployStageContentResponse struct {
 	// A Fabric deployment pipeline operation.
@@ -67,6 +128,81 @@ type ExternalDataSharesClientListExternalDataSharesInItemResponse struct {
 // ExternalDataSharesClientRevokeExternalDataShareResponse contains the response from method ExternalDataSharesClient.RevokeExternalDataShare.
 type ExternalDataSharesClientRevokeExternalDataShareResponse struct {
 	// placeholder for future response values
+}
+
+// GatewaysClientAddGatewayRoleAssignmentResponse contains the response from method GatewaysClient.AddGatewayRoleAssignment.
+type GatewaysClientAddGatewayRoleAssignmentResponse struct {
+	// The gateway role assignment for a principal.
+	GatewayRoleAssignment
+
+	// Location contains the information returned from the Location header response.
+	Location *string
+}
+
+// GatewaysClientCreateGatewayResponse contains the response from method GatewaysClient.CreateGateway.
+type GatewaysClientCreateGatewayResponse struct {
+	// The base object of gateway.
+	GatewayClassification
+}
+
+// GatewaysClientDeleteGatewayMemberResponse contains the response from method GatewaysClient.DeleteGatewayMember.
+type GatewaysClientDeleteGatewayMemberResponse struct {
+	// placeholder for future response values
+}
+
+// GatewaysClientDeleteGatewayResponse contains the response from method GatewaysClient.DeleteGateway.
+type GatewaysClientDeleteGatewayResponse struct {
+	// placeholder for future response values
+}
+
+// GatewaysClientDeleteGatewayRoleAssignmentResponse contains the response from method GatewaysClient.DeleteGatewayRoleAssignment.
+type GatewaysClientDeleteGatewayRoleAssignmentResponse struct {
+	// placeholder for future response values
+}
+
+// GatewaysClientGetGatewayResponse contains the response from method GatewaysClient.GetGateway.
+type GatewaysClientGetGatewayResponse struct {
+	// The base object of gateway.
+	GatewayClassification
+}
+
+// GatewaysClientGetGatewayRoleAssignmentResponse contains the response from method GatewaysClient.GetGatewayRoleAssignment.
+type GatewaysClientGetGatewayRoleAssignmentResponse struct {
+	// The gateway role assignment for a principal.
+	GatewayRoleAssignment
+}
+
+// GatewaysClientListGatewayMembersResponse contains the response from method GatewaysClient.ListGatewayMembers.
+type GatewaysClientListGatewayMembersResponse struct {
+	ListGatewayMembersResponse
+}
+
+// GatewaysClientListGatewayRoleAssignmentsResponse contains the response from method GatewaysClient.NewListGatewayRoleAssignmentsPager.
+type GatewaysClientListGatewayRoleAssignmentsResponse struct {
+	GatewayRoleAssignments
+}
+
+// GatewaysClientListGatewaysResponse contains the response from method GatewaysClient.NewListGatewaysPager.
+type GatewaysClientListGatewaysResponse struct {
+	ListGatewaysResponse
+}
+
+// GatewaysClientUpdateGatewayMemberResponse contains the response from method GatewaysClient.UpdateGatewayMember.
+type GatewaysClientUpdateGatewayMemberResponse struct {
+	// The gateway member information.
+	OnPremisesGatewayMember
+}
+
+// GatewaysClientUpdateGatewayResponse contains the response from method GatewaysClient.UpdateGateway.
+type GatewaysClientUpdateGatewayResponse struct {
+	// The base object of gateway.
+	GatewayClassification
+}
+
+// GatewaysClientUpdateGatewayRoleAssignmentResponse contains the response from method GatewaysClient.UpdateGatewayRoleAssignment.
+type GatewaysClientUpdateGatewayRoleAssignmentResponse struct {
+	// The gateway role assignment for a principal.
+	GatewayRoleAssignment
 }
 
 // GitClientCommitToGitResponse contains the response from method GitClient.BeginCommitToGit.
