@@ -96,26 +96,32 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "ItemsClient.BeginCreateNotebook":
-			res.resp, res.err = i.dispatchBeginCreateNotebook(req)
-		case "ItemsClient.DeleteNotebook":
-			res.resp, res.err = i.dispatchDeleteNotebook(req)
-		case "ItemsClient.GetNotebook":
-			res.resp, res.err = i.dispatchGetNotebook(req)
-		case "ItemsClient.BeginGetNotebookDefinition":
-			res.resp, res.err = i.dispatchBeginGetNotebookDefinition(req)
-		case "ItemsClient.NewListNotebooksPager":
-			res.resp, res.err = i.dispatchNewListNotebooksPager(req)
-		case "ItemsClient.UpdateNotebook":
-			res.resp, res.err = i.dispatchUpdateNotebook(req)
-		case "ItemsClient.BeginUpdateNotebookDefinition":
-			res.resp, res.err = i.dispatchBeginUpdateNotebookDefinition(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if itemsServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = itemsServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "ItemsClient.BeginCreateNotebook":
+				res.resp, res.err = i.dispatchBeginCreateNotebook(req)
+			case "ItemsClient.DeleteNotebook":
+				res.resp, res.err = i.dispatchDeleteNotebook(req)
+			case "ItemsClient.GetNotebook":
+				res.resp, res.err = i.dispatchGetNotebook(req)
+			case "ItemsClient.BeginGetNotebookDefinition":
+				res.resp, res.err = i.dispatchBeginGetNotebookDefinition(req)
+			case "ItemsClient.NewListNotebooksPager":
+				res.resp, res.err = i.dispatchNewListNotebooksPager(req)
+			case "ItemsClient.UpdateNotebook":
+				res.resp, res.err = i.dispatchUpdateNotebook(req)
+			case "ItemsClient.BeginUpdateNotebookDefinition":
+				res.resp, res.err = i.dispatchBeginUpdateNotebookDefinition(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -443,4 +449,10 @@ func (i *ItemsServerTransport) dispatchBeginUpdateNotebookDefinition(req *http.R
 	}
 
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to ItemsServerTransport
+var itemsServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

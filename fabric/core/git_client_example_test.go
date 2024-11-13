@@ -62,14 +62,20 @@ func ExampleGitClient_GetConnection_workspaceNotConnectedToGitExample() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewGitClient().GetConnection(ctx, "1455b6a2-c120-4c1c-dda7-92bafe99bec3", nil)
+	res, err := clientFactory.NewGitClient().GetConnection(ctx, "1455b6a2-c120-4c1c-dda7-92bafe99bec3", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.GitConnection = core.GitConnection{
+	// 	GitConnectionState: to.Ptr(core.GitConnectionStateNotConnected),
+	// }
 }
 
 // Generated from example definition
-func ExampleGitClient_Connect() {
+func ExampleGitClient_Connect_connectAWorkspaceToAzureDevOpsExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -87,6 +93,35 @@ func ExampleGitClient_Connect() {
 			RepositoryName:   to.Ptr("Test Repo"),
 			OrganizationName: to.Ptr("Test Organization"),
 			ProjectName:      to.Ptr("Test Project"),
+		},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleGitClient_Connect_connectAWorkspaceToGitHubExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewGitClient().Connect(ctx, "1565e6a3-c020-4c0c-dda7-92bafe99eec5", core.GitConnectRequest{
+		GitProviderDetails: &core.GitHubDetails{
+			BranchName:      to.Ptr("Test Branch"),
+			DirectoryName:   to.Ptr("Test Directory/Test Subdirectory"),
+			GitProviderType: to.Ptr(core.GitProviderTypeGitHub),
+			RepositoryName:  to.Ptr("Test Repo"),
+			OwnerName:       to.Ptr("Test Owner"),
+		},
+		MyGitCredentials: &core.ConfiguredConnectionGitCredentials{
+			Source:       to.Ptr(core.GitCredentialsSourceConfiguredConnection),
+			ConnectionID: to.Ptr("3f2504e0-4f89-11d3-9a0c-0305e82c3301"),
 		},
 	}, nil)
 	if err != nil {
@@ -362,4 +397,136 @@ func ExampleGitClient_BeginCommitToGit_commitSelectiveItemsToGitExample() {
 	if err != nil {
 		log.Fatalf("failed to pull the result: %v", err)
 	}
+}
+
+// Generated from example definition
+func ExampleGitClient_GetMyGitCredentials_getTheUsersGitCredentialsConfigurationForAzureDevOpsWhenItIsAutomaticExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewGitClient().GetMyGitCredentials(ctx, "1565e6a3-c020-4c0c-dda7-92bafe99eec5", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res = core.GitClientGetMyGitCredentialsResponse{
+	// 	                            GitCredentialsConfigurationResponseClassification: &core.AutomaticGitCredentialsResponse{
+	// 		Source: to.Ptr(core.GitCredentialsSourceAutomatic),
+	// 	},
+	// 	                        }
+}
+
+// Generated from example definition
+func ExampleGitClient_GetMyGitCredentials_getTheUsersGitCredentialsConfigurationForGitHubWhenItIsConfiguredByConnectionExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewGitClient().GetMyGitCredentials(ctx, "1565e6a3-c020-4c0c-dda7-92bafe99eec5", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res = core.GitClientGetMyGitCredentialsResponse{
+	// 	                            GitCredentialsConfigurationResponseClassification: &core.ConfiguredConnectionGitCredentialsResponse{
+	// 		Source: to.Ptr(core.GitCredentialsSourceConfiguredConnection),
+	// 		ConnectionID: to.Ptr("3f2504e0-4f89-11d3-9a0c-0305e82c3301"),
+	// 	},
+	// 	                        }
+}
+
+// Generated from example definition
+func ExampleGitClient_GetMyGitCredentials_getTheUsersGitCredentialsConfigurationForGitHubWhenItIsNotConfiguredExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewGitClient().GetMyGitCredentials(ctx, "1565e6a3-c020-4c0c-dda7-92bafe99eec5", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res = core.GitClientGetMyGitCredentialsResponse{
+	// 	                            GitCredentialsConfigurationResponseClassification: &core.NoneGitCredentialsResponse{
+	// 		Source: to.Ptr(core.GitCredentialsSourceNone),
+	// 	},
+	// 	                        }
+}
+
+// Generated from example definition
+func ExampleGitClient_UpdateMyGitCredentials_updateUsersGitCredentialsToConfiguredConnectionExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewGitClient().UpdateMyGitCredentials(ctx, "1565e6a3-c020-4c0c-dda7-92bafe99eec5", &core.UpdateGitCredentialsToConfiguredConnectionRequest{
+		Source:       to.Ptr(core.GitCredentialsSourceConfiguredConnection),
+		ConnectionID: to.Ptr("3f2504e0-4f89-11d3-9a0c-0305e82c3301"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res = core.GitClientUpdateMyGitCredentialsResponse{
+	// 	                            GitCredentialsConfigurationResponseClassification: &core.ConfiguredConnectionGitCredentialsResponse{
+	// 		Source: to.Ptr(core.GitCredentialsSourceConfiguredConnection),
+	// 		ConnectionID: to.Ptr("3f2504e0-4f89-11d3-9a0c-0305e82c3301"),
+	// 	},
+	// 	                        }
+}
+
+// Generated from example definition
+func ExampleGitClient_UpdateMyGitCredentials_updateUsersGitCredentialsToNoneExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewGitClient().UpdateMyGitCredentials(ctx, "1565e6a3-c020-4c0c-dda7-92bafe99eec5", &core.UpdateGitCredentialsToNoneRequest{
+		Source: to.Ptr(core.GitCredentialsSourceNone),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res = core.GitClientUpdateMyGitCredentialsResponse{
+	// 	                            GitCredentialsConfigurationResponseClassification: &core.NoneGitCredentialsResponse{
+	// 		Source: to.Ptr(core.GitCredentialsSourceNone),
+	// 	},
+	// 	                        }
 }

@@ -12,6 +12,27 @@ type ItemsClientBeginCreateKQLDatabaseOptions struct {
 	ResumeToken string
 }
 
+// ItemsClientBeginGetKQLDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetKQLDatabaseDefinition
+// method.
+type ItemsClientBeginGetKQLDatabaseDefinitionOptions struct {
+	// The format of the KQL database public definition.
+	Format *string
+
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// ItemsClientBeginUpdateKQLDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateKQLDatabaseDefinition
+// method.
+type ItemsClientBeginUpdateKQLDatabaseDefinitionOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+
+	// When set to true and the .platform file is provided as part of the definition, the item's metadata is updated using the
+	// metadata in the .platform file
+	UpdateMetadata *bool
+}
+
 // ItemsClientDeleteKQLDatabaseOptions contains the optional parameters for the ItemsClient.DeleteKQLDatabase method.
 type ItemsClientDeleteKQLDatabaseOptions struct {
 	// placeholder for future optional parameters

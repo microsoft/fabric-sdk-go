@@ -29,7 +29,7 @@ type DeploymentPipelinesClient struct {
 }
 
 // BeginDeployStageContent - To learn about items that are supported in deployment pipelines, see: Supported items [/fabric/cicd/deployment-pipelines/intro-to-deployment-pipelines#supported-items].
-// > [!IMPORTANT] This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The user must be at least a contributor on both source and target deployment workspaces. For more information,
 // see: Permissions [https://go.microsoft.com/fwlink/?linkid=2235654].
 // REQUIRED DELEGATED SCOPES Pipeline.Deploy
@@ -54,7 +54,7 @@ func (client *DeploymentPipelinesClient) BeginDeployStageContent(ctx context.Con
 }
 
 // DeployStageContent - To learn about items that are supported in deployment pipelines, see: Supported items [/fabric/cicd/deployment-pipelines/intro-to-deployment-pipelines#supported-items].
-// > [!IMPORTANT] This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The user must be at least a contributor on both source and target deployment workspaces. For more information,
 // see: Permissions [https://go.microsoft.com/fwlink/?linkid=2235654].
 // REQUIRED DELEGATED SCOPES Pipeline.Deploy
@@ -369,7 +369,7 @@ func (client *DeploymentPipelinesClient) listDeploymentPipelinesHandleResponse(r
 // DeployStageContent - returns DeploymentPipelinesClientDeployStageContentResponse in sync mode.
 // To learn about items that are supported in deployment pipelines, see: Supported items [/fabric/cicd/deployment-pipelines/intro-to-deployment-pipelines#supported-items].
 //
-// >  [!IMPORTANT] This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
 // PERMISSIONS The user must be at least a contributor on both source and target deployment workspaces. For more information, see: Permissions [https://go.microsoft.com/fwlink/?linkid=2235654].
 //

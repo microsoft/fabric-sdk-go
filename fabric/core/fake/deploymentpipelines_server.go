@@ -87,22 +87,28 @@ func (d *DeploymentPipelinesServerTransport) dispatchToMethodFake(req *http.Requ
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "DeploymentPipelinesClient.BeginDeployStageContent":
-			res.resp, res.err = d.dispatchBeginDeployStageContent(req)
-		case "DeploymentPipelinesClient.GetDeploymentPipeline":
-			res.resp, res.err = d.dispatchGetDeploymentPipeline(req)
-		case "DeploymentPipelinesClient.NewListDeploymentPipelineStageItemsPager":
-			res.resp, res.err = d.dispatchNewListDeploymentPipelineStageItemsPager(req)
-		case "DeploymentPipelinesClient.NewListDeploymentPipelineStagesPager":
-			res.resp, res.err = d.dispatchNewListDeploymentPipelineStagesPager(req)
-		case "DeploymentPipelinesClient.NewListDeploymentPipelinesPager":
-			res.resp, res.err = d.dispatchNewListDeploymentPipelinesPager(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if deploymentPipelinesServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = deploymentPipelinesServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "DeploymentPipelinesClient.BeginDeployStageContent":
+				res.resp, res.err = d.dispatchBeginDeployStageContent(req)
+			case "DeploymentPipelinesClient.GetDeploymentPipeline":
+				res.resp, res.err = d.dispatchGetDeploymentPipeline(req)
+			case "DeploymentPipelinesClient.NewListDeploymentPipelineStageItemsPager":
+				res.resp, res.err = d.dispatchNewListDeploymentPipelineStageItemsPager(req)
+			case "DeploymentPipelinesClient.NewListDeploymentPipelineStagesPager":
+				res.resp, res.err = d.dispatchNewListDeploymentPipelineStagesPager(req)
+			case "DeploymentPipelinesClient.NewListDeploymentPipelinesPager":
+				res.resp, res.err = d.dispatchNewListDeploymentPipelinesPager(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -329,4 +335,10 @@ func (d *DeploymentPipelinesServerTransport) dispatchNewListDeploymentPipelinesP
 		d.newListDeploymentPipelinesPager.remove(req)
 	}
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to DeploymentPipelinesServerTransport
+var deploymentPipelinesServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

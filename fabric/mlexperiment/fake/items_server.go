@@ -83,22 +83,28 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "ItemsClient.BeginCreateMLExperiment":
-			res.resp, res.err = i.dispatchBeginCreateMLExperiment(req)
-		case "ItemsClient.DeleteMLExperiment":
-			res.resp, res.err = i.dispatchDeleteMLExperiment(req)
-		case "ItemsClient.GetMLExperiment":
-			res.resp, res.err = i.dispatchGetMLExperiment(req)
-		case "ItemsClient.NewListMLExperimentsPager":
-			res.resp, res.err = i.dispatchNewListMLExperimentsPager(req)
-		case "ItemsClient.UpdateMLExperiment":
-			res.resp, res.err = i.dispatchUpdateMLExperiment(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if itemsServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = itemsServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "ItemsClient.BeginCreateMLExperiment":
+				res.resp, res.err = i.dispatchBeginCreateMLExperiment(req)
+			case "ItemsClient.DeleteMLExperiment":
+				res.resp, res.err = i.dispatchDeleteMLExperiment(req)
+			case "ItemsClient.GetMLExperiment":
+				res.resp, res.err = i.dispatchGetMLExperiment(req)
+			case "ItemsClient.NewListMLExperimentsPager":
+				res.resp, res.err = i.dispatchNewListMLExperimentsPager(req)
+			case "ItemsClient.UpdateMLExperiment":
+				res.resp, res.err = i.dispatchUpdateMLExperiment(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -307,4 +313,10 @@ func (i *ItemsServerTransport) dispatchUpdateMLExperiment(req *http.Request) (*h
 		return nil, err
 	}
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to ItemsServerTransport
+var itemsServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

@@ -81,22 +81,28 @@ func (c *CustomPoolsServerTransport) dispatchToMethodFake(req *http.Request, met
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "CustomPoolsClient.CreateWorkspaceCustomPool":
-			res.resp, res.err = c.dispatchCreateWorkspaceCustomPool(req)
-		case "CustomPoolsClient.DeleteWorkspaceCustomPool":
-			res.resp, res.err = c.dispatchDeleteWorkspaceCustomPool(req)
-		case "CustomPoolsClient.GetWorkspaceCustomPool":
-			res.resp, res.err = c.dispatchGetWorkspaceCustomPool(req)
-		case "CustomPoolsClient.NewListWorkspaceCustomPoolsPager":
-			res.resp, res.err = c.dispatchNewListWorkspaceCustomPoolsPager(req)
-		case "CustomPoolsClient.UpdateWorkspaceCustomPool":
-			res.resp, res.err = c.dispatchUpdateWorkspaceCustomPool(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if customPoolsServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = customPoolsServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "CustomPoolsClient.CreateWorkspaceCustomPool":
+				res.resp, res.err = c.dispatchCreateWorkspaceCustomPool(req)
+			case "CustomPoolsClient.DeleteWorkspaceCustomPool":
+				res.resp, res.err = c.dispatchDeleteWorkspaceCustomPool(req)
+			case "CustomPoolsClient.GetWorkspaceCustomPool":
+				res.resp, res.err = c.dispatchGetWorkspaceCustomPool(req)
+			case "CustomPoolsClient.NewListWorkspaceCustomPoolsPager":
+				res.resp, res.err = c.dispatchNewListWorkspaceCustomPoolsPager(req)
+			case "CustomPoolsClient.UpdateWorkspaceCustomPool":
+				res.resp, res.err = c.dispatchUpdateWorkspaceCustomPool(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -297,4 +303,10 @@ func (c *CustomPoolsServerTransport) dispatchUpdateWorkspaceCustomPool(req *http
 		return nil, err
 	}
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to CustomPoolsServerTransport
+var customPoolsServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

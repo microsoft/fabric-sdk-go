@@ -397,6 +397,35 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ListWorkspaceAccessDetails() {
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.WorkspaceAccessDetailsResponse))
 }
 
+func (testsuite *FakeTestSuite) TestWorkspaces_RestoreWorkspace() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Restore workspace example"},
+	})
+	var exampleWorkspaceID string
+	var exampleRestoreWorkspaceRequest admin.RestoreWorkspaceRequest
+	exampleWorkspaceID = "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f"
+	exampleRestoreWorkspaceRequest = admin.RestoreWorkspaceRequest{
+		NewWorkspaceAdminPrincipal: &admin.Principal{
+			Type: to.Ptr(admin.PrincipalTypeUser),
+			ID:   to.Ptr("17dd1e38-a4c6-41ed-bc4f-1e383f8ddd01"),
+		},
+		NewWorkspaceName: to.Ptr("Contoso Workspace"),
+	}
+
+	testsuite.serverFactory.WorkspacesServer.RestoreWorkspace = func(ctx context.Context, workspaceID string, restoreWorkspaceRequest admin.RestoreWorkspaceRequest, options *admin.WorkspacesClientRestoreWorkspaceOptions) (resp azfake.Responder[admin.WorkspacesClientRestoreWorkspaceResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleRestoreWorkspaceRequest, restoreWorkspaceRequest))
+		resp = azfake.Responder[admin.WorkspacesClientRestoreWorkspaceResponse]{}
+		resp.SetResponse(http.StatusOK, admin.WorkspacesClientRestoreWorkspaceResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	_, err = client.RestoreWorkspace(ctx, exampleWorkspaceID, exampleRestoreWorkspaceRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
 func (testsuite *FakeTestSuite) TestItems_ListItems() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{

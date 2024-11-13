@@ -7,6 +7,7 @@
 package fake
 
 import (
+	"io"
 	"net/http"
 	"reflect"
 	"sync"
@@ -60,6 +61,18 @@ func parseOptional[T any](v string, parse func(v string) (T, error)) (*T, error)
 		return nil, err
 	}
 	return &t, err
+}
+
+func readRequestBody(req *http.Request) ([]byte, error) {
+	if req.Body == nil {
+		return nil, nil
+	}
+	body, err := io.ReadAll(req.Body)
+	if err != nil {
+		return nil, err
+	}
+	req.Body.Close()
+	return body, nil
 }
 
 func newTracker[T any]() *tracker[T] {

@@ -64,14 +64,20 @@ func (u *UsersServerTransport) dispatchToMethodFake(req *http.Request, method st
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "UsersClient.NewListAccessEntitiesPager":
-			res.resp, res.err = u.dispatchNewListAccessEntitiesPager(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if usersServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = usersServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "UsersClient.NewListAccessEntitiesPager":
+				res.resp, res.err = u.dispatchNewListAccessEntitiesPager(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -139,4 +145,10 @@ func (u *UsersServerTransport) dispatchNewListAccessEntitiesPager(req *http.Requ
 		u.newListAccessEntitiesPager.remove(req)
 	}
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to UsersServerTransport
+var usersServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

@@ -8,6 +8,191 @@ package core
 
 import "encoding/json"
 
+func unmarshalConnectionDetailsParameterClassification(rawMsg json.RawMessage) (ConnectionDetailsParameterClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b ConnectionDetailsParameterClassification
+	switch m["dataType"] {
+	case string(DataTypeBoolean):
+		b = &ConnectionDetailsBooleanParameter{}
+	case string(DataTypeDate):
+		b = &ConnectionDetailsDateParameter{}
+	case string(DataTypeDateTime):
+		b = &ConnectionDetailsDateTimeParameter{}
+	case string(DataTypeDateTimeZone):
+		b = &ConnectionDetailsDateTimeZoneParameter{}
+	case string(DataTypeDuration):
+		b = &ConnectionDetailsDurationParameter{}
+	case string(DataTypeNumber):
+		b = &ConnectionDetailsNumberParameter{}
+	case string(DataTypeText):
+		b = &ConnectionDetailsTextParameter{}
+	case string(DataTypeTime):
+		b = &ConnectionDetailsTimeParameter{}
+	default:
+		b = &ConnectionDetailsParameter{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalConnectionDetailsParameterClassificationArray(rawMsg json.RawMessage) ([]ConnectionDetailsParameterClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var rawMessages []json.RawMessage
+	if err := json.Unmarshal(rawMsg, &rawMessages); err != nil {
+		return nil, err
+	}
+	fArray := make([]ConnectionDetailsParameterClassification, len(rawMessages))
+	for index, rawMessage := range rawMessages {
+		f, err := unmarshalConnectionDetailsParameterClassification(rawMessage)
+		if err != nil {
+			return nil, err
+		}
+		fArray[index] = f
+	}
+	return fArray, nil
+}
+
+func unmarshalCredentialsClassification(rawMsg json.RawMessage) (CredentialsClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b CredentialsClassification
+	switch m["credentialType"] {
+	case "OnPremisesGatewayCredentials":
+		b = &OnPremisesGatewayCredentials{}
+	case "OnPremisesGatewayPersonalCredentials":
+		b = &OnPremisesGatewayPersonalCredentials{}
+	case string(CredentialTypeAnonymous):
+		b = &AnonymousCredentials{}
+	case string(CredentialTypeBasic):
+		b = &BasicCredentials{}
+	case string(CredentialTypeKey):
+		b = &KeyCredentials{}
+	case string(CredentialTypeServicePrincipal):
+		b = &ServicePrincipalCredentials{}
+	case string(CredentialTypeSharedAccessSignature):
+		b = &SharedAccessSignatureCredentials{}
+	case string(CredentialTypeWindows):
+		b = &WindowsCredentials{}
+	case string(CredentialTypeWindowsWithoutImpersonation):
+		b = &WindowsWithoutImpersonationCredentials{}
+	case string(CredentialTypeWorkspaceIdentity):
+		b = &WorkspaceIdentityCredentials{}
+	default:
+		b = &Credentials{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalGatewayClassification(rawMsg json.RawMessage) (GatewayClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b GatewayClassification
+	switch m["type"] {
+	case string(GatewayTypeOnPremises):
+		b = &OnPremisesGateway{}
+	case string(GatewayTypeOnPremisesPersonal):
+		b = &OnPremisesGatewayPersonal{}
+	case string(GatewayTypeVirtualNetwork):
+		b = &VirtualNetworkGateway{}
+	default:
+		b = &Gateway{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalGatewayClassificationArray(rawMsg json.RawMessage) ([]GatewayClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var rawMessages []json.RawMessage
+	if err := json.Unmarshal(rawMsg, &rawMessages); err != nil {
+		return nil, err
+	}
+	fArray := make([]GatewayClassification, len(rawMessages))
+	for index, rawMessage := range rawMessages {
+		f, err := unmarshalGatewayClassification(rawMessage)
+		if err != nil {
+			return nil, err
+		}
+		fArray[index] = f
+	}
+	return fArray, nil
+}
+
+func unmarshalGitCredentialsClassification(rawMsg json.RawMessage) (GitCredentialsClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b GitCredentialsClassification
+	switch m["source"] {
+	case string(GitCredentialsSourceAutomatic):
+		b = &AutomaticGitCredentials{}
+	case string(GitCredentialsSourceConfiguredConnection):
+		b = &ConfiguredConnectionGitCredentials{}
+	default:
+		b = &GitCredentials{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalGitCredentialsConfigurationResponseClassification(rawMsg json.RawMessage) (GitCredentialsConfigurationResponseClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b GitCredentialsConfigurationResponseClassification
+	switch m["source"] {
+	case string(GitCredentialsSourceAutomatic):
+		b = &AutomaticGitCredentialsResponse{}
+	case string(GitCredentialsSourceConfiguredConnection):
+		b = &ConfiguredConnectionGitCredentialsResponse{}
+	case string(GitCredentialsSourceNone):
+		b = &NoneGitCredentialsResponse{}
+	default:
+		b = &GitCredentialsConfigurationResponse{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
 func unmarshalGitProviderDetailsClassification(rawMsg json.RawMessage) (GitProviderDetailsClassification, error) {
 	if rawMsg == nil || string(rawMsg) == "null" {
 		return nil, nil

@@ -1581,21 +1581,26 @@ func (testsuite *FakeTestSuite) TestGit_GetConnection() {
 	})
 	exampleWorkspaceID = "1455b6a2-c120-4c1c-dda7-92bafe99bec3"
 
+	exampleRes = core.GitConnection{
+		GitConnectionState: to.Ptr(core.GitConnectionStateNotConnected),
+	}
+
 	testsuite.serverFactory.GitServer.GetConnection = func(ctx context.Context, workspaceID string, options *core.GitClientGetConnectionOptions) (resp azfake.Responder[core.GitClientGetConnectionResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		resp = azfake.Responder[core.GitClientGetConnectionResponse]{}
-		resp.SetResponse(http.StatusOK, core.GitClientGetConnectionResponse{}, nil)
+		resp.SetResponse(http.StatusOK, core.GitClientGetConnectionResponse{GitConnection: exampleRes}, nil)
 		return
 	}
 
-	_, err = client.GetConnection(ctx, exampleWorkspaceID, nil)
+	res, err = client.GetConnection(ctx, exampleWorkspaceID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.GitConnection))
 }
 
 func (testsuite *FakeTestSuite) TestGit_Connect() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Connect a workspace to a Git example"},
+		"example-id": {"Connect a workspace to Azure DevOps example"},
 	})
 	var exampleWorkspaceID string
 	var exampleGitConnectRequest core.GitConnectRequest
@@ -1620,6 +1625,36 @@ func (testsuite *FakeTestSuite) TestGit_Connect() {
 	}
 
 	client := testsuite.clientFactory.NewGitClient()
+	_, err = client.Connect(ctx, exampleWorkspaceID, exampleGitConnectRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Connect a workspace to GitHub example"},
+	})
+	exampleWorkspaceID = "1565e6a3-c020-4c0c-dda7-92bafe99eec5"
+	exampleGitConnectRequest = core.GitConnectRequest{
+		GitProviderDetails: &core.GitHubDetails{
+			BranchName:      to.Ptr("Test Branch"),
+			DirectoryName:   to.Ptr("Test Directory/Test Subdirectory"),
+			GitProviderType: to.Ptr(core.GitProviderTypeGitHub),
+			RepositoryName:  to.Ptr("Test Repo"),
+			OwnerName:       to.Ptr("Test Owner"),
+		},
+		MyGitCredentials: &core.ConfiguredConnectionGitCredentials{
+			Source:       to.Ptr(core.GitCredentialsSourceConfiguredConnection),
+			ConnectionID: to.Ptr("3f2504e0-4f89-11d3-9a0c-0305e82c3301"),
+		},
+	}
+
+	testsuite.serverFactory.GitServer.Connect = func(ctx context.Context, workspaceID string, gitConnectRequest core.GitConnectRequest, options *core.GitClientConnectOptions) (resp azfake.Responder[core.GitClientConnectResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleGitConnectRequest, gitConnectRequest))
+		resp = azfake.Responder[core.GitClientConnectResponse]{}
+		resp.SetResponse(http.StatusOK, core.GitClientConnectResponse{}, nil)
+		return
+	}
+
 	_, err = client.Connect(ctx, exampleWorkspaceID, exampleGitConnectRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
@@ -1893,6 +1928,141 @@ func (testsuite *FakeTestSuite) TestGit_CommitToGit() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestGit_GetMyGitCredentials() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get the user's Git credentials configuration for Azure DevOps when it is automatic example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "1565e6a3-c020-4c0c-dda7-92bafe99eec5"
+
+	exampleRes := core.GitClientGetMyGitCredentialsResponse{
+		GitCredentialsConfigurationResponseClassification: &core.AutomaticGitCredentialsResponse{
+			Source: to.Ptr(core.GitCredentialsSourceAutomatic),
+		},
+	}
+
+	testsuite.serverFactory.GitServer.GetMyGitCredentials = func(ctx context.Context, workspaceID string, options *core.GitClientGetMyGitCredentialsOptions) (resp azfake.Responder[core.GitClientGetMyGitCredentialsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.GitClientGetMyGitCredentialsResponse]{}
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGitClient()
+	res, err := client.GetMyGitCredentials(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get the user's Git credentials configuration for GitHub when it is configured by connection example"},
+	})
+	exampleWorkspaceID = "1565e6a3-c020-4c0c-dda7-92bafe99eec5"
+
+	exampleRes = core.GitClientGetMyGitCredentialsResponse{
+		GitCredentialsConfigurationResponseClassification: &core.ConfiguredConnectionGitCredentialsResponse{
+			Source:       to.Ptr(core.GitCredentialsSourceConfiguredConnection),
+			ConnectionID: to.Ptr("3f2504e0-4f89-11d3-9a0c-0305e82c3301"),
+		},
+	}
+
+	testsuite.serverFactory.GitServer.GetMyGitCredentials = func(ctx context.Context, workspaceID string, options *core.GitClientGetMyGitCredentialsOptions) (resp azfake.Responder[core.GitClientGetMyGitCredentialsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.GitClientGetMyGitCredentialsResponse]{}
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
+		return
+	}
+
+	res, err = client.GetMyGitCredentials(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get the user's Git credentials configuration for GitHub when it is not configured example"},
+	})
+	exampleWorkspaceID = "1565e6a3-c020-4c0c-dda7-92bafe99eec5"
+
+	exampleRes = core.GitClientGetMyGitCredentialsResponse{
+		GitCredentialsConfigurationResponseClassification: &core.NoneGitCredentialsResponse{
+			Source: to.Ptr(core.GitCredentialsSourceNone),
+		},
+	}
+
+	testsuite.serverFactory.GitServer.GetMyGitCredentials = func(ctx context.Context, workspaceID string, options *core.GitClientGetMyGitCredentialsOptions) (resp azfake.Responder[core.GitClientGetMyGitCredentialsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.GitClientGetMyGitCredentialsResponse]{}
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
+		return
+	}
+
+	res, err = client.GetMyGitCredentials(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
+}
+
+func (testsuite *FakeTestSuite) TestGit_UpdateMyGitCredentials() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update user's Git credentials to ConfiguredConnection example"},
+	})
+	var exampleWorkspaceID string
+	var exampleUpdateGitCredentialsRequest core.UpdateGitCredentialsRequestClassification
+	exampleWorkspaceID = "1565e6a3-c020-4c0c-dda7-92bafe99eec5"
+	exampleUpdateGitCredentialsRequest = &core.UpdateGitCredentialsToConfiguredConnectionRequest{
+		Source:       to.Ptr(core.GitCredentialsSourceConfiguredConnection),
+		ConnectionID: to.Ptr("3f2504e0-4f89-11d3-9a0c-0305e82c3301"),
+	}
+
+	exampleRes := core.GitClientUpdateMyGitCredentialsResponse{
+		GitCredentialsConfigurationResponseClassification: &core.ConfiguredConnectionGitCredentialsResponse{
+			Source:       to.Ptr(core.GitCredentialsSourceConfiguredConnection),
+			ConnectionID: to.Ptr("3f2504e0-4f89-11d3-9a0c-0305e82c3301"),
+		},
+	}
+
+	testsuite.serverFactory.GitServer.UpdateMyGitCredentials = func(ctx context.Context, workspaceID string, updateGitCredentialsRequest core.UpdateGitCredentialsRequestClassification, options *core.GitClientUpdateMyGitCredentialsOptions) (resp azfake.Responder[core.GitClientUpdateMyGitCredentialsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateGitCredentialsRequest, updateGitCredentialsRequest))
+		resp = azfake.Responder[core.GitClientUpdateMyGitCredentialsResponse]{}
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGitClient()
+	res, err := client.UpdateMyGitCredentials(ctx, exampleWorkspaceID, exampleUpdateGitCredentialsRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update user's Git credentials to None example"},
+	})
+	exampleWorkspaceID = "1565e6a3-c020-4c0c-dda7-92bafe99eec5"
+	exampleUpdateGitCredentialsRequest = &core.UpdateGitCredentialsToNoneRequest{
+		Source: to.Ptr(core.GitCredentialsSourceNone),
+	}
+
+	exampleRes = core.GitClientUpdateMyGitCredentialsResponse{
+		GitCredentialsConfigurationResponseClassification: &core.NoneGitCredentialsResponse{
+			Source: to.Ptr(core.GitCredentialsSourceNone),
+		},
+	}
+
+	testsuite.serverFactory.GitServer.UpdateMyGitCredentials = func(ctx context.Context, workspaceID string, updateGitCredentialsRequest core.UpdateGitCredentialsRequestClassification, options *core.GitClientUpdateMyGitCredentialsOptions) (resp azfake.Responder[core.GitClientUpdateMyGitCredentialsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateGitCredentialsRequest, updateGitCredentialsRequest))
+		resp = azfake.Responder[core.GitClientUpdateMyGitCredentialsResponse]{}
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
+		return
+	}
+
+	res, err = client.UpdateMyGitCredentials(ctx, exampleWorkspaceID, exampleUpdateGitCredentialsRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
 }
 
 func (testsuite *FakeTestSuite) TestCapacities_ListCapacities() {
@@ -3488,5 +3658,1462 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_RevokeExternalDataShare()
 
 	client := testsuite.clientFactory.NewExternalDataSharesClient()
 	_, err = client.RevokeExternalDataShare(ctx, exampleWorkspaceID, exampleItemID, exampleExternalDataShareID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestManagedPrivateEndpoints_ListWorkspaceManagedPrivateEndpoints() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List managed private endpoints in workspace example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+
+	exampleRes := core.ManagedPrivateEndpoints{
+		Value: []core.ManagedPrivateEndpoint{
+			{
+				Name: to.Ptr("SqlPE"),
+				ConnectionState: &core.PrivateEndpointConnectionState{
+					Description: to.Ptr("Endpoint approved"),
+					Status:      to.Ptr(core.ConnectionStatusApproved),
+				},
+				ID:                          to.Ptr("59a92b06-6e5a-468c-b748-e28c8ff28da3"),
+				ProvisioningState:           to.Ptr(core.PrivateEndpointProvisioningStateSucceeded),
+				TargetPrivateLinkResourceID: to.Ptr("/subscriptions/e3bf3f1a-4d64-4e42-85e9-aa1b84e3874/resourceGroups/testRG/providers/Microsoft.SqlServer/SqlServer/sql1"),
+				TargetSubresourceType:       to.Ptr("sqlServer"),
+			},
+			{
+				Name: to.Ptr("BlobPE"),
+				ConnectionState: &core.PrivateEndpointConnectionState{
+					Description: to.Ptr("Endpoint approval provided"),
+					Status:      to.Ptr(core.ConnectionStatusApproved),
+				},
+				ID:                          to.Ptr("1b56faf6-9cb8-4506-8c6c-83e0aece804f"),
+				ProvisioningState:           to.Ptr(core.PrivateEndpointProvisioningStateSucceeded),
+				TargetPrivateLinkResourceID: to.Ptr("/subscriptions/73310022-c811-4844-8b73-f9baa17c0d08/resourceGroups/testRG2/providers/Microsoft.Storage/storageAccounts/storage1"),
+				TargetSubresourceType:       to.Ptr("blob"),
+			}},
+	}
+
+	testsuite.serverFactory.ManagedPrivateEndpointsServer.NewListWorkspaceManagedPrivateEndpointsPager = func(workspaceID string, options *core.ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsOptions) (resp azfake.PagerResponder[core.ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.PagerResponder[core.ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsResponse]{}
+		resp.AddPage(http.StatusOK, core.ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsResponse{ManagedPrivateEndpoints: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewManagedPrivateEndpointsClient()
+	pager := client.NewListWorkspaceManagedPrivateEndpointsPager(exampleWorkspaceID, &core.ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.ManagedPrivateEndpoints))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List managed private endpoints in workspace with continuation example"},
+	})
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+
+	exampleRes = core.ManagedPrivateEndpoints{
+		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/workspaces/47482db6-4583-4672-86dd-999d0f8f4d7a/managedPrivateEndpoints?continuationToken=LDEsMTAwMDAwLDA%3D"),
+		Value: []core.ManagedPrivateEndpoint{
+			{
+				Name: to.Ptr("SqlPE"),
+				ConnectionState: &core.PrivateEndpointConnectionState{
+					Description: to.Ptr("Endpoint approved"),
+					Status:      to.Ptr(core.ConnectionStatusApproved),
+				},
+				ID:                          to.Ptr("59a92b06-6e5a-468c-b748-e28c8ff28da3"),
+				ProvisioningState:           to.Ptr(core.PrivateEndpointProvisioningStateSucceeded),
+				TargetPrivateLinkResourceID: to.Ptr("/subscriptions/e3bf3f1a-4d64-4e42-85e9-aa1b84e3874/resourceGroups/testRG/providers/Microsoft.SqlServer/SqlServer/sql1"),
+				TargetSubresourceType:       to.Ptr("sqlServer"),
+			},
+			{
+				Name: to.Ptr("BlobPE"),
+				ConnectionState: &core.PrivateEndpointConnectionState{
+					Description: to.Ptr("Endpoint approval provided"),
+					Status:      to.Ptr(core.ConnectionStatusApproved),
+				},
+				ID:                          to.Ptr("1b56faf6-9cb8-4506-8c6c-83e0aece804f"),
+				ProvisioningState:           to.Ptr(core.PrivateEndpointProvisioningStateSucceeded),
+				TargetPrivateLinkResourceID: to.Ptr("/subscriptions/73310022-c811-4844-8b73-f9baa17c0d08/resourceGroups/testRG2/providers/Microsoft.Storage/storageAccounts/storage1"),
+				TargetSubresourceType:       to.Ptr("blob"),
+			}},
+	}
+
+	testsuite.serverFactory.ManagedPrivateEndpointsServer.NewListWorkspaceManagedPrivateEndpointsPager = func(workspaceID string, options *core.ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsOptions) (resp azfake.PagerResponder[core.ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.PagerResponder[core.ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsResponse]{}
+		resp.AddPage(http.StatusOK, core.ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsResponse{ManagedPrivateEndpoints: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListWorkspaceManagedPrivateEndpointsPager(exampleWorkspaceID, &core.ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.ManagedPrivateEndpoints))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestManagedPrivateEndpoints_CreateWorkspaceManagedPrivateEndpoint() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a managed private endpoint example"},
+	})
+	var exampleWorkspaceID string
+	var exampleCreateManagedPrivateEndpointRequest core.CreateManagedPrivateEndpointRequest
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+	exampleCreateManagedPrivateEndpointRequest = core.CreateManagedPrivateEndpointRequest{
+		Name:                        to.Ptr("testprivatendpoint1"),
+		RequestMessage:              to.Ptr("Request message to approve private endpoint"),
+		TargetPrivateLinkResourceID: to.Ptr("/subscriptions/2374e587-d28b-4898-a39c-6070e078ae31/resourceGroups/testrg/providers/Microsoft.Sql/servers/testsql1"),
+		TargetSubresourceType:       to.Ptr("sqlServer"),
+	}
+
+	testsuite.serverFactory.ManagedPrivateEndpointsServer.CreateWorkspaceManagedPrivateEndpoint = func(ctx context.Context, workspaceID string, createManagedPrivateEndpointRequest core.CreateManagedPrivateEndpointRequest, options *core.ManagedPrivateEndpointsClientCreateWorkspaceManagedPrivateEndpointOptions) (resp azfake.Responder[core.ManagedPrivateEndpointsClientCreateWorkspaceManagedPrivateEndpointResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateManagedPrivateEndpointRequest, createManagedPrivateEndpointRequest))
+		resp = azfake.Responder[core.ManagedPrivateEndpointsClientCreateWorkspaceManagedPrivateEndpointResponse]{}
+		resp.SetResponse(http.StatusCreated, core.ManagedPrivateEndpointsClientCreateWorkspaceManagedPrivateEndpointResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewManagedPrivateEndpointsClient()
+	_, err = client.CreateWorkspaceManagedPrivateEndpoint(ctx, exampleWorkspaceID, exampleCreateManagedPrivateEndpointRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestManagedPrivateEndpoints_DeleteWorkspaceManagedPrivateEndpoint() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete managed private endpoint example"},
+	})
+	var exampleWorkspaceID string
+	var exampleManagedPrivateEndpointID string
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+	exampleManagedPrivateEndpointID = "59a92b06-6e5a-468c-b748-e28c8ff28da3"
+
+	testsuite.serverFactory.ManagedPrivateEndpointsServer.DeleteWorkspaceManagedPrivateEndpoint = func(ctx context.Context, workspaceID string, managedPrivateEndpointID string, options *core.ManagedPrivateEndpointsClientDeleteWorkspaceManagedPrivateEndpointOptions) (resp azfake.Responder[core.ManagedPrivateEndpointsClientDeleteWorkspaceManagedPrivateEndpointResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleManagedPrivateEndpointID, managedPrivateEndpointID)
+		resp = azfake.Responder[core.ManagedPrivateEndpointsClientDeleteWorkspaceManagedPrivateEndpointResponse]{}
+		resp.SetResponse(http.StatusOK, core.ManagedPrivateEndpointsClientDeleteWorkspaceManagedPrivateEndpointResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewManagedPrivateEndpointsClient()
+	_, err = client.DeleteWorkspaceManagedPrivateEndpoint(ctx, exampleWorkspaceID, exampleManagedPrivateEndpointID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestManagedPrivateEndpoints_GetWorkspaceManagedPrivateEndpoint() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get managed private endpoint example"},
+	})
+	var exampleWorkspaceID string
+	var exampleManagedPrivateEndpointID string
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+	exampleManagedPrivateEndpointID = "59a92b06-6e5a-468c-b748-e28c8ff28da3"
+
+	exampleRes := core.ManagedPrivateEndpoint{
+		Name: to.Ptr("SqlPE"),
+		ConnectionState: &core.PrivateEndpointConnectionState{
+			Description: to.Ptr("Endpoint approved"),
+			Status:      to.Ptr(core.ConnectionStatusApproved),
+		},
+		ID:                          to.Ptr("59a92b06-6e5a-468c-b748-e28c8ff28da3"),
+		ProvisioningState:           to.Ptr(core.PrivateEndpointProvisioningStateSucceeded),
+		TargetPrivateLinkResourceID: to.Ptr("/subscriptions/e3bf3f1a-4d64-4e42-85e9-aa1b84e3874/resourceGroups/testRG/providers/Microsoft.SqlServer/SqlServer/sql1"),
+		TargetSubresourceType:       to.Ptr("sqlServer"),
+	}
+
+	testsuite.serverFactory.ManagedPrivateEndpointsServer.GetWorkspaceManagedPrivateEndpoint = func(ctx context.Context, workspaceID string, managedPrivateEndpointID string, options *core.ManagedPrivateEndpointsClientGetWorkspaceManagedPrivateEndpointOptions) (resp azfake.Responder[core.ManagedPrivateEndpointsClientGetWorkspaceManagedPrivateEndpointResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleManagedPrivateEndpointID, managedPrivateEndpointID)
+		resp = azfake.Responder[core.ManagedPrivateEndpointsClientGetWorkspaceManagedPrivateEndpointResponse]{}
+		resp.SetResponse(http.StatusOK, core.ManagedPrivateEndpointsClientGetWorkspaceManagedPrivateEndpointResponse{ManagedPrivateEndpoint: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewManagedPrivateEndpointsClient()
+	res, err := client.GetWorkspaceManagedPrivateEndpoint(ctx, exampleWorkspaceID, exampleManagedPrivateEndpointID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ManagedPrivateEndpoint))
+}
+
+func (testsuite *FakeTestSuite) TestConnections_ListConnections() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+
+	exampleRes := core.ListConnectionsResponse{
+		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/connections?continuationToken=LDEsMTAwMDAwLDA%3D"),
+		Value: []core.Connection{
+			{
+				ConnectionDetails: &core.ListConnectionDetails{
+					Type: to.Ptr("Web"),
+					Path: to.Ptr("https://www.contoso.com"),
+				},
+				ConnectivityType: to.Ptr(core.ConnectivityTypeShareableCloud),
+				CredentialDetails: &core.ListCredentialDetails{
+					ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+					SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+					SkipTestConnection:   to.Ptr(false),
+					CredentialType:       to.Ptr(core.CredentialTypeAnonymous),
+				},
+				DisplayName:  to.Ptr("ContosoConnection1"),
+				ID:           to.Ptr("6952a7b2-aea3-414f-9d85-6c0fe5d34539"),
+				PrivacyLevel: to.Ptr(core.PrivacyLevelPublic),
+			},
+			{
+				ConnectionDetails: &core.ListConnectionDetails{
+					Type: to.Ptr("SQL"),
+					Path: to.Ptr("contoso.database.windows.net;sales"),
+				},
+				ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGateway),
+				CredentialDetails: &core.ListCredentialDetails{
+					ConnectionEncryption: to.Ptr(core.ConnectionEncryptionAny),
+					SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+					SkipTestConnection:   to.Ptr(false),
+					CredentialType:       to.Ptr(core.CredentialTypeBasic),
+				},
+				DisplayName:  to.Ptr("ContosoConnection2"),
+				GatewayID:    to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
+				ID:           to.Ptr("f6a39b76-9816-4e4b-b93a-f42e405017b7"),
+				PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
+			}},
+	}
+
+	testsuite.serverFactory.ConnectionsServer.NewListConnectionsPager = func(options *core.ConnectionsClientListConnectionsOptions) (resp azfake.PagerResponder[core.ConnectionsClientListConnectionsResponse]) {
+		resp = azfake.PagerResponder[core.ConnectionsClientListConnectionsResponse]{}
+		resp.AddPage(http.StatusOK, core.ConnectionsClientListConnectionsResponse{ListConnectionsResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewConnectionsClient()
+	pager := client.NewListConnectionsPager(&core.ConnectionsClientListConnectionsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.ListConnectionsResponse))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestConnections_CreateConnection() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Cloud example"},
+	})
+	var exampleCreateConnectionRequest core.CreateConnectionRequestClassification
+	exampleCreateConnectionRequest = &core.CreateCloudConnectionRequest{
+		ConnectionDetails: &core.CreateConnectionDetails{
+			Type:           to.Ptr("SQL"),
+			CreationMethod: to.Ptr("SQL"),
+			Parameters: []core.ConnectionDetailsParameterClassification{
+				&core.ConnectionDetailsTextParameter{
+					Name:     to.Ptr("server"),
+					DataType: to.Ptr(core.DataTypeText),
+					Value:    to.Ptr("contoso.database.windows.net"),
+				},
+				&core.ConnectionDetailsTextParameter{
+					Name:     to.Ptr("database"),
+					DataType: to.Ptr(core.DataTypeText),
+					Value:    to.Ptr("sales"),
+				}},
+		},
+		ConnectivityType: to.Ptr(core.ConnectivityTypeShareableCloud),
+		DisplayName:      to.Ptr("ContosoCloudConnection"),
+		PrivacyLevel:     to.Ptr(core.PrivacyLevelOrganizational),
+		CredentialDetails: &core.CreateCredentialDetails{
+			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+			SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+			SkipTestConnection:   to.Ptr(false),
+			Credentials: &core.BasicCredentials{
+				CredentialType: to.Ptr(core.CredentialTypeBasic),
+				Password:       to.Ptr("********"),
+				Username:       to.Ptr("admin"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.ConnectionsServer.CreateConnection = func(ctx context.Context, createConnectionRequest core.CreateConnectionRequestClassification, options *core.ConnectionsClientCreateConnectionOptions) (resp azfake.Responder[core.ConnectionsClientCreateConnectionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateConnectionRequest, createConnectionRequest))
+		resp = azfake.Responder[core.ConnectionsClientCreateConnectionResponse]{}
+		resp.SetResponse(http.StatusCreated, core.ConnectionsClientCreateConnectionResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewConnectionsClient()
+	_, err = client.CreateConnection(ctx, exampleCreateConnectionRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Virtual network gateway example"},
+	})
+	exampleCreateConnectionRequest = &core.CreateVirtualNetworkGatewayConnectionRequest{
+		ConnectionDetails: &core.CreateConnectionDetails{
+			Type:           to.Ptr("SQL"),
+			CreationMethod: to.Ptr("SQL"),
+			Parameters: []core.ConnectionDetailsParameterClassification{
+				&core.ConnectionDetailsTextParameter{
+					Name:     to.Ptr("server"),
+					DataType: to.Ptr(core.DataTypeText),
+					Value:    to.Ptr("contoso.database.windows.net"),
+				},
+				&core.ConnectionDetailsTextParameter{
+					Name:     to.Ptr("database"),
+					DataType: to.Ptr(core.DataTypeText),
+					Value:    to.Ptr("sales"),
+				}},
+		},
+		ConnectivityType: to.Ptr(core.ConnectivityTypeVirtualNetworkGateway),
+		DisplayName:      to.Ptr("ContosoVirtualNetworkGatewayConnection"),
+		PrivacyLevel:     to.Ptr(core.PrivacyLevelOrganizational),
+		CredentialDetails: &core.CreateCredentialDetails{
+			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionEncrypted),
+			SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+			SkipTestConnection:   to.Ptr(false),
+			Credentials: &core.BasicCredentials{
+				CredentialType: to.Ptr(core.CredentialTypeBasic),
+				Password:       to.Ptr("*********"),
+				Username:       to.Ptr("admin"),
+			},
+		},
+		GatewayID: to.Ptr("93491300-cfbd-402f-bf17-9ace59a92354"),
+	}
+
+	testsuite.serverFactory.ConnectionsServer.CreateConnection = func(ctx context.Context, createConnectionRequest core.CreateConnectionRequestClassification, options *core.ConnectionsClientCreateConnectionOptions) (resp azfake.Responder[core.ConnectionsClientCreateConnectionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateConnectionRequest, createConnectionRequest))
+		resp = azfake.Responder[core.ConnectionsClientCreateConnectionResponse]{}
+		resp.SetResponse(http.StatusCreated, core.ConnectionsClientCreateConnectionResponse{}, nil)
+		return
+	}
+
+	_, err = client.CreateConnection(ctx, exampleCreateConnectionRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestConnections_GetConnection() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+	var exampleConnectionID string
+	exampleConnectionID = "f6a39b76-9816-4e4b-b93a-f42e405017b7"
+
+	exampleRes := core.Connection{
+		ConnectionDetails: &core.ListConnectionDetails{
+			Type: to.Ptr("SQL"),
+			Path: to.Ptr("contoso.database.windows.net;sales"),
+		},
+		ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGateway),
+		CredentialDetails: &core.ListCredentialDetails{
+			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+			SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+			SkipTestConnection:   to.Ptr(false),
+			CredentialType:       to.Ptr(core.CredentialTypeBasic),
+		},
+		DisplayName:  to.Ptr("ContosoConnection"),
+		GatewayID:    to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
+		ID:           to.Ptr("f6a39b76-9816-4e4b-b93a-f42e405017b7"),
+		PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
+	}
+
+	testsuite.serverFactory.ConnectionsServer.GetConnection = func(ctx context.Context, connectionID string, options *core.ConnectionsClientGetConnectionOptions) (resp azfake.Responder[core.ConnectionsClientGetConnectionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		resp = azfake.Responder[core.ConnectionsClientGetConnectionResponse]{}
+		resp.SetResponse(http.StatusOK, core.ConnectionsClientGetConnectionResponse{Connection: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewConnectionsClient()
+	res, err := client.GetConnection(ctx, exampleConnectionID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Connection))
+}
+
+func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Personal cloud example"},
+	})
+	var exampleConnectionID string
+	var exampleUpdateConnectionRequest core.UpdateConnectionRequestClassification
+	exampleConnectionID = "7a0369b2-58c4-4b67-b3f3-92156a95f1cd"
+	exampleUpdateConnectionRequest = &core.UpdatePersonalCloudConnectionRequest{
+		ConnectivityType: to.Ptr(core.ConnectivityTypePersonalCloud),
+		PrivacyLevel:     to.Ptr(core.PrivacyLevelOrganizational),
+	}
+
+	exampleRes := core.Connection{
+		ConnectionDetails: &core.ListConnectionDetails{
+			Type: to.Ptr("SQL"),
+			Path: to.Ptr("contoso.database.windows.net;finances"),
+		},
+		ConnectivityType: to.Ptr(core.ConnectivityTypePersonalCloud),
+		CredentialDetails: &core.ListCredentialDetails{
+			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+			SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+			SkipTestConnection:   to.Ptr(false),
+			CredentialType:       to.Ptr(core.CredentialTypeOAuth2),
+		},
+		ID:           to.Ptr("7a0369b2-58c4-4b67-b3f3-92156a95f1cd"),
+		PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
+	}
+
+	testsuite.serverFactory.ConnectionsServer.UpdateConnection = func(ctx context.Context, connectionID string, updateConnectionRequest core.UpdateConnectionRequestClassification, options *core.ConnectionsClientUpdateConnectionOptions) (resp azfake.Responder[core.ConnectionsClientUpdateConnectionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateConnectionRequest, updateConnectionRequest))
+		resp = azfake.Responder[core.ConnectionsClientUpdateConnectionResponse]{}
+		resp.SetResponse(http.StatusOK, core.ConnectionsClientUpdateConnectionResponse{Connection: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewConnectionsClient()
+	res, err := client.UpdateConnection(ctx, exampleConnectionID, exampleUpdateConnectionRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Connection))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Shareable cloud example"},
+	})
+	exampleConnectionID = "fa968eee-8075-48f6-8c6d-41260ee1396d"
+	exampleUpdateConnectionRequest = &core.UpdateShareableCloudConnectionRequest{
+		ConnectivityType: to.Ptr(core.ConnectivityTypeShareableCloud),
+		DisplayName:      to.Ptr("ContosoCloudConnection"),
+	}
+
+	exampleRes = core.Connection{
+		ConnectionDetails: &core.ListConnectionDetails{
+			Type: to.Ptr("SQL"),
+			Path: to.Ptr("contoso.database.windows.net;networks"),
+		},
+		ConnectivityType: to.Ptr(core.ConnectivityTypeShareableCloud),
+		CredentialDetails: &core.ListCredentialDetails{
+			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+			SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+			SkipTestConnection:   to.Ptr(true),
+			CredentialType:       to.Ptr(core.CredentialTypeBasic),
+		},
+		DisplayName:  to.Ptr("ContosoCloudConnection"),
+		ID:           to.Ptr("fa968eee-8075-48f6-8c6d-41260ee1396d"),
+		PrivacyLevel: to.Ptr(core.PrivacyLevelPublic),
+	}
+
+	testsuite.serverFactory.ConnectionsServer.UpdateConnection = func(ctx context.Context, connectionID string, updateConnectionRequest core.UpdateConnectionRequestClassification, options *core.ConnectionsClientUpdateConnectionOptions) (resp azfake.Responder[core.ConnectionsClientUpdateConnectionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateConnectionRequest, updateConnectionRequest))
+		resp = azfake.Responder[core.ConnectionsClientUpdateConnectionResponse]{}
+		resp.SetResponse(http.StatusOK, core.ConnectionsClientUpdateConnectionResponse{Connection: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.UpdateConnection(ctx, exampleConnectionID, exampleUpdateConnectionRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Connection))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Virtual network gateway example"},
+	})
+	exampleConnectionID = "6b571614-2e98-4bfd-b9ed-1cb8d3ffc396"
+	exampleUpdateConnectionRequest = &core.UpdateVirtualNetworkGatewayConnectionRequest{
+		ConnectivityType: to.Ptr(core.ConnectivityTypeVirtualNetworkGateway),
+		PrivacyLevel:     to.Ptr(core.PrivacyLevelOrganizational),
+		CredentialDetails: &core.UpdateCredentialDetails{
+			SingleSignOnType: to.Ptr(core.SingleSignOnTypeNone),
+		},
+		DisplayName: to.Ptr("ContosoMarketingVirtualNetworkGatewayConnection"),
+	}
+
+	exampleRes = core.Connection{
+		ConnectionDetails: &core.ListConnectionDetails{
+			Type: to.Ptr("SQL"),
+			Path: to.Ptr("contoso.database.windows.net;marketing"),
+		},
+		ConnectivityType: to.Ptr(core.ConnectivityTypeVirtualNetworkGateway),
+		CredentialDetails: &core.ListCredentialDetails{
+			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+			SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+			SkipTestConnection:   to.Ptr(false),
+			CredentialType:       to.Ptr(core.CredentialTypeBasic),
+		},
+		DisplayName:  to.Ptr("ContosoMarketingVirtualNetworkGatewayConnection"),
+		GatewayID:    to.Ptr("befccff4-3ee6-40d7-b8f1-a0a9fd684a85"),
+		ID:           to.Ptr("6b571614-2e98-4bfd-b9ed-1cb8d3ffc396"),
+		PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
+	}
+
+	testsuite.serverFactory.ConnectionsServer.UpdateConnection = func(ctx context.Context, connectionID string, updateConnectionRequest core.UpdateConnectionRequestClassification, options *core.ConnectionsClientUpdateConnectionOptions) (resp azfake.Responder[core.ConnectionsClientUpdateConnectionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateConnectionRequest, updateConnectionRequest))
+		resp = azfake.Responder[core.ConnectionsClientUpdateConnectionResponse]{}
+		resp.SetResponse(http.StatusOK, core.ConnectionsClientUpdateConnectionResponse{Connection: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.UpdateConnection(ctx, exampleConnectionID, exampleUpdateConnectionRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Connection))
+}
+
+func (testsuite *FakeTestSuite) TestConnections_DeleteConnection() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+	var exampleConnectionID string
+	exampleConnectionID = "536f7c95-076c-40b5-8fe0-2179536e4161"
+
+	testsuite.serverFactory.ConnectionsServer.DeleteConnection = func(ctx context.Context, connectionID string, options *core.ConnectionsClientDeleteConnectionOptions) (resp azfake.Responder[core.ConnectionsClientDeleteConnectionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		resp = azfake.Responder[core.ConnectionsClientDeleteConnectionResponse]{}
+		resp.SetResponse(http.StatusOK, core.ConnectionsClientDeleteConnectionResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewConnectionsClient()
+	_, err = client.DeleteConnection(ctx, exampleConnectionID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestConnections_ListSupportedConnectionTypes() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+
+	exampleRes := core.ListSupportedConnectionTypesResponse{
+		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/connections/supportedConnections?connectivityType=ShareableCloud&continuationToken=LDEsMTAwMDAwLDA%3D"),
+		Value: []core.ConnectionCreationMetadata{
+			{
+				Type: to.Ptr("SQL"),
+				CreationMethods: []core.ConnectionCreationMethod{
+					{
+						Name: to.Ptr("SQL"),
+						Parameters: []core.ConnectionCreationParameter{
+							{
+								Name:     to.Ptr("server"),
+								DataType: to.Ptr(core.DataTypeText),
+								Required: to.Ptr(true),
+							},
+							{
+								Name:     to.Ptr("database"),
+								DataType: to.Ptr(core.DataTypeText),
+								Required: to.Ptr(false),
+							}},
+					}},
+				SupportedConnectionEncryptionTypes: []core.ConnectionEncryption{
+					core.ConnectionEncryptionEncrypted,
+					core.ConnectionEncryptionNotEncrypted},
+				SupportedCredentialTypes: []core.CredentialType{
+					core.CredentialTypeBasic,
+					core.CredentialTypeOAuth2},
+				SupportsSkipTestConnection: to.Ptr(true),
+			}},
+	}
+
+	testsuite.serverFactory.ConnectionsServer.NewListSupportedConnectionTypesPager = func(options *core.ConnectionsClientListSupportedConnectionTypesOptions) (resp azfake.PagerResponder[core.ConnectionsClientListSupportedConnectionTypesResponse]) {
+		resp = azfake.PagerResponder[core.ConnectionsClientListSupportedConnectionTypesResponse]{}
+		resp.AddPage(http.StatusOK, core.ConnectionsClientListSupportedConnectionTypesResponse{ListSupportedConnectionTypesResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewConnectionsClient()
+	pager := client.NewListSupportedConnectionTypesPager(&core.ConnectionsClientListSupportedConnectionTypesOptions{GatewayID: to.Ptr("6d824cb9-6bfb-4bdb-a702-238e172a8743"),
+		ShowAllCreationMethods: nil,
+		ContinuationToken:      nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.ListSupportedConnectionTypesResponse))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestConnections_ListConnectionRoleAssignments() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List connection role assignment example"},
+	})
+	var exampleConnectionID string
+	exampleConnectionID = "9558d649-84f1-4b7e-850a-59b5d0ae95eb"
+
+	exampleRes := core.ConnectionRoleAssignments{
+		Value: []core.ConnectionRoleAssignment{
+			{
+				ID: to.Ptr("1f227c77-826d-40eb-a2b7-27a325afb900"),
+				Principal: &core.Principal{
+					Type: to.Ptr(core.PrincipalTypeUser),
+					ID:   to.Ptr("1c15c348-dd88-4065-8f25-57581c216bcf"),
+				},
+				Role: to.Ptr(core.ConnectionRoleOwner),
+			},
+			{
+				ID: to.Ptr("c8a395c6-f7ad-4caa-8ab1-0cc5684a3966"),
+				Principal: &core.Principal{
+					Type: to.Ptr(core.PrincipalTypeGroup),
+					ID:   to.Ptr("d3a7dbf7-6641-48f2-851e-d71bbf9d90c4"),
+				},
+				Role: to.Ptr(core.ConnectionRoleOwner),
+			},
+			{
+				ID: to.Ptr("f42d1536-e8d3-4f69-8eab-8509bef50315"),
+				Principal: &core.Principal{
+					Type: to.Ptr(core.PrincipalTypeGroup),
+					ID:   to.Ptr("48ba22da-4431-4da4-8b70-3401685bf9e5"),
+				},
+				Role: to.Ptr(core.ConnectionRoleUser),
+			},
+			{
+				ID: to.Ptr("40ac84af-e80b-4e6d-8b38-91541be3845f"),
+				Principal: &core.Principal{
+					Type: to.Ptr(core.PrincipalTypeUser),
+					ID:   to.Ptr("1dfa1747-ce76-4caf-99c8-360b95f9f17a"),
+				},
+				Role: to.Ptr(core.ConnectionRoleUserWithReshare),
+			}},
+	}
+
+	testsuite.serverFactory.ConnectionsServer.NewListConnectionRoleAssignmentsPager = func(connectionID string, options *core.ConnectionsClientListConnectionRoleAssignmentsOptions) (resp azfake.PagerResponder[core.ConnectionsClientListConnectionRoleAssignmentsResponse]) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		resp = azfake.PagerResponder[core.ConnectionsClientListConnectionRoleAssignmentsResponse]{}
+		resp.AddPage(http.StatusOK, core.ConnectionsClientListConnectionRoleAssignmentsResponse{ConnectionRoleAssignments: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewConnectionsClient()
+	pager := client.NewListConnectionRoleAssignmentsPager(exampleConnectionID, &core.ConnectionsClientListConnectionRoleAssignmentsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.ConnectionRoleAssignments))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List connection role assignment with continuation example"},
+	})
+	exampleConnectionID = "9558d649-84f1-4b7e-850a-59b5d0ae95eb"
+
+	exampleRes = core.ConnectionRoleAssignments{
+		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/connections/9558d649-84f1-4b7e-850a-59b5d0ae95eb/roleAssignments?continuationToken=LDEsMTAwMDAwLDA%3D"),
+		Value: []core.ConnectionRoleAssignment{
+			{
+				ID: to.Ptr("1f227c77-826d-40eb-a2b7-27a325afb900"),
+				Principal: &core.Principal{
+					Type: to.Ptr(core.PrincipalTypeUser),
+					ID:   to.Ptr("1c15c348-dd88-4065-8f25-57581c216bcf"),
+				},
+				Role: to.Ptr(core.ConnectionRoleOwner),
+			},
+			{
+				ID: to.Ptr("c8a395c6-f7ad-4caa-8ab1-0cc5684a3966"),
+				Principal: &core.Principal{
+					Type: to.Ptr(core.PrincipalTypeGroup),
+					ID:   to.Ptr("d3a7dbf7-6641-48f2-851e-d71bbf9d90c4"),
+				},
+				Role: to.Ptr(core.ConnectionRoleOwner),
+			},
+			{
+				ID: to.Ptr("f42d1536-e8d3-4f69-8eab-8509bef50315"),
+				Principal: &core.Principal{
+					Type: to.Ptr(core.PrincipalTypeGroup),
+					ID:   to.Ptr("48ba22da-4431-4da4-8b70-3401685bf9e5"),
+				},
+				Role: to.Ptr(core.ConnectionRoleUser),
+			},
+			{
+				ID: to.Ptr("40ac84af-e80b-4e6d-8b38-91541be3845f"),
+				Principal: &core.Principal{
+					Type: to.Ptr(core.PrincipalTypeUser),
+					ID:   to.Ptr("1dfa1747-ce76-4caf-99c8-360b95f9f17a"),
+				},
+				Role: to.Ptr(core.ConnectionRoleUserWithReshare),
+			}},
+	}
+
+	testsuite.serverFactory.ConnectionsServer.NewListConnectionRoleAssignmentsPager = func(connectionID string, options *core.ConnectionsClientListConnectionRoleAssignmentsOptions) (resp azfake.PagerResponder[core.ConnectionsClientListConnectionRoleAssignmentsResponse]) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		resp = azfake.PagerResponder[core.ConnectionsClientListConnectionRoleAssignmentsResponse]{}
+		resp.AddPage(http.StatusOK, core.ConnectionsClientListConnectionRoleAssignmentsResponse{ConnectionRoleAssignments: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListConnectionRoleAssignmentsPager(exampleConnectionID, &core.ConnectionsClientListConnectionRoleAssignmentsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.ConnectionRoleAssignments))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestConnections_AddConnectionRoleAssignment() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Add connection role assignment example"},
+	})
+	var exampleConnectionID string
+	var exampleAddConnectionRoleAssignmentRequest core.AddConnectionRoleAssignmentRequest
+	exampleConnectionID = "f3a2e6af-d048-4f85-94d9-b3d16140df05"
+	exampleAddConnectionRoleAssignmentRequest = core.AddConnectionRoleAssignmentRequest{
+		Principal: &core.Principal{
+			Type: to.Ptr(core.PrincipalTypeUser),
+			ID:   to.Ptr("6a002b3d-e4ec-43df-8c08-e8eb7547d9dd"),
+		},
+		Role: to.Ptr(core.ConnectionRoleOwner),
+	}
+
+	testsuite.serverFactory.ConnectionsServer.AddConnectionRoleAssignment = func(ctx context.Context, connectionID string, addConnectionRoleAssignmentRequest core.AddConnectionRoleAssignmentRequest, options *core.ConnectionsClientAddConnectionRoleAssignmentOptions) (resp azfake.Responder[core.ConnectionsClientAddConnectionRoleAssignmentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		testsuite.Require().True(reflect.DeepEqual(exampleAddConnectionRoleAssignmentRequest, addConnectionRoleAssignmentRequest))
+		resp = azfake.Responder[core.ConnectionsClientAddConnectionRoleAssignmentResponse]{}
+		resp.SetResponse(http.StatusCreated, core.ConnectionsClientAddConnectionRoleAssignmentResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewConnectionsClient()
+	_, err = client.AddConnectionRoleAssignment(ctx, exampleConnectionID, exampleAddConnectionRoleAssignmentRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestConnections_GetConnectionRoleAssignment() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+	var exampleConnectionID string
+	var exampleConnectionRoleAssignmentID string
+	exampleConnectionID = "4bbb41c0-1dcc-4a8c-aff5-c681a3d10208"
+	exampleConnectionRoleAssignmentID = "43970761-afc9-4428-ae6e-3b08bef098ff"
+
+	exampleRes := core.ConnectionRoleAssignment{
+		ID: to.Ptr("c28d68d6-2984-4d36-9a6b-82751093d3f1"),
+		Principal: &core.Principal{
+			Type: to.Ptr(core.PrincipalTypeUser),
+			ID:   to.Ptr("43970761-afc9-4428-ae6e-3b08bef098ff"),
+		},
+		Role: to.Ptr(core.ConnectionRoleOwner),
+	}
+
+	testsuite.serverFactory.ConnectionsServer.GetConnectionRoleAssignment = func(ctx context.Context, connectionID string, connectionRoleAssignmentID string, options *core.ConnectionsClientGetConnectionRoleAssignmentOptions) (resp azfake.Responder[core.ConnectionsClientGetConnectionRoleAssignmentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		testsuite.Require().Equal(exampleConnectionRoleAssignmentID, connectionRoleAssignmentID)
+		resp = azfake.Responder[core.ConnectionsClientGetConnectionRoleAssignmentResponse]{}
+		resp.SetResponse(http.StatusOK, core.ConnectionsClientGetConnectionRoleAssignmentResponse{ConnectionRoleAssignment: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewConnectionsClient()
+	res, err := client.GetConnectionRoleAssignment(ctx, exampleConnectionID, exampleConnectionRoleAssignmentID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ConnectionRoleAssignment))
+}
+
+func (testsuite *FakeTestSuite) TestConnections_UpdateConnectionRoleAssignment() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update connection role assignment example"},
+	})
+	var exampleConnectionID string
+	var exampleConnectionRoleAssignmentID string
+	var exampleUpdateConnectionRoleAssignmentRequest core.UpdateConnectionRoleAssignmentRequest
+	exampleConnectionID = "fe8e181d-dbb8-471a-99f0-fdbf0a2ad4fd"
+	exampleConnectionRoleAssignmentID = "449a8a88-7f31-40c1-aece-8e128adb14a8"
+	exampleUpdateConnectionRoleAssignmentRequest = core.UpdateConnectionRoleAssignmentRequest{
+		Role: to.Ptr(core.ConnectionRoleUserWithReshare),
+	}
+
+	exampleRes := core.ConnectionRoleAssignment{
+		ID: to.Ptr("43970761-afc9-4428-ae6e-3b08bef098ff"),
+		Principal: &core.Principal{
+			Type: to.Ptr(core.PrincipalTypeUser),
+			ID:   to.Ptr("43970761-afc9-4428-ae6e-3b08bef098ff"),
+		},
+		Role: to.Ptr(core.ConnectionRoleUserWithReshare),
+	}
+
+	testsuite.serverFactory.ConnectionsServer.UpdateConnectionRoleAssignment = func(ctx context.Context, connectionID string, connectionRoleAssignmentID string, updateConnectionRoleAssignmentRequest core.UpdateConnectionRoleAssignmentRequest, options *core.ConnectionsClientUpdateConnectionRoleAssignmentOptions) (resp azfake.Responder[core.ConnectionsClientUpdateConnectionRoleAssignmentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		testsuite.Require().Equal(exampleConnectionRoleAssignmentID, connectionRoleAssignmentID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateConnectionRoleAssignmentRequest, updateConnectionRoleAssignmentRequest))
+		resp = azfake.Responder[core.ConnectionsClientUpdateConnectionRoleAssignmentResponse]{}
+		resp.SetResponse(http.StatusOK, core.ConnectionsClientUpdateConnectionRoleAssignmentResponse{ConnectionRoleAssignment: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewConnectionsClient()
+	res, err := client.UpdateConnectionRoleAssignment(ctx, exampleConnectionID, exampleConnectionRoleAssignmentID, exampleUpdateConnectionRoleAssignmentRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ConnectionRoleAssignment))
+}
+
+func (testsuite *FakeTestSuite) TestConnections_DeleteConnectionRoleAssignment() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete connection role assignment example"},
+	})
+	var exampleConnectionID string
+	var exampleConnectionRoleAssignmentID string
+	exampleConnectionID = "a06fbff3-09e1-4958-a92b-2a7550459762"
+	exampleConnectionRoleAssignmentID = "b7439ed7-7331-4c59-b2bb-f4f917e61979"
+
+	testsuite.serverFactory.ConnectionsServer.DeleteConnectionRoleAssignment = func(ctx context.Context, connectionID string, connectionRoleAssignmentID string, options *core.ConnectionsClientDeleteConnectionRoleAssignmentOptions) (resp azfake.Responder[core.ConnectionsClientDeleteConnectionRoleAssignmentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		testsuite.Require().Equal(exampleConnectionRoleAssignmentID, connectionRoleAssignmentID)
+		resp = azfake.Responder[core.ConnectionsClientDeleteConnectionRoleAssignmentResponse]{}
+		resp.SetResponse(http.StatusOK, core.ConnectionsClientDeleteConnectionRoleAssignmentResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewConnectionsClient()
+	_, err = client.DeleteConnectionRoleAssignment(ctx, exampleConnectionID, exampleConnectionRoleAssignmentID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestGateways_ListGateways() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+
+	exampleRes := core.ListGatewaysResponse{
+		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/connections?continuationToken=LDEsMTAwMDAwLDA%3D"),
+		Value: []core.GatewayClassification{
+			&core.OnPremisesGateway{
+				Type:                        to.Ptr(core.GatewayTypeOnPremises),
+				ID:                          to.Ptr("8e41c4dd-a382-4937-9bf3-695ab881f7c2"),
+				AllowCloudConnectionRefresh: to.Ptr(true),
+				AllowCustomConnectors:       to.Ptr(true),
+				DisplayName:                 to.Ptr("ContosoOnPremisesGateway"),
+				LoadBalancingSetting:        to.Ptr(core.LoadBalancingSettingDistributeEvenly),
+				NumberOfMemberGateways:      to.Ptr[int32](2),
+				PublicKey: &core.PublicKey{
+					Exponent: to.Ptr("AQGB"),
+					Modulus:  to.Ptr("od9b...90Jp1Q=="),
+				},
+				Version: to.Ptr("3000.1.1"),
+			},
+			&core.OnPremisesGatewayPersonal{
+				Type: to.Ptr(core.GatewayTypeOnPremisesPersonal),
+				ID:   to.Ptr("ca8979ff-4238-4489-ad13-2e1bd69a8412"),
+				PublicKey: &core.PublicKey{
+					Exponent: to.Ptr("AQOV"),
+					Modulus:  to.Ptr("pt9b...87Jp1Q=="),
+				},
+				Version: to.Ptr("3000.1.1"),
+			},
+			&core.VirtualNetworkGateway{
+				Type:                         to.Ptr(core.GatewayTypeVirtualNetwork),
+				ID:                           to.Ptr("271c5c9a-0860-4927-b1da-ce49008d6565"),
+				CapacityID:                   to.Ptr("ed26b6f3-7bc5-44b0-9565-a8942619ef4c"),
+				DisplayName:                  to.Ptr("ContosoVirtualNetworkGateway"),
+				InactivityMinutesBeforeSleep: to.Ptr[int32](1440),
+				NumberOfMemberGateways:       to.Ptr[int32](3),
+				VirtualNetworkAzureResource: &core.VirtualNetworkAzureResource{
+					ResourceGroupName:  to.Ptr("ContosoResourceGroup"),
+					SubscriptionID:     to.Ptr("879b4ba0-ed17-4ff2-851e-4a2228e00b70"),
+					SubnetName:         to.Ptr("ContosoSubnet"),
+					VirtualNetworkName: to.Ptr("ContosoVirtualNetwork"),
+				},
+			}},
+	}
+
+	testsuite.serverFactory.GatewaysServer.NewListGatewaysPager = func(options *core.GatewaysClientListGatewaysOptions) (resp azfake.PagerResponder[core.GatewaysClientListGatewaysResponse]) {
+		resp = azfake.PagerResponder[core.GatewaysClientListGatewaysResponse]{}
+		resp.AddPage(http.StatusOK, core.GatewaysClientListGatewaysResponse{ListGatewaysResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGatewaysClient()
+	pager := client.NewListGatewaysPager(&core.GatewaysClientListGatewaysOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.ListGatewaysResponse))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestGateways_CreateGateway() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Virtual network gateway example"},
+	})
+	var exampleCreateGatewayRequest core.CreateGatewayRequestClassification
+	exampleCreateGatewayRequest = &core.CreateVirtualNetworkGatewayRequest{
+		Type:                         to.Ptr(core.GatewayTypeVirtualNetwork),
+		CapacityID:                   to.Ptr("ed26b6f3-7bc5-44b0-9565-a8942619ef4c"),
+		DisplayName:                  to.Ptr("ContosoVirtualNetworkGateway"),
+		InactivityMinutesBeforeSleep: to.Ptr[int32](120),
+		NumberOfMemberGateways:       to.Ptr[int32](3),
+		VirtualNetworkAzureResource: &core.VirtualNetworkAzureResource{
+			ResourceGroupName:  to.Ptr("ContosoResourceGroup"),
+			SubscriptionID:     to.Ptr("879b4ba0-ed17-4ff2-851e-4a2228e00b70"),
+			SubnetName:         to.Ptr("ContosoSubnet"),
+			VirtualNetworkName: to.Ptr("ContosoVirtualNetwork"),
+		},
+	}
+
+	testsuite.serverFactory.GatewaysServer.CreateGateway = func(ctx context.Context, createGatewayRequest core.CreateGatewayRequestClassification, options *core.GatewaysClientCreateGatewayOptions) (resp azfake.Responder[core.GatewaysClientCreateGatewayResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateGatewayRequest, createGatewayRequest))
+		resp = azfake.Responder[core.GatewaysClientCreateGatewayResponse]{}
+		resp.SetResponse(http.StatusCreated, core.GatewaysClientCreateGatewayResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGatewaysClient()
+	_, err = client.CreateGateway(ctx, exampleCreateGatewayRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestGateways_GetGateway() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+	var exampleGatewayID string
+	exampleGatewayID = "8e41c4dd-a382-4937-9bf3-695ab881f7c2"
+
+	exampleRes := core.GatewaysClientGetGatewayResponse{
+		GatewayClassification: &core.OnPremisesGateway{
+			Type:                        to.Ptr(core.GatewayTypeOnPremises),
+			ID:                          to.Ptr("8e41c4dd-a382-4937-9bf3-695ab881f7c2"),
+			AllowCloudConnectionRefresh: to.Ptr(true),
+			AllowCustomConnectors:       to.Ptr(true),
+			DisplayName:                 to.Ptr("ContosoOnPremisesGateway"),
+			LoadBalancingSetting:        to.Ptr(core.LoadBalancingSettingDistributeEvenly),
+			NumberOfMemberGateways:      to.Ptr[int32](2),
+			PublicKey: &core.PublicKey{
+				Exponent: to.Ptr("AQGB"),
+				Modulus:  to.Ptr("od9b...90Jp1Q=="),
+			},
+			Version: to.Ptr("3000.1.1"),
+		},
+	}
+
+	testsuite.serverFactory.GatewaysServer.GetGateway = func(ctx context.Context, gatewayID string, options *core.GatewaysClientGetGatewayOptions) (resp azfake.Responder[core.GatewaysClientGetGatewayResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleGatewayID, gatewayID)
+		resp = azfake.Responder[core.GatewaysClientGetGatewayResponse]{}
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGatewaysClient()
+	res, err := client.GetGateway(ctx, exampleGatewayID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
+}
+
+func (testsuite *FakeTestSuite) TestGateways_UpdateGateway() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"On-premises gateway example"},
+	})
+	var exampleGatewayID string
+	var exampleUpdateGatewayRequest core.UpdateGatewayRequestClassification
+	exampleGatewayID = "3d1290e1-e3ed-4bd6-93bc-2bbd5b49a789"
+	exampleUpdateGatewayRequest = &core.UpdateOnPremisesGatewayRequest{
+		Type:                        to.Ptr(core.GatewayTypeOnPremises),
+		DisplayName:                 to.Ptr("ContosoGatewayCluster1"),
+		AllowCloudConnectionRefresh: to.Ptr(false),
+		AllowCustomConnectors:       to.Ptr(false),
+		LoadBalancingSetting:        to.Ptr(core.LoadBalancingSettingFailover),
+	}
+
+	exampleRes := core.GatewaysClientUpdateGatewayResponse{
+		GatewayClassification: &core.OnPremisesGateway{
+			Type:                        to.Ptr(core.GatewayTypeOnPremises),
+			ID:                          to.Ptr("3d1290e1-e3ed-4bd6-93bc-2bbd5b49a789"),
+			AllowCloudConnectionRefresh: to.Ptr(false),
+			AllowCustomConnectors:       to.Ptr(false),
+			DisplayName:                 to.Ptr("ContosoGatewayCluster1"),
+			LoadBalancingSetting:        to.Ptr(core.LoadBalancingSettingFailover),
+			NumberOfMemberGateways:      to.Ptr[int32](2),
+			PublicKey: &core.PublicKey{
+				Exponent: to.Ptr("AQGB"),
+				Modulus:  to.Ptr("od9b...90Jp1Q=="),
+			},
+			Version: to.Ptr("3000.1.2"),
+		},
+	}
+
+	testsuite.serverFactory.GatewaysServer.UpdateGateway = func(ctx context.Context, gatewayID string, updateGatewayRequest core.UpdateGatewayRequestClassification, options *core.GatewaysClientUpdateGatewayOptions) (resp azfake.Responder[core.GatewaysClientUpdateGatewayResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleGatewayID, gatewayID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateGatewayRequest, updateGatewayRequest))
+		resp = azfake.Responder[core.GatewaysClientUpdateGatewayResponse]{}
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGatewaysClient()
+	res, err := client.UpdateGateway(ctx, exampleGatewayID, exampleUpdateGatewayRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Virtual network gateway example"},
+	})
+	exampleGatewayID = "7015263e-885f-455b-80f7-bbf862899176"
+	exampleUpdateGatewayRequest = &core.UpdateVirtualNetworkGatewayRequest{
+		Type:                         to.Ptr(core.GatewayTypeVirtualNetwork),
+		DisplayName:                  to.Ptr("ContosoVirtualNetworkGateway1"),
+		CapacityID:                   to.Ptr("7cf7181f-9457-4178-b488-e7472b02faf4"),
+		InactivityMinutesBeforeSleep: to.Ptr[int32](720),
+		NumberOfMemberGateways:       to.Ptr[int32](5),
+	}
+
+	exampleRes = core.GatewaysClientUpdateGatewayResponse{
+		GatewayClassification: &core.VirtualNetworkGateway{
+			Type:                         to.Ptr(core.GatewayTypeVirtualNetwork),
+			ID:                           to.Ptr("7015263e-885f-455b-80f7-bbf862899176"),
+			CapacityID:                   to.Ptr("7cf7181f-9457-4178-b488-e7472b02faf4"),
+			DisplayName:                  to.Ptr("ContosoVirtualNetworkGateway1"),
+			InactivityMinutesBeforeSleep: to.Ptr[int32](720),
+			NumberOfMemberGateways:       to.Ptr[int32](5),
+			VirtualNetworkAzureResource: &core.VirtualNetworkAzureResource{
+				ResourceGroupName:  to.Ptr("ContosoResourceGroup"),
+				SubscriptionID:     to.Ptr("879b4ba0-ed17-4ff2-851e-4a2228e00b70"),
+				SubnetName:         to.Ptr("ContosoSubnet"),
+				VirtualNetworkName: to.Ptr("ContosoVirtualNetwork"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.GatewaysServer.UpdateGateway = func(ctx context.Context, gatewayID string, updateGatewayRequest core.UpdateGatewayRequestClassification, options *core.GatewaysClientUpdateGatewayOptions) (resp azfake.Responder[core.GatewaysClientUpdateGatewayResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleGatewayID, gatewayID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateGatewayRequest, updateGatewayRequest))
+		resp = azfake.Responder[core.GatewaysClientUpdateGatewayResponse]{}
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
+		return
+	}
+
+	res, err = client.UpdateGateway(ctx, exampleGatewayID, exampleUpdateGatewayRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
+}
+
+func (testsuite *FakeTestSuite) TestGateways_DeleteGateway() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+	var exampleGatewayID string
+	exampleGatewayID = "411a04d3-7c15-4b69-9dd8-de6e80df1009"
+
+	testsuite.serverFactory.GatewaysServer.DeleteGateway = func(ctx context.Context, gatewayID string, options *core.GatewaysClientDeleteGatewayOptions) (resp azfake.Responder[core.GatewaysClientDeleteGatewayResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleGatewayID, gatewayID)
+		resp = azfake.Responder[core.GatewaysClientDeleteGatewayResponse]{}
+		resp.SetResponse(http.StatusOK, core.GatewaysClientDeleteGatewayResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGatewaysClient()
+	_, err = client.DeleteGateway(ctx, exampleGatewayID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestGateways_ListGatewayMembers() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+	var exampleGatewayID string
+	exampleGatewayID = "8e41c4dd-a382-4937-9bf3-695ab881f7c2"
+
+	exampleRes := core.ListGatewayMembersResponse{
+		Value: []core.OnPremisesGatewayMember{
+			{
+				DisplayName: to.Ptr("ContosoPrimaryMemberGateway"),
+				Enabled:     to.Ptr(true),
+				ID:          to.Ptr("8e41c4dd-a382-4937-9bf3-695ab881f7c2"),
+				PublicKey: &core.PublicKey{
+					Exponent: to.Ptr("AQGB"),
+					Modulus:  to.Ptr("od9b...90Jp1Q=="),
+				},
+				Version: to.Ptr("3000.1.1"),
+			},
+			{
+				DisplayName: to.Ptr("ContosoSecondaryMemberGateway"),
+				Enabled:     to.Ptr(false),
+				ID:          to.Ptr("5d225cda-42d5-43d3-bc40-218f746e1d58"),
+				PublicKey: &core.PublicKey{
+					Exponent: to.Ptr("AQCB"),
+					Modulus:  to.Ptr("o57c...90Jh1P=="),
+				},
+				Version: to.Ptr("3000.1.1"),
+			}},
+	}
+
+	testsuite.serverFactory.GatewaysServer.ListGatewayMembers = func(ctx context.Context, gatewayID string, options *core.GatewaysClientListGatewayMembersOptions) (resp azfake.Responder[core.GatewaysClientListGatewayMembersResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleGatewayID, gatewayID)
+		resp = azfake.Responder[core.GatewaysClientListGatewayMembersResponse]{}
+		resp.SetResponse(http.StatusOK, core.GatewaysClientListGatewayMembersResponse{ListGatewayMembersResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGatewaysClient()
+	res, err := client.ListGatewayMembers(ctx, exampleGatewayID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ListGatewayMembersResponse))
+}
+
+func (testsuite *FakeTestSuite) TestGateways_UpdateGatewayMember() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+	var exampleGatewayID string
+	var exampleGatewayMemberID string
+	var exampleUpdateGatewayMemberRequest core.UpdateGatewayMemberRequest
+	exampleGatewayID = "41d198df-5fb2-4463-8157-2af5153e6503"
+	exampleGatewayMemberID = "1e624ffb-f74a-4dfb-9aa8-ea5056da37da"
+	exampleUpdateGatewayMemberRequest = core.UpdateGatewayMemberRequest{
+		DisplayName: to.Ptr("ContosoGatewayMember1"),
+		Enabled:     to.Ptr(false),
+	}
+
+	exampleRes := core.OnPremisesGatewayMember{
+		DisplayName: to.Ptr("ContosoGatewayMember1"),
+		Enabled:     to.Ptr(false),
+		ID:          to.Ptr("1e624ffb-f74a-4dfb-9aa8-ea5056da37da"),
+		PublicKey: &core.PublicKey{
+			Exponent: to.Ptr("AQGB"),
+			Modulus:  to.Ptr("od9b...90Jp1Q=="),
+		},
+		Version: to.Ptr("3000.1.1"),
+	}
+
+	testsuite.serverFactory.GatewaysServer.UpdateGatewayMember = func(ctx context.Context, gatewayID string, gatewayMemberID string, updateGatewayMemberRequest core.UpdateGatewayMemberRequest, options *core.GatewaysClientUpdateGatewayMemberOptions) (resp azfake.Responder[core.GatewaysClientUpdateGatewayMemberResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleGatewayID, gatewayID)
+		testsuite.Require().Equal(exampleGatewayMemberID, gatewayMemberID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateGatewayMemberRequest, updateGatewayMemberRequest))
+		resp = azfake.Responder[core.GatewaysClientUpdateGatewayMemberResponse]{}
+		resp.SetResponse(http.StatusOK, core.GatewaysClientUpdateGatewayMemberResponse{OnPremisesGatewayMember: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGatewaysClient()
+	res, err := client.UpdateGatewayMember(ctx, exampleGatewayID, exampleGatewayMemberID, exampleUpdateGatewayMemberRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.OnPremisesGatewayMember))
+}
+
+func (testsuite *FakeTestSuite) TestGateways_DeleteGatewayMember() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+	var exampleGatewayID string
+	var exampleGatewayMemberID string
+	exampleGatewayID = "ad457a0a-1fc4-4218-9867-1d84661ca4b8"
+	exampleGatewayMemberID = "f921ee6b-8feb-4595-8aa7-3ed34338e8b6"
+
+	testsuite.serverFactory.GatewaysServer.DeleteGatewayMember = func(ctx context.Context, gatewayID string, gatewayMemberID string, options *core.GatewaysClientDeleteGatewayMemberOptions) (resp azfake.Responder[core.GatewaysClientDeleteGatewayMemberResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleGatewayID, gatewayID)
+		testsuite.Require().Equal(exampleGatewayMemberID, gatewayMemberID)
+		resp = azfake.Responder[core.GatewaysClientDeleteGatewayMemberResponse]{}
+		resp.SetResponse(http.StatusOK, core.GatewaysClientDeleteGatewayMemberResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGatewaysClient()
+	_, err = client.DeleteGatewayMember(ctx, exampleGatewayID, exampleGatewayMemberID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestGateways_ListGatewayRoleAssignments() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List gateway role assignment example"},
+	})
+	var exampleGatewayID string
+	exampleGatewayID = "8e41c4dd-a382-4937-9bf3-695ab881f7c2"
+
+	exampleRes := core.GatewayRoleAssignments{
+		Value: []core.GatewayRoleAssignment{
+			{
+				ID: to.Ptr("5a25c49d-d313-4842-ba83-d6cd7c3bb57d"),
+				Principal: &core.Principal{
+					Type: to.Ptr(core.PrincipalTypeUser),
+					ID:   to.Ptr("ef543eb8-969c-46b0-a5a1-3f93351b6b31"),
+				},
+				Role: to.Ptr(core.GatewayRoleAdmin),
+			},
+			{
+				ID: to.Ptr("cd706538-1ac6-4991-8346-0975052cd552"),
+				Principal: &core.Principal{
+					Type: to.Ptr(core.PrincipalTypeUser),
+					ID:   to.Ptr("5cf7d203-9123-4dff-a87f-7097dc4b5d60"),
+				},
+				Role: to.Ptr(core.GatewayRoleConnectionCreatorWithResharing),
+			},
+			{
+				ID: to.Ptr("81bedb00-2af0-4fe1-93f2-8864ac5670ac"),
+				Principal: &core.Principal{
+					Type: to.Ptr(core.PrincipalTypeUser),
+					ID:   to.Ptr("5931cd21-857f-42a5-beaf-0120e8b36542"),
+				},
+				Role: to.Ptr(core.GatewayRoleConnectionCreator),
+			},
+			{
+				ID: to.Ptr("6a759c0e-9976-4624-ad8b-caa6333adf5f"),
+				Principal: &core.Principal{
+					Type: to.Ptr(core.PrincipalTypeUser),
+					ID:   to.Ptr("97614f04-507c-4f6c-8dbc-da1845f582ef"),
+				},
+				Role: to.Ptr(core.GatewayRoleConnectionCreator),
+			},
+			{
+				ID: to.Ptr("64fd9965-56b2-45dd-bb5b-563c0998b82d"),
+				Principal: &core.Principal{
+					Type: to.Ptr(core.PrincipalTypeGroup),
+					ID:   to.Ptr("a5d9f30d-a15c-4fb9-b8ff-e2a884c9fd82"),
+				},
+				Role: to.Ptr(core.GatewayRoleConnectionCreator),
+			}},
+	}
+
+	testsuite.serverFactory.GatewaysServer.NewListGatewayRoleAssignmentsPager = func(gatewayID string, options *core.GatewaysClientListGatewayRoleAssignmentsOptions) (resp azfake.PagerResponder[core.GatewaysClientListGatewayRoleAssignmentsResponse]) {
+		testsuite.Require().Equal(exampleGatewayID, gatewayID)
+		resp = azfake.PagerResponder[core.GatewaysClientListGatewayRoleAssignmentsResponse]{}
+		resp.AddPage(http.StatusOK, core.GatewaysClientListGatewayRoleAssignmentsResponse{GatewayRoleAssignments: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGatewaysClient()
+	pager := client.NewListGatewayRoleAssignmentsPager(exampleGatewayID, &core.GatewaysClientListGatewayRoleAssignmentsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.GatewayRoleAssignments))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List gateway role assignment with continuation example"},
+	})
+	exampleGatewayID = "8e41c4dd-a382-4937-9bf3-695ab881f7c2"
+
+	exampleRes = core.GatewayRoleAssignments{
+		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/gateways/8e41c4dd-a382-4937-9bf3-695ab881f7c2/roleAssignments?continuationToken=LDEsMTAwMDAwLDA%3D"),
+		Value: []core.GatewayRoleAssignment{
+			{
+				ID: to.Ptr("5a25c49d-d313-4842-ba83-d6cd7c3bb57d"),
+				Principal: &core.Principal{
+					Type: to.Ptr(core.PrincipalTypeUser),
+					ID:   to.Ptr("ef543eb8-969c-46b0-a5a1-3f93351b6b31"),
+				},
+				Role: to.Ptr(core.GatewayRoleAdmin),
+			},
+			{
+				ID: to.Ptr("cd706538-1ac6-4991-8346-0975052cd552"),
+				Principal: &core.Principal{
+					Type: to.Ptr(core.PrincipalTypeUser),
+					ID:   to.Ptr("5cf7d203-9123-4dff-a87f-7097dc4b5d60"),
+				},
+				Role: to.Ptr(core.GatewayRoleConnectionCreatorWithResharing),
+			},
+			{
+				ID: to.Ptr("81bedb00-2af0-4fe1-93f2-8864ac5670ac"),
+				Principal: &core.Principal{
+					Type: to.Ptr(core.PrincipalTypeUser),
+					ID:   to.Ptr("5931cd21-857f-42a5-beaf-0120e8b36542"),
+				},
+				Role: to.Ptr(core.GatewayRoleConnectionCreator),
+			},
+			{
+				ID: to.Ptr("6a759c0e-9976-4624-ad8b-caa6333adf5f"),
+				Principal: &core.Principal{
+					Type: to.Ptr(core.PrincipalTypeUser),
+					ID:   to.Ptr("97614f04-507c-4f6c-8dbc-da1845f582ef"),
+				},
+				Role: to.Ptr(core.GatewayRoleConnectionCreator),
+			},
+			{
+				ID: to.Ptr("64fd9965-56b2-45dd-bb5b-563c0998b82d"),
+				Principal: &core.Principal{
+					Type: to.Ptr(core.PrincipalTypeGroup),
+					ID:   to.Ptr("a5d9f30d-a15c-4fb9-b8ff-e2a884c9fd82"),
+				},
+				Role: to.Ptr(core.GatewayRoleConnectionCreator),
+			}},
+	}
+
+	testsuite.serverFactory.GatewaysServer.NewListGatewayRoleAssignmentsPager = func(gatewayID string, options *core.GatewaysClientListGatewayRoleAssignmentsOptions) (resp azfake.PagerResponder[core.GatewaysClientListGatewayRoleAssignmentsResponse]) {
+		testsuite.Require().Equal(exampleGatewayID, gatewayID)
+		resp = azfake.PagerResponder[core.GatewaysClientListGatewayRoleAssignmentsResponse]{}
+		resp.AddPage(http.StatusOK, core.GatewaysClientListGatewayRoleAssignmentsResponse{GatewayRoleAssignments: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListGatewayRoleAssignmentsPager(exampleGatewayID, &core.GatewaysClientListGatewayRoleAssignmentsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.GatewayRoleAssignments))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestGateways_AddGatewayRoleAssignment() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Add gateway role assignment example"},
+	})
+	var exampleGatewayID string
+	var exampleAddGatewayRoleAssignmentRequest core.AddGatewayRoleAssignmentRequest
+	exampleGatewayID = "d12d139f-4141-467c-9f53-80787b198843"
+	exampleAddGatewayRoleAssignmentRequest = core.AddGatewayRoleAssignmentRequest{
+		Principal: &core.Principal{
+			Type: to.Ptr(core.PrincipalTypeUser),
+			ID:   to.Ptr("6a002b3d-e4ec-43df-8c08-e8eb7547d9dd"),
+		},
+		Role: to.Ptr(core.GatewayRoleConnectionCreator),
+	}
+
+	testsuite.serverFactory.GatewaysServer.AddGatewayRoleAssignment = func(ctx context.Context, gatewayID string, addGatewayRoleAssignmentRequest core.AddGatewayRoleAssignmentRequest, options *core.GatewaysClientAddGatewayRoleAssignmentOptions) (resp azfake.Responder[core.GatewaysClientAddGatewayRoleAssignmentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleGatewayID, gatewayID)
+		testsuite.Require().True(reflect.DeepEqual(exampleAddGatewayRoleAssignmentRequest, addGatewayRoleAssignmentRequest))
+		resp = azfake.Responder[core.GatewaysClientAddGatewayRoleAssignmentResponse]{}
+		resp.SetResponse(http.StatusCreated, core.GatewaysClientAddGatewayRoleAssignmentResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGatewaysClient()
+	_, err = client.AddGatewayRoleAssignment(ctx, exampleGatewayID, exampleAddGatewayRoleAssignmentRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestGateways_GetGatewayRoleAssignment() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+	var exampleGatewayID string
+	var exampleGatewayRoleAssignmentID string
+	exampleGatewayID = "8e41c4dd-a382-4937-9bf3-695ab881f7c2"
+	exampleGatewayRoleAssignmentID = "056afb37-8f6c-4fd8-9aa5-64ba7f1974e7"
+
+	exampleRes := core.GatewayRoleAssignment{
+		ID: to.Ptr("28eabf06-f786-48d4-8b22-7b71e3e4e8f6"),
+		Principal: &core.Principal{
+			Type: to.Ptr(core.PrincipalTypeUser),
+			ID:   to.Ptr("056afb37-8f6c-4fd8-9aa5-64ba7f1974e7"),
+		},
+		Role: to.Ptr(core.GatewayRoleAdmin),
+	}
+
+	testsuite.serverFactory.GatewaysServer.GetGatewayRoleAssignment = func(ctx context.Context, gatewayID string, gatewayRoleAssignmentID string, options *core.GatewaysClientGetGatewayRoleAssignmentOptions) (resp azfake.Responder[core.GatewaysClientGetGatewayRoleAssignmentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleGatewayID, gatewayID)
+		testsuite.Require().Equal(exampleGatewayRoleAssignmentID, gatewayRoleAssignmentID)
+		resp = azfake.Responder[core.GatewaysClientGetGatewayRoleAssignmentResponse]{}
+		resp.SetResponse(http.StatusOK, core.GatewaysClientGetGatewayRoleAssignmentResponse{GatewayRoleAssignment: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGatewaysClient()
+	res, err := client.GetGatewayRoleAssignment(ctx, exampleGatewayID, exampleGatewayRoleAssignmentID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.GatewayRoleAssignment))
+}
+
+func (testsuite *FakeTestSuite) TestGateways_UpdateGatewayRoleAssignment() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update gateway role assignment example"},
+	})
+	var exampleGatewayID string
+	var exampleGatewayRoleAssignmentID string
+	var exampleUpdateGatewayRoleAssignmentRequest core.UpdateGatewayRoleAssignmentRequest
+	exampleGatewayID = "8e41c4dd-a382-4937-9bf3-695ab881f7c2"
+	exampleGatewayRoleAssignmentID = "43970761-afc9-4428-ae6e-3b08bef098ff"
+	exampleUpdateGatewayRoleAssignmentRequest = core.UpdateGatewayRoleAssignmentRequest{
+		Role: to.Ptr(core.GatewayRoleConnectionCreator),
+	}
+
+	exampleRes := core.GatewayRoleAssignment{
+		ID: to.Ptr("43970761-afc9-4428-ae6e-3b08bef098ff"),
+		Principal: &core.Principal{
+			Type: to.Ptr(core.PrincipalTypeUser),
+			ID:   to.Ptr("43970761-afc9-4428-ae6e-3b08bef098ff"),
+		},
+		Role: to.Ptr(core.GatewayRoleConnectionCreator),
+	}
+
+	testsuite.serverFactory.GatewaysServer.UpdateGatewayRoleAssignment = func(ctx context.Context, gatewayID string, gatewayRoleAssignmentID string, updateGatewayRoleAssignmentRequest core.UpdateGatewayRoleAssignmentRequest, options *core.GatewaysClientUpdateGatewayRoleAssignmentOptions) (resp azfake.Responder[core.GatewaysClientUpdateGatewayRoleAssignmentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleGatewayID, gatewayID)
+		testsuite.Require().Equal(exampleGatewayRoleAssignmentID, gatewayRoleAssignmentID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateGatewayRoleAssignmentRequest, updateGatewayRoleAssignmentRequest))
+		resp = azfake.Responder[core.GatewaysClientUpdateGatewayRoleAssignmentResponse]{}
+		resp.SetResponse(http.StatusOK, core.GatewaysClientUpdateGatewayRoleAssignmentResponse{GatewayRoleAssignment: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGatewaysClient()
+	res, err := client.UpdateGatewayRoleAssignment(ctx, exampleGatewayID, exampleGatewayRoleAssignmentID, exampleUpdateGatewayRoleAssignmentRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.GatewayRoleAssignment))
+}
+
+func (testsuite *FakeTestSuite) TestGateways_DeleteGatewayRoleAssignment() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete gateway role assignment example"},
+	})
+	var exampleGatewayID string
+	var exampleGatewayRoleAssignmentID string
+	exampleGatewayID = "8e41c4dd-a382-4937-9bf3-695ab881f7c2"
+	exampleGatewayRoleAssignmentID = "056afb37-8f6c-4fd8-9aa5-64ba7f1974e7"
+
+	testsuite.serverFactory.GatewaysServer.DeleteGatewayRoleAssignment = func(ctx context.Context, gatewayID string, gatewayRoleAssignmentID string, options *core.GatewaysClientDeleteGatewayRoleAssignmentOptions) (resp azfake.Responder[core.GatewaysClientDeleteGatewayRoleAssignmentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleGatewayID, gatewayID)
+		testsuite.Require().Equal(exampleGatewayRoleAssignmentID, gatewayRoleAssignmentID)
+		resp = azfake.Responder[core.GatewaysClientDeleteGatewayRoleAssignmentResponse]{}
+		resp.SetResponse(http.StatusOK, core.GatewaysClientDeleteGatewayRoleAssignmentResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGatewaysClient()
+	_, err = client.DeleteGatewayRoleAssignment(ctx, exampleGatewayID, exampleGatewayRoleAssignmentID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }

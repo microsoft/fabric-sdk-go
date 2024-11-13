@@ -19,12 +19,15 @@ import (
 // ServerFactory is a fake server for instances of the core.ClientFactory type.
 type ServerFactory struct {
 	CapacitiesServer                CapacitiesServer
+	ConnectionsServer               ConnectionsServer
 	DeploymentPipelinesServer       DeploymentPipelinesServer
 	ExternalDataSharesServer        ExternalDataSharesServer
+	GatewaysServer                  GatewaysServer
 	GitServer                       GitServer
 	ItemsServer                     ItemsServer
 	JobSchedulerServer              JobSchedulerServer
 	LongRunningOperationsServer     LongRunningOperationsServer
+	ManagedPrivateEndpointsServer   ManagedPrivateEndpointsServer
 	OneLakeDataAccessSecurityServer OneLakeDataAccessSecurityServer
 	OneLakeShortcutsServer          OneLakeShortcutsServer
 	WorkspacesServer                WorkspacesServer
@@ -36,12 +39,15 @@ type ServerFactoryTransport struct {
 	srv                               *ServerFactory
 	trMu                              sync.Mutex
 	trCapacitiesServer                *CapacitiesServerTransport
+	trConnectionsServer               *ConnectionsServerTransport
 	trDeploymentPipelinesServer       *DeploymentPipelinesServerTransport
 	trExternalDataSharesServer        *ExternalDataSharesServerTransport
+	trGatewaysServer                  *GatewaysServerTransport
 	trGitServer                       *GitServerTransport
 	trItemsServer                     *ItemsServerTransport
 	trJobSchedulerServer              *JobSchedulerServerTransport
 	trLongRunningOperationsServer     *LongRunningOperationsServerTransport
+	trManagedPrivateEndpointsServer   *ManagedPrivateEndpointsServerTransport
 	trOneLakeDataAccessSecurityServer *OneLakeDataAccessSecurityServerTransport
 	trOneLakeShortcutsServer          *OneLakeShortcutsServerTransport
 	trWorkspacesServer                *WorkspacesServerTransport
@@ -73,6 +79,9 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	case "CapacitiesClient":
 		initServer(s, &s.trCapacitiesServer, func() *CapacitiesServerTransport { return NewCapacitiesServerTransport(&s.srv.CapacitiesServer) })
 		resp, err = s.trCapacitiesServer.Do(req)
+	case "ConnectionsClient":
+		initServer(s, &s.trConnectionsServer, func() *ConnectionsServerTransport { return NewConnectionsServerTransport(&s.srv.ConnectionsServer) })
+		resp, err = s.trConnectionsServer.Do(req)
 	case "DeploymentPipelinesClient":
 		initServer(s, &s.trDeploymentPipelinesServer, func() *DeploymentPipelinesServerTransport {
 			return NewDeploymentPipelinesServerTransport(&s.srv.DeploymentPipelinesServer)
@@ -83,6 +92,9 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return NewExternalDataSharesServerTransport(&s.srv.ExternalDataSharesServer)
 		})
 		resp, err = s.trExternalDataSharesServer.Do(req)
+	case "GatewaysClient":
+		initServer(s, &s.trGatewaysServer, func() *GatewaysServerTransport { return NewGatewaysServerTransport(&s.srv.GatewaysServer) })
+		resp, err = s.trGatewaysServer.Do(req)
 	case "GitClient":
 		initServer(s, &s.trGitServer, func() *GitServerTransport { return NewGitServerTransport(&s.srv.GitServer) })
 		resp, err = s.trGitServer.Do(req)
@@ -97,6 +109,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return NewLongRunningOperationsServerTransport(&s.srv.LongRunningOperationsServer)
 		})
 		resp, err = s.trLongRunningOperationsServer.Do(req)
+	case "ManagedPrivateEndpointsClient":
+		initServer(s, &s.trManagedPrivateEndpointsServer, func() *ManagedPrivateEndpointsServerTransport {
+			return NewManagedPrivateEndpointsServerTransport(&s.srv.ManagedPrivateEndpointsServer)
+		})
+		resp, err = s.trManagedPrivateEndpointsServer.Do(req)
 	case "OneLakeDataAccessSecurityClient":
 		initServer(s, &s.trOneLakeDataAccessSecurityServer, func() *OneLakeDataAccessSecurityServerTransport {
 			return NewOneLakeDataAccessSecurityServerTransport(&s.srv.OneLakeDataAccessSecurityServer)

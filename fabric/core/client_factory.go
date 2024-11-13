@@ -55,6 +55,14 @@ func (c *ClientFactory) NewCapacitiesClient() *CapacitiesClient {
 	}
 }
 
+// NewConnectionsClient creates a new instance of ConnectionsClient.
+func (c *ClientFactory) NewConnectionsClient() *ConnectionsClient {
+	return &ConnectionsClient{
+		internal: c.internal.WithClientName("core.ConnectionsClient"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewDeploymentPipelinesClient creates a new instance of DeploymentPipelinesClient.
 func (c *ClientFactory) NewDeploymentPipelinesClient() *DeploymentPipelinesClient {
 	return &DeploymentPipelinesClient{
@@ -67,6 +75,14 @@ func (c *ClientFactory) NewDeploymentPipelinesClient() *DeploymentPipelinesClien
 func (c *ClientFactory) NewExternalDataSharesClient() *ExternalDataSharesClient {
 	return &ExternalDataSharesClient{
 		internal: c.internal.WithClientName("core.ExternalDataSharesClient"),
+		endpoint: c.endpoint,
+	}
+}
+
+// NewGatewaysClient creates a new instance of GatewaysClient.
+func (c *ClientFactory) NewGatewaysClient() *GatewaysClient {
+	return &GatewaysClient{
+		internal: c.internal.WithClientName("core.GatewaysClient"),
 		endpoint: c.endpoint,
 	}
 }
@@ -99,6 +115,14 @@ func (c *ClientFactory) NewJobSchedulerClient() *JobSchedulerClient {
 func (c *ClientFactory) NewLongRunningOperationsClient() *LongRunningOperationsClient {
 	return &LongRunningOperationsClient{
 		internal: c.internal.WithClientName("core.LongRunningOperationsClient"),
+		endpoint: c.endpoint,
+	}
+}
+
+// NewManagedPrivateEndpointsClient creates a new instance of ManagedPrivateEndpointsClient.
+func (c *ClientFactory) NewManagedPrivateEndpointsClient() *ManagedPrivateEndpointsClient {
+	return &ManagedPrivateEndpointsClient{
+		internal: c.internal.WithClientName("core.ManagedPrivateEndpointsClient"),
 		endpoint: c.endpoint,
 	}
 }

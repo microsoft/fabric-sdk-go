@@ -32,8 +32,8 @@ type DomainsClient struct {
 
 // BeginAssignDomainWorkspacesByCapacities - Preexisting domain assignments will be overridden unless bulk reassignment is
 // blocked by domain management tenant settings.
-// PERMISSIONS The caller must be a Fabric administrator.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 10 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -55,8 +55,8 @@ func (client *DomainsClient) BeginAssignDomainWorkspacesByCapacities(ctx context
 
 // AssignDomainWorkspacesByCapacities - Preexisting domain assignments will be overridden unless bulk reassignment is blocked
 // by domain management tenant settings.
-// PERMISSIONS The caller must be a Fabric administrator.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 10 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -166,8 +166,8 @@ func (client *DomainsClient) assignDomainWorkspacesByIDsCreateRequest(ctx contex
 
 // BeginAssignDomainWorkspacesByPrincipals - Preexisting domain assignments will be overridden unless bulk reassignment is
 // blocked by domain management tenant settings.
-// PERMISSIONS The caller must be a Fabric administrator.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 10 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -189,8 +189,8 @@ func (client *DomainsClient) BeginAssignDomainWorkspacesByPrincipals(ctx context
 
 // AssignDomainWorkspacesByPrincipals - Preexisting domain assignments will be overridden unless bulk reassignment is blocked
 // by domain management tenant settings.
-// PERMISSIONS The caller must be a Fabric administrator.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 10 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -824,9 +824,9 @@ func (client *DomainsClient) updateDomainHandleResponse(resp *http.Response) (Do
 // AssignDomainWorkspacesByCapacities - returns DomainsClientAssignDomainWorkspacesByCapacitiesResponse in sync mode.
 // Preexisting domain assignments will be overridden unless bulk reassignment is blocked by domain management tenant settings.
 //
-// PERMISSIONS The caller must be a Fabric administrator.
-//
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS The caller must be a Fabric administrator.
 //
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 //
@@ -897,9 +897,9 @@ func (client *DomainsClient) beginAssignDomainWorkspacesByCapacities(ctx context
 // AssignDomainWorkspacesByPrincipals - returns DomainsClientAssignDomainWorkspacesByPrincipalsResponse in sync mode.
 // Preexisting domain assignments will be overridden unless bulk reassignment is blocked by domain management tenant settings.
 //
-// PERMISSIONS The caller must be a Fabric administrator.
-//
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS The caller must be a Fabric administrator.
 //
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 //

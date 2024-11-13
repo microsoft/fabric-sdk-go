@@ -77,20 +77,26 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "ItemsClient.DeleteKQLQueryset":
-			res.resp, res.err = i.dispatchDeleteKQLQueryset(req)
-		case "ItemsClient.GetKQLQueryset":
-			res.resp, res.err = i.dispatchGetKQLQueryset(req)
-		case "ItemsClient.NewListKQLQuerysetsPager":
-			res.resp, res.err = i.dispatchNewListKQLQuerysetsPager(req)
-		case "ItemsClient.UpdateKQLQueryset":
-			res.resp, res.err = i.dispatchUpdateKQLQueryset(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if itemsServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = itemsServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "ItemsClient.DeleteKQLQueryset":
+				res.resp, res.err = i.dispatchDeleteKQLQueryset(req)
+			case "ItemsClient.GetKQLQueryset":
+				res.resp, res.err = i.dispatchGetKQLQueryset(req)
+			case "ItemsClient.NewListKQLQuerysetsPager":
+				res.resp, res.err = i.dispatchNewListKQLQuerysetsPager(req)
+			case "ItemsClient.UpdateKQLQueryset":
+				res.resp, res.err = i.dispatchUpdateKQLQueryset(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -255,4 +261,10 @@ func (i *ItemsServerTransport) dispatchUpdateKQLQueryset(req *http.Request) (*ht
 		return nil, err
 	}
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to ItemsServerTransport
+var itemsServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

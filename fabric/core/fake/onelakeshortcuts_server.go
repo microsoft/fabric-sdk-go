@@ -77,20 +77,26 @@ func (o *OneLakeShortcutsServerTransport) dispatchToMethodFake(req *http.Request
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "OneLakeShortcutsClient.CreateShortcut":
-			res.resp, res.err = o.dispatchCreateShortcut(req)
-		case "OneLakeShortcutsClient.DeleteShortcut":
-			res.resp, res.err = o.dispatchDeleteShortcut(req)
-		case "OneLakeShortcutsClient.GetShortcut":
-			res.resp, res.err = o.dispatchGetShortcut(req)
-		case "OneLakeShortcutsClient.NewListShortcutsPager":
-			res.resp, res.err = o.dispatchNewListShortcutsPager(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if oneLakeShortcutsServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = oneLakeShortcutsServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "OneLakeShortcutsClient.CreateShortcut":
+				res.resp, res.err = o.dispatchCreateShortcut(req)
+			case "OneLakeShortcutsClient.DeleteShortcut":
+				res.resp, res.err = o.dispatchDeleteShortcut(req)
+			case "OneLakeShortcutsClient.GetShortcut":
+				res.resp, res.err = o.dispatchGetShortcut(req)
+			case "OneLakeShortcutsClient.NewListShortcutsPager":
+				res.resp, res.err = o.dispatchNewListShortcutsPager(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -296,4 +302,10 @@ func (o *OneLakeShortcutsServerTransport) dispatchNewListShortcutsPager(req *htt
 		o.newListShortcutsPager.remove(req)
 	}
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to OneLakeShortcutsServerTransport
+var oneLakeShortcutsServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

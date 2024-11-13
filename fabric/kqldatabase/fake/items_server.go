@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
@@ -37,6 +38,10 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetKQLDatabase func(ctx context.Context, workspaceID string, kqlDatabaseID string, options *kqldatabase.ItemsClientGetKQLDatabaseOptions) (resp azfake.Responder[kqldatabase.ItemsClientGetKQLDatabaseResponse], errResp azfake.ErrorResponder)
 
+	// BeginGetKQLDatabaseDefinition is the fake for method ItemsClient.BeginGetKQLDatabaseDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	BeginGetKQLDatabaseDefinition func(ctx context.Context, workspaceID string, kqlDatabaseID string, options *kqldatabase.ItemsClientBeginGetKQLDatabaseDefinitionOptions) (resp azfake.PollerResponder[kqldatabase.ItemsClientGetKQLDatabaseDefinitionResponse], errResp azfake.ErrorResponder)
+
 	// NewListKQLDatabasesPager is the fake for method ItemsClient.NewListKQLDatabasesPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListKQLDatabasesPager func(workspaceID string, options *kqldatabase.ItemsClientListKQLDatabasesOptions) (resp azfake.PagerResponder[kqldatabase.ItemsClientListKQLDatabasesResponse])
@@ -44,6 +49,10 @@ type ItemsServer struct {
 	// UpdateKQLDatabase is the fake for method ItemsClient.UpdateKQLDatabase
 	// HTTP status codes to indicate success: http.StatusOK
 	UpdateKQLDatabase func(ctx context.Context, workspaceID string, kqlDatabaseID string, updateKQLDatabaseRequest kqldatabase.UpdateKQLDatabaseRequest, options *kqldatabase.ItemsClientUpdateKQLDatabaseOptions) (resp azfake.Responder[kqldatabase.ItemsClientUpdateKQLDatabaseResponse], errResp azfake.ErrorResponder)
+
+	// BeginUpdateKQLDatabaseDefinition is the fake for method ItemsClient.BeginUpdateKQLDatabaseDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
+	BeginUpdateKQLDatabaseDefinition func(ctx context.Context, workspaceID string, kqlDatabaseID string, updateKQLDatabaseDefinitionRequest kqldatabase.UpdateKQLDatabaseDefinitionRequest, options *kqldatabase.ItemsClientBeginUpdateKQLDatabaseDefinitionOptions) (resp azfake.PollerResponder[kqldatabase.ItemsClientUpdateKQLDatabaseDefinitionResponse], errResp azfake.ErrorResponder)
 }
 
 // NewItemsServerTransport creates a new instance of ItemsServerTransport with the provided implementation.
@@ -51,18 +60,22 @@ type ItemsServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewItemsServerTransport(srv *ItemsServer) *ItemsServerTransport {
 	return &ItemsServerTransport{
-		srv:                      srv,
-		beginCreateKQLDatabase:   newTracker[azfake.PollerResponder[kqldatabase.ItemsClientCreateKQLDatabaseResponse]](),
-		newListKQLDatabasesPager: newTracker[azfake.PagerResponder[kqldatabase.ItemsClientListKQLDatabasesResponse]](),
+		srv:                              srv,
+		beginCreateKQLDatabase:           newTracker[azfake.PollerResponder[kqldatabase.ItemsClientCreateKQLDatabaseResponse]](),
+		beginGetKQLDatabaseDefinition:    newTracker[azfake.PollerResponder[kqldatabase.ItemsClientGetKQLDatabaseDefinitionResponse]](),
+		newListKQLDatabasesPager:         newTracker[azfake.PagerResponder[kqldatabase.ItemsClientListKQLDatabasesResponse]](),
+		beginUpdateKQLDatabaseDefinition: newTracker[azfake.PollerResponder[kqldatabase.ItemsClientUpdateKQLDatabaseDefinitionResponse]](),
 	}
 }
 
 // ItemsServerTransport connects instances of kqldatabase.ItemsClient to instances of ItemsServer.
 // Don't use this type directly, use NewItemsServerTransport instead.
 type ItemsServerTransport struct {
-	srv                      *ItemsServer
-	beginCreateKQLDatabase   *tracker[azfake.PollerResponder[kqldatabase.ItemsClientCreateKQLDatabaseResponse]]
-	newListKQLDatabasesPager *tracker[azfake.PagerResponder[kqldatabase.ItemsClientListKQLDatabasesResponse]]
+	srv                              *ItemsServer
+	beginCreateKQLDatabase           *tracker[azfake.PollerResponder[kqldatabase.ItemsClientCreateKQLDatabaseResponse]]
+	beginGetKQLDatabaseDefinition    *tracker[azfake.PollerResponder[kqldatabase.ItemsClientGetKQLDatabaseDefinitionResponse]]
+	newListKQLDatabasesPager         *tracker[azfake.PagerResponder[kqldatabase.ItemsClientListKQLDatabasesResponse]]
+	beginUpdateKQLDatabaseDefinition *tracker[azfake.PollerResponder[kqldatabase.ItemsClientUpdateKQLDatabaseDefinitionResponse]]
 }
 
 // Do implements the policy.Transporter interface for ItemsServerTransport.
@@ -83,22 +96,32 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "ItemsClient.BeginCreateKQLDatabase":
-			res.resp, res.err = i.dispatchBeginCreateKQLDatabase(req)
-		case "ItemsClient.DeleteKQLDatabase":
-			res.resp, res.err = i.dispatchDeleteKQLDatabase(req)
-		case "ItemsClient.GetKQLDatabase":
-			res.resp, res.err = i.dispatchGetKQLDatabase(req)
-		case "ItemsClient.NewListKQLDatabasesPager":
-			res.resp, res.err = i.dispatchNewListKQLDatabasesPager(req)
-		case "ItemsClient.UpdateKQLDatabase":
-			res.resp, res.err = i.dispatchUpdateKQLDatabase(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if itemsServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = itemsServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "ItemsClient.BeginCreateKQLDatabase":
+				res.resp, res.err = i.dispatchBeginCreateKQLDatabase(req)
+			case "ItemsClient.DeleteKQLDatabase":
+				res.resp, res.err = i.dispatchDeleteKQLDatabase(req)
+			case "ItemsClient.GetKQLDatabase":
+				res.resp, res.err = i.dispatchGetKQLDatabase(req)
+			case "ItemsClient.BeginGetKQLDatabaseDefinition":
+				res.resp, res.err = i.dispatchBeginGetKQLDatabaseDefinition(req)
+			case "ItemsClient.NewListKQLDatabasesPager":
+				res.resp, res.err = i.dispatchNewListKQLDatabasesPager(req)
+			case "ItemsClient.UpdateKQLDatabase":
+				res.resp, res.err = i.dispatchUpdateKQLDatabase(req)
+			case "ItemsClient.BeginUpdateKQLDatabaseDefinition":
+				res.resp, res.err = i.dispatchBeginUpdateKQLDatabaseDefinition(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -223,6 +246,62 @@ func (i *ItemsServerTransport) dispatchGetKQLDatabase(req *http.Request) (*http.
 	return resp, nil
 }
 
+func (i *ItemsServerTransport) dispatchBeginGetKQLDatabaseDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginGetKQLDatabaseDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginGetKQLDatabaseDefinition not implemented")}
+	}
+	beginGetKQLDatabaseDefinition := i.beginGetKQLDatabaseDefinition.get(req)
+	if beginGetKQLDatabaseDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/kqlDatabases/(?P<kqlDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		kqlDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("kqlDatabaseId")])
+		if err != nil {
+			return nil, err
+		}
+		formatUnescaped, err := url.QueryUnescape(qp.Get("format"))
+		if err != nil {
+			return nil, err
+		}
+		formatParam := getOptional(formatUnescaped)
+		var options *kqldatabase.ItemsClientBeginGetKQLDatabaseDefinitionOptions
+		if formatParam != nil {
+			options = &kqldatabase.ItemsClientBeginGetKQLDatabaseDefinitionOptions{
+				Format: formatParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginGetKQLDatabaseDefinition(req.Context(), workspaceIDParam, kqlDatabaseIDParam, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginGetKQLDatabaseDefinition = &respr
+		i.beginGetKQLDatabaseDefinition.add(req, beginGetKQLDatabaseDefinition)
+	}
+
+	resp, err := server.PollerResponderNext(beginGetKQLDatabaseDefinition, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+		i.beginGetKQLDatabaseDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginGetKQLDatabaseDefinition) {
+		i.beginGetKQLDatabaseDefinition.remove(req)
+	}
+
+	return resp, nil
+}
+
 func (i *ItemsServerTransport) dispatchNewListKQLDatabasesPager(req *http.Request) (*http.Response, error) {
 	if i.srv.NewListKQLDatabasesPager == nil {
 		return nil, &nonRetriableError{errors.New("fake for method NewListKQLDatabasesPager not implemented")}
@@ -307,4 +386,73 @@ func (i *ItemsServerTransport) dispatchUpdateKQLDatabase(req *http.Request) (*ht
 		return nil, err
 	}
 	return resp, nil
+}
+
+func (i *ItemsServerTransport) dispatchBeginUpdateKQLDatabaseDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginUpdateKQLDatabaseDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginUpdateKQLDatabaseDefinition not implemented")}
+	}
+	beginUpdateKQLDatabaseDefinition := i.beginUpdateKQLDatabaseDefinition.get(req)
+	if beginUpdateKQLDatabaseDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/kqlDatabases/(?P<kqlDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		body, err := server.UnmarshalRequestAsJSON[kqldatabase.UpdateKQLDatabaseDefinitionRequest](req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		kqlDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("kqlDatabaseId")])
+		if err != nil {
+			return nil, err
+		}
+		updateMetadataUnescaped, err := url.QueryUnescape(qp.Get("updateMetadata"))
+		if err != nil {
+			return nil, err
+		}
+		updateMetadataParam, err := parseOptional(updateMetadataUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		var options *kqldatabase.ItemsClientBeginUpdateKQLDatabaseDefinitionOptions
+		if updateMetadataParam != nil {
+			options = &kqldatabase.ItemsClientBeginUpdateKQLDatabaseDefinitionOptions{
+				UpdateMetadata: updateMetadataParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginUpdateKQLDatabaseDefinition(req.Context(), workspaceIDParam, kqlDatabaseIDParam, body, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginUpdateKQLDatabaseDefinition = &respr
+		i.beginUpdateKQLDatabaseDefinition.add(req, beginUpdateKQLDatabaseDefinition)
+	}
+
+	resp, err := server.PollerResponderNext(beginUpdateKQLDatabaseDefinition, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
+		i.beginUpdateKQLDatabaseDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginUpdateKQLDatabaseDefinition) {
+		i.beginUpdateKQLDatabaseDefinition.remove(req)
+	}
+
+	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to ItemsServerTransport
+var itemsServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

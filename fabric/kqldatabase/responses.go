@@ -17,6 +17,12 @@ type ItemsClientDeleteKQLDatabaseResponse struct {
 	// placeholder for future response values
 }
 
+// ItemsClientGetKQLDatabaseDefinitionResponse contains the response from method ItemsClient.BeginGetKQLDatabaseDefinition.
+type ItemsClientGetKQLDatabaseDefinitionResponse struct {
+	// KQL database public definition response.
+	DefinitionResponse
+}
+
 // ItemsClientGetKQLDatabaseResponse contains the response from method ItemsClient.GetKQLDatabase.
 type ItemsClientGetKQLDatabaseResponse struct {
 	// A KQL database object.
@@ -27,6 +33,11 @@ type ItemsClientGetKQLDatabaseResponse struct {
 type ItemsClientListKQLDatabasesResponse struct {
 	// A list of KQL databases.
 	KQLDatabases
+}
+
+// ItemsClientUpdateKQLDatabaseDefinitionResponse contains the response from method ItemsClient.BeginUpdateKQLDatabaseDefinition.
+type ItemsClientUpdateKQLDatabaseDefinitionResponse struct {
+	// placeholder for future response values
 }
 
 // ItemsClientUpdateKQLDatabaseResponse contains the response from method ItemsClient.UpdateKQLDatabase.

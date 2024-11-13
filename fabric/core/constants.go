@@ -340,6 +340,74 @@ func PossibleConflictTypeValues() []ConflictType {
 	}
 }
 
+// ConnectionEncryption - The connection encryption type of the connection. Additional connection encryption values may be
+// added over time.
+type ConnectionEncryption string
+
+const (
+	// ConnectionEncryptionAny - The connection attempt is first made using an encrypted connection, then falls back to unencrypted
+	// connection if unsuccessful.
+	ConnectionEncryptionAny ConnectionEncryption = "Any"
+	// ConnectionEncryptionEncrypted - The connection attempt is made using an encrypted connection.
+	ConnectionEncryptionEncrypted ConnectionEncryption = "Encrypted"
+	// ConnectionEncryptionNotEncrypted - The connection attempt is made using an unencrypted connection.
+	ConnectionEncryptionNotEncrypted ConnectionEncryption = "NotEncrypted"
+)
+
+// PossibleConnectionEncryptionValues returns the possible values for the ConnectionEncryption const type.
+func PossibleConnectionEncryptionValues() []ConnectionEncryption {
+	return []ConnectionEncryption{
+		ConnectionEncryptionAny,
+		ConnectionEncryptionEncrypted,
+		ConnectionEncryptionNotEncrypted,
+	}
+}
+
+// ConnectionRole - A Connection role. Additional connection roles may be added over time.
+type ConnectionRole string
+
+const (
+	// ConnectionRoleOwner - Enables ownership access for the connection.
+	ConnectionRoleOwner ConnectionRole = "Owner"
+	// ConnectionRoleUser - Enables user access for the connection.
+	ConnectionRoleUser ConnectionRole = "User"
+	// ConnectionRoleUserWithReshare - Enables user with resharing access for the connection.
+	ConnectionRoleUserWithReshare ConnectionRole = "UserWithReshare"
+)
+
+// PossibleConnectionRoleValues returns the possible values for the ConnectionRole const type.
+func PossibleConnectionRoleValues() []ConnectionRole {
+	return []ConnectionRole{
+		ConnectionRoleOwner,
+		ConnectionRoleUser,
+		ConnectionRoleUserWithReshare,
+	}
+}
+
+// ConnectionStatus - Private endpoint connection status. Additional connection status may be added over time.
+type ConnectionStatus string
+
+const (
+	// ConnectionStatusApproved - Endpoint approved
+	ConnectionStatusApproved ConnectionStatus = "Approved"
+	// ConnectionStatusDisconnected - Endpoint disconnected
+	ConnectionStatusDisconnected ConnectionStatus = "Disconnected"
+	// ConnectionStatusPending - Pending approval
+	ConnectionStatusPending ConnectionStatus = "Pending"
+	// ConnectionStatusRejected - Endpoint rejected
+	ConnectionStatusRejected ConnectionStatus = "Rejected"
+)
+
+// PossibleConnectionStatusValues returns the possible values for the ConnectionStatus const type.
+func PossibleConnectionStatusValues() []ConnectionStatus {
+	return []ConnectionStatus{
+		ConnectionStatusApproved,
+		ConnectionStatusDisconnected,
+		ConnectionStatusPending,
+		ConnectionStatusRejected,
+	}
+}
+
 // ConnectivityType - The connectivity type of the connection. Additional connectivity types may be added over time.
 type ConnectivityType string
 
@@ -371,6 +439,83 @@ func PossibleConnectivityTypeValues() []ConnectivityType {
 		ConnectivityTypePersonalCloud,
 		ConnectivityTypeShareableCloud,
 		ConnectivityTypeVirtualNetworkGateway,
+	}
+}
+
+// CredentialType - The credential type of the connection. Additional credential types may be added over time.
+type CredentialType string
+
+const (
+	// CredentialTypeAnonymous - Connection uses anonymous authentication to connect.
+	CredentialTypeAnonymous CredentialType = "Anonymous"
+	// CredentialTypeBasic - Connection uses basic authentication to connect.
+	CredentialTypeBasic CredentialType = "Basic"
+	// CredentialTypeKey - Connection uses key authentication to connect.
+	CredentialTypeKey CredentialType = "Key"
+	// CredentialTypeOAuth2 - Connection uses OAuth 2.0 authentication to connect.
+	CredentialTypeOAuth2 CredentialType = "OAuth2"
+	// CredentialTypeServicePrincipal - Connection uses service principal authentication to connect.
+	CredentialTypeServicePrincipal CredentialType = "ServicePrincipal"
+	// CredentialTypeSharedAccessSignature - Connection uses shared access signature (SAS) authentication to connect.
+	CredentialTypeSharedAccessSignature CredentialType = "SharedAccessSignature"
+	// CredentialTypeWindows - Connection uses Windows authentication to connect. Only supported for on-premises gateways.
+	CredentialTypeWindows CredentialType = "Windows"
+	// CredentialTypeWindowsWithoutImpersonation - Connection uses Windows (without the option for impersonation) authentication
+	// to connect. Only supported for on-premises gateways (personal mode).
+	CredentialTypeWindowsWithoutImpersonation CredentialType = "WindowsWithoutImpersonation"
+	// CredentialTypeWorkspaceIdentity - Connection uses workspace identity authentication to connect.
+	CredentialTypeWorkspaceIdentity CredentialType = "WorkspaceIdentity"
+)
+
+// PossibleCredentialTypeValues returns the possible values for the CredentialType const type.
+func PossibleCredentialTypeValues() []CredentialType {
+	return []CredentialType{
+		CredentialTypeAnonymous,
+		CredentialTypeBasic,
+		CredentialTypeKey,
+		CredentialTypeOAuth2,
+		CredentialTypeServicePrincipal,
+		CredentialTypeSharedAccessSignature,
+		CredentialTypeWindows,
+		CredentialTypeWindowsWithoutImpersonation,
+		CredentialTypeWorkspaceIdentity,
+	}
+}
+
+// DataType - The data type of the connection creation parameter value. Additional data type values may be added over time.
+type DataType string
+
+const (
+	// DataTypeBoolean - Use boolean as the parameter input value. False - the value is false, True - the value is true.
+	DataTypeBoolean DataType = "Boolean"
+	// DataTypeDate - Use date as the parameter input value, using YYYY-MM-DD format.
+	DataTypeDate DataType = "Date"
+	// DataTypeDateTime - Use date time as the parameter input value, using YYYY-MM-DDTHH:mm:ss.FFFZ format.
+	DataTypeDateTime DataType = "DateTime"
+	// DataTypeDateTimeZone - Use date time zone as the parameter input value, using YYYY-MM-DDTHH:mm:ss.FFF±hh:mm format.
+	DataTypeDateTimeZone DataType = "DateTimeZone"
+	// DataTypeDuration - Use duration as the parameter input value, using [-]P(n)DT(n)H(n)M(n)S format. For example: P3DT4H30M10S
+	// (for 3 days, 4 hours, 30 minutes, and 10 seconds).
+	DataTypeDuration DataType = "Duration"
+	// DataTypeNumber - Use number as the parameter input value (integer or floating point).
+	DataTypeNumber DataType = "Number"
+	// DataTypeText - Use text as the parameter input value.
+	DataTypeText DataType = "Text"
+	// DataTypeTime - Use time as the parameter input value, using HH:mm:ss.FFFZ format.
+	DataTypeTime DataType = "Time"
+)
+
+// PossibleDataTypeValues returns the possible values for the DataType const type.
+func PossibleDataTypeValues() []DataType {
+	return []DataType{
+		DataTypeBoolean,
+		DataTypeDate,
+		DataTypeDateTime,
+		DataTypeDateTimeZone,
+		DataTypeDuration,
+		DataTypeNumber,
+		DataTypeText,
+		DataTypeTime,
 	}
 }
 
@@ -488,6 +633,48 @@ func PossibleExternalDataShareStatusValues() []ExternalDataShareStatus {
 	}
 }
 
+// GatewayRole - A Gateway role. Additional gateway roles may be added over time.
+type GatewayRole string
+
+const (
+	// GatewayRoleAdmin - Enables administrative access for the gateway.
+	GatewayRoleAdmin GatewayRole = "Admin"
+	// GatewayRoleConnectionCreator - Enables connection creator access for the gateway.
+	GatewayRoleConnectionCreator GatewayRole = "ConnectionCreator"
+	// GatewayRoleConnectionCreatorWithResharing - Enables connection creator with resharing access for the gateway.
+	GatewayRoleConnectionCreatorWithResharing GatewayRole = "ConnectionCreatorWithResharing"
+)
+
+// PossibleGatewayRoleValues returns the possible values for the GatewayRole const type.
+func PossibleGatewayRoleValues() []GatewayRole {
+	return []GatewayRole{
+		GatewayRoleAdmin,
+		GatewayRoleConnectionCreator,
+		GatewayRoleConnectionCreatorWithResharing,
+	}
+}
+
+// GatewayType - The type of the gateway. Additional gateway types may be added over time.
+type GatewayType string
+
+const (
+	// GatewayTypeOnPremises - The on-premises gateway.
+	GatewayTypeOnPremises GatewayType = "OnPremises"
+	// GatewayTypeOnPremisesPersonal - The on-premises gateway (personal mode).
+	GatewayTypeOnPremisesPersonal GatewayType = "OnPremisesPersonal"
+	// GatewayTypeVirtualNetwork - The virtual network gateway.
+	GatewayTypeVirtualNetwork GatewayType = "VirtualNetwork"
+)
+
+// PossibleGatewayTypeValues returns the possible values for the GatewayType const type.
+func PossibleGatewayTypeValues() []GatewayType {
+	return []GatewayType{
+		GatewayTypeOnPremises,
+		GatewayTypeOnPremisesPersonal,
+		GatewayTypeVirtualNetwork,
+	}
+}
+
 // GitConnectionState - Git connection state. Additional connection state types may be added over time.
 type GitConnectionState string
 
@@ -506,6 +693,28 @@ func PossibleGitConnectionStateValues() []GitConnectionState {
 		GitConnectionStateConnected,
 		GitConnectionStateConnectedAndInitialized,
 		GitConnectionStateNotConnected,
+	}
+}
+
+// GitCredentialsSource - The Git credentials source. Additional Git credentials sources may be added over time.
+type GitCredentialsSource string
+
+const (
+	// GitCredentialsSourceAutomatic - The Git credentials are automatically obtained by the system, using default credentials
+	// if available.
+	GitCredentialsSourceAutomatic GitCredentialsSource = "Automatic"
+	// GitCredentialsSourceConfiguredConnection - The Git credentials are obtained through a configured connection.
+	GitCredentialsSourceConfiguredConnection GitCredentialsSource = "ConfiguredConnection"
+	// GitCredentialsSourceNone - The Git credentials are not configured.
+	GitCredentialsSourceNone GitCredentialsSource = "None"
+)
+
+// PossibleGitCredentialsSourceValues returns the possible values for the GitCredentialsSource const type.
+func PossibleGitCredentialsSourceValues() []GitCredentialsSource {
+	return []GitCredentialsSource{
+		GitCredentialsSourceAutomatic,
+		GitCredentialsSourceConfiguredConnection,
+		GitCredentialsSourceNone,
 	}
 }
 
@@ -669,6 +878,8 @@ const (
 	ItemTypeMLExperiment ItemType = "MLExperiment"
 	// ItemTypeMLModel - A machine learning model.
 	ItemTypeMLModel ItemType = "MLModel"
+	// ItemTypeMirroredDatabase - A mirrored database.
+	ItemTypeMirroredDatabase ItemType = "MirroredDatabase"
 	// ItemTypeMirroredWarehouse - A mirrored warehouse.
 	ItemTypeMirroredWarehouse ItemType = "MirroredWarehouse"
 	// ItemTypeNotebook - A notebook.
@@ -702,6 +913,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeLakehouse,
 		ItemTypeMLExperiment,
 		ItemTypeMLModel,
+		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
 		ItemTypeNotebook,
 		ItemTypePaginatedReport,
@@ -710,6 +922,25 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeSemanticModel,
 		ItemTypeSparkJobDefinition,
 		ItemTypeWarehouse,
+	}
+}
+
+// LoadBalancingSetting - The load balancing setting of the gateway cluster. Additional load balancing settings may be added
+// over time.
+type LoadBalancingSetting string
+
+const (
+	// LoadBalancingSettingDistributeEvenly - Requests will be distributed evenly among all enabled gateway cluster members.
+	LoadBalancingSettingDistributeEvenly LoadBalancingSetting = "DistributeEvenly"
+	// LoadBalancingSettingFailover - Requests will be sent to the first available gateway cluster member.
+	LoadBalancingSettingFailover LoadBalancingSetting = "Failover"
+)
+
+// PossibleLoadBalancingSettingValues returns the possible values for the LoadBalancingSetting const type.
+func PossibleLoadBalancingSettingValues() []LoadBalancingSetting {
+	return []LoadBalancingSetting{
+		LoadBalancingSettingDistributeEvenly,
+		LoadBalancingSettingFailover,
 	}
 }
 
@@ -803,6 +1034,61 @@ func PossiblePrincipalTypeValues() []PrincipalType {
 	}
 }
 
+// PrivacyLevel - The privacy level setting of the connection. Additional privacy levels may be added over time.
+type PrivacyLevel string
+
+const (
+	// PrivacyLevelNone - No privacy level setting is configured.
+	PrivacyLevelNone PrivacyLevel = "None"
+	// PrivacyLevelOrganizational - Connections set to organizational can fold in to private and other organizational connections.
+	// They can't fold in to public connections. Visibility is set to a trusted group.
+	PrivacyLevelOrganizational PrivacyLevel = "Organizational"
+	// PrivacyLevelPrivate - Connections set to private contain sensitive or confidential information. Visibility can be restricted
+	// to authorized users. Data from a private connection won't fold in to other connections, including other private connections.
+	PrivacyLevelPrivate PrivacyLevel = "Private"
+	// PrivacyLevelPublic - Files, internet connections, and workbook data can be set to public. Data can fold in to other connections.
+	// Visibility is available to everyone.
+	PrivacyLevelPublic PrivacyLevel = "Public"
+)
+
+// PossiblePrivacyLevelValues returns the possible values for the PrivacyLevel const type.
+func PossiblePrivacyLevelValues() []PrivacyLevel {
+	return []PrivacyLevel{
+		PrivacyLevelNone,
+		PrivacyLevelOrganizational,
+		PrivacyLevelPrivate,
+		PrivacyLevelPublic,
+	}
+}
+
+// PrivateEndpointProvisioningState - PrivateEndpointProvisioningState type. Additional Provisioning state may be added over
+// time.
+type PrivateEndpointProvisioningState string
+
+const (
+	// PrivateEndpointProvisioningStateDeleting - Private endpoint deleting
+	PrivateEndpointProvisioningStateDeleting PrivateEndpointProvisioningState = "Deleting"
+	// PrivateEndpointProvisioningStateFailed - Private endpoint provisioning failed
+	PrivateEndpointProvisioningStateFailed PrivateEndpointProvisioningState = "Failed"
+	// PrivateEndpointProvisioningStateProvisioning - Private endpoint in provisioning is in-progress
+	PrivateEndpointProvisioningStateProvisioning PrivateEndpointProvisioningState = "Provisioning"
+	// PrivateEndpointProvisioningStateSucceeded - Private endpoint provisioning Succeeded
+	PrivateEndpointProvisioningStateSucceeded PrivateEndpointProvisioningState = "Succeeded"
+	// PrivateEndpointProvisioningStateUpdating - Private endpoint updating
+	PrivateEndpointProvisioningStateUpdating PrivateEndpointProvisioningState = "Updating"
+)
+
+// PossiblePrivateEndpointProvisioningStateValues returns the possible values for the PrivateEndpointProvisioningState const type.
+func PossiblePrivateEndpointProvisioningStateValues() []PrivateEndpointProvisioningState {
+	return []PrivateEndpointProvisioningState{
+		PrivateEndpointProvisioningStateDeleting,
+		PrivateEndpointProvisioningStateFailed,
+		PrivateEndpointProvisioningStateProvisioning,
+		PrivateEndpointProvisioningStateSucceeded,
+		PrivateEndpointProvisioningStateUpdating,
+	}
+}
+
 // RequiredAction - Required action after the initialization process has finished. Additional actions may be added over time.
 type RequiredAction string
 
@@ -861,6 +1147,34 @@ func PossibleShortcutConflictPolicyValues() []ShortcutConflictPolicy {
 	return []ShortcutConflictPolicy{
 		ShortcutConflictPolicyAbort,
 		ShortcutConflictPolicyGenerateUniqueName,
+	}
+}
+
+// SingleSignOnType - The single sign-on type of the connection. Additional single sign on types may be added over time.
+type SingleSignOnType string
+
+const (
+	// SingleSignOnTypeKerberos - Connection uses Kerberos single sign-on to connect.
+	SingleSignOnTypeKerberos SingleSignOnType = "Kerberos"
+	// SingleSignOnTypeKerberosDirectQueryAndRefresh - Connection uses Kerberos DirectQuery and Refresh single sign-on to connect.
+	SingleSignOnTypeKerberosDirectQueryAndRefresh SingleSignOnType = "KerberosDirectQueryAndRefresh"
+	// SingleSignOnTypeMicrosoftEntraID - Connection uses Microsoft Entra ID single sign-on to connect.
+	SingleSignOnTypeMicrosoftEntraID SingleSignOnType = "MicrosoftEntraID"
+	// SingleSignOnTypeNone - Connection does not use single sign-on to connect.
+	SingleSignOnTypeNone SingleSignOnType = "None"
+	// SingleSignOnTypeSecurityAssertionMarkupLanguage - Connection uses Security Assertion Markup Language (SAML) single sign-on
+	// to connect.
+	SingleSignOnTypeSecurityAssertionMarkupLanguage SingleSignOnType = "SecurityAssertionMarkupLanguage"
+)
+
+// PossibleSingleSignOnTypeValues returns the possible values for the SingleSignOnType const type.
+func PossibleSingleSignOnTypeValues() []SingleSignOnType {
+	return []SingleSignOnType{
+		SingleSignOnTypeKerberos,
+		SingleSignOnTypeKerberosDirectQueryAndRefresh,
+		SingleSignOnTypeMicrosoftEntraID,
+		SingleSignOnTypeNone,
+		SingleSignOnTypeSecurityAssertionMarkupLanguage,
 	}
 }
 

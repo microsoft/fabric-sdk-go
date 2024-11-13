@@ -96,26 +96,32 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "ItemsClient.BeginCreateSparkJobDefinition":
-			res.resp, res.err = i.dispatchBeginCreateSparkJobDefinition(req)
-		case "ItemsClient.DeleteSparkJobDefinition":
-			res.resp, res.err = i.dispatchDeleteSparkJobDefinition(req)
-		case "ItemsClient.GetSparkJobDefinition":
-			res.resp, res.err = i.dispatchGetSparkJobDefinition(req)
-		case "ItemsClient.BeginGetSparkJobDefinitionDefinition":
-			res.resp, res.err = i.dispatchBeginGetSparkJobDefinitionDefinition(req)
-		case "ItemsClient.NewListSparkJobDefinitionsPager":
-			res.resp, res.err = i.dispatchNewListSparkJobDefinitionsPager(req)
-		case "ItemsClient.UpdateSparkJobDefinition":
-			res.resp, res.err = i.dispatchUpdateSparkJobDefinition(req)
-		case "ItemsClient.BeginUpdateSparkJobDefinitionDefinition":
-			res.resp, res.err = i.dispatchBeginUpdateSparkJobDefinitionDefinition(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if itemsServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = itemsServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "ItemsClient.BeginCreateSparkJobDefinition":
+				res.resp, res.err = i.dispatchBeginCreateSparkJobDefinition(req)
+			case "ItemsClient.DeleteSparkJobDefinition":
+				res.resp, res.err = i.dispatchDeleteSparkJobDefinition(req)
+			case "ItemsClient.GetSparkJobDefinition":
+				res.resp, res.err = i.dispatchGetSparkJobDefinition(req)
+			case "ItemsClient.BeginGetSparkJobDefinitionDefinition":
+				res.resp, res.err = i.dispatchBeginGetSparkJobDefinitionDefinition(req)
+			case "ItemsClient.NewListSparkJobDefinitionsPager":
+				res.resp, res.err = i.dispatchNewListSparkJobDefinitionsPager(req)
+			case "ItemsClient.UpdateSparkJobDefinition":
+				res.resp, res.err = i.dispatchUpdateSparkJobDefinition(req)
+			case "ItemsClient.BeginUpdateSparkJobDefinitionDefinition":
+				res.resp, res.err = i.dispatchBeginUpdateSparkJobDefinitionDefinition(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -443,4 +449,10 @@ func (i *ItemsServerTransport) dispatchBeginUpdateSparkJobDefinitionDefinition(r
 	}
 
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to ItemsServerTransport
+var itemsServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

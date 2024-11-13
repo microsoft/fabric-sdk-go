@@ -65,16 +65,22 @@ func (o *OneLakeDataAccessSecurityServerTransport) dispatchToMethodFake(req *htt
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "OneLakeDataAccessSecurityClient.CreateOrUpdateDataAccessRoles":
-			res.resp, res.err = o.dispatchCreateOrUpdateDataAccessRoles(req)
-		case "OneLakeDataAccessSecurityClient.ListDataAccessRoles":
-			res.resp, res.err = o.dispatchListDataAccessRoles(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if oneLakeDataAccessSecurityServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = oneLakeDataAccessSecurityServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "OneLakeDataAccessSecurityClient.CreateOrUpdateDataAccessRoles":
+				res.resp, res.err = o.dispatchCreateOrUpdateDataAccessRoles(req)
+			case "OneLakeDataAccessSecurityClient.ListDataAccessRoles":
+				res.resp, res.err = o.dispatchListDataAccessRoles(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -194,4 +200,10 @@ func (o *OneLakeDataAccessSecurityServerTransport) dispatchListDataAccessRoles(r
 		resp.Header.Set("Etag", *val)
 	}
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to OneLakeDataAccessSecurityServerTransport
+var oneLakeDataAccessSecurityServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

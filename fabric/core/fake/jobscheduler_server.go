@@ -95,28 +95,34 @@ func (j *JobSchedulerServerTransport) dispatchToMethodFake(req *http.Request, me
 	defer close(resultChan)
 
 	go func() {
+		var intercepted bool
 		var res result
-		switch method {
-		case "JobSchedulerClient.CancelItemJobInstance":
-			res.resp, res.err = j.dispatchCancelItemJobInstance(req)
-		case "JobSchedulerClient.CreateItemSchedule":
-			res.resp, res.err = j.dispatchCreateItemSchedule(req)
-		case "JobSchedulerClient.GetItemJobInstance":
-			res.resp, res.err = j.dispatchGetItemJobInstance(req)
-		case "JobSchedulerClient.GetItemSchedule":
-			res.resp, res.err = j.dispatchGetItemSchedule(req)
-		case "JobSchedulerClient.NewListItemJobInstancesPager":
-			res.resp, res.err = j.dispatchNewListItemJobInstancesPager(req)
-		case "JobSchedulerClient.ListItemSchedules":
-			res.resp, res.err = j.dispatchListItemSchedules(req)
-		case "JobSchedulerClient.RunOnDemandItemJob":
-			res.resp, res.err = j.dispatchRunOnDemandItemJob(req)
-		case "JobSchedulerClient.UpdateItemSchedule":
-			res.resp, res.err = j.dispatchUpdateItemSchedule(req)
-		default:
-			res.err = fmt.Errorf("unhandled API %s", method)
+		if jobSchedulerServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = jobSchedulerServerTransportInterceptor.Do(req)
 		}
+		if !intercepted {
+			switch method {
+			case "JobSchedulerClient.CancelItemJobInstance":
+				res.resp, res.err = j.dispatchCancelItemJobInstance(req)
+			case "JobSchedulerClient.CreateItemSchedule":
+				res.resp, res.err = j.dispatchCreateItemSchedule(req)
+			case "JobSchedulerClient.GetItemJobInstance":
+				res.resp, res.err = j.dispatchGetItemJobInstance(req)
+			case "JobSchedulerClient.GetItemSchedule":
+				res.resp, res.err = j.dispatchGetItemSchedule(req)
+			case "JobSchedulerClient.NewListItemJobInstancesPager":
+				res.resp, res.err = j.dispatchNewListItemJobInstancesPager(req)
+			case "JobSchedulerClient.ListItemSchedules":
+				res.resp, res.err = j.dispatchListItemSchedules(req)
+			case "JobSchedulerClient.RunOnDemandItemJob":
+				res.resp, res.err = j.dispatchRunOnDemandItemJob(req)
+			case "JobSchedulerClient.UpdateItemSchedule":
+				res.resp, res.err = j.dispatchUpdateItemSchedule(req)
+			default:
+				res.err = fmt.Errorf("unhandled API %s", method)
+			}
 
+		}
 		select {
 		case resultChan <- res:
 		case <-req.Context().Done():
@@ -483,4 +489,10 @@ func (j *JobSchedulerServerTransport) dispatchUpdateItemSchedule(req *http.Reque
 		return nil, err
 	}
 	return resp, nil
+}
+
+// set this to conditionally intercept incoming requests to JobSchedulerServerTransport
+var jobSchedulerServerTransportInterceptor interface {
+	// Do returns true if the server transport should use the returned response/error
+	Do(*http.Request) (*http.Response, error, bool)
 }

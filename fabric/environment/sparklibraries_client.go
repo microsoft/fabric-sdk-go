@@ -33,8 +33,8 @@ type SparkLibrariesClient struct {
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -98,8 +98,8 @@ func (client *SparkLibrariesClient) cancelPublishHandleResponse(resp *http.Respo
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -157,8 +157,8 @@ func (client *SparkLibrariesClient) deleteStagingLibraryCreateRequest(ctx contex
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -222,8 +222,8 @@ func (client *SparkLibrariesClient) getPublishedLibrariesHandleResponse(resp *ht
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -287,8 +287,8 @@ func (client *SparkLibrariesClient) getStagingLibrariesHandleResponse(resp *http
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -367,8 +367,8 @@ func (client *SparkLibrariesClient) publishEnvironmentHandleResponse(resp *http.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //

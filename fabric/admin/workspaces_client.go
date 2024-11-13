@@ -289,6 +289,61 @@ func (client *WorkspacesClient) listWorkspacesHandleResponse(resp *http.Response
 	return result, nil
 }
 
+// RestoreWorkspace - PERMISSIONS The caller must have Fabric administrator rights.
+// REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
+// LIMITATIONS Maximum ten requests per minute.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// | No | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - restoreWorkspaceRequest - The request payload for restoring the deleted workspace.
+//   - options - WorkspacesClientRestoreWorkspaceOptions contains the optional parameters for the WorkspacesClient.RestoreWorkspace
+//     method.
+func (client *WorkspacesClient) RestoreWorkspace(ctx context.Context, workspaceID string, restoreWorkspaceRequest RestoreWorkspaceRequest, options *WorkspacesClientRestoreWorkspaceOptions) (WorkspacesClientRestoreWorkspaceResponse, error) {
+	var err error
+	const operationName = "admin.WorkspacesClient.RestoreWorkspace"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.restoreWorkspaceCreateRequest(ctx, workspaceID, restoreWorkspaceRequest, options)
+	if err != nil {
+		return WorkspacesClientRestoreWorkspaceResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientRestoreWorkspaceResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return WorkspacesClientRestoreWorkspaceResponse{}, err
+	}
+	return WorkspacesClientRestoreWorkspaceResponse{}, nil
+}
+
+// restoreWorkspaceCreateRequest creates the RestoreWorkspace request.
+func (client *WorkspacesClient) restoreWorkspaceCreateRequest(ctx context.Context, workspaceID string, restoreWorkspaceRequest RestoreWorkspaceRequest, _ *WorkspacesClientRestoreWorkspaceOptions) (*policy.Request, error) {
+	urlPath := "/v1/admin/workspaces/{workspaceId}/restore"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, restoreWorkspaceRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // Custom code starts below
 
 // ListGitConnections - returns array of GitConnectionDetails from all pages.

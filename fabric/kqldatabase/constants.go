@@ -34,6 +34,8 @@ const (
 	ItemTypeMLExperiment ItemType = "MLExperiment"
 	// ItemTypeMLModel - A machine learning model.
 	ItemTypeMLModel ItemType = "MLModel"
+	// ItemTypeMirroredDatabase - A mirrored database.
+	ItemTypeMirroredDatabase ItemType = "MirroredDatabase"
 	// ItemTypeMirroredWarehouse - A mirrored warehouse.
 	ItemTypeMirroredWarehouse ItemType = "MirroredWarehouse"
 	// ItemTypeNotebook - A notebook.
@@ -67,6 +69,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeLakehouse,
 		ItemTypeMLExperiment,
 		ItemTypeMLModel,
+		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
 		ItemTypeNotebook,
 		ItemTypePaginatedReport,
@@ -75,6 +78,21 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeSemanticModel,
 		ItemTypeSparkJobDefinition,
 		ItemTypeWarehouse,
+	}
+}
+
+// PayloadType - The type of the definition part payload. Additional payload types may be added over time.
+type PayloadType string
+
+const (
+	// PayloadTypeInlineBase64 - Inline Base 64.
+	PayloadTypeInlineBase64 PayloadType = "InlineBase64"
+)
+
+// PossiblePayloadTypeValues returns the possible values for the PayloadType const type.
+func PossiblePayloadTypeValues() []PayloadType {
+	return []PayloadType{
+		PayloadTypeInlineBase64,
 	}
 }
 

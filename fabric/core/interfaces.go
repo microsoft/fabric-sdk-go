@@ -6,6 +6,74 @@
 
 package core
 
+// ConnectionDetailsParameterClassification provides polymorphic access to related types.
+// Call the interface's GetConnectionDetailsParameter() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *ConnectionDetailsBooleanParameter, *ConnectionDetailsDateParameter, *ConnectionDetailsDateTimeParameter, *ConnectionDetailsDateTimeZoneParameter,
+// - *ConnectionDetailsDurationParameter, *ConnectionDetailsNumberParameter, *ConnectionDetailsParameter, *ConnectionDetailsTextParameter,
+// - *ConnectionDetailsTimeParameter
+type ConnectionDetailsParameterClassification interface {
+	// GetConnectionDetailsParameter returns the ConnectionDetailsParameter content of the underlying type.
+	GetConnectionDetailsParameter() *ConnectionDetailsParameter
+}
+
+// CreateConnectionRequestClassification provides polymorphic access to related types.
+// Call the interface's GetCreateConnectionRequest() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *CreateCloudConnectionRequest, *CreateConnectionRequest, *CreateOnPremisesConnectionRequest, *CreateVirtualNetworkGatewayConnectionRequest
+type CreateConnectionRequestClassification interface {
+	// GetCreateConnectionRequest returns the CreateConnectionRequest content of the underlying type.
+	GetCreateConnectionRequest() *CreateConnectionRequest
+}
+
+// CreateGatewayRequestClassification provides polymorphic access to related types.
+// Call the interface's GetCreateGatewayRequest() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *CreateGatewayRequest, *CreateVirtualNetworkGatewayRequest
+type CreateGatewayRequestClassification interface {
+	// GetCreateGatewayRequest returns the CreateGatewayRequest content of the underlying type.
+	GetCreateGatewayRequest() *CreateGatewayRequest
+}
+
+// CredentialsClassification provides polymorphic access to related types.
+// Call the interface's GetCredentials() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *AnonymousCredentials, *BasicCredentials, *Credentials, *KeyCredentials, *OnPremisesGatewayCredentials, *OnPremisesGatewayPersonalCredentials,
+// - *ServicePrincipalCredentials, *SharedAccessSignatureCredentials, *WindowsCredentials, *WindowsWithoutImpersonationCredentials,
+// - *WorkspaceIdentityCredentials
+type CredentialsClassification interface {
+	// GetCredentials returns the Credentials content of the underlying type.
+	GetCredentials() *Credentials
+}
+
+// GatewayClassification provides polymorphic access to related types.
+// Call the interface's GetGateway() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *Gateway, *OnPremisesGateway, *OnPremisesGatewayPersonal, *VirtualNetworkGateway
+type GatewayClassification interface {
+	// GetGateway returns the Gateway content of the underlying type.
+	GetGateway() *Gateway
+}
+
+// GitCredentialsClassification provides polymorphic access to related types.
+// Call the interface's GetGitCredentials() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *AutomaticGitCredentials, *ConfiguredConnectionGitCredentials, *GitCredentials
+type GitCredentialsClassification interface {
+	// GetGitCredentials returns the GitCredentials content of the underlying type.
+	GetGitCredentials() *GitCredentials
+}
+
+// GitCredentialsConfigurationResponseClassification provides polymorphic access to related types.
+// Call the interface's GetGitCredentialsConfigurationResponse() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *AutomaticGitCredentialsResponse, *ConfiguredConnectionGitCredentialsResponse, *GitCredentialsConfigurationResponse,
+// - *NoneGitCredentialsResponse
+type GitCredentialsConfigurationResponseClassification interface {
+	// GetGitCredentialsConfigurationResponse returns the GitCredentialsConfigurationResponse content of the underlying type.
+	GetGitCredentialsConfigurationResponse() *GitCredentialsConfigurationResponse
+}
+
 // GitProviderDetailsClassification provides polymorphic access to related types.
 // Call the interface's GetGitProviderDetails() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
@@ -22,4 +90,33 @@ type GitProviderDetailsClassification interface {
 type ScheduleConfigClassification interface {
 	// GetScheduleConfig returns the ScheduleConfig content of the underlying type.
 	GetScheduleConfig() *ScheduleConfig
+}
+
+// UpdateConnectionRequestClassification provides polymorphic access to related types.
+// Call the interface's GetUpdateConnectionRequest() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *UpdateConnectionRequest, *UpdateOnPremisesGatewayConnectionRequest, *UpdateOnPremisesGatewayPersonalConnectionRequest,
+// - *UpdatePersonalCloudConnectionRequest, *UpdateShareableCloudConnectionRequest, *UpdateVirtualNetworkGatewayConnectionRequest
+type UpdateConnectionRequestClassification interface {
+	// GetUpdateConnectionRequest returns the UpdateConnectionRequest content of the underlying type.
+	GetUpdateConnectionRequest() *UpdateConnectionRequest
+}
+
+// UpdateGatewayRequestClassification provides polymorphic access to related types.
+// Call the interface's GetUpdateGatewayRequest() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *UpdateGatewayRequest, *UpdateOnPremisesGatewayRequest, *UpdateVirtualNetworkGatewayRequest
+type UpdateGatewayRequestClassification interface {
+	// GetUpdateGatewayRequest returns the UpdateGatewayRequest content of the underlying type.
+	GetUpdateGatewayRequest() *UpdateGatewayRequest
+}
+
+// UpdateGitCredentialsRequestClassification provides polymorphic access to related types.
+// Call the interface's GetUpdateGitCredentialsRequest() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *UpdateGitCredentialsRequest, *UpdateGitCredentialsToAutomaticRequest, *UpdateGitCredentialsToConfiguredConnectionRequest,
+// - *UpdateGitCredentialsToNoneRequest
+type UpdateGitCredentialsRequestClassification interface {
+	// GetUpdateGitCredentialsRequest returns the UpdateGitCredentialsRequest content of the underlying type.
+	GetUpdateGitCredentialsRequest() *UpdateGitCredentialsRequest
 }

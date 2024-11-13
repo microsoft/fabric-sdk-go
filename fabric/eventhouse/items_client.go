@@ -11,6 +11,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -224,6 +225,83 @@ func (client *ItemsClient) getEventhouseHandleResponse(resp *http.Response) (Ite
 	return result, nil
 }
 
+// BeginGetEventhouseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES Eventhouse.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - eventhouseID - The eventhouse ID.
+//   - options - ItemsClientBeginGetEventhouseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetEventhouseDefinition
+//     method.
+func (client *ItemsClient) BeginGetEventhouseDefinition(ctx context.Context, workspaceID string, eventhouseID string, options *ItemsClientBeginGetEventhouseDefinitionOptions) (*runtime.Poller[ItemsClientGetEventhouseDefinitionResponse], error) {
+	return client.beginGetEventhouseDefinition(ctx, workspaceID, eventhouseID, options)
+}
+
+// GetEventhouseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES Eventhouse.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) getEventhouseDefinition(ctx context.Context, workspaceID string, eventhouseID string, options *ItemsClientBeginGetEventhouseDefinitionOptions) (*http.Response, error) {
+	var err error
+	const operationName = "eventhouse.ItemsClient.BeginGetEventhouseDefinition"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getEventhouseDefinitionCreateRequest(ctx, workspaceID, eventhouseID, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// getEventhouseDefinitionCreateRequest creates the GetEventhouseDefinition request.
+func (client *ItemsClient) getEventhouseDefinitionCreateRequest(ctx context.Context, workspaceID string, eventhouseID string, options *ItemsClientBeginGetEventhouseDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/eventhouses/{eventhouseId}/getDefinition"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if eventhouseID == "" {
+		return nil, errors.New("parameter eventhouseID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{eventhouseId}", url.PathEscape(eventhouseID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.Format != nil {
+		reqQP.Set("format", *options.Format)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
 // NewListEventhousesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have viewer or higher role on the workspace.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
@@ -290,7 +368,7 @@ func (client *ItemsClient) listEventhousesHandleResponse(resp *http.Response) (I
 	return result, nil
 }
 
-// UpdateEventhouse - PERMISSIONS The caller must have contributor or higher wokrspace role.
+// UpdateEventhouse - PERMISSIONS The caller must have contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Eventhouse.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -356,6 +434,87 @@ func (client *ItemsClient) updateEventhouseHandleResponse(resp *http.Response) (
 		return ItemsClientUpdateEventhouseResponse{}, err
 	}
 	return result, nil
+}
+
+// BeginUpdateEventhouseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES Eventhouse.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - eventhouseID - The eventhouse ID.
+//   - updateEventhouseDefinitionRequest - Update eventhouse definition request payload.
+//   - options - ItemsClientBeginUpdateEventhouseDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateEventhouseDefinition
+//     method.
+func (client *ItemsClient) BeginUpdateEventhouseDefinition(ctx context.Context, workspaceID string, eventhouseID string, updateEventhouseDefinitionRequest UpdateEventhouseDefinitionRequest, options *ItemsClientBeginUpdateEventhouseDefinitionOptions) (*runtime.Poller[ItemsClientUpdateEventhouseDefinitionResponse], error) {
+	return client.beginUpdateEventhouseDefinition(ctx, workspaceID, eventhouseID, updateEventhouseDefinitionRequest, options)
+}
+
+// UpdateEventhouseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES Eventhouse.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) updateEventhouseDefinition(ctx context.Context, workspaceID string, eventhouseID string, updateEventhouseDefinitionRequest UpdateEventhouseDefinitionRequest, options *ItemsClientBeginUpdateEventhouseDefinitionOptions) (*http.Response, error) {
+	var err error
+	const operationName = "eventhouse.ItemsClient.BeginUpdateEventhouseDefinition"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateEventhouseDefinitionCreateRequest(ctx, workspaceID, eventhouseID, updateEventhouseDefinitionRequest, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// updateEventhouseDefinitionCreateRequest creates the UpdateEventhouseDefinition request.
+func (client *ItemsClient) updateEventhouseDefinitionCreateRequest(ctx context.Context, workspaceID string, eventhouseID string, updateEventhouseDefinitionRequest UpdateEventhouseDefinitionRequest, options *ItemsClientBeginUpdateEventhouseDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/eventhouses/{eventhouseId}/updateDefinition"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if eventhouseID == "" {
+		return nil, errors.New("parameter eventhouseID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{eventhouseId}", url.PathEscape(eventhouseID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.UpdateMetadata != nil {
+		reqQP.Set("updateMetadata", strconv.FormatBool(*options.UpdateMetadata))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateEventhouseDefinitionRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
 }
 
 // Custom code starts below
@@ -426,6 +585,145 @@ func (client *ItemsClient) beginCreateEventhouse(ctx context.Context, workspaceI
 			return nil, err
 		}
 		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientCreateEventhouseResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// GetEventhouseDefinition - returns ItemsClientGetEventhouseDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS The caller must have contributor or higher workspace role.
+//
+// # REQUIRED DELEGATED SCOPES Eventhouse.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - eventhouseID - The eventhouse ID.
+//   - options - ItemsClientBeginGetEventhouseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetEventhouseDefinition method.
+func (client *ItemsClient) GetEventhouseDefinition(ctx context.Context, workspaceID string, eventhouseID string, options *ItemsClientBeginGetEventhouseDefinitionOptions) (ItemsClientGetEventhouseDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginGetEventhouseDefinition(ctx, workspaceID, eventhouseID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientGetEventhouseDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientGetEventhouseDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginGetEventhouseDefinition creates the getEventhouseDefinition request.
+func (client *ItemsClient) beginGetEventhouseDefinition(ctx context.Context, workspaceID string, eventhouseID string, options *ItemsClientBeginGetEventhouseDefinitionOptions) (*runtime.Poller[ItemsClientGetEventhouseDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.getEventhouseDefinition(ctx, workspaceID, eventhouseID, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientGetEventhouseDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientGetEventhouseDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientGetEventhouseDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientGetEventhouseDefinitionResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// UpdateEventhouseDefinition - returns ItemsClientUpdateEventhouseDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS The caller must have contributor or higher workspace role.
+//
+// # REQUIRED DELEGATED SCOPES Eventhouse.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - eventhouseID - The eventhouse ID.
+//   - updateEventhouseDefinitionRequest - Update eventhouse definition request payload.
+//   - options - ItemsClientBeginUpdateEventhouseDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateEventhouseDefinition method.
+func (client *ItemsClient) UpdateEventhouseDefinition(ctx context.Context, workspaceID string, eventhouseID string, updateEventhouseDefinitionRequest UpdateEventhouseDefinitionRequest, options *ItemsClientBeginUpdateEventhouseDefinitionOptions) (ItemsClientUpdateEventhouseDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginUpdateEventhouseDefinition(ctx, workspaceID, eventhouseID, updateEventhouseDefinitionRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientUpdateEventhouseDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientUpdateEventhouseDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginUpdateEventhouseDefinition creates the updateEventhouseDefinition request.
+func (client *ItemsClient) beginUpdateEventhouseDefinition(ctx context.Context, workspaceID string, eventhouseID string, updateEventhouseDefinitionRequest UpdateEventhouseDefinitionRequest, options *ItemsClientBeginUpdateEventhouseDefinitionOptions) (*runtime.Poller[ItemsClientUpdateEventhouseDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.updateEventhouseDefinition(ctx, workspaceID, eventhouseID, updateEventhouseDefinitionRequest, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateEventhouseDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientUpdateEventhouseDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateEventhouseDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientUpdateEventhouseDefinitionResponse]{
 			Handler: handler,
 			Tracer:  client.internal.Tracer(),
 		})
