@@ -6,6 +6,45 @@
 
 package kqlqueryset
 
+// CreateKQLQuerysetRequest - Create KQL queryset request payload.
+type CreateKQLQuerysetRequest struct {
+	// REQUIRED; The KQL queryset display name. The display name must follow naming rules according to item type.
+	DisplayName *string
+
+	// The KQL queryset public definition.
+	Definition *Definition
+
+	// The KQL queryset description. Maximum length is 256 characters.
+	Description *string
+}
+
+// Definition - KQL queryset public definition object.
+type Definition struct {
+	// REQUIRED; A list of definition parts.
+	Parts []DefinitionPart
+
+	// The format of the item definition.
+	Format *string
+}
+
+// DefinitionPart - KQL queryset definition part object.
+type DefinitionPart struct {
+	// The KQL queryset part path.
+	Path *string
+
+	// The KQL queryset part payload.
+	Payload *string
+
+	// The payload type.
+	PayloadType *PayloadType
+}
+
+// DefinitionResponse - KQL queryset public definition response.
+type DefinitionResponse struct {
+	// READ-ONLY; KQL queryset public definition object.
+	Definition *Definition
+}
+
 // KQLQueryset - A KQL queryset object.
 type KQLQueryset struct {
 	// REQUIRED; The item type.
@@ -34,6 +73,12 @@ type KQLQuerysets struct {
 
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
+}
+
+// UpdateKQLQuerysetDefinitionRequest - Update KQL queryset public definition request payload.
+type UpdateKQLQuerysetDefinitionRequest struct {
+	// REQUIRED; KQL queryset public definition object.
+	Definition *Definition
 }
 
 // UpdateKQLQuerysetRequest - Update KQL queryset request.
