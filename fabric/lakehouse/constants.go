@@ -60,6 +60,8 @@ const (
 	ItemTypeNotebook ItemType = "Notebook"
 	// ItemTypePaginatedReport - PowerBI paginated report.
 	ItemTypePaginatedReport ItemType = "PaginatedReport"
+	// ItemTypeReflex - A Reflex.
+	ItemTypeReflex ItemType = "Reflex"
 	// ItemTypeReport - PowerBI report.
 	ItemTypeReport ItemType = "Report"
 	// ItemTypeSQLEndpoint - An SQL endpoint.
@@ -91,6 +93,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeMirroredWarehouse,
 		ItemTypeNotebook,
 		ItemTypePaginatedReport,
+		ItemTypeReflex,
 		ItemTypeReport,
 		ItemTypeSQLEndpoint,
 		ItemTypeSemanticModel,

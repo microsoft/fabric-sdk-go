@@ -11,6 +11,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -26,6 +27,70 @@ import (
 type ItemsClient struct {
 	internal *azcore.Client
 	endpoint string
+}
+
+// CreateKQLQueryset - To create a KQL queryset with definition, refer to the KQL queryset definition article [/rest/api/fabric/articles/item-management/definitions/kql-queryset-definition].
+// PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - createKQLQuerysetRequest - Create item request payload.
+//   - options - ItemsClientCreateKQLQuerysetOptions contains the optional parameters for the ItemsClient.CreateKQLQueryset method.
+func (client *ItemsClient) CreateKQLQueryset(ctx context.Context, workspaceID string, createKQLQuerysetRequest CreateKQLQuerysetRequest, options *ItemsClientCreateKQLQuerysetOptions) (ItemsClientCreateKQLQuerysetResponse, error) {
+	var err error
+	const operationName = "kqlqueryset.ItemsClient.CreateKQLQueryset"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.createKQLQuerysetCreateRequest(ctx, workspaceID, createKQLQuerysetRequest, options)
+	if err != nil {
+		return ItemsClientCreateKQLQuerysetResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return ItemsClientCreateKQLQuerysetResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusCreated) {
+		err = core.NewResponseError(httpResp)
+		return ItemsClientCreateKQLQuerysetResponse{}, err
+	}
+	resp, err := client.createKQLQuerysetHandleResponse(httpResp)
+	return resp, err
+}
+
+// createKQLQuerysetCreateRequest creates the CreateKQLQueryset request.
+func (client *ItemsClient) createKQLQuerysetCreateRequest(ctx context.Context, workspaceID string, createKQLQuerysetRequest CreateKQLQuerysetRequest, _ *ItemsClientCreateKQLQuerysetOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/kqlQuerysets"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, createKQLQuerysetRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// createKQLQuerysetHandleResponse handles the CreateKQLQueryset response.
+func (client *ItemsClient) createKQLQuerysetHandleResponse(resp *http.Response) (ItemsClientCreateKQLQuerysetResponse, error) {
+	result := ItemsClientCreateKQLQuerysetResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.KQLQueryset); err != nil {
+		return ItemsClientCreateKQLQuerysetResponse{}, err
+	}
+	return result, nil
 }
 
 // DeleteKQLQueryset - PERMISSIONS The caller must have contributor or higher workspace role.
@@ -142,6 +207,76 @@ func (client *ItemsClient) getKQLQuerysetHandleResponse(resp *http.Response) (It
 	result := ItemsClientGetKQLQuerysetResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.KQLQueryset); err != nil {
 		return ItemsClientGetKQLQuerysetResponse{}, err
+	}
+	return result, nil
+}
+
+// GetKQLQuerysetDefinition - PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - kqlQuerysetID - The KQL queryset ID.
+//   - options - ItemsClientGetKQLQuerysetDefinitionOptions contains the optional parameters for the ItemsClient.GetKQLQuerysetDefinition
+//     method.
+func (client *ItemsClient) GetKQLQuerysetDefinition(ctx context.Context, workspaceID string, kqlQuerysetID string, options *ItemsClientGetKQLQuerysetDefinitionOptions) (ItemsClientGetKQLQuerysetDefinitionResponse, error) {
+	var err error
+	const operationName = "kqlqueryset.ItemsClient.GetKQLQuerysetDefinition"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getKQLQuerysetDefinitionCreateRequest(ctx, workspaceID, kqlQuerysetID, options)
+	if err != nil {
+		return ItemsClientGetKQLQuerysetDefinitionResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return ItemsClientGetKQLQuerysetDefinitionResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return ItemsClientGetKQLQuerysetDefinitionResponse{}, err
+	}
+	resp, err := client.getKQLQuerysetDefinitionHandleResponse(httpResp)
+	return resp, err
+}
+
+// getKQLQuerysetDefinitionCreateRequest creates the GetKQLQuerysetDefinition request.
+func (client *ItemsClient) getKQLQuerysetDefinitionCreateRequest(ctx context.Context, workspaceID string, kqlQuerysetID string, options *ItemsClientGetKQLQuerysetDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/kqlQuerysets/{kqlQuerysetId}/getDefinition"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if kqlQuerysetID == "" {
+		return nil, errors.New("parameter kqlQuerysetID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{kqlQuerysetId}", url.PathEscape(kqlQuerysetID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.Format != nil {
+		reqQP.Set("format", *options.Format)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getKQLQuerysetDefinitionHandleResponse handles the GetKQLQuerysetDefinition response.
+func (client *ItemsClient) getKQLQuerysetDefinitionHandleResponse(resp *http.Response) (ItemsClientGetKQLQuerysetDefinitionResponse, error) {
+	result := ItemsClientGetKQLQuerysetDefinitionResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.DefinitionResponse); err != nil {
+		return ItemsClientGetKQLQuerysetDefinitionResponse{}, err
 	}
 	return result, nil
 }
@@ -278,6 +413,70 @@ func (client *ItemsClient) updateKQLQuerysetHandleResponse(resp *http.Response) 
 		return ItemsClientUpdateKQLQuerysetResponse{}, err
 	}
 	return result, nil
+}
+
+// UpdateKQLQuerysetDefinition - PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - kqlQuerysetID - The KQL queryset ID.
+//   - updateKQLQuerysetDefinitionRequest - Update KQL queryset definition request payload.
+//   - options - ItemsClientUpdateKQLQuerysetDefinitionOptions contains the optional parameters for the ItemsClient.UpdateKQLQuerysetDefinition
+//     method.
+func (client *ItemsClient) UpdateKQLQuerysetDefinition(ctx context.Context, workspaceID string, kqlQuerysetID string, updateKQLQuerysetDefinitionRequest UpdateKQLQuerysetDefinitionRequest, options *ItemsClientUpdateKQLQuerysetDefinitionOptions) (ItemsClientUpdateKQLQuerysetDefinitionResponse, error) {
+	var err error
+	const operationName = "kqlqueryset.ItemsClient.UpdateKQLQuerysetDefinition"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateKQLQuerysetDefinitionCreateRequest(ctx, workspaceID, kqlQuerysetID, updateKQLQuerysetDefinitionRequest, options)
+	if err != nil {
+		return ItemsClientUpdateKQLQuerysetDefinitionResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return ItemsClientUpdateKQLQuerysetDefinitionResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return ItemsClientUpdateKQLQuerysetDefinitionResponse{}, err
+	}
+	return ItemsClientUpdateKQLQuerysetDefinitionResponse{}, nil
+}
+
+// updateKQLQuerysetDefinitionCreateRequest creates the UpdateKQLQuerysetDefinition request.
+func (client *ItemsClient) updateKQLQuerysetDefinitionCreateRequest(ctx context.Context, workspaceID string, kqlQuerysetID string, updateKQLQuerysetDefinitionRequest UpdateKQLQuerysetDefinitionRequest, options *ItemsClientUpdateKQLQuerysetDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/kqlQuerysets/{kqlQuerysetId}/updateDefinition"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if kqlQuerysetID == "" {
+		return nil, errors.New("parameter kqlQuerysetID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{kqlQuerysetId}", url.PathEscape(kqlQuerysetID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.UpdateMetadata != nil {
+		reqQP.Set("updateMetadata", strconv.FormatBool(*options.UpdateMetadata))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateKQLQuerysetDefinitionRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
 }
 
 // Custom code starts below

@@ -4,7 +4,7 @@
 // Changes may cause incorrect behavior and will be lost if the code is regenerated.
 // SPDX-License-Identifier: MIT
 
-package kqlqueryset
+package reflex
 
 import (
 	"encoding/json"
@@ -14,8 +14,8 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 )
 
-// MarshalJSON implements the json.Marshaller interface for type CreateKQLQuerysetRequest.
-func (c CreateKQLQuerysetRequest) MarshalJSON() ([]byte, error) {
+// MarshalJSON implements the json.Marshaller interface for type CreateReflexRequest.
+func (c CreateReflexRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "definition", c.Definition)
 	populate(objectMap, "description", c.Description)
@@ -23,8 +23,8 @@ func (c CreateKQLQuerysetRequest) MarshalJSON() ([]byte, error) {
 	return json.Marshal(objectMap)
 }
 
-// UnmarshalJSON implements the json.Unmarshaller interface for type CreateKQLQuerysetRequest.
-func (c *CreateKQLQuerysetRequest) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON implements the json.Unmarshaller interface for type CreateReflexRequest.
+func (c *CreateReflexRequest) UnmarshalJSON(data []byte) error {
 	var rawMsg map[string]json.RawMessage
 	if err := json.Unmarshal(data, &rawMsg); err != nil {
 		return fmt.Errorf("unmarshalling type %T: %v", c, err)
@@ -142,93 +142,93 @@ func (d *DefinitionResponse) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// MarshalJSON implements the json.Marshaller interface for type KQLQueryset.
-func (k KQLQueryset) MarshalJSON() ([]byte, error) {
+// MarshalJSON implements the json.Marshaller interface for type Reflex.
+func (r Reflex) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
-	populate(objectMap, "description", k.Description)
-	populate(objectMap, "displayName", k.DisplayName)
-	populate(objectMap, "id", k.ID)
-	populate(objectMap, "type", k.Type)
-	populate(objectMap, "workspaceId", k.WorkspaceID)
+	populate(objectMap, "description", r.Description)
+	populate(objectMap, "displayName", r.DisplayName)
+	populate(objectMap, "id", r.ID)
+	populate(objectMap, "type", r.Type)
+	populate(objectMap, "workspaceId", r.WorkspaceID)
 	return json.Marshal(objectMap)
 }
 
-// UnmarshalJSON implements the json.Unmarshaller interface for type KQLQueryset.
-func (k *KQLQueryset) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON implements the json.Unmarshaller interface for type Reflex.
+func (r *Reflex) UnmarshalJSON(data []byte) error {
 	var rawMsg map[string]json.RawMessage
 	if err := json.Unmarshal(data, &rawMsg); err != nil {
-		return fmt.Errorf("unmarshalling type %T: %v", k, err)
+		return fmt.Errorf("unmarshalling type %T: %v", r, err)
 	}
 	for key, val := range rawMsg {
 		var err error
 		switch key {
 		case "description":
-			err = unpopulate(val, "Description", &k.Description)
+			err = unpopulate(val, "Description", &r.Description)
 			delete(rawMsg, key)
 		case "displayName":
-			err = unpopulate(val, "DisplayName", &k.DisplayName)
+			err = unpopulate(val, "DisplayName", &r.DisplayName)
 			delete(rawMsg, key)
 		case "id":
-			err = unpopulate(val, "ID", &k.ID)
+			err = unpopulate(val, "ID", &r.ID)
 			delete(rawMsg, key)
 		case "type":
-			err = unpopulate(val, "Type", &k.Type)
+			err = unpopulate(val, "Type", &r.Type)
 			delete(rawMsg, key)
 		case "workspaceId":
-			err = unpopulate(val, "WorkspaceID", &k.WorkspaceID)
+			err = unpopulate(val, "WorkspaceID", &r.WorkspaceID)
 			delete(rawMsg, key)
 		}
 		if err != nil {
-			return fmt.Errorf("unmarshalling type %T: %v", k, err)
+			return fmt.Errorf("unmarshalling type %T: %v", r, err)
 		}
 	}
 	return nil
 }
 
-// MarshalJSON implements the json.Marshaller interface for type KQLQuerysets.
-func (k KQLQuerysets) MarshalJSON() ([]byte, error) {
+// MarshalJSON implements the json.Marshaller interface for type Reflexes.
+func (r Reflexes) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
-	populate(objectMap, "continuationToken", k.ContinuationToken)
-	populate(objectMap, "continuationUri", k.ContinuationURI)
-	populate(objectMap, "value", k.Value)
+	populate(objectMap, "continuationToken", r.ContinuationToken)
+	populate(objectMap, "continuationUri", r.ContinuationURI)
+	populate(objectMap, "value", r.Value)
 	return json.Marshal(objectMap)
 }
 
-// UnmarshalJSON implements the json.Unmarshaller interface for type KQLQuerysets.
-func (k *KQLQuerysets) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON implements the json.Unmarshaller interface for type Reflexes.
+func (r *Reflexes) UnmarshalJSON(data []byte) error {
 	var rawMsg map[string]json.RawMessage
 	if err := json.Unmarshal(data, &rawMsg); err != nil {
-		return fmt.Errorf("unmarshalling type %T: %v", k, err)
+		return fmt.Errorf("unmarshalling type %T: %v", r, err)
 	}
 	for key, val := range rawMsg {
 		var err error
 		switch key {
 		case "continuationToken":
-			err = unpopulate(val, "ContinuationToken", &k.ContinuationToken)
+			err = unpopulate(val, "ContinuationToken", &r.ContinuationToken)
 			delete(rawMsg, key)
 		case "continuationUri":
-			err = unpopulate(val, "ContinuationURI", &k.ContinuationURI)
+			err = unpopulate(val, "ContinuationURI", &r.ContinuationURI)
 			delete(rawMsg, key)
 		case "value":
-			err = unpopulate(val, "Value", &k.Value)
+			err = unpopulate(val, "Value", &r.Value)
 			delete(rawMsg, key)
 		}
 		if err != nil {
-			return fmt.Errorf("unmarshalling type %T: %v", k, err)
+			return fmt.Errorf("unmarshalling type %T: %v", r, err)
 		}
 	}
 	return nil
 }
 
-// MarshalJSON implements the json.Marshaller interface for type UpdateKQLQuerysetDefinitionRequest.
-func (u UpdateKQLQuerysetDefinitionRequest) MarshalJSON() ([]byte, error) {
+// MarshalJSON implements the json.Marshaller interface for type UpdateReflexDefinitionRequest.
+func (u UpdateReflexDefinitionRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "definition", u.Definition)
 	return json.Marshal(objectMap)
 }
 
-// UnmarshalJSON implements the json.Unmarshaller interface for type UpdateKQLQuerysetDefinitionRequest.
-func (u *UpdateKQLQuerysetDefinitionRequest) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON implements the json.Unmarshaller interface for type UpdateReflexDefinitionRequest.
+func (u *UpdateReflexDefinitionRequest) UnmarshalJSON(data []byte) error {
 	var rawMsg map[string]json.RawMessage
 	if err := json.Unmarshal(data, &rawMsg); err != nil {
 		return fmt.Errorf("unmarshalling type %T: %v", u, err)
@@ -247,16 +247,16 @@ func (u *UpdateKQLQuerysetDefinitionRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// MarshalJSON implements the json.Marshaller interface for type UpdateKQLQuerysetRequest.
-func (u UpdateKQLQuerysetRequest) MarshalJSON() ([]byte, error) {
+// MarshalJSON implements the json.Marshaller interface for type UpdateReflexRequest.
+func (u UpdateReflexRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "description", u.Description)
 	populate(objectMap, "displayName", u.DisplayName)
 	return json.Marshal(objectMap)
 }
 
-// UnmarshalJSON implements the json.Unmarshaller interface for type UpdateKQLQuerysetRequest.
-func (u *UpdateKQLQuerysetRequest) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON implements the json.Unmarshaller interface for type UpdateReflexRequest.
+func (u *UpdateReflexRequest) UnmarshalJSON(data []byte) error {
 	var rawMsg map[string]json.RawMessage
 	if err := json.Unmarshal(data, &rawMsg); err != nil {
 		return fmt.Errorf("unmarshalling type %T: %v", u, err)

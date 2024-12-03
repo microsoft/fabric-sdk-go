@@ -104,6 +104,61 @@ func (testsuite *FakeTestSuite) TestItems_ListKQLQuerysets() {
 	}
 }
 
+func (testsuite *FakeTestSuite) TestItems_CreateKQLQueryset() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a KQL queryset example"},
+	})
+	var exampleWorkspaceID string
+	var exampleCreateKQLQuerysetRequest kqlqueryset.CreateKQLQuerysetRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCreateKQLQuerysetRequest = kqlqueryset.CreateKQLQuerysetRequest{
+		Description: to.Ptr("A KQL queryset description"),
+		DisplayName: to.Ptr("KQLQueryset_1"),
+	}
+
+	testsuite.serverFactory.ItemsServer.CreateKQLQueryset = func(ctx context.Context, workspaceID string, createKQLQuerysetRequest kqlqueryset.CreateKQLQuerysetRequest, options *kqlqueryset.ItemsClientCreateKQLQuerysetOptions) (resp azfake.Responder[kqlqueryset.ItemsClientCreateKQLQuerysetResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateKQLQuerysetRequest, createKQLQuerysetRequest))
+		resp = azfake.Responder[kqlqueryset.ItemsClientCreateKQLQuerysetResponse]{}
+		resp.SetResponse(http.StatusCreated, kqlqueryset.ItemsClientCreateKQLQuerysetResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	_, err = client.CreateKQLQueryset(ctx, exampleWorkspaceID, exampleCreateKQLQuerysetRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a KQL queryset with definition example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCreateKQLQuerysetRequest = kqlqueryset.CreateKQLQuerysetRequest{
+		Description: to.Ptr("A KQL queryset description"),
+		Definition: &kqlqueryset.Definition{
+			Parts: []kqlqueryset.DefinitionPart{
+				{
+					Path:        to.Ptr("RealTimeQueryset.json"),
+					Payload:     to.Ptr("eyJjb250ZW50Ijoie1wicGF5bG9hZFwiOntcInRhYnNcIjpbe1wiaWRcIjpcImFkODAxYjlkLTEwOTEtNDI2NC04ZjdhLThlNDkyOGI5ZTEzOFwiLFwicXVlcnlSYW5nZVwiOntcInN0YXJ0TGluZU51bWJlclwiOjEsXCJzdGFydENvbHVtblwiOjEsXCJlbmRMaW5lTnVtYmVyXCI6MSxcImVuZENvbHVtblwiOjl9LFwidGV4dFwiOlwicHJpbnQgMTBcIixcImNvbW1hbmRJbkNvbnRleHRcIjpcInByaW50IDEwXCIsXCJleGVjdXRpb25TdGF0dXNcIjpcIm5vdFN0YXJ0ZWRcIixcImNsaWVudFJlcXVlc3RJZFwiOm51bGwsXCJjb21tYW5kVHlwZVwiOlwiUXVlcnlcIixcImNvbW1hbmRXaXRob3V0TGVhZGluZ0NvbW1lbnRzXCI6XCJwcmludCAxMFwiLFwiaGlkZUVtcHR5Q29sdW1uc1wiOmZhbHNlLFwiY3Vyc29yUG9zaXRpb25cIjp7XCJsaW5lTnVtYmVyXCI6MSxcImNvbHVtblwiOjl9fV0sXCJ0YWJJbkNvbnRleHRcIjpcImFkODAxYjlkLTEwOTEtNDI2NC04ZjdhLThlNDkyOGI5ZTEzOFwiLFwiY29ubmVjdGlvbnNcIjp7fX19In0="),
+					PayloadType: to.Ptr(kqlqueryset.PayloadTypeInlineBase64),
+				}},
+		},
+		DisplayName: to.Ptr("KQLQueryset_1"),
+	}
+
+	testsuite.serverFactory.ItemsServer.CreateKQLQueryset = func(ctx context.Context, workspaceID string, createKQLQuerysetRequest kqlqueryset.CreateKQLQuerysetRequest, options *kqlqueryset.ItemsClientCreateKQLQuerysetOptions) (resp azfake.Responder[kqlqueryset.ItemsClientCreateKQLQuerysetResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateKQLQuerysetRequest, createKQLQuerysetRequest))
+		resp = azfake.Responder[kqlqueryset.ItemsClientCreateKQLQuerysetResponse]{}
+		resp.SetResponse(http.StatusCreated, kqlqueryset.ItemsClientCreateKQLQuerysetResponse{}, nil)
+		return
+	}
+
+	_, err = client.CreateKQLQueryset(ctx, exampleWorkspaceID, exampleCreateKQLQuerysetRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
 func (testsuite *FakeTestSuite) TestItems_GetKQLQueryset() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -194,5 +249,85 @@ func (testsuite *FakeTestSuite) TestItems_DeleteKQLQueryset() {
 
 	client := testsuite.clientFactory.NewItemsClient()
 	_, err = client.DeleteKQLQueryset(ctx, exampleWorkspaceID, exampleKqlQuerysetID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestItems_GetKQLQuerysetDefinition() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a KQL queryset definition example"},
+	})
+	var exampleWorkspaceID string
+	var exampleKqlQuerysetID string
+	exampleWorkspaceID = "314fff62-7c47-4225-9a6c-1a2220f4ce32"
+	exampleKqlQuerysetID = "9b7de20c-a62f-470e-931d-e7e53f373c0c"
+
+	exampleRes := kqlqueryset.DefinitionResponse{
+		Definition: &kqlqueryset.Definition{
+			Parts: []kqlqueryset.DefinitionPart{
+				{
+					Path:        to.Ptr("RealTimeQueryset.json"),
+					Payload:     to.Ptr("eyJjb250ZW50Ijoie1wicGF5bG9hZFwiOntcInRhYnNcIjpbe1wiaWRcIjpcImFkODAxYjlkLTEwOTEtNDI2NC04ZjdhLThlNDkyOGI5ZTEzOFwiLFwicXVlcnlSYW5nZVwiOntcInN0YXJ0TGluZU51bWJlclwiOjEsXCJzdGFydENvbHVtblwiOjEsXCJlbmRMaW5lTnVtYmVyXCI6MSxcImVuZENvbHVtblwiOjl9LFwidGV4dFwiOlwicHJpbnQgMTBcIixcImNvbW1hbmRJbkNvbnRleHRcIjpcInByaW50IDEwXCIsXCJleGVjdXRpb25TdGF0dXNcIjpcIm5vdFN0YXJ0ZWRcIixcImNsaWVudFJlcXVlc3RJZFwiOm51bGwsXCJjb21tYW5kVHlwZVwiOlwiUXVlcnlcIixcImNvbW1hbmRXaXRob3V0TGVhZGluZ0NvbW1lbnRzXCI6XCJwcmludCAxMFwiLFwiaGlkZUVtcHR5Q29sdW1uc1wiOmZhbHNlLFwiY3Vyc29yUG9zaXRpb25cIjp7XCJsaW5lTnVtYmVyXCI6MSxcImNvbHVtblwiOjl9fV0sXCJ0YWJJbkNvbnRleHRcIjpcImFkODAxYjlkLTEwOTEtNDI2NC04ZjdhLThlNDkyOGI5ZTEzOFwiLFwiY29ubmVjdGlvbnNcIjp7fX19In0="),
+					PayloadType: to.Ptr(kqlqueryset.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ewogICIkc2NoZW1hIjogImh0dHBzOi8vZGV2ZWxvcGVyLm1pY3Jvc29mdC5jb20vanNvbi1zY2hlbWFzL2ZhYnJpYy9naXRJbnRlZ3JhdGlvbi9wbGF0Zm9ybVByb3BlcnRpZXMvMi4wLjAvc2NoZW1hLmpzb24iLAogICJtZXRhZGF0YSI6IHsKICAgICJ0eXBlIjogIktRTFF1ZXJ5c2V0IiwKICAgICJkaXNwbGF5TmFtZSI6ICJjeHp2ZWFyZ2giLAogICAgImRlc2NyaXB0aW9uIjogImN4enZlYXJnaCIKICB9LAogICJjb25maWciOiB7CiAgICAidmVyc2lvbiI6ICIyLjAiLAogICAgImxvZ2ljYWxJZCI6ICIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDAiCiAgfQp9"),
+					PayloadType: to.Ptr(kqlqueryset.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.GetKQLQuerysetDefinition = func(ctx context.Context, workspaceID string, kqlQuerysetID string, options *kqlqueryset.ItemsClientGetKQLQuerysetDefinitionOptions) (resp azfake.Responder[kqlqueryset.ItemsClientGetKQLQuerysetDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleKqlQuerysetID, kqlQuerysetID)
+		resp = azfake.Responder[kqlqueryset.ItemsClientGetKQLQuerysetDefinitionResponse]{}
+		resp.SetResponse(http.StatusOK, kqlqueryset.ItemsClientGetKQLQuerysetDefinitionResponse{DefinitionResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	res, err := client.GetKQLQuerysetDefinition(ctx, exampleWorkspaceID, exampleKqlQuerysetID, &kqlqueryset.ItemsClientGetKQLQuerysetDefinitionOptions{Format: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DefinitionResponse))
+}
+
+func (testsuite *FakeTestSuite) TestItems_UpdateKQLQuerysetDefinition() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update a KQL queryset definition example"},
+	})
+	var exampleWorkspaceID string
+	var exampleKqlQuerysetID string
+	var exampleUpdateKQLQuerysetDefinitionRequest kqlqueryset.UpdateKQLQuerysetDefinitionRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleKqlQuerysetID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleUpdateKQLQuerysetDefinitionRequest = kqlqueryset.UpdateKQLQuerysetDefinitionRequest{
+		Definition: &kqlqueryset.Definition{
+			Parts: []kqlqueryset.DefinitionPart{
+				{
+					Path:        to.Ptr("RealTimeQueryset.json"),
+					Payload:     to.Ptr("eyJjb250ZW50Ijoie1wicGF5bG9hZFwiOntcInRhYnNcIjpbe1wiaWRcIjpcImFkODAxYjlkLTEwOTEtNDI2NC04ZjdhLThlNDkyOGI5ZTEzOFwiLFwicXVlcnlSYW5nZVwiOntcInN0YXJ0TGluZU51bWJlclwiOjEsXCJzdGFydENvbHVtblwiOjEsXCJlbmRMaW5lTnVtYmVyXCI6MSxcImVuZENvbHVtblwiOjl9LFwidGV4dFwiOlwicHJpbnQgMTBcIixcImNvbW1hbmRJbkNvbnRleHRcIjpcInByaW50IDEwXCIsXCJleGVjdXRpb25TdGF0dXNcIjpcIm5vdFN0YXJ0ZWRcIixcImNsaWVudFJlcXVlc3RJZFwiOm51bGwsXCJjb21tYW5kVHlwZVwiOlwiUXVlcnlcIixcImNvbW1hbmRXaXRob3V0TGVhZGluZ0NvbW1lbnRzXCI6XCJwcmludCAxMFwiLFwiaGlkZUVtcHR5Q29sdW1uc1wiOmZhbHNlLFwiY3Vyc29yUG9zaXRpb25cIjp7XCJsaW5lTnVtYmVyXCI6MSxcImNvbHVtblwiOjl9fV0sXCJ0YWJJbkNvbnRleHRcIjpcImFkODAxYjlkLTEwOTEtNDI2NC04ZjdhLThlNDkyOGI5ZTEzOFwiLFwiY29ubmVjdGlvbnNcIjp7fX19In0="),
+					PayloadType: to.Ptr(kqlqueryset.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(kqlqueryset.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.UpdateKQLQuerysetDefinition = func(ctx context.Context, workspaceID string, kqlQuerysetID string, updateKQLQuerysetDefinitionRequest kqlqueryset.UpdateKQLQuerysetDefinitionRequest, options *kqlqueryset.ItemsClientUpdateKQLQuerysetDefinitionOptions) (resp azfake.Responder[kqlqueryset.ItemsClientUpdateKQLQuerysetDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleKqlQuerysetID, kqlQuerysetID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateKQLQuerysetDefinitionRequest, updateKQLQuerysetDefinitionRequest))
+		resp = azfake.Responder[kqlqueryset.ItemsClientUpdateKQLQuerysetDefinitionResponse]{}
+		resp.SetResponse(http.StatusOK, kqlqueryset.ItemsClientUpdateKQLQuerysetDefinitionResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	_, err = client.UpdateKQLQuerysetDefinition(ctx, exampleWorkspaceID, exampleKqlQuerysetID, exampleUpdateKQLQuerysetDefinitionRequest, &kqlqueryset.ItemsClientUpdateKQLQuerysetDefinitionOptions{UpdateMetadata: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }

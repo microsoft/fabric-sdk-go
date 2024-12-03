@@ -6,9 +6,21 @@
 
 package kqlqueryset
 
+// ItemsClientCreateKQLQuerysetResponse contains the response from method ItemsClient.CreateKQLQueryset.
+type ItemsClientCreateKQLQuerysetResponse struct {
+	// A KQL queryset object.
+	KQLQueryset
+}
+
 // ItemsClientDeleteKQLQuerysetResponse contains the response from method ItemsClient.DeleteKQLQueryset.
 type ItemsClientDeleteKQLQuerysetResponse struct {
 	// placeholder for future response values
+}
+
+// ItemsClientGetKQLQuerysetDefinitionResponse contains the response from method ItemsClient.GetKQLQuerysetDefinition.
+type ItemsClientGetKQLQuerysetDefinitionResponse struct {
+	// KQL queryset public definition response.
+	DefinitionResponse
 }
 
 // ItemsClientGetKQLQuerysetResponse contains the response from method ItemsClient.GetKQLQueryset.
@@ -21,6 +33,11 @@ type ItemsClientGetKQLQuerysetResponse struct {
 type ItemsClientListKQLQuerysetsResponse struct {
 	// A list of KQL querysets.
 	KQLQuerysets
+}
+
+// ItemsClientUpdateKQLQuerysetDefinitionResponse contains the response from method ItemsClient.UpdateKQLQuerysetDefinition.
+type ItemsClientUpdateKQLQuerysetDefinitionResponse struct {
+	// placeholder for future response values
 }
 
 // ItemsClientUpdateKQLQuerysetResponse contains the response from method ItemsClient.UpdateKQLQueryset.

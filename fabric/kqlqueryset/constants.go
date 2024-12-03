@@ -42,6 +42,8 @@ const (
 	ItemTypeNotebook ItemType = "Notebook"
 	// ItemTypePaginatedReport - PowerBI paginated report.
 	ItemTypePaginatedReport ItemType = "PaginatedReport"
+	// ItemTypeReflex - A Reflex.
+	ItemTypeReflex ItemType = "Reflex"
 	// ItemTypeReport - PowerBI report.
 	ItemTypeReport ItemType = "Report"
 	// ItemTypeSQLEndpoint - An SQL endpoint.
@@ -73,10 +75,26 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeMirroredWarehouse,
 		ItemTypeNotebook,
 		ItemTypePaginatedReport,
+		ItemTypeReflex,
 		ItemTypeReport,
 		ItemTypeSQLEndpoint,
 		ItemTypeSemanticModel,
 		ItemTypeSparkJobDefinition,
 		ItemTypeWarehouse,
+	}
+}
+
+// PayloadType - The type of the definition part payload. Additional payload types may be added over time.
+type PayloadType string
+
+const (
+	// PayloadTypeInlineBase64 - Inline Base 64.
+	PayloadTypeInlineBase64 PayloadType = "InlineBase64"
+)
+
+// PossiblePayloadTypeValues returns the possible values for the PayloadType const type.
+func PossiblePayloadTypeValues() []PayloadType {
+	return []PayloadType{
+		PayloadTypeInlineBase64,
 	}
 }

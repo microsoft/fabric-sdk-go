@@ -66,6 +66,54 @@ func ExampleItemsClient_NewListKQLQuerysetsPager() {
 }
 
 // Generated from example definition
+func ExampleItemsClient_CreateKQLQueryset_createAKqlQuerysetExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := kqlqueryset.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewItemsClient().CreateKQLQueryset(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", kqlqueryset.CreateKQLQuerysetRequest{
+		Description: to.Ptr("A KQL queryset description"),
+		DisplayName: to.Ptr("KQLQueryset_1"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_CreateKQLQueryset_createAKqlQuerysetWithDefinitionExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := kqlqueryset.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewItemsClient().CreateKQLQueryset(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", kqlqueryset.CreateKQLQuerysetRequest{
+		Description: to.Ptr("A KQL queryset description"),
+		Definition: &kqlqueryset.Definition{
+			Parts: []kqlqueryset.DefinitionPart{
+				{
+					Path:        to.Ptr("RealTimeQueryset.json"),
+					Payload:     to.Ptr("eyJjb250ZW50Ijoie1wicGF5bG9hZFwiOntcInRhYnNcIjpbe1wiaWRcIjpcImFkODAxYjlkLTEwOTEtNDI2NC04ZjdhLThlNDkyOGI5ZTEzOFwiLFwicXVlcnlSYW5nZVwiOntcInN0YXJ0TGluZU51bWJlclwiOjEsXCJzdGFydENvbHVtblwiOjEsXCJlbmRMaW5lTnVtYmVyXCI6MSxcImVuZENvbHVtblwiOjl9LFwidGV4dFwiOlwicHJpbnQgMTBcIixcImNvbW1hbmRJbkNvbnRleHRcIjpcInByaW50IDEwXCIsXCJleGVjdXRpb25TdGF0dXNcIjpcIm5vdFN0YXJ0ZWRcIixcImNsaWVudFJlcXVlc3RJZFwiOm51bGwsXCJjb21tYW5kVHlwZVwiOlwiUXVlcnlcIixcImNvbW1hbmRXaXRob3V0TGVhZGluZ0NvbW1lbnRzXCI6XCJwcmludCAxMFwiLFwiaGlkZUVtcHR5Q29sdW1uc1wiOmZhbHNlLFwiY3Vyc29yUG9zaXRpb25cIjp7XCJsaW5lTnVtYmVyXCI6MSxcImNvbHVtblwiOjl9fV0sXCJ0YWJJbkNvbnRleHRcIjpcImFkODAxYjlkLTEwOTEtNDI2NC04ZjdhLThlNDkyOGI5ZTEzOFwiLFwiY29ubmVjdGlvbnNcIjp7fX19In0="),
+					PayloadType: to.Ptr(kqlqueryset.PayloadTypeInlineBase64),
+				}},
+		},
+		DisplayName: to.Ptr("KQLQueryset_1"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
 func ExampleItemsClient_GetKQLQueryset() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -134,6 +182,72 @@ func ExampleItemsClient_DeleteKQLQueryset() {
 		log.Fatalf("failed to create client: %v", err)
 	}
 	_, err = clientFactory.NewItemsClient().DeleteKQLQueryset(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_GetKQLQuerysetDefinition() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := kqlqueryset.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewItemsClient().GetKQLQuerysetDefinition(ctx, "314fff62-7c47-4225-9a6c-1a2220f4ce32", "9b7de20c-a62f-470e-931d-e7e53f373c0c", &kqlqueryset.ItemsClientGetKQLQuerysetDefinitionOptions{Format: nil})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.DefinitionResponse = kqlqueryset.DefinitionResponse{
+	// 	Definition: &kqlqueryset.Definition{
+	// 		Parts: []kqlqueryset.DefinitionPart{
+	// 			{
+	// 				Path: to.Ptr("RealTimeQueryset.json"),
+	// 				Payload: to.Ptr("eyJjb250ZW50Ijoie1wicGF5bG9hZFwiOntcInRhYnNcIjpbe1wiaWRcIjpcImFkODAxYjlkLTEwOTEtNDI2NC04ZjdhLThlNDkyOGI5ZTEzOFwiLFwicXVlcnlSYW5nZVwiOntcInN0YXJ0TGluZU51bWJlclwiOjEsXCJzdGFydENvbHVtblwiOjEsXCJlbmRMaW5lTnVtYmVyXCI6MSxcImVuZENvbHVtblwiOjl9LFwidGV4dFwiOlwicHJpbnQgMTBcIixcImNvbW1hbmRJbkNvbnRleHRcIjpcInByaW50IDEwXCIsXCJleGVjdXRpb25TdGF0dXNcIjpcIm5vdFN0YXJ0ZWRcIixcImNsaWVudFJlcXVlc3RJZFwiOm51bGwsXCJjb21tYW5kVHlwZVwiOlwiUXVlcnlcIixcImNvbW1hbmRXaXRob3V0TGVhZGluZ0NvbW1lbnRzXCI6XCJwcmludCAxMFwiLFwiaGlkZUVtcHR5Q29sdW1uc1wiOmZhbHNlLFwiY3Vyc29yUG9zaXRpb25cIjp7XCJsaW5lTnVtYmVyXCI6MSxcImNvbHVtblwiOjl9fV0sXCJ0YWJJbkNvbnRleHRcIjpcImFkODAxYjlkLTEwOTEtNDI2NC04ZjdhLThlNDkyOGI5ZTEzOFwiLFwiY29ubmVjdGlvbnNcIjp7fX19In0="),
+	// 				PayloadType: to.Ptr(kqlqueryset.PayloadTypeInlineBase64),
+	// 			},
+	// 			{
+	// 				Path: to.Ptr(".platform"),
+	// 				Payload: to.Ptr("ewogICIkc2NoZW1hIjogImh0dHBzOi8vZGV2ZWxvcGVyLm1pY3Jvc29mdC5jb20vanNvbi1zY2hlbWFzL2ZhYnJpYy9naXRJbnRlZ3JhdGlvbi9wbGF0Zm9ybVByb3BlcnRpZXMvMi4wLjAvc2NoZW1hLmpzb24iLAogICJtZXRhZGF0YSI6IHsKICAgICJ0eXBlIjogIktRTFF1ZXJ5c2V0IiwKICAgICJkaXNwbGF5TmFtZSI6ICJjeHp2ZWFyZ2giLAogICAgImRlc2NyaXB0aW9uIjogImN4enZlYXJnaCIKICB9LAogICJjb25maWciOiB7CiAgICAidmVyc2lvbiI6ICIyLjAiLAogICAgImxvZ2ljYWxJZCI6ICIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDAiCiAgfQp9"),
+	// 				PayloadType: to.Ptr(kqlqueryset.PayloadTypeInlineBase64),
+	// 		}},
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleItemsClient_UpdateKQLQuerysetDefinition() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := kqlqueryset.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewItemsClient().UpdateKQLQuerysetDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", kqlqueryset.UpdateKQLQuerysetDefinitionRequest{
+		Definition: &kqlqueryset.Definition{
+			Parts: []kqlqueryset.DefinitionPart{
+				{
+					Path:        to.Ptr("RealTimeQueryset.json"),
+					Payload:     to.Ptr("eyJjb250ZW50Ijoie1wicGF5bG9hZFwiOntcInRhYnNcIjpbe1wiaWRcIjpcImFkODAxYjlkLTEwOTEtNDI2NC04ZjdhLThlNDkyOGI5ZTEzOFwiLFwicXVlcnlSYW5nZVwiOntcInN0YXJ0TGluZU51bWJlclwiOjEsXCJzdGFydENvbHVtblwiOjEsXCJlbmRMaW5lTnVtYmVyXCI6MSxcImVuZENvbHVtblwiOjl9LFwidGV4dFwiOlwicHJpbnQgMTBcIixcImNvbW1hbmRJbkNvbnRleHRcIjpcInByaW50IDEwXCIsXCJleGVjdXRpb25TdGF0dXNcIjpcIm5vdFN0YXJ0ZWRcIixcImNsaWVudFJlcXVlc3RJZFwiOm51bGwsXCJjb21tYW5kVHlwZVwiOlwiUXVlcnlcIixcImNvbW1hbmRXaXRob3V0TGVhZGluZ0NvbW1lbnRzXCI6XCJwcmludCAxMFwiLFwiaGlkZUVtcHR5Q29sdW1uc1wiOmZhbHNlLFwiY3Vyc29yUG9zaXRpb25cIjp7XCJsaW5lTnVtYmVyXCI6MSxcImNvbHVtblwiOjl9fV0sXCJ0YWJJbkNvbnRleHRcIjpcImFkODAxYjlkLTEwOTEtNDI2NC04ZjdhLThlNDkyOGI5ZTEzOFwiLFwiY29ubmVjdGlvbnNcIjp7fX19In0="),
+					PayloadType: to.Ptr(kqlqueryset.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(kqlqueryset.PayloadTypeInlineBase64),
+				}},
+		},
+	}, &kqlqueryset.ItemsClientUpdateKQLQuerysetDefinitionOptions{UpdateMetadata: to.Ptr(true)})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

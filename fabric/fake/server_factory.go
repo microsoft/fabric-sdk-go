@@ -33,6 +33,7 @@ import (
 	mlmodelfake "github.com/microsoft/fabric-sdk-go/fabric/mlmodel/fake"
 	notebookfake "github.com/microsoft/fabric-sdk-go/fabric/notebook/fake"
 	paginatedreportfake "github.com/microsoft/fabric-sdk-go/fabric/paginatedreport/fake"
+	reflexfake "github.com/microsoft/fabric-sdk-go/fabric/reflex/fake"
 	reportfake "github.com/microsoft/fabric-sdk-go/fabric/report/fake"
 	semanticmodelfake "github.com/microsoft/fabric-sdk-go/fabric/semanticmodel/fake"
 	sparkfake "github.com/microsoft/fabric-sdk-go/fabric/spark/fake"
@@ -61,6 +62,7 @@ type ServerFactory struct {
 	MLModel            mlmodelfake.ServerFactory
 	Notebook           notebookfake.ServerFactory
 	PaginatedReport    paginatedreportfake.ServerFactory
+	Reflex             reflexfake.ServerFactory
 	Report             reportfake.ServerFactory
 	SemanticModel      semanticmodelfake.ServerFactory
 	Spark              sparkfake.ServerFactory
@@ -92,6 +94,7 @@ type ServerFactoryTransport struct {
 	trMLModel            *mlmodelfake.ServerFactoryTransport
 	trNotebook           *notebookfake.ServerFactoryTransport
 	trPaginatedReport    *paginatedreportfake.ServerFactoryTransport
+	trReflex             *reflexfake.ServerFactoryTransport
 	trReport             *reportfake.ServerFactoryTransport
 	trSemanticModel      *semanticmodelfake.ServerFactoryTransport
 	trSpark              *sparkfake.ServerFactoryTransport
@@ -209,6 +212,9 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return paginatedreportfake.NewServerFactoryTransport(&s.srv.PaginatedReport)
 		})
 		resp, err = s.trPaginatedReport.Do(req)
+	case "reflex":
+		initServer(s, &s.trReflex, func() *reflexfake.ServerFactoryTransport { return reflexfake.NewServerFactoryTransport(&s.srv.Reflex) })
+		resp, err = s.trReflex.Do(req)
 	case "report":
 		initServer(s, &s.trReport, func() *reportfake.ServerFactoryTransport { return reportfake.NewServerFactoryTransport(&s.srv.Report) })
 		resp, err = s.trReport.Do(req)
