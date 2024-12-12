@@ -531,8 +531,15 @@ func ExampleWorkspacesClient_BeginProvisionIdentity() {
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
-	_, err = poller.PollUntilDone(ctx, nil)
+	res, err := poller.PollUntilDone(ctx, nil)
 	if err != nil {
 		log.Fatalf("failed to pull the result: %v", err)
 	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.WorkspaceIdentity = core.WorkspaceIdentity{
+	// 	ApplicationID: to.Ptr("00a4a8f9-78d3-41b3-b87a-6ae5271c8d0d"),
+	// 	ServicePrincipalID: to.Ptr("5ba4ae58-d402-45c6-a848-0253e834fd78"),
+	// }
 }

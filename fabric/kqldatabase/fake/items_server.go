@@ -27,7 +27,7 @@ import (
 // ItemsServer is a fake server for instances of the kqldatabase.ItemsClient type.
 type ItemsServer struct {
 	// BeginCreateKQLDatabase is the fake for method ItemsClient.BeginCreateKQLDatabase
-	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated, http.StatusAccepted
 	BeginCreateKQLDatabase func(ctx context.Context, workspaceID string, createKQLDatabaseRequest kqldatabase.CreateKQLDatabaseRequest, options *kqldatabase.ItemsClientBeginCreateKQLDatabaseOptions) (resp azfake.PollerResponder[kqldatabase.ItemsClientCreateKQLDatabaseResponse], errResp azfake.ErrorResponder)
 
 	// DeleteKQLDatabase is the fake for method ItemsClient.DeleteKQLDatabase
@@ -169,9 +169,9 @@ func (i *ItemsServerTransport) dispatchBeginCreateKQLDatabase(req *http.Request)
 		return nil, err
 	}
 
-	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+	if !contains([]int{http.StatusOK, http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
 		i.beginCreateKQLDatabase.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
 	}
 	if !server.PollerResponderMore(beginCreateKQLDatabase) {
 		i.beginCreateKQLDatabase.remove(req)
