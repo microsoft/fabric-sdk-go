@@ -82,7 +82,7 @@ func (client *ItemsClient) createKQLDatabase(ctx context.Context, workspaceID st
 	if err != nil {
 		return nil, err
 	}
-	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusCreated, http.StatusAccepted) {
 		err = core.NewResponseError(httpResp)
 		return nil, err
 	}

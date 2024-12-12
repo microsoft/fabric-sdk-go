@@ -604,18 +604,24 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ProvisionIdentity() {
 	var exampleWorkspaceID string
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
 
+	exampleRes := core.WorkspaceIdentity{
+		ApplicationID:      to.Ptr("00a4a8f9-78d3-41b3-b87a-6ae5271c8d0d"),
+		ServicePrincipalID: to.Ptr("5ba4ae58-d402-45c6-a848-0253e834fd78"),
+	}
+
 	testsuite.serverFactory.WorkspacesServer.BeginProvisionIdentity = func(ctx context.Context, workspaceID string, options *core.WorkspacesClientBeginProvisionIdentityOptions) (resp azfake.PollerResponder[core.WorkspacesClientProvisionIdentityResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		resp = azfake.PollerResponder[core.WorkspacesClientProvisionIdentityResponse]{}
-		resp.SetTerminalResponse(http.StatusOK, core.WorkspacesClientProvisionIdentityResponse{}, nil)
+		resp.SetTerminalResponse(http.StatusOK, core.WorkspacesClientProvisionIdentityResponse{WorkspaceIdentity: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewWorkspacesClient()
 	poller, err := client.BeginProvisionIdentity(ctx, exampleWorkspaceID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
-	_, err = poller.PollUntilDone(ctx, nil)
+	res, err := poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.WorkspaceIdentity))
 }
 
 func (testsuite *FakeTestSuite) TestItems_ListItems() {

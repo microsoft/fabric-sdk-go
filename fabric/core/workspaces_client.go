@@ -380,7 +380,7 @@ func (client *WorkspacesClient) deprovisionIdentity(ctx context.Context, workspa
 	if err != nil {
 		return nil, err
 	}
-	if !runtime.HasStatusCode(httpResp, http.StatusAccepted) {
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
 		err = NewResponseError(httpResp)
 		return nil, err
 	}
