@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
@@ -37,6 +38,10 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetEventstream func(ctx context.Context, workspaceID string, eventstreamID string, options *eventstream.ItemsClientGetEventstreamOptions) (resp azfake.Responder[eventstream.ItemsClientGetEventstreamResponse], errResp azfake.ErrorResponder)
 
+	// BeginGetEventstreamDefinition is the fake for method ItemsClient.BeginGetEventstreamDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	BeginGetEventstreamDefinition func(ctx context.Context, workspaceID string, eventstreamID string, options *eventstream.ItemsClientBeginGetEventstreamDefinitionOptions) (resp azfake.PollerResponder[eventstream.ItemsClientGetEventstreamDefinitionResponse], errResp azfake.ErrorResponder)
+
 	// NewListEventstreamsPager is the fake for method ItemsClient.NewListEventstreamsPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListEventstreamsPager func(workspaceID string, options *eventstream.ItemsClientListEventstreamsOptions) (resp azfake.PagerResponder[eventstream.ItemsClientListEventstreamsResponse])
@@ -44,6 +49,10 @@ type ItemsServer struct {
 	// UpdateEventstream is the fake for method ItemsClient.UpdateEventstream
 	// HTTP status codes to indicate success: http.StatusOK
 	UpdateEventstream func(ctx context.Context, workspaceID string, eventstreamID string, updateEventstreamRequest eventstream.UpdateEventstreamRequest, options *eventstream.ItemsClientUpdateEventstreamOptions) (resp azfake.Responder[eventstream.ItemsClientUpdateEventstreamResponse], errResp azfake.ErrorResponder)
+
+	// BeginUpdateEventstreamDefinition is the fake for method ItemsClient.BeginUpdateEventstreamDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
+	BeginUpdateEventstreamDefinition func(ctx context.Context, workspaceID string, eventstreamID string, updateEventstreamDefinitionRequest eventstream.UpdateEventstreamDefinitionRequest, options *eventstream.ItemsClientBeginUpdateEventstreamDefinitionOptions) (resp azfake.PollerResponder[eventstream.ItemsClientUpdateEventstreamDefinitionResponse], errResp azfake.ErrorResponder)
 }
 
 // NewItemsServerTransport creates a new instance of ItemsServerTransport with the provided implementation.
@@ -51,18 +60,22 @@ type ItemsServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewItemsServerTransport(srv *ItemsServer) *ItemsServerTransport {
 	return &ItemsServerTransport{
-		srv:                      srv,
-		beginCreateEventstream:   newTracker[azfake.PollerResponder[eventstream.ItemsClientCreateEventstreamResponse]](),
-		newListEventstreamsPager: newTracker[azfake.PagerResponder[eventstream.ItemsClientListEventstreamsResponse]](),
+		srv:                              srv,
+		beginCreateEventstream:           newTracker[azfake.PollerResponder[eventstream.ItemsClientCreateEventstreamResponse]](),
+		beginGetEventstreamDefinition:    newTracker[azfake.PollerResponder[eventstream.ItemsClientGetEventstreamDefinitionResponse]](),
+		newListEventstreamsPager:         newTracker[azfake.PagerResponder[eventstream.ItemsClientListEventstreamsResponse]](),
+		beginUpdateEventstreamDefinition: newTracker[azfake.PollerResponder[eventstream.ItemsClientUpdateEventstreamDefinitionResponse]](),
 	}
 }
 
 // ItemsServerTransport connects instances of eventstream.ItemsClient to instances of ItemsServer.
 // Don't use this type directly, use NewItemsServerTransport instead.
 type ItemsServerTransport struct {
-	srv                      *ItemsServer
-	beginCreateEventstream   *tracker[azfake.PollerResponder[eventstream.ItemsClientCreateEventstreamResponse]]
-	newListEventstreamsPager *tracker[azfake.PagerResponder[eventstream.ItemsClientListEventstreamsResponse]]
+	srv                              *ItemsServer
+	beginCreateEventstream           *tracker[azfake.PollerResponder[eventstream.ItemsClientCreateEventstreamResponse]]
+	beginGetEventstreamDefinition    *tracker[azfake.PollerResponder[eventstream.ItemsClientGetEventstreamDefinitionResponse]]
+	newListEventstreamsPager         *tracker[azfake.PagerResponder[eventstream.ItemsClientListEventstreamsResponse]]
+	beginUpdateEventstreamDefinition *tracker[azfake.PollerResponder[eventstream.ItemsClientUpdateEventstreamDefinitionResponse]]
 }
 
 // Do implements the policy.Transporter interface for ItemsServerTransport.
@@ -96,10 +109,14 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 				res.resp, res.err = i.dispatchDeleteEventstream(req)
 			case "ItemsClient.GetEventstream":
 				res.resp, res.err = i.dispatchGetEventstream(req)
+			case "ItemsClient.BeginGetEventstreamDefinition":
+				res.resp, res.err = i.dispatchBeginGetEventstreamDefinition(req)
 			case "ItemsClient.NewListEventstreamsPager":
 				res.resp, res.err = i.dispatchNewListEventstreamsPager(req)
 			case "ItemsClient.UpdateEventstream":
 				res.resp, res.err = i.dispatchUpdateEventstream(req)
+			case "ItemsClient.BeginUpdateEventstreamDefinition":
+				res.resp, res.err = i.dispatchBeginUpdateEventstreamDefinition(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -229,6 +246,62 @@ func (i *ItemsServerTransport) dispatchGetEventstream(req *http.Request) (*http.
 	return resp, nil
 }
 
+func (i *ItemsServerTransport) dispatchBeginGetEventstreamDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginGetEventstreamDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginGetEventstreamDefinition not implemented")}
+	}
+	beginGetEventstreamDefinition := i.beginGetEventstreamDefinition.get(req)
+	if beginGetEventstreamDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/eventstreams/(?P<eventstreamId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		eventstreamIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("eventstreamId")])
+		if err != nil {
+			return nil, err
+		}
+		formatUnescaped, err := url.QueryUnescape(qp.Get("format"))
+		if err != nil {
+			return nil, err
+		}
+		formatParam := getOptional(formatUnescaped)
+		var options *eventstream.ItemsClientBeginGetEventstreamDefinitionOptions
+		if formatParam != nil {
+			options = &eventstream.ItemsClientBeginGetEventstreamDefinitionOptions{
+				Format: formatParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginGetEventstreamDefinition(req.Context(), workspaceIDParam, eventstreamIDParam, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginGetEventstreamDefinition = &respr
+		i.beginGetEventstreamDefinition.add(req, beginGetEventstreamDefinition)
+	}
+
+	resp, err := server.PollerResponderNext(beginGetEventstreamDefinition, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+		i.beginGetEventstreamDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginGetEventstreamDefinition) {
+		i.beginGetEventstreamDefinition.remove(req)
+	}
+
+	return resp, nil
+}
+
 func (i *ItemsServerTransport) dispatchNewListEventstreamsPager(req *http.Request) (*http.Response, error) {
 	if i.srv.NewListEventstreamsPager == nil {
 		return nil, &nonRetriableError{errors.New("fake for method NewListEventstreamsPager not implemented")}
@@ -312,6 +385,69 @@ func (i *ItemsServerTransport) dispatchUpdateEventstream(req *http.Request) (*ht
 	if err != nil {
 		return nil, err
 	}
+	return resp, nil
+}
+
+func (i *ItemsServerTransport) dispatchBeginUpdateEventstreamDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginUpdateEventstreamDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginUpdateEventstreamDefinition not implemented")}
+	}
+	beginUpdateEventstreamDefinition := i.beginUpdateEventstreamDefinition.get(req)
+	if beginUpdateEventstreamDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/eventstreams/(?P<eventstreamId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		body, err := server.UnmarshalRequestAsJSON[eventstream.UpdateEventstreamDefinitionRequest](req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		eventstreamIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("eventstreamId")])
+		if err != nil {
+			return nil, err
+		}
+		updateMetadataUnescaped, err := url.QueryUnescape(qp.Get("updateMetadata"))
+		if err != nil {
+			return nil, err
+		}
+		updateMetadataParam, err := parseOptional(updateMetadataUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		var options *eventstream.ItemsClientBeginUpdateEventstreamDefinitionOptions
+		if updateMetadataParam != nil {
+			options = &eventstream.ItemsClientBeginUpdateEventstreamDefinitionOptions{
+				UpdateMetadata: updateMetadataParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginUpdateEventstreamDefinition(req.Context(), workspaceIDParam, eventstreamIDParam, body, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginUpdateEventstreamDefinition = &respr
+		i.beginUpdateEventstreamDefinition.add(req, beginUpdateEventstreamDefinition)
+	}
+
+	resp, err := server.PollerResponderNext(beginUpdateEventstreamDefinition, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
+		i.beginUpdateEventstreamDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginUpdateEventstreamDefinition) {
+		i.beginUpdateEventstreamDefinition.remove(req)
+	}
+
 	return resp, nil
 }
 
