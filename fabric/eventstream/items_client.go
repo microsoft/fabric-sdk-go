@@ -11,6 +11,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -30,7 +31,7 @@ type ItemsClient struct {
 }
 
 // BeginCreateEventstream - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// This API does not support create an eventstream with a definition.
+// To create eventstream with definition, refer to Eventstream definition [/rest/api/fabric/articles/item-management/definitions/eventstream-definition].
 // PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
@@ -39,8 +40,8 @@ type ItemsClient struct {
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -54,7 +55,7 @@ func (client *ItemsClient) BeginCreateEventstream(ctx context.Context, workspace
 }
 
 // CreateEventstream - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// This API does not support create an eventstream with a definition.
+// To create eventstream with definition, refer to Eventstream definition [/rest/api/fabric/articles/item-management/definitions/eventstream-definition].
 // PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
@@ -63,8 +64,8 @@ func (client *ItemsClient) BeginCreateEventstream(ctx context.Context, workspace
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -113,8 +114,8 @@ func (client *ItemsClient) createEventstreamCreateRequest(ctx context.Context, w
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -167,8 +168,8 @@ func (client *ItemsClient) deleteEventstreamCreateRequest(ctx context.Context, w
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -226,14 +227,95 @@ func (client *ItemsClient) getEventstreamHandleResponse(resp *http.Response) (It
 	return result, nil
 }
 
+// BeginGetEventstreamDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// When you get an eventstream public definition, the sensitivity label is not a part of the definition.
+// PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
+// LIMITATIONS This API is blocked for an eventstream with an encrypted sensitivity label.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - eventstreamID - The eventstream ID.
+//   - options - ItemsClientBeginGetEventstreamDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetEventstreamDefinition
+//     method.
+func (client *ItemsClient) BeginGetEventstreamDefinition(ctx context.Context, workspaceID string, eventstreamID string, options *ItemsClientBeginGetEventstreamDefinitionOptions) (*runtime.Poller[ItemsClientGetEventstreamDefinitionResponse], error) {
+	return client.beginGetEventstreamDefinition(ctx, workspaceID, eventstreamID, options)
+}
+
+// GetEventstreamDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// When you get an eventstream public definition, the sensitivity label is not a part of the definition.
+// PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
+// LIMITATIONS This API is blocked for an eventstream with an encrypted sensitivity label.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) getEventstreamDefinition(ctx context.Context, workspaceID string, eventstreamID string, options *ItemsClientBeginGetEventstreamDefinitionOptions) (*http.Response, error) {
+	var err error
+	const operationName = "eventstream.ItemsClient.BeginGetEventstreamDefinition"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getEventstreamDefinitionCreateRequest(ctx, workspaceID, eventstreamID, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// getEventstreamDefinitionCreateRequest creates the GetEventstreamDefinition request.
+func (client *ItemsClient) getEventstreamDefinitionCreateRequest(ctx context.Context, workspaceID string, eventstreamID string, options *ItemsClientBeginGetEventstreamDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/eventstreams/{eventstreamId}/getDefinition"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if eventstreamID == "" {
+		return nil, errors.New("parameter eventstreamID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{eventstreamId}", url.PathEscape(eventstreamID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.Format != nil {
+		reqQP.Set("format", *options.Format)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
 // NewListEventstreamsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 //
 // Generated from API version v1
@@ -297,8 +379,8 @@ func (client *ItemsClient) listEventstreamsHandleResponse(resp *http.Response) (
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -360,12 +442,95 @@ func (client *ItemsClient) updateEventstreamHandleResponse(resp *http.Response) 
 	return result, nil
 }
 
+// BeginUpdateEventstreamDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Updating the eventstream definition, does not affect its sensitivity label.
+// PERMISSIONS The API caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - eventstreamID - The eventstream ID.
+//   - updateEventstreamDefinitionRequest - Update eventstream definition request payload.
+//   - options - ItemsClientBeginUpdateEventstreamDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateEventstreamDefinition
+//     method.
+func (client *ItemsClient) BeginUpdateEventstreamDefinition(ctx context.Context, workspaceID string, eventstreamID string, updateEventstreamDefinitionRequest UpdateEventstreamDefinitionRequest, options *ItemsClientBeginUpdateEventstreamDefinitionOptions) (*runtime.Poller[ItemsClientUpdateEventstreamDefinitionResponse], error) {
+	return client.beginUpdateEventstreamDefinition(ctx, workspaceID, eventstreamID, updateEventstreamDefinitionRequest, options)
+}
+
+// UpdateEventstreamDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Updating the eventstream definition, does not affect its sensitivity label.
+// PERMISSIONS The API caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) updateEventstreamDefinition(ctx context.Context, workspaceID string, eventstreamID string, updateEventstreamDefinitionRequest UpdateEventstreamDefinitionRequest, options *ItemsClientBeginUpdateEventstreamDefinitionOptions) (*http.Response, error) {
+	var err error
+	const operationName = "eventstream.ItemsClient.BeginUpdateEventstreamDefinition"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateEventstreamDefinitionCreateRequest(ctx, workspaceID, eventstreamID, updateEventstreamDefinitionRequest, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// updateEventstreamDefinitionCreateRequest creates the UpdateEventstreamDefinition request.
+func (client *ItemsClient) updateEventstreamDefinitionCreateRequest(ctx context.Context, workspaceID string, eventstreamID string, updateEventstreamDefinitionRequest UpdateEventstreamDefinitionRequest, options *ItemsClientBeginUpdateEventstreamDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/eventstreams/{eventstreamId}/updateDefinition"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if eventstreamID == "" {
+		return nil, errors.New("parameter eventstreamID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{eventstreamId}", url.PathEscape(eventstreamID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.UpdateMetadata != nil {
+		reqQP.Set("updateMetadata", strconv.FormatBool(*options.UpdateMetadata))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateEventstreamDefinitionRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // Custom code starts below
 
 // CreateEventstream - returns ItemsClientCreateEventstreamResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// This API does not support create an eventstream with a definition.
+// To create eventstream with definition, refer to Eventstream definition [/rest/api/fabric/articles/item-management/definitions/eventstream-definition].
 //
 // PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
@@ -376,8 +541,8 @@ func (client *ItemsClient) updateEventstreamHandleResponse(resp *http.Response) 
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | No | | Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
 // Generated from API version v1
@@ -436,6 +601,151 @@ func (client *ItemsClient) beginCreateEventstream(ctx context.Context, workspace
 	}
 }
 
+// GetEventstreamDefinition - returns ItemsClientGetEventstreamDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// When you get an eventstream public definition, the sensitivity label is not a part of the definition.
+//
+// PERMISSIONS The caller must have contributor or higher workspace role.
+//
+// # REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
+//
+// LIMITATIONS This API is blocked for an eventstream with an encrypted sensitivity label.
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - eventstreamID - The eventstream ID.
+//   - options - ItemsClientBeginGetEventstreamDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetEventstreamDefinition method.
+func (client *ItemsClient) GetEventstreamDefinition(ctx context.Context, workspaceID string, eventstreamID string, options *ItemsClientBeginGetEventstreamDefinitionOptions) (ItemsClientGetEventstreamDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginGetEventstreamDefinition(ctx, workspaceID, eventstreamID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientGetEventstreamDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientGetEventstreamDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginGetEventstreamDefinition creates the getEventstreamDefinition request.
+func (client *ItemsClient) beginGetEventstreamDefinition(ctx context.Context, workspaceID string, eventstreamID string, options *ItemsClientBeginGetEventstreamDefinitionOptions) (*runtime.Poller[ItemsClientGetEventstreamDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.getEventstreamDefinition(ctx, workspaceID, eventstreamID, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientGetEventstreamDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientGetEventstreamDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientGetEventstreamDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientGetEventstreamDefinitionResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// UpdateEventstreamDefinition - returns ItemsClientUpdateEventstreamDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// Updating the eventstream definition, does not affect its sensitivity label.
+//
+// PERMISSIONS The API caller must have contributor or higher workspace role.
+//
+// # REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - eventstreamID - The eventstream ID.
+//   - updateEventstreamDefinitionRequest - Update eventstream definition request payload.
+//   - options - ItemsClientBeginUpdateEventstreamDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateEventstreamDefinition method.
+func (client *ItemsClient) UpdateEventstreamDefinition(ctx context.Context, workspaceID string, eventstreamID string, updateEventstreamDefinitionRequest UpdateEventstreamDefinitionRequest, options *ItemsClientBeginUpdateEventstreamDefinitionOptions) (ItemsClientUpdateEventstreamDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginUpdateEventstreamDefinition(ctx, workspaceID, eventstreamID, updateEventstreamDefinitionRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientUpdateEventstreamDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientUpdateEventstreamDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginUpdateEventstreamDefinition creates the updateEventstreamDefinition request.
+func (client *ItemsClient) beginUpdateEventstreamDefinition(ctx context.Context, workspaceID string, eventstreamID string, updateEventstreamDefinitionRequest UpdateEventstreamDefinitionRequest, options *ItemsClientBeginUpdateEventstreamDefinitionOptions) (*runtime.Poller[ItemsClientUpdateEventstreamDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.updateEventstreamDefinition(ctx, workspaceID, eventstreamID, updateEventstreamDefinitionRequest, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateEventstreamDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientUpdateEventstreamDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateEventstreamDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientUpdateEventstreamDefinitionResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
 // ListEventstreams - returns array of Eventstream from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
@@ -445,8 +755,8 @@ func (client *ItemsClient) beginCreateEventstream(ctx context.Context, workspace
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | No | | Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
 // Generated from API version v1

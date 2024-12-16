@@ -66,7 +66,7 @@ func ExampleItemsClient_NewListEventstreamsPager() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_BeginCreateEventstream() {
+func ExampleItemsClient_BeginCreateEventstream_createAnEventstreamExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -77,7 +77,45 @@ func ExampleItemsClient_BeginCreateEventstream() {
 		log.Fatalf("failed to create client: %v", err)
 	}
 	poller, err := clientFactory.NewItemsClient().BeginCreateEventstream(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", eventstream.CreateEventstreamRequest{
-		Description: to.Ptr("An eventstream description."),
+		Description: to.Ptr("Eventstream_1 description."),
+		DisplayName: to.Ptr("Eventstream_1"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginCreateEventstream_createAnEventstreamWithPublicDefinitionExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := eventstream.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginCreateEventstream(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", eventstream.CreateEventstreamRequest{
+		Description: to.Ptr("Eventstream_1 description."),
+		Definition: &eventstream.Definition{
+			Format: to.Ptr("eventstream"),
+			Parts: []eventstream.DefinitionPart{
+				{
+					Path:        to.Ptr("eventstream.json"),
+					Payload:     to.Ptr("SSdkIGxpa2UgdG8gdGVsbCBh..IGpva2UgZm9yIHlvdS4K"),
+					PayloadType: to.Ptr(eventstream.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(eventstream.PayloadTypeInlineBase64),
+				}},
+		},
 		DisplayName: to.Ptr("Eventstream_1"),
 	}, nil)
 	if err != nil {
@@ -160,5 +198,79 @@ func ExampleItemsClient_DeleteEventstream() {
 	_, err = clientFactory.NewItemsClient().DeleteEventstream(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginGetEventstreamDefinition() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := eventstream.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginGetEventstreamDefinition(ctx, "6e335e92-a2a2-4b5a-970a-bd6a89fbb765", "cfafbeb1-8037-4d0c-896e-a46fb27ff229", &eventstream.ItemsClientBeginGetEventstreamDefinitionOptions{Format: nil})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	res, err := poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.DefinitionResponse = eventstream.DefinitionResponse{
+	// 	Definition: &eventstream.Definition{
+	// 		Parts: []eventstream.DefinitionPart{
+	// 			{
+	// 				Path: to.Ptr("eventstream.json"),
+	// 				Payload: to.Ptr("SSdkIGxpa2UgdG8gdGVsbCBh..IGpva2UgZm9yIHlvdS4K"),
+	// 				PayloadType: to.Ptr(eventstream.PayloadTypeInlineBase64),
+	// 			},
+	// 			{
+	// 				Path: to.Ptr(".platform"),
+	// 				Payload: to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+	// 				PayloadType: to.Ptr(eventstream.PayloadTypeInlineBase64),
+	// 		}},
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginUpdateEventstreamDefinition() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := eventstream.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginUpdateEventstreamDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", eventstream.UpdateEventstreamDefinitionRequest{
+		Definition: &eventstream.Definition{
+			Parts: []eventstream.DefinitionPart{
+				{
+					Path:        to.Ptr("eventstream.json"),
+					Payload:     to.Ptr("SSdkIGxpa2UgdG8gdGVsbCBh..IGpva2UgZm9yIHlvdS4K"),
+					PayloadType: to.Ptr(eventstream.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(eventstream.PayloadTypeInlineBase64),
+				}},
+		},
+	}, &eventstream.ItemsClientBeginUpdateEventstreamDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
 	}
 }

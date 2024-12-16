@@ -113,7 +113,7 @@ func (testsuite *FakeTestSuite) TestItems_CreateEventstream() {
 	var exampleCreateEventstreamRequest eventstream.CreateEventstreamRequest
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
 	exampleCreateEventstreamRequest = eventstream.CreateEventstreamRequest{
-		Description: to.Ptr("An eventstream description."),
+		Description: to.Ptr("Eventstream_1 description."),
 		DisplayName: to.Ptr("Eventstream_1"),
 	}
 
@@ -127,6 +127,43 @@ func (testsuite *FakeTestSuite) TestItems_CreateEventstream() {
 
 	client := testsuite.clientFactory.NewItemsClient()
 	poller, err := client.BeginCreateEventstream(ctx, exampleWorkspaceID, exampleCreateEventstreamRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create an eventstream with public definition example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCreateEventstreamRequest = eventstream.CreateEventstreamRequest{
+		Description: to.Ptr("Eventstream_1 description."),
+		Definition: &eventstream.Definition{
+			Format: to.Ptr("eventstream"),
+			Parts: []eventstream.DefinitionPart{
+				{
+					Path:        to.Ptr("eventstream.json"),
+					Payload:     to.Ptr("SSdkIGxpa2UgdG8gdGVsbCBh..IGpva2UgZm9yIHlvdS4K"),
+					PayloadType: to.Ptr(eventstream.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(eventstream.PayloadTypeInlineBase64),
+				}},
+		},
+		DisplayName: to.Ptr("Eventstream_1"),
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginCreateEventstream = func(ctx context.Context, workspaceID string, createEventstreamRequest eventstream.CreateEventstreamRequest, options *eventstream.ItemsClientBeginCreateEventstreamOptions) (resp azfake.PollerResponder[eventstream.ItemsClientCreateEventstreamResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateEventstreamRequest, createEventstreamRequest))
+		resp = azfake.PollerResponder[eventstream.ItemsClientCreateEventstreamResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, eventstream.ItemsClientCreateEventstreamResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateEventstream(ctx, exampleWorkspaceID, exampleCreateEventstreamRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
@@ -223,4 +260,88 @@ func (testsuite *FakeTestSuite) TestItems_DeleteEventstream() {
 	client := testsuite.clientFactory.NewItemsClient()
 	_, err = client.DeleteEventstream(ctx, exampleWorkspaceID, exampleEventstreamID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestItems_GetEventstreamDefinition() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get an eventstream definition example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEventstreamID string
+	exampleWorkspaceID = "6e335e92-a2a2-4b5a-970a-bd6a89fbb765"
+	exampleEventstreamID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+
+	exampleRes := eventstream.DefinitionResponse{
+		Definition: &eventstream.Definition{
+			Parts: []eventstream.DefinitionPart{
+				{
+					Path:        to.Ptr("eventstream.json"),
+					Payload:     to.Ptr("SSdkIGxpa2UgdG8gdGVsbCBh..IGpva2UgZm9yIHlvdS4K"),
+					PayloadType: to.Ptr(eventstream.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(eventstream.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginGetEventstreamDefinition = func(ctx context.Context, workspaceID string, eventstreamID string, options *eventstream.ItemsClientBeginGetEventstreamDefinitionOptions) (resp azfake.PollerResponder[eventstream.ItemsClientGetEventstreamDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEventstreamID, eventstreamID)
+		resp = azfake.PollerResponder[eventstream.ItemsClientGetEventstreamDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, eventstream.ItemsClientGetEventstreamDefinitionResponse{DefinitionResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	poller, err := client.BeginGetEventstreamDefinition(ctx, exampleWorkspaceID, exampleEventstreamID, &eventstream.ItemsClientBeginGetEventstreamDefinitionOptions{Format: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DefinitionResponse))
+}
+
+func (testsuite *FakeTestSuite) TestItems_UpdateEventstreamDefinition() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update an eventstream definition example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEventstreamID string
+	var exampleUpdateEventstreamDefinitionRequest eventstream.UpdateEventstreamDefinitionRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleEventstreamID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleUpdateEventstreamDefinitionRequest = eventstream.UpdateEventstreamDefinitionRequest{
+		Definition: &eventstream.Definition{
+			Parts: []eventstream.DefinitionPart{
+				{
+					Path:        to.Ptr("eventstream.json"),
+					Payload:     to.Ptr("SSdkIGxpa2UgdG8gdGVsbCBh..IGpva2UgZm9yIHlvdS4K"),
+					PayloadType: to.Ptr(eventstream.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(eventstream.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginUpdateEventstreamDefinition = func(ctx context.Context, workspaceID string, eventstreamID string, updateEventstreamDefinitionRequest eventstream.UpdateEventstreamDefinitionRequest, options *eventstream.ItemsClientBeginUpdateEventstreamDefinitionOptions) (resp azfake.PollerResponder[eventstream.ItemsClientUpdateEventstreamDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEventstreamID, eventstreamID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateEventstreamDefinitionRequest, updateEventstreamDefinitionRequest))
+		resp = azfake.PollerResponder[eventstream.ItemsClientUpdateEventstreamDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, eventstream.ItemsClientUpdateEventstreamDefinitionResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	poller, err := client.BeginUpdateEventstreamDefinition(ctx, exampleWorkspaceID, exampleEventstreamID, exampleUpdateEventstreamDefinitionRequest, &eventstream.ItemsClientBeginUpdateEventstreamDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }

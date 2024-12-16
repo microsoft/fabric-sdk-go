@@ -11,8 +11,38 @@ type CreateEventstreamRequest struct {
 	// REQUIRED; The eventstream display name. The display name must follow naming rules according to item type.
 	DisplayName *string
 
+	// The eventstream public definition [/rest/api/fabric/articles/item-management/definitions/eventstream-definition].
+	Definition *Definition
+
 	// The eventstream description. Maximum length is 256 characters.
 	Description *string
+}
+
+// Definition - Eventstream public definition object.
+type Definition struct {
+	// REQUIRED; A list of definition parts.
+	Parts []DefinitionPart
+
+	// The format of the item definition.
+	Format *string
+}
+
+// DefinitionPart - Eventstream definition part object.
+type DefinitionPart struct {
+	// The eventstream part path.
+	Path *string
+
+	// The eventstream part payload.
+	Payload *string
+
+	// The payload type.
+	PayloadType *PayloadType
+}
+
+// DefinitionResponse - Eventstream public definition response.
+type DefinitionResponse struct {
+	// READ-ONLY; Eventstream public definition object.
+	Definition *Definition
 }
 
 // Eventstream - An eventstream object.
@@ -43,6 +73,12 @@ type Eventstreams struct {
 
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
+}
+
+// UpdateEventstreamDefinitionRequest - Update eventstream public definition request payload.
+type UpdateEventstreamDefinitionRequest struct {
+	// REQUIRED; Eventstream public definition object.
+	Definition *Definition
 }
 
 // UpdateEventstreamRequest - Update eventstream request.

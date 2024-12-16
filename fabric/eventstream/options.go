@@ -12,6 +12,28 @@ type ItemsClientBeginCreateEventstreamOptions struct {
 	ResumeToken string
 }
 
+// ItemsClientBeginGetEventstreamDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetEventstreamDefinition
+// method.
+type ItemsClientBeginGetEventstreamDefinitionOptions struct {
+	// The format of the eventstream public definition.
+	Format *string
+
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// ItemsClientBeginUpdateEventstreamDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateEventstreamDefinition
+// method.
+type ItemsClientBeginUpdateEventstreamDefinitionOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+
+	// Whether to update the item's metadata if it is provided in the .platform file. True - Update the metadata if it is provided
+	// in the .platform file as part of the definition, False - Do not update the
+	// metadata.
+	UpdateMetadata *bool
+}
+
 // ItemsClientDeleteEventstreamOptions contains the optional parameters for the ItemsClient.DeleteEventstream method.
 type ItemsClientDeleteEventstreamOptions struct {
 	// placeholder for future optional parameters

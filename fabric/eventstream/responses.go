@@ -17,6 +17,12 @@ type ItemsClientDeleteEventstreamResponse struct {
 	// placeholder for future response values
 }
 
+// ItemsClientGetEventstreamDefinitionResponse contains the response from method ItemsClient.BeginGetEventstreamDefinition.
+type ItemsClientGetEventstreamDefinitionResponse struct {
+	// Eventstream public definition response.
+	DefinitionResponse
+}
+
 // ItemsClientGetEventstreamResponse contains the response from method ItemsClient.GetEventstream.
 type ItemsClientGetEventstreamResponse struct {
 	// An eventstream object.
@@ -27,6 +33,11 @@ type ItemsClientGetEventstreamResponse struct {
 type ItemsClientListEventstreamsResponse struct {
 	// A list of eventstreams.
 	Eventstreams
+}
+
+// ItemsClientUpdateEventstreamDefinitionResponse contains the response from method ItemsClient.BeginUpdateEventstreamDefinition.
+type ItemsClientUpdateEventstreamDefinitionResponse struct {
+	// placeholder for future response values
 }
 
 // ItemsClientUpdateEventstreamResponse contains the response from method ItemsClient.UpdateEventstream.
