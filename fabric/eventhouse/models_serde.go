@@ -17,6 +17,7 @@ import (
 // MarshalJSON implements the json.Marshaller interface for type CreateEventhouseRequest.
 func (c CreateEventhouseRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
+	populate(objectMap, "creationPayload", c.CreationPayload)
 	populate(objectMap, "definition", c.Definition)
 	populate(objectMap, "description", c.Description)
 	populate(objectMap, "displayName", c.DisplayName)
@@ -32,6 +33,9 @@ func (c *CreateEventhouseRequest) UnmarshalJSON(data []byte) error {
 	for key, val := range rawMsg {
 		var err error
 		switch key {
+		case "creationPayload":
+			err = unpopulate(val, "CreationPayload", &c.CreationPayload)
+			delete(rawMsg, key)
 		case "definition":
 			err = unpopulate(val, "Definition", &c.Definition)
 			delete(rawMsg, key)
@@ -40,6 +44,33 @@ func (c *CreateEventhouseRequest) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "displayName":
 			err = unpopulate(val, "DisplayName", &c.DisplayName)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type CreationPayload.
+func (c CreationPayload) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "minimumConsumptionUnits", c.MinimumConsumptionUnits)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CreationPayload.
+func (c *CreationPayload) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "minimumConsumptionUnits":
+			err = unpopulate(val, "MinimumConsumptionUnits", &c.MinimumConsumptionUnits)
 			delete(rawMsg, key)
 		}
 		if err != nil {

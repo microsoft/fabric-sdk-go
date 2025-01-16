@@ -12,11 +12,22 @@ type CreateEventhouseRequest struct {
 	// hyphens. Special characters aren't supported.
 	DisplayName *string
 
-	// The eventhouse public definition.
+	// The eventhouse creation payload. Use definition or creationPayload. You can't use both at the same time.
+	CreationPayload *CreationPayload
+
+	// The eventhouse public definition. Use definition or creationPayload. You can't use both at the same time.
 	Definition *Definition
 
 	// The eventhouse description. Maximum length is 256 characters.
 	Description *string
+}
+
+// CreationPayload - Eventhouse item payload
+type CreationPayload struct {
+	// When activated, the eventhouse is always available at the selected minimum level and you pay at least the minimum compute
+	// selected. Supported values include [0, 2.25, 4.25, 8.5, 13, 18, 26, 34, 50] or
+	// any number between 51 and 322. For more information, see minimum consumption [/fabric/real-time-intelligence/eventhouse#minimum-consumption]
+	MinimumConsumptionUnits *float64
 }
 
 // Definition - Eventhouse public definition object.
