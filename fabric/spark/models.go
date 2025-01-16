@@ -93,7 +93,7 @@ type DynamicExecutorAllocationProperties struct {
 }
 
 type EnvironmentProperties struct {
-	// The name of the default environment. Empty string indicated there is no workspace default environment
+	// The name of the default environment. Empty string indicated there is no workspace default environment.
 	Name *string
 
 	// Runtime [/fabric/data-engineering/runtime] version.
@@ -102,8 +102,11 @@ type EnvironmentProperties struct {
 
 // HighConcurrencyProperties - High Concurrency Properties.
 type HighConcurrencyProperties struct {
-	// REQUIRED; The status of the high concurrency for notebook interactive run. False - Disabled, true - Enabled.
+	// The status of the high concurrency for notebook interactive run. False - Disabled, true - Enabled.
 	NotebookInteractiveRunEnabled *bool
+
+	// The status of the high concurrency for notebook pipeline run. False - Disabled, true - Enabled.
+	NotebookPipelineRunEnabled *bool
 }
 
 type InstancePool struct {
@@ -115,6 +118,19 @@ type InstancePool struct {
 
 	// Instance pool ID.
 	ID *string
+}
+
+type JobsProperties struct {
+	// Reserve maximum cores for active Spark jobs. When this setting is enabled, your Fabric capacity reserves the maximum number
+	// of cores needed for active Spark jobs, ensuring job reliability by making
+	// sure that cores are available if a job scales up. When this setting is disabled, jobs are started based on the minimum
+	// number of cores needed, letting more jobs run at the same time. For more
+	// information see job admission and management [/fabric/data-engineering/job-admission-management]. False - Disabled, true
+	// - Enabled.
+	ConservativeJobAdmissionEnabled *bool
+
+	// Time to terminate inactive Spark sessions. The maximum is 14 days.
+	SessionTimeoutInMinutes *int32
 }
 
 type PoolProperties struct {
@@ -169,6 +185,9 @@ type UpdateWorkspaceSparkSettingsRequest struct {
 	// High concurrency settings.
 	HighConcurrency *HighConcurrencyProperties
 
+	// Job management settings.
+	Jobs *JobsProperties
+
 	// Pool settings.
 	Pool *PoolProperties
 }
@@ -183,6 +202,9 @@ type WorkspaceSparkSettings struct {
 
 	// High concurrency settings.
 	HighConcurrency *HighConcurrencyProperties
+
+	// Job management settings.
+	Jobs *JobsProperties
 
 	// Pool settings.
 	Pool *PoolProperties

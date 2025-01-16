@@ -275,6 +275,7 @@ func (e *EnvironmentProperties) UnmarshalJSON(data []byte) error {
 func (h HighConcurrencyProperties) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "notebookInteractiveRunEnabled", h.NotebookInteractiveRunEnabled)
+	populate(objectMap, "notebookPipelineRunEnabled", h.NotebookPipelineRunEnabled)
 	return json.Marshal(objectMap)
 }
 
@@ -289,6 +290,9 @@ func (h *HighConcurrencyProperties) UnmarshalJSON(data []byte) error {
 		switch key {
 		case "notebookInteractiveRunEnabled":
 			err = unpopulate(val, "NotebookInteractiveRunEnabled", &h.NotebookInteractiveRunEnabled)
+			delete(rawMsg, key)
+		case "notebookPipelineRunEnabled":
+			err = unpopulate(val, "NotebookPipelineRunEnabled", &h.NotebookPipelineRunEnabled)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -328,6 +332,37 @@ func (i *InstancePool) UnmarshalJSON(data []byte) error {
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", i, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type JobsProperties.
+func (j JobsProperties) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "conservativeJobAdmissionEnabled", j.ConservativeJobAdmissionEnabled)
+	populate(objectMap, "sessionTimeoutInMinutes", j.SessionTimeoutInMinutes)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type JobsProperties.
+func (j *JobsProperties) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", j, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "conservativeJobAdmissionEnabled":
+			err = unpopulate(val, "ConservativeJobAdmissionEnabled", &j.ConservativeJobAdmissionEnabled)
+			delete(rawMsg, key)
+		case "sessionTimeoutInMinutes":
+			err = unpopulate(val, "SessionTimeoutInMinutes", &j.SessionTimeoutInMinutes)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", j, err)
 		}
 	}
 	return nil
@@ -448,6 +483,7 @@ func (u UpdateWorkspaceSparkSettingsRequest) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "automaticLog", u.AutomaticLog)
 	populate(objectMap, "environment", u.Environment)
 	populate(objectMap, "highConcurrency", u.HighConcurrency)
+	populate(objectMap, "jobs", u.Jobs)
 	populate(objectMap, "pool", u.Pool)
 	return json.Marshal(objectMap)
 }
@@ -470,6 +506,9 @@ func (u *UpdateWorkspaceSparkSettingsRequest) UnmarshalJSON(data []byte) error {
 		case "highConcurrency":
 			err = unpopulate(val, "HighConcurrency", &u.HighConcurrency)
 			delete(rawMsg, key)
+		case "jobs":
+			err = unpopulate(val, "Jobs", &u.Jobs)
+			delete(rawMsg, key)
 		case "pool":
 			err = unpopulate(val, "Pool", &u.Pool)
 			delete(rawMsg, key)
@@ -487,6 +526,7 @@ func (w WorkspaceSparkSettings) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "automaticLog", w.AutomaticLog)
 	populate(objectMap, "environment", w.Environment)
 	populate(objectMap, "highConcurrency", w.HighConcurrency)
+	populate(objectMap, "jobs", w.Jobs)
 	populate(objectMap, "pool", w.Pool)
 	return json.Marshal(objectMap)
 }
@@ -508,6 +548,9 @@ func (w *WorkspaceSparkSettings) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "highConcurrency":
 			err = unpopulate(val, "HighConcurrency", &w.HighConcurrency)
+			delete(rawMsg, key)
+		case "jobs":
+			err = unpopulate(val, "Jobs", &w.Jobs)
 			delete(rawMsg, key)
 		case "pool":
 			err = unpopulate(val, "Pool", &w.Pool)
