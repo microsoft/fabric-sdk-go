@@ -39,7 +39,7 @@ type ItemsClient struct {
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -63,7 +63,7 @@ func (client *ItemsClient) BeginCreateWarehouse(ctx context.Context, workspaceID
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -113,7 +113,7 @@ func (client *ItemsClient) createWarehouseCreateRequest(ctx context.Context, wor
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -167,7 +167,7 @@ func (client *ItemsClient) deleteWarehouseCreateRequest(ctx context.Context, wor
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -232,7 +232,7 @@ func (client *ItemsClient) getWarehouseHandleResponse(resp *http.Response) (Item
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 //
@@ -297,7 +297,7 @@ func (client *ItemsClient) listWarehousesHandleResponse(resp *http.Response) (It
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -376,7 +376,7 @@ func (client *ItemsClient) updateWarehouseHandleResponse(resp *http.Response) (I
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | No | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 //
 // INTERFACE
@@ -445,7 +445,7 @@ func (client *ItemsClient) beginCreateWarehouse(ctx context.Context, workspaceID
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | No | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 //
 // INTERFACE

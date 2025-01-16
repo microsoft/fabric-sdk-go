@@ -39,7 +39,7 @@ type ItemsClient struct {
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -62,7 +62,7 @@ func (client *ItemsClient) BeginCreateKQLDatabase(ctx context.Context, workspace
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -112,7 +112,7 @@ func (client *ItemsClient) createKQLDatabaseCreateRequest(ctx context.Context, w
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -166,7 +166,7 @@ func (client *ItemsClient) deleteKQLDatabaseCreateRequest(ctx context.Context, w
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -231,7 +231,7 @@ func (client *ItemsClient) getKQLDatabaseHandleResponse(resp *http.Response) (It
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -251,7 +251,7 @@ func (client *ItemsClient) BeginGetKQLDatabaseDefinition(ctx context.Context, wo
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -308,7 +308,7 @@ func (client *ItemsClient) getKQLDatabaseDefinitionCreateRequest(ctx context.Con
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 //
@@ -373,7 +373,7 @@ func (client *ItemsClient) listKQLDatabasesHandleResponse(resp *http.Response) (
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -442,7 +442,7 @@ func (client *ItemsClient) updateKQLDatabaseHandleResponse(resp *http.Response) 
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -463,7 +463,7 @@ func (client *ItemsClient) BeginUpdateKQLDatabaseDefinition(ctx context.Context,
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -531,7 +531,7 @@ func (client *ItemsClient) updateKQLDatabaseDefinitionCreateRequest(ctx context.
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
@@ -600,7 +600,7 @@ func (client *ItemsClient) beginCreateKQLDatabase(ctx context.Context, workspace
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
@@ -669,7 +669,7 @@ func (client *ItemsClient) beginGetKQLDatabaseDefinition(ctx context.Context, wo
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
@@ -739,7 +739,7 @@ func (client *ItemsClient) beginUpdateKQLDatabaseDefinition(ctx context.Context,
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE

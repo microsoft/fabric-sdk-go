@@ -37,7 +37,7 @@ type WorkspacesClient struct {
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -111,7 +111,7 @@ func (client *WorkspacesClient) addWorkspaceRoleAssignmentHandleResponse(resp *h
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -170,7 +170,7 @@ func (client *WorkspacesClient) assignToCapacityCreateRequest(ctx context.Contex
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -232,7 +232,7 @@ func (client *WorkspacesClient) createWorkspaceHandleResponse(resp *http.Respons
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -283,7 +283,7 @@ func (client *WorkspacesClient) deleteWorkspaceCreateRequest(ctx context.Context
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -340,7 +340,7 @@ func (client *WorkspacesClient) deleteWorkspaceRoleAssignmentCreateRequest(ctx c
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -360,7 +360,7 @@ func (client *WorkspacesClient) BeginDeprovisionIdentity(ctx context.Context, wo
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -407,7 +407,7 @@ func (client *WorkspacesClient) deprovisionIdentityCreateRequest(ctx context.Con
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -466,7 +466,7 @@ func (client *WorkspacesClient) getWorkspaceHandleResponse(resp *http.Response) 
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -532,7 +532,7 @@ func (client *WorkspacesClient) getWorkspaceRoleAssignmentHandleResponse(resp *h
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 //
@@ -597,7 +597,7 @@ func (client *WorkspacesClient) listWorkspaceRoleAssignmentsHandleResponse(resp 
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 //
@@ -662,7 +662,7 @@ func (client *WorkspacesClient) listWorkspacesHandleResponse(resp *http.Response
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -682,7 +682,7 @@ func (client *WorkspacesClient) BeginProvisionIdentity(ctx context.Context, work
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -732,7 +732,7 @@ func (client *WorkspacesClient) provisionIdentityCreateRequest(ctx context.Conte
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -782,7 +782,7 @@ func (client *WorkspacesClient) unassignFromCapacityCreateRequest(ctx context.Co
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -847,7 +847,7 @@ func (client *WorkspacesClient) updateWorkspaceHandleResponse(resp *http.Respons
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -923,7 +923,7 @@ func (client *WorkspacesClient) updateWorkspaceRoleAssignmentHandleResponse(resp
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
@@ -992,7 +992,7 @@ func (client *WorkspacesClient) beginDeprovisionIdentity(ctx context.Context, wo
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
@@ -1060,7 +1060,7 @@ func (client *WorkspacesClient) beginProvisionIdentity(ctx context.Context, work
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
@@ -1090,7 +1090,7 @@ func (client *WorkspacesClient) ListWorkspaceRoleAssignments(ctx context.Context
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE

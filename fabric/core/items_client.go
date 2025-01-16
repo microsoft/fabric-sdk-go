@@ -51,9 +51,7 @@ type ItemsClient struct {
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | When the item type in the call is supported.
-// Check the corresponding API for the item type you're calling, to see if your call is supported. For example, semantic models
-// are supported. | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | When the item type in the call is supported. Check the
 // corresponding API for the item type you're calling, to see if your call is
 // supported. For example, semantic models are supported. |
@@ -90,9 +88,7 @@ func (client *ItemsClient) BeginCreateItem(ctx context.Context, workspaceID stri
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | When the item type in the call is supported.
-// Check the corresponding API for the item type you're calling, to see if your call is supported. For example, semantic models
-// are supported. | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | When the item type in the call is supported. Check the
 // corresponding API for the item type you're calling, to see if your call is
 // supported. For example, semantic models are supported. |
@@ -153,9 +149,7 @@ func (client *ItemsClient) createItemCreateRequest(ctx context.Context, workspac
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | When the item type in the call is supported.
-// Check the corresponding API for the item type you're calling, to see if your call is supported. For example, semantic models
-// are supported. | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | When the item type in the call is supported. Check the
 // corresponding API for the item type you're calling, to see if your call is
 // supported. For example, semantic models are supported. |
@@ -219,7 +213,7 @@ func (client *ItemsClient) deleteItemCreateRequest(ctx context.Context, workspac
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -296,9 +290,7 @@ func (client *ItemsClient) getItemHandleResponse(resp *http.Response) (ItemsClie
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | When the item type in the call is supported.
-// Check the corresponding API for the item type you're calling, to see if your call is supported. For example, semantic models
-// are supported. | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | When the item type in the call is supported. Check the
 // corresponding API for the item type you're calling, to see if your call is
 // supported. For example, semantic models are supported. |
@@ -332,9 +324,7 @@ func (client *ItemsClient) BeginGetItemDefinition(ctx context.Context, workspace
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | When the item type in the call is supported.
-// Check the corresponding API for the item type you're calling, to see if your call is supported. For example, semantic models
-// are supported. | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | When the item type in the call is supported. Check the
 // corresponding API for the item type you're calling, to see if your call is
 // supported. For example, semantic models are supported. |
@@ -401,7 +391,7 @@ func (client *ItemsClient) getItemDefinitionCreateRequest(ctx context.Context, w
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 //
@@ -472,7 +462,7 @@ func (client *ItemsClient) listItemConnectionsHandleResponse(resp *http.Response
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 //
@@ -548,9 +538,7 @@ func (client *ItemsClient) listItemsHandleResponse(resp *http.Response) (ItemsCl
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | When the item type in the call is supported.
-// Check the corresponding API for the item type you're calling, to see if your call is supported. For example, semantic models
-// are supported. | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | When the item type in the call is supported. Check the
 // corresponding API for the item type you're calling, to see if your call is
 // supported. For example, semantic models are supported. |
@@ -631,9 +619,7 @@ func (client *ItemsClient) updateItemHandleResponse(resp *http.Response) (ItemsC
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | When the item type in the call is supported.
-// Check the corresponding API for the item type you're calling, to see if your call is supported. For example, semantic models
-// are supported. | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | When the item type in the call is supported. Check the
 // corresponding API for the item type you're calling, to see if your call is
 // supported. For example, semantic models are supported. |
@@ -666,9 +652,7 @@ func (client *ItemsClient) BeginUpdateItemDefinition(ctx context.Context, worksp
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | When the item type in the call is supported.
-// Check the corresponding API for the item type you're calling, to see if your call is supported. For example, semantic models
-// are supported. | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | When the item type in the call is supported. Check the
 // corresponding API for the item type you're calling, to see if your call is
 // supported. For example, semantic models are supported. |
@@ -750,8 +734,7 @@ func (client *ItemsClient) updateItemDefinitionCreateRequest(ctx context.Context
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | When the item type in the call is supported.
-// Check the corresponding API for the item type you're calling, to see if your call is supported. For example, semantic models are supported. | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | When the item type in the call is supported. Check the corresponding API for the item type you're calling, to see if your call is
 // supported. For example, semantic models are supported. |
 //
@@ -832,8 +815,7 @@ func (client *ItemsClient) beginCreateItem(ctx context.Context, workspaceID stri
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | When the item type in the call is supported.
-// Check the corresponding API for the item type you're calling, to see if your call is supported. For example, semantic models are supported. | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | When the item type in the call is supported. Check the corresponding API for the item type you're calling, to see if your call is
 // supported. For example, semantic models are supported. |
 //
@@ -912,8 +894,7 @@ func (client *ItemsClient) beginGetItemDefinition(ctx context.Context, workspace
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | When the item type in the call is supported.
-// Check the corresponding API for the item type you're calling, to see if your call is supported. For example, semantic models are supported. | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | When the item type in the call is supported. Check the corresponding API for the item type you're calling, to see if your call is
 // supported. For example, semantic models are supported. |
 //
@@ -992,7 +973,7 @@ func (client *ItemsClient) beginUpdateItemDefinition(ctx context.Context, worksp
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
@@ -1025,7 +1006,7 @@ func (client *ItemsClient) ListItemConnections(ctx context.Context, workspaceID 
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE

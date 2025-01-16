@@ -34,7 +34,7 @@ type ItemsClient struct {
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 //
@@ -105,7 +105,7 @@ func (client *ItemsClient) listSQLEndpointsHandleResponse(resp *http.Response) (
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | No | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 //
 // INTERFACE

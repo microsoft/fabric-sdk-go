@@ -40,7 +40,7 @@ type ItemsClient struct {
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -65,7 +65,7 @@ func (client *ItemsClient) BeginCreateMLModel(ctx context.Context, workspaceID s
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -115,7 +115,7 @@ func (client *ItemsClient) createMLModelCreateRequest(ctx context.Context, works
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -169,7 +169,7 @@ func (client *ItemsClient) deleteMLModelCreateRequest(ctx context.Context, works
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -234,7 +234,7 @@ func (client *ItemsClient) getMLModelHandleResponse(resp *http.Response) (ItemsC
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 //
@@ -300,7 +300,7 @@ func (client *ItemsClient) listMLModelsHandleResponse(resp *http.Response) (Item
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -380,7 +380,7 @@ func (client *ItemsClient) updateMLModelHandleResponse(resp *http.Response) (Ite
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | No | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 //
 // INTERFACE
@@ -449,7 +449,7 @@ func (client *ItemsClient) beginCreateMLModel(ctx context.Context, workspaceID s
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | No | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 //
 // INTERFACE

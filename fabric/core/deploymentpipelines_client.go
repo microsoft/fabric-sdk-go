@@ -37,10 +37,9 @@ type DeploymentPipelinesClient struct {
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Only Power BI Items
-// [/rest/api/fabric/articles/item-management/item-management-overview#power-bi] are supported | | Managed identities [/entra/identity/managed-identities-azure-resources/overview]
-// | Only Power BI Items
-// [/rest/api/fabric/articles/item-management/item-management-overview#power-bi] are supported |
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Only Power BI Items [/rest/api/fabric/articles/item-management/item-management-overview#power-bi]
+// are supported |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -62,10 +61,9 @@ func (client *DeploymentPipelinesClient) BeginDeployStageContent(ctx context.Con
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Only Power BI Items
-// [/rest/api/fabric/articles/item-management/item-management-overview#power-bi] are supported | | Managed identities [/entra/identity/managed-identities-azure-resources/overview]
-// | Only Power BI Items
-// [/rest/api/fabric/articles/item-management/item-management-overview#power-bi] are supported |
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Only Power BI Items [/rest/api/fabric/articles/item-management/item-management-overview#power-bi]
+// are supported |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -113,7 +111,7 @@ func (client *DeploymentPipelinesClient) deployStageContentCreateRequest(ctx con
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -176,7 +174,7 @@ func (client *DeploymentPipelinesClient) getDeploymentPipelineHandleResponse(res
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 //
@@ -245,7 +243,7 @@ func (client *DeploymentPipelinesClient) listDeploymentPipelineStageItemsHandleR
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 //
@@ -309,7 +307,7 @@ func (client *DeploymentPipelinesClient) listDeploymentPipelineStagesHandleRespo
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | Yes | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 //
@@ -379,9 +377,8 @@ func (client *DeploymentPipelinesClient) listDeploymentPipelinesHandleResponse(r
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Only Power BI Items
-// [/rest/api/fabric/articles/item-management/item-management-overview#power-bi] are supported | | Managed identities [/entra/identity/managed-identities-azure-resources/overview] | Only Power BI Items
-// [/rest/api/fabric/articles/item-management/item-management-overview#power-bi] are supported |
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Only Power BI Items [/rest/api/fabric/articles/item-management/item-management-overview#power-bi] are supported |
 //
 // INTERFACE
 // Generated from API version v1
@@ -449,7 +446,7 @@ func (client *DeploymentPipelinesClient) beginDeployStageContent(ctx context.Con
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
@@ -478,7 +475,7 @@ func (client *DeploymentPipelinesClient) ListDeploymentPipelineStageItems(ctx co
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
@@ -506,7 +503,7 @@ func (client *DeploymentPipelinesClient) ListDeploymentPipelineStages(ctx contex
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | Yes | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE

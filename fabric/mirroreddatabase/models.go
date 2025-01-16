@@ -10,11 +10,11 @@ import "time"
 
 // CreateMirroredDatabaseRequest - Create mirrored database request payload.
 type CreateMirroredDatabaseRequest struct {
+	// REQUIRED; The mirrored database public definition.
+	Definition *Definition
+
 	// REQUIRED; The mirrored database display name. The display name must follow naming rules according to item type.
 	DisplayName *string
-
-	// The mirrored database public definition.
-	Definition *Definition
 
 	// The mirrored database description. Maximum length is 256 characters.
 	Description *string
