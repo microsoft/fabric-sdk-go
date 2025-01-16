@@ -152,9 +152,9 @@ func (testsuite *FakeTestSuite) TestItems_GetMirroredDatabase() {
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		Properties: &mirroreddatabase.Properties{
 			DefaultSchema:     to.Ptr("dbo"),
-			OneLakeTablesPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/7ba2c2f8-750a-47d8-9e95-99585107e23a/c3889489-6074-490e-90ed-e5a9e46142c6/Tables"),
+			OneLakeTablesPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/cfafbeb1-8037-4d0c-896e-a46fb27ff229/5b218778-e7a5-4d73-8187-f10824047715/Tables"),
 			SQLEndpointProperties: &mirroreddatabase.SQLEndpointProperties{
-				ConnectionString:   to.Ptr("x6eps4xrq2xudenlfv6naeo3i4-7dbke6ykoxmephuvtfmfcb7chi.msit-datawarehouse.fabric.microsoft.com"),
+				ConnectionString:   to.Ptr("xxx.datawarehouse.fabric.microsoft.com"),
 				ID:                 to.Ptr("84c9ad4a-ba9e-42d9-9025-b40f8e38c025"),
 				ProvisioningStatus: to.Ptr(mirroreddatabase.SQLEndpointProvisioningStatusSuccess),
 			},

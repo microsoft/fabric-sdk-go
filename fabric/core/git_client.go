@@ -37,7 +37,7 @@ type GitClient struct {
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -59,7 +59,7 @@ func (client *GitClient) BeginCommitToGit(ctx context.Context, workspaceID strin
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -115,7 +115,7 @@ func (client *GitClient) commitToGitCreateRequest(ctx context.Context, workspace
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -168,7 +168,7 @@ func (client *GitClient) connectCreateRequest(ctx context.Context, workspaceID s
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -217,7 +217,7 @@ func (client *GitClient) disconnectCreateRequest(ctx context.Context, workspaceI
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -279,7 +279,7 @@ func (client *GitClient) getConnectionHandleResponse(resp *http.Response) (GitCl
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -341,7 +341,7 @@ func (client *GitClient) getMyGitCredentialsHandleResponse(resp *http.Response) 
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -361,7 +361,7 @@ func (client *GitClient) BeginGetStatus(ctx context.Context, workspaceID string,
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -414,7 +414,7 @@ func (client *GitClient) getStatusCreateRequest(ctx context.Context, workspaceID
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -438,7 +438,7 @@ func (client *GitClient) BeginInitializeConnection(ctx context.Context, workspac
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -495,7 +495,7 @@ func (client *GitClient) initializeConnectionCreateRequest(ctx context.Context, 
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -517,7 +517,7 @@ func (client *GitClient) BeginUpdateFromGit(ctx context.Context, workspaceID str
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -570,7 +570,7 @@ func (client *GitClient) updateFromGitCreateRequest(ctx context.Context, workspa
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// | No | | Managed identities
+// and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
@@ -643,7 +643,7 @@ func (client *GitClient) updateMyGitCredentialsHandleResponse(resp *http.Respons
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | No | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 //
 // INTERFACE
@@ -714,7 +714,7 @@ func (client *GitClient) beginCommitToGit(ctx context.Context, workspaceID strin
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | No | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 //
 // INTERFACE
@@ -786,7 +786,7 @@ func (client *GitClient) beginGetStatus(ctx context.Context, workspaceID string,
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | No | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 //
 // INTERFACE
@@ -857,7 +857,7 @@ func (client *GitClient) beginInitializeConnection(ctx context.Context, workspac
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] | No | | Managed identities
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 //
 // INTERFACE

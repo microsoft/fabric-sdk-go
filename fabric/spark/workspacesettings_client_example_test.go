@@ -44,6 +44,11 @@ func ExampleWorkspaceSettingsClient_GetSparkSettings() {
 	// 	},
 	// 	HighConcurrency: &spark.HighConcurrencyProperties{
 	// 		NotebookInteractiveRunEnabled: to.Ptr(true),
+	// 		NotebookPipelineRunEnabled: to.Ptr(false),
+	// 	},
+	// 	Jobs: &spark.JobsProperties{
+	// 		ConservativeJobAdmissionEnabled: to.Ptr(false),
+	// 		SessionTimeoutInMinutes: to.Ptr[int32](20),
 	// 	},
 	// 	Pool: &spark.PoolProperties{
 	// 		CustomizeComputeEnabled: to.Ptr(true),
@@ -80,6 +85,11 @@ func ExampleWorkspaceSettingsClient_UpdateSparkSettings() {
 		},
 		HighConcurrency: &spark.HighConcurrencyProperties{
 			NotebookInteractiveRunEnabled: to.Ptr(false),
+			NotebookPipelineRunEnabled:    to.Ptr(false),
+		},
+		Jobs: &spark.JobsProperties{
+			ConservativeJobAdmissionEnabled: to.Ptr(false),
+			SessionTimeoutInMinutes:         to.Ptr[int32](20),
 		},
 		Pool: &spark.PoolProperties{
 			CustomizeComputeEnabled: to.Ptr(false),
@@ -109,6 +119,11 @@ func ExampleWorkspaceSettingsClient_UpdateSparkSettings() {
 	// 	},
 	// 	HighConcurrency: &spark.HighConcurrencyProperties{
 	// 		NotebookInteractiveRunEnabled: to.Ptr(false),
+	// 		NotebookPipelineRunEnabled: to.Ptr(false),
+	// 	},
+	// 	Jobs: &spark.JobsProperties{
+	// 		ConservativeJobAdmissionEnabled: to.Ptr(false),
+	// 		SessionTimeoutInMinutes: to.Ptr[int32](20),
 	// 	},
 	// 	Pool: &spark.PoolProperties{
 	// 		CustomizeComputeEnabled: to.Ptr(false),
