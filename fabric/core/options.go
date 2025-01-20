@@ -435,6 +435,13 @@ type OneLakeDataAccessSecurityClientListDataAccessRolesOptions struct {
 	ContinuationToken *string
 }
 
+// OneLakeShortcutsClientBeginResetShortcutCacheOptions contains the optional parameters for the OneLakeShortcutsClient.BeginResetShortcutCache
+// method.
+type OneLakeShortcutsClientBeginResetShortcutCacheOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
 // OneLakeShortcutsClientCreateShortcutOptions contains the optional parameters for the OneLakeShortcutsClient.CreateShortcut
 // method.
 type OneLakeShortcutsClientCreateShortcutOptions struct {

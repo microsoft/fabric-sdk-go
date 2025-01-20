@@ -186,7 +186,7 @@ type UpdateWorkspaceSparkSettingsRequest struct {
 	HighConcurrency *HighConcurrencyProperties
 
 	// Job management settings.
-	Jobs *JobsProperties
+	Job *JobsProperties
 
 	// Pool settings.
 	Pool *PoolProperties
@@ -204,7 +204,7 @@ type WorkspaceSparkSettings struct {
 	HighConcurrency *HighConcurrencyProperties
 
 	// Job management settings.
-	Jobs *JobsProperties
+	Job *JobsProperties
 
 	// Pool settings.
 	Pool *PoolProperties

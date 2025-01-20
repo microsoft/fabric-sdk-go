@@ -483,7 +483,7 @@ func (u UpdateWorkspaceSparkSettingsRequest) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "automaticLog", u.AutomaticLog)
 	populate(objectMap, "environment", u.Environment)
 	populate(objectMap, "highConcurrency", u.HighConcurrency)
-	populate(objectMap, "jobs", u.Jobs)
+	populate(objectMap, "job", u.Job)
 	populate(objectMap, "pool", u.Pool)
 	return json.Marshal(objectMap)
 }
@@ -506,8 +506,8 @@ func (u *UpdateWorkspaceSparkSettingsRequest) UnmarshalJSON(data []byte) error {
 		case "highConcurrency":
 			err = unpopulate(val, "HighConcurrency", &u.HighConcurrency)
 			delete(rawMsg, key)
-		case "jobs":
-			err = unpopulate(val, "Jobs", &u.Jobs)
+		case "job":
+			err = unpopulate(val, "Job", &u.Job)
 			delete(rawMsg, key)
 		case "pool":
 			err = unpopulate(val, "Pool", &u.Pool)
@@ -526,7 +526,7 @@ func (w WorkspaceSparkSettings) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "automaticLog", w.AutomaticLog)
 	populate(objectMap, "environment", w.Environment)
 	populate(objectMap, "highConcurrency", w.HighConcurrency)
-	populate(objectMap, "jobs", w.Jobs)
+	populate(objectMap, "job", w.Job)
 	populate(objectMap, "pool", w.Pool)
 	return json.Marshal(objectMap)
 }
@@ -549,8 +549,8 @@ func (w *WorkspaceSparkSettings) UnmarshalJSON(data []byte) error {
 		case "highConcurrency":
 			err = unpopulate(val, "HighConcurrency", &w.HighConcurrency)
 			delete(rawMsg, key)
-		case "jobs":
-			err = unpopulate(val, "Jobs", &w.Jobs)
+		case "job":
+			err = unpopulate(val, "Job", &w.Job)
 			delete(rawMsg, key)
 		case "pool":
 			err = unpopulate(val, "Pool", &w.Pool)

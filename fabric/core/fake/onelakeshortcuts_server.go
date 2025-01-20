@@ -40,6 +40,10 @@ type OneLakeShortcutsServer struct {
 	// NewListShortcutsPager is the fake for method OneLakeShortcutsClient.NewListShortcutsPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListShortcutsPager func(workspaceID string, itemID string, options *core.OneLakeShortcutsClientListShortcutsOptions) (resp azfake.PagerResponder[core.OneLakeShortcutsClientListShortcutsResponse])
+
+	// BeginResetShortcutCache is the fake for method OneLakeShortcutsClient.BeginResetShortcutCache
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
+	BeginResetShortcutCache func(ctx context.Context, workspaceID string, options *core.OneLakeShortcutsClientBeginResetShortcutCacheOptions) (resp azfake.PollerResponder[core.OneLakeShortcutsClientResetShortcutCacheResponse], errResp azfake.ErrorResponder)
 }
 
 // NewOneLakeShortcutsServerTransport creates a new instance of OneLakeShortcutsServerTransport with the provided implementation.
@@ -47,16 +51,18 @@ type OneLakeShortcutsServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewOneLakeShortcutsServerTransport(srv *OneLakeShortcutsServer) *OneLakeShortcutsServerTransport {
 	return &OneLakeShortcutsServerTransport{
-		srv:                   srv,
-		newListShortcutsPager: newTracker[azfake.PagerResponder[core.OneLakeShortcutsClientListShortcutsResponse]](),
+		srv:                     srv,
+		newListShortcutsPager:   newTracker[azfake.PagerResponder[core.OneLakeShortcutsClientListShortcutsResponse]](),
+		beginResetShortcutCache: newTracker[azfake.PollerResponder[core.OneLakeShortcutsClientResetShortcutCacheResponse]](),
 	}
 }
 
 // OneLakeShortcutsServerTransport connects instances of core.OneLakeShortcutsClient to instances of OneLakeShortcutsServer.
 // Don't use this type directly, use NewOneLakeShortcutsServerTransport instead.
 type OneLakeShortcutsServerTransport struct {
-	srv                   *OneLakeShortcutsServer
-	newListShortcutsPager *tracker[azfake.PagerResponder[core.OneLakeShortcutsClientListShortcutsResponse]]
+	srv                     *OneLakeShortcutsServer
+	newListShortcutsPager   *tracker[azfake.PagerResponder[core.OneLakeShortcutsClientListShortcutsResponse]]
+	beginResetShortcutCache *tracker[azfake.PollerResponder[core.OneLakeShortcutsClientResetShortcutCacheResponse]]
 }
 
 // Do implements the policy.Transporter interface for OneLakeShortcutsServerTransport.
@@ -92,6 +98,8 @@ func (o *OneLakeShortcutsServerTransport) dispatchToMethodFake(req *http.Request
 				res.resp, res.err = o.dispatchGetShortcut(req)
 			case "OneLakeShortcutsClient.NewListShortcutsPager":
 				res.resp, res.err = o.dispatchNewListShortcutsPager(req)
+			case "OneLakeShortcutsClient.BeginResetShortcutCache":
+				res.resp, res.err = o.dispatchBeginResetShortcutCache(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -301,6 +309,46 @@ func (o *OneLakeShortcutsServerTransport) dispatchNewListShortcutsPager(req *htt
 	if !server.PagerResponderMore(newListShortcutsPager) {
 		o.newListShortcutsPager.remove(req)
 	}
+	return resp, nil
+}
+
+func (o *OneLakeShortcutsServerTransport) dispatchBeginResetShortcutCache(req *http.Request) (*http.Response, error) {
+	if o.srv.BeginResetShortcutCache == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginResetShortcutCache not implemented")}
+	}
+	beginResetShortcutCache := o.beginResetShortcutCache.get(req)
+	if beginResetShortcutCache == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/onelake/resetShortcutCache`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 1 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		respr, errRespr := o.srv.BeginResetShortcutCache(req.Context(), workspaceIDParam, nil)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginResetShortcutCache = &respr
+		o.beginResetShortcutCache.add(req, beginResetShortcutCache)
+	}
+
+	resp, err := server.PollerResponderNext(beginResetShortcutCache, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
+		o.beginResetShortcutCache.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginResetShortcutCache) {
+		o.beginResetShortcutCache.remove(req)
+	}
+
 	return resp, nil
 }
 

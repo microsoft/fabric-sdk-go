@@ -18,6 +18,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 
 	"github.com/microsoft/fabric-sdk-go/internal/iruntime"
+	"github.com/microsoft/fabric-sdk-go/internal/pollers/locasync"
 )
 
 // OneLakeShortcutsClient contains the methods for the OneLakeShortcuts group.
@@ -318,7 +319,138 @@ func (client *OneLakeShortcutsClient) listShortcutsHandleResponse(resp *http.Res
 	return result, nil
 }
 
+// BeginResetShortcutCache - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The ID of the workspace.
+//   - options - OneLakeShortcutsClientBeginResetShortcutCacheOptions contains the optional parameters for the OneLakeShortcutsClient.BeginResetShortcutCache
+//     method.
+func (client *OneLakeShortcutsClient) BeginResetShortcutCache(ctx context.Context, workspaceID string, options *OneLakeShortcutsClientBeginResetShortcutCacheOptions) (*runtime.Poller[OneLakeShortcutsClientResetShortcutCacheResponse], error) {
+	return client.beginResetShortcutCache(ctx, workspaceID, options)
+}
+
+// ResetShortcutCache - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *OneLakeShortcutsClient) resetShortcutCache(ctx context.Context, workspaceID string, options *OneLakeShortcutsClientBeginResetShortcutCacheOptions) (*http.Response, error) {
+	var err error
+	const operationName = "core.OneLakeShortcutsClient.BeginResetShortcutCache"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.resetShortcutCacheCreateRequest(ctx, workspaceID, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// resetShortcutCacheCreateRequest creates the ResetShortcutCache request.
+func (client *OneLakeShortcutsClient) resetShortcutCacheCreateRequest(ctx context.Context, workspaceID string, _ *OneLakeShortcutsClientBeginResetShortcutCacheOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/onelake/resetShortcutCache"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
 // Custom code starts below
+
+// ResetShortcutCache - returns OneLakeShortcutsClientResetShortcutCacheResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// # REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The ID of the workspace.
+//   - options - OneLakeShortcutsClientBeginResetShortcutCacheOptions contains the optional parameters for the OneLakeShortcutsClient.BeginResetShortcutCache method.
+func (client *OneLakeShortcutsClient) ResetShortcutCache(ctx context.Context, workspaceID string, options *OneLakeShortcutsClientBeginResetShortcutCacheOptions) (OneLakeShortcutsClientResetShortcutCacheResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginResetShortcutCache(ctx, workspaceID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return OneLakeShortcutsClientResetShortcutCacheResponse{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return OneLakeShortcutsClientResetShortcutCacheResponse{}, err
+	}
+	return result, err
+}
+
+// beginResetShortcutCache creates the resetShortcutCache request.
+func (client *OneLakeShortcutsClient) beginResetShortcutCache(ctx context.Context, workspaceID string, options *OneLakeShortcutsClientBeginResetShortcutCacheOptions) (*runtime.Poller[OneLakeShortcutsClientResetShortcutCacheResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.resetShortcutCache(ctx, workspaceID, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[OneLakeShortcutsClientResetShortcutCacheResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[OneLakeShortcutsClientResetShortcutCacheResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[OneLakeShortcutsClientResetShortcutCacheResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[OneLakeShortcutsClientResetShortcutCacheResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
 
 // ListShortcuts - returns array of Shortcut from all pages.
 // REQUIRED DELEGATED SCOPES OneLake.Read.All or OneLake.ReadWrite.All
