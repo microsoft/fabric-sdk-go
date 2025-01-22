@@ -23,6 +23,7 @@ import (
 	environmentfake "github.com/microsoft/fabric-sdk-go/fabric/environment/fake"
 	eventhousefake "github.com/microsoft/fabric-sdk-go/fabric/eventhouse/fake"
 	eventstreamfake "github.com/microsoft/fabric-sdk-go/fabric/eventstream/fake"
+	graphqlapifake "github.com/microsoft/fabric-sdk-go/fabric/graphqlapi/fake"
 	kqldashboardfake "github.com/microsoft/fabric-sdk-go/fabric/kqldashboard/fake"
 	kqldatabasefake "github.com/microsoft/fabric-sdk-go/fabric/kqldatabase/fake"
 	kqlquerysetfake "github.com/microsoft/fabric-sdk-go/fabric/kqlqueryset/fake"
@@ -52,6 +53,7 @@ type ServerFactory struct {
 	Environment        environmentfake.ServerFactory
 	Eventhouse         eventhousefake.ServerFactory
 	Eventstream        eventstreamfake.ServerFactory
+	GraphQLApi         graphqlapifake.ServerFactory
 	KQLDashboard       kqldashboardfake.ServerFactory
 	KQLDatabase        kqldatabasefake.ServerFactory
 	KQLQueryset        kqlquerysetfake.ServerFactory
@@ -84,6 +86,7 @@ type ServerFactoryTransport struct {
 	trEnvironment        *environmentfake.ServerFactoryTransport
 	trEventhouse         *eventhousefake.ServerFactoryTransport
 	trEventstream        *eventstreamfake.ServerFactoryTransport
+	trGraphQLApi         *graphqlapifake.ServerFactoryTransport
 	trKQLDashboard       *kqldashboardfake.ServerFactoryTransport
 	trKQLDatabase        *kqldatabasefake.ServerFactoryTransport
 	trKQLQueryset        *kqlquerysetfake.ServerFactoryTransport
@@ -162,6 +165,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return eventstreamfake.NewServerFactoryTransport(&s.srv.Eventstream)
 		})
 		resp, err = s.trEventstream.Do(req)
+	case "graphqlapi":
+		initServer(s, &s.trGraphQLApi, func() *graphqlapifake.ServerFactoryTransport {
+			return graphqlapifake.NewServerFactoryTransport(&s.srv.GraphQLApi)
+		})
+		resp, err = s.trGraphQLApi.Do(req)
 	case "kqldashboard":
 		initServer(s, &s.trKQLDashboard, func() *kqldashboardfake.ServerFactoryTransport {
 			return kqldashboardfake.NewServerFactoryTransport(&s.srv.KQLDashboard)
