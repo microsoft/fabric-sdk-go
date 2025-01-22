@@ -72,7 +72,7 @@ func (testsuite *FakeTestSuite) TestWorkspaceSettings_GetSparkSettings() {
 			NotebookInteractiveRunEnabled: to.Ptr(true),
 			NotebookPipelineRunEnabled:    to.Ptr(false),
 		},
-		Jobs: &spark.JobsProperties{
+		Job: &spark.JobsProperties{
 			ConservativeJobAdmissionEnabled: to.Ptr(false),
 			SessionTimeoutInMinutes:         to.Ptr[int32](20),
 		},
@@ -122,7 +122,7 @@ func (testsuite *FakeTestSuite) TestWorkspaceSettings_UpdateSparkSettings() {
 			NotebookInteractiveRunEnabled: to.Ptr(false),
 			NotebookPipelineRunEnabled:    to.Ptr(false),
 		},
-		Jobs: &spark.JobsProperties{
+		Job: &spark.JobsProperties{
 			ConservativeJobAdmissionEnabled: to.Ptr(false),
 			SessionTimeoutInMinutes:         to.Ptr[int32](20),
 		},
@@ -151,7 +151,7 @@ func (testsuite *FakeTestSuite) TestWorkspaceSettings_UpdateSparkSettings() {
 			NotebookInteractiveRunEnabled: to.Ptr(false),
 			NotebookPipelineRunEnabled:    to.Ptr(false),
 		},
-		Jobs: &spark.JobsProperties{
+		Job: &spark.JobsProperties{
 			ConservativeJobAdmissionEnabled: to.Ptr(false),
 			SessionTimeoutInMinutes:         to.Ptr[int32](20),
 		},

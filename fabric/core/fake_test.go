@@ -2767,6 +2767,28 @@ func (testsuite *FakeTestSuite) TestOneLakeShortcuts_DeleteShortcut() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
+func (testsuite *FakeTestSuite) TestOneLakeShortcuts_ResetShortcutCache() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Reset shortcut cache example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff222"
+
+	testsuite.serverFactory.OneLakeShortcutsServer.BeginResetShortcutCache = func(ctx context.Context, workspaceID string, options *core.OneLakeShortcutsClientBeginResetShortcutCacheOptions) (resp azfake.PollerResponder[core.OneLakeShortcutsClientResetShortcutCacheResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.PollerResponder[core.OneLakeShortcutsClientResetShortcutCacheResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, core.OneLakeShortcutsClientResetShortcutCacheResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewOneLakeShortcutsClient()
+	poller, err := client.BeginResetShortcutCache(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
 func (testsuite *FakeTestSuite) TestDeploymentPipelines_ListDeploymentPipelines() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{

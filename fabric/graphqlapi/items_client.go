@@ -4,7 +4,7 @@
 // Changes may cause incorrect behavior and will be lost if the code is regenerated.
 // SPDX-License-Identifier: MIT
 
-package warehouse
+package graphqlapi
 
 import (
 	"context"
@@ -29,12 +29,11 @@ type ItemsClient struct {
 	endpoint string
 }
 
-// BeginCreateWarehouse - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// This API does not support create a warehouse with definition.
+// BeginCreateGraphQLAPI - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
-// REQUIRED DELEGATED SCOPES Warehouse.ReadWrite.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
-// * To create a warehouse the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
+// * To create a GraphQLApi the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
 // license types [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -46,19 +45,18 @@ type ItemsClient struct {
 //
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
-//   - createWarehouseRequest - Create item request payload.
-//   - options - ItemsClientBeginCreateWarehouseOptions contains the optional parameters for the ItemsClient.BeginCreateWarehouse
+//   - createGraphQLAPIRequest - Create item request payload.
+//   - options - ItemsClientBeginCreateGraphQLAPIOptions contains the optional parameters for the ItemsClient.BeginCreateGraphQLAPI
 //     method.
-func (client *ItemsClient) BeginCreateWarehouse(ctx context.Context, workspaceID string, createWarehouseRequest CreateWarehouseRequest, options *ItemsClientBeginCreateWarehouseOptions) (*runtime.Poller[ItemsClientCreateWarehouseResponse], error) {
-	return client.beginCreateWarehouse(ctx, workspaceID, createWarehouseRequest, options)
+func (client *ItemsClient) BeginCreateGraphQLAPI(ctx context.Context, workspaceID string, createGraphQLAPIRequest CreateGraphQLAPIRequest, options *ItemsClientBeginCreateGraphQLAPIOptions) (*runtime.Poller[ItemsClientCreateGraphQLAPIResponse], error) {
+	return client.beginCreateGraphQLAPI(ctx, workspaceID, createGraphQLAPIRequest, options)
 }
 
-// CreateWarehouse - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// This API does not support create a warehouse with definition.
+// CreateGraphQLAPI - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
-// REQUIRED DELEGATED SCOPES Warehouse.ReadWrite.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
-// * To create a warehouse the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
+// * To create a GraphQLApi the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
 // license types [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -69,13 +67,13 @@ func (client *ItemsClient) BeginCreateWarehouse(ctx context.Context, workspaceID
 // If the operation fails it returns an *core.ResponseError type.
 //
 // Generated from API version v1
-func (client *ItemsClient) createWarehouse(ctx context.Context, workspaceID string, createWarehouseRequest CreateWarehouseRequest, options *ItemsClientBeginCreateWarehouseOptions) (*http.Response, error) {
+func (client *ItemsClient) createGraphQLAPI(ctx context.Context, workspaceID string, createGraphQLAPIRequest CreateGraphQLAPIRequest, options *ItemsClientBeginCreateGraphQLAPIOptions) (*http.Response, error) {
 	var err error
-	const operationName = "warehouse.ItemsClient.BeginCreateWarehouse"
+	const operationName = "graphqlapi.ItemsClient.BeginCreateGraphQLAPI"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.createWarehouseCreateRequest(ctx, workspaceID, createWarehouseRequest, options)
+	req, err := client.createGraphQLAPICreateRequest(ctx, workspaceID, createGraphQLAPIRequest, options)
 	if err != nil {
 		return nil, err
 	}
@@ -90,9 +88,9 @@ func (client *ItemsClient) createWarehouse(ctx context.Context, workspaceID stri
 	return httpResp, nil
 }
 
-// createWarehouseCreateRequest creates the CreateWarehouse request.
-func (client *ItemsClient) createWarehouseCreateRequest(ctx context.Context, workspaceID string, createWarehouseRequest CreateWarehouseRequest, _ *ItemsClientBeginCreateWarehouseOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/warehouses"
+// createGraphQLAPICreateRequest creates the CreateGraphQLAPI request.
+func (client *ItemsClient) createGraphQLAPICreateRequest(ctx context.Context, workspaceID string, createGraphQLAPIRequest CreateGraphQLAPIRequest, _ *ItemsClientBeginCreateGraphQLAPIOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/GraphQLApis"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -102,14 +100,14 @@ func (client *ItemsClient) createWarehouseCreateRequest(ctx context.Context, wor
 		return nil, err
 	}
 	req.Raw().Header["Accept"] = []string{"application/json"}
-	if err := runtime.MarshalAsJSON(req, createWarehouseRequest); err != nil {
+	if err := runtime.MarshalAsJSON(req, createGraphQLAPIRequest); err != nil {
 		return nil, err
 	}
 	return req, nil
 }
 
-// DeleteWarehouse - PERMISSIONS The caller must have contributor or higher workspace role.
-// REQUIRED DELEGATED SCOPES Warehouse.ReadWrite.All or Item.ReadWrite.All
+// DeleteGraphQLAPI - PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -120,40 +118,40 @@ func (client *ItemsClient) createWarehouseCreateRequest(ctx context.Context, wor
 //
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
-//   - warehouseID - The warehouse ID.
-//   - options - ItemsClientDeleteWarehouseOptions contains the optional parameters for the ItemsClient.DeleteWarehouse method.
-func (client *ItemsClient) DeleteWarehouse(ctx context.Context, workspaceID string, warehouseID string, options *ItemsClientDeleteWarehouseOptions) (ItemsClientDeleteWarehouseResponse, error) {
+//   - graphQLAPIID - The GraphQLApi ID.
+//   - options - ItemsClientDeleteGraphQLAPIOptions contains the optional parameters for the ItemsClient.DeleteGraphQLAPI method.
+func (client *ItemsClient) DeleteGraphQLAPI(ctx context.Context, workspaceID string, graphQLAPIID string, options *ItemsClientDeleteGraphQLAPIOptions) (ItemsClientDeleteGraphQLAPIResponse, error) {
 	var err error
-	const operationName = "warehouse.ItemsClient.DeleteWarehouse"
+	const operationName = "graphqlapi.ItemsClient.DeleteGraphQLAPI"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.deleteWarehouseCreateRequest(ctx, workspaceID, warehouseID, options)
+	req, err := client.deleteGraphQLAPICreateRequest(ctx, workspaceID, graphQLAPIID, options)
 	if err != nil {
-		return ItemsClientDeleteWarehouseResponse{}, err
+		return ItemsClientDeleteGraphQLAPIResponse{}, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return ItemsClientDeleteWarehouseResponse{}, err
+		return ItemsClientDeleteGraphQLAPIResponse{}, err
 	}
 	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
 		err = core.NewResponseError(httpResp)
-		return ItemsClientDeleteWarehouseResponse{}, err
+		return ItemsClientDeleteGraphQLAPIResponse{}, err
 	}
-	return ItemsClientDeleteWarehouseResponse{}, nil
+	return ItemsClientDeleteGraphQLAPIResponse{}, nil
 }
 
-// deleteWarehouseCreateRequest creates the DeleteWarehouse request.
-func (client *ItemsClient) deleteWarehouseCreateRequest(ctx context.Context, workspaceID string, warehouseID string, _ *ItemsClientDeleteWarehouseOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/warehouses/{warehouseId}"
+// deleteGraphQLAPICreateRequest creates the DeleteGraphQLAPI request.
+func (client *ItemsClient) deleteGraphQLAPICreateRequest(ctx context.Context, workspaceID string, graphQLAPIID string, _ *ItemsClientDeleteGraphQLAPIOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/GraphQLApis/{GraphQLApiId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
 	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
-	if warehouseID == "" {
-		return nil, errors.New("parameter warehouseID cannot be empty")
+	if graphQLAPIID == "" {
+		return nil, errors.New("parameter graphQLAPIID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{warehouseId}", url.PathEscape(warehouseID))
+	urlPath = strings.ReplaceAll(urlPath, "{GraphQLApiId}", url.PathEscape(graphQLAPIID))
 	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -162,8 +160,8 @@ func (client *ItemsClient) deleteWarehouseCreateRequest(ctx context.Context, wor
 	return req, nil
 }
 
-// GetWarehouse - PERMISSIONS The caller must have viewer or higher workspace role.
-// REQUIRED DELEGATED SCOPES Warehouse.Read.All or Warehouse.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
+// GetGraphQLAPI - PERMISSIONS The caller must have viewer or higher workspace role.
+// REQUIRED DELEGATED SCOPES GraphQLApi.Read.All or GraphQLApi.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -174,41 +172,41 @@ func (client *ItemsClient) deleteWarehouseCreateRequest(ctx context.Context, wor
 //
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
-//   - warehouseID - The warehouse ID.
-//   - options - ItemsClientGetWarehouseOptions contains the optional parameters for the ItemsClient.GetWarehouse method.
-func (client *ItemsClient) GetWarehouse(ctx context.Context, workspaceID string, warehouseID string, options *ItemsClientGetWarehouseOptions) (ItemsClientGetWarehouseResponse, error) {
+//   - graphQLAPIID - The GraphQLApi ID.
+//   - options - ItemsClientGetGraphQLAPIOptions contains the optional parameters for the ItemsClient.GetGraphQLAPI method.
+func (client *ItemsClient) GetGraphQLAPI(ctx context.Context, workspaceID string, graphQLAPIID string, options *ItemsClientGetGraphQLAPIOptions) (ItemsClientGetGraphQLAPIResponse, error) {
 	var err error
-	const operationName = "warehouse.ItemsClient.GetWarehouse"
+	const operationName = "graphqlapi.ItemsClient.GetGraphQLAPI"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.getWarehouseCreateRequest(ctx, workspaceID, warehouseID, options)
+	req, err := client.getGraphQLAPICreateRequest(ctx, workspaceID, graphQLAPIID, options)
 	if err != nil {
-		return ItemsClientGetWarehouseResponse{}, err
+		return ItemsClientGetGraphQLAPIResponse{}, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return ItemsClientGetWarehouseResponse{}, err
+		return ItemsClientGetGraphQLAPIResponse{}, err
 	}
 	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
 		err = core.NewResponseError(httpResp)
-		return ItemsClientGetWarehouseResponse{}, err
+		return ItemsClientGetGraphQLAPIResponse{}, err
 	}
-	resp, err := client.getWarehouseHandleResponse(httpResp)
+	resp, err := client.getGraphQLAPIHandleResponse(httpResp)
 	return resp, err
 }
 
-// getWarehouseCreateRequest creates the GetWarehouse request.
-func (client *ItemsClient) getWarehouseCreateRequest(ctx context.Context, workspaceID string, warehouseID string, _ *ItemsClientGetWarehouseOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/warehouses/{warehouseId}"
+// getGraphQLAPICreateRequest creates the GetGraphQLAPI request.
+func (client *ItemsClient) getGraphQLAPICreateRequest(ctx context.Context, workspaceID string, graphQLAPIID string, _ *ItemsClientGetGraphQLAPIOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/GraphQLApis/{GraphQLApiId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
 	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
-	if warehouseID == "" {
-		return nil, errors.New("parameter warehouseID cannot be empty")
+	if graphQLAPIID == "" {
+		return nil, errors.New("parameter graphQLAPIID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{warehouseId}", url.PathEscape(warehouseID))
+	urlPath = strings.ReplaceAll(urlPath, "{GraphQLApiId}", url.PathEscape(graphQLAPIID))
 	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -217,16 +215,16 @@ func (client *ItemsClient) getWarehouseCreateRequest(ctx context.Context, worksp
 	return req, nil
 }
 
-// getWarehouseHandleResponse handles the GetWarehouse response.
-func (client *ItemsClient) getWarehouseHandleResponse(resp *http.Response) (ItemsClientGetWarehouseResponse, error) {
-	result := ItemsClientGetWarehouseResponse{}
-	if err := runtime.UnmarshalAsJSON(resp, &result.Warehouse); err != nil {
-		return ItemsClientGetWarehouseResponse{}, err
+// getGraphQLAPIHandleResponse handles the GetGraphQLAPI response.
+func (client *ItemsClient) getGraphQLAPIHandleResponse(resp *http.Response) (ItemsClientGetGraphQLAPIResponse, error) {
+	result := ItemsClientGetGraphQLAPIResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.GraphQLAPI); err != nil {
+		return ItemsClientGetGraphQLAPIResponse{}, err
 	}
 	return result, nil
 }
 
-// NewListWarehousesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
+// NewListGraphQLApisPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -238,34 +236,34 @@ func (client *ItemsClient) getWarehouseHandleResponse(resp *http.Response) (Item
 //
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
-//   - options - ItemsClientListWarehousesOptions contains the optional parameters for the ItemsClient.NewListWarehousesPager
+//   - options - ItemsClientListGraphQLApisOptions contains the optional parameters for the ItemsClient.NewListGraphQLApisPager
 //     method.
-func (client *ItemsClient) NewListWarehousesPager(workspaceID string, options *ItemsClientListWarehousesOptions) *runtime.Pager[ItemsClientListWarehousesResponse] {
-	return runtime.NewPager(runtime.PagingHandler[ItemsClientListWarehousesResponse]{
-		More: func(page ItemsClientListWarehousesResponse) bool {
+func (client *ItemsClient) NewListGraphQLApisPager(workspaceID string, options *ItemsClientListGraphQLApisOptions) *runtime.Pager[ItemsClientListGraphQLApisResponse] {
+	return runtime.NewPager(runtime.PagingHandler[ItemsClientListGraphQLApisResponse]{
+		More: func(page ItemsClientListGraphQLApisResponse) bool {
 			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
 		},
-		Fetcher: func(ctx context.Context, page *ItemsClientListWarehousesResponse) (ItemsClientListWarehousesResponse, error) {
-			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "warehouse.ItemsClient.NewListWarehousesPager")
+		Fetcher: func(ctx context.Context, page *ItemsClientListGraphQLApisResponse) (ItemsClientListGraphQLApisResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "graphqlapi.ItemsClient.NewListGraphQLApisPager")
 			nextLink := ""
 			if page != nil {
 				nextLink = *page.ContinuationURI
 			}
 			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
-				return client.listWarehousesCreateRequest(ctx, workspaceID, options)
+				return client.listGraphQLApisCreateRequest(ctx, workspaceID, options)
 			}, nil)
 			if err != nil {
-				return ItemsClientListWarehousesResponse{}, err
+				return ItemsClientListGraphQLApisResponse{}, err
 			}
-			return client.listWarehousesHandleResponse(resp)
+			return client.listGraphQLApisHandleResponse(resp)
 		},
 		Tracer: client.internal.Tracer(),
 	})
 }
 
-// listWarehousesCreateRequest creates the ListWarehouses request.
-func (client *ItemsClient) listWarehousesCreateRequest(ctx context.Context, workspaceID string, options *ItemsClientListWarehousesOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/warehouses"
+// listGraphQLApisCreateRequest creates the ListGraphQLApis request.
+func (client *ItemsClient) listGraphQLApisCreateRequest(ctx context.Context, workspaceID string, options *ItemsClientListGraphQLApisOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/GraphQLApis"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -283,17 +281,17 @@ func (client *ItemsClient) listWarehousesCreateRequest(ctx context.Context, work
 	return req, nil
 }
 
-// listWarehousesHandleResponse handles the ListWarehouses response.
-func (client *ItemsClient) listWarehousesHandleResponse(resp *http.Response) (ItemsClientListWarehousesResponse, error) {
-	result := ItemsClientListWarehousesResponse{}
-	if err := runtime.UnmarshalAsJSON(resp, &result.Warehouses); err != nil {
-		return ItemsClientListWarehousesResponse{}, err
+// listGraphQLApisHandleResponse handles the ListGraphQLApis response.
+func (client *ItemsClient) listGraphQLApisHandleResponse(resp *http.Response) (ItemsClientListGraphQLApisResponse, error) {
+	result := ItemsClientListGraphQLApisResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.GraphQLApis); err != nil {
+		return ItemsClientListGraphQLApisResponse{}, err
 	}
 	return result, nil
 }
 
-// UpdateWarehouse - PERMISSIONS The caller must have contributor or higher workspce role.
-// REQUIRED DELEGATED SCOPES Warehouse.ReadWrite.All or Item.ReadWrite.All
+// UpdateGraphQLAPI - PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -304,75 +302,73 @@ func (client *ItemsClient) listWarehousesHandleResponse(resp *http.Response) (It
 //
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
-//   - warehouseID - The warehouse ID.
-//   - updateWarehouseRequest - Update warehouse request payload.
-//   - options - ItemsClientUpdateWarehouseOptions contains the optional parameters for the ItemsClient.UpdateWarehouse method.
-func (client *ItemsClient) UpdateWarehouse(ctx context.Context, workspaceID string, warehouseID string, updateWarehouseRequest UpdateWarehouseRequest, options *ItemsClientUpdateWarehouseOptions) (ItemsClientUpdateWarehouseResponse, error) {
+//   - graphQLAPIID - The GraphQLApi ID.
+//   - updateGraphQLAPIRequest - Update GraphQLApi request payload.
+//   - options - ItemsClientUpdateGraphQLAPIOptions contains the optional parameters for the ItemsClient.UpdateGraphQLAPI method.
+func (client *ItemsClient) UpdateGraphQLAPI(ctx context.Context, workspaceID string, graphQLAPIID string, updateGraphQLAPIRequest UpdateGraphQLAPIRequest, options *ItemsClientUpdateGraphQLAPIOptions) (ItemsClientUpdateGraphQLAPIResponse, error) {
 	var err error
-	const operationName = "warehouse.ItemsClient.UpdateWarehouse"
+	const operationName = "graphqlapi.ItemsClient.UpdateGraphQLAPI"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.updateWarehouseCreateRequest(ctx, workspaceID, warehouseID, updateWarehouseRequest, options)
+	req, err := client.updateGraphQLAPICreateRequest(ctx, workspaceID, graphQLAPIID, updateGraphQLAPIRequest, options)
 	if err != nil {
-		return ItemsClientUpdateWarehouseResponse{}, err
+		return ItemsClientUpdateGraphQLAPIResponse{}, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return ItemsClientUpdateWarehouseResponse{}, err
+		return ItemsClientUpdateGraphQLAPIResponse{}, err
 	}
 	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
 		err = core.NewResponseError(httpResp)
-		return ItemsClientUpdateWarehouseResponse{}, err
+		return ItemsClientUpdateGraphQLAPIResponse{}, err
 	}
-	resp, err := client.updateWarehouseHandleResponse(httpResp)
+	resp, err := client.updateGraphQLAPIHandleResponse(httpResp)
 	return resp, err
 }
 
-// updateWarehouseCreateRequest creates the UpdateWarehouse request.
-func (client *ItemsClient) updateWarehouseCreateRequest(ctx context.Context, workspaceID string, warehouseID string, updateWarehouseRequest UpdateWarehouseRequest, _ *ItemsClientUpdateWarehouseOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/warehouses/{warehouseId}"
+// updateGraphQLAPICreateRequest creates the UpdateGraphQLAPI request.
+func (client *ItemsClient) updateGraphQLAPICreateRequest(ctx context.Context, workspaceID string, graphQLAPIID string, updateGraphQLAPIRequest UpdateGraphQLAPIRequest, _ *ItemsClientUpdateGraphQLAPIOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/GraphQLApis/{GraphQLApiId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
 	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
-	if warehouseID == "" {
-		return nil, errors.New("parameter warehouseID cannot be empty")
+	if graphQLAPIID == "" {
+		return nil, errors.New("parameter graphQLAPIID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{warehouseId}", url.PathEscape(warehouseID))
+	urlPath = strings.ReplaceAll(urlPath, "{GraphQLApiId}", url.PathEscape(graphQLAPIID))
 	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
 	}
 	req.Raw().Header["Accept"] = []string{"application/json"}
-	if err := runtime.MarshalAsJSON(req, updateWarehouseRequest); err != nil {
+	if err := runtime.MarshalAsJSON(req, updateGraphQLAPIRequest); err != nil {
 		return nil, err
 	}
 	return req, nil
 }
 
-// updateWarehouseHandleResponse handles the UpdateWarehouse response.
-func (client *ItemsClient) updateWarehouseHandleResponse(resp *http.Response) (ItemsClientUpdateWarehouseResponse, error) {
-	result := ItemsClientUpdateWarehouseResponse{}
-	if err := runtime.UnmarshalAsJSON(resp, &result.Warehouse); err != nil {
-		return ItemsClientUpdateWarehouseResponse{}, err
+// updateGraphQLAPIHandleResponse handles the UpdateGraphQLAPI response.
+func (client *ItemsClient) updateGraphQLAPIHandleResponse(resp *http.Response) (ItemsClientUpdateGraphQLAPIResponse, error) {
+	result := ItemsClientUpdateGraphQLAPIResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.GraphQLAPI); err != nil {
+		return ItemsClientUpdateGraphQLAPIResponse{}, err
 	}
 	return result, nil
 }
 
 // Custom code starts below
 
-// CreateWarehouse - returns ItemsClientCreateWarehouseResponse in sync mode.
+// CreateGraphQLAPI - returns ItemsClientCreateGraphQLAPIResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// This API does not support create a warehouse with definition.
-//
 // PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
-// REQUIRED DELEGATED SCOPES Warehouse.ReadWrite.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
 //
 // LIMITATIONS
 //
-//   - To create a warehouse the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric license types [/fabric/enterprise/licenses#microsoft-fabric-license-types].
+//   - To create a GraphQLApi the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric license types [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
@@ -382,24 +378,24 @@ func (client *ItemsClient) updateWarehouseHandleResponse(resp *http.Response) (I
 // INTERFACE
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
-//   - createWarehouseRequest - Create item request payload.
-//   - options - ItemsClientBeginCreateWarehouseOptions contains the optional parameters for the ItemsClient.BeginCreateWarehouse method.
-func (client *ItemsClient) CreateWarehouse(ctx context.Context, workspaceID string, createWarehouseRequest CreateWarehouseRequest, options *ItemsClientBeginCreateWarehouseOptions) (ItemsClientCreateWarehouseResponse, error) {
-	result, err := iruntime.NewLRO(client.BeginCreateWarehouse(ctx, workspaceID, createWarehouseRequest, options)).Sync(ctx)
+//   - createGraphQLAPIRequest - Create item request payload.
+//   - options - ItemsClientBeginCreateGraphQLAPIOptions contains the optional parameters for the ItemsClient.BeginCreateGraphQLAPI method.
+func (client *ItemsClient) CreateGraphQLAPI(ctx context.Context, workspaceID string, createGraphQLAPIRequest CreateGraphQLAPIRequest, options *ItemsClientBeginCreateGraphQLAPIOptions) (ItemsClientCreateGraphQLAPIResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginCreateGraphQLAPI(ctx, workspaceID, createGraphQLAPIRequest, options)).Sync(ctx)
 	if err != nil {
 		var azcoreRespError *azcore.ResponseError
 		if errors.As(err, &azcoreRespError) {
-			return ItemsClientCreateWarehouseResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+			return ItemsClientCreateGraphQLAPIResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
 		}
-		return ItemsClientCreateWarehouseResponse{}, err
+		return ItemsClientCreateGraphQLAPIResponse{}, err
 	}
 	return result, err
 }
 
-// beginCreateWarehouse creates the createWarehouse request.
-func (client *ItemsClient) beginCreateWarehouse(ctx context.Context, workspaceID string, createWarehouseRequest CreateWarehouseRequest, options *ItemsClientBeginCreateWarehouseOptions) (*runtime.Poller[ItemsClientCreateWarehouseResponse], error) {
+// beginCreateGraphQLAPI creates the createGraphQLAPI request.
+func (client *ItemsClient) beginCreateGraphQLAPI(ctx context.Context, workspaceID string, createGraphQLAPIRequest CreateGraphQLAPIRequest, options *ItemsClientBeginCreateGraphQLAPIOptions) (*runtime.Poller[ItemsClientCreateGraphQLAPIResponse], error) {
 	if options == nil || options.ResumeToken == "" {
-		resp, err := client.createWarehouse(ctx, workspaceID, createWarehouseRequest, options)
+		resp, err := client.createGraphQLAPI(ctx, workspaceID, createGraphQLAPIRequest, options)
 		if err != nil {
 			var azcoreRespError *azcore.ResponseError
 			if errors.As(err, &azcoreRespError) {
@@ -407,7 +403,7 @@ func (client *ItemsClient) beginCreateWarehouse(ctx context.Context, workspaceID
 			}
 			return nil, err
 		}
-		handler, err := locasync.NewPollerHandler[ItemsClientCreateWarehouseResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		handler, err := locasync.NewPollerHandler[ItemsClientCreateGraphQLAPIResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
 		if err != nil {
 			var azcoreRespError *azcore.ResponseError
 			if errors.As(err, &azcoreRespError) {
@@ -415,13 +411,13 @@ func (client *ItemsClient) beginCreateWarehouse(ctx context.Context, workspaceID
 			}
 			return nil, err
 		}
-		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientCreateWarehouseResponse]{
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientCreateGraphQLAPIResponse]{
 			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
 			Handler:       handler,
 			Tracer:        client.internal.Tracer(),
 		})
 	} else {
-		handler, err := locasync.NewPollerHandler[ItemsClientCreateWarehouseResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		handler, err := locasync.NewPollerHandler[ItemsClientCreateGraphQLAPIResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
 		if err != nil {
 			var azcoreRespError *azcore.ResponseError
 			if errors.As(err, &azcoreRespError) {
@@ -429,14 +425,14 @@ func (client *ItemsClient) beginCreateWarehouse(ctx context.Context, workspaceID
 			}
 			return nil, err
 		}
-		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientCreateWarehouseResponse]{
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientCreateGraphQLAPIResponse]{
 			Handler: handler,
 			Tracer:  client.internal.Tracer(),
 		})
 	}
 }
 
-// ListWarehouses - returns array of Warehouse from all pages.
+// ListGraphQLApis - returns array of GraphQLAPI from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
 // PERMISSIONS The caller must have viewer or higher workspace role.
@@ -451,19 +447,19 @@ func (client *ItemsClient) beginCreateWarehouse(ctx context.Context, workspaceID
 // INTERFACE
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
-//   - options - ItemsClientListWarehousesOptions contains the optional parameters for the ItemsClient.NewListWarehousesPager method.
-func (client *ItemsClient) ListWarehouses(ctx context.Context, workspaceID string, options *ItemsClientListWarehousesOptions) ([]Warehouse, error) {
-	pager := client.NewListWarehousesPager(workspaceID, options)
-	mapper := func(resp ItemsClientListWarehousesResponse) []Warehouse {
+//   - options - ItemsClientListGraphQLApisOptions contains the optional parameters for the ItemsClient.NewListGraphQLApisPager method.
+func (client *ItemsClient) ListGraphQLApis(ctx context.Context, workspaceID string, options *ItemsClientListGraphQLApisOptions) ([]GraphQLAPI, error) {
+	pager := client.NewListGraphQLApisPager(workspaceID, options)
+	mapper := func(resp ItemsClientListGraphQLApisResponse) []GraphQLAPI {
 		return resp.Value
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
 		var azcoreRespError *azcore.ResponseError
 		if errors.As(err, &azcoreRespError) {
-			return []Warehouse{}, core.NewResponseError(azcoreRespError.RawResponse)
+			return []GraphQLAPI{}, core.NewResponseError(azcoreRespError.RawResponse)
 		}
-		return []Warehouse{}, err
+		return []GraphQLAPI{}, err
 	}
 	return list, nil
 }
