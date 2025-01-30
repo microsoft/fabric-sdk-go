@@ -604,7 +604,16 @@ type CreateCredentialDetails struct {
 
 // CreateExternalDataShareRequest - The request payload for creating an external data share.
 type CreateExternalDataShareRequest struct {
-	// REQUIRED; The path or list of paths that are to be externally shared. Currently, only a single path is supported.
+	// REQUIRED; The path or list of paths that are to be externally shared. Currently, only a single path is supported. A valid
+	// path to an external data share must start with "Files/" or "Tables/". You can't share
+	// the root folder itself (Files or Tables).
+	// * For example, these paths are valid:
+	//
+	//
+	// * "Files/MyFolder1"
+	//
+	//
+	// * "Tables/MyTable1"
 	Paths []string
 
 	// REQUIRED; The recipient who is invited to accept the external data share.

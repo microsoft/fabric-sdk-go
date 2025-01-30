@@ -19,7 +19,7 @@ import (
 )
 
 // Generated from example definition
-func ExampleJobSchedulerClient_ListItemSchedules() {
+func ExampleJobSchedulerClient_NewListItemSchedulesPager() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -29,71 +29,76 @@ func ExampleJobSchedulerClient_ListItemSchedules() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewJobSchedulerClient().ListItemSchedules(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "3546052c-ae64-4526-b1a8-52af7761426f", "DefaultJob", nil)
-	if err != nil {
-		log.Fatalf("failed to finish the request: %v", err)
+	pager := clientFactory.NewJobSchedulerClient().NewListItemSchedulesPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", "3546052c-ae64-4526-b1a8-52af7761426f", "DefaultJob", &core.JobSchedulerClientListItemSchedulesOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.ItemSchedules = core.ItemSchedules{
+		// 	Value: []core.ItemSchedule{
+		// 		{
+		// 			Configuration: &core.CronScheduleConfig{
+		// 				Type: to.Ptr(core.ScheduleTypeCron),
+		// 				EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-30T23:59:00.000Z"); return t}()),
+		// 				LocalTimeZoneID: to.Ptr("Central Standard Time"),
+		// 				StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T00:00:00.000Z"); return t}()),
+		// 				Interval: to.Ptr[int32](10),
+		// 			},
+		// 			CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T05:35:20.536Z"); return t}()),
+		// 			Enabled: to.Ptr(true),
+		// 			ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		// 			Owner: &core.Principal{
+		// 				Type: to.Ptr(core.PrincipalTypeUser),
+		// 				ID: to.Ptr("8eedb1b0-3af8-4b17-8e7e-663e61e12211"),
+		// 			},
+		// 		},
+		// 		{
+		// 			Configuration: &core.WeeklyScheduleConfig{
+		// 				Type: to.Ptr(core.ScheduleTypeWeekly),
+		// 				EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-30T23:59:00.000Z"); return t}()),
+		// 				LocalTimeZoneID: to.Ptr("Central Standard Time"),
+		// 				StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T00:00:00.000Z"); return t}()),
+		// 				Times: []string{
+		// 					"18:09",
+		// 					"17:12"},
+		// 					Weekdays: []core.DayOfWeek{
+		// 						core.DayOfWeekMonday,
+		// 						core.DayOfWeekTuesday},
+		// 					},
+		// 					CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T05:35:20.536Z"); return t}()),
+		// 					Enabled: to.Ptr(true),
+		// 					ID: to.Ptr("96f3f0ff-4fe2-4712-b61b-05a456ba9357"),
+		// 					Owner: &core.Principal{
+		// 						Type: to.Ptr(core.PrincipalTypeUser),
+		// 						ID: to.Ptr("8eedb1b0-3af8-4b17-8e7e-663e61e12211"),
+		// 					},
+		// 				},
+		// 				{
+		// 					Configuration: &core.DailyScheduleConfig{
+		// 						Type: to.Ptr(core.ScheduleTypeDaily),
+		// 						EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-30T23:59:00.000Z"); return t}()),
+		// 						LocalTimeZoneID: to.Ptr("Central Standard Time"),
+		// 						StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T00:00:00.000Z"); return t}()),
+		// 						Times: []string{
+		// 							"18:09",
+		// 							"17:12"},
+		// 						},
+		// 						CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T05:35:20.536Z"); return t}()),
+		// 						Enabled: to.Ptr(true),
+		// 						ID: to.Ptr("c0ed1d27-32dc-49e6-90ba-cac9b6248c7f"),
+		// 						Owner: &core.Principal{
+		// 							Type: to.Ptr(core.PrincipalTypeUser),
+		// 							ID: to.Ptr("8eedb1b0-3af8-4b17-8e7e-663e61e12211"),
+		// 						},
+		// 				}},
+		// 			}
 	}
-	// You could use response here. We use blank identifier for just demo purposes.
-	_ = res
-	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
-	// res.ItemSchedules = core.ItemSchedules{
-	// 	Value: []core.ItemSchedule{
-	// 		{
-	// 			Configuration: &core.CronScheduleConfig{
-	// 				Type: to.Ptr(core.ScheduleTypeCron),
-	// 				EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-30T23:59:00.000Z"); return t}()),
-	// 				LocalTimeZoneID: to.Ptr("Central Standard Time"),
-	// 				StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T00:00:00.000Z"); return t}()),
-	// 				Interval: to.Ptr[int32](10),
-	// 			},
-	// 			CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T05:35:20.536Z"); return t}()),
-	// 			Enabled: to.Ptr(true),
-	// 			ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
-	// 			Owner: &core.Principal{
-	// 				Type: to.Ptr(core.PrincipalTypeUser),
-	// 				ID: to.Ptr("8eedb1b0-3af8-4b17-8e7e-663e61e12211"),
-	// 			},
-	// 		},
-	// 		{
-	// 			Configuration: &core.WeeklyScheduleConfig{
-	// 				Type: to.Ptr(core.ScheduleTypeWeekly),
-	// 				EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-30T23:59:00.000Z"); return t}()),
-	// 				LocalTimeZoneID: to.Ptr("Central Standard Time"),
-	// 				StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T00:00:00.000Z"); return t}()),
-	// 				Times: []string{
-	// 					"18:09",
-	// 					"17:12"},
-	// 					Weekdays: []core.DayOfWeek{
-	// 						core.DayOfWeekMonday,
-	// 						core.DayOfWeekTuesday},
-	// 					},
-	// 					CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T05:35:20.536Z"); return t}()),
-	// 					Enabled: to.Ptr(true),
-	// 					ID: to.Ptr("96f3f0ff-4fe2-4712-b61b-05a456ba9357"),
-	// 					Owner: &core.Principal{
-	// 						Type: to.Ptr(core.PrincipalTypeUser),
-	// 						ID: to.Ptr("8eedb1b0-3af8-4b17-8e7e-663e61e12211"),
-	// 					},
-	// 				},
-	// 				{
-	// 					Configuration: &core.DailyScheduleConfig{
-	// 						Type: to.Ptr(core.ScheduleTypeDaily),
-	// 						EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-30T23:59:00.000Z"); return t}()),
-	// 						LocalTimeZoneID: to.Ptr("Central Standard Time"),
-	// 						StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T00:00:00.000Z"); return t}()),
-	// 						Times: []string{
-	// 							"18:09",
-	// 							"17:12"},
-	// 						},
-	// 						CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T05:35:20.536Z"); return t}()),
-	// 						Enabled: to.Ptr(true),
-	// 						ID: to.Ptr("c0ed1d27-32dc-49e6-90ba-cac9b6248c7f"),
-	// 						Owner: &core.Principal{
-	// 							Type: to.Ptr(core.PrincipalTypeUser),
-	// 							ID: to.Ptr("8eedb1b0-3af8-4b17-8e7e-663e61e12211"),
-	// 						},
-	// 				}},
-	// 			}
 }
 
 // Generated from example definition

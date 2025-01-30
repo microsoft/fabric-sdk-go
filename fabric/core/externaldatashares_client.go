@@ -36,16 +36,13 @@ type ExternalDataSharesClient struct {
 // For more information about scopes, see scopes article [/rest/api/fabric/articles/scopes].
 //
 // REQUIRED TENANT SETTINGS To use this API, enable the 'External data sharing' admin switch for the calling principal.
-// LIMITATIONS
-// * Maximum 10 requests per minute.
-//
-// * Supported item types are: Lakehouse, KQLDatabase, and Warehouse.
-//
+// LIMITATIONS Maximum 10 requests per minute.
+// Supported item types: See External data sharing in Microsoft Fabric - Supported item types [/fabric/governance/external-data-sharing-overview#supported-fabric-item-types].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -125,7 +122,7 @@ func (client *ExternalDataSharesClient) createExternalDataShareHandleResponse(re
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -204,7 +201,7 @@ func (client *ExternalDataSharesClient) getExternalDataShareHandleResponse(resp 
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 //
 // Generated from API version v1
@@ -282,7 +279,7 @@ func (client *ExternalDataSharesClient) listExternalDataSharesInItemHandleRespon
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -358,7 +355,7 @@ func (client *ExternalDataSharesClient) revokeExternalDataShareCreateRequest(ctx
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
 // Generated from API version v1
