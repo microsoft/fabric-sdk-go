@@ -417,7 +417,7 @@ func (client *JobSchedulerClient) listItemJobInstancesHandleResponse(resp *http.
 	return result, nil
 }
 
-// ListItemSchedules - This API supports pagination [/rest/api/fabric/articles/pagination].
+// NewListItemSchedulesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // REQUIRED DELEGATED SCOPES For item APIs use these scope types:
 // * Generic scope: Item.ReadWrite.All or Item.Read.All
 //
@@ -431,38 +431,38 @@ func (client *JobSchedulerClient) listItemJobInstancesHandleResponse(resp *http.
 // and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | No |
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 //
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - itemID - The item ID.
 //   - jobType - The job type.
-//   - options - JobSchedulerClientListItemSchedulesOptions contains the optional parameters for the JobSchedulerClient.ListItemSchedules
+//   - options - JobSchedulerClientListItemSchedulesOptions contains the optional parameters for the JobSchedulerClient.NewListItemSchedulesPager
 //     method.
-func (client *JobSchedulerClient) ListItemSchedules(ctx context.Context, workspaceID string, itemID string, jobType string, options *JobSchedulerClientListItemSchedulesOptions) (JobSchedulerClientListItemSchedulesResponse, error) {
-	var err error
-	const operationName = "core.JobSchedulerClient.ListItemSchedules"
-	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
-	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
-	defer func() { endSpan(err) }()
-	req, err := client.listItemSchedulesCreateRequest(ctx, workspaceID, itemID, jobType, options)
-	if err != nil {
-		return JobSchedulerClientListItemSchedulesResponse{}, err
-	}
-	httpResp, err := client.internal.Pipeline().Do(req)
-	if err != nil {
-		return JobSchedulerClientListItemSchedulesResponse{}, err
-	}
-	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
-		err = NewResponseError(httpResp)
-		return JobSchedulerClientListItemSchedulesResponse{}, err
-	}
-	resp, err := client.listItemSchedulesHandleResponse(httpResp)
-	return resp, err
+func (client *JobSchedulerClient) NewListItemSchedulesPager(workspaceID string, itemID string, jobType string, options *JobSchedulerClientListItemSchedulesOptions) *runtime.Pager[JobSchedulerClientListItemSchedulesResponse] {
+	return runtime.NewPager(runtime.PagingHandler[JobSchedulerClientListItemSchedulesResponse]{
+		More: func(page JobSchedulerClientListItemSchedulesResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *JobSchedulerClientListItemSchedulesResponse) (JobSchedulerClientListItemSchedulesResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "core.JobSchedulerClient.NewListItemSchedulesPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.listItemSchedulesCreateRequest(ctx, workspaceID, itemID, jobType, options)
+			}, nil)
+			if err != nil {
+				return JobSchedulerClientListItemSchedulesResponse{}, err
+			}
+			return client.listItemSchedulesHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
 }
 
 // listItemSchedulesCreateRequest creates the ListItemSchedules request.
-func (client *JobSchedulerClient) listItemSchedulesCreateRequest(ctx context.Context, workspaceID string, itemID string, jobType string, _ *JobSchedulerClientListItemSchedulesOptions) (*policy.Request, error) {
+func (client *JobSchedulerClient) listItemSchedulesCreateRequest(ctx context.Context, workspaceID string, itemID string, jobType string, options *JobSchedulerClientListItemSchedulesOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/jobs/{jobType}/schedules"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -480,6 +480,11 @@ func (client *JobSchedulerClient) listItemSchedulesCreateRequest(ctx context.Con
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }
@@ -692,6 +697,44 @@ func (client *JobSchedulerClient) ListItemJobInstances(ctx context.Context, work
 			return []ItemJobInstance{}, NewResponseError(azcoreRespError.RawResponse)
 		}
 		return []ItemJobInstance{}, err
+	}
+	return list, nil
+}
+
+// ListItemSchedules - returns array of ItemSchedule from all pages.
+// This API supports pagination [/rest/api/fabric/articles/pagination].
+//
+// REQUIRED DELEGATED SCOPES For item APIs use these scope types:
+//
+//   - Generic scope: Item.ReadWrite.All or Item.Read.All
+//
+//   - Specific scope: itemType.ReadWrite.All or itemType.Read.All (for example: Notebook.ReadWrite.All)
+//
+//     for more information about scopes, see scopes article [/rest/api/fabric/articles/scopes].
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | No |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - itemID - The item ID.
+//   - jobType - The job type.
+//   - options - JobSchedulerClientListItemSchedulesOptions contains the optional parameters for the JobSchedulerClient.NewListItemSchedulesPager method.
+func (client *JobSchedulerClient) ListItemSchedules(ctx context.Context, workspaceID string, itemID string, jobType string, options *JobSchedulerClientListItemSchedulesOptions) ([]ItemSchedule, error) {
+	pager := client.NewListItemSchedulesPager(workspaceID, itemID, jobType, options)
+	mapper := func(resp JobSchedulerClientListItemSchedulesResponse) []ItemSchedule {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []ItemSchedule{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []ItemSchedule{}, err
 	}
 	return list, nil
 }

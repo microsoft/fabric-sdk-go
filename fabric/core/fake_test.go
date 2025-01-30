@@ -1163,19 +1163,25 @@ func (testsuite *FakeTestSuite) TestJobScheduler_ListItemSchedules() {
 			}},
 	}
 
-	testsuite.serverFactory.JobSchedulerServer.ListItemSchedules = func(ctx context.Context, workspaceID string, itemID string, jobType string, options *core.JobSchedulerClientListItemSchedulesOptions) (resp azfake.Responder[core.JobSchedulerClientListItemSchedulesResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.JobSchedulerServer.NewListItemSchedulesPager = func(workspaceID string, itemID string, jobType string, options *core.JobSchedulerClientListItemSchedulesOptions) (resp azfake.PagerResponder[core.JobSchedulerClientListItemSchedulesResponse]) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleItemID, itemID)
 		testsuite.Require().Equal(exampleJobType, jobType)
-		resp = azfake.Responder[core.JobSchedulerClientListItemSchedulesResponse]{}
-		resp.SetResponse(http.StatusOK, core.JobSchedulerClientListItemSchedulesResponse{ItemSchedules: exampleRes}, nil)
+		resp = azfake.PagerResponder[core.JobSchedulerClientListItemSchedulesResponse]{}
+		resp.AddPage(http.StatusOK, core.JobSchedulerClientListItemSchedulesResponse{ItemSchedules: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewJobSchedulerClient()
-	res, err := client.ListItemSchedules(ctx, exampleWorkspaceID, exampleItemID, exampleJobType, nil)
-	testsuite.Require().NoError(err, "Failed to get result for example ")
-	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ItemSchedules))
+	pager := client.NewListItemSchedulesPager(exampleWorkspaceID, exampleItemID, exampleJobType, &core.JobSchedulerClientListItemSchedulesOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.ItemSchedules))
+		if err == nil {
+			break
+		}
+	}
 }
 
 func (testsuite *FakeTestSuite) TestJobScheduler_CreateItemSchedule() {

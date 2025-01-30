@@ -47,9 +47,9 @@ type JobSchedulerServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListItemJobInstancesPager func(workspaceID string, itemID string, options *core.JobSchedulerClientListItemJobInstancesOptions) (resp azfake.PagerResponder[core.JobSchedulerClientListItemJobInstancesResponse])
 
-	// ListItemSchedules is the fake for method JobSchedulerClient.ListItemSchedules
+	// NewListItemSchedulesPager is the fake for method JobSchedulerClient.NewListItemSchedulesPager
 	// HTTP status codes to indicate success: http.StatusOK
-	ListItemSchedules func(ctx context.Context, workspaceID string, itemID string, jobType string, options *core.JobSchedulerClientListItemSchedulesOptions) (resp azfake.Responder[core.JobSchedulerClientListItemSchedulesResponse], errResp azfake.ErrorResponder)
+	NewListItemSchedulesPager func(workspaceID string, itemID string, jobType string, options *core.JobSchedulerClientListItemSchedulesOptions) (resp azfake.PagerResponder[core.JobSchedulerClientListItemSchedulesResponse])
 
 	// RunOnDemandItemJob is the fake for method JobSchedulerClient.RunOnDemandItemJob
 	// HTTP status codes to indicate success: http.StatusAccepted
@@ -67,6 +67,7 @@ func NewJobSchedulerServerTransport(srv *JobSchedulerServer) *JobSchedulerServer
 	return &JobSchedulerServerTransport{
 		srv:                          srv,
 		newListItemJobInstancesPager: newTracker[azfake.PagerResponder[core.JobSchedulerClientListItemJobInstancesResponse]](),
+		newListItemSchedulesPager:    newTracker[azfake.PagerResponder[core.JobSchedulerClientListItemSchedulesResponse]](),
 	}
 }
 
@@ -75,6 +76,7 @@ func NewJobSchedulerServerTransport(srv *JobSchedulerServer) *JobSchedulerServer
 type JobSchedulerServerTransport struct {
 	srv                          *JobSchedulerServer
 	newListItemJobInstancesPager *tracker[azfake.PagerResponder[core.JobSchedulerClientListItemJobInstancesResponse]]
+	newListItemSchedulesPager    *tracker[azfake.PagerResponder[core.JobSchedulerClientListItemSchedulesResponse]]
 }
 
 // Do implements the policy.Transporter interface for JobSchedulerServerTransport.
@@ -112,8 +114,8 @@ func (j *JobSchedulerServerTransport) dispatchToMethodFake(req *http.Request, me
 				res.resp, res.err = j.dispatchGetItemSchedule(req)
 			case "JobSchedulerClient.NewListItemJobInstancesPager":
 				res.resp, res.err = j.dispatchNewListItemJobInstancesPager(req)
-			case "JobSchedulerClient.ListItemSchedules":
-				res.resp, res.err = j.dispatchListItemSchedules(req)
+			case "JobSchedulerClient.NewListItemSchedulesPager":
+				res.resp, res.err = j.dispatchNewListItemSchedulesPager(req)
 			case "JobSchedulerClient.RunOnDemandItemJob":
 				res.resp, res.err = j.dispatchRunOnDemandItemJob(req)
 			case "JobSchedulerClient.UpdateItemSchedule":
@@ -355,39 +357,59 @@ func (j *JobSchedulerServerTransport) dispatchNewListItemJobInstancesPager(req *
 	return resp, nil
 }
 
-func (j *JobSchedulerServerTransport) dispatchListItemSchedules(req *http.Request) (*http.Response, error) {
-	if j.srv.ListItemSchedules == nil {
-		return nil, &nonRetriableError{errors.New("fake for method ListItemSchedules not implemented")}
+func (j *JobSchedulerServerTransport) dispatchNewListItemSchedulesPager(req *http.Request) (*http.Response, error) {
+	if j.srv.NewListItemSchedulesPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListItemSchedulesPager not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/items/(?P<itemId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/(?P<jobType>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/schedules`
-	regex := regexp.MustCompile(regexStr)
-	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 3 {
-		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	newListItemSchedulesPager := j.newListItemSchedulesPager.get(req)
+	if newListItemSchedulesPager == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/items/(?P<itemId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/(?P<jobType>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/schedules`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 3 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		itemIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("itemId")])
+		if err != nil {
+			return nil, err
+		}
+		jobTypeParam, err := url.PathUnescape(matches[regex.SubexpIndex("jobType")])
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *core.JobSchedulerClientListItemSchedulesOptions
+		if continuationTokenParam != nil {
+			options = &core.JobSchedulerClientListItemSchedulesOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := j.srv.NewListItemSchedulesPager(workspaceIDParam, itemIDParam, jobTypeParam, options)
+		newListItemSchedulesPager = &resp
+		j.newListItemSchedulesPager.add(req, newListItemSchedulesPager)
+		server.PagerResponderInjectNextLinks(newListItemSchedulesPager, req, func(page *core.JobSchedulerClientListItemSchedulesResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
 	}
-	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	resp, err := server.PagerResponderNext(newListItemSchedulesPager, req)
 	if err != nil {
 		return nil, err
 	}
-	itemIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("itemId")])
-	if err != nil {
-		return nil, err
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		j.newListItemSchedulesPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
 	}
-	jobTypeParam, err := url.PathUnescape(matches[regex.SubexpIndex("jobType")])
-	if err != nil {
-		return nil, err
-	}
-	respr, errRespr := j.srv.ListItemSchedules(req.Context(), workspaceIDParam, itemIDParam, jobTypeParam, nil)
-	if respErr := server.GetError(errRespr, req); respErr != nil {
-		return nil, respErr
-	}
-	respContent := server.GetResponseContent(respr)
-	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
-	}
-	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).ItemSchedules, req)
-	if err != nil {
-		return nil, err
+	if !server.PagerResponderMore(newListItemSchedulesPager) {
+		j.newListItemSchedulesPager.remove(req)
 	}
 	return resp, nil
 }

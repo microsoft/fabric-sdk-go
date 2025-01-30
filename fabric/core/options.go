@@ -356,10 +356,11 @@ type JobSchedulerClientListItemJobInstancesOptions struct {
 	ContinuationToken *string
 }
 
-// JobSchedulerClientListItemSchedulesOptions contains the optional parameters for the JobSchedulerClient.ListItemSchedules
+// JobSchedulerClientListItemSchedulesOptions contains the optional parameters for the JobSchedulerClient.NewListItemSchedulesPager
 // method.
 type JobSchedulerClientListItemSchedulesOptions struct {
-	// placeholder for future optional parameters
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
 }
 
 // JobSchedulerClientRunOnDemandItemJobOptions contains the optional parameters for the JobSchedulerClient.RunOnDemandItemJob
