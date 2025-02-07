@@ -355,6 +355,35 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandSparkJobDefinition
 	}
 
 	client := testsuite.clientFactory.NewBackgroundJobsClient()
-	_, err = client.RunOnDemandSparkJobDefinition(ctx, exampleWorkspaceID, exampleSparkJobDefinitionID, exampleJobType, nil)
+	_, err = client.RunOnDemandSparkJobDefinition(ctx, exampleWorkspaceID, exampleSparkJobDefinitionID, exampleJobType, &sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions{RunSparkJobDefinitionRequest: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Run SparkJobDefinition with request body."},
+	})
+	exampleWorkspaceID = "4b218778-e7a5-4d73-8187-f10824047715"
+	exampleSparkJobDefinitionID = "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"
+	exampleJobType = "sparkjob"
+
+	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandSparkJobDefinition = func(ctx context.Context, workspaceID string, sparkJobDefinitionID string, jobType string, options *sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions) (resp azfake.Responder[sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleSparkJobDefinitionID, sparkJobDefinitionID)
+		testsuite.Require().Equal(exampleJobType, jobType)
+		resp = azfake.Responder[sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse]{}
+		resp.SetResponse(http.StatusAccepted, sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse{}, nil)
+		return
+	}
+
+	_, err = client.RunOnDemandSparkJobDefinition(ctx, exampleWorkspaceID, exampleSparkJobDefinitionID, exampleJobType, &sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions{RunSparkJobDefinitionRequest: &sparkjobdefinition.RunSparkJobDefinitionRequest{
+		ExecutionData: &sparkjobdefinition.ExecutionData{
+			AdditionalLibraryUris: []string{
+				"abfss://test@onelakecst180.dfs.pbidedicated.windows-int.net/dfsd.Lakehouse/Files/testfile.jar"},
+			CommandLineArguments: to.Ptr("firstarg secondarg thirdarg"),
+			ExecutableFile:       to.Ptr("abfss://test@northcentralus-onelake.dfs.fabric.microsoft.com/salesdata.Lakehouse/Files/oneplusoneapp.jar"),
+			MainClass:            to.Ptr("com.microsoft.spark.example.OneplusOneApp"),
+		},
+	},
+	})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }

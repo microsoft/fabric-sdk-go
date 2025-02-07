@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -100,6 +101,10 @@ func (b *BackgroundJobsServerTransport) dispatchRunOnDemandSparkJobDefinition(re
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	qp := req.URL.Query()
+	body, err := server.UnmarshalRequestAsJSON[sparkjobdefinition.RunSparkJobDefinitionRequest](req)
+	if err != nil {
+		return nil, err
+	}
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 	if err != nil {
 		return nil, err
@@ -112,7 +117,13 @@ func (b *BackgroundJobsServerTransport) dispatchRunOnDemandSparkJobDefinition(re
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := b.srv.RunOnDemandSparkJobDefinition(req.Context(), workspaceIDParam, sparkJobDefinitionIDParam, jobTypeParam, nil)
+	var options *sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions
+	if !reflect.ValueOf(body).IsZero() {
+		options = &sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions{
+			RunSparkJobDefinitionRequest: &body,
+		}
+	}
+	respr, errRespr := b.srv.RunOnDemandSparkJobDefinition(req.Context(), workspaceIDParam, sparkJobDefinitionIDParam, jobTypeParam, options)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}

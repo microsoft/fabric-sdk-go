@@ -984,7 +984,7 @@ func (testsuite *FakeTestSuite) TestItems_ListItemConnections() {
 					Type: to.Ptr("SQL"),
 					Path: to.Ptr("xqoruksalslrtkdxe2bvrlwgsi-5j2iqepw1i3ucdp6bepe62hcii.datawarehouse.fabric.microsoft.com;532183f5-ac60-4d12-0fc5-4094532f14b5"),
 				},
-				ConnectivityType: to.Ptr(core.ConnectivityType("DefaultSetting")),
+				ConnectivityType: to.Ptr(core.ConnectivityTypeAutomatic),
 			}},
 	}
 
@@ -1069,7 +1069,7 @@ func (testsuite *FakeTestSuite) TestItems_ListItemConnections() {
 					Type: to.Ptr("SQL"),
 					Path: to.Ptr("xqoruksalslrtkdxe2bvrlwgsi-5j2iqepw1i3ucdp6bepe62hcii.datawarehouse.fabric.microsoft.com;532183f5-ac60-4d12-0fc5-4094532f14b5"),
 				},
-				ConnectivityType: to.Ptr(core.ConnectivityType("DefaultSetting")),
+				ConnectivityType: to.Ptr(core.ConnectivityTypeAutomatic),
 			}},
 	}
 

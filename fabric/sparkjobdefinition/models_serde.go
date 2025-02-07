@@ -49,6 +49,45 @@ func (c *CreateSparkJobDefinitionRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type ExecutionData.
+func (e ExecutionData) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "additionalLibraryUris", e.AdditionalLibraryUris)
+	populate(objectMap, "commandLineArguments", e.CommandLineArguments)
+	populate(objectMap, "executableFile", e.ExecutableFile)
+	populate(objectMap, "mainClass", e.MainClass)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ExecutionData.
+func (e *ExecutionData) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", e, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "additionalLibraryUris":
+			err = unpopulate(val, "AdditionalLibraryUris", &e.AdditionalLibraryUris)
+			delete(rawMsg, key)
+		case "commandLineArguments":
+			err = unpopulate(val, "CommandLineArguments", &e.CommandLineArguments)
+			delete(rawMsg, key)
+		case "executableFile":
+			err = unpopulate(val, "ExecutableFile", &e.ExecutableFile)
+			delete(rawMsg, key)
+		case "mainClass":
+			err = unpopulate(val, "MainClass", &e.MainClass)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", e, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type Properties.
 func (p Properties) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -160,6 +199,33 @@ func (r *Response) UnmarshalJSON(data []byte) error {
 		switch key {
 		case "definition":
 			err = unpopulate(val, "Definition", &r.Definition)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", r, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type RunSparkJobDefinitionRequest.
+func (r RunSparkJobDefinitionRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "executionData", r.ExecutionData)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type RunSparkJobDefinitionRequest.
+func (r *RunSparkJobDefinitionRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", r, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "executionData":
+			err = unpopulate(val, "ExecutionData", &r.ExecutionData)
 			delete(rawMsg, key)
 		}
 		if err != nil {
