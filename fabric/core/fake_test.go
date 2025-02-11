@@ -984,7 +984,7 @@ func (testsuite *FakeTestSuite) TestItems_ListItemConnections() {
 					Type: to.Ptr("SQL"),
 					Path: to.Ptr("xqoruksalslrtkdxe2bvrlwgsi-5j2iqepw1i3ucdp6bepe62hcii.datawarehouse.fabric.microsoft.com;532183f5-ac60-4d12-0fc5-4094532f14b5"),
 				},
-				ConnectivityType: to.Ptr(core.ConnectivityType("DefaultSetting")),
+				ConnectivityType: to.Ptr(core.ConnectivityTypeAutomatic),
 			}},
 	}
 
@@ -1069,7 +1069,7 @@ func (testsuite *FakeTestSuite) TestItems_ListItemConnections() {
 					Type: to.Ptr("SQL"),
 					Path: to.Ptr("xqoruksalslrtkdxe2bvrlwgsi-5j2iqepw1i3ucdp6bepe62hcii.datawarehouse.fabric.microsoft.com;532183f5-ac60-4d12-0fc5-4094532f14b5"),
 				},
-				ConnectivityType: to.Ptr(core.ConnectivityType("DefaultSetting")),
+				ConnectivityType: to.Ptr(core.ConnectivityTypeAutomatic),
 			}},
 	}
 
@@ -4298,7 +4298,7 @@ func (testsuite *FakeTestSuite) TestConnections_ListConnectionRoleAssignments() 
 	exampleRes := core.ConnectionRoleAssignments{
 		Value: []core.ConnectionRoleAssignment{
 			{
-				ID: to.Ptr("1f227c77-826d-40eb-a2b7-27a325afb900"),
+				ID: to.Ptr("1c15c348-dd88-4065-8f25-57581c216bcf"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeUser),
 					ID:   to.Ptr("1c15c348-dd88-4065-8f25-57581c216bcf"),
@@ -4306,7 +4306,7 @@ func (testsuite *FakeTestSuite) TestConnections_ListConnectionRoleAssignments() 
 				Role: to.Ptr(core.ConnectionRoleOwner),
 			},
 			{
-				ID: to.Ptr("c8a395c6-f7ad-4caa-8ab1-0cc5684a3966"),
+				ID: to.Ptr("d3a7dbf7-6641-48f2-851e-d71bbf9d90c4"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeGroup),
 					ID:   to.Ptr("d3a7dbf7-6641-48f2-851e-d71bbf9d90c4"),
@@ -4314,7 +4314,7 @@ func (testsuite *FakeTestSuite) TestConnections_ListConnectionRoleAssignments() 
 				Role: to.Ptr(core.ConnectionRoleOwner),
 			},
 			{
-				ID: to.Ptr("f42d1536-e8d3-4f69-8eab-8509bef50315"),
+				ID: to.Ptr("48ba22da-4431-4da4-8b70-3401685bf9e5"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeGroup),
 					ID:   to.Ptr("48ba22da-4431-4da4-8b70-3401685bf9e5"),
@@ -4322,7 +4322,7 @@ func (testsuite *FakeTestSuite) TestConnections_ListConnectionRoleAssignments() 
 				Role: to.Ptr(core.ConnectionRoleUser),
 			},
 			{
-				ID: to.Ptr("40ac84af-e80b-4e6d-8b38-91541be3845f"),
+				ID: to.Ptr("1dfa1747-ce76-4caf-99c8-360b95f9f17a"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeUser),
 					ID:   to.Ptr("1dfa1747-ce76-4caf-99c8-360b95f9f17a"),
@@ -4360,7 +4360,7 @@ func (testsuite *FakeTestSuite) TestConnections_ListConnectionRoleAssignments() 
 		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/connections/9558d649-84f1-4b7e-850a-59b5d0ae95eb/roleAssignments?continuationToken=LDEsMTAwMDAwLDA%3D"),
 		Value: []core.ConnectionRoleAssignment{
 			{
-				ID: to.Ptr("1f227c77-826d-40eb-a2b7-27a325afb900"),
+				ID: to.Ptr("1c15c348-dd88-4065-8f25-57581c216bcf"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeUser),
 					ID:   to.Ptr("1c15c348-dd88-4065-8f25-57581c216bcf"),
@@ -4368,7 +4368,7 @@ func (testsuite *FakeTestSuite) TestConnections_ListConnectionRoleAssignments() 
 				Role: to.Ptr(core.ConnectionRoleOwner),
 			},
 			{
-				ID: to.Ptr("c8a395c6-f7ad-4caa-8ab1-0cc5684a3966"),
+				ID: to.Ptr("d3a7dbf7-6641-48f2-851e-d71bbf9d90c4"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeGroup),
 					ID:   to.Ptr("d3a7dbf7-6641-48f2-851e-d71bbf9d90c4"),
@@ -4376,7 +4376,7 @@ func (testsuite *FakeTestSuite) TestConnections_ListConnectionRoleAssignments() 
 				Role: to.Ptr(core.ConnectionRoleOwner),
 			},
 			{
-				ID: to.Ptr("f42d1536-e8d3-4f69-8eab-8509bef50315"),
+				ID: to.Ptr("48ba22da-4431-4da4-8b70-3401685bf9e5"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeGroup),
 					ID:   to.Ptr("48ba22da-4431-4da4-8b70-3401685bf9e5"),
@@ -4384,7 +4384,7 @@ func (testsuite *FakeTestSuite) TestConnections_ListConnectionRoleAssignments() 
 				Role: to.Ptr(core.ConnectionRoleUser),
 			},
 			{
-				ID: to.Ptr("40ac84af-e80b-4e6d-8b38-91541be3845f"),
+				ID: to.Ptr("1dfa1747-ce76-4caf-99c8-360b95f9f17a"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeUser),
 					ID:   to.Ptr("1dfa1747-ce76-4caf-99c8-360b95f9f17a"),
@@ -4451,7 +4451,7 @@ func (testsuite *FakeTestSuite) TestConnections_GetConnectionRoleAssignment() {
 	exampleConnectionRoleAssignmentID = "43970761-afc9-4428-ae6e-3b08bef098ff"
 
 	exampleRes := core.ConnectionRoleAssignment{
-		ID: to.Ptr("c28d68d6-2984-4d36-9a6b-82751093d3f1"),
+		ID: to.Ptr("43970761-afc9-4428-ae6e-3b08bef098ff"),
 		Principal: &core.Principal{
 			Type: to.Ptr(core.PrincipalTypeUser),
 			ID:   to.Ptr("43970761-afc9-4428-ae6e-3b08bef098ff"),
@@ -4482,7 +4482,7 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnectionRoleAssignment()
 	var exampleConnectionRoleAssignmentID string
 	var exampleUpdateConnectionRoleAssignmentRequest core.UpdateConnectionRoleAssignmentRequest
 	exampleConnectionID = "fe8e181d-dbb8-471a-99f0-fdbf0a2ad4fd"
-	exampleConnectionRoleAssignmentID = "449a8a88-7f31-40c1-aece-8e128adb14a8"
+	exampleConnectionRoleAssignmentID = "43970761-afc9-4428-ae6e-3b08bef098ff"
 	exampleUpdateConnectionRoleAssignmentRequest = core.UpdateConnectionRoleAssignmentRequest{
 		Role: to.Ptr(core.ConnectionRoleUserWithReshare),
 	}
@@ -4900,7 +4900,7 @@ func (testsuite *FakeTestSuite) TestGateways_ListGatewayRoleAssignments() {
 	exampleRes := core.GatewayRoleAssignments{
 		Value: []core.GatewayRoleAssignment{
 			{
-				ID: to.Ptr("5a25c49d-d313-4842-ba83-d6cd7c3bb57d"),
+				ID: to.Ptr("ef543eb8-969c-46b0-a5a1-3f93351b6b31"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeUser),
 					ID:   to.Ptr("ef543eb8-969c-46b0-a5a1-3f93351b6b31"),
@@ -4908,7 +4908,7 @@ func (testsuite *FakeTestSuite) TestGateways_ListGatewayRoleAssignments() {
 				Role: to.Ptr(core.GatewayRoleAdmin),
 			},
 			{
-				ID: to.Ptr("cd706538-1ac6-4991-8346-0975052cd552"),
+				ID: to.Ptr("5cf7d203-9123-4dff-a87f-7097dc4b5d60"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeUser),
 					ID:   to.Ptr("5cf7d203-9123-4dff-a87f-7097dc4b5d60"),
@@ -4916,7 +4916,7 @@ func (testsuite *FakeTestSuite) TestGateways_ListGatewayRoleAssignments() {
 				Role: to.Ptr(core.GatewayRoleConnectionCreatorWithResharing),
 			},
 			{
-				ID: to.Ptr("81bedb00-2af0-4fe1-93f2-8864ac5670ac"),
+				ID: to.Ptr("5931cd21-857f-42a5-beaf-0120e8b36542"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeUser),
 					ID:   to.Ptr("5931cd21-857f-42a5-beaf-0120e8b36542"),
@@ -4924,7 +4924,7 @@ func (testsuite *FakeTestSuite) TestGateways_ListGatewayRoleAssignments() {
 				Role: to.Ptr(core.GatewayRoleConnectionCreator),
 			},
 			{
-				ID: to.Ptr("6a759c0e-9976-4624-ad8b-caa6333adf5f"),
+				ID: to.Ptr("97614f04-507c-4f6c-8dbc-da1845f582ef"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeUser),
 					ID:   to.Ptr("97614f04-507c-4f6c-8dbc-da1845f582ef"),
@@ -4932,7 +4932,7 @@ func (testsuite *FakeTestSuite) TestGateways_ListGatewayRoleAssignments() {
 				Role: to.Ptr(core.GatewayRoleConnectionCreator),
 			},
 			{
-				ID: to.Ptr("64fd9965-56b2-45dd-bb5b-563c0998b82d"),
+				ID: to.Ptr("a5d9f30d-a15c-4fb9-b8ff-e2a884c9fd82"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeGroup),
 					ID:   to.Ptr("a5d9f30d-a15c-4fb9-b8ff-e2a884c9fd82"),
@@ -4970,7 +4970,7 @@ func (testsuite *FakeTestSuite) TestGateways_ListGatewayRoleAssignments() {
 		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/gateways/8e41c4dd-a382-4937-9bf3-695ab881f7c2/roleAssignments?continuationToken=LDEsMTAwMDAwLDA%3D"),
 		Value: []core.GatewayRoleAssignment{
 			{
-				ID: to.Ptr("5a25c49d-d313-4842-ba83-d6cd7c3bb57d"),
+				ID: to.Ptr("ef543eb8-969c-46b0-a5a1-3f93351b6b31"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeUser),
 					ID:   to.Ptr("ef543eb8-969c-46b0-a5a1-3f93351b6b31"),
@@ -4978,7 +4978,7 @@ func (testsuite *FakeTestSuite) TestGateways_ListGatewayRoleAssignments() {
 				Role: to.Ptr(core.GatewayRoleAdmin),
 			},
 			{
-				ID: to.Ptr("cd706538-1ac6-4991-8346-0975052cd552"),
+				ID: to.Ptr("5cf7d203-9123-4dff-a87f-7097dc4b5d60"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeUser),
 					ID:   to.Ptr("5cf7d203-9123-4dff-a87f-7097dc4b5d60"),
@@ -4986,7 +4986,7 @@ func (testsuite *FakeTestSuite) TestGateways_ListGatewayRoleAssignments() {
 				Role: to.Ptr(core.GatewayRoleConnectionCreatorWithResharing),
 			},
 			{
-				ID: to.Ptr("81bedb00-2af0-4fe1-93f2-8864ac5670ac"),
+				ID: to.Ptr("5931cd21-857f-42a5-beaf-0120e8b36542"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeUser),
 					ID:   to.Ptr("5931cd21-857f-42a5-beaf-0120e8b36542"),
@@ -4994,7 +4994,7 @@ func (testsuite *FakeTestSuite) TestGateways_ListGatewayRoleAssignments() {
 				Role: to.Ptr(core.GatewayRoleConnectionCreator),
 			},
 			{
-				ID: to.Ptr("6a759c0e-9976-4624-ad8b-caa6333adf5f"),
+				ID: to.Ptr("97614f04-507c-4f6c-8dbc-da1845f582ef"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeUser),
 					ID:   to.Ptr("97614f04-507c-4f6c-8dbc-da1845f582ef"),
@@ -5002,7 +5002,7 @@ func (testsuite *FakeTestSuite) TestGateways_ListGatewayRoleAssignments() {
 				Role: to.Ptr(core.GatewayRoleConnectionCreator),
 			},
 			{
-				ID: to.Ptr("64fd9965-56b2-45dd-bb5b-563c0998b82d"),
+				ID: to.Ptr("a5d9f30d-a15c-4fb9-b8ff-e2a884c9fd82"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeGroup),
 					ID:   to.Ptr("a5d9f30d-a15c-4fb9-b8ff-e2a884c9fd82"),
@@ -5069,7 +5069,7 @@ func (testsuite *FakeTestSuite) TestGateways_GetGatewayRoleAssignment() {
 	exampleGatewayRoleAssignmentID = "056afb37-8f6c-4fd8-9aa5-64ba7f1974e7"
 
 	exampleRes := core.GatewayRoleAssignment{
-		ID: to.Ptr("28eabf06-f786-48d4-8b22-7b71e3e4e8f6"),
+		ID: to.Ptr("056afb37-8f6c-4fd8-9aa5-64ba7f1974e7"),
 		Principal: &core.Principal{
 			Type: to.Ptr(core.PrincipalTypeUser),
 			ID:   to.Ptr("056afb37-8f6c-4fd8-9aa5-64ba7f1974e7"),

@@ -255,9 +255,6 @@ type Connection struct {
 	// REQUIRED; The object ID of the connection.
 	ID *string
 
-	// REQUIRED; The privacy level of the connection.
-	PrivacyLevel *PrivacyLevel
-
 	// The credential details of the connection.
 	CredentialDetails *ListCredentialDetails
 
@@ -266,6 +263,9 @@ type Connection struct {
 
 	// The gateway object ID of the connection.
 	GatewayID *string
+
+	// The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
 }
 
 type ConnectionCreationMetadata struct {
@@ -542,7 +542,7 @@ type CreateCloudConnectionRequest struct {
 	// REQUIRED; The display name of the connection. Maximum length is 200 characters.
 	DisplayName *string
 
-	// REQUIRED; The privacy level of the connection.
+	// (Optional) The privacy level of the connection. When no value is passed, this is set to 'Organizational'.
 	PrivacyLevel *PrivacyLevel
 }
 
@@ -579,7 +579,7 @@ type CreateConnectionRequest struct {
 	// REQUIRED; The display name of the connection. Maximum length is 200 characters.
 	DisplayName *string
 
-	// REQUIRED; The privacy level of the connection.
+	// (Optional) The privacy level of the connection. When no value is passed, this is set to 'Organizational'.
 	PrivacyLevel *PrivacyLevel
 }
 
@@ -591,14 +591,16 @@ type CreateCredentialDetails struct {
 	// REQUIRED; The credentials of the connection.
 	Credentials CredentialsClassification
 
-	// The connection encryption setting that is used during the test connection.
+	// (Optional) The connection encryption setting that is used during the test connection. When no value is passed, the connection
+	// is not encrypted.
 	ConnectionEncryption *ConnectionEncryption
 
-	// The single sign-on type of the connection.
+	// (Optional) The single sign-on type of the connection. When no value is passed, the connection doesn't use single sign-on.
 	SingleSignOnType *SingleSignOnType
 
 	// Whether the connection should skip the test connection during creation and update. True - Skip the test connection, False
-	// - Do not skip the test connection.
+	// - Do not skip the test connection. When no value is passed, this is set to
+	// 'False'.
 	SkipTestConnection *bool
 }
 
@@ -678,7 +680,7 @@ type CreateOnPremisesConnectionRequest struct {
 	// REQUIRED; The object ID of the primary gateway of the on-premises gateway that the connection is created under.
 	GatewayID *string
 
-	// REQUIRED; The privacy level of the connection.
+	// (Optional) The privacy level of the connection. When no value is passed, this is set to 'Organizational'.
 	PrivacyLevel *PrivacyLevel
 }
 
@@ -697,14 +699,16 @@ type CreateOnPremisesCredentialDetails struct {
 	// REQUIRED; The credentials of the connection.
 	Credentials *OnPremisesGatewayCredentials
 
-	// The connection encryption setting that is used during the test connection.
+	// (Optional) The connection encryption setting that is used during the test connection. When no value is passed, the connection
+	// is not encrypted.
 	ConnectionEncryption *ConnectionEncryption
 
-	// The single sign-on type of the connection.
+	// (Optional) The single sign-on type of the connection. When no value is passed, the connection doesn't use single sign-on.
 	SingleSignOnType *SingleSignOnType
 
 	// Whether the connection should skip the test connection during creation and update. True - Skip the test connection, False
-	// - Do not skip the test connection.
+	// - Do not skip the test connection. When no value is passed, this is set to
+	// 'False'.
 	SkipTestConnection *bool
 }
 
@@ -759,7 +763,7 @@ type CreateVirtualNetworkGatewayConnectionRequest struct {
 	// REQUIRED; The object ID of the virtual network gateway that the connection is created under.
 	GatewayID *string
 
-	// REQUIRED; The privacy level of the connection.
+	// (Optional) The privacy level of the connection. When no value is passed, this is set to 'Organizational'.
 	PrivacyLevel *PrivacyLevel
 }
 

@@ -105,7 +105,7 @@ func (client *WorkspacesClient) addWorkspaceRoleAssignmentHandleResponse(resp *h
 // REQUIRED SCOPE Capacity.ReadWrite.All and Workspace.ReadWrite.All
 // LIMITATIONS
 // * Fabric items (non-PowerBI) don't support migration across region. For more information see moving data around [/fabric/admin/portal-workspaces#moving-data-around].
-// * Workspaces with Fabric items (non-PowerBI) can only be assigned to Fabric, Fabric trialor Power BI Premium capacity.
+// * Workspaces with Fabric items (non-PowerBI) can only be assigned to Fabric, Fabric trial or Power BI Premium capacity.
 // For more information see Microsoft Fabric license types
 // [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]

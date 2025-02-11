@@ -18,6 +18,21 @@ type CreateSparkJobDefinitionRequest struct {
 	Description *string
 }
 
+// ExecutionData for spark job definition run if customer wants to override default values.
+type ExecutionData struct {
+	// List of additional library paths needed for execution.
+	AdditionalLibraryUris []string
+
+	// Command line arguments. The arguments are space separated
+	CommandLineArguments *string
+
+	// Executable main file to be used. The path must be an abfs path.
+	ExecutableFile *string
+
+	// Main class name to be used. This is not needed for python and r executable files.
+	MainClass *string
+}
+
 // Properties - The spark job definition properties.
 type Properties struct {
 	// REQUIRED; OneLake path to the SparkJobDefinition root directory.
@@ -53,6 +68,12 @@ type Response struct {
 	// for more details on how to craft a spark job
 	// definition public definition.
 	Definition *PublicDefinition
+}
+
+// RunSparkJobDefinitionRequest - Run spark job definition request with executionData.
+type RunSparkJobDefinitionRequest struct {
+	// The spark job definition parameters to be used during execution if needed. By default no body is needed
+	ExecutionData *ExecutionData
 }
 
 // SparkJobDefinition - A spark job definition object.

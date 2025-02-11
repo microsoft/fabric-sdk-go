@@ -9,7 +9,8 @@ package sparkjobdefinition
 // BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions contains the optional parameters for the BackgroundJobsClient.RunOnDemandSparkJobDefinition
 // method.
 type BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions struct {
-	// placeholder for future optional parameters
+	// Run spark job definition request payload with parameters to use.
+	RunSparkJobDefinitionRequest *RunSparkJobDefinitionRequest
 }
 
 // ItemsClientBeginCreateSparkJobDefinitionOptions contains the optional parameters for the ItemsClient.BeginCreateSparkJobDefinition
