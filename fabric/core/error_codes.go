@@ -283,15 +283,18 @@ func PossibleErrExternalDataShareValues() []string {
 
 type errGateway struct {
 	PowerPlatformVirtualNetworkNotEnabled error
+	DuplicateGatewayName                  error
 }
 
 var ErrGateway = errGateway{
 	PowerPlatformVirtualNetworkNotEnabled: errors.New("PowerPlatformVirtualNetworkNotEnabled"),
+	DuplicateGatewayName:                  errors.New("DuplicateGatewayName"),
 }
 
 func PossibleErrGatewayValues() []string {
 	return []string{
 		ErrGateway.PowerPlatformVirtualNetworkNotEnabled.Error(),
+		ErrGateway.DuplicateGatewayName.Error(),
 	}
 }
 
