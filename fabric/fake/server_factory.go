@@ -32,6 +32,7 @@ import (
 	mirroredwarehousefake "github.com/microsoft/fabric-sdk-go/fabric/mirroredwarehouse/fake"
 	mlexperimentfake "github.com/microsoft/fabric-sdk-go/fabric/mlexperiment/fake"
 	mlmodelfake "github.com/microsoft/fabric-sdk-go/fabric/mlmodel/fake"
+	mounteddatafactoryfake "github.com/microsoft/fabric-sdk-go/fabric/mounteddatafactory/fake"
 	notebookfake "github.com/microsoft/fabric-sdk-go/fabric/notebook/fake"
 	paginatedreportfake "github.com/microsoft/fabric-sdk-go/fabric/paginatedreport/fake"
 	reflexfake "github.com/microsoft/fabric-sdk-go/fabric/reflex/fake"
@@ -62,6 +63,7 @@ type ServerFactory struct {
 	MirroredWarehouse  mirroredwarehousefake.ServerFactory
 	MLExperiment       mlexperimentfake.ServerFactory
 	MLModel            mlmodelfake.ServerFactory
+	MountedDataFactory mounteddatafactoryfake.ServerFactory
 	Notebook           notebookfake.ServerFactory
 	PaginatedReport    paginatedreportfake.ServerFactory
 	Reflex             reflexfake.ServerFactory
@@ -95,6 +97,7 @@ type ServerFactoryTransport struct {
 	trMirroredWarehouse  *mirroredwarehousefake.ServerFactoryTransport
 	trMLExperiment       *mlexperimentfake.ServerFactoryTransport
 	trMLModel            *mlmodelfake.ServerFactoryTransport
+	trMountedDataFactory *mounteddatafactoryfake.ServerFactoryTransport
 	trNotebook           *notebookfake.ServerFactoryTransport
 	trPaginatedReport    *paginatedreportfake.ServerFactoryTransport
 	trReflex             *reflexfake.ServerFactoryTransport
@@ -210,6 +213,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return mlmodelfake.NewServerFactoryTransport(&s.srv.MLModel)
 		})
 		resp, err = s.trMLModel.Do(req)
+	case "mounteddatafactory":
+		initServer(s, &s.trMountedDataFactory, func() *mounteddatafactoryfake.ServerFactoryTransport {
+			return mounteddatafactoryfake.NewServerFactoryTransport(&s.srv.MountedDataFactory)
+		})
+		resp, err = s.trMountedDataFactory.Do(req)
 	case "notebook":
 		initServer(s, &s.trNotebook, func() *notebookfake.ServerFactoryTransport {
 			return notebookfake.NewServerFactoryTransport(&s.srv.Notebook)

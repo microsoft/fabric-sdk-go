@@ -40,6 +40,8 @@ const (
 	ItemTypeMirroredDatabase ItemType = "MirroredDatabase"
 	// ItemTypeMirroredWarehouse - A mirrored warehouse.
 	ItemTypeMirroredWarehouse ItemType = "MirroredWarehouse"
+	// ItemTypeMountedDataFactory - A MountedDataFactory.
+	ItemTypeMountedDataFactory ItemType = "MountedDataFactory"
 	// ItemTypeNotebook - A notebook.
 	ItemTypeNotebook ItemType = "Notebook"
 	// ItemTypePaginatedReport - PowerBI paginated report.
@@ -76,6 +78,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeMLModel,
 		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
+		ItemTypeMountedDataFactory,
 		ItemTypeNotebook,
 		ItemTypePaginatedReport,
 		ItemTypeReflex,
