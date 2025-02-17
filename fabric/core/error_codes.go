@@ -298,6 +298,50 @@ func PossibleErrGatewayValues() []string {
 	}
 }
 
+type errManagedPrivateEndpoint struct {
+	UnsupportedSku                       error
+	UnsupportedRegion                    error
+	InvalidPrivateEndpointName           error
+	InvalidTargetSubResourceType         error
+	InvalidRequestMessage                error
+	InvalidTargetPrivateLinkResourceId   error
+	DuplicatePrivateEndpointName         error
+	DuplicateTargetPrivateLinkResourceId error
+	NonCompliant                         error
+	PrivateEndpointNotFound              error
+	IncorrectVNetType                    error
+}
+
+var ErrManagedPrivateEndpoint = errManagedPrivateEndpoint{
+	UnsupportedSku:                       errors.New("UnsupportedSku"),
+	UnsupportedRegion:                    errors.New("UnsupportedRegion"),
+	InvalidPrivateEndpointName:           errors.New("InvalidPrivateEndpointName"),
+	InvalidTargetSubResourceType:         errors.New("InvalidTargetSubResourceType"),
+	InvalidRequestMessage:                errors.New("InvalidRequestMessage"),
+	InvalidTargetPrivateLinkResourceId:   errors.New("InvalidTargetPrivateLinkResourceId"),
+	DuplicatePrivateEndpointName:         errors.New("DuplicatePrivateEndpointName"),
+	DuplicateTargetPrivateLinkResourceId: errors.New("DuplicateTargetPrivateLinkResourceId"),
+	NonCompliant:                         errors.New("NonCompliant"),
+	PrivateEndpointNotFound:              errors.New("PrivateEndpointNotFound"),
+	IncorrectVNetType:                    errors.New("IncorrectVNetType"),
+}
+
+func PossibleErrManagedPrivateEndpointValues() []string {
+	return []string{
+		ErrManagedPrivateEndpoint.UnsupportedSku.Error(),
+		ErrManagedPrivateEndpoint.UnsupportedRegion.Error(),
+		ErrManagedPrivateEndpoint.InvalidPrivateEndpointName.Error(),
+		ErrManagedPrivateEndpoint.InvalidTargetSubResourceType.Error(),
+		ErrManagedPrivateEndpoint.InvalidRequestMessage.Error(),
+		ErrManagedPrivateEndpoint.InvalidTargetPrivateLinkResourceId.Error(),
+		ErrManagedPrivateEndpoint.DuplicatePrivateEndpointName.Error(),
+		ErrManagedPrivateEndpoint.DuplicateTargetPrivateLinkResourceId.Error(),
+		ErrManagedPrivateEndpoint.NonCompliant.Error(),
+		ErrManagedPrivateEndpoint.PrivateEndpointNotFound.Error(),
+		ErrManagedPrivateEndpoint.IncorrectVNetType.Error(),
+	}
+}
+
 type errGit struct {
 	TemplateAppsWorkspacesNotSupported       error
 	WorkspaceNotConnectedToGit               error

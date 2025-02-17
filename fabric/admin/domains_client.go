@@ -40,7 +40,7 @@ type DomainsClient struct {
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -63,7 +63,7 @@ func (client *DomainsClient) BeginAssignDomainWorkspacesByCapacities(ctx context
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -116,7 +116,7 @@ func (client *DomainsClient) assignDomainWorkspacesByCapacitiesCreateRequest(ctx
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -174,7 +174,7 @@ func (client *DomainsClient) assignDomainWorkspacesByIDsCreateRequest(ctx contex
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -197,7 +197,7 @@ func (client *DomainsClient) BeginAssignDomainWorkspacesByPrincipals(ctx context
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -248,7 +248,7 @@ func (client *DomainsClient) assignDomainWorkspacesByPrincipalsCreateRequest(ctx
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -307,7 +307,7 @@ func (client *DomainsClient) createDomainHandleResponse(resp *http.Response) (Do
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -544,7 +544,7 @@ func (client *DomainsClient) listDomainsHandleResponse(resp *http.Response) (Dom
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -599,7 +599,7 @@ func (client *DomainsClient) roleAssignmentsBulkAssignCreateRequest(ctx context.
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -654,7 +654,7 @@ func (client *DomainsClient) roleAssignmentsBulkUnassignCreateRequest(ctx contex
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -705,7 +705,7 @@ func (client *DomainsClient) unassignAllDomainWorkspacesCreateRequest(ctx contex
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -762,7 +762,7 @@ func (client *DomainsClient) unassignDomainWorkspacesByIDsCreateRequest(ctx cont
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -835,7 +835,7 @@ func (client *DomainsClient) updateDomainHandleResponse(resp *http.Response) (Do
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
 // Generated from API version v1
@@ -908,7 +908,7 @@ func (client *DomainsClient) beginAssignDomainWorkspacesByCapacities(ctx context
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
 // Generated from API version v1
