@@ -85,6 +85,74 @@ func (a *AzureDevOpsDetails) GetGitProviderDetails() *GitProviderDetails {
 	}
 }
 
+// CapacityTenantSetting - Capacity tenant setting details.
+type CapacityTenantSetting struct {
+	// REQUIRED; Indicates if the tenant setting is enabled for a security group. False - The tenant setting is enabled for the
+	// entire organization. True - The tenant setting is enabled for security groups.
+	CanSpecifySecurityGroups *bool
+
+	// REQUIRED; The status of the tenant setting. False - Disabled, True - Enabled.
+	Enabled *bool
+
+	// REQUIRED; The name of the tenant setting.
+	SettingName *string
+
+	// REQUIRED; The title of the tenant setting.
+	Title *string
+
+	// Indicates whether the tenant setting can be delegated to a workspace admin. False - Workspace admin cannot override the
+	// tenant setting. True - Workspace admin can override the tenant setting.
+	DelegateToWorkspace *bool
+
+	// Tenant setting delegated from tenant, capacity or domain.
+	DelegatedFrom *DelegatedFrom
+
+	// A list of enabled security groups.
+	EnabledSecurityGroups []TenantSettingSecurityGroup
+
+	// A list of excluded security groups.
+	ExcludedSecurityGroups []TenantSettingSecurityGroup
+
+	// Tenant setting properties.
+	Properties []TenantSettingProperty
+
+	// Tenant setting group name.
+	TenantSettingGroup *string
+}
+
+// CapacityTenantSettingOverride - A capacity admin can override the tenant setting.
+type CapacityTenantSettingOverride struct {
+	// The ID of a capacity.
+	ID *string
+
+	// A list of capacity tenant settings.
+	TenantSettings []CapacityTenantSetting
+}
+
+// CapacityTenantSettingOverrides - A list of tenant settings overrides.
+type CapacityTenantSettingOverrides struct {
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+
+	// A list of tenant settings that were overridden by capacity admin.
+	Value []CapacityTenantSettingOverride
+}
+
+// CapacityTenantSettingsByCapacityIDResponse - A list of tenant settings overrides for given capacityId
+type CapacityTenantSettingsByCapacityIDResponse struct {
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+
+	// A list of tenant settings that were overridden by capacity admin for given capacityId.
+	Value []CapacityTenantSetting
+}
+
 // CreateDomainRequest - The request payload for creating a domain or subdomain.
 type CreateDomainRequest struct {
 	// REQUIRED; The domain display name. The display name cannot contain more than 40 characters.
@@ -127,6 +195,62 @@ type DomainRoleUnassignmentRequest struct {
 	// REQUIRED; The update request type.
 	Type       *DomainRole
 	Principals []Principal
+}
+
+// DomainTenantSetting - Domain tenant setting details.
+type DomainTenantSetting struct {
+	// REQUIRED; Indicates if the tenant setting is enabled for a security group. False - The tenant setting is enabled for the
+	// entire organization. True - The tenant setting is enabled for security groups.
+	CanSpecifySecurityGroups *bool
+
+	// REQUIRED; The status of the tenant setting. False - Disabled, True - Enabled.
+	Enabled *bool
+
+	// REQUIRED; The name of the tenant setting.
+	SettingName *string
+
+	// REQUIRED; The title of the tenant setting.
+	Title *string
+
+	// Indicates whether the tenant setting can be delegated to a workspace admin. False - Workspace admin cannot override the
+	// tenant setting. True - Workspace admin can override the tenant setting.
+	DelegateToWorkspace *bool
+
+	// Tenant setting delegated from tenant, capacity or domain.
+	DelegatedFrom *DelegatedFrom
+
+	// A list of enabled security groups.
+	EnabledSecurityGroups []TenantSettingSecurityGroup
+
+	// A list of excluded security groups.
+	ExcludedSecurityGroups []TenantSettingSecurityGroup
+
+	// Tenant setting properties.
+	Properties []TenantSettingProperty
+
+	// Tenant setting group name.
+	TenantSettingGroup *string
+}
+
+// DomainTenantSettingOverride - A domain admin can override the tenant setting.
+type DomainTenantSettingOverride struct {
+	// The ID of a domain.
+	ID *string
+
+	// A list of domain tenant settings.
+	TenantSettings []DomainTenantSetting
+}
+
+// DomainTenantSettingOverrides - A list of tenant settings overrides.
+type DomainTenantSettingOverrides struct {
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+
+	// A list of tenant settings that were overridden by a domain admin.
+	Value []DomainTenantSettingOverride
 }
 
 // DomainWorkspace - Represents a workspace in a domain.
@@ -457,13 +581,13 @@ type SetLabelsRequest struct {
 	DelegatedPrincipal *Principal
 }
 
-// TenantSetting - Tenant setting details.
+// TenantSetting - Tenant level setting details.
 type TenantSetting struct {
-	// REQUIRED; Indicates if the tenant setting is enabled for a security group. 0 - The tenant setting is enabled for the entire
-	// organization. 1 - The tenant setting is enabled for security groups.
+	// REQUIRED; Indicates if the tenant setting is enabled for a security group. False - The tenant setting is enabled for the
+	// entire organization. True - The tenant setting is enabled for security groups.
 	CanSpecifySecurityGroups *bool
 
-	// REQUIRED; The status of the tenant setting. 0 - Disabled, 1- Enabled.
+	// REQUIRED; The status of the tenant setting. False - Disabled, True - Enabled.
 	Enabled *bool
 
 	// REQUIRED; The name of the tenant setting.
@@ -472,12 +596,17 @@ type TenantSetting struct {
 	// REQUIRED; The title of the tenant setting.
 	Title *string
 
+	// Indicates whether the tenant setting can be delegated to a capacity admin. False - Capacity admin cannot override the tenant
+	// setting. True - Capacity admin can override the tenant setting.
+	DelegateToCapacity *bool
+
+	// Indicates whether the tenant setting can be delegated to a domain admin. False - Domain admin cannot override the tenant
+	// setting. True - Domain admin can override the tenant setting.
+	DelegateToDomain *bool
+
 	// Indicates whether the tenant setting can be delegated to a workspace admin. False - Workspace admin cannot override the
 	// tenant setting. True - Workspace admin can override the tenant setting.
 	DelegateToWorkspace *bool
-
-	// Tenant setting delegated from tenant, capacity or domain.
-	DelegatedFrom *DelegatedFrom
 
 	// A list of enabled security groups.
 	EnabledSecurityGroups []TenantSettingSecurityGroup
@@ -490,27 +619,6 @@ type TenantSetting struct {
 
 	// Tenant setting group name.
 	TenantSettingGroup *string
-}
-
-// TenantSettingOverride - A workspace, capacity or domain admin can override the tenant setting.
-type TenantSettingOverride struct {
-	// The ID of a capacity, domain or workspace.
-	ID *string
-
-	// A list of tenant settings.
-	TenantSettings []TenantSetting
-}
-
-// TenantSettingOverrides - A list of tenant settings overrides.
-type TenantSettingOverrides struct {
-	// The token for the next result set batch. If there are no more records, it's removed from the response.
-	ContinuationToken *string
-
-	// The URI of the next result set batch. If there are no more records, it's removed from the response.
-	ContinuationURI *string
-
-	// A list of tenant settings that were overridden by a workspace, capacity or domain admin.
-	Overrides []TenantSettingOverride
 }
 
 // TenantSettingProperty - Tenant setting property.
@@ -536,13 +644,41 @@ type TenantSettingSecurityGroup struct {
 
 // TenantSettings - A list of tenant settings.
 type TenantSettings struct {
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+
 	// A list of tenant settings.
-	TenantSettings []TenantSetting
+	Value []TenantSetting
 }
 
 // UnassignDomainWorkspacesByIDsRequest - The request payload for unassigning workspaces from a domain by workspace ID.
 type UnassignDomainWorkspacesByIDsRequest struct {
 	WorkspacesIDs []string
+}
+
+// UpdateCapacityTenantSettingOverrideRequest - Capacity tenant setting override update request.
+type UpdateCapacityTenantSettingOverrideRequest struct {
+	// REQUIRED; The status of the tenant setting. False - Disabled, True - Enabled.
+	Enabled *bool
+
+	// Indicates whether the tenant setting can be delegated to a workspace admin. False - Workspace admin cannot override the
+	// tenant setting. True - Workspace admin can override the tenant setting.
+	DelegateToWorkspace *bool
+
+	// A list of enabled security groups.
+	EnabledSecurityGroups []TenantSettingSecurityGroup
+
+	// A list of excluded security groups.
+	ExcludedSecurityGroups []TenantSettingSecurityGroup
+}
+
+// UpdateCapacityTenantSettingOverrideResponse - Capacity tenant setting override update request.
+type UpdateCapacityTenantSettingOverrideResponse struct {
+	// A list of tenant settings that were updated in given capacity.
+	Overrides []CapacityTenantSetting
 }
 
 // UpdateDomainRequest - The request payload for updating a domain.
@@ -555,6 +691,39 @@ type UpdateDomainRequest struct {
 
 	// The domain display name. The display name cannot contain more than 40 characters.
 	DisplayName *string
+}
+
+// UpdateTenantSettingRequest - Tenant setting update request.
+type UpdateTenantSettingRequest struct {
+	// REQUIRED; The status of the tenant setting. False - Disabled, True - Enabled.
+	Enabled *bool
+
+	// Indicates whether the tenant setting can be delegated to a capacity admin. False - Capacity admin cannot override the tenant
+	// setting. True - Capacity admin can override the tenant setting.
+	DelegateToCapacity *bool
+
+	// Indicates whether the tenant setting can be delegated to a domain admin. False - Domain admin cannot override the tenant
+	// setting. True - Domain admin can override the tenant setting.
+	DelegateToDomain *bool
+
+	// Indicates whether the tenant setting can be delegated to a workspace admin. False - Workspace admin cannot override the
+	// tenant setting. True - Workspace admin can override the tenant setting.
+	DelegateToWorkspace *bool
+
+	// A list of enabled security groups.
+	EnabledSecurityGroups []TenantSettingSecurityGroup
+
+	// A list of excluded security groups.
+	ExcludedSecurityGroups []TenantSettingSecurityGroup
+
+	// Tenant setting properties.
+	Properties []TenantSettingProperty
+}
+
+// UpdateTenantSettingResponse - Tenant setting update response.
+type UpdateTenantSettingResponse struct {
+	// A list of tenant settings that were updated.
+	TenantSettings []TenantSetting
 }
 
 // Workspace.
@@ -597,6 +766,58 @@ type WorkspaceAccessDetails struct {
 type WorkspaceAccessDetailsResponse struct {
 	// A list of users with access to an entity.
 	AccessDetails []WorkspaceAccessDetails
+}
+
+// WorkspaceTenantSetting - Workspace tenant setting details.
+type WorkspaceTenantSetting struct {
+	// REQUIRED; Indicates if the tenant setting is enabled for a security group. False - The tenant setting is enabled for the
+	// entire organization. True - The tenant setting is enabled for security groups.
+	CanSpecifySecurityGroups *bool
+
+	// REQUIRED; The status of the tenant setting. False - Disabled, True - Enabled.
+	Enabled *bool
+
+	// REQUIRED; The name of the tenant setting.
+	SettingName *string
+
+	// REQUIRED; The title of the tenant setting.
+	Title *string
+
+	// Tenant setting delegated from tenant, capacity or domain.
+	DelegatedFrom *DelegatedFrom
+
+	// A list of enabled security groups.
+	EnabledSecurityGroups []TenantSettingSecurityGroup
+
+	// A list of excluded security groups.
+	ExcludedSecurityGroups []TenantSettingSecurityGroup
+
+	// Tenant setting properties.
+	Properties []TenantSettingProperty
+
+	// Tenant setting group name.
+	TenantSettingGroup *string
+}
+
+// WorkspaceTenantSettingOverride - A workspaceadmin can override the tenant setting.
+type WorkspaceTenantSettingOverride struct {
+	// The ID of a workspace.
+	ID *string
+
+	// A list of workspace tenant settings.
+	TenantSettings []WorkspaceTenantSetting
+}
+
+// WorkspaceTenantSettingOverrides - A list of tenant settings overrides.
+type WorkspaceTenantSettingOverrides struct {
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+
+	// A list of tenant settings that were overridden by a workspace admin.
+	Value []WorkspaceTenantSettingOverride
 }
 
 // Workspaces - A list of workspaces.

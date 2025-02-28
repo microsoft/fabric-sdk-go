@@ -138,7 +138,7 @@ func ExampleJobSchedulerClient_GetItemSchedule() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewJobSchedulerClient().GetItemSchedule(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "DefaultJob", "3546052c-ae64-4526-b1a8-52af7761426f", nil)
+	res, err := clientFactory.NewJobSchedulerClient().GetItemSchedule(ctx, "4b218778-e7a5-4d73-8187-f10824047715", "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "DefaultJob", "3546052c-ae64-4526-b1a8-52af7761426f", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -206,6 +206,23 @@ func ExampleJobSchedulerClient_UpdateItemSchedule() {
 	// 		ID: to.Ptr("8eedb1b0-3af8-4b17-8e7e-663e61e12211"),
 	// 	},
 	// }
+}
+
+// Generated from example definition
+func ExampleJobSchedulerClient_DeleteItemSchedule() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewJobSchedulerClient().DeleteItemSchedule(ctx, "4b218778-e7a5-4d73-8187-f10824047715", "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "DefaultJob", "3546052c-ae64-4526-b1a8-52af7761426f", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
 }
 
 // Generated from example definition

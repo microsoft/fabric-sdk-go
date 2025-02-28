@@ -12,7 +12,7 @@ This project provides a data-plane Go SDK for [Microsoft Fabric](https://www.mic
 
 ### Prerequisites
 
-* Go, version `1.22` or higher - [Install Go](https://go.dev/doc/install)
+* Go, version `1.23` or higher - [Install Go](https://go.dev/doc/install)
 * [Microsoft Fabric](https://learn.microsoft.com/fabric/get-started/microsoft-fabric-overview)
 
 ### Install modules

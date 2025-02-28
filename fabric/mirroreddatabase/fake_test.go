@@ -414,16 +414,22 @@ func (testsuite *FakeTestSuite) TestMirroring_GetTablesMirroringStatus() {
 			}},
 	}
 
-	testsuite.serverFactory.MirroringServer.GetTablesMirroringStatus = func(ctx context.Context, workspaceID string, mirroredDatabaseID string, options *mirroreddatabase.MirroringClientGetTablesMirroringStatusOptions) (resp azfake.Responder[mirroreddatabase.MirroringClientGetTablesMirroringStatusResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.MirroringServer.NewGetTablesMirroringStatusPager = func(workspaceID string, mirroredDatabaseID string, options *mirroreddatabase.MirroringClientGetTablesMirroringStatusOptions) (resp azfake.PagerResponder[mirroreddatabase.MirroringClientGetTablesMirroringStatusResponse]) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleMirroredDatabaseID, mirroredDatabaseID)
-		resp = azfake.Responder[mirroreddatabase.MirroringClientGetTablesMirroringStatusResponse]{}
-		resp.SetResponse(http.StatusOK, mirroreddatabase.MirroringClientGetTablesMirroringStatusResponse{TablesMirroringStatusResponse: exampleRes}, nil)
+		resp = azfake.PagerResponder[mirroreddatabase.MirroringClientGetTablesMirroringStatusResponse]{}
+		resp.AddPage(http.StatusOK, mirroreddatabase.MirroringClientGetTablesMirroringStatusResponse{TablesMirroringStatusResponse: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewMirroringClient()
-	res, err := client.GetTablesMirroringStatus(ctx, exampleWorkspaceID, exampleMirroredDatabaseID, nil)
-	testsuite.Require().NoError(err, "Failed to get result for example ")
-	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.TablesMirroringStatusResponse))
+	pager := client.NewGetTablesMirroringStatusPager(exampleWorkspaceID, exampleMirroredDatabaseID, &mirroreddatabase.MirroringClientGetTablesMirroringStatusOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.TablesMirroringStatusResponse))
+		if err == nil {
+			break
+		}
+	}
 }

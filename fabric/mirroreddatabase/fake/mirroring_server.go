@@ -18,6 +18,7 @@ import (
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/fake/server"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 
 	"github.com/microsoft/fabric-sdk-go/fabric/mirroreddatabase"
 )
@@ -28,9 +29,9 @@ type MirroringServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetMirroringStatus func(ctx context.Context, workspaceID string, mirroredDatabaseID string, options *mirroreddatabase.MirroringClientGetMirroringStatusOptions) (resp azfake.Responder[mirroreddatabase.MirroringClientGetMirroringStatusResponse], errResp azfake.ErrorResponder)
 
-	// GetTablesMirroringStatus is the fake for method MirroringClient.GetTablesMirroringStatus
+	// NewGetTablesMirroringStatusPager is the fake for method MirroringClient.NewGetTablesMirroringStatusPager
 	// HTTP status codes to indicate success: http.StatusOK
-	GetTablesMirroringStatus func(ctx context.Context, workspaceID string, mirroredDatabaseID string, options *mirroreddatabase.MirroringClientGetTablesMirroringStatusOptions) (resp azfake.Responder[mirroreddatabase.MirroringClientGetTablesMirroringStatusResponse], errResp azfake.ErrorResponder)
+	NewGetTablesMirroringStatusPager func(workspaceID string, mirroredDatabaseID string, options *mirroreddatabase.MirroringClientGetTablesMirroringStatusOptions) (resp azfake.PagerResponder[mirroreddatabase.MirroringClientGetTablesMirroringStatusResponse])
 
 	// StartMirroring is the fake for method MirroringClient.StartMirroring
 	// HTTP status codes to indicate success: http.StatusOK
@@ -45,13 +46,17 @@ type MirroringServer struct {
 // The returned MirroringServerTransport instance is connected to an instance of mirroreddatabase.MirroringClient via the
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewMirroringServerTransport(srv *MirroringServer) *MirroringServerTransport {
-	return &MirroringServerTransport{srv: srv}
+	return &MirroringServerTransport{
+		srv:                              srv,
+		newGetTablesMirroringStatusPager: newTracker[azfake.PagerResponder[mirroreddatabase.MirroringClientGetTablesMirroringStatusResponse]](),
+	}
 }
 
 // MirroringServerTransport connects instances of mirroreddatabase.MirroringClient to instances of MirroringServer.
 // Don't use this type directly, use NewMirroringServerTransport instead.
 type MirroringServerTransport struct {
-	srv *MirroringServer
+	srv                              *MirroringServer
+	newGetTablesMirroringStatusPager *tracker[azfake.PagerResponder[mirroreddatabase.MirroringClientGetTablesMirroringStatusResponse]]
 }
 
 // Do implements the policy.Transporter interface for MirroringServerTransport.
@@ -81,8 +86,8 @@ func (m *MirroringServerTransport) dispatchToMethodFake(req *http.Request, metho
 			switch method {
 			case "MirroringClient.GetMirroringStatus":
 				res.resp, res.err = m.dispatchGetMirroringStatus(req)
-			case "MirroringClient.GetTablesMirroringStatus":
-				res.resp, res.err = m.dispatchGetTablesMirroringStatus(req)
+			case "MirroringClient.NewGetTablesMirroringStatusPager":
+				res.resp, res.err = m.dispatchNewGetTablesMirroringStatusPager(req)
 			case "MirroringClient.StartMirroring":
 				res.resp, res.err = m.dispatchStartMirroring(req)
 			case "MirroringClient.StopMirroring":
@@ -139,35 +144,55 @@ func (m *MirroringServerTransport) dispatchGetMirroringStatus(req *http.Request)
 	return resp, nil
 }
 
-func (m *MirroringServerTransport) dispatchGetTablesMirroringStatus(req *http.Request) (*http.Response, error) {
-	if m.srv.GetTablesMirroringStatus == nil {
-		return nil, &nonRetriableError{errors.New("fake for method GetTablesMirroringStatus not implemented")}
+func (m *MirroringServerTransport) dispatchNewGetTablesMirroringStatusPager(req *http.Request) (*http.Response, error) {
+	if m.srv.NewGetTablesMirroringStatusPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewGetTablesMirroringStatusPager not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/mirroredDatabases/(?P<mirroredDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getTablesMirroringStatus`
-	regex := regexp.MustCompile(regexStr)
-	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
-		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	newGetTablesMirroringStatusPager := m.newGetTablesMirroringStatusPager.get(req)
+	if newGetTablesMirroringStatusPager == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/mirroredDatabases/(?P<mirroredDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getTablesMirroringStatus`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		mirroredDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("mirroredDatabaseId")])
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *mirroreddatabase.MirroringClientGetTablesMirroringStatusOptions
+		if continuationTokenParam != nil {
+			options = &mirroreddatabase.MirroringClientGetTablesMirroringStatusOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := m.srv.NewGetTablesMirroringStatusPager(workspaceIDParam, mirroredDatabaseIDParam, options)
+		newGetTablesMirroringStatusPager = &resp
+		m.newGetTablesMirroringStatusPager.add(req, newGetTablesMirroringStatusPager)
+		server.PagerResponderInjectNextLinks(newGetTablesMirroringStatusPager, req, func(page *mirroreddatabase.MirroringClientGetTablesMirroringStatusResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
 	}
-	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	resp, err := server.PagerResponderNext(newGetTablesMirroringStatusPager, req)
 	if err != nil {
 		return nil, err
 	}
-	mirroredDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("mirroredDatabaseId")])
-	if err != nil {
-		return nil, err
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		m.newGetTablesMirroringStatusPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
 	}
-	respr, errRespr := m.srv.GetTablesMirroringStatus(req.Context(), workspaceIDParam, mirroredDatabaseIDParam, nil)
-	if respErr := server.GetError(errRespr, req); respErr != nil {
-		return nil, respErr
-	}
-	respContent := server.GetResponseContent(respr)
-	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
-	}
-	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).TablesMirroringStatusResponse, req)
-	if err != nil {
-		return nil, err
+	if !server.PagerResponderMore(newGetTablesMirroringStatusPager) {
+		m.newGetTablesMirroringStatusPager.remove(req)
 	}
 	return resp, nil
 }

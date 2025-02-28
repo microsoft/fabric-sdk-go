@@ -52,7 +52,7 @@ type MirroringClientGetMirroringStatusResponse struct {
 	MirroringStatusResponse
 }
 
-// MirroringClientGetTablesMirroringStatusResponse contains the response from method MirroringClient.GetTablesMirroringStatus.
+// MirroringClientGetTablesMirroringStatusResponse contains the response from method MirroringClient.NewGetTablesMirroringStatusPager.
 type MirroringClientGetTablesMirroringStatusResponse struct {
 	// A paginated list of table mirroring statuses.
 	TablesMirroringStatusResponse

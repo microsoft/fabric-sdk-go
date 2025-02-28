@@ -978,6 +978,9 @@ type DeployRequest struct {
 
 	// A note describing the deployment. The text size is limited to 1024 characters.
 	Note *string
+
+	// Deployment options that control the behavior of the deployment.
+	Options *DeploymentOptions
 }
 
 // DeploymentExecutionPlan - A deployment execution plan.
@@ -1005,6 +1008,12 @@ type DeploymentExecutionStep struct {
 
 	// READ-ONLY; Is an item new, different or identical to items in the target stage before deployment.
 	PreDeploymentDiffState *ItemPreDeploymentDiffState
+}
+
+// DeploymentOptions - Deployment configuration options for the deployment.
+type DeploymentOptions struct {
+	// Indicates whether cross region deployment is enabled. True - enabled, False - disabled. Default value is false.
+	AllowCrossRegionDeployment *bool
 }
 
 // DeploymentPipeline - A Fabric deployment pipeline.

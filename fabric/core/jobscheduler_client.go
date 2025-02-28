@@ -187,6 +187,76 @@ func (client *JobSchedulerClient) createItemScheduleHandleResponse(resp *http.Re
 	return result, nil
 }
 
+// DeleteItemSchedule - REQUIRED DELEGATED SCOPES For item APIs use these scope types:
+// * Generic scope: Item.ReadWrite.All
+//
+// * Specific scope: itemType.ReadWrite.All (for example: Notebook.ReadWrite.All)
+//
+// for more information about scopes, see scopes article [/rest/api/fabric/articles/scopes].
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - itemID - The item ID.
+//   - jobType - The job type.
+//   - scheduleID - The item schedule ID.
+//   - options - JobSchedulerClientDeleteItemScheduleOptions contains the optional parameters for the JobSchedulerClient.DeleteItemSchedule
+//     method.
+func (client *JobSchedulerClient) DeleteItemSchedule(ctx context.Context, workspaceID string, itemID string, jobType string, scheduleID string, options *JobSchedulerClientDeleteItemScheduleOptions) (JobSchedulerClientDeleteItemScheduleResponse, error) {
+	var err error
+	const operationName = "core.JobSchedulerClient.DeleteItemSchedule"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.deleteItemScheduleCreateRequest(ctx, workspaceID, itemID, jobType, scheduleID, options)
+	if err != nil {
+		return JobSchedulerClientDeleteItemScheduleResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return JobSchedulerClientDeleteItemScheduleResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return JobSchedulerClientDeleteItemScheduleResponse{}, err
+	}
+	return JobSchedulerClientDeleteItemScheduleResponse{}, nil
+}
+
+// deleteItemScheduleCreateRequest creates the DeleteItemSchedule request.
+func (client *JobSchedulerClient) deleteItemScheduleCreateRequest(ctx context.Context, workspaceID string, itemID string, jobType string, scheduleID string, _ *JobSchedulerClientDeleteItemScheduleOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/jobs/{jobType}/schedules/{scheduleId}"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if itemID == "" {
+		return nil, errors.New("parameter itemID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{itemId}", url.PathEscape(itemID))
+	if jobType == "" {
+		return nil, errors.New("parameter jobType cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{jobType}", url.PathEscape(jobType))
+	if scheduleID == "" {
+		return nil, errors.New("parameter scheduleID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{scheduleId}", url.PathEscape(scheduleID))
+	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
 // GetItemJobInstance - REQUIRED DELEGATED SCOPES For item APIs use these scope types:
 // * Generic scope: Item.ReadWrite.All or Item.Read.All
 //

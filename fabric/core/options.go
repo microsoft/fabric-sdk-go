@@ -338,6 +338,12 @@ type JobSchedulerClientCreateItemScheduleOptions struct {
 	// placeholder for future optional parameters
 }
 
+// JobSchedulerClientDeleteItemScheduleOptions contains the optional parameters for the JobSchedulerClient.DeleteItemSchedule
+// method.
+type JobSchedulerClientDeleteItemScheduleOptions struct {
+	// placeholder for future optional parameters
+}
+
 // JobSchedulerClientGetItemJobInstanceOptions contains the optional parameters for the JobSchedulerClient.GetItemJobInstance
 // method.
 type JobSchedulerClientGetItemJobInstanceOptions struct {

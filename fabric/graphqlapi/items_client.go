@@ -118,7 +118,7 @@ func (client *ItemsClient) createGraphQLAPICreateRequest(ctx context.Context, wo
 //
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
-//   - graphQLAPIID - The GraphQLApi ID.
+//   - graphQLAPIID - The API for GraphQL ID.
 //   - options - ItemsClientDeleteGraphQLAPIOptions contains the optional parameters for the ItemsClient.DeleteGraphQLAPI method.
 func (client *ItemsClient) DeleteGraphQLAPI(ctx context.Context, workspaceID string, graphQLAPIID string, options *ItemsClientDeleteGraphQLAPIOptions) (ItemsClientDeleteGraphQLAPIResponse, error) {
 	var err error
@@ -172,7 +172,7 @@ func (client *ItemsClient) deleteGraphQLAPICreateRequest(ctx context.Context, wo
 //
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
-//   - graphQLAPIID - The GraphQLApi ID.
+//   - graphQLAPIID - The API for GraphQL ID.
 //   - options - ItemsClientGetGraphQLAPIOptions contains the optional parameters for the ItemsClient.GetGraphQLAPI method.
 func (client *ItemsClient) GetGraphQLAPI(ctx context.Context, workspaceID string, graphQLAPIID string, options *ItemsClientGetGraphQLAPIOptions) (ItemsClientGetGraphQLAPIResponse, error) {
 	var err error
@@ -302,8 +302,8 @@ func (client *ItemsClient) listGraphQLApisHandleResponse(resp *http.Response) (I
 //
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
-//   - graphQLAPIID - The GraphQLApi ID.
-//   - updateGraphQLAPIRequest - Update GraphQLApi request payload.
+//   - graphQLAPIID - The API for GraphQL ID.
+//   - updateGraphQLAPIRequest - Update API for GraphQL request payload.
 //   - options - ItemsClientUpdateGraphQLAPIOptions contains the optional parameters for the ItemsClient.UpdateGraphQLAPI method.
 func (client *ItemsClient) UpdateGraphQLAPI(ctx context.Context, workspaceID string, graphQLAPIID string, updateGraphQLAPIRequest UpdateGraphQLAPIRequest, options *ItemsClientUpdateGraphQLAPIOptions) (ItemsClientUpdateGraphQLAPIResponse, error) {
 	var err error

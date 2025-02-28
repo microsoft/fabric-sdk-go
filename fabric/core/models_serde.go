@@ -2005,6 +2005,7 @@ func (d DeployRequest) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "createdWorkspaceDetails", d.CreatedWorkspaceDetails)
 	populate(objectMap, "items", d.Items)
 	populate(objectMap, "note", d.Note)
+	populate(objectMap, "options", d.Options)
 	populate(objectMap, "sourceStageId", d.SourceStageID)
 	populate(objectMap, "targetStageId", d.TargetStageID)
 	return json.Marshal(objectMap)
@@ -2027,6 +2028,9 @@ func (d *DeployRequest) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "note":
 			err = unpopulate(val, "Note", &d.Note)
+			delete(rawMsg, key)
+		case "options":
+			err = unpopulate(val, "Options", &d.Options)
 			delete(rawMsg, key)
 		case "sourceStageId":
 			err = unpopulate(val, "SourceStageID", &d.SourceStageID)
@@ -2107,6 +2111,33 @@ func (d *DeploymentExecutionStep) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "status":
 			err = unpopulate(val, "Status", &d.Status)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", d, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type DeploymentOptions.
+func (d DeploymentOptions) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "allowCrossRegionDeployment", d.AllowCrossRegionDeployment)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type DeploymentOptions.
+func (d *DeploymentOptions) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", d, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "allowCrossRegionDeployment":
+			err = unpopulate(val, "AllowCrossRegionDeployment", &d.AllowCrossRegionDeployment)
 			delete(rawMsg, key)
 		}
 		if err != nil {

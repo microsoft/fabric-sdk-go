@@ -1,6 +1,6 @@
 module github.com/microsoft/fabric-sdk-go
 
-go 1.22
+go 1.23
 
 require (
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.17.0

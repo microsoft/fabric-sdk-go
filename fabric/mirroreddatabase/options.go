@@ -50,10 +50,11 @@ type MirroringClientGetMirroringStatusOptions struct {
 	// placeholder for future optional parameters
 }
 
-// MirroringClientGetTablesMirroringStatusOptions contains the optional parameters for the MirroringClient.GetTablesMirroringStatus
+// MirroringClientGetTablesMirroringStatusOptions contains the optional parameters for the MirroringClient.NewGetTablesMirroringStatusPager
 // method.
 type MirroringClientGetTablesMirroringStatusOptions struct {
-	// placeholder for future optional parameters
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
 }
 
 // MirroringClientStartMirroringOptions contains the optional parameters for the MirroringClient.StartMirroring method.

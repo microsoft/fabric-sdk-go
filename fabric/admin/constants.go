@@ -242,6 +242,8 @@ const (
 	ItemTypeMirroredDatabase ItemType = "MirroredDatabase"
 	// ItemTypeMirroredWarehouse - A mirrored warehouse.
 	ItemTypeMirroredWarehouse ItemType = "MirroredWarehouse"
+	// ItemTypeMountedDataFactory - A MountedDataFactory.
+	ItemTypeMountedDataFactory ItemType = "MountedDataFactory"
 	// ItemTypeNotebook - A notebook.
 	ItemTypeNotebook ItemType = "Notebook"
 	// ItemTypePaginatedReport - PowerBI paginated report.
@@ -250,6 +252,8 @@ const (
 	ItemTypeReflex ItemType = "Reflex"
 	// ItemTypeReport - PowerBI report.
 	ItemTypeReport ItemType = "Report"
+	// ItemTypeSQLDatabase - A SQLDatabase.
+	ItemTypeSQLDatabase ItemType = "SQLDatabase"
 	// ItemTypeSQLEndpoint - An SQL endpoint.
 	ItemTypeSQLEndpoint ItemType = "SQLEndpoint"
 	// ItemTypeSemanticModel - PowerBI semantic model.
@@ -278,10 +282,12 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeMLModel,
 		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
+		ItemTypeMountedDataFactory,
 		ItemTypeNotebook,
 		ItemTypePaginatedReport,
 		ItemTypeReflex,
 		ItemTypeReport,
+		ItemTypeSQLDatabase,
 		ItemTypeSQLEndpoint,
 		ItemTypeSemanticModel,
 		ItemTypeSparkJobDefinition,
