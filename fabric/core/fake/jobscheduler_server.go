@@ -35,6 +35,10 @@ type JobSchedulerServer struct {
 	// HTTP status codes to indicate success: http.StatusCreated
 	CreateItemSchedule func(ctx context.Context, workspaceID string, itemID string, jobType string, createScheduleRequest core.CreateScheduleRequest, options *core.JobSchedulerClientCreateItemScheduleOptions) (resp azfake.Responder[core.JobSchedulerClientCreateItemScheduleResponse], errResp azfake.ErrorResponder)
 
+	// DeleteItemSchedule is the fake for method JobSchedulerClient.DeleteItemSchedule
+	// HTTP status codes to indicate success: http.StatusOK
+	DeleteItemSchedule func(ctx context.Context, workspaceID string, itemID string, jobType string, scheduleID string, options *core.JobSchedulerClientDeleteItemScheduleOptions) (resp azfake.Responder[core.JobSchedulerClientDeleteItemScheduleResponse], errResp azfake.ErrorResponder)
+
 	// GetItemJobInstance is the fake for method JobSchedulerClient.GetItemJobInstance
 	// HTTP status codes to indicate success: http.StatusOK
 	GetItemJobInstance func(ctx context.Context, workspaceID string, itemID string, jobInstanceID string, options *core.JobSchedulerClientGetItemJobInstanceOptions) (resp azfake.Responder[core.JobSchedulerClientGetItemJobInstanceResponse], errResp azfake.ErrorResponder)
@@ -108,6 +112,8 @@ func (j *JobSchedulerServerTransport) dispatchToMethodFake(req *http.Request, me
 				res.resp, res.err = j.dispatchCancelItemJobInstance(req)
 			case "JobSchedulerClient.CreateItemSchedule":
 				res.resp, res.err = j.dispatchCreateItemSchedule(req)
+			case "JobSchedulerClient.DeleteItemSchedule":
+				res.resp, res.err = j.dispatchDeleteItemSchedule(req)
 			case "JobSchedulerClient.GetItemJobInstance":
 				res.resp, res.err = j.dispatchGetItemJobInstance(req)
 			case "JobSchedulerClient.GetItemSchedule":
@@ -222,6 +228,47 @@ func (j *JobSchedulerServerTransport) dispatchCreateItemSchedule(req *http.Reque
 	}
 	if val := server.GetResponse(respr).Location; val != nil {
 		resp.Header.Set("Location", *val)
+	}
+	return resp, nil
+}
+
+func (j *JobSchedulerServerTransport) dispatchDeleteItemSchedule(req *http.Request) (*http.Response, error) {
+	if j.srv.DeleteItemSchedule == nil {
+		return nil, &nonRetriableError{errors.New("fake for method DeleteItemSchedule not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/items/(?P<itemId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/(?P<jobType>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/schedules/(?P<scheduleId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 4 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	itemIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("itemId")])
+	if err != nil {
+		return nil, err
+	}
+	jobTypeParam, err := url.PathUnescape(matches[regex.SubexpIndex("jobType")])
+	if err != nil {
+		return nil, err
+	}
+	scheduleIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("scheduleId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := j.srv.DeleteItemSchedule(req.Context(), workspaceIDParam, itemIDParam, jobTypeParam, scheduleIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
 	}
 	return resp, nil
 }

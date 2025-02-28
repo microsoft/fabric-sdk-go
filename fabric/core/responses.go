@@ -317,6 +317,11 @@ type JobSchedulerClientCreateItemScheduleResponse struct {
 	Location *string
 }
 
+// JobSchedulerClientDeleteItemScheduleResponse contains the response from method JobSchedulerClient.DeleteItemSchedule.
+type JobSchedulerClientDeleteItemScheduleResponse struct {
+	// placeholder for future response values
+}
+
 // JobSchedulerClientGetItemJobInstanceResponse contains the response from method JobSchedulerClient.GetItemJobInstance.
 type JobSchedulerClientGetItemJobInstanceResponse struct {
 	// An object representing item job instance

@@ -1231,7 +1231,7 @@ func (testsuite *FakeTestSuite) TestJobScheduler_GetItemSchedule() {
 	var exampleItemID string
 	var exampleJobType string
 	var exampleScheduleID string
-	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleWorkspaceID = "4b218778-e7a5-4d73-8187-f10824047715"
 	exampleItemID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
 	exampleJobType = "DefaultJob"
 	exampleScheduleID = "3546052c-ae64-4526-b1a8-52af7761426f"
@@ -1326,6 +1326,35 @@ func (testsuite *FakeTestSuite) TestJobScheduler_UpdateItemSchedule() {
 	res, err := client.UpdateItemSchedule(ctx, exampleWorkspaceID, exampleItemID, exampleJobType, exampleScheduleID, exampleUpdateScheduleRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ItemSchedule))
+}
+
+func (testsuite *FakeTestSuite) TestJobScheduler_DeleteItemSchedule() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"delete item schedule example"},
+	})
+	var exampleWorkspaceID string
+	var exampleItemID string
+	var exampleJobType string
+	var exampleScheduleID string
+	exampleWorkspaceID = "4b218778-e7a5-4d73-8187-f10824047715"
+	exampleItemID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleJobType = "DefaultJob"
+	exampleScheduleID = "3546052c-ae64-4526-b1a8-52af7761426f"
+
+	testsuite.serverFactory.JobSchedulerServer.DeleteItemSchedule = func(ctx context.Context, workspaceID string, itemID string, jobType string, scheduleID string, options *core.JobSchedulerClientDeleteItemScheduleOptions) (resp azfake.Responder[core.JobSchedulerClientDeleteItemScheduleResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().Equal(exampleJobType, jobType)
+		testsuite.Require().Equal(exampleScheduleID, scheduleID)
+		resp = azfake.Responder[core.JobSchedulerClientDeleteItemScheduleResponse]{}
+		resp.SetResponse(http.StatusOK, core.JobSchedulerClientDeleteItemScheduleResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewJobSchedulerClient()
+	_, err = client.DeleteItemSchedule(ctx, exampleWorkspaceID, exampleItemID, exampleJobType, exampleScheduleID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestJobScheduler_GetItemJobInstance() {
