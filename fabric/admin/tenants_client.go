@@ -10,6 +10,8 @@ import (
 	"context"
 	"errors"
 	"net/http"
+	"net/url"
+	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
@@ -26,13 +28,70 @@ type TenantsClient struct {
 	endpoint string
 }
 
+// DeleteCapacityTenantSettingOverride - PERMISSIONS The caller must be a Fabric administrator or authenticate using a service
+// principal.
+// REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All
+// LIMITATIONS Maximum 25 requests per minute.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - tenantSettingName - The name of tenant setting.
+//   - options - TenantsClientDeleteCapacityTenantSettingOverrideOptions contains the optional parameters for the TenantsClient.DeleteCapacityTenantSettingOverride
+//     method.
+func (client *TenantsClient) DeleteCapacityTenantSettingOverride(ctx context.Context, capacityID string, tenantSettingName string, options *TenantsClientDeleteCapacityTenantSettingOverrideOptions) (TenantsClientDeleteCapacityTenantSettingOverrideResponse, error) {
+	var err error
+	const operationName = "admin.TenantsClient.DeleteCapacityTenantSettingOverride"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.deleteCapacityTenantSettingOverrideCreateRequest(ctx, capacityID, tenantSettingName, options)
+	if err != nil {
+		return TenantsClientDeleteCapacityTenantSettingOverrideResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return TenantsClientDeleteCapacityTenantSettingOverrideResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return TenantsClientDeleteCapacityTenantSettingOverrideResponse{}, err
+	}
+	return TenantsClientDeleteCapacityTenantSettingOverrideResponse{}, nil
+}
+
+// deleteCapacityTenantSettingOverrideCreateRequest creates the DeleteCapacityTenantSettingOverride request.
+func (client *TenantsClient) deleteCapacityTenantSettingOverrideCreateRequest(ctx context.Context, capacityID string, tenantSettingName string, _ *TenantsClientDeleteCapacityTenantSettingOverrideOptions) (*policy.Request, error) {
+	urlPath := "/v1/admin/capacities/{capacityId}/delegatedTenantSettingOverrides/{tenantSettingName}"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	if tenantSettingName == "" {
+		return nil, errors.New("parameter tenantSettingName cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{tenantSettingName}", url.PathEscape(tenantSettingName))
+	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
 // NewListCapacitiesTenantSettingsOverridesPager - This API supports pagination [/rest/api/fabric/articles/pagination]. A
 // maximum of 10,000 records can be returned per request. With the continuation token provided in the response, you can get
 // the next
 // 10,000 records.
 // The user must be a Fabric Service Administrator or authenticate using a service principal.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
-// LIMITATIONS Maximum 100 requests per hour.
+// LIMITATIONS Maximum 25 requests per minute.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -85,55 +144,191 @@ func (client *TenantsClient) listCapacitiesTenantSettingsOverridesCreateRequest(
 // listCapacitiesTenantSettingsOverridesHandleResponse handles the ListCapacitiesTenantSettingsOverrides response.
 func (client *TenantsClient) listCapacitiesTenantSettingsOverridesHandleResponse(resp *http.Response) (TenantsClientListCapacitiesTenantSettingsOverridesResponse, error) {
 	result := TenantsClientListCapacitiesTenantSettingsOverridesResponse{}
-	if err := runtime.UnmarshalAsJSON(resp, &result.TenantSettingOverrides); err != nil {
+	if err := runtime.UnmarshalAsJSON(resp, &result.CapacityTenantSettingOverrides); err != nil {
 		return TenantsClientListCapacitiesTenantSettingsOverridesResponse{}, err
 	}
 	return result, nil
 }
 
-// ListTenantSettings - PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
+// NewListCapacityTenantSettingsOverridesByCapacityIDPager - PERMISSIONS The caller must be a Fabric administrator or authenticate
+// using a service principal.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
-// LIMITATIONS Maximum 200 requests per hour.
+// LIMITATIONS Maximum 100 requests per minute.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 //
 // Generated from API version v1
-//   - options - TenantsClientListTenantSettingsOptions contains the optional parameters for the TenantsClient.ListTenantSettings
+//   - capacityID - The capacity ID.
+//   - options - TenantsClientListCapacityTenantSettingsOverridesByCapacityIDOptions contains the optional parameters for the
+//     TenantsClient.NewListCapacityTenantSettingsOverridesByCapacityIDPager method.
+func (client *TenantsClient) NewListCapacityTenantSettingsOverridesByCapacityIDPager(capacityID string, options *TenantsClientListCapacityTenantSettingsOverridesByCapacityIDOptions) *runtime.Pager[TenantsClientListCapacityTenantSettingsOverridesByCapacityIDResponse] {
+	return runtime.NewPager(runtime.PagingHandler[TenantsClientListCapacityTenantSettingsOverridesByCapacityIDResponse]{
+		More: func(page TenantsClientListCapacityTenantSettingsOverridesByCapacityIDResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *TenantsClientListCapacityTenantSettingsOverridesByCapacityIDResponse) (TenantsClientListCapacityTenantSettingsOverridesByCapacityIDResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "admin.TenantsClient.NewListCapacityTenantSettingsOverridesByCapacityIDPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.listCapacityTenantSettingsOverridesByCapacityIDCreateRequest(ctx, capacityID, options)
+			}, nil)
+			if err != nil {
+				return TenantsClientListCapacityTenantSettingsOverridesByCapacityIDResponse{}, err
+			}
+			return client.listCapacityTenantSettingsOverridesByCapacityIDHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
+}
+
+// listCapacityTenantSettingsOverridesByCapacityIDCreateRequest creates the ListCapacityTenantSettingsOverridesByCapacityID request.
+func (client *TenantsClient) listCapacityTenantSettingsOverridesByCapacityIDCreateRequest(ctx context.Context, capacityID string, options *TenantsClientListCapacityTenantSettingsOverridesByCapacityIDOptions) (*policy.Request, error) {
+	urlPath := "/v1/admin/capacities/{capacityId}/delegatedTenantSettingOverrides"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// listCapacityTenantSettingsOverridesByCapacityIDHandleResponse handles the ListCapacityTenantSettingsOverridesByCapacityID response.
+func (client *TenantsClient) listCapacityTenantSettingsOverridesByCapacityIDHandleResponse(resp *http.Response) (TenantsClientListCapacityTenantSettingsOverridesByCapacityIDResponse, error) {
+	result := TenantsClientListCapacityTenantSettingsOverridesByCapacityIDResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.CapacityTenantSettingsByCapacityIDResponse); err != nil {
+		return TenantsClientListCapacityTenantSettingsOverridesByCapacityIDResponse{}, err
+	}
+	return result, nil
+}
+
+// NewListDomainsTenantSettingsOverridesPager - This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum
+// of 10,000 records can be returned per request. With the continuation token provided in the response, you can get the next
+// 10,000 records.
+// The user must be a Fabric Service Administrator or authenticate using a service principal.
+// REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
+// LIMITATIONS Maximum 25 requests per minute.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+//
+// Generated from API version v1
+//   - options - TenantsClientListDomainsTenantSettingsOverridesOptions contains the optional parameters for the TenantsClient.NewListDomainsTenantSettingsOverridesPager
 //     method.
-func (client *TenantsClient) ListTenantSettings(ctx context.Context, options *TenantsClientListTenantSettingsOptions) (TenantsClientListTenantSettingsResponse, error) {
-	var err error
-	const operationName = "admin.TenantsClient.ListTenantSettings"
-	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
-	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
-	defer func() { endSpan(err) }()
-	req, err := client.listTenantSettingsCreateRequest(ctx, options)
+func (client *TenantsClient) NewListDomainsTenantSettingsOverridesPager(options *TenantsClientListDomainsTenantSettingsOverridesOptions) *runtime.Pager[TenantsClientListDomainsTenantSettingsOverridesResponse] {
+	return runtime.NewPager(runtime.PagingHandler[TenantsClientListDomainsTenantSettingsOverridesResponse]{
+		More: func(page TenantsClientListDomainsTenantSettingsOverridesResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *TenantsClientListDomainsTenantSettingsOverridesResponse) (TenantsClientListDomainsTenantSettingsOverridesResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "admin.TenantsClient.NewListDomainsTenantSettingsOverridesPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.listDomainsTenantSettingsOverridesCreateRequest(ctx, options)
+			}, nil)
+			if err != nil {
+				return TenantsClientListDomainsTenantSettingsOverridesResponse{}, err
+			}
+			return client.listDomainsTenantSettingsOverridesHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
+}
+
+// listDomainsTenantSettingsOverridesCreateRequest creates the ListDomainsTenantSettingsOverrides request.
+func (client *TenantsClient) listDomainsTenantSettingsOverridesCreateRequest(ctx context.Context, options *TenantsClientListDomainsTenantSettingsOverridesOptions) (*policy.Request, error) {
+	urlPath := "/v1/admin/domains/delegatedTenantSettingOverrides"
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
-		return TenantsClientListTenantSettingsResponse{}, err
+		return nil, err
 	}
-	httpResp, err := client.internal.Pipeline().Do(req)
-	if err != nil {
-		return TenantsClientListTenantSettingsResponse{}, err
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
 	}
-	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
-		err = core.NewResponseError(httpResp)
-		return TenantsClientListTenantSettingsResponse{}, err
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// listDomainsTenantSettingsOverridesHandleResponse handles the ListDomainsTenantSettingsOverrides response.
+func (client *TenantsClient) listDomainsTenantSettingsOverridesHandleResponse(resp *http.Response) (TenantsClientListDomainsTenantSettingsOverridesResponse, error) {
+	result := TenantsClientListDomainsTenantSettingsOverridesResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.DomainTenantSettingOverrides); err != nil {
+		return TenantsClientListDomainsTenantSettingsOverridesResponse{}, err
 	}
-	resp, err := client.listTenantSettingsHandleResponse(httpResp)
-	return resp, err
+	return result, nil
+}
+
+// NewListTenantSettingsPager - PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
+// REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
+// LIMITATIONS Maximum 25 requests per minute.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+//
+// Generated from API version v1
+//   - options - TenantsClientListTenantSettingsOptions contains the optional parameters for the TenantsClient.NewListTenantSettingsPager
+//     method.
+func (client *TenantsClient) NewListTenantSettingsPager(options *TenantsClientListTenantSettingsOptions) *runtime.Pager[TenantsClientListTenantSettingsResponse] {
+	return runtime.NewPager(runtime.PagingHandler[TenantsClientListTenantSettingsResponse]{
+		More: func(page TenantsClientListTenantSettingsResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *TenantsClientListTenantSettingsResponse) (TenantsClientListTenantSettingsResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "admin.TenantsClient.NewListTenantSettingsPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.listTenantSettingsCreateRequest(ctx, options)
+			}, nil)
+			if err != nil {
+				return TenantsClientListTenantSettingsResponse{}, err
+			}
+			return client.listTenantSettingsHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
 }
 
 // listTenantSettingsCreateRequest creates the ListTenantSettings request.
-func (client *TenantsClient) listTenantSettingsCreateRequest(ctx context.Context, _ *TenantsClientListTenantSettingsOptions) (*policy.Request, error) {
+func (client *TenantsClient) listTenantSettingsCreateRequest(ctx context.Context, options *TenantsClientListTenantSettingsOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/tenantsettings"
 	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }
@@ -147,9 +342,210 @@ func (client *TenantsClient) listTenantSettingsHandleResponse(resp *http.Respons
 	return result, nil
 }
 
+// NewListWorkspacesTenantSettingsOverridesPager - This API supports pagination [/rest/api/fabric/articles/pagination]. A
+// maximum of 10,000 records can be returned per request. With the continuation token provided in the response, you can get
+// the next
+// 10,000 records.
+// The user must be a Fabric Service Administrator or authenticate using a service principal.
+// REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
+// LIMITATIONS Maximum 25 requests per minute.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+//
+// Generated from API version v1
+//   - options - TenantsClientListWorkspacesTenantSettingsOverridesOptions contains the optional parameters for the TenantsClient.NewListWorkspacesTenantSettingsOverridesPager
+//     method.
+func (client *TenantsClient) NewListWorkspacesTenantSettingsOverridesPager(options *TenantsClientListWorkspacesTenantSettingsOverridesOptions) *runtime.Pager[TenantsClientListWorkspacesTenantSettingsOverridesResponse] {
+	return runtime.NewPager(runtime.PagingHandler[TenantsClientListWorkspacesTenantSettingsOverridesResponse]{
+		More: func(page TenantsClientListWorkspacesTenantSettingsOverridesResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *TenantsClientListWorkspacesTenantSettingsOverridesResponse) (TenantsClientListWorkspacesTenantSettingsOverridesResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "admin.TenantsClient.NewListWorkspacesTenantSettingsOverridesPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.listWorkspacesTenantSettingsOverridesCreateRequest(ctx, options)
+			}, nil)
+			if err != nil {
+				return TenantsClientListWorkspacesTenantSettingsOverridesResponse{}, err
+			}
+			return client.listWorkspacesTenantSettingsOverridesHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
+}
+
+// listWorkspacesTenantSettingsOverridesCreateRequest creates the ListWorkspacesTenantSettingsOverrides request.
+func (client *TenantsClient) listWorkspacesTenantSettingsOverridesCreateRequest(ctx context.Context, options *TenantsClientListWorkspacesTenantSettingsOverridesOptions) (*policy.Request, error) {
+	urlPath := "/v1/admin/workspaces/delegatedTenantSettingOverrides"
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// listWorkspacesTenantSettingsOverridesHandleResponse handles the ListWorkspacesTenantSettingsOverrides response.
+func (client *TenantsClient) listWorkspacesTenantSettingsOverridesHandleResponse(resp *http.Response) (TenantsClientListWorkspacesTenantSettingsOverridesResponse, error) {
+	result := TenantsClientListWorkspacesTenantSettingsOverridesResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.WorkspaceTenantSettingOverrides); err != nil {
+		return TenantsClientListWorkspacesTenantSettingsOverridesResponse{}, err
+	}
+	return result, nil
+}
+
+// UpdateCapacityTenantSettingOverride - PERMISSIONS The caller must be a Fabric administrator or authenticate using a service
+// principal.
+// REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All
+// LIMITATIONS Maximum 25 requests per minute.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - tenantSettingName - The name of tenant setting.
+//   - updateTenantSettingOverrideRequest - The request payload for updating the tenant setting override.
+//   - options - TenantsClientUpdateCapacityTenantSettingOverrideOptions contains the optional parameters for the TenantsClient.UpdateCapacityTenantSettingOverride
+//     method.
+func (client *TenantsClient) UpdateCapacityTenantSettingOverride(ctx context.Context, capacityID string, tenantSettingName string, updateTenantSettingOverrideRequest UpdateCapacityTenantSettingOverrideRequest, options *TenantsClientUpdateCapacityTenantSettingOverrideOptions) (TenantsClientUpdateCapacityTenantSettingOverrideResponse, error) {
+	var err error
+	const operationName = "admin.TenantsClient.UpdateCapacityTenantSettingOverride"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateCapacityTenantSettingOverrideCreateRequest(ctx, capacityID, tenantSettingName, updateTenantSettingOverrideRequest, options)
+	if err != nil {
+		return TenantsClientUpdateCapacityTenantSettingOverrideResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return TenantsClientUpdateCapacityTenantSettingOverrideResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return TenantsClientUpdateCapacityTenantSettingOverrideResponse{}, err
+	}
+	resp, err := client.updateCapacityTenantSettingOverrideHandleResponse(httpResp)
+	return resp, err
+}
+
+// updateCapacityTenantSettingOverrideCreateRequest creates the UpdateCapacityTenantSettingOverride request.
+func (client *TenantsClient) updateCapacityTenantSettingOverrideCreateRequest(ctx context.Context, capacityID string, tenantSettingName string, updateTenantSettingOverrideRequest UpdateCapacityTenantSettingOverrideRequest, _ *TenantsClientUpdateCapacityTenantSettingOverrideOptions) (*policy.Request, error) {
+	urlPath := "/v1/admin/capacities/{capacityId}/delegatedTenantSettingOverrides/{tenantSettingName}/update"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	if tenantSettingName == "" {
+		return nil, errors.New("parameter tenantSettingName cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{tenantSettingName}", url.PathEscape(tenantSettingName))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateTenantSettingOverrideRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// updateCapacityTenantSettingOverrideHandleResponse handles the UpdateCapacityTenantSettingOverride response.
+func (client *TenantsClient) updateCapacityTenantSettingOverrideHandleResponse(resp *http.Response) (TenantsClientUpdateCapacityTenantSettingOverrideResponse, error) {
+	result := TenantsClientUpdateCapacityTenantSettingOverrideResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.UpdateCapacityTenantSettingOverrideResponse); err != nil {
+		return TenantsClientUpdateCapacityTenantSettingOverrideResponse{}, err
+	}
+	return result, nil
+}
+
+// UpdateTenantSetting - PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
+// REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All
+// LIMITATIONS Maximum 25 requests per minute.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - tenantSettingName - The name of tenant setting.
+//   - updateTenantSettingRequest - The request payload for updating a tenant setting.
+//   - options - TenantsClientUpdateTenantSettingOptions contains the optional parameters for the TenantsClient.UpdateTenantSetting
+//     method.
+func (client *TenantsClient) UpdateTenantSetting(ctx context.Context, tenantSettingName string, updateTenantSettingRequest UpdateTenantSettingRequest, options *TenantsClientUpdateTenantSettingOptions) (TenantsClientUpdateTenantSettingResponse, error) {
+	var err error
+	const operationName = "admin.TenantsClient.UpdateTenantSetting"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateTenantSettingCreateRequest(ctx, tenantSettingName, updateTenantSettingRequest, options)
+	if err != nil {
+		return TenantsClientUpdateTenantSettingResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return TenantsClientUpdateTenantSettingResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return TenantsClientUpdateTenantSettingResponse{}, err
+	}
+	resp, err := client.updateTenantSettingHandleResponse(httpResp)
+	return resp, err
+}
+
+// updateTenantSettingCreateRequest creates the UpdateTenantSetting request.
+func (client *TenantsClient) updateTenantSettingCreateRequest(ctx context.Context, tenantSettingName string, updateTenantSettingRequest UpdateTenantSettingRequest, _ *TenantsClientUpdateTenantSettingOptions) (*policy.Request, error) {
+	urlPath := "/v1/admin/tenantsettings/{tenantSettingName}/update"
+	if tenantSettingName == "" {
+		return nil, errors.New("parameter tenantSettingName cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{tenantSettingName}", url.PathEscape(tenantSettingName))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateTenantSettingRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// updateTenantSettingHandleResponse handles the UpdateTenantSetting response.
+func (client *TenantsClient) updateTenantSettingHandleResponse(resp *http.Response) (TenantsClientUpdateTenantSettingResponse, error) {
+	result := TenantsClientUpdateTenantSettingResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.UpdateTenantSettingResponse); err != nil {
+		return TenantsClientUpdateTenantSettingResponse{}, err
+	}
+	return result, nil
+}
+
 // Custom code starts below
 
-// ListCapacitiesTenantSettingsOverrides - returns array of TenantSettingOverride from all pages.
+// ListCapacitiesTenantSettingsOverrides - returns array of CapacityTenantSettingOverride from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records can be returned per request. With the continuation token provided in the response, you can get the next
 // 10,000 records.
 //
@@ -157,7 +553,7 @@ func (client *TenantsClient) listTenantSettingsHandleResponse(resp *http.Respons
 //
 // # REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
 //
-// LIMITATIONS Maximum 100 requests per hour.
+// LIMITATIONS Maximum 25 requests per minute.
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
@@ -167,18 +563,149 @@ func (client *TenantsClient) listTenantSettingsHandleResponse(resp *http.Respons
 // INTERFACE
 // Generated from API version v1
 //   - options - TenantsClientListCapacitiesTenantSettingsOverridesOptions contains the optional parameters for the TenantsClient.NewListCapacitiesTenantSettingsOverridesPager method.
-func (client *TenantsClient) ListCapacitiesTenantSettingsOverrides(ctx context.Context, options *TenantsClientListCapacitiesTenantSettingsOverridesOptions) ([]TenantSettingOverride, error) {
+func (client *TenantsClient) ListCapacitiesTenantSettingsOverrides(ctx context.Context, options *TenantsClientListCapacitiesTenantSettingsOverridesOptions) ([]CapacityTenantSettingOverride, error) {
 	pager := client.NewListCapacitiesTenantSettingsOverridesPager(options)
-	mapper := func(resp TenantsClientListCapacitiesTenantSettingsOverridesResponse) []TenantSettingOverride {
-		return resp.Overrides
+	mapper := func(resp TenantsClientListCapacitiesTenantSettingsOverridesResponse) []CapacityTenantSettingOverride {
+		return resp.Value
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
 		var azcoreRespError *azcore.ResponseError
 		if errors.As(err, &azcoreRespError) {
-			return []TenantSettingOverride{}, core.NewResponseError(azcoreRespError.RawResponse)
+			return []CapacityTenantSettingOverride{}, core.NewResponseError(azcoreRespError.RawResponse)
 		}
-		return []TenantSettingOverride{}, err
+		return []CapacityTenantSettingOverride{}, err
+	}
+	return list, nil
+}
+
+// ListCapacityTenantSettingsOverridesByCapacityID - returns array of CapacityTenantSetting from all pages.
+// PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
+//
+// # REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
+//
+// LIMITATIONS Maximum 100 requests per minute.
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - options - TenantsClientListCapacityTenantSettingsOverridesByCapacityIDOptions contains the optional parameters for the TenantsClient.NewListCapacityTenantSettingsOverridesByCapacityIDPager method.
+func (client *TenantsClient) ListCapacityTenantSettingsOverridesByCapacityID(ctx context.Context, capacityID string, options *TenantsClientListCapacityTenantSettingsOverridesByCapacityIDOptions) ([]CapacityTenantSetting, error) {
+	pager := client.NewListCapacityTenantSettingsOverridesByCapacityIDPager(capacityID, options)
+	mapper := func(resp TenantsClientListCapacityTenantSettingsOverridesByCapacityIDResponse) []CapacityTenantSetting {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []CapacityTenantSetting{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []CapacityTenantSetting{}, err
+	}
+	return list, nil
+}
+
+// ListDomainsTenantSettingsOverrides - returns array of DomainTenantSettingOverride from all pages.
+// This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records can be returned per request. With the continuation token provided in the response, you can get the next
+// 10,000 records.
+//
+// The user must be a Fabric Service Administrator or authenticate using a service principal.
+//
+// # REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
+//
+// LIMITATIONS Maximum 25 requests per minute.
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - options - TenantsClientListDomainsTenantSettingsOverridesOptions contains the optional parameters for the TenantsClient.NewListDomainsTenantSettingsOverridesPager method.
+func (client *TenantsClient) ListDomainsTenantSettingsOverrides(ctx context.Context, options *TenantsClientListDomainsTenantSettingsOverridesOptions) ([]DomainTenantSettingOverride, error) {
+	pager := client.NewListDomainsTenantSettingsOverridesPager(options)
+	mapper := func(resp TenantsClientListDomainsTenantSettingsOverridesResponse) []DomainTenantSettingOverride {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []DomainTenantSettingOverride{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []DomainTenantSettingOverride{}, err
+	}
+	return list, nil
+}
+
+// ListTenantSettings - returns array of TenantSetting from all pages.
+// PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
+//
+// # REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
+//
+// LIMITATIONS Maximum 25 requests per minute.
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - options - TenantsClientListTenantSettingsOptions contains the optional parameters for the TenantsClient.NewListTenantSettingsPager method.
+func (client *TenantsClient) ListTenantSettings(ctx context.Context, options *TenantsClientListTenantSettingsOptions) ([]TenantSetting, error) {
+	pager := client.NewListTenantSettingsPager(options)
+	mapper := func(resp TenantsClientListTenantSettingsResponse) []TenantSetting {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []TenantSetting{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []TenantSetting{}, err
+	}
+	return list, nil
+}
+
+// ListWorkspacesTenantSettingsOverrides - returns array of WorkspaceTenantSettingOverride from all pages.
+// This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records can be returned per request. With the continuation token provided in the response, you can get the next
+// 10,000 records.
+//
+// The user must be a Fabric Service Administrator or authenticate using a service principal.
+//
+// # REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
+//
+// LIMITATIONS Maximum 25 requests per minute.
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - options - TenantsClientListWorkspacesTenantSettingsOverridesOptions contains the optional parameters for the TenantsClient.NewListWorkspacesTenantSettingsOverridesPager method.
+func (client *TenantsClient) ListWorkspacesTenantSettingsOverrides(ctx context.Context, options *TenantsClientListWorkspacesTenantSettingsOverridesOptions) ([]WorkspaceTenantSettingOverride, error) {
+	pager := client.NewListWorkspacesTenantSettingsOverridesPager(options)
+	mapper := func(resp TenantsClientListWorkspacesTenantSettingsOverridesResponse) []WorkspaceTenantSettingOverride {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []WorkspaceTenantSettingOverride{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []WorkspaceTenantSettingOverride{}, err
 	}
 	return list, nil
 }

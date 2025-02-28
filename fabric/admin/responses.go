@@ -117,16 +117,51 @@ type LabelsClientBulkSetLabelsResponse struct {
 	ItemsChangeLabelResponse
 }
 
+// TenantsClientDeleteCapacityTenantSettingOverrideResponse contains the response from method TenantsClient.DeleteCapacityTenantSettingOverride.
+type TenantsClientDeleteCapacityTenantSettingOverrideResponse struct {
+	// placeholder for future response values
+}
+
 // TenantsClientListCapacitiesTenantSettingsOverridesResponse contains the response from method TenantsClient.NewListCapacitiesTenantSettingsOverridesPager.
 type TenantsClientListCapacitiesTenantSettingsOverridesResponse struct {
 	// A list of tenant settings overrides.
-	TenantSettingOverrides
+	CapacityTenantSettingOverrides
 }
 
-// TenantsClientListTenantSettingsResponse contains the response from method TenantsClient.ListTenantSettings.
+// TenantsClientListCapacityTenantSettingsOverridesByCapacityIDResponse contains the response from method TenantsClient.NewListCapacityTenantSettingsOverridesByCapacityIDPager.
+type TenantsClientListCapacityTenantSettingsOverridesByCapacityIDResponse struct {
+	// A list of tenant settings overrides for given capacityId
+	CapacityTenantSettingsByCapacityIDResponse
+}
+
+// TenantsClientListDomainsTenantSettingsOverridesResponse contains the response from method TenantsClient.NewListDomainsTenantSettingsOverridesPager.
+type TenantsClientListDomainsTenantSettingsOverridesResponse struct {
+	// A list of tenant settings overrides.
+	DomainTenantSettingOverrides
+}
+
+// TenantsClientListTenantSettingsResponse contains the response from method TenantsClient.NewListTenantSettingsPager.
 type TenantsClientListTenantSettingsResponse struct {
 	// A list of tenant settings.
 	TenantSettings
+}
+
+// TenantsClientListWorkspacesTenantSettingsOverridesResponse contains the response from method TenantsClient.NewListWorkspacesTenantSettingsOverridesPager.
+type TenantsClientListWorkspacesTenantSettingsOverridesResponse struct {
+	// A list of tenant settings overrides.
+	WorkspaceTenantSettingOverrides
+}
+
+// TenantsClientUpdateCapacityTenantSettingOverrideResponse contains the response from method TenantsClient.UpdateCapacityTenantSettingOverride.
+type TenantsClientUpdateCapacityTenantSettingOverrideResponse struct {
+	// Capacity tenant setting override update request.
+	UpdateCapacityTenantSettingOverrideResponse
+}
+
+// TenantsClientUpdateTenantSettingResponse contains the response from method TenantsClient.UpdateTenantSetting.
+type TenantsClientUpdateTenantSettingResponse struct {
+	// Tenant setting update response.
+	UpdateTenantSettingResponse
 }
 
 // UsersClientListAccessEntitiesResponse contains the response from method UsersClient.NewListAccessEntitiesPager.

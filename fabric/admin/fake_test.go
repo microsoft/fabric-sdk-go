@@ -60,7 +60,7 @@ func (testsuite *FakeTestSuite) TestTenants_ListTenantSettings() {
 	})
 
 	exampleRes := admin.TenantSettings{
-		TenantSettings: []admin.TenantSetting{
+		Value: []admin.TenantSetting{
 			{
 				CanSpecifySecurityGroups: to.Ptr(true),
 				Enabled:                  to.Ptr(true),
@@ -97,16 +97,81 @@ func (testsuite *FakeTestSuite) TestTenants_ListTenantSettings() {
 			}},
 	}
 
-	testsuite.serverFactory.TenantsServer.ListTenantSettings = func(ctx context.Context, options *admin.TenantsClientListTenantSettingsOptions) (resp azfake.Responder[admin.TenantsClientListTenantSettingsResponse], errResp azfake.ErrorResponder) {
-		resp = azfake.Responder[admin.TenantsClientListTenantSettingsResponse]{}
-		resp.SetResponse(http.StatusOK, admin.TenantsClientListTenantSettingsResponse{TenantSettings: exampleRes}, nil)
+	testsuite.serverFactory.TenantsServer.NewListTenantSettingsPager = func(options *admin.TenantsClientListTenantSettingsOptions) (resp azfake.PagerResponder[admin.TenantsClientListTenantSettingsResponse]) {
+		resp = azfake.PagerResponder[admin.TenantsClientListTenantSettingsResponse]{}
+		resp.AddPage(http.StatusOK, admin.TenantsClientListTenantSettingsResponse{TenantSettings: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewTenantsClient()
-	res, err := client.ListTenantSettings(ctx, nil)
+	pager := client.NewListTenantSettingsPager(&admin.TenantsClientListTenantSettingsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.TenantSettings))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestTenants_UpdateTenantSetting() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update tenant setting example"},
+	})
+	var exampleTenantSettingName string
+	var exampleUpdateTenantSettingRequest admin.UpdateTenantSettingRequest
+	exampleTenantSettingName = "PublishToWeb"
+	exampleUpdateTenantSettingRequest = admin.UpdateTenantSettingRequest{
+		Enabled: to.Ptr(true),
+		EnabledSecurityGroups: []admin.TenantSettingSecurityGroup{
+			{
+				Name:    to.Ptr("TestComputeCdsa"),
+				GraphID: to.Ptr("f51b705f-a409-4d40-9197-c5d5f349e2f0"),
+			}},
+		Properties: []admin.TenantSettingProperty{
+			{
+				Name:  to.Ptr("CreateP2w"),
+				Type:  to.Ptr(admin.TenantSettingPropertyTypeBoolean),
+				Value: to.Ptr("true"),
+			}},
+	}
+
+	exampleRes := admin.UpdateTenantSettingResponse{
+		TenantSettings: []admin.TenantSetting{
+			{
+				CanSpecifySecurityGroups: to.Ptr(true),
+				Enabled:                  to.Ptr(true),
+				EnabledSecurityGroups: []admin.TenantSettingSecurityGroup{
+					{
+						Name:    to.Ptr("TestComputeCdsa"),
+						GraphID: to.Ptr("f51b705f-a409-4d40-9197-c5d5f349e2f0"),
+					}},
+				Properties: []admin.TenantSettingProperty{
+					{
+						Name:  to.Ptr("CreateP2w"),
+						Type:  to.Ptr(admin.TenantSettingPropertyTypeBoolean),
+						Value: to.Ptr("true"),
+					}},
+				SettingName:        to.Ptr("PublishToWeb"),
+				TenantSettingGroup: to.Ptr("TestSetting"),
+				Title:              to.Ptr("Sample test tenant setting"),
+			}},
+	}
+
+	testsuite.serverFactory.TenantsServer.UpdateTenantSetting = func(ctx context.Context, tenantSettingName string, updateTenantSettingRequest admin.UpdateTenantSettingRequest, options *admin.TenantsClientUpdateTenantSettingOptions) (resp azfake.Responder[admin.TenantsClientUpdateTenantSettingResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleTenantSettingName, tenantSettingName)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateTenantSettingRequest, updateTenantSettingRequest))
+		resp = azfake.Responder[admin.TenantsClientUpdateTenantSettingResponse]{}
+		resp.SetResponse(http.StatusOK, admin.TenantsClientUpdateTenantSettingResponse{UpdateTenantSettingResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTenantsClient()
+	res, err := client.UpdateTenantSetting(ctx, exampleTenantSettingName, exampleUpdateTenantSettingRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
-	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.TenantSettings))
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.UpdateTenantSettingResponse))
 }
 
 func (testsuite *FakeTestSuite) TestTenants_ListCapacitiesTenantSettingsOverrides() {
@@ -115,17 +180,15 @@ func (testsuite *FakeTestSuite) TestTenants_ListCapacitiesTenantSettingsOverride
 		"example-id": {"List capacities tenant settings overrides example"},
 	})
 
-	exampleRes := admin.TenantSettingOverrides{
+	exampleRes := admin.CapacityTenantSettingOverrides{
 		ContinuationToken: to.Ptr("MSwxMDAwMCww"),
 		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/admin/capacities/delegatedTenantSettingOverrides?continuationToken=MSwxMDAwMCww"),
-		Overrides: []admin.TenantSettingOverride{
+		Value: []admin.CapacityTenantSettingOverride{
 			{
 				ID: to.Ptr("f51b705f-a409-4d40-9197-c5d5f349e2ef"),
-				TenantSettings: []admin.TenantSetting{
+				TenantSettings: []admin.CapacityTenantSetting{
 					{
 						CanSpecifySecurityGroups: to.Ptr(true),
-						DelegateToWorkspace:      to.Ptr(false),
-						DelegatedFrom:            to.Ptr(admin.DelegatedFromTenant),
 						Enabled:                  to.Ptr(true),
 						EnabledSecurityGroups: []admin.TenantSettingSecurityGroup{
 							{
@@ -146,16 +209,18 @@ func (testsuite *FakeTestSuite) TestTenants_ListCapacitiesTenantSettingsOverride
 								Type:  to.Ptr(admin.TenantSettingPropertyTypeInteger),
 								Value: to.Ptr("5"),
 							}},
-						SettingName:        to.Ptr("TenantSettingForCapacityDelegatedSwitch"),
-						TenantSettingGroup: to.Ptr("Delegation testing"),
-						Title:              to.Ptr("Capacity delegation test settings"),
+						SettingName:         to.Ptr("TenantSettingForCapacityDelegatedSwitch"),
+						TenantSettingGroup:  to.Ptr("Delegation testing"),
+						Title:               to.Ptr("Capacity delegation test settings"),
+						DelegateToWorkspace: to.Ptr(false),
+						DelegatedFrom:       to.Ptr(admin.DelegatedFromTenant),
 					}},
 			}},
 	}
 
 	testsuite.serverFactory.TenantsServer.NewListCapacitiesTenantSettingsOverridesPager = func(options *admin.TenantsClientListCapacitiesTenantSettingsOverridesOptions) (resp azfake.PagerResponder[admin.TenantsClientListCapacitiesTenantSettingsOverridesResponse]) {
 		resp = azfake.PagerResponder[admin.TenantsClientListCapacitiesTenantSettingsOverridesResponse]{}
-		resp.AddPage(http.StatusOK, admin.TenantsClientListCapacitiesTenantSettingsOverridesResponse{TenantSettingOverrides: exampleRes}, nil)
+		resp.AddPage(http.StatusOK, admin.TenantsClientListCapacitiesTenantSettingsOverridesResponse{CapacityTenantSettingOverrides: exampleRes}, nil)
 		return
 	}
 
@@ -164,7 +229,200 @@ func (testsuite *FakeTestSuite) TestTenants_ListCapacitiesTenantSettingsOverride
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")
-		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.TenantSettingOverrides))
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.CapacityTenantSettingOverrides))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestTenants_DeleteCapacityTenantSettingOverride() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update capacity tenant setting override example"},
+	})
+	var exampleCapacityID string
+	var exampleTenantSettingName string
+	exampleCapacityID = "f51b705f-a409-4d40-9197-c5d5f349e2ef"
+	exampleTenantSettingName = "TenantSettingForCapacityDelegatedSwitch"
+
+	testsuite.serverFactory.TenantsServer.DeleteCapacityTenantSettingOverride = func(ctx context.Context, capacityID string, tenantSettingName string, options *admin.TenantsClientDeleteCapacityTenantSettingOverrideOptions) (resp azfake.Responder[admin.TenantsClientDeleteCapacityTenantSettingOverrideResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().Equal(exampleTenantSettingName, tenantSettingName)
+		resp = azfake.Responder[admin.TenantsClientDeleteCapacityTenantSettingOverrideResponse]{}
+		resp.SetResponse(http.StatusOK, admin.TenantsClientDeleteCapacityTenantSettingOverrideResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTenantsClient()
+	_, err = client.DeleteCapacityTenantSettingOverride(ctx, exampleCapacityID, exampleTenantSettingName, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestTenants_UpdateCapacityTenantSettingOverride() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update capacity tenant setting override example"},
+	})
+	var exampleCapacityID string
+	var exampleTenantSettingName string
+	var exampleUpdateTenantSettingOverrideRequest admin.UpdateCapacityTenantSettingOverrideRequest
+	exampleCapacityID = "f51b705f-a409-4d40-9197-c5d5f349e2ef"
+	exampleTenantSettingName = "AdminApisIncludeDetailedMetadata"
+	exampleUpdateTenantSettingOverrideRequest = admin.UpdateCapacityTenantSettingOverrideRequest{
+		DelegateToWorkspace: to.Ptr(true),
+		Enabled:             to.Ptr(true),
+		EnabledSecurityGroups: []admin.TenantSettingSecurityGroup{
+			{
+				Name:    to.Ptr("TestComputeCdsa"),
+				GraphID: to.Ptr("f51b705f-a409-4d40-9197-c5d5f349e2f0"),
+			}},
+	}
+
+	exampleRes := admin.UpdateCapacityTenantSettingOverrideResponse{
+		Overrides: []admin.CapacityTenantSetting{
+			{
+				CanSpecifySecurityGroups: to.Ptr(true),
+				Enabled:                  to.Ptr(true),
+				EnabledSecurityGroups: []admin.TenantSettingSecurityGroup{
+					{
+						Name:    to.Ptr("TestComputeCdsa"),
+						GraphID: to.Ptr("f51b705f-a409-4d40-9197-c5d5f349e2f0"),
+					}},
+				Properties: []admin.TenantSettingProperty{
+					{
+						Name:  to.Ptr("testIntProp"),
+						Type:  to.Ptr(admin.TenantSettingPropertyTypeInteger),
+						Value: to.Ptr("5"),
+					}},
+				SettingName:         to.Ptr("TenantSettingForCapacityDelegatedSwitch"),
+				TenantSettingGroup:  to.Ptr("Delegation testing"),
+				Title:               to.Ptr("Capacity delegation test settings"),
+				DelegateToWorkspace: to.Ptr(true),
+				DelegatedFrom:       to.Ptr(admin.DelegatedFromTenant),
+			}},
+	}
+
+	testsuite.serverFactory.TenantsServer.UpdateCapacityTenantSettingOverride = func(ctx context.Context, capacityID string, tenantSettingName string, updateTenantSettingOverrideRequest admin.UpdateCapacityTenantSettingOverrideRequest, options *admin.TenantsClientUpdateCapacityTenantSettingOverrideOptions) (resp azfake.Responder[admin.TenantsClientUpdateCapacityTenantSettingOverrideResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().Equal(exampleTenantSettingName, tenantSettingName)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateTenantSettingOverrideRequest, updateTenantSettingOverrideRequest))
+		resp = azfake.Responder[admin.TenantsClientUpdateCapacityTenantSettingOverrideResponse]{}
+		resp.SetResponse(http.StatusOK, admin.TenantsClientUpdateCapacityTenantSettingOverrideResponse{UpdateCapacityTenantSettingOverrideResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTenantsClient()
+	res, err := client.UpdateCapacityTenantSettingOverride(ctx, exampleCapacityID, exampleTenantSettingName, exampleUpdateTenantSettingOverrideRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.UpdateCapacityTenantSettingOverrideResponse))
+}
+
+func (testsuite *FakeTestSuite) TestTenants_ListDomainsTenantSettingsOverrides() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List domain tenant settings overrides example"},
+	})
+
+	exampleRes := admin.DomainTenantSettingOverrides{
+		ContinuationToken: to.Ptr("MSwxMDAwMCww"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/admin/domains/delegatedTenantSettingOverrides?continuationToken=MSwxMDAwMCww"),
+		Value: []admin.DomainTenantSettingOverride{
+			{
+				ID: to.Ptr("f51b705f-a409-4d40-9197-c5d5f349e2ef"),
+				TenantSettings: []admin.DomainTenantSetting{
+					{
+						CanSpecifySecurityGroups: to.Ptr(true),
+						Enabled:                  to.Ptr(true),
+						EnabledSecurityGroups: []admin.TenantSettingSecurityGroup{
+							{
+								Name:    to.Ptr("Admin API SP Test"),
+								GraphID: to.Ptr("f51b705f-a409-4d40-9197-c5d5f349e2f0"),
+							},
+							{
+								Name:    to.Ptr("Admin API Testing"),
+								GraphID: to.Ptr("1fecf19f-6e33-41b3-89fa-de8c821f3b79"),
+							},
+							{
+								Name:    to.Ptr("Admin Only"),
+								GraphID: to.Ptr("64bc10f1-1f1b-4a7e-b7a0-c87d89cba2b4"),
+							}},
+						SettingName:         to.Ptr("TenantSettingForDomainDelegatedSwitch"),
+						TenantSettingGroup:  to.Ptr("Delegation testing"),
+						Title:               to.Ptr("Domain delegation test settings"),
+						DelegateToWorkspace: to.Ptr(false),
+						DelegatedFrom:       to.Ptr(admin.DelegatedFromTenant),
+					}},
+			}},
+	}
+
+	testsuite.serverFactory.TenantsServer.NewListDomainsTenantSettingsOverridesPager = func(options *admin.TenantsClientListDomainsTenantSettingsOverridesOptions) (resp azfake.PagerResponder[admin.TenantsClientListDomainsTenantSettingsOverridesResponse]) {
+		resp = azfake.PagerResponder[admin.TenantsClientListDomainsTenantSettingsOverridesResponse]{}
+		resp.AddPage(http.StatusOK, admin.TenantsClientListDomainsTenantSettingsOverridesResponse{DomainTenantSettingOverrides: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTenantsClient()
+	pager := client.NewListDomainsTenantSettingsOverridesPager(&admin.TenantsClientListDomainsTenantSettingsOverridesOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.DomainTenantSettingOverrides))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestTenants_ListWorkspacesTenantSettingsOverrides() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List workspace tenant settings overrides example"},
+	})
+
+	exampleRes := admin.WorkspaceTenantSettingOverrides{
+		ContinuationToken: to.Ptr("MSwxMDAwMCww"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/admin/workspaces/delegatedTenantSettingOverrides?continuationToken=MSwxMDAwMCww"),
+		Value: []admin.WorkspaceTenantSettingOverride{
+			{
+				ID: to.Ptr("f51b705f-a409-4d40-9197-c5d5f349e2ef"),
+				TenantSettings: []admin.WorkspaceTenantSetting{
+					{
+						CanSpecifySecurityGroups: to.Ptr(true),
+						Enabled:                  to.Ptr(true),
+						EnabledSecurityGroups: []admin.TenantSettingSecurityGroup{
+							{
+								Name:    to.Ptr("Admin API SP Test"),
+								GraphID: to.Ptr("f51b705f-a409-4d40-9197-c5d5f349e2f0"),
+							},
+							{
+								Name:    to.Ptr("Admin API Testing"),
+								GraphID: to.Ptr("1fecf19f-6e33-41b3-89fa-de8c821f3b79"),
+							},
+							{
+								Name:    to.Ptr("Admin Only"),
+								GraphID: to.Ptr("64bc10f1-1f1b-4a7e-b7a0-c87d89cba2b4"),
+							}},
+						SettingName:        to.Ptr("TenantSettingForWorkspaceDelegatedSwitch"),
+						TenantSettingGroup: to.Ptr("Delegation testing"),
+						Title:              to.Ptr("Workspace delegation test settings"),
+						DelegatedFrom:      to.Ptr(admin.DelegatedFromTenant),
+					}},
+			}},
+	}
+
+	testsuite.serverFactory.TenantsServer.NewListWorkspacesTenantSettingsOverridesPager = func(options *admin.TenantsClientListWorkspacesTenantSettingsOverridesOptions) (resp azfake.PagerResponder[admin.TenantsClientListWorkspacesTenantSettingsOverridesResponse]) {
+		resp = azfake.PagerResponder[admin.TenantsClientListWorkspacesTenantSettingsOverridesResponse]{}
+		resp.AddPage(http.StatusOK, admin.TenantsClientListWorkspacesTenantSettingsOverridesResponse{WorkspaceTenantSettingOverrides: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTenantsClient()
+	pager := client.NewListWorkspacesTenantSettingsOverridesPager(&admin.TenantsClientListWorkspacesTenantSettingsOverridesOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.WorkspaceTenantSettingOverrides))
 		if err == nil {
 			break
 		}

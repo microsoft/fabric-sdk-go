@@ -220,6 +220,170 @@ func (a *AzureDevOpsDetails) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type CapacityTenantSetting.
+func (c CapacityTenantSetting) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "canSpecifySecurityGroups", c.CanSpecifySecurityGroups)
+	populate(objectMap, "delegateToWorkspace", c.DelegateToWorkspace)
+	populate(objectMap, "delegatedFrom", c.DelegatedFrom)
+	populate(objectMap, "enabled", c.Enabled)
+	populate(objectMap, "enabledSecurityGroups", c.EnabledSecurityGroups)
+	populate(objectMap, "excludedSecurityGroups", c.ExcludedSecurityGroups)
+	populate(objectMap, "properties", c.Properties)
+	populate(objectMap, "settingName", c.SettingName)
+	populate(objectMap, "tenantSettingGroup", c.TenantSettingGroup)
+	populate(objectMap, "title", c.Title)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CapacityTenantSetting.
+func (c *CapacityTenantSetting) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "canSpecifySecurityGroups":
+			err = unpopulate(val, "CanSpecifySecurityGroups", &c.CanSpecifySecurityGroups)
+			delete(rawMsg, key)
+		case "delegateToWorkspace":
+			err = unpopulate(val, "DelegateToWorkspace", &c.DelegateToWorkspace)
+			delete(rawMsg, key)
+		case "delegatedFrom":
+			err = unpopulate(val, "DelegatedFrom", &c.DelegatedFrom)
+			delete(rawMsg, key)
+		case "enabled":
+			err = unpopulate(val, "Enabled", &c.Enabled)
+			delete(rawMsg, key)
+		case "enabledSecurityGroups":
+			err = unpopulate(val, "EnabledSecurityGroups", &c.EnabledSecurityGroups)
+			delete(rawMsg, key)
+		case "excludedSecurityGroups":
+			err = unpopulate(val, "ExcludedSecurityGroups", &c.ExcludedSecurityGroups)
+			delete(rawMsg, key)
+		case "properties":
+			err = unpopulate(val, "Properties", &c.Properties)
+			delete(rawMsg, key)
+		case "settingName":
+			err = unpopulate(val, "SettingName", &c.SettingName)
+			delete(rawMsg, key)
+		case "tenantSettingGroup":
+			err = unpopulate(val, "TenantSettingGroup", &c.TenantSettingGroup)
+			delete(rawMsg, key)
+		case "title":
+			err = unpopulate(val, "Title", &c.Title)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type CapacityTenantSettingOverride.
+func (c CapacityTenantSettingOverride) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "id", c.ID)
+	populate(objectMap, "tenantSettings", c.TenantSettings)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CapacityTenantSettingOverride.
+func (c *CapacityTenantSettingOverride) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "id":
+			err = unpopulate(val, "ID", &c.ID)
+			delete(rawMsg, key)
+		case "tenantSettings":
+			err = unpopulate(val, "TenantSettings", &c.TenantSettings)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type CapacityTenantSettingOverrides.
+func (c CapacityTenantSettingOverrides) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "continuationToken", c.ContinuationToken)
+	populate(objectMap, "continuationUri", c.ContinuationURI)
+	populate(objectMap, "value", c.Value)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CapacityTenantSettingOverrides.
+func (c *CapacityTenantSettingOverrides) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "continuationToken":
+			err = unpopulate(val, "ContinuationToken", &c.ContinuationToken)
+			delete(rawMsg, key)
+		case "continuationUri":
+			err = unpopulate(val, "ContinuationURI", &c.ContinuationURI)
+			delete(rawMsg, key)
+		case "value":
+			err = unpopulate(val, "Value", &c.Value)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type CapacityTenantSettingsByCapacityIDResponse.
+func (c CapacityTenantSettingsByCapacityIDResponse) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "continuationToken", c.ContinuationToken)
+	populate(objectMap, "continuationUri", c.ContinuationURI)
+	populate(objectMap, "value", c.Value)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CapacityTenantSettingsByCapacityIDResponse.
+func (c *CapacityTenantSettingsByCapacityIDResponse) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "continuationToken":
+			err = unpopulate(val, "ContinuationToken", &c.ContinuationToken)
+			delete(rawMsg, key)
+		case "continuationUri":
+			err = unpopulate(val, "ContinuationURI", &c.ContinuationURI)
+			delete(rawMsg, key)
+		case "value":
+			err = unpopulate(val, "Value", &c.Value)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type CreateDomainRequest.
 func (c CreateDomainRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -351,6 +515,135 @@ func (d *DomainRoleUnassignmentRequest) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "type":
 			err = unpopulate(val, "Type", &d.Type)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", d, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type DomainTenantSetting.
+func (d DomainTenantSetting) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "canSpecifySecurityGroups", d.CanSpecifySecurityGroups)
+	populate(objectMap, "delegateToWorkspace", d.DelegateToWorkspace)
+	populate(objectMap, "delegatedFrom", d.DelegatedFrom)
+	populate(objectMap, "enabled", d.Enabled)
+	populate(objectMap, "enabledSecurityGroups", d.EnabledSecurityGroups)
+	populate(objectMap, "excludedSecurityGroups", d.ExcludedSecurityGroups)
+	populate(objectMap, "properties", d.Properties)
+	populate(objectMap, "settingName", d.SettingName)
+	populate(objectMap, "tenantSettingGroup", d.TenantSettingGroup)
+	populate(objectMap, "title", d.Title)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type DomainTenantSetting.
+func (d *DomainTenantSetting) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", d, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "canSpecifySecurityGroups":
+			err = unpopulate(val, "CanSpecifySecurityGroups", &d.CanSpecifySecurityGroups)
+			delete(rawMsg, key)
+		case "delegateToWorkspace":
+			err = unpopulate(val, "DelegateToWorkspace", &d.DelegateToWorkspace)
+			delete(rawMsg, key)
+		case "delegatedFrom":
+			err = unpopulate(val, "DelegatedFrom", &d.DelegatedFrom)
+			delete(rawMsg, key)
+		case "enabled":
+			err = unpopulate(val, "Enabled", &d.Enabled)
+			delete(rawMsg, key)
+		case "enabledSecurityGroups":
+			err = unpopulate(val, "EnabledSecurityGroups", &d.EnabledSecurityGroups)
+			delete(rawMsg, key)
+		case "excludedSecurityGroups":
+			err = unpopulate(val, "ExcludedSecurityGroups", &d.ExcludedSecurityGroups)
+			delete(rawMsg, key)
+		case "properties":
+			err = unpopulate(val, "Properties", &d.Properties)
+			delete(rawMsg, key)
+		case "settingName":
+			err = unpopulate(val, "SettingName", &d.SettingName)
+			delete(rawMsg, key)
+		case "tenantSettingGroup":
+			err = unpopulate(val, "TenantSettingGroup", &d.TenantSettingGroup)
+			delete(rawMsg, key)
+		case "title":
+			err = unpopulate(val, "Title", &d.Title)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", d, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type DomainTenantSettingOverride.
+func (d DomainTenantSettingOverride) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "id", d.ID)
+	populate(objectMap, "tenantSettings", d.TenantSettings)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type DomainTenantSettingOverride.
+func (d *DomainTenantSettingOverride) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", d, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "id":
+			err = unpopulate(val, "ID", &d.ID)
+			delete(rawMsg, key)
+		case "tenantSettings":
+			err = unpopulate(val, "TenantSettings", &d.TenantSettings)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", d, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type DomainTenantSettingOverrides.
+func (d DomainTenantSettingOverrides) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "continuationToken", d.ContinuationToken)
+	populate(objectMap, "continuationUri", d.ContinuationURI)
+	populate(objectMap, "value", d.Value)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type DomainTenantSettingOverrides.
+func (d *DomainTenantSettingOverrides) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", d, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "continuationToken":
+			err = unpopulate(val, "ContinuationToken", &d.ContinuationToken)
+			delete(rawMsg, key)
+		case "continuationUri":
+			err = unpopulate(val, "ContinuationURI", &d.ContinuationURI)
+			delete(rawMsg, key)
+		case "value":
+			err = unpopulate(val, "Value", &d.Value)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -1270,8 +1563,9 @@ func (s *SetLabelsRequest) UnmarshalJSON(data []byte) error {
 func (t TenantSetting) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "canSpecifySecurityGroups", t.CanSpecifySecurityGroups)
+	populate(objectMap, "delegateToCapacity", t.DelegateToCapacity)
+	populate(objectMap, "delegateToDomain", t.DelegateToDomain)
 	populate(objectMap, "delegateToWorkspace", t.DelegateToWorkspace)
-	populate(objectMap, "delegatedFrom", t.DelegatedFrom)
 	populate(objectMap, "enabled", t.Enabled)
 	populate(objectMap, "enabledSecurityGroups", t.EnabledSecurityGroups)
 	populate(objectMap, "excludedSecurityGroups", t.ExcludedSecurityGroups)
@@ -1294,11 +1588,14 @@ func (t *TenantSetting) UnmarshalJSON(data []byte) error {
 		case "canSpecifySecurityGroups":
 			err = unpopulate(val, "CanSpecifySecurityGroups", &t.CanSpecifySecurityGroups)
 			delete(rawMsg, key)
+		case "delegateToCapacity":
+			err = unpopulate(val, "DelegateToCapacity", &t.DelegateToCapacity)
+			delete(rawMsg, key)
+		case "delegateToDomain":
+			err = unpopulate(val, "DelegateToDomain", &t.DelegateToDomain)
+			delete(rawMsg, key)
 		case "delegateToWorkspace":
 			err = unpopulate(val, "DelegateToWorkspace", &t.DelegateToWorkspace)
-			delete(rawMsg, key)
-		case "delegatedFrom":
-			err = unpopulate(val, "DelegatedFrom", &t.DelegatedFrom)
 			delete(rawMsg, key)
 		case "enabled":
 			err = unpopulate(val, "Enabled", &t.Enabled)
@@ -1320,72 +1617,6 @@ func (t *TenantSetting) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "title":
 			err = unpopulate(val, "Title", &t.Title)
-			delete(rawMsg, key)
-		}
-		if err != nil {
-			return fmt.Errorf("unmarshalling type %T: %v", t, err)
-		}
-	}
-	return nil
-}
-
-// MarshalJSON implements the json.Marshaller interface for type TenantSettingOverride.
-func (t TenantSettingOverride) MarshalJSON() ([]byte, error) {
-	objectMap := make(map[string]any)
-	populate(objectMap, "id", t.ID)
-	populate(objectMap, "tenantSettings", t.TenantSettings)
-	return json.Marshal(objectMap)
-}
-
-// UnmarshalJSON implements the json.Unmarshaller interface for type TenantSettingOverride.
-func (t *TenantSettingOverride) UnmarshalJSON(data []byte) error {
-	var rawMsg map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawMsg); err != nil {
-		return fmt.Errorf("unmarshalling type %T: %v", t, err)
-	}
-	for key, val := range rawMsg {
-		var err error
-		switch key {
-		case "id":
-			err = unpopulate(val, "ID", &t.ID)
-			delete(rawMsg, key)
-		case "tenantSettings":
-			err = unpopulate(val, "TenantSettings", &t.TenantSettings)
-			delete(rawMsg, key)
-		}
-		if err != nil {
-			return fmt.Errorf("unmarshalling type %T: %v", t, err)
-		}
-	}
-	return nil
-}
-
-// MarshalJSON implements the json.Marshaller interface for type TenantSettingOverrides.
-func (t TenantSettingOverrides) MarshalJSON() ([]byte, error) {
-	objectMap := make(map[string]any)
-	populate(objectMap, "continuationToken", t.ContinuationToken)
-	populate(objectMap, "continuationUri", t.ContinuationURI)
-	populate(objectMap, "overrides", t.Overrides)
-	return json.Marshal(objectMap)
-}
-
-// UnmarshalJSON implements the json.Unmarshaller interface for type TenantSettingOverrides.
-func (t *TenantSettingOverrides) UnmarshalJSON(data []byte) error {
-	var rawMsg map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawMsg); err != nil {
-		return fmt.Errorf("unmarshalling type %T: %v", t, err)
-	}
-	for key, val := range rawMsg {
-		var err error
-		switch key {
-		case "continuationToken":
-			err = unpopulate(val, "ContinuationToken", &t.ContinuationToken)
-			delete(rawMsg, key)
-		case "continuationUri":
-			err = unpopulate(val, "ContinuationURI", &t.ContinuationURI)
-			delete(rawMsg, key)
-		case "overrides":
-			err = unpopulate(val, "Overrides", &t.Overrides)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -1464,7 +1695,9 @@ func (t *TenantSettingSecurityGroup) UnmarshalJSON(data []byte) error {
 // MarshalJSON implements the json.Marshaller interface for type TenantSettings.
 func (t TenantSettings) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
-	populate(objectMap, "tenantSettings", t.TenantSettings)
+	populate(objectMap, "continuationToken", t.ContinuationToken)
+	populate(objectMap, "continuationUri", t.ContinuationURI)
+	populate(objectMap, "value", t.Value)
 	return json.Marshal(objectMap)
 }
 
@@ -1477,8 +1710,14 @@ func (t *TenantSettings) UnmarshalJSON(data []byte) error {
 	for key, val := range rawMsg {
 		var err error
 		switch key {
-		case "tenantSettings":
-			err = unpopulate(val, "TenantSettings", &t.TenantSettings)
+		case "continuationToken":
+			err = unpopulate(val, "ContinuationToken", &t.ContinuationToken)
+			delete(rawMsg, key)
+		case "continuationUri":
+			err = unpopulate(val, "ContinuationURI", &t.ContinuationURI)
+			delete(rawMsg, key)
+		case "value":
+			err = unpopulate(val, "Value", &t.Value)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -1515,6 +1754,72 @@ func (u *UnassignDomainWorkspacesByIDsRequest) UnmarshalJSON(data []byte) error 
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type UpdateCapacityTenantSettingOverrideRequest.
+func (u UpdateCapacityTenantSettingOverrideRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "delegateToWorkspace", u.DelegateToWorkspace)
+	populate(objectMap, "enabled", u.Enabled)
+	populate(objectMap, "enabledSecurityGroups", u.EnabledSecurityGroups)
+	populate(objectMap, "excludedSecurityGroups", u.ExcludedSecurityGroups)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type UpdateCapacityTenantSettingOverrideRequest.
+func (u *UpdateCapacityTenantSettingOverrideRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", u, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "delegateToWorkspace":
+			err = unpopulate(val, "DelegateToWorkspace", &u.DelegateToWorkspace)
+			delete(rawMsg, key)
+		case "enabled":
+			err = unpopulate(val, "Enabled", &u.Enabled)
+			delete(rawMsg, key)
+		case "enabledSecurityGroups":
+			err = unpopulate(val, "EnabledSecurityGroups", &u.EnabledSecurityGroups)
+			delete(rawMsg, key)
+		case "excludedSecurityGroups":
+			err = unpopulate(val, "ExcludedSecurityGroups", &u.ExcludedSecurityGroups)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", u, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type UpdateCapacityTenantSettingOverrideResponse.
+func (u UpdateCapacityTenantSettingOverrideResponse) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "overrides", u.Overrides)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type UpdateCapacityTenantSettingOverrideResponse.
+func (u *UpdateCapacityTenantSettingOverrideResponse) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", u, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "overrides":
+			err = unpopulate(val, "Overrides", &u.Overrides)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", u, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type UpdateDomainRequest.
 func (u UpdateDomainRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -1541,6 +1846,84 @@ func (u *UpdateDomainRequest) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "displayName":
 			err = unpopulate(val, "DisplayName", &u.DisplayName)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", u, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type UpdateTenantSettingRequest.
+func (u UpdateTenantSettingRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "delegateToCapacity", u.DelegateToCapacity)
+	populate(objectMap, "delegateToDomain", u.DelegateToDomain)
+	populate(objectMap, "delegateToWorkspace", u.DelegateToWorkspace)
+	populate(objectMap, "enabled", u.Enabled)
+	populate(objectMap, "enabledSecurityGroups", u.EnabledSecurityGroups)
+	populate(objectMap, "excludedSecurityGroups", u.ExcludedSecurityGroups)
+	populate(objectMap, "properties", u.Properties)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type UpdateTenantSettingRequest.
+func (u *UpdateTenantSettingRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", u, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "delegateToCapacity":
+			err = unpopulate(val, "DelegateToCapacity", &u.DelegateToCapacity)
+			delete(rawMsg, key)
+		case "delegateToDomain":
+			err = unpopulate(val, "DelegateToDomain", &u.DelegateToDomain)
+			delete(rawMsg, key)
+		case "delegateToWorkspace":
+			err = unpopulate(val, "DelegateToWorkspace", &u.DelegateToWorkspace)
+			delete(rawMsg, key)
+		case "enabled":
+			err = unpopulate(val, "Enabled", &u.Enabled)
+			delete(rawMsg, key)
+		case "enabledSecurityGroups":
+			err = unpopulate(val, "EnabledSecurityGroups", &u.EnabledSecurityGroups)
+			delete(rawMsg, key)
+		case "excludedSecurityGroups":
+			err = unpopulate(val, "ExcludedSecurityGroups", &u.ExcludedSecurityGroups)
+			delete(rawMsg, key)
+		case "properties":
+			err = unpopulate(val, "Properties", &u.Properties)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", u, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type UpdateTenantSettingResponse.
+func (u UpdateTenantSettingResponse) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "tenantSettings", u.TenantSettings)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type UpdateTenantSettingResponse.
+func (u *UpdateTenantSettingResponse) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", u, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "tenantSettings":
+			err = unpopulate(val, "TenantSettings", &u.TenantSettings)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -1673,6 +2056,131 @@ func (w *WorkspaceAccessDetailsResponse) UnmarshalJSON(data []byte) error {
 		switch key {
 		case "accessDetails":
 			err = unpopulate(val, "AccessDetails", &w.AccessDetails)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", w, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type WorkspaceTenantSetting.
+func (w WorkspaceTenantSetting) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "canSpecifySecurityGroups", w.CanSpecifySecurityGroups)
+	populate(objectMap, "delegatedFrom", w.DelegatedFrom)
+	populate(objectMap, "enabled", w.Enabled)
+	populate(objectMap, "enabledSecurityGroups", w.EnabledSecurityGroups)
+	populate(objectMap, "excludedSecurityGroups", w.ExcludedSecurityGroups)
+	populate(objectMap, "properties", w.Properties)
+	populate(objectMap, "settingName", w.SettingName)
+	populate(objectMap, "tenantSettingGroup", w.TenantSettingGroup)
+	populate(objectMap, "title", w.Title)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type WorkspaceTenantSetting.
+func (w *WorkspaceTenantSetting) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", w, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "canSpecifySecurityGroups":
+			err = unpopulate(val, "CanSpecifySecurityGroups", &w.CanSpecifySecurityGroups)
+			delete(rawMsg, key)
+		case "delegatedFrom":
+			err = unpopulate(val, "DelegatedFrom", &w.DelegatedFrom)
+			delete(rawMsg, key)
+		case "enabled":
+			err = unpopulate(val, "Enabled", &w.Enabled)
+			delete(rawMsg, key)
+		case "enabledSecurityGroups":
+			err = unpopulate(val, "EnabledSecurityGroups", &w.EnabledSecurityGroups)
+			delete(rawMsg, key)
+		case "excludedSecurityGroups":
+			err = unpopulate(val, "ExcludedSecurityGroups", &w.ExcludedSecurityGroups)
+			delete(rawMsg, key)
+		case "properties":
+			err = unpopulate(val, "Properties", &w.Properties)
+			delete(rawMsg, key)
+		case "settingName":
+			err = unpopulate(val, "SettingName", &w.SettingName)
+			delete(rawMsg, key)
+		case "tenantSettingGroup":
+			err = unpopulate(val, "TenantSettingGroup", &w.TenantSettingGroup)
+			delete(rawMsg, key)
+		case "title":
+			err = unpopulate(val, "Title", &w.Title)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", w, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type WorkspaceTenantSettingOverride.
+func (w WorkspaceTenantSettingOverride) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "id", w.ID)
+	populate(objectMap, "tenantSettings", w.TenantSettings)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type WorkspaceTenantSettingOverride.
+func (w *WorkspaceTenantSettingOverride) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", w, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "id":
+			err = unpopulate(val, "ID", &w.ID)
+			delete(rawMsg, key)
+		case "tenantSettings":
+			err = unpopulate(val, "TenantSettings", &w.TenantSettings)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", w, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type WorkspaceTenantSettingOverrides.
+func (w WorkspaceTenantSettingOverrides) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "continuationToken", w.ContinuationToken)
+	populate(objectMap, "continuationUri", w.ContinuationURI)
+	populate(objectMap, "value", w.Value)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type WorkspaceTenantSettingOverrides.
+func (w *WorkspaceTenantSettingOverrides) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", w, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "continuationToken":
+			err = unpopulate(val, "ContinuationToken", &w.ContinuationToken)
+			delete(rawMsg, key)
+		case "continuationUri":
+			err = unpopulate(val, "ContinuationURI", &w.ContinuationURI)
+			delete(rawMsg, key)
+		case "value":
+			err = unpopulate(val, "Value", &w.Value)
 			delete(rawMsg, key)
 		}
 		if err != nil {

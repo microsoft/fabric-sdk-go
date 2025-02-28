@@ -163,6 +163,12 @@ type LabelsClientBulkSetLabelsOptions struct {
 	// placeholder for future optional parameters
 }
 
+// TenantsClientDeleteCapacityTenantSettingOverrideOptions contains the optional parameters for the TenantsClient.DeleteCapacityTenantSettingOverride
+// method.
+type TenantsClientDeleteCapacityTenantSettingOverrideOptions struct {
+	// placeholder for future optional parameters
+}
+
 // TenantsClientListCapacitiesTenantSettingsOverridesOptions contains the optional parameters for the TenantsClient.NewListCapacitiesTenantSettingsOverridesPager
 // method.
 type TenantsClientListCapacitiesTenantSettingsOverridesOptions struct {
@@ -170,8 +176,42 @@ type TenantsClientListCapacitiesTenantSettingsOverridesOptions struct {
 	ContinuationToken *string
 }
 
-// TenantsClientListTenantSettingsOptions contains the optional parameters for the TenantsClient.ListTenantSettings method.
+// TenantsClientListCapacityTenantSettingsOverridesByCapacityIDOptions contains the optional parameters for the TenantsClient.NewListCapacityTenantSettingsOverridesByCapacityIDPager
+// method.
+type TenantsClientListCapacityTenantSettingsOverridesByCapacityIDOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// TenantsClientListDomainsTenantSettingsOverridesOptions contains the optional parameters for the TenantsClient.NewListDomainsTenantSettingsOverridesPager
+// method.
+type TenantsClientListDomainsTenantSettingsOverridesOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// TenantsClientListTenantSettingsOptions contains the optional parameters for the TenantsClient.NewListTenantSettingsPager
+// method.
 type TenantsClientListTenantSettingsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// TenantsClientListWorkspacesTenantSettingsOverridesOptions contains the optional parameters for the TenantsClient.NewListWorkspacesTenantSettingsOverridesPager
+// method.
+type TenantsClientListWorkspacesTenantSettingsOverridesOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// TenantsClientUpdateCapacityTenantSettingOverrideOptions contains the optional parameters for the TenantsClient.UpdateCapacityTenantSettingOverride
+// method.
+type TenantsClientUpdateCapacityTenantSettingOverrideOptions struct {
+	// placeholder for future optional parameters
+}
+
+// TenantsClientUpdateTenantSettingOptions contains the optional parameters for the TenantsClient.UpdateTenantSetting method.
+type TenantsClientUpdateTenantSettingOptions struct {
 	// placeholder for future optional parameters
 }
 

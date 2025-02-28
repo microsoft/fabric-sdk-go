@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strings"
 
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
@@ -24,13 +25,37 @@ import (
 
 // TenantsServer is a fake server for instances of the admin.TenantsClient type.
 type TenantsServer struct {
+	// DeleteCapacityTenantSettingOverride is the fake for method TenantsClient.DeleteCapacityTenantSettingOverride
+	// HTTP status codes to indicate success: http.StatusOK
+	DeleteCapacityTenantSettingOverride func(ctx context.Context, capacityID string, tenantSettingName string, options *admin.TenantsClientDeleteCapacityTenantSettingOverrideOptions) (resp azfake.Responder[admin.TenantsClientDeleteCapacityTenantSettingOverrideResponse], errResp azfake.ErrorResponder)
+
 	// NewListCapacitiesTenantSettingsOverridesPager is the fake for method TenantsClient.NewListCapacitiesTenantSettingsOverridesPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListCapacitiesTenantSettingsOverridesPager func(options *admin.TenantsClientListCapacitiesTenantSettingsOverridesOptions) (resp azfake.PagerResponder[admin.TenantsClientListCapacitiesTenantSettingsOverridesResponse])
 
-	// ListTenantSettings is the fake for method TenantsClient.ListTenantSettings
+	// NewListCapacityTenantSettingsOverridesByCapacityIDPager is the fake for method TenantsClient.NewListCapacityTenantSettingsOverridesByCapacityIDPager
 	// HTTP status codes to indicate success: http.StatusOK
-	ListTenantSettings func(ctx context.Context, options *admin.TenantsClientListTenantSettingsOptions) (resp azfake.Responder[admin.TenantsClientListTenantSettingsResponse], errResp azfake.ErrorResponder)
+	NewListCapacityTenantSettingsOverridesByCapacityIDPager func(capacityID string, options *admin.TenantsClientListCapacityTenantSettingsOverridesByCapacityIDOptions) (resp azfake.PagerResponder[admin.TenantsClientListCapacityTenantSettingsOverridesByCapacityIDResponse])
+
+	// NewListDomainsTenantSettingsOverridesPager is the fake for method TenantsClient.NewListDomainsTenantSettingsOverridesPager
+	// HTTP status codes to indicate success: http.StatusOK
+	NewListDomainsTenantSettingsOverridesPager func(options *admin.TenantsClientListDomainsTenantSettingsOverridesOptions) (resp azfake.PagerResponder[admin.TenantsClientListDomainsTenantSettingsOverridesResponse])
+
+	// NewListTenantSettingsPager is the fake for method TenantsClient.NewListTenantSettingsPager
+	// HTTP status codes to indicate success: http.StatusOK
+	NewListTenantSettingsPager func(options *admin.TenantsClientListTenantSettingsOptions) (resp azfake.PagerResponder[admin.TenantsClientListTenantSettingsResponse])
+
+	// NewListWorkspacesTenantSettingsOverridesPager is the fake for method TenantsClient.NewListWorkspacesTenantSettingsOverridesPager
+	// HTTP status codes to indicate success: http.StatusOK
+	NewListWorkspacesTenantSettingsOverridesPager func(options *admin.TenantsClientListWorkspacesTenantSettingsOverridesOptions) (resp azfake.PagerResponder[admin.TenantsClientListWorkspacesTenantSettingsOverridesResponse])
+
+	// UpdateCapacityTenantSettingOverride is the fake for method TenantsClient.UpdateCapacityTenantSettingOverride
+	// HTTP status codes to indicate success: http.StatusOK
+	UpdateCapacityTenantSettingOverride func(ctx context.Context, capacityID string, tenantSettingName string, updateTenantSettingOverrideRequest admin.UpdateCapacityTenantSettingOverrideRequest, options *admin.TenantsClientUpdateCapacityTenantSettingOverrideOptions) (resp azfake.Responder[admin.TenantsClientUpdateCapacityTenantSettingOverrideResponse], errResp azfake.ErrorResponder)
+
+	// UpdateTenantSetting is the fake for method TenantsClient.UpdateTenantSetting
+	// HTTP status codes to indicate success: http.StatusOK
+	UpdateTenantSetting func(ctx context.Context, tenantSettingName string, updateTenantSettingRequest admin.UpdateTenantSettingRequest, options *admin.TenantsClientUpdateTenantSettingOptions) (resp azfake.Responder[admin.TenantsClientUpdateTenantSettingResponse], errResp azfake.ErrorResponder)
 }
 
 // NewTenantsServerTransport creates a new instance of TenantsServerTransport with the provided implementation.
@@ -39,15 +64,23 @@ type TenantsServer struct {
 func NewTenantsServerTransport(srv *TenantsServer) *TenantsServerTransport {
 	return &TenantsServerTransport{
 		srv: srv,
-		newListCapacitiesTenantSettingsOverridesPager: newTracker[azfake.PagerResponder[admin.TenantsClientListCapacitiesTenantSettingsOverridesResponse]](),
+		newListCapacitiesTenantSettingsOverridesPager:           newTracker[azfake.PagerResponder[admin.TenantsClientListCapacitiesTenantSettingsOverridesResponse]](),
+		newListCapacityTenantSettingsOverridesByCapacityIDPager: newTracker[azfake.PagerResponder[admin.TenantsClientListCapacityTenantSettingsOverridesByCapacityIDResponse]](),
+		newListDomainsTenantSettingsOverridesPager:              newTracker[azfake.PagerResponder[admin.TenantsClientListDomainsTenantSettingsOverridesResponse]](),
+		newListTenantSettingsPager:                              newTracker[azfake.PagerResponder[admin.TenantsClientListTenantSettingsResponse]](),
+		newListWorkspacesTenantSettingsOverridesPager:           newTracker[azfake.PagerResponder[admin.TenantsClientListWorkspacesTenantSettingsOverridesResponse]](),
 	}
 }
 
 // TenantsServerTransport connects instances of admin.TenantsClient to instances of TenantsServer.
 // Don't use this type directly, use NewTenantsServerTransport instead.
 type TenantsServerTransport struct {
-	srv                                           *TenantsServer
-	newListCapacitiesTenantSettingsOverridesPager *tracker[azfake.PagerResponder[admin.TenantsClientListCapacitiesTenantSettingsOverridesResponse]]
+	srv                                                     *TenantsServer
+	newListCapacitiesTenantSettingsOverridesPager           *tracker[azfake.PagerResponder[admin.TenantsClientListCapacitiesTenantSettingsOverridesResponse]]
+	newListCapacityTenantSettingsOverridesByCapacityIDPager *tracker[azfake.PagerResponder[admin.TenantsClientListCapacityTenantSettingsOverridesByCapacityIDResponse]]
+	newListDomainsTenantSettingsOverridesPager              *tracker[azfake.PagerResponder[admin.TenantsClientListDomainsTenantSettingsOverridesResponse]]
+	newListTenantSettingsPager                              *tracker[azfake.PagerResponder[admin.TenantsClientListTenantSettingsResponse]]
+	newListWorkspacesTenantSettingsOverridesPager           *tracker[azfake.PagerResponder[admin.TenantsClientListWorkspacesTenantSettingsOverridesResponse]]
 }
 
 // Do implements the policy.Transporter interface for TenantsServerTransport.
@@ -75,10 +108,22 @@ func (t *TenantsServerTransport) dispatchToMethodFake(req *http.Request, method 
 		}
 		if !intercepted {
 			switch method {
+			case "TenantsClient.DeleteCapacityTenantSettingOverride":
+				res.resp, res.err = t.dispatchDeleteCapacityTenantSettingOverride(req)
 			case "TenantsClient.NewListCapacitiesTenantSettingsOverridesPager":
 				res.resp, res.err = t.dispatchNewListCapacitiesTenantSettingsOverridesPager(req)
-			case "TenantsClient.ListTenantSettings":
-				res.resp, res.err = t.dispatchListTenantSettings(req)
+			case "TenantsClient.NewListCapacityTenantSettingsOverridesByCapacityIDPager":
+				res.resp, res.err = t.dispatchNewListCapacityTenantSettingsOverridesByCapacityIDPager(req)
+			case "TenantsClient.NewListDomainsTenantSettingsOverridesPager":
+				res.resp, res.err = t.dispatchNewListDomainsTenantSettingsOverridesPager(req)
+			case "TenantsClient.NewListTenantSettingsPager":
+				res.resp, res.err = t.dispatchNewListTenantSettingsPager(req)
+			case "TenantsClient.NewListWorkspacesTenantSettingsOverridesPager":
+				res.resp, res.err = t.dispatchNewListWorkspacesTenantSettingsOverridesPager(req)
+			case "TenantsClient.UpdateCapacityTenantSettingOverride":
+				res.resp, res.err = t.dispatchUpdateCapacityTenantSettingOverride(req)
+			case "TenantsClient.UpdateTenantSetting":
+				res.resp, res.err = t.dispatchUpdateTenantSetting(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -96,6 +141,39 @@ func (t *TenantsServerTransport) dispatchToMethodFake(req *http.Request, method 
 	case res := <-resultChan:
 		return res.resp, res.err
 	}
+}
+
+func (t *TenantsServerTransport) dispatchDeleteCapacityTenantSettingOverride(req *http.Request) (*http.Response, error) {
+	if t.srv.DeleteCapacityTenantSettingOverride == nil {
+		return nil, &nonRetriableError{errors.New("fake for method DeleteCapacityTenantSettingOverride not implemented")}
+	}
+	const regexStr = `/v1/admin/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/delegatedTenantSettingOverrides/(?P<tenantSettingName>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+	if err != nil {
+		return nil, err
+	}
+	tenantSettingNameParam, err := url.PathUnescape(matches[regex.SubexpIndex("tenantSettingName")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := t.srv.DeleteCapacityTenantSettingOverride(req.Context(), capacityIDParam, tenantSettingNameParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 func (t *TenantsServerTransport) dispatchNewListCapacitiesTenantSettingsOverridesPager(req *http.Request) (*http.Response, error) {
@@ -137,11 +215,195 @@ func (t *TenantsServerTransport) dispatchNewListCapacitiesTenantSettingsOverride
 	return resp, nil
 }
 
-func (t *TenantsServerTransport) dispatchListTenantSettings(req *http.Request) (*http.Response, error) {
-	if t.srv.ListTenantSettings == nil {
-		return nil, &nonRetriableError{errors.New("fake for method ListTenantSettings not implemented")}
+func (t *TenantsServerTransport) dispatchNewListCapacityTenantSettingsOverridesByCapacityIDPager(req *http.Request) (*http.Response, error) {
+	if t.srv.NewListCapacityTenantSettingsOverridesByCapacityIDPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListCapacityTenantSettingsOverridesByCapacityIDPager not implemented")}
 	}
-	respr, errRespr := t.srv.ListTenantSettings(req.Context(), nil)
+	newListCapacityTenantSettingsOverridesByCapacityIDPager := t.newListCapacityTenantSettingsOverridesByCapacityIDPager.get(req)
+	if newListCapacityTenantSettingsOverridesByCapacityIDPager == nil {
+		const regexStr = `/v1/admin/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/delegatedTenantSettingOverrides`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 1 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *admin.TenantsClientListCapacityTenantSettingsOverridesByCapacityIDOptions
+		if continuationTokenParam != nil {
+			options = &admin.TenantsClientListCapacityTenantSettingsOverridesByCapacityIDOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := t.srv.NewListCapacityTenantSettingsOverridesByCapacityIDPager(capacityIDParam, options)
+		newListCapacityTenantSettingsOverridesByCapacityIDPager = &resp
+		t.newListCapacityTenantSettingsOverridesByCapacityIDPager.add(req, newListCapacityTenantSettingsOverridesByCapacityIDPager)
+		server.PagerResponderInjectNextLinks(newListCapacityTenantSettingsOverridesByCapacityIDPager, req, func(page *admin.TenantsClientListCapacityTenantSettingsOverridesByCapacityIDResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
+	}
+	resp, err := server.PagerResponderNext(newListCapacityTenantSettingsOverridesByCapacityIDPager, req)
+	if err != nil {
+		return nil, err
+	}
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		t.newListCapacityTenantSettingsOverridesByCapacityIDPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
+	}
+	if !server.PagerResponderMore(newListCapacityTenantSettingsOverridesByCapacityIDPager) {
+		t.newListCapacityTenantSettingsOverridesByCapacityIDPager.remove(req)
+	}
+	return resp, nil
+}
+
+func (t *TenantsServerTransport) dispatchNewListDomainsTenantSettingsOverridesPager(req *http.Request) (*http.Response, error) {
+	if t.srv.NewListDomainsTenantSettingsOverridesPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListDomainsTenantSettingsOverridesPager not implemented")}
+	}
+	newListDomainsTenantSettingsOverridesPager := t.newListDomainsTenantSettingsOverridesPager.get(req)
+	if newListDomainsTenantSettingsOverridesPager == nil {
+		qp := req.URL.Query()
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *admin.TenantsClientListDomainsTenantSettingsOverridesOptions
+		if continuationTokenParam != nil {
+			options = &admin.TenantsClientListDomainsTenantSettingsOverridesOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := t.srv.NewListDomainsTenantSettingsOverridesPager(options)
+		newListDomainsTenantSettingsOverridesPager = &resp
+		t.newListDomainsTenantSettingsOverridesPager.add(req, newListDomainsTenantSettingsOverridesPager)
+		server.PagerResponderInjectNextLinks(newListDomainsTenantSettingsOverridesPager, req, func(page *admin.TenantsClientListDomainsTenantSettingsOverridesResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
+	}
+	resp, err := server.PagerResponderNext(newListDomainsTenantSettingsOverridesPager, req)
+	if err != nil {
+		return nil, err
+	}
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		t.newListDomainsTenantSettingsOverridesPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
+	}
+	if !server.PagerResponderMore(newListDomainsTenantSettingsOverridesPager) {
+		t.newListDomainsTenantSettingsOverridesPager.remove(req)
+	}
+	return resp, nil
+}
+
+func (t *TenantsServerTransport) dispatchNewListTenantSettingsPager(req *http.Request) (*http.Response, error) {
+	if t.srv.NewListTenantSettingsPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListTenantSettingsPager not implemented")}
+	}
+	newListTenantSettingsPager := t.newListTenantSettingsPager.get(req)
+	if newListTenantSettingsPager == nil {
+		qp := req.URL.Query()
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *admin.TenantsClientListTenantSettingsOptions
+		if continuationTokenParam != nil {
+			options = &admin.TenantsClientListTenantSettingsOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := t.srv.NewListTenantSettingsPager(options)
+		newListTenantSettingsPager = &resp
+		t.newListTenantSettingsPager.add(req, newListTenantSettingsPager)
+		server.PagerResponderInjectNextLinks(newListTenantSettingsPager, req, func(page *admin.TenantsClientListTenantSettingsResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
+	}
+	resp, err := server.PagerResponderNext(newListTenantSettingsPager, req)
+	if err != nil {
+		return nil, err
+	}
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		t.newListTenantSettingsPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
+	}
+	if !server.PagerResponderMore(newListTenantSettingsPager) {
+		t.newListTenantSettingsPager.remove(req)
+	}
+	return resp, nil
+}
+
+func (t *TenantsServerTransport) dispatchNewListWorkspacesTenantSettingsOverridesPager(req *http.Request) (*http.Response, error) {
+	if t.srv.NewListWorkspacesTenantSettingsOverridesPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListWorkspacesTenantSettingsOverridesPager not implemented")}
+	}
+	newListWorkspacesTenantSettingsOverridesPager := t.newListWorkspacesTenantSettingsOverridesPager.get(req)
+	if newListWorkspacesTenantSettingsOverridesPager == nil {
+		qp := req.URL.Query()
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *admin.TenantsClientListWorkspacesTenantSettingsOverridesOptions
+		if continuationTokenParam != nil {
+			options = &admin.TenantsClientListWorkspacesTenantSettingsOverridesOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := t.srv.NewListWorkspacesTenantSettingsOverridesPager(options)
+		newListWorkspacesTenantSettingsOverridesPager = &resp
+		t.newListWorkspacesTenantSettingsOverridesPager.add(req, newListWorkspacesTenantSettingsOverridesPager)
+		server.PagerResponderInjectNextLinks(newListWorkspacesTenantSettingsOverridesPager, req, func(page *admin.TenantsClientListWorkspacesTenantSettingsOverridesResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
+	}
+	resp, err := server.PagerResponderNext(newListWorkspacesTenantSettingsOverridesPager, req)
+	if err != nil {
+		return nil, err
+	}
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		t.newListWorkspacesTenantSettingsOverridesPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
+	}
+	if !server.PagerResponderMore(newListWorkspacesTenantSettingsOverridesPager) {
+		t.newListWorkspacesTenantSettingsOverridesPager.remove(req)
+	}
+	return resp, nil
+}
+
+func (t *TenantsServerTransport) dispatchUpdateCapacityTenantSettingOverride(req *http.Request) (*http.Response, error) {
+	if t.srv.UpdateCapacityTenantSettingOverride == nil {
+		return nil, &nonRetriableError{errors.New("fake for method UpdateCapacityTenantSettingOverride not implemented")}
+	}
+	const regexStr = `/v1/admin/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/delegatedTenantSettingOverrides/(?P<tenantSettingName>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/update`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[admin.UpdateCapacityTenantSettingOverrideRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+	if err != nil {
+		return nil, err
+	}
+	tenantSettingNameParam, err := url.PathUnescape(matches[regex.SubexpIndex("tenantSettingName")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := t.srv.UpdateCapacityTenantSettingOverride(req.Context(), capacityIDParam, tenantSettingNameParam, body, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -149,7 +411,40 @@ func (t *TenantsServerTransport) dispatchListTenantSettings(req *http.Request) (
 	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
 	}
-	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).TenantSettings, req)
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).UpdateCapacityTenantSettingOverrideResponse, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (t *TenantsServerTransport) dispatchUpdateTenantSetting(req *http.Request) (*http.Response, error) {
+	if t.srv.UpdateTenantSetting == nil {
+		return nil, &nonRetriableError{errors.New("fake for method UpdateTenantSetting not implemented")}
+	}
+	const regexStr = `/v1/admin/tenantsettings/(?P<tenantSettingName>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/update`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 1 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[admin.UpdateTenantSettingRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	tenantSettingNameParam, err := url.PathUnescape(matches[regex.SubexpIndex("tenantSettingName")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := t.srv.UpdateTenantSetting(req.Context(), tenantSettingNameParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).UpdateTenantSettingResponse, req)
 	if err != nil {
 		return nil, err
 	}

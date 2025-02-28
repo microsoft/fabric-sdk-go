@@ -252,6 +252,8 @@ const (
 	ItemTypeReflex ItemType = "Reflex"
 	// ItemTypeReport - PowerBI report.
 	ItemTypeReport ItemType = "Report"
+	// ItemTypeSQLDatabase - A SQLDatabase.
+	ItemTypeSQLDatabase ItemType = "SQLDatabase"
 	// ItemTypeSQLEndpoint - An SQL endpoint.
 	ItemTypeSQLEndpoint ItemType = "SQLEndpoint"
 	// ItemTypeSemanticModel - PowerBI semantic model.
@@ -285,6 +287,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypePaginatedReport,
 		ItemTypeReflex,
 		ItemTypeReport,
+		ItemTypeSQLDatabase,
 		ItemTypeSQLEndpoint,
 		ItemTypeSemanticModel,
 		ItemTypeSparkJobDefinition,
