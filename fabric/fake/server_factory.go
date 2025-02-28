@@ -40,6 +40,7 @@ import (
 	semanticmodelfake "github.com/microsoft/fabric-sdk-go/fabric/semanticmodel/fake"
 	sparkfake "github.com/microsoft/fabric-sdk-go/fabric/spark/fake"
 	sparkjobdefinitionfake "github.com/microsoft/fabric-sdk-go/fabric/sparkjobdefinition/fake"
+	sqldatabasefake "github.com/microsoft/fabric-sdk-go/fabric/sqldatabase/fake"
 	sqlendpointfake "github.com/microsoft/fabric-sdk-go/fabric/sqlendpoint/fake"
 	warehousefake "github.com/microsoft/fabric-sdk-go/fabric/warehouse/fake"
 )
@@ -71,6 +72,7 @@ type ServerFactory struct {
 	SemanticModel      semanticmodelfake.ServerFactory
 	Spark              sparkfake.ServerFactory
 	SparkJobDefinition sparkjobdefinitionfake.ServerFactory
+	SQLDatabase        sqldatabasefake.ServerFactory
 	SQLEndpoint        sqlendpointfake.ServerFactory
 	Warehouse          warehousefake.ServerFactory
 }
@@ -105,6 +107,7 @@ type ServerFactoryTransport struct {
 	trSemanticModel      *semanticmodelfake.ServerFactoryTransport
 	trSpark              *sparkfake.ServerFactoryTransport
 	trSparkJobDefinition *sparkjobdefinitionfake.ServerFactoryTransport
+	trSQLDatabase        *sqldatabasefake.ServerFactoryTransport
 	trSQLEndpoint        *sqlendpointfake.ServerFactoryTransport
 	trWarehouse          *warehousefake.ServerFactoryTransport
 }
@@ -247,6 +250,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return sparkjobdefinitionfake.NewServerFactoryTransport(&s.srv.SparkJobDefinition)
 		})
 		resp, err = s.trSparkJobDefinition.Do(req)
+	case "sqldatabase":
+		initServer(s, &s.trSQLDatabase, func() *sqldatabasefake.ServerFactoryTransport {
+			return sqldatabasefake.NewServerFactoryTransport(&s.srv.SQLDatabase)
+		})
+		resp, err = s.trSQLDatabase.Do(req)
 	case "sqlendpoint":
 		initServer(s, &s.trSQLEndpoint, func() *sqlendpointfake.ServerFactoryTransport {
 			return sqlendpointfake.NewServerFactoryTransport(&s.srv.SQLEndpoint)

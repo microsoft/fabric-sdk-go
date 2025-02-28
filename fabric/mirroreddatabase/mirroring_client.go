@@ -18,6 +18,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 
 	"github.com/microsoft/fabric-sdk-go/fabric/core"
+	"github.com/microsoft/fabric-sdk-go/internal/iruntime"
 )
 
 // MirroringClient contains the methods for the Mirroring group.
@@ -92,7 +93,7 @@ func (client *MirroringClient) getMirroringStatusHandleResponse(resp *http.Respo
 	return result, nil
 }
 
-// GetTablesMirroringStatus - his API supports pagination [/rest/api/fabric/articles/pagination].
+// NewGetTablesMirroringStatusPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES MirroredDatabase.Read.All or MirroredDatabase.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -101,37 +102,37 @@ func (client *MirroringClient) getMirroringStatusHandleResponse(resp *http.Respo
 // and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
-// If the operation fails it returns an *core.ResponseError type.
 //
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - mirroredDatabaseID - The mirrored database ID.
-//   - options - MirroringClientGetTablesMirroringStatusOptions contains the optional parameters for the MirroringClient.GetTablesMirroringStatus
+//   - options - MirroringClientGetTablesMirroringStatusOptions contains the optional parameters for the MirroringClient.NewGetTablesMirroringStatusPager
 //     method.
-func (client *MirroringClient) GetTablesMirroringStatus(ctx context.Context, workspaceID string, mirroredDatabaseID string, options *MirroringClientGetTablesMirroringStatusOptions) (MirroringClientGetTablesMirroringStatusResponse, error) {
-	var err error
-	const operationName = "mirroreddatabase.MirroringClient.GetTablesMirroringStatus"
-	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
-	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
-	defer func() { endSpan(err) }()
-	req, err := client.getTablesMirroringStatusCreateRequest(ctx, workspaceID, mirroredDatabaseID, options)
-	if err != nil {
-		return MirroringClientGetTablesMirroringStatusResponse{}, err
-	}
-	httpResp, err := client.internal.Pipeline().Do(req)
-	if err != nil {
-		return MirroringClientGetTablesMirroringStatusResponse{}, err
-	}
-	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
-		err = core.NewResponseError(httpResp)
-		return MirroringClientGetTablesMirroringStatusResponse{}, err
-	}
-	resp, err := client.getTablesMirroringStatusHandleResponse(httpResp)
-	return resp, err
+func (client *MirroringClient) NewGetTablesMirroringStatusPager(workspaceID string, mirroredDatabaseID string, options *MirroringClientGetTablesMirroringStatusOptions) *runtime.Pager[MirroringClientGetTablesMirroringStatusResponse] {
+	return runtime.NewPager(runtime.PagingHandler[MirroringClientGetTablesMirroringStatusResponse]{
+		More: func(page MirroringClientGetTablesMirroringStatusResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *MirroringClientGetTablesMirroringStatusResponse) (MirroringClientGetTablesMirroringStatusResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "mirroreddatabase.MirroringClient.NewGetTablesMirroringStatusPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.getTablesMirroringStatusCreateRequest(ctx, workspaceID, mirroredDatabaseID, options)
+			}, nil)
+			if err != nil {
+				return MirroringClientGetTablesMirroringStatusResponse{}, err
+			}
+			return client.getTablesMirroringStatusHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
 }
 
 // getTablesMirroringStatusCreateRequest creates the GetTablesMirroringStatus request.
-func (client *MirroringClient) getTablesMirroringStatusCreateRequest(ctx context.Context, workspaceID string, mirroredDatabaseID string, _ *MirroringClientGetTablesMirroringStatusOptions) (*policy.Request, error) {
+func (client *MirroringClient) getTablesMirroringStatusCreateRequest(ctx context.Context, workspaceID string, mirroredDatabaseID string, options *MirroringClientGetTablesMirroringStatusOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/mirroredDatabases/{mirroredDatabaseId}/getTablesMirroringStatus"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -145,6 +146,11 @@ func (client *MirroringClient) getTablesMirroringStatusCreateRequest(ctx context
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }
@@ -268,3 +274,36 @@ func (client *MirroringClient) stopMirroringCreateRequest(ctx context.Context, w
 }
 
 // Custom code starts below
+
+// GetTablesMirroringStatus - returns array of TableMirroringStatusResponse from all pages.
+// This API supports pagination [/rest/api/fabric/articles/pagination].
+//
+// PERMISSIONS The caller must have viewer or higher workspace role.
+//
+// # REQUIRED DELEGATED SCOPES MirroredDatabase.Read.All or MirroredDatabase.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - mirroredDatabaseID - The mirrored database ID.
+//   - options - MirroringClientGetTablesMirroringStatusOptions contains the optional parameters for the MirroringClient.NewGetTablesMirroringStatusPager method.
+func (client *MirroringClient) GetTablesMirroringStatus(ctx context.Context, workspaceID string, mirroredDatabaseID string, options *MirroringClientGetTablesMirroringStatusOptions) ([]TableMirroringStatusResponse, error) {
+	pager := client.NewGetTablesMirroringStatusPager(workspaceID, mirroredDatabaseID, options)
+	mapper := func(resp MirroringClientGetTablesMirroringStatusResponse) []TableMirroringStatusResponse {
+		return resp.Data
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []TableMirroringStatusResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []TableMirroringStatusResponse{}, err
+	}
+	return list, nil
+}

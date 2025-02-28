@@ -73,7 +73,7 @@ func ExampleMirroringClient_GetMirroringStatus() {
 }
 
 // Generated from example definition
-func ExampleMirroringClient_GetTablesMirroringStatus() {
+func ExampleMirroringClient_NewGetTablesMirroringStatusPager() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -83,24 +83,29 @@ func ExampleMirroringClient_GetTablesMirroringStatus() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewMirroringClient().GetTablesMirroringStatus(ctx, "6e335e92-a2a2-4b5a-970a-bd6a89fbb765", "cfafbeb1-8037-4d0c-896e-a46fb27ff229", nil)
-	if err != nil {
-		log.Fatalf("failed to finish the request: %v", err)
+	pager := clientFactory.NewMirroringClient().NewGetTablesMirroringStatusPager("6e335e92-a2a2-4b5a-970a-bd6a89fbb765", "cfafbeb1-8037-4d0c-896e-a46fb27ff229", &mirroreddatabase.MirroringClientGetTablesMirroringStatusOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Data {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.TablesMirroringStatusResponse = mirroreddatabase.TablesMirroringStatusResponse{
+		// 	Data: []mirroreddatabase.TableMirroringStatusResponse{
+		// 		{
+		// 			Metrics: &mirroreddatabase.TableMirroringMetrics{
+		// 				LastSyncDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-10-08T05:07:11.066Z"); return t}()),
+		// 				ProcessedBytes: to.Ptr[int64](1247),
+		// 				ProcessedRows: to.Ptr[int64](6),
+		// 			},
+		// 			SourceSchemaName: to.Ptr("dbo"),
+		// 			SourceTableName: to.Ptr("test"),
+		// 			Status: to.Ptr(mirroreddatabase.TableMirroringStatusReplicating),
+		// 	}},
+		// }
 	}
-	// You could use response here. We use blank identifier for just demo purposes.
-	_ = res
-	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
-	// res.TablesMirroringStatusResponse = mirroreddatabase.TablesMirroringStatusResponse{
-	// 	Data: []mirroreddatabase.TableMirroringStatusResponse{
-	// 		{
-	// 			Metrics: &mirroreddatabase.TableMirroringMetrics{
-	// 				LastSyncDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-10-08T05:07:11.066Z"); return t}()),
-	// 				ProcessedBytes: to.Ptr[int64](1247),
-	// 				ProcessedRows: to.Ptr[int64](6),
-	// 			},
-	// 			SourceSchemaName: to.Ptr("dbo"),
-	// 			SourceTableName: to.Ptr("test"),
-	// 			Status: to.Ptr(mirroreddatabase.TableMirroringStatusReplicating),
-	// 	}},
-	// }
 }
