@@ -126,6 +126,60 @@ func ExampleConnectionsClient_CreateConnection_cloudExample() {
 }
 
 // Generated from example definition
+func ExampleConnectionsClient_CreateConnection_onPremisesGatewayExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewConnectionsClient().CreateConnection(ctx, &core.CreateOnPremisesConnectionRequest{
+		ConnectionDetails: &core.CreateConnectionDetails{
+			Type:           to.Ptr("SQL"),
+			CreationMethod: to.Ptr("SQL"),
+			Parameters: []core.ConnectionDetailsParameterClassification{
+				&core.ConnectionDetailsTextParameter{
+					Name:     to.Ptr("server"),
+					DataType: to.Ptr(core.DataTypeText),
+					Value:    to.Ptr("contoso.database.windows.net"),
+				},
+				&core.ConnectionDetailsTextParameter{
+					Name:     to.Ptr("database"),
+					DataType: to.Ptr(core.DataTypeText),
+					Value:    to.Ptr("sales"),
+				}},
+		},
+		ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGateway),
+		DisplayName:      to.Ptr("ContosoOnPremisesConnection"),
+		PrivacyLevel:     to.Ptr(core.PrivacyLevelOrganizational),
+		CredentialDetails: &core.CreateOnPremisesCredentialDetails{
+			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+			SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+			SkipTestConnection:   to.Ptr(false),
+			Credentials: &core.OnPremisesGatewayCredentials{
+				CredentialType: to.Ptr(core.CredentialTypeWindows),
+				Values: []core.OnPremisesCredentialEntry{
+					{
+						EncryptedCredentials: to.Ptr("************************************"),
+						GatewayID:            to.Ptr("93491300-cfbd-402f-bf17-9ace59a92354"),
+					},
+					{
+						EncryptedCredentials: to.Ptr("************************************"),
+						GatewayID:            to.Ptr("55226bab-5024-4b72-9716-6dc8ef3a97fe"),
+					}},
+			},
+		},
+		GatewayID: to.Ptr("93491300-cfbd-402f-bf17-9ace59a92354"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
 func ExampleConnectionsClient_CreateConnection_virtualNetworkGatewayExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -205,6 +259,105 @@ func ExampleConnectionsClient_GetConnection() {
 	// 	DisplayName: to.Ptr("ContosoConnection"),
 	// 	GatewayID: to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
 	// 	ID: to.Ptr("f6a39b76-9816-4e4b-b93a-f42e405017b7"),
+	// 	PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
+	// }
+}
+
+// Generated from example definition
+func ExampleConnectionsClient_UpdateConnection_onPremisesGatewayPersonalModeExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewConnectionsClient().UpdateConnection(ctx, "ef8f408d-2ab7-4a18-b662-9251febda49c", &core.UpdateOnPremisesGatewayPersonalConnectionRequest{
+		ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGatewayPersonal),
+		CredentialDetails: &core.UpdateOnPremisesGatewayPersonalCredentialDetails{
+			Credentials: &core.OnPremisesGatewayPersonalCredentials{
+				CredentialType:       to.Ptr(core.CredentialTypeWindowsWithoutImpersonation),
+				EncryptedCredentials: to.Ptr("************************************"),
+			},
+		},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.Connection = core.Connection{
+	// 	ConnectionDetails: &core.ListConnectionDetails{
+	// 		Type: to.Ptr("SQL"),
+	// 		Path: to.Ptr("contoso.database.windows.net;reporting"),
+	// 	},
+	// 	ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGatewayPersonal),
+	// 	CredentialDetails: &core.ListCredentialDetails{
+	// 		ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+	// 		SingleSignOnType: to.Ptr(core.SingleSignOnTypeNone),
+	// 		SkipTestConnection: to.Ptr(false),
+	// 		CredentialType: to.Ptr(core.CredentialTypeWindowsWithoutImpersonation),
+	// 	},
+	// 	GatewayID: to.Ptr("429a773e-5633-45ee-8584-a192bd79c16a"),
+	// 	ID: to.Ptr("ef8f408d-2ab7-4a18-b662-9251febda49c"),
+	// 	PrivacyLevel: to.Ptr(core.PrivacyLevelPrivate),
+	// }
+}
+
+// Generated from example definition
+func ExampleConnectionsClient_UpdateConnection_onPremisesGatewayExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewConnectionsClient().UpdateConnection(ctx, "70b17680-48f1-4729-9df6-02576647dc3a", &core.UpdateOnPremisesGatewayConnectionRequest{
+		ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGateway),
+		CredentialDetails: &core.UpdateOnPremisesGatewayCredentialDetails{
+			SkipTestConnection: to.Ptr(false),
+			Credentials: &core.OnPremisesGatewayCredentials{
+				CredentialType: to.Ptr(core.CredentialTypeWindows),
+				Values: []core.OnPremisesCredentialEntry{
+					{
+						EncryptedCredentials: to.Ptr("************************************"),
+						GatewayID:            to.Ptr("4f8b5d6e-8e99-4817-8b9e-6b6a613be707"),
+					},
+					{
+						EncryptedCredentials: to.Ptr("************************************"),
+						GatewayID:            to.Ptr("c6961028-1309-4183-9799-a0b0fa28a235"),
+					}},
+			},
+		},
+		DisplayName: to.Ptr("ContosoSalesOnPremisesConnection"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.Connection = core.Connection{
+	// 	ConnectionDetails: &core.ListConnectionDetails{
+	// 		Type: to.Ptr("SQL"),
+	// 		Path: to.Ptr("contoso.database.windows.net;sales"),
+	// 	},
+	// 	ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGateway),
+	// 	CredentialDetails: &core.ListCredentialDetails{
+	// 		ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+	// 		SingleSignOnType: to.Ptr(core.SingleSignOnTypeNone),
+	// 		SkipTestConnection: to.Ptr(false),
+	// 		CredentialType: to.Ptr(core.CredentialTypeWindows),
+	// 	},
+	// 	DisplayName: to.Ptr("ContosoSalesOnPremisesConnection"),
+	// 	GatewayID: to.Ptr("4f8b5d6e-8e99-4817-8b9e-6b6a613be707"),
+	// 	ID: to.Ptr("70b17680-48f1-4729-9df6-02576647dc3a"),
 	// 	PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 	// }
 }

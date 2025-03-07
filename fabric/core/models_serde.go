@@ -4385,7 +4385,7 @@ func (o *OnPremisesGateway) UnmarshalJSON(data []byte) error {
 // MarshalJSON implements the json.Marshaller interface for type OnPremisesGatewayCredentials.
 func (o OnPremisesGatewayCredentials) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
-	objectMap["credentialType"] = "OnPremisesGatewayCredentials"
+	populate(objectMap, "credentialType", o.CredentialType)
 	populate(objectMap, "values", o.Values)
 	return json.Marshal(objectMap)
 }
@@ -4498,7 +4498,7 @@ func (o *OnPremisesGatewayPersonal) UnmarshalJSON(data []byte) error {
 // MarshalJSON implements the json.Marshaller interface for type OnPremisesGatewayPersonalCredentials.
 func (o OnPremisesGatewayPersonalCredentials) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
-	objectMap["credentialType"] = "OnPremisesGatewayPersonalCredentials"
+	populate(objectMap, "credentialType", o.CredentialType)
 	populate(objectMap, "encryptedCredentials", o.EncryptedCredentials)
 	return json.Marshal(objectMap)
 }

@@ -4056,6 +4056,59 @@ func (testsuite *FakeTestSuite) TestConnections_CreateConnection() {
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"On-premises gateway example"},
+	})
+	exampleCreateConnectionRequest = &core.CreateOnPremisesConnectionRequest{
+		ConnectionDetails: &core.CreateConnectionDetails{
+			Type:           to.Ptr("SQL"),
+			CreationMethod: to.Ptr("SQL"),
+			Parameters: []core.ConnectionDetailsParameterClassification{
+				&core.ConnectionDetailsTextParameter{
+					Name:     to.Ptr("server"),
+					DataType: to.Ptr(core.DataTypeText),
+					Value:    to.Ptr("contoso.database.windows.net"),
+				},
+				&core.ConnectionDetailsTextParameter{
+					Name:     to.Ptr("database"),
+					DataType: to.Ptr(core.DataTypeText),
+					Value:    to.Ptr("sales"),
+				}},
+		},
+		ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGateway),
+		DisplayName:      to.Ptr("ContosoOnPremisesConnection"),
+		PrivacyLevel:     to.Ptr(core.PrivacyLevelOrganizational),
+		CredentialDetails: &core.CreateOnPremisesCredentialDetails{
+			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+			SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+			SkipTestConnection:   to.Ptr(false),
+			Credentials: &core.OnPremisesGatewayCredentials{
+				CredentialType: to.Ptr(core.CredentialTypeWindows),
+				Values: []core.OnPremisesCredentialEntry{
+					{
+						EncryptedCredentials: to.Ptr("************************************"),
+						GatewayID:            to.Ptr("93491300-cfbd-402f-bf17-9ace59a92354"),
+					},
+					{
+						EncryptedCredentials: to.Ptr("************************************"),
+						GatewayID:            to.Ptr("55226bab-5024-4b72-9716-6dc8ef3a97fe"),
+					}},
+			},
+		},
+		GatewayID: to.Ptr("93491300-cfbd-402f-bf17-9ace59a92354"),
+	}
+
+	testsuite.serverFactory.ConnectionsServer.CreateConnection = func(ctx context.Context, createConnectionRequest core.CreateConnectionRequestClassification, options *core.ConnectionsClientCreateConnectionOptions) (resp azfake.Responder[core.ConnectionsClientCreateConnectionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateConnectionRequest, createConnectionRequest))
+		resp = azfake.Responder[core.ConnectionsClientCreateConnectionResponse]{}
+		resp.SetResponse(http.StatusCreated, core.ConnectionsClientCreateConnectionResponse{}, nil)
+		return
+	}
+
+	_, err = client.CreateConnection(ctx, exampleCreateConnectionRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Virtual network gateway example"},
 	})
 	exampleCreateConnectionRequest = &core.CreateVirtualNetworkGatewayConnectionRequest{
@@ -4143,17 +4196,117 @@ func (testsuite *FakeTestSuite) TestConnections_GetConnection() {
 func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Personal cloud example"},
+		"example-id": {"On-premises gateway (personal mode) example"},
 	})
 	var exampleConnectionID string
 	var exampleUpdateConnectionRequest core.UpdateConnectionRequestClassification
+	exampleConnectionID = "ef8f408d-2ab7-4a18-b662-9251febda49c"
+	exampleUpdateConnectionRequest = &core.UpdateOnPremisesGatewayPersonalConnectionRequest{
+		ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGatewayPersonal),
+		CredentialDetails: &core.UpdateOnPremisesGatewayPersonalCredentialDetails{
+			Credentials: &core.OnPremisesGatewayPersonalCredentials{
+				CredentialType:       to.Ptr(core.CredentialTypeWindowsWithoutImpersonation),
+				EncryptedCredentials: to.Ptr("************************************"),
+			},
+		},
+	}
+
+	exampleRes := core.Connection{
+		ConnectionDetails: &core.ListConnectionDetails{
+			Type: to.Ptr("SQL"),
+			Path: to.Ptr("contoso.database.windows.net;reporting"),
+		},
+		ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGatewayPersonal),
+		CredentialDetails: &core.ListCredentialDetails{
+			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+			SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+			SkipTestConnection:   to.Ptr(false),
+			CredentialType:       to.Ptr(core.CredentialTypeWindowsWithoutImpersonation),
+		},
+		GatewayID:    to.Ptr("429a773e-5633-45ee-8584-a192bd79c16a"),
+		ID:           to.Ptr("ef8f408d-2ab7-4a18-b662-9251febda49c"),
+		PrivacyLevel: to.Ptr(core.PrivacyLevelPrivate),
+	}
+
+	testsuite.serverFactory.ConnectionsServer.UpdateConnection = func(ctx context.Context, connectionID string, updateConnectionRequest core.UpdateConnectionRequestClassification, options *core.ConnectionsClientUpdateConnectionOptions) (resp azfake.Responder[core.ConnectionsClientUpdateConnectionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateConnectionRequest, updateConnectionRequest))
+		resp = azfake.Responder[core.ConnectionsClientUpdateConnectionResponse]{}
+		resp.SetResponse(http.StatusOK, core.ConnectionsClientUpdateConnectionResponse{Connection: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewConnectionsClient()
+	res, err := client.UpdateConnection(ctx, exampleConnectionID, exampleUpdateConnectionRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Connection))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"On-premises gateway example"},
+	})
+	exampleConnectionID = "70b17680-48f1-4729-9df6-02576647dc3a"
+	exampleUpdateConnectionRequest = &core.UpdateOnPremisesGatewayConnectionRequest{
+		ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGateway),
+		CredentialDetails: &core.UpdateOnPremisesGatewayCredentialDetails{
+			SkipTestConnection: to.Ptr(false),
+			Credentials: &core.OnPremisesGatewayCredentials{
+				CredentialType: to.Ptr(core.CredentialTypeWindows),
+				Values: []core.OnPremisesCredentialEntry{
+					{
+						EncryptedCredentials: to.Ptr("************************************"),
+						GatewayID:            to.Ptr("4f8b5d6e-8e99-4817-8b9e-6b6a613be707"),
+					},
+					{
+						EncryptedCredentials: to.Ptr("************************************"),
+						GatewayID:            to.Ptr("c6961028-1309-4183-9799-a0b0fa28a235"),
+					}},
+			},
+		},
+		DisplayName: to.Ptr("ContosoSalesOnPremisesConnection"),
+	}
+
+	exampleRes = core.Connection{
+		ConnectionDetails: &core.ListConnectionDetails{
+			Type: to.Ptr("SQL"),
+			Path: to.Ptr("contoso.database.windows.net;sales"),
+		},
+		ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGateway),
+		CredentialDetails: &core.ListCredentialDetails{
+			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+			SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+			SkipTestConnection:   to.Ptr(false),
+			CredentialType:       to.Ptr(core.CredentialTypeWindows),
+		},
+		DisplayName:  to.Ptr("ContosoSalesOnPremisesConnection"),
+		GatewayID:    to.Ptr("4f8b5d6e-8e99-4817-8b9e-6b6a613be707"),
+		ID:           to.Ptr("70b17680-48f1-4729-9df6-02576647dc3a"),
+		PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
+	}
+
+	testsuite.serverFactory.ConnectionsServer.UpdateConnection = func(ctx context.Context, connectionID string, updateConnectionRequest core.UpdateConnectionRequestClassification, options *core.ConnectionsClientUpdateConnectionOptions) (resp azfake.Responder[core.ConnectionsClientUpdateConnectionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateConnectionRequest, updateConnectionRequest))
+		resp = azfake.Responder[core.ConnectionsClientUpdateConnectionResponse]{}
+		resp.SetResponse(http.StatusOK, core.ConnectionsClientUpdateConnectionResponse{Connection: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.UpdateConnection(ctx, exampleConnectionID, exampleUpdateConnectionRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Connection))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Personal cloud example"},
+	})
 	exampleConnectionID = "7a0369b2-58c4-4b67-b3f3-92156a95f1cd"
 	exampleUpdateConnectionRequest = &core.UpdatePersonalCloudConnectionRequest{
 		ConnectivityType: to.Ptr(core.ConnectivityTypePersonalCloud),
 		PrivacyLevel:     to.Ptr(core.PrivacyLevelOrganizational),
 	}
 
-	exampleRes := core.Connection{
+	exampleRes = core.Connection{
 		ConnectionDetails: &core.ListConnectionDetails{
 			Type: to.Ptr("SQL"),
 			Path: to.Ptr("contoso.database.windows.net;finances"),
@@ -4177,8 +4330,7 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 		return
 	}
 
-	client := testsuite.clientFactory.NewConnectionsClient()
-	res, err := client.UpdateConnection(ctx, exampleConnectionID, exampleUpdateConnectionRequest, nil)
+	res, err = client.UpdateConnection(ctx, exampleConnectionID, exampleUpdateConnectionRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Connection))
 
