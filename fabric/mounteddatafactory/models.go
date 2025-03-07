@@ -18,7 +18,7 @@ type CreateMountedDataFactoryRequest struct {
 	Description *string
 }
 
-// Definition - MountedDataFactory public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/mounteddatafactory-definition]
+// Definition - MountedDataFactory public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/mounted-data-factory-definition]
 // for more details on how to craft a
 // MountedDataFactory public definition.
 type Definition struct {
@@ -43,7 +43,7 @@ type DefinitionPart struct {
 
 // DefinitionResponse - MountedDataFactory public definition response.
 type DefinitionResponse struct {
-	// READ-ONLY; MountedDataFactory public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/mounteddatafactory-definition]
+	// READ-ONLY; MountedDataFactory public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/mounted-data-factory-definition]
 	// for more details on how to craft a
 	// MountedDataFactory public definition.
 	Definition *Definition
@@ -81,7 +81,7 @@ type MountedDataFactory struct {
 
 // UpdateMountedDataFactoryDefinitionRequest - Update MountedDataFactory public definition request payload.
 type UpdateMountedDataFactoryDefinitionRequest struct {
-	// REQUIRED; MountedDataFactory public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/mounteddatafactory-definition]
+	// REQUIRED; MountedDataFactory public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/mounted-data-factory-definition]
 	// for more details on how to craft a
 	// MountedDataFactory public definition.
 	Definition *Definition

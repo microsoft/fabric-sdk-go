@@ -27,7 +27,7 @@ func ExampleItemsClient_NewListMirroredDatabasesPager() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewItemsClient().NewListMirroredDatabasesPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &mirroreddatabase.ItemsClientListMirroredDatabasesOptions{ContinuationToken: nil})
+	pager := clientFactory.NewItemsClient().NewListMirroredDatabasesPager("a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", &mirroreddatabase.ItemsClientListMirroredDatabasesOptions{ContinuationToken: nil})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
 		if err != nil {
@@ -44,14 +44,14 @@ func ExampleItemsClient_NewListMirroredDatabasesPager() {
 		// 			Type: to.Ptr(mirroreddatabase.ItemTypeMirroredDatabase),
 		// 			Description: to.Ptr("A mirrored database description."),
 		// 			DisplayName: to.Ptr("Mirrored database 1"),
-		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
-		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+		// 			ID: to.Ptr("b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2"),
+		// 			WorkspaceID: to.Ptr("a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"),
 		// 			Properties: &mirroreddatabase.Properties{
 		// 				DefaultSchema: to.Ptr("dbo"),
-		// 				OneLakeTablesPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/7ba2c2f8-750a-47d8-9e95-99585107e23a/c3889489-6074-490e-90ed-e5a9e46142c6/Tables"),
+		// 				OneLakeTablesPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1/b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2/Tables"),
 		// 				SQLEndpointProperties: &mirroreddatabase.SQLEndpointProperties{
-		// 					ConnectionString: to.Ptr("x6eps4xrq2xudenlfv6naeo3i4-7dbke6ykoxmephuvtfmfcb7chi.msit-datawarehouse.fabric.microsoft.com"),
-		// 					ID: to.Ptr("84c9ad4a-ba9e-42d9-9025-b40f8e38c025"),
+		// 					ConnectionString: to.Ptr("xxx.datawarehouse.fabric.microsoft.com"),
+		// 					ID: to.Ptr("c2c2c2c2-dddd-eeee-ffff-a3a3a3a3a3a3"),
 		// 					ProvisioningStatus: to.Ptr(mirroreddatabase.SQLEndpointProvisioningStatusSuccess),
 		// 				},
 		// 			},
@@ -71,12 +71,12 @@ func ExampleItemsClient_CreateMirroredDatabase() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewItemsClient().CreateMirroredDatabase(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", mirroreddatabase.CreateMirroredDatabaseRequest{
+	_, err = clientFactory.NewItemsClient().CreateMirroredDatabase(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", mirroreddatabase.CreateMirroredDatabaseRequest{
 		Description: to.Ptr("A mirrored database description"),
 		Definition: &mirroreddatabase.Definition{
 			Parts: []mirroreddatabase.DefinitionPart{
 				{
-					Path:        to.Ptr("mirroredDatabase.json"),
+					Path:        to.Ptr("mirroring.json"),
 					Payload:     to.Ptr("eyAicHJvcGVydGllcy..WJsZSIgfSB9IH0gXSB9IH0"),
 					PayloadType: to.Ptr(mirroreddatabase.PayloadTypeInlineBase64),
 				}},
@@ -99,7 +99,7 @@ func ExampleItemsClient_GetMirroredDatabase() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewItemsClient().GetMirroredDatabase(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", nil)
+	res, err := clientFactory.NewItemsClient().GetMirroredDatabase(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -110,14 +110,14 @@ func ExampleItemsClient_GetMirroredDatabase() {
 	// 	Type: to.Ptr(mirroreddatabase.ItemTypeMirroredDatabase),
 	// 	Description: to.Ptr("A mirrored database description."),
 	// 	DisplayName: to.Ptr("Mirrored database 1"),
-	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
-	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+	// 	ID: to.Ptr("b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2"),
+	// 	WorkspaceID: to.Ptr("a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"),
 	// 	Properties: &mirroreddatabase.Properties{
 	// 		DefaultSchema: to.Ptr("dbo"),
-	// 		OneLakeTablesPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/cfafbeb1-8037-4d0c-896e-a46fb27ff229/5b218778-e7a5-4d73-8187-f10824047715/Tables"),
+	// 		OneLakeTablesPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1/b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2/Tables"),
 	// 		SQLEndpointProperties: &mirroreddatabase.SQLEndpointProperties{
 	// 			ConnectionString: to.Ptr("xxx.datawarehouse.fabric.microsoft.com"),
-	// 			ID: to.Ptr("84c9ad4a-ba9e-42d9-9025-b40f8e38c025"),
+	// 			ID: to.Ptr("c2c2c2c2-dddd-eeee-ffff-a3a3a3a3a3a3"),
 	// 			ProvisioningStatus: to.Ptr(mirroreddatabase.SQLEndpointProvisioningStatusSuccess),
 	// 		},
 	// 	},
@@ -135,7 +135,7 @@ func ExampleItemsClient_UpdateMirroredDatabase() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewItemsClient().UpdateMirroredDatabase(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", mirroreddatabase.UpdateMirroredDatabaseRequest{
+	res, err := clientFactory.NewItemsClient().UpdateMirroredDatabase(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2", mirroreddatabase.UpdateMirroredDatabaseRequest{
 		Description: to.Ptr("A new description for mirrored database."),
 		DisplayName: to.Ptr("MirroredDatabase's New name"),
 	}, nil)
@@ -149,8 +149,8 @@ func ExampleItemsClient_UpdateMirroredDatabase() {
 	// 	Type: to.Ptr(mirroreddatabase.ItemTypeMirroredDatabase),
 	// 	Description: to.Ptr("A new description for mirrored database."),
 	// 	DisplayName: to.Ptr("MirroredDatabase's New name"),
-	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
-	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+	// 	ID: to.Ptr("b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2"),
+	// 	WorkspaceID: to.Ptr("a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"),
 	// }
 }
 
@@ -165,14 +165,14 @@ func ExampleItemsClient_DeleteMirroredDatabase() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewItemsClient().DeleteMirroredDatabase(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", nil)
+	_, err = clientFactory.NewItemsClient().DeleteMirroredDatabase(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
 }
 
 // Generated from example definition
-func ExampleItemsClient_GetMirroredDatabaseDefinition() {
+func ExampleItemsClient_BeginGetMirroredDatabaseDefinition() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -182,9 +182,13 @@ func ExampleItemsClient_GetMirroredDatabaseDefinition() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewItemsClient().GetMirroredDatabaseDefinition(ctx, "6e335e92-a2a2-4b5a-970a-bd6a89fbb765", "cfafbeb1-8037-4d0c-896e-a46fb27ff229", nil)
+	poller, err := clientFactory.NewItemsClient().BeginGetMirroredDatabaseDefinition(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
+	}
+	res, err := poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
 	}
 	// You could use response here. We use blank identifier for just demo purposes.
 	_ = res
@@ -193,7 +197,7 @@ func ExampleItemsClient_GetMirroredDatabaseDefinition() {
 	// 	Definition: &mirroreddatabase.Definition{
 	// 		Parts: []mirroreddatabase.DefinitionPart{
 	// 			{
-	// 				Path: to.Ptr("mirroredDatabase.json"),
+	// 				Path: to.Ptr("mirroring.json"),
 	// 				Payload: to.Ptr("eyAicHJvcGVydGllcy..WJsZSIgfSB9IH0gXSB9IH0"),
 	// 				PayloadType: to.Ptr(mirroreddatabase.PayloadTypeInlineBase64),
 	// 			},
@@ -207,7 +211,7 @@ func ExampleItemsClient_GetMirroredDatabaseDefinition() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_UpdateMirroredDatabaseDefinition() {
+func ExampleItemsClient_BeginUpdateMirroredDatabaseDefinition() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -217,11 +221,11 @@ func ExampleItemsClient_UpdateMirroredDatabaseDefinition() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewItemsClient().UpdateMirroredDatabaseDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", mirroreddatabase.UpdateMirroredDatabaseDefinitionRequest{
+	poller, err := clientFactory.NewItemsClient().BeginUpdateMirroredDatabaseDefinition(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2", mirroreddatabase.UpdateMirroredDatabaseDefinitionRequest{
 		Definition: &mirroreddatabase.Definition{
 			Parts: []mirroreddatabase.DefinitionPart{
 				{
-					Path:        to.Ptr("mirroredDatabase.json"),
+					Path:        to.Ptr("mirroring.json"),
 					Payload:     to.Ptr("eyAicHJvcGVydGllcy..WJsZSIgfSB9IH0gXSB9IH0"),
 					PayloadType: to.Ptr(mirroreddatabase.PayloadTypeInlineBase64),
 				},
@@ -234,5 +238,9 @@ func ExampleItemsClient_UpdateMirroredDatabaseDefinition() {
 	}, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
 	}
 }

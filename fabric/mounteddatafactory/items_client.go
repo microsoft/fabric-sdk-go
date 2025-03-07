@@ -31,7 +31,7 @@ type ItemsClient struct {
 }
 
 // BeginCreateMountedDataFactory - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create MountedDataFactory with a public definition, refer to MountedDataFactory [/rest/api/fabric/articles/item-management/definitions/mounteddatafactory-definition]
+// To create MountedDataFactory with a public definition, refer to MountedDataFactory [/rest/api/fabric/articles/item-management/definitions/mounted-data-factory-definition]
 // article.
 // PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES MountedDataFactory.ReadWrite.All or Item.ReadWrite.All
@@ -57,7 +57,7 @@ func (client *ItemsClient) BeginCreateMountedDataFactory(ctx context.Context, wo
 }
 
 // CreateMountedDataFactory - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create MountedDataFactory with a public definition, refer to MountedDataFactory [/rest/api/fabric/articles/item-management/definitions/mounteddatafactory-definition]
+// To create MountedDataFactory with a public definition, refer to MountedDataFactory [/rest/api/fabric/articles/item-management/definitions/mounted-data-factory-definition]
 // article.
 // PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES MountedDataFactory.ReadWrite.All or Item.ReadWrite.All
@@ -533,7 +533,7 @@ func (client *ItemsClient) updateMountedDataFactoryDefinitionCreateRequest(ctx c
 // CreateMountedDataFactory - returns ItemsClientCreateMountedDataFactoryResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// To create MountedDataFactory with a public definition, refer to MountedDataFactory [/rest/api/fabric/articles/item-management/definitions/mounteddatafactory-definition] article.
+// To create MountedDataFactory with a public definition, refer to MountedDataFactory [/rest/api/fabric/articles/item-management/definitions/mounted-data-factory-definition] article.
 //
 // PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES MountedDataFactory.ReadWrite.All or Item.ReadWrite.All

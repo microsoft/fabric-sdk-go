@@ -17,6 +17,12 @@ type ItemsClientDeleteDataPipelineResponse struct {
 	// placeholder for future response values
 }
 
+// ItemsClientGetDataPipelineDefinitionResponse contains the response from method ItemsClient.BeginGetDataPipelineDefinition.
+type ItemsClientGetDataPipelineDefinitionResponse struct {
+	// Data pipeline public definition response.
+	DefinitionResponse
+}
+
 // ItemsClientGetDataPipelineResponse contains the response from method ItemsClient.GetDataPipeline.
 type ItemsClientGetDataPipelineResponse struct {
 	// A data pipeline object.
@@ -27,6 +33,11 @@ type ItemsClientGetDataPipelineResponse struct {
 type ItemsClientListDataPipelinesResponse struct {
 	// A list of data pipelines.
 	DataPipelines
+}
+
+// ItemsClientUpdateDataPipelineDefinitionResponse contains the response from method ItemsClient.BeginUpdateDataPipelineDefinition.
+type ItemsClientUpdateDataPipelineDefinitionResponse struct {
+	// placeholder for future response values
 }
 
 // ItemsClientUpdateDataPipelineResponse contains the response from method ItemsClient.UpdateDataPipeline.

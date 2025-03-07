@@ -28,9 +28,7 @@ type ExternalDataSharesClient struct {
 	endpoint string
 }
 
-// NewListExternalDataSharesPager - This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000
-// records can be returned per request. With the continuous token provided in the response, you can get the next
-// 10,000 records.
+// NewListExternalDataSharesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All
 // REQUIRED TENANT SETTINGS To use this API, enable the 'External data sharing' admin switch for the calling principal.
@@ -158,8 +156,7 @@ func (client *ExternalDataSharesClient) revokeExternalDataShareCreateRequest(ctx
 // Custom code starts below
 
 // ListExternalDataShares - returns array of ExternalDataShare from all pages.
-// This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records can be returned per request. With the continuous token provided in the response, you can get the next
-// 10,000 records.
+// This API supports pagination [/rest/api/fabric/articles/pagination].
 //
 // PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
 //

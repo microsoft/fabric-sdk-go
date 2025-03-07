@@ -13,6 +13,27 @@ type ItemsClientBeginCreateDataPipelineOptions struct {
 	ResumeToken string
 }
 
+// ItemsClientBeginGetDataPipelineDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetDataPipelineDefinition
+// method.
+type ItemsClientBeginGetDataPipelineDefinitionOptions struct {
+	// The format of the data pipeline public definition.
+	Format *string
+
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// ItemsClientBeginUpdateDataPipelineDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateDataPipelineDefinition
+// method.
+type ItemsClientBeginUpdateDataPipelineDefinitionOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+
+	// When set to true and the .platform file is provided as part of the definition, the item's metadata is updated using the
+	// metadata in the .platform file
+	UpdateMetadata *bool
+}
+
 // ItemsClientDeleteDataPipelineOptions contains the optional parameters for the ItemsClient.DeleteDataPipeline method.
 type ItemsClientDeleteDataPipelineOptions struct {
 	// placeholder for future optional parameters

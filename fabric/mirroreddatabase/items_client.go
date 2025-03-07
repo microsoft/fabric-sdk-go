@@ -19,6 +19,7 @@ import (
 
 	"github.com/microsoft/fabric-sdk-go/fabric/core"
 	"github.com/microsoft/fabric-sdk-go/internal/iruntime"
+	"github.com/microsoft/fabric-sdk-go/internal/pollers/locasync"
 )
 
 // ItemsClient contains the methods for the Items group.
@@ -215,7 +216,8 @@ func (client *ItemsClient) getMirroredDatabaseHandleResponse(resp *http.Response
 	return result, nil
 }
 
-// GetMirroredDatabaseDefinition - PERMISSIONS The caller must have contributor or higher workspace role.
+// BeginGetMirroredDatabaseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES MirroredDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -228,32 +230,47 @@ func (client *ItemsClient) getMirroredDatabaseHandleResponse(resp *http.Response
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - mirroredDatabaseID - The mirrored database ID.
-//   - options - ItemsClientGetMirroredDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.GetMirroredDatabaseDefinition
+//   - options - ItemsClientBeginGetMirroredDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetMirroredDatabaseDefinition
 //     method.
-func (client *ItemsClient) GetMirroredDatabaseDefinition(ctx context.Context, workspaceID string, mirroredDatabaseID string, options *ItemsClientGetMirroredDatabaseDefinitionOptions) (ItemsClientGetMirroredDatabaseDefinitionResponse, error) {
+func (client *ItemsClient) BeginGetMirroredDatabaseDefinition(ctx context.Context, workspaceID string, mirroredDatabaseID string, options *ItemsClientBeginGetMirroredDatabaseDefinitionOptions) (*runtime.Poller[ItemsClientGetMirroredDatabaseDefinitionResponse], error) {
+	return client.beginGetMirroredDatabaseDefinition(ctx, workspaceID, mirroredDatabaseID, options)
+}
+
+// GetMirroredDatabaseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES MirroredDatabase.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) getMirroredDatabaseDefinition(ctx context.Context, workspaceID string, mirroredDatabaseID string, options *ItemsClientBeginGetMirroredDatabaseDefinitionOptions) (*http.Response, error) {
 	var err error
-	const operationName = "mirroreddatabase.ItemsClient.GetMirroredDatabaseDefinition"
+	const operationName = "mirroreddatabase.ItemsClient.BeginGetMirroredDatabaseDefinition"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
 	req, err := client.getMirroredDatabaseDefinitionCreateRequest(ctx, workspaceID, mirroredDatabaseID, options)
 	if err != nil {
-		return ItemsClientGetMirroredDatabaseDefinitionResponse{}, err
+		return nil, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return ItemsClientGetMirroredDatabaseDefinitionResponse{}, err
+		return nil, err
 	}
-	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
 		err = core.NewResponseError(httpResp)
-		return ItemsClientGetMirroredDatabaseDefinitionResponse{}, err
+		return nil, err
 	}
-	resp, err := client.getMirroredDatabaseDefinitionHandleResponse(httpResp)
-	return resp, err
+	return httpResp, nil
 }
 
 // getMirroredDatabaseDefinitionCreateRequest creates the GetMirroredDatabaseDefinition request.
-func (client *ItemsClient) getMirroredDatabaseDefinitionCreateRequest(ctx context.Context, workspaceID string, mirroredDatabaseID string, _ *ItemsClientGetMirroredDatabaseDefinitionOptions) (*policy.Request, error) {
+func (client *ItemsClient) getMirroredDatabaseDefinitionCreateRequest(ctx context.Context, workspaceID string, mirroredDatabaseID string, _ *ItemsClientBeginGetMirroredDatabaseDefinitionOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/mirroredDatabases/{mirroredDatabaseId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -269,15 +286,6 @@ func (client *ItemsClient) getMirroredDatabaseDefinitionCreateRequest(ctx contex
 	}
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
-}
-
-// getMirroredDatabaseDefinitionHandleResponse handles the GetMirroredDatabaseDefinition response.
-func (client *ItemsClient) getMirroredDatabaseDefinitionHandleResponse(resp *http.Response) (ItemsClientGetMirroredDatabaseDefinitionResponse, error) {
-	result := ItemsClientGetMirroredDatabaseDefinitionResponse{}
-	if err := runtime.UnmarshalAsJSON(resp, &result.DefinitionResponse); err != nil {
-		return ItemsClientGetMirroredDatabaseDefinitionResponse{}, err
-	}
-	return result, nil
 }
 
 // NewListMirroredDatabasesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
@@ -415,7 +423,8 @@ func (client *ItemsClient) updateMirroredDatabaseHandleResponse(resp *http.Respo
 	return result, nil
 }
 
-// UpdateMirroredDatabaseDefinition - PERMISSIONS The API caller must have contributor or higher workspace role.
+// BeginUpdateMirroredDatabaseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The API caller must have contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES MirroredDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -429,31 +438,47 @@ func (client *ItemsClient) updateMirroredDatabaseHandleResponse(resp *http.Respo
 //   - workspaceID - The workspace ID.
 //   - mirroredDatabaseID - The mirrored database ID.
 //   - updateMirroredDatabaseDefinitionRequest - Update mirrored database definition request payload.
-//   - options - ItemsClientUpdateMirroredDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.UpdateMirroredDatabaseDefinition
+//   - options - ItemsClientBeginUpdateMirroredDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateMirroredDatabaseDefinition
 //     method.
-func (client *ItemsClient) UpdateMirroredDatabaseDefinition(ctx context.Context, workspaceID string, mirroredDatabaseID string, updateMirroredDatabaseDefinitionRequest UpdateMirroredDatabaseDefinitionRequest, options *ItemsClientUpdateMirroredDatabaseDefinitionOptions) (ItemsClientUpdateMirroredDatabaseDefinitionResponse, error) {
+func (client *ItemsClient) BeginUpdateMirroredDatabaseDefinition(ctx context.Context, workspaceID string, mirroredDatabaseID string, updateMirroredDatabaseDefinitionRequest UpdateMirroredDatabaseDefinitionRequest, options *ItemsClientBeginUpdateMirroredDatabaseDefinitionOptions) (*runtime.Poller[ItemsClientUpdateMirroredDatabaseDefinitionResponse], error) {
+	return client.beginUpdateMirroredDatabaseDefinition(ctx, workspaceID, mirroredDatabaseID, updateMirroredDatabaseDefinitionRequest, options)
+}
+
+// UpdateMirroredDatabaseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The API caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES MirroredDatabase.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) updateMirroredDatabaseDefinition(ctx context.Context, workspaceID string, mirroredDatabaseID string, updateMirroredDatabaseDefinitionRequest UpdateMirroredDatabaseDefinitionRequest, options *ItemsClientBeginUpdateMirroredDatabaseDefinitionOptions) (*http.Response, error) {
 	var err error
-	const operationName = "mirroreddatabase.ItemsClient.UpdateMirroredDatabaseDefinition"
+	const operationName = "mirroreddatabase.ItemsClient.BeginUpdateMirroredDatabaseDefinition"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
 	req, err := client.updateMirroredDatabaseDefinitionCreateRequest(ctx, workspaceID, mirroredDatabaseID, updateMirroredDatabaseDefinitionRequest, options)
 	if err != nil {
-		return ItemsClientUpdateMirroredDatabaseDefinitionResponse{}, err
+		return nil, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return ItemsClientUpdateMirroredDatabaseDefinitionResponse{}, err
+		return nil, err
 	}
-	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
 		err = core.NewResponseError(httpResp)
-		return ItemsClientUpdateMirroredDatabaseDefinitionResponse{}, err
+		return nil, err
 	}
-	return ItemsClientUpdateMirroredDatabaseDefinitionResponse{}, nil
+	return httpResp, nil
 }
 
 // updateMirroredDatabaseDefinitionCreateRequest creates the UpdateMirroredDatabaseDefinition request.
-func (client *ItemsClient) updateMirroredDatabaseDefinitionCreateRequest(ctx context.Context, workspaceID string, mirroredDatabaseID string, updateMirroredDatabaseDefinitionRequest UpdateMirroredDatabaseDefinitionRequest, _ *ItemsClientUpdateMirroredDatabaseDefinitionOptions) (*policy.Request, error) {
+func (client *ItemsClient) updateMirroredDatabaseDefinitionCreateRequest(ctx context.Context, workspaceID string, mirroredDatabaseID string, updateMirroredDatabaseDefinitionRequest UpdateMirroredDatabaseDefinitionRequest, _ *ItemsClientBeginUpdateMirroredDatabaseDefinitionOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/mirroredDatabases/{mirroredDatabaseId}/updateDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -475,6 +500,145 @@ func (client *ItemsClient) updateMirroredDatabaseDefinitionCreateRequest(ctx con
 }
 
 // Custom code starts below
+
+// GetMirroredDatabaseDefinition - returns ItemsClientGetMirroredDatabaseDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS The caller must have contributor or higher workspace role.
+//
+// # REQUIRED DELEGATED SCOPES MirroredDatabase.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - mirroredDatabaseID - The mirrored database ID.
+//   - options - ItemsClientBeginGetMirroredDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetMirroredDatabaseDefinition method.
+func (client *ItemsClient) GetMirroredDatabaseDefinition(ctx context.Context, workspaceID string, mirroredDatabaseID string, options *ItemsClientBeginGetMirroredDatabaseDefinitionOptions) (ItemsClientGetMirroredDatabaseDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginGetMirroredDatabaseDefinition(ctx, workspaceID, mirroredDatabaseID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientGetMirroredDatabaseDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientGetMirroredDatabaseDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginGetMirroredDatabaseDefinition creates the getMirroredDatabaseDefinition request.
+func (client *ItemsClient) beginGetMirroredDatabaseDefinition(ctx context.Context, workspaceID string, mirroredDatabaseID string, options *ItemsClientBeginGetMirroredDatabaseDefinitionOptions) (*runtime.Poller[ItemsClientGetMirroredDatabaseDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.getMirroredDatabaseDefinition(ctx, workspaceID, mirroredDatabaseID, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientGetMirroredDatabaseDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientGetMirroredDatabaseDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientGetMirroredDatabaseDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientGetMirroredDatabaseDefinitionResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// UpdateMirroredDatabaseDefinition - returns ItemsClientUpdateMirroredDatabaseDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS The API caller must have contributor or higher workspace role.
+//
+// # REQUIRED DELEGATED SCOPES MirroredDatabase.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - mirroredDatabaseID - The mirrored database ID.
+//   - updateMirroredDatabaseDefinitionRequest - Update mirrored database definition request payload.
+//   - options - ItemsClientBeginUpdateMirroredDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateMirroredDatabaseDefinition method.
+func (client *ItemsClient) UpdateMirroredDatabaseDefinition(ctx context.Context, workspaceID string, mirroredDatabaseID string, updateMirroredDatabaseDefinitionRequest UpdateMirroredDatabaseDefinitionRequest, options *ItemsClientBeginUpdateMirroredDatabaseDefinitionOptions) (ItemsClientUpdateMirroredDatabaseDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginUpdateMirroredDatabaseDefinition(ctx, workspaceID, mirroredDatabaseID, updateMirroredDatabaseDefinitionRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientUpdateMirroredDatabaseDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientUpdateMirroredDatabaseDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginUpdateMirroredDatabaseDefinition creates the updateMirroredDatabaseDefinition request.
+func (client *ItemsClient) beginUpdateMirroredDatabaseDefinition(ctx context.Context, workspaceID string, mirroredDatabaseID string, updateMirroredDatabaseDefinitionRequest UpdateMirroredDatabaseDefinitionRequest, options *ItemsClientBeginUpdateMirroredDatabaseDefinitionOptions) (*runtime.Poller[ItemsClientUpdateMirroredDatabaseDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.updateMirroredDatabaseDefinition(ctx, workspaceID, mirroredDatabaseID, updateMirroredDatabaseDefinitionRequest, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateMirroredDatabaseDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientUpdateMirroredDatabaseDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateMirroredDatabaseDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientUpdateMirroredDatabaseDefinitionResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
 
 // ListMirroredDatabases - returns array of MirroredDatabase from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].

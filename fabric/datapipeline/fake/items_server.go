@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
@@ -37,6 +38,10 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetDataPipeline func(ctx context.Context, workspaceID string, dataPipelineID string, options *datapipeline.ItemsClientGetDataPipelineOptions) (resp azfake.Responder[datapipeline.ItemsClientGetDataPipelineResponse], errResp azfake.ErrorResponder)
 
+	// BeginGetDataPipelineDefinition is the fake for method ItemsClient.BeginGetDataPipelineDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	BeginGetDataPipelineDefinition func(ctx context.Context, workspaceID string, dataPipelineID string, options *datapipeline.ItemsClientBeginGetDataPipelineDefinitionOptions) (resp azfake.PollerResponder[datapipeline.ItemsClientGetDataPipelineDefinitionResponse], errResp azfake.ErrorResponder)
+
 	// NewListDataPipelinesPager is the fake for method ItemsClient.NewListDataPipelinesPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListDataPipelinesPager func(workspaceID string, options *datapipeline.ItemsClientListDataPipelinesOptions) (resp azfake.PagerResponder[datapipeline.ItemsClientListDataPipelinesResponse])
@@ -44,6 +49,10 @@ type ItemsServer struct {
 	// UpdateDataPipeline is the fake for method ItemsClient.UpdateDataPipeline
 	// HTTP status codes to indicate success: http.StatusOK
 	UpdateDataPipeline func(ctx context.Context, workspaceID string, dataPipelineID string, updateDataPipelineRequest datapipeline.UpdateDataPipelineRequest, options *datapipeline.ItemsClientUpdateDataPipelineOptions) (resp azfake.Responder[datapipeline.ItemsClientUpdateDataPipelineResponse], errResp azfake.ErrorResponder)
+
+	// BeginUpdateDataPipelineDefinition is the fake for method ItemsClient.BeginUpdateDataPipelineDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
+	BeginUpdateDataPipelineDefinition func(ctx context.Context, workspaceID string, dataPipelineID string, updatePipelineDefinitionRequest datapipeline.UpdateDataPipelineDefinitionRequest, options *datapipeline.ItemsClientBeginUpdateDataPipelineDefinitionOptions) (resp azfake.PollerResponder[datapipeline.ItemsClientUpdateDataPipelineDefinitionResponse], errResp azfake.ErrorResponder)
 }
 
 // NewItemsServerTransport creates a new instance of ItemsServerTransport with the provided implementation.
@@ -51,18 +60,22 @@ type ItemsServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewItemsServerTransport(srv *ItemsServer) *ItemsServerTransport {
 	return &ItemsServerTransport{
-		srv:                       srv,
-		beginCreateDataPipeline:   newTracker[azfake.PollerResponder[datapipeline.ItemsClientCreateDataPipelineResponse]](),
-		newListDataPipelinesPager: newTracker[azfake.PagerResponder[datapipeline.ItemsClientListDataPipelinesResponse]](),
+		srv:                               srv,
+		beginCreateDataPipeline:           newTracker[azfake.PollerResponder[datapipeline.ItemsClientCreateDataPipelineResponse]](),
+		beginGetDataPipelineDefinition:    newTracker[azfake.PollerResponder[datapipeline.ItemsClientGetDataPipelineDefinitionResponse]](),
+		newListDataPipelinesPager:         newTracker[azfake.PagerResponder[datapipeline.ItemsClientListDataPipelinesResponse]](),
+		beginUpdateDataPipelineDefinition: newTracker[azfake.PollerResponder[datapipeline.ItemsClientUpdateDataPipelineDefinitionResponse]](),
 	}
 }
 
 // ItemsServerTransport connects instances of datapipeline.ItemsClient to instances of ItemsServer.
 // Don't use this type directly, use NewItemsServerTransport instead.
 type ItemsServerTransport struct {
-	srv                       *ItemsServer
-	beginCreateDataPipeline   *tracker[azfake.PollerResponder[datapipeline.ItemsClientCreateDataPipelineResponse]]
-	newListDataPipelinesPager *tracker[azfake.PagerResponder[datapipeline.ItemsClientListDataPipelinesResponse]]
+	srv                               *ItemsServer
+	beginCreateDataPipeline           *tracker[azfake.PollerResponder[datapipeline.ItemsClientCreateDataPipelineResponse]]
+	beginGetDataPipelineDefinition    *tracker[azfake.PollerResponder[datapipeline.ItemsClientGetDataPipelineDefinitionResponse]]
+	newListDataPipelinesPager         *tracker[azfake.PagerResponder[datapipeline.ItemsClientListDataPipelinesResponse]]
+	beginUpdateDataPipelineDefinition *tracker[azfake.PollerResponder[datapipeline.ItemsClientUpdateDataPipelineDefinitionResponse]]
 }
 
 // Do implements the policy.Transporter interface for ItemsServerTransport.
@@ -96,10 +109,14 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 				res.resp, res.err = i.dispatchDeleteDataPipeline(req)
 			case "ItemsClient.GetDataPipeline":
 				res.resp, res.err = i.dispatchGetDataPipeline(req)
+			case "ItemsClient.BeginGetDataPipelineDefinition":
+				res.resp, res.err = i.dispatchBeginGetDataPipelineDefinition(req)
 			case "ItemsClient.NewListDataPipelinesPager":
 				res.resp, res.err = i.dispatchNewListDataPipelinesPager(req)
 			case "ItemsClient.UpdateDataPipeline":
 				res.resp, res.err = i.dispatchUpdateDataPipeline(req)
+			case "ItemsClient.BeginUpdateDataPipelineDefinition":
+				res.resp, res.err = i.dispatchBeginUpdateDataPipelineDefinition(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -229,6 +246,62 @@ func (i *ItemsServerTransport) dispatchGetDataPipeline(req *http.Request) (*http
 	return resp, nil
 }
 
+func (i *ItemsServerTransport) dispatchBeginGetDataPipelineDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginGetDataPipelineDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginGetDataPipelineDefinition not implemented")}
+	}
+	beginGetDataPipelineDefinition := i.beginGetDataPipelineDefinition.get(req)
+	if beginGetDataPipelineDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataPipelines/(?P<dataPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		dataPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("dataPipelineId")])
+		if err != nil {
+			return nil, err
+		}
+		formatUnescaped, err := url.QueryUnescape(qp.Get("format"))
+		if err != nil {
+			return nil, err
+		}
+		formatParam := getOptional(formatUnescaped)
+		var options *datapipeline.ItemsClientBeginGetDataPipelineDefinitionOptions
+		if formatParam != nil {
+			options = &datapipeline.ItemsClientBeginGetDataPipelineDefinitionOptions{
+				Format: formatParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginGetDataPipelineDefinition(req.Context(), workspaceIDParam, dataPipelineIDParam, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginGetDataPipelineDefinition = &respr
+		i.beginGetDataPipelineDefinition.add(req, beginGetDataPipelineDefinition)
+	}
+
+	resp, err := server.PollerResponderNext(beginGetDataPipelineDefinition, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+		i.beginGetDataPipelineDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginGetDataPipelineDefinition) {
+		i.beginGetDataPipelineDefinition.remove(req)
+	}
+
+	return resp, nil
+}
+
 func (i *ItemsServerTransport) dispatchNewListDataPipelinesPager(req *http.Request) (*http.Response, error) {
 	if i.srv.NewListDataPipelinesPager == nil {
 		return nil, &nonRetriableError{errors.New("fake for method NewListDataPipelinesPager not implemented")}
@@ -312,6 +385,69 @@ func (i *ItemsServerTransport) dispatchUpdateDataPipeline(req *http.Request) (*h
 	if err != nil {
 		return nil, err
 	}
+	return resp, nil
+}
+
+func (i *ItemsServerTransport) dispatchBeginUpdateDataPipelineDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginUpdateDataPipelineDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginUpdateDataPipelineDefinition not implemented")}
+	}
+	beginUpdateDataPipelineDefinition := i.beginUpdateDataPipelineDefinition.get(req)
+	if beginUpdateDataPipelineDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataPipelines/(?P<dataPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		body, err := server.UnmarshalRequestAsJSON[datapipeline.UpdateDataPipelineDefinitionRequest](req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		dataPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("dataPipelineId")])
+		if err != nil {
+			return nil, err
+		}
+		updateMetadataUnescaped, err := url.QueryUnescape(qp.Get("updateMetadata"))
+		if err != nil {
+			return nil, err
+		}
+		updateMetadataParam, err := parseOptional(updateMetadataUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		var options *datapipeline.ItemsClientBeginUpdateDataPipelineDefinitionOptions
+		if updateMetadataParam != nil {
+			options = &datapipeline.ItemsClientBeginUpdateDataPipelineDefinitionOptions{
+				UpdateMetadata: updateMetadataParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginUpdateDataPipelineDefinition(req.Context(), workspaceIDParam, dataPipelineIDParam, body, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginUpdateDataPipelineDefinition = &respr
+		i.beginUpdateDataPipelineDefinition.add(req, beginUpdateDataPipelineDefinition)
+	}
+
+	resp, err := server.PollerResponderNext(beginUpdateDataPipelineDefinition, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
+		i.beginUpdateDataPipelineDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginUpdateDataPipelineDefinition) {
+		i.beginUpdateDataPipelineDefinition.remove(req)
+	}
+
 	return resp, nil
 }
 

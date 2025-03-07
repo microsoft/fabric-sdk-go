@@ -3547,6 +3547,34 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_CreateExternalDataShare()
 
 	_, err = client.CreateExternalDataShare(ctx, exampleWorkspaceID, exampleItemID, exampleCreateExternalDataShareRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create an external data share with multiple paths example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleItemID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleCreateExternalDataShareRequest = core.CreateExternalDataShareRequest{
+		Paths: []string{
+			"Files/Sales/Contoso_Sales_2023",
+			"Files/Sales/Contoso_Sales_2024/SubFolder1",
+			"Files/Sales/Contoso_Sales_2024/SubFolder2/SubFolder3"},
+		Recipient: &core.ExternalDataShareRecipient{
+			UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
+		},
+	}
+
+	testsuite.serverFactory.ExternalDataSharesServer.CreateExternalDataShare = func(ctx context.Context, workspaceID string, itemID string, createExternalDataShareRequest core.CreateExternalDataShareRequest, options *core.ExternalDataSharesClientCreateExternalDataShareOptions) (resp azfake.Responder[core.ExternalDataSharesClientCreateExternalDataShareResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateExternalDataShareRequest, createExternalDataShareRequest))
+		resp = azfake.Responder[core.ExternalDataSharesClientCreateExternalDataShareResponse]{}
+		resp.SetResponse(http.StatusCreated, core.ExternalDataSharesClientCreateExternalDataShareResponse{}, nil)
+		return
+	}
+
+	_, err = client.CreateExternalDataShare(ctx, exampleWorkspaceID, exampleItemID, exampleCreateExternalDataShareRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestExternalDataShares_ListExternalDataSharesInItem() {
