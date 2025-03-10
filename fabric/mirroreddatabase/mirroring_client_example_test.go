@@ -26,7 +26,7 @@ func ExampleMirroringClient_StartMirroring() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewMirroringClient().StartMirroring(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", nil)
+	_, err = clientFactory.NewMirroringClient().StartMirroring(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -43,7 +43,7 @@ func ExampleMirroringClient_StopMirroring() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewMirroringClient().StopMirroring(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", nil)
+	_, err = clientFactory.NewMirroringClient().StopMirroring(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -60,7 +60,7 @@ func ExampleMirroringClient_GetMirroringStatus() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewMirroringClient().GetMirroringStatus(ctx, "6e335e92-a2a2-4b5a-970a-bd6a89fbb765", "cfafbeb1-8037-4d0c-896e-a46fb27ff229", nil)
+	res, err := clientFactory.NewMirroringClient().GetMirroringStatus(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -83,7 +83,7 @@ func ExampleMirroringClient_NewGetTablesMirroringStatusPager() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewMirroringClient().NewGetTablesMirroringStatusPager("6e335e92-a2a2-4b5a-970a-bd6a89fbb765", "cfafbeb1-8037-4d0c-896e-a46fb27ff229", &mirroreddatabase.MirroringClientGetTablesMirroringStatusOptions{ContinuationToken: nil})
+	pager := clientFactory.NewMirroringClient().NewGetTablesMirroringStatusPager("a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2", &mirroreddatabase.MirroringClientGetTablesMirroringStatusOptions{ContinuationToken: nil})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
 		if err != nil {

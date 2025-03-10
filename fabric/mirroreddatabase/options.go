@@ -6,6 +6,20 @@
 
 package mirroreddatabase
 
+// ItemsClientBeginGetMirroredDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetMirroredDatabaseDefinition
+// method.
+type ItemsClientBeginGetMirroredDatabaseDefinitionOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// ItemsClientBeginUpdateMirroredDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateMirroredDatabaseDefinition
+// method.
+type ItemsClientBeginUpdateMirroredDatabaseDefinitionOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
 // ItemsClientCreateMirroredDatabaseOptions contains the optional parameters for the ItemsClient.CreateMirroredDatabase method.
 type ItemsClientCreateMirroredDatabaseOptions struct {
 	// placeholder for future optional parameters
@@ -13,12 +27,6 @@ type ItemsClientCreateMirroredDatabaseOptions struct {
 
 // ItemsClientDeleteMirroredDatabaseOptions contains the optional parameters for the ItemsClient.DeleteMirroredDatabase method.
 type ItemsClientDeleteMirroredDatabaseOptions struct {
-	// placeholder for future optional parameters
-}
-
-// ItemsClientGetMirroredDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.GetMirroredDatabaseDefinition
-// method.
-type ItemsClientGetMirroredDatabaseDefinitionOptions struct {
 	// placeholder for future optional parameters
 }
 
@@ -32,12 +40,6 @@ type ItemsClientGetMirroredDatabaseOptions struct {
 type ItemsClientListMirroredDatabasesOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
-}
-
-// ItemsClientUpdateMirroredDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.UpdateMirroredDatabaseDefinition
-// method.
-type ItemsClientUpdateMirroredDatabaseDefinitionOptions struct {
-	// placeholder for future optional parameters
 }
 
 // ItemsClientUpdateMirroredDatabaseOptions contains the optional parameters for the ItemsClient.UpdateMirroredDatabase method.

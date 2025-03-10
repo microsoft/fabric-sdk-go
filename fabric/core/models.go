@@ -606,7 +606,7 @@ type CreateCredentialDetails struct {
 
 // CreateExternalDataShareRequest - The request payload for creating an external data share.
 type CreateExternalDataShareRequest struct {
-	// REQUIRED; The path or list of paths that are to be externally shared. Currently, only a single path is supported. A valid
+	// REQUIRED; The path or list of paths that are to be externally shared. You can share up to 100 paths in each share. A valid
 	// path to an external data share must start with "Files/" or "Tables/". You can't share
 	// the root folder itself (Files or Tables).
 	// * For example, these paths are valid:
@@ -1898,13 +1898,6 @@ type OnPremisesGatewayCredentials struct {
 	Values []OnPremisesCredentialEntry
 }
 
-// GetCredentials implements the CredentialsClassification interface for type OnPremisesGatewayCredentials.
-func (o *OnPremisesGatewayCredentials) GetCredentials() *Credentials {
-	return &Credentials{
-		CredentialType: o.CredentialType,
-	}
-}
-
 // OnPremisesGatewayMember - The gateway member information.
 type OnPremisesGatewayMember struct {
 	// REQUIRED; The display name of the gateway member.
@@ -1954,13 +1947,6 @@ type OnPremisesGatewayPersonalCredentials struct {
 	// value. Encryption is performed using the Rivest-Shamir-Adleman (RSA) encryption
 	// algorithm with the on-premises gateway's public key.
 	EncryptedCredentials *string
-}
-
-// GetCredentials implements the CredentialsClassification interface for type OnPremisesGatewayPersonalCredentials.
-func (o *OnPremisesGatewayPersonalCredentials) GetCredentials() *Credentials {
-	return &Credentials{
-		CredentialType: o.CredentialType,
-	}
 }
 
 // OneLake - An object containing the properties of the target OneLake data source.

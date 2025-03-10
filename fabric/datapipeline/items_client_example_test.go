@@ -52,7 +52,7 @@ func ExampleItemsClient_NewListDataPipelinesPager() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_BeginCreateDataPipeline() {
+func ExampleItemsClient_BeginCreateDataPipeline_createDataPipelineExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -64,6 +64,43 @@ func ExampleItemsClient_BeginCreateDataPipeline() {
 	}
 	poller, err := clientFactory.NewItemsClient().BeginCreateDataPipeline(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", datapipeline.CreateDataPipelineRequest{
 		Description: to.Ptr("A data pipeline description"),
+		DisplayName: to.Ptr("DataPipeline 1"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginCreateDataPipeline_createDataPipelineWithItemDefinitionExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := datapipeline.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginCreateDataPipeline(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", datapipeline.CreateDataPipelineRequest{
+		Description: to.Ptr("A data pipeline description"),
+		Definition: &datapipeline.Definition{
+			Parts: []datapipeline.DefinitionPart{
+				{
+					Path:        to.Ptr("pipeline-content.json"),
+					Payload:     to.Ptr("ewogICAgInByb3BlcnRpZXMiOiB7IAogICAgICAgICJkZXNjcmlwdGlvbiI6ICJEYXRhIHBpcGVsaW5lIGRlc2NyaXB0aW9uIiwgCiAgICAgICAgImFjdGl2aXRpZXMiOiBbIAogICAgICAgICAgICB7IAogICAgICAgICAgICAgICAgIm5hbWUiOiAiV2FpdF9BY3Rpdml0eV8xIiwgCiAgICAgICAgICAgICAgICAidHlwZSI6ICJXYWl0IiwgCiAgICAgICAgICAgICAgICAiZGVwZW5kc09uIjogW10sIAogICAgICAgICAgICAgICAgInR5cGVQcm9wZXJ0aWVzIjogeyAKICAgICAgICAgICAgICAgICAgICAid2FpdFRpbWVJblNlY29uZHMiOiAyNDAgCiAgICAgICAgICAgICAgICB9IAogICAgICAgICAgICB9LAogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAibmFtZSI6ICJXYWl0X0FjdGl2aXR5XzIiLAogICAgICAgICAgICAgICAgInR5cGUiOiAiV2FpdCIsCiAgICAgICAgICAgICAgICAiZGVwZW5kc09uIjogWwogICAgICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICAgICAgImFjdGl2aXR5IjogIldhaXRfQWN0aXZpdHlfMSIsCiAgICAgICAgICAgICAgICAgICAgICAgICJkZXBlbmRlbmN5Q29uZGl0aW9ucyI6IFsgIlN1Y2NlZWRlZCIgXQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIF0sCiAgICAgICAgICAgICAgICAidHlwZVByb3BlcnRpZXMiOiB7CiAgICAgICAgICAgICAgICAgICAgIndhaXRUaW1lSW5TZWNvbmRzIjogMjQwCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICBdCiAgICB9IAp9IA=="),
+					PayloadType: to.Ptr(datapipeline.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(datapipeline.PayloadTypeInlineBase64),
+				}},
+		},
 		DisplayName: to.Ptr("DataPipeline 1"),
 	}, nil)
 	if err != nil {
@@ -146,5 +183,79 @@ func ExampleItemsClient_DeleteDataPipeline() {
 	_, err = clientFactory.NewItemsClient().DeleteDataPipeline(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginGetDataPipelineDefinition() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := datapipeline.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginGetDataPipelineDefinition(ctx, "6e335e92-a2a2-4b5a-970a-bd6a89fbb765", "cfafbeb1-8037-4d0c-896e-a46fb27ff229", &datapipeline.ItemsClientBeginGetDataPipelineDefinitionOptions{Format: nil})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	res, err := poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.DefinitionResponse = datapipeline.DefinitionResponse{
+	// 	Definition: &datapipeline.Definition{
+	// 		Parts: []datapipeline.DefinitionPart{
+	// 			{
+	// 				Path: to.Ptr("pipeline-content.json"),
+	// 				Payload: to.Ptr("ewogICJwcm9wZXJ0aWVzIjogewogICAgImFjdGl2aXRpZXMiOiBbXQogIH0KfQ=="),
+	// 				PayloadType: to.Ptr(datapipeline.PayloadTypeInlineBase64),
+	// 			},
+	// 			{
+	// 				Path: to.Ptr(".platform"),
+	// 				Payload: to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+	// 				PayloadType: to.Ptr(datapipeline.PayloadTypeInlineBase64),
+	// 		}},
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginUpdateDataPipelineDefinition() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := datapipeline.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginUpdateDataPipelineDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", datapipeline.UpdateDataPipelineDefinitionRequest{
+		Definition: &datapipeline.Definition{
+			Parts: []datapipeline.DefinitionPart{
+				{
+					Path:        to.Ptr("pipeline-content.json"),
+					Payload:     to.Ptr("ewogICJwcm9wZXJ0aWVzIjogewogICAgImFjdGl2aXRpZXMiOiBbCiAgICAgIHsKICAgICAgICAibmFtZSI6ICJXYWl0MSIsCiAgICAgICAgInR5cGUiOiAiV2FpdCIsCiAgICAgICAgImRlcGVuZHNPbiI6IFtdLAogICAgICAgICJ0eXBlUHJvcGVydGllcyI6IHsKICAgICAgICAgICJ3YWl0VGltZUluU2Vjb25kcyI6IDEKICAgICAgICB9CiAgICAgIH0KICAgIF0KICB9Cn0="),
+					PayloadType: to.Ptr(datapipeline.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(datapipeline.PayloadTypeInlineBase64),
+				}},
+		},
+	}, &datapipeline.ItemsClientBeginUpdateDataPipelineDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
 	}
 }

@@ -11,6 +11,9 @@ type CreateDataPipelineRequest struct {
 	// REQUIRED; The data pipeline display name.
 	DisplayName *string
 
+	// The data pipeline public definition.
+	Definition *Definition
+
 	// The data pipeline description. Maximum length is 256 characters.
 	Description *string
 }
@@ -43,6 +46,39 @@ type DataPipelines struct {
 
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
+}
+
+// Definition - Data pipeline public definition object.
+type Definition struct {
+	// REQUIRED; A list of definition parts.
+	Parts []DefinitionPart
+
+	// The format of the item definition.
+	Format *string
+}
+
+// DefinitionPart - Data pipeline definition part object.
+type DefinitionPart struct {
+	// The data pipeline part path.
+	Path *string
+
+	// The data pipeline part payload.
+	Payload *string
+
+	// The payload type.
+	PayloadType *PayloadType
+}
+
+// DefinitionResponse - Data pipeline public definition response.
+type DefinitionResponse struct {
+	// READ-ONLY; Data pipeline public definition object.
+	Definition *Definition
+}
+
+// UpdateDataPipelineDefinitionRequest - Update data pipeline public definition request payload.
+type UpdateDataPipelineDefinitionRequest struct {
+	// REQUIRED; Data pipeline public definition object.
+	Definition *Definition
 }
 
 // UpdateDataPipelineRequest - Update data pipeline request.

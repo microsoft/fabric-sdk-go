@@ -60,3 +60,31 @@ tasks:
     desc: Install gocov-xml
     cmds:
       - go install github.com/AlekSi/gocov-xml@latest
+
+  install:gorelease:
+    desc: Install gorelease
+    cmds:
+      - go install golang.org/x/exp/cmd/gorelease@latest
+
+  install:gapidiff:
+    desc: Install apidiff
+    cmds:
+      - go install golang.org/x/exp/cmd/apidiff@latest
+
+  install:modver:
+    desc: Install modver
+    cmds:
+      - go install github.com/bobg/modver/v2/cmd/modver@latest
+
+  # install:go-apidiff:
+  #   desc: Install go-apidiff
+  #   cmds:
+  #     - go install github.com/joelanford/go-apidiff@latest
+
+  api:check:
+    desc: Checks what changes have been made to the public API
+    vars:
+      LATEST:
+        sh: git describe --tags --abbrev=0
+    cmds:
+      - gorelease -base={{.LATEST}}

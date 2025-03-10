@@ -116,6 +116,42 @@ func (testsuite *FakeTestSuite) TestItems_CreateDataPipeline() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create data pipeline with item definition example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCreateDataPipelineRequest = datapipeline.CreateDataPipelineRequest{
+		Description: to.Ptr("A data pipeline description"),
+		Definition: &datapipeline.Definition{
+			Parts: []datapipeline.DefinitionPart{
+				{
+					Path:        to.Ptr("pipeline-content.json"),
+					Payload:     to.Ptr("ewogICAgInByb3BlcnRpZXMiOiB7IAogICAgICAgICJkZXNjcmlwdGlvbiI6ICJEYXRhIHBpcGVsaW5lIGRlc2NyaXB0aW9uIiwgCiAgICAgICAgImFjdGl2aXRpZXMiOiBbIAogICAgICAgICAgICB7IAogICAgICAgICAgICAgICAgIm5hbWUiOiAiV2FpdF9BY3Rpdml0eV8xIiwgCiAgICAgICAgICAgICAgICAidHlwZSI6ICJXYWl0IiwgCiAgICAgICAgICAgICAgICAiZGVwZW5kc09uIjogW10sIAogICAgICAgICAgICAgICAgInR5cGVQcm9wZXJ0aWVzIjogeyAKICAgICAgICAgICAgICAgICAgICAid2FpdFRpbWVJblNlY29uZHMiOiAyNDAgCiAgICAgICAgICAgICAgICB9IAogICAgICAgICAgICB9LAogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAibmFtZSI6ICJXYWl0X0FjdGl2aXR5XzIiLAogICAgICAgICAgICAgICAgInR5cGUiOiAiV2FpdCIsCiAgICAgICAgICAgICAgICAiZGVwZW5kc09uIjogWwogICAgICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICAgICAgImFjdGl2aXR5IjogIldhaXRfQWN0aXZpdHlfMSIsCiAgICAgICAgICAgICAgICAgICAgICAgICJkZXBlbmRlbmN5Q29uZGl0aW9ucyI6IFsgIlN1Y2NlZWRlZCIgXQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIF0sCiAgICAgICAgICAgICAgICAidHlwZVByb3BlcnRpZXMiOiB7CiAgICAgICAgICAgICAgICAgICAgIndhaXRUaW1lSW5TZWNvbmRzIjogMjQwCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICBdCiAgICB9IAp9IA=="),
+					PayloadType: to.Ptr(datapipeline.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(datapipeline.PayloadTypeInlineBase64),
+				}},
+		},
+		DisplayName: to.Ptr("DataPipeline 1"),
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginCreateDataPipeline = func(ctx context.Context, workspaceID string, createDataPipelineRequest datapipeline.CreateDataPipelineRequest, options *datapipeline.ItemsClientBeginCreateDataPipelineOptions) (resp azfake.PollerResponder[datapipeline.ItemsClientCreateDataPipelineResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateDataPipelineRequest, createDataPipelineRequest))
+		resp = azfake.PollerResponder[datapipeline.ItemsClientCreateDataPipelineResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, datapipeline.ItemsClientCreateDataPipelineResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateDataPipeline(ctx, exampleWorkspaceID, exampleCreateDataPipelineRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestItems_GetDataPipeline() {
@@ -209,4 +245,88 @@ func (testsuite *FakeTestSuite) TestItems_DeleteDataPipeline() {
 	client := testsuite.clientFactory.NewItemsClient()
 	_, err = client.DeleteDataPipeline(ctx, exampleWorkspaceID, exampleDataPipelineID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestItems_GetDataPipelineDefinition() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a data pipeline public definition example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataPipelineID string
+	exampleWorkspaceID = "6e335e92-a2a2-4b5a-970a-bd6a89fbb765"
+	exampleDataPipelineID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+
+	exampleRes := datapipeline.DefinitionResponse{
+		Definition: &datapipeline.Definition{
+			Parts: []datapipeline.DefinitionPart{
+				{
+					Path:        to.Ptr("pipeline-content.json"),
+					Payload:     to.Ptr("ewogICJwcm9wZXJ0aWVzIjogewogICAgImFjdGl2aXRpZXMiOiBbXQogIH0KfQ=="),
+					PayloadType: to.Ptr(datapipeline.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(datapipeline.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginGetDataPipelineDefinition = func(ctx context.Context, workspaceID string, dataPipelineID string, options *datapipeline.ItemsClientBeginGetDataPipelineDefinitionOptions) (resp azfake.PollerResponder[datapipeline.ItemsClientGetDataPipelineDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataPipelineID, dataPipelineID)
+		resp = azfake.PollerResponder[datapipeline.ItemsClientGetDataPipelineDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, datapipeline.ItemsClientGetDataPipelineDefinitionResponse{DefinitionResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	poller, err := client.BeginGetDataPipelineDefinition(ctx, exampleWorkspaceID, exampleDataPipelineID, &datapipeline.ItemsClientBeginGetDataPipelineDefinitionOptions{Format: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DefinitionResponse))
+}
+
+func (testsuite *FakeTestSuite) TestItems_UpdateDataPipelineDefinition() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update a data pipeline public definition example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataPipelineID string
+	var exampleUpdatePipelineDefinitionRequest datapipeline.UpdateDataPipelineDefinitionRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleDataPipelineID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleUpdatePipelineDefinitionRequest = datapipeline.UpdateDataPipelineDefinitionRequest{
+		Definition: &datapipeline.Definition{
+			Parts: []datapipeline.DefinitionPart{
+				{
+					Path:        to.Ptr("pipeline-content.json"),
+					Payload:     to.Ptr("ewogICJwcm9wZXJ0aWVzIjogewogICAgImFjdGl2aXRpZXMiOiBbCiAgICAgIHsKICAgICAgICAibmFtZSI6ICJXYWl0MSIsCiAgICAgICAgInR5cGUiOiAiV2FpdCIsCiAgICAgICAgImRlcGVuZHNPbiI6IFtdLAogICAgICAgICJ0eXBlUHJvcGVydGllcyI6IHsKICAgICAgICAgICJ3YWl0VGltZUluU2Vjb25kcyI6IDEKICAgICAgICB9CiAgICAgIH0KICAgIF0KICB9Cn0="),
+					PayloadType: to.Ptr(datapipeline.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(datapipeline.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginUpdateDataPipelineDefinition = func(ctx context.Context, workspaceID string, dataPipelineID string, updatePipelineDefinitionRequest datapipeline.UpdateDataPipelineDefinitionRequest, options *datapipeline.ItemsClientBeginUpdateDataPipelineDefinitionOptions) (resp azfake.PollerResponder[datapipeline.ItemsClientUpdateDataPipelineDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataPipelineID, dataPipelineID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdatePipelineDefinitionRequest, updatePipelineDefinitionRequest))
+		resp = azfake.PollerResponder[datapipeline.ItemsClientUpdateDataPipelineDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, datapipeline.ItemsClientUpdateDataPipelineDefinitionResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	poller, err := client.BeginUpdateDataPipelineDefinition(ctx, exampleWorkspaceID, exampleDataPipelineID, exampleUpdatePipelineDefinitionRequest, &datapipeline.ItemsClientBeginUpdateDataPipelineDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }

@@ -17,7 +17,7 @@ type ItemsClientDeleteMirroredDatabaseResponse struct {
 	// placeholder for future response values
 }
 
-// ItemsClientGetMirroredDatabaseDefinitionResponse contains the response from method ItemsClient.GetMirroredDatabaseDefinition.
+// ItemsClientGetMirroredDatabaseDefinitionResponse contains the response from method ItemsClient.BeginGetMirroredDatabaseDefinition.
 type ItemsClientGetMirroredDatabaseDefinitionResponse struct {
 	// Mirrored database public definition response.
 	DefinitionResponse
@@ -35,7 +35,7 @@ type ItemsClientListMirroredDatabasesResponse struct {
 	MirroredDatabases
 }
 
-// ItemsClientUpdateMirroredDatabaseDefinitionResponse contains the response from method ItemsClient.UpdateMirroredDatabaseDefinition.
+// ItemsClientUpdateMirroredDatabaseDefinitionResponse contains the response from method ItemsClient.BeginUpdateMirroredDatabaseDefinition.
 type ItemsClientUpdateMirroredDatabaseDefinitionResponse struct {
 	// placeholder for future response values
 }

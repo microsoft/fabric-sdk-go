@@ -38,9 +38,8 @@ type CreateGatewayRequestClassification interface {
 // CredentialsClassification provides polymorphic access to related types.
 // Call the interface's GetCredentials() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
-// - *AnonymousCredentials, *BasicCredentials, *Credentials, *KeyCredentials, *OnPremisesGatewayCredentials, *OnPremisesGatewayPersonalCredentials,
-// - *ServicePrincipalCredentials, *SharedAccessSignatureCredentials, *WindowsCredentials, *WindowsWithoutImpersonationCredentials,
-// - *WorkspaceIdentityCredentials
+// - *AnonymousCredentials, *BasicCredentials, *Credentials, *KeyCredentials, *ServicePrincipalCredentials, *SharedAccessSignatureCredentials,
+// - *WindowsCredentials, *WindowsWithoutImpersonationCredentials, *WorkspaceIdentityCredentials
 type CredentialsClassification interface {
 	// GetCredentials returns the Credentials content of the underlying type.
 	GetCredentials() *Credentials

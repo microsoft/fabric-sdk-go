@@ -59,7 +59,7 @@ func (testsuite *FakeTestSuite) TestItems_ListMirroredDatabases() {
 		"example-id": {"List mirrored databases in workspace example"},
 	})
 	var exampleWorkspaceID string
-	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
 
 	exampleRes := mirroreddatabase.MirroredDatabases{
 		Value: []mirroreddatabase.MirroredDatabase{
@@ -67,14 +67,14 @@ func (testsuite *FakeTestSuite) TestItems_ListMirroredDatabases() {
 				Type:        to.Ptr(mirroreddatabase.ItemTypeMirroredDatabase),
 				Description: to.Ptr("A mirrored database description."),
 				DisplayName: to.Ptr("Mirrored database 1"),
-				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
-				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+				ID:          to.Ptr("b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2"),
+				WorkspaceID: to.Ptr("a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"),
 				Properties: &mirroreddatabase.Properties{
 					DefaultSchema:     to.Ptr("dbo"),
-					OneLakeTablesPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/7ba2c2f8-750a-47d8-9e95-99585107e23a/c3889489-6074-490e-90ed-e5a9e46142c6/Tables"),
+					OneLakeTablesPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1/b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2/Tables"),
 					SQLEndpointProperties: &mirroreddatabase.SQLEndpointProperties{
-						ConnectionString:   to.Ptr("x6eps4xrq2xudenlfv6naeo3i4-7dbke6ykoxmephuvtfmfcb7chi.msit-datawarehouse.fabric.microsoft.com"),
-						ID:                 to.Ptr("84c9ad4a-ba9e-42d9-9025-b40f8e38c025"),
+						ConnectionString:   to.Ptr("xxx.datawarehouse.fabric.microsoft.com"),
+						ID:                 to.Ptr("c2c2c2c2-dddd-eeee-ffff-a3a3a3a3a3a3"),
 						ProvisioningStatus: to.Ptr(mirroreddatabase.SQLEndpointProvisioningStatusSuccess),
 					},
 				},
@@ -107,13 +107,13 @@ func (testsuite *FakeTestSuite) TestItems_CreateMirroredDatabase() {
 	})
 	var exampleWorkspaceID string
 	var exampleCreateMirroredDatabaseRequest mirroreddatabase.CreateMirroredDatabaseRequest
-	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
 	exampleCreateMirroredDatabaseRequest = mirroreddatabase.CreateMirroredDatabaseRequest{
 		Description: to.Ptr("A mirrored database description"),
 		Definition: &mirroreddatabase.Definition{
 			Parts: []mirroreddatabase.DefinitionPart{
 				{
-					Path:        to.Ptr("mirroredDatabase.json"),
+					Path:        to.Ptr("mirroring.json"),
 					Payload:     to.Ptr("eyAicHJvcGVydGllcy..WJsZSIgfSB9IH0gXSB9IH0"),
 					PayloadType: to.Ptr(mirroreddatabase.PayloadTypeInlineBase64),
 				}},
@@ -141,21 +141,21 @@ func (testsuite *FakeTestSuite) TestItems_GetMirroredDatabase() {
 	})
 	var exampleWorkspaceID string
 	var exampleMirroredDatabaseID string
-	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
-	exampleMirroredDatabaseID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleMirroredDatabaseID = "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2"
 
 	exampleRes := mirroreddatabase.MirroredDatabase{
 		Type:        to.Ptr(mirroreddatabase.ItemTypeMirroredDatabase),
 		Description: to.Ptr("A mirrored database description."),
 		DisplayName: to.Ptr("Mirrored database 1"),
-		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
-		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+		ID:          to.Ptr("b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2"),
+		WorkspaceID: to.Ptr("a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"),
 		Properties: &mirroreddatabase.Properties{
 			DefaultSchema:     to.Ptr("dbo"),
-			OneLakeTablesPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/cfafbeb1-8037-4d0c-896e-a46fb27ff229/5b218778-e7a5-4d73-8187-f10824047715/Tables"),
+			OneLakeTablesPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1/b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2/Tables"),
 			SQLEndpointProperties: &mirroreddatabase.SQLEndpointProperties{
 				ConnectionString:   to.Ptr("xxx.datawarehouse.fabric.microsoft.com"),
-				ID:                 to.Ptr("84c9ad4a-ba9e-42d9-9025-b40f8e38c025"),
+				ID:                 to.Ptr("c2c2c2c2-dddd-eeee-ffff-a3a3a3a3a3a3"),
 				ProvisioningStatus: to.Ptr(mirroreddatabase.SQLEndpointProvisioningStatusSuccess),
 			},
 		},
@@ -183,8 +183,8 @@ func (testsuite *FakeTestSuite) TestItems_UpdateMirroredDatabase() {
 	var exampleWorkspaceID string
 	var exampleMirroredDatabaseID string
 	var exampleUpdateMirroredDatabaseRequest mirroreddatabase.UpdateMirroredDatabaseRequest
-	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
-	exampleMirroredDatabaseID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleMirroredDatabaseID = "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2"
 	exampleUpdateMirroredDatabaseRequest = mirroreddatabase.UpdateMirroredDatabaseRequest{
 		Description: to.Ptr("A new description for mirrored database."),
 		DisplayName: to.Ptr("MirroredDatabase's New name"),
@@ -194,8 +194,8 @@ func (testsuite *FakeTestSuite) TestItems_UpdateMirroredDatabase() {
 		Type:        to.Ptr(mirroreddatabase.ItemTypeMirroredDatabase),
 		Description: to.Ptr("A new description for mirrored database."),
 		DisplayName: to.Ptr("MirroredDatabase's New name"),
-		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
-		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+		ID:          to.Ptr("b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2"),
+		WorkspaceID: to.Ptr("a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"),
 	}
 
 	testsuite.serverFactory.ItemsServer.UpdateMirroredDatabase = func(ctx context.Context, workspaceID string, mirroredDatabaseID string, updateMirroredDatabaseRequest mirroreddatabase.UpdateMirroredDatabaseRequest, options *mirroreddatabase.ItemsClientUpdateMirroredDatabaseOptions) (resp azfake.Responder[mirroreddatabase.ItemsClientUpdateMirroredDatabaseResponse], errResp azfake.ErrorResponder) {
@@ -220,8 +220,8 @@ func (testsuite *FakeTestSuite) TestItems_DeleteMirroredDatabase() {
 	})
 	var exampleWorkspaceID string
 	var exampleMirroredDatabaseID string
-	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
-	exampleMirroredDatabaseID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleMirroredDatabaseID = "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2"
 
 	testsuite.serverFactory.ItemsServer.DeleteMirroredDatabase = func(ctx context.Context, workspaceID string, mirroredDatabaseID string, options *mirroreddatabase.ItemsClientDeleteMirroredDatabaseOptions) (resp azfake.Responder[mirroreddatabase.ItemsClientDeleteMirroredDatabaseResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
@@ -243,14 +243,14 @@ func (testsuite *FakeTestSuite) TestItems_GetMirroredDatabaseDefinition() {
 	})
 	var exampleWorkspaceID string
 	var exampleMirroredDatabaseID string
-	exampleWorkspaceID = "6e335e92-a2a2-4b5a-970a-bd6a89fbb765"
-	exampleMirroredDatabaseID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleMirroredDatabaseID = "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2"
 
 	exampleRes := mirroreddatabase.DefinitionResponse{
 		Definition: &mirroreddatabase.Definition{
 			Parts: []mirroreddatabase.DefinitionPart{
 				{
-					Path:        to.Ptr("mirroredDatabase.json"),
+					Path:        to.Ptr("mirroring.json"),
 					Payload:     to.Ptr("eyAicHJvcGVydGllcy..WJsZSIgfSB9IH0gXSB9IH0"),
 					PayloadType: to.Ptr(mirroreddatabase.PayloadTypeInlineBase64),
 				},
@@ -262,17 +262,19 @@ func (testsuite *FakeTestSuite) TestItems_GetMirroredDatabaseDefinition() {
 		},
 	}
 
-	testsuite.serverFactory.ItemsServer.GetMirroredDatabaseDefinition = func(ctx context.Context, workspaceID string, mirroredDatabaseID string, options *mirroreddatabase.ItemsClientGetMirroredDatabaseDefinitionOptions) (resp azfake.Responder[mirroreddatabase.ItemsClientGetMirroredDatabaseDefinitionResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ItemsServer.BeginGetMirroredDatabaseDefinition = func(ctx context.Context, workspaceID string, mirroredDatabaseID string, options *mirroreddatabase.ItemsClientBeginGetMirroredDatabaseDefinitionOptions) (resp azfake.PollerResponder[mirroreddatabase.ItemsClientGetMirroredDatabaseDefinitionResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleMirroredDatabaseID, mirroredDatabaseID)
-		resp = azfake.Responder[mirroreddatabase.ItemsClientGetMirroredDatabaseDefinitionResponse]{}
-		resp.SetResponse(http.StatusOK, mirroreddatabase.ItemsClientGetMirroredDatabaseDefinitionResponse{DefinitionResponse: exampleRes}, nil)
+		resp = azfake.PollerResponder[mirroreddatabase.ItemsClientGetMirroredDatabaseDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, mirroreddatabase.ItemsClientGetMirroredDatabaseDefinitionResponse{DefinitionResponse: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	res, err := client.GetMirroredDatabaseDefinition(ctx, exampleWorkspaceID, exampleMirroredDatabaseID, nil)
+	poller, err := client.BeginGetMirroredDatabaseDefinition(ctx, exampleWorkspaceID, exampleMirroredDatabaseID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DefinitionResponse))
 }
 
@@ -284,13 +286,13 @@ func (testsuite *FakeTestSuite) TestItems_UpdateMirroredDatabaseDefinition() {
 	var exampleWorkspaceID string
 	var exampleMirroredDatabaseID string
 	var exampleUpdateMirroredDatabaseDefinitionRequest mirroreddatabase.UpdateMirroredDatabaseDefinitionRequest
-	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
-	exampleMirroredDatabaseID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleMirroredDatabaseID = "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2"
 	exampleUpdateMirroredDatabaseDefinitionRequest = mirroreddatabase.UpdateMirroredDatabaseDefinitionRequest{
 		Definition: &mirroreddatabase.Definition{
 			Parts: []mirroreddatabase.DefinitionPart{
 				{
-					Path:        to.Ptr("mirroredDatabase.json"),
+					Path:        to.Ptr("mirroring.json"),
 					Payload:     to.Ptr("eyAicHJvcGVydGllcy..WJsZSIgfSB9IH0gXSB9IH0"),
 					PayloadType: to.Ptr(mirroreddatabase.PayloadTypeInlineBase64),
 				},
@@ -302,18 +304,20 @@ func (testsuite *FakeTestSuite) TestItems_UpdateMirroredDatabaseDefinition() {
 		},
 	}
 
-	testsuite.serverFactory.ItemsServer.UpdateMirroredDatabaseDefinition = func(ctx context.Context, workspaceID string, mirroredDatabaseID string, updateMirroredDatabaseDefinitionRequest mirroreddatabase.UpdateMirroredDatabaseDefinitionRequest, options *mirroreddatabase.ItemsClientUpdateMirroredDatabaseDefinitionOptions) (resp azfake.Responder[mirroreddatabase.ItemsClientUpdateMirroredDatabaseDefinitionResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ItemsServer.BeginUpdateMirroredDatabaseDefinition = func(ctx context.Context, workspaceID string, mirroredDatabaseID string, updateMirroredDatabaseDefinitionRequest mirroreddatabase.UpdateMirroredDatabaseDefinitionRequest, options *mirroreddatabase.ItemsClientBeginUpdateMirroredDatabaseDefinitionOptions) (resp azfake.PollerResponder[mirroreddatabase.ItemsClientUpdateMirroredDatabaseDefinitionResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleMirroredDatabaseID, mirroredDatabaseID)
 		testsuite.Require().True(reflect.DeepEqual(exampleUpdateMirroredDatabaseDefinitionRequest, updateMirroredDatabaseDefinitionRequest))
-		resp = azfake.Responder[mirroreddatabase.ItemsClientUpdateMirroredDatabaseDefinitionResponse]{}
-		resp.SetResponse(http.StatusOK, mirroreddatabase.ItemsClientUpdateMirroredDatabaseDefinitionResponse{}, nil)
+		resp = azfake.PollerResponder[mirroreddatabase.ItemsClientUpdateMirroredDatabaseDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, mirroreddatabase.ItemsClientUpdateMirroredDatabaseDefinitionResponse{}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.UpdateMirroredDatabaseDefinition(ctx, exampleWorkspaceID, exampleMirroredDatabaseID, exampleUpdateMirroredDatabaseDefinitionRequest, nil)
+	poller, err := client.BeginUpdateMirroredDatabaseDefinition(ctx, exampleWorkspaceID, exampleMirroredDatabaseID, exampleUpdateMirroredDatabaseDefinitionRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestMirroring_StartMirroring() {
@@ -323,8 +327,8 @@ func (testsuite *FakeTestSuite) TestMirroring_StartMirroring() {
 	})
 	var exampleWorkspaceID string
 	var exampleMirroredDatabaseID string
-	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
-	exampleMirroredDatabaseID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleMirroredDatabaseID = "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2"
 
 	testsuite.serverFactory.MirroringServer.StartMirroring = func(ctx context.Context, workspaceID string, mirroredDatabaseID string, options *mirroreddatabase.MirroringClientStartMirroringOptions) (resp azfake.Responder[mirroreddatabase.MirroringClientStartMirroringResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
@@ -346,8 +350,8 @@ func (testsuite *FakeTestSuite) TestMirroring_StopMirroring() {
 	})
 	var exampleWorkspaceID string
 	var exampleMirroredDatabaseID string
-	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
-	exampleMirroredDatabaseID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleMirroredDatabaseID = "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2"
 
 	testsuite.serverFactory.MirroringServer.StopMirroring = func(ctx context.Context, workspaceID string, mirroredDatabaseID string, options *mirroreddatabase.MirroringClientStopMirroringOptions) (resp azfake.Responder[mirroreddatabase.MirroringClientStopMirroringResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
@@ -369,8 +373,8 @@ func (testsuite *FakeTestSuite) TestMirroring_GetMirroringStatus() {
 	})
 	var exampleWorkspaceID string
 	var exampleMirroredDatabaseID string
-	exampleWorkspaceID = "6e335e92-a2a2-4b5a-970a-bd6a89fbb765"
-	exampleMirroredDatabaseID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleMirroredDatabaseID = "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2"
 
 	exampleRes := mirroreddatabase.MirroringStatusResponse{
 		Status: to.Ptr(mirroreddatabase.MirroringStatusRunning),
@@ -397,8 +401,8 @@ func (testsuite *FakeTestSuite) TestMirroring_GetTablesMirroringStatus() {
 	})
 	var exampleWorkspaceID string
 	var exampleMirroredDatabaseID string
-	exampleWorkspaceID = "6e335e92-a2a2-4b5a-970a-bd6a89fbb765"
-	exampleMirroredDatabaseID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleMirroredDatabaseID = "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2"
 
 	exampleRes := mirroreddatabase.TablesMirroringStatusResponse{
 		Data: []mirroreddatabase.TableMirroringStatusResponse{

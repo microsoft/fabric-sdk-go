@@ -11,6 +11,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -38,7 +39,7 @@ type ItemsClient struct {
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -60,7 +61,7 @@ func (client *ItemsClient) BeginCreateDataPipeline(ctx context.Context, workspac
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -110,7 +111,7 @@ func (client *ItemsClient) createDataPipelineCreateRequest(ctx context.Context, 
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -165,7 +166,7 @@ func (client *ItemsClient) deleteDataPipelineCreateRequest(ctx context.Context, 
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -223,6 +224,85 @@ func (client *ItemsClient) getDataPipelineHandleResponse(resp *http.Response) (I
 	return result, nil
 }
 
+// BeginGetDataPipelineDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// When you get a DataPipeline's public definition, the sensitivity label is not a part of the definition.
+// PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES DataPipeline.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataPipelineID - The data pipeline ID.
+//   - options - ItemsClientBeginGetDataPipelineDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetDataPipelineDefinition
+//     method.
+func (client *ItemsClient) BeginGetDataPipelineDefinition(ctx context.Context, workspaceID string, dataPipelineID string, options *ItemsClientBeginGetDataPipelineDefinitionOptions) (*runtime.Poller[ItemsClientGetDataPipelineDefinitionResponse], error) {
+	return client.beginGetDataPipelineDefinition(ctx, workspaceID, dataPipelineID, options)
+}
+
+// GetDataPipelineDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// When you get a DataPipeline's public definition, the sensitivity label is not a part of the definition.
+// PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES DataPipeline.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) getDataPipelineDefinition(ctx context.Context, workspaceID string, dataPipelineID string, options *ItemsClientBeginGetDataPipelineDefinitionOptions) (*http.Response, error) {
+	var err error
+	const operationName = "datapipeline.ItemsClient.BeginGetDataPipelineDefinition"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getDataPipelineDefinitionCreateRequest(ctx, workspaceID, dataPipelineID, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// getDataPipelineDefinitionCreateRequest creates the GetDataPipelineDefinition request.
+func (client *ItemsClient) getDataPipelineDefinitionCreateRequest(ctx context.Context, workspaceID string, dataPipelineID string, options *ItemsClientBeginGetDataPipelineDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/dataPipelines/{dataPipelineId}/getDefinition"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if dataPipelineID == "" {
+		return nil, errors.New("parameter dataPipelineID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{dataPipelineId}", url.PathEscape(dataPipelineID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.Format != nil {
+		reqQP.Set("format", *options.Format)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
 // NewListDataPipelinesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
@@ -230,7 +310,7 @@ func (client *ItemsClient) getDataPipelineHandleResponse(resp *http.Response) (I
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 //
 // Generated from API version v1
@@ -295,7 +375,7 @@ func (client *ItemsClient) listDataPipelinesHandleResponse(resp *http.Response) 
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -358,6 +438,89 @@ func (client *ItemsClient) updateDataPipelineHandleResponse(resp *http.Response)
 	return result, nil
 }
 
+// BeginUpdateDataPipelineDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Updating the DataPipeline's definition, does not affect its sensitivity label.
+// PERMISSIONS The API caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES DataPipeline.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataPipelineID - The data pipeline ID.
+//   - updatePipelineDefinitionRequest - Update data pipeline definition request payload.
+//   - options - ItemsClientBeginUpdateDataPipelineDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateDataPipelineDefinition
+//     method.
+func (client *ItemsClient) BeginUpdateDataPipelineDefinition(ctx context.Context, workspaceID string, dataPipelineID string, updatePipelineDefinitionRequest UpdateDataPipelineDefinitionRequest, options *ItemsClientBeginUpdateDataPipelineDefinitionOptions) (*runtime.Poller[ItemsClientUpdateDataPipelineDefinitionResponse], error) {
+	return client.beginUpdateDataPipelineDefinition(ctx, workspaceID, dataPipelineID, updatePipelineDefinitionRequest, options)
+}
+
+// UpdateDataPipelineDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Updating the DataPipeline's definition, does not affect its sensitivity label.
+// PERMISSIONS The API caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES DataPipeline.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) updateDataPipelineDefinition(ctx context.Context, workspaceID string, dataPipelineID string, updatePipelineDefinitionRequest UpdateDataPipelineDefinitionRequest, options *ItemsClientBeginUpdateDataPipelineDefinitionOptions) (*http.Response, error) {
+	var err error
+	const operationName = "datapipeline.ItemsClient.BeginUpdateDataPipelineDefinition"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateDataPipelineDefinitionCreateRequest(ctx, workspaceID, dataPipelineID, updatePipelineDefinitionRequest, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// updateDataPipelineDefinitionCreateRequest creates the UpdateDataPipelineDefinition request.
+func (client *ItemsClient) updateDataPipelineDefinitionCreateRequest(ctx context.Context, workspaceID string, dataPipelineID string, updatePipelineDefinitionRequest UpdateDataPipelineDefinitionRequest, options *ItemsClientBeginUpdateDataPipelineDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/dataPipelines/{dataPipelineId}/updateDefinition"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if dataPipelineID == "" {
+		return nil, errors.New("parameter dataPipelineID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{dataPipelineId}", url.PathEscape(dataPipelineID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.UpdateMetadata != nil {
+		reqQP.Set("updateMetadata", strconv.FormatBool(*options.UpdateMetadata))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updatePipelineDefinitionRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // Custom code starts below
 
 // CreateDataPipeline - returns ItemsClientCreateDataPipelineResponse in sync mode.
@@ -373,7 +536,7 @@ func (client *ItemsClient) updateDataPipelineHandleResponse(resp *http.Response)
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
 // Generated from API version v1
@@ -432,6 +595,149 @@ func (client *ItemsClient) beginCreateDataPipeline(ctx context.Context, workspac
 	}
 }
 
+// GetDataPipelineDefinition - returns ItemsClientGetDataPipelineDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// When you get a DataPipeline's public definition, the sensitivity label is not a part of the definition.
+//
+// PERMISSIONS The caller must have contributor or higher workspace role.
+//
+// # REQUIRED DELEGATED SCOPES DataPipeline.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataPipelineID - The data pipeline ID.
+//   - options - ItemsClientBeginGetDataPipelineDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetDataPipelineDefinition method.
+func (client *ItemsClient) GetDataPipelineDefinition(ctx context.Context, workspaceID string, dataPipelineID string, options *ItemsClientBeginGetDataPipelineDefinitionOptions) (ItemsClientGetDataPipelineDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginGetDataPipelineDefinition(ctx, workspaceID, dataPipelineID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientGetDataPipelineDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientGetDataPipelineDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginGetDataPipelineDefinition creates the getDataPipelineDefinition request.
+func (client *ItemsClient) beginGetDataPipelineDefinition(ctx context.Context, workspaceID string, dataPipelineID string, options *ItemsClientBeginGetDataPipelineDefinitionOptions) (*runtime.Poller[ItemsClientGetDataPipelineDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.getDataPipelineDefinition(ctx, workspaceID, dataPipelineID, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientGetDataPipelineDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientGetDataPipelineDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientGetDataPipelineDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientGetDataPipelineDefinitionResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// UpdateDataPipelineDefinition - returns ItemsClientUpdateDataPipelineDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// Updating the DataPipeline's definition, does not affect its sensitivity label.
+//
+// PERMISSIONS The API caller must have contributor or higher workspace role.
+//
+// # REQUIRED DELEGATED SCOPES DataPipeline.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataPipelineID - The data pipeline ID.
+//   - updatePipelineDefinitionRequest - Update data pipeline definition request payload.
+//   - options - ItemsClientBeginUpdateDataPipelineDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateDataPipelineDefinition method.
+func (client *ItemsClient) UpdateDataPipelineDefinition(ctx context.Context, workspaceID string, dataPipelineID string, updatePipelineDefinitionRequest UpdateDataPipelineDefinitionRequest, options *ItemsClientBeginUpdateDataPipelineDefinitionOptions) (ItemsClientUpdateDataPipelineDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginUpdateDataPipelineDefinition(ctx, workspaceID, dataPipelineID, updatePipelineDefinitionRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientUpdateDataPipelineDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientUpdateDataPipelineDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginUpdateDataPipelineDefinition creates the updateDataPipelineDefinition request.
+func (client *ItemsClient) beginUpdateDataPipelineDefinition(ctx context.Context, workspaceID string, dataPipelineID string, updatePipelineDefinitionRequest UpdateDataPipelineDefinitionRequest, options *ItemsClientBeginUpdateDataPipelineDefinitionOptions) (*runtime.Poller[ItemsClientUpdateDataPipelineDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.updateDataPipelineDefinition(ctx, workspaceID, dataPipelineID, updatePipelineDefinitionRequest, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateDataPipelineDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientUpdateDataPipelineDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateDataPipelineDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientUpdateDataPipelineDefinitionResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
 // ListDataPipelines - returns array of DataPipeline from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
@@ -442,7 +748,7 @@ func (client *ItemsClient) beginCreateDataPipeline(ctx context.Context, workspac
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
 // Generated from API version v1

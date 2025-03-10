@@ -72,10 +72,6 @@ func unmarshalCredentialsClassification(rawMsg json.RawMessage) (CredentialsClas
 	}
 	var b CredentialsClassification
 	switch m["credentialType"] {
-	case "OnPremisesGatewayCredentials":
-		b = &OnPremisesGatewayCredentials{}
-	case "OnPremisesGatewayPersonalCredentials":
-		b = &OnPremisesGatewayPersonalCredentials{}
 	case string(CredentialTypeAnonymous):
 		b = &AnonymousCredentials{}
 	case string(CredentialTypeBasic):

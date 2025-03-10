@@ -64,6 +64,31 @@ func ExampleExternalDataSharesClient_CreateExternalDataShare_createAnExternalDat
 }
 
 // Generated from example definition
+func ExampleExternalDataSharesClient_CreateExternalDataShare_createAnExternalDataShareWithMultiplePathsExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewExternalDataSharesClient().CreateExternalDataShare(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", core.CreateExternalDataShareRequest{
+		Paths: []string{
+			"Files/Sales/Contoso_Sales_2023",
+			"Files/Sales/Contoso_Sales_2024/SubFolder1",
+			"Files/Sales/Contoso_Sales_2024/SubFolder2/SubFolder3"},
+		Recipient: &core.ExternalDataShareRecipient{
+			UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
+		},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
 func ExampleExternalDataSharesClient_NewListExternalDataSharesInItemPager() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {

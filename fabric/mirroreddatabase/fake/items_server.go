@@ -37,9 +37,9 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetMirroredDatabase func(ctx context.Context, workspaceID string, mirroredDatabaseID string, options *mirroreddatabase.ItemsClientGetMirroredDatabaseOptions) (resp azfake.Responder[mirroreddatabase.ItemsClientGetMirroredDatabaseResponse], errResp azfake.ErrorResponder)
 
-	// GetMirroredDatabaseDefinition is the fake for method ItemsClient.GetMirroredDatabaseDefinition
-	// HTTP status codes to indicate success: http.StatusOK
-	GetMirroredDatabaseDefinition func(ctx context.Context, workspaceID string, mirroredDatabaseID string, options *mirroreddatabase.ItemsClientGetMirroredDatabaseDefinitionOptions) (resp azfake.Responder[mirroreddatabase.ItemsClientGetMirroredDatabaseDefinitionResponse], errResp azfake.ErrorResponder)
+	// BeginGetMirroredDatabaseDefinition is the fake for method ItemsClient.BeginGetMirroredDatabaseDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	BeginGetMirroredDatabaseDefinition func(ctx context.Context, workspaceID string, mirroredDatabaseID string, options *mirroreddatabase.ItemsClientBeginGetMirroredDatabaseDefinitionOptions) (resp azfake.PollerResponder[mirroreddatabase.ItemsClientGetMirroredDatabaseDefinitionResponse], errResp azfake.ErrorResponder)
 
 	// NewListMirroredDatabasesPager is the fake for method ItemsClient.NewListMirroredDatabasesPager
 	// HTTP status codes to indicate success: http.StatusOK
@@ -49,9 +49,9 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	UpdateMirroredDatabase func(ctx context.Context, workspaceID string, mirroredDatabaseID string, updateMirroredDatabaseRequest mirroreddatabase.UpdateMirroredDatabaseRequest, options *mirroreddatabase.ItemsClientUpdateMirroredDatabaseOptions) (resp azfake.Responder[mirroreddatabase.ItemsClientUpdateMirroredDatabaseResponse], errResp azfake.ErrorResponder)
 
-	// UpdateMirroredDatabaseDefinition is the fake for method ItemsClient.UpdateMirroredDatabaseDefinition
-	// HTTP status codes to indicate success: http.StatusOK
-	UpdateMirroredDatabaseDefinition func(ctx context.Context, workspaceID string, mirroredDatabaseID string, updateMirroredDatabaseDefinitionRequest mirroreddatabase.UpdateMirroredDatabaseDefinitionRequest, options *mirroreddatabase.ItemsClientUpdateMirroredDatabaseDefinitionOptions) (resp azfake.Responder[mirroreddatabase.ItemsClientUpdateMirroredDatabaseDefinitionResponse], errResp azfake.ErrorResponder)
+	// BeginUpdateMirroredDatabaseDefinition is the fake for method ItemsClient.BeginUpdateMirroredDatabaseDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
+	BeginUpdateMirroredDatabaseDefinition func(ctx context.Context, workspaceID string, mirroredDatabaseID string, updateMirroredDatabaseDefinitionRequest mirroreddatabase.UpdateMirroredDatabaseDefinitionRequest, options *mirroreddatabase.ItemsClientBeginUpdateMirroredDatabaseDefinitionOptions) (resp azfake.PollerResponder[mirroreddatabase.ItemsClientUpdateMirroredDatabaseDefinitionResponse], errResp azfake.ErrorResponder)
 }
 
 // NewItemsServerTransport creates a new instance of ItemsServerTransport with the provided implementation.
@@ -59,16 +59,20 @@ type ItemsServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewItemsServerTransport(srv *ItemsServer) *ItemsServerTransport {
 	return &ItemsServerTransport{
-		srv:                           srv,
-		newListMirroredDatabasesPager: newTracker[azfake.PagerResponder[mirroreddatabase.ItemsClientListMirroredDatabasesResponse]](),
+		srv:                                   srv,
+		beginGetMirroredDatabaseDefinition:    newTracker[azfake.PollerResponder[mirroreddatabase.ItemsClientGetMirroredDatabaseDefinitionResponse]](),
+		newListMirroredDatabasesPager:         newTracker[azfake.PagerResponder[mirroreddatabase.ItemsClientListMirroredDatabasesResponse]](),
+		beginUpdateMirroredDatabaseDefinition: newTracker[azfake.PollerResponder[mirroreddatabase.ItemsClientUpdateMirroredDatabaseDefinitionResponse]](),
 	}
 }
 
 // ItemsServerTransport connects instances of mirroreddatabase.ItemsClient to instances of ItemsServer.
 // Don't use this type directly, use NewItemsServerTransport instead.
 type ItemsServerTransport struct {
-	srv                           *ItemsServer
-	newListMirroredDatabasesPager *tracker[azfake.PagerResponder[mirroreddatabase.ItemsClientListMirroredDatabasesResponse]]
+	srv                                   *ItemsServer
+	beginGetMirroredDatabaseDefinition    *tracker[azfake.PollerResponder[mirroreddatabase.ItemsClientGetMirroredDatabaseDefinitionResponse]]
+	newListMirroredDatabasesPager         *tracker[azfake.PagerResponder[mirroreddatabase.ItemsClientListMirroredDatabasesResponse]]
+	beginUpdateMirroredDatabaseDefinition *tracker[azfake.PollerResponder[mirroreddatabase.ItemsClientUpdateMirroredDatabaseDefinitionResponse]]
 }
 
 // Do implements the policy.Transporter interface for ItemsServerTransport.
@@ -102,14 +106,14 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 				res.resp, res.err = i.dispatchDeleteMirroredDatabase(req)
 			case "ItemsClient.GetMirroredDatabase":
 				res.resp, res.err = i.dispatchGetMirroredDatabase(req)
-			case "ItemsClient.GetMirroredDatabaseDefinition":
-				res.resp, res.err = i.dispatchGetMirroredDatabaseDefinition(req)
+			case "ItemsClient.BeginGetMirroredDatabaseDefinition":
+				res.resp, res.err = i.dispatchBeginGetMirroredDatabaseDefinition(req)
 			case "ItemsClient.NewListMirroredDatabasesPager":
 				res.resp, res.err = i.dispatchNewListMirroredDatabasesPager(req)
 			case "ItemsClient.UpdateMirroredDatabase":
 				res.resp, res.err = i.dispatchUpdateMirroredDatabase(req)
-			case "ItemsClient.UpdateMirroredDatabaseDefinition":
-				res.resp, res.err = i.dispatchUpdateMirroredDatabaseDefinition(req)
+			case "ItemsClient.BeginUpdateMirroredDatabaseDefinition":
+				res.resp, res.err = i.dispatchBeginUpdateMirroredDatabaseDefinition(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -228,36 +232,47 @@ func (i *ItemsServerTransport) dispatchGetMirroredDatabase(req *http.Request) (*
 	return resp, nil
 }
 
-func (i *ItemsServerTransport) dispatchGetMirroredDatabaseDefinition(req *http.Request) (*http.Response, error) {
-	if i.srv.GetMirroredDatabaseDefinition == nil {
-		return nil, &nonRetriableError{errors.New("fake for method GetMirroredDatabaseDefinition not implemented")}
+func (i *ItemsServerTransport) dispatchBeginGetMirroredDatabaseDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginGetMirroredDatabaseDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginGetMirroredDatabaseDefinition not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/mirroredDatabases/(?P<mirroredDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
-	regex := regexp.MustCompile(regexStr)
-	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
-		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	beginGetMirroredDatabaseDefinition := i.beginGetMirroredDatabaseDefinition.get(req)
+	if beginGetMirroredDatabaseDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/mirroredDatabases/(?P<mirroredDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		mirroredDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("mirroredDatabaseId")])
+		if err != nil {
+			return nil, err
+		}
+		respr, errRespr := i.srv.BeginGetMirroredDatabaseDefinition(req.Context(), workspaceIDParam, mirroredDatabaseIDParam, nil)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginGetMirroredDatabaseDefinition = &respr
+		i.beginGetMirroredDatabaseDefinition.add(req, beginGetMirroredDatabaseDefinition)
 	}
-	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+
+	resp, err := server.PollerResponderNext(beginGetMirroredDatabaseDefinition, req)
 	if err != nil {
 		return nil, err
 	}
-	mirroredDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("mirroredDatabaseId")])
-	if err != nil {
-		return nil, err
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+		i.beginGetMirroredDatabaseDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
 	}
-	respr, errRespr := i.srv.GetMirroredDatabaseDefinition(req.Context(), workspaceIDParam, mirroredDatabaseIDParam, nil)
-	if respErr := server.GetError(errRespr, req); respErr != nil {
-		return nil, respErr
+	if !server.PollerResponderMore(beginGetMirroredDatabaseDefinition) {
+		i.beginGetMirroredDatabaseDefinition.remove(req)
 	}
-	respContent := server.GetResponseContent(respr)
-	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
-	}
-	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).DefinitionResponse, req)
-	if err != nil {
-		return nil, err
-	}
+
 	return resp, nil
 }
 
@@ -347,40 +362,51 @@ func (i *ItemsServerTransport) dispatchUpdateMirroredDatabase(req *http.Request)
 	return resp, nil
 }
 
-func (i *ItemsServerTransport) dispatchUpdateMirroredDatabaseDefinition(req *http.Request) (*http.Response, error) {
-	if i.srv.UpdateMirroredDatabaseDefinition == nil {
-		return nil, &nonRetriableError{errors.New("fake for method UpdateMirroredDatabaseDefinition not implemented")}
+func (i *ItemsServerTransport) dispatchBeginUpdateMirroredDatabaseDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginUpdateMirroredDatabaseDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginUpdateMirroredDatabaseDefinition not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/mirroredDatabases/(?P<mirroredDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
-	regex := regexp.MustCompile(regexStr)
-	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
-		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	beginUpdateMirroredDatabaseDefinition := i.beginUpdateMirroredDatabaseDefinition.get(req)
+	if beginUpdateMirroredDatabaseDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/mirroredDatabases/(?P<mirroredDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		body, err := server.UnmarshalRequestAsJSON[mirroreddatabase.UpdateMirroredDatabaseDefinitionRequest](req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		mirroredDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("mirroredDatabaseId")])
+		if err != nil {
+			return nil, err
+		}
+		respr, errRespr := i.srv.BeginUpdateMirroredDatabaseDefinition(req.Context(), workspaceIDParam, mirroredDatabaseIDParam, body, nil)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginUpdateMirroredDatabaseDefinition = &respr
+		i.beginUpdateMirroredDatabaseDefinition.add(req, beginUpdateMirroredDatabaseDefinition)
 	}
-	body, err := server.UnmarshalRequestAsJSON[mirroreddatabase.UpdateMirroredDatabaseDefinitionRequest](req)
+
+	resp, err := server.PollerResponderNext(beginUpdateMirroredDatabaseDefinition, req)
 	if err != nil {
 		return nil, err
 	}
-	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
-	if err != nil {
-		return nil, err
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
+		i.beginUpdateMirroredDatabaseDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
 	}
-	mirroredDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("mirroredDatabaseId")])
-	if err != nil {
-		return nil, err
+	if !server.PollerResponderMore(beginUpdateMirroredDatabaseDefinition) {
+		i.beginUpdateMirroredDatabaseDefinition.remove(req)
 	}
-	respr, errRespr := i.srv.UpdateMirroredDatabaseDefinition(req.Context(), workspaceIDParam, mirroredDatabaseIDParam, body, nil)
-	if respErr := server.GetError(errRespr, req); respErr != nil {
-		return nil, respErr
-	}
-	respContent := server.GetResponseContent(respr)
-	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
-	}
-	resp, err := server.NewResponse(respContent, req, nil)
-	if err != nil {
-		return nil, err
-	}
+
 	return resp, nil
 }
 
