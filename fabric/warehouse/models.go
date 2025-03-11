@@ -13,8 +13,17 @@ type CreateWarehouseRequest struct {
 	// REQUIRED; The warehouse display name. The display name must follow naming rules according to item type.
 	DisplayName *string
 
+	// The warehouse creation payload. Use creationPayload. You can't use definition or creationPayload at the same time.
+	CreationPayload *CreationPayload
+
 	// The warehouse description. Maximum length is 256 characters.
 	Description *string
+}
+
+// CreationPayload - Warehouse item payload
+type CreationPayload struct {
+	// REQUIRED; The default collation type of the warehouse.
+	CollationType *CollationType
 }
 
 // Properties - The warehouse item properties.
@@ -27,6 +36,9 @@ type Properties struct {
 
 	// REQUIRED; The date and time the warehouse was last updated
 	LastUpdatedTime *time.Time
+
+	// The collation type of the warehouse.
+	CollationType *CollationType
 }
 
 // UpdateWarehouseRequest - Update warehouse request.

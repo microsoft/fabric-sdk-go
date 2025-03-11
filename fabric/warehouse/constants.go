@@ -6,6 +6,24 @@
 
 package warehouse
 
+// CollationType - Warehouse collation. Additional collations may be added over time.
+type CollationType string
+
+const (
+	// CollationTypeLatin1General100BIN2UTF8 - The default - case-sensitive (CS) collation
+	CollationTypeLatin1General100BIN2UTF8 CollationType = "Latin1_General_100_BIN2_UTF8"
+	// CollationTypeLatin1General100CIASKSWSSCUTF8 - case-insensitive (CI) collation
+	CollationTypeLatin1General100CIASKSWSSCUTF8 CollationType = "Latin1_General_100_CI_AS_KS_WS_SC_UTF8"
+)
+
+// PossibleCollationTypeValues returns the possible values for the CollationType const type.
+func PossibleCollationTypeValues() []CollationType {
+	return []CollationType{
+		CollationTypeLatin1General100BIN2UTF8,
+		CollationTypeLatin1General100CIASKSWSSCUTF8,
+	}
+}
+
 // ItemType - The type of the item. Additional item types may be added over time.
 type ItemType string
 
