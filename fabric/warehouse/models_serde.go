@@ -17,6 +17,7 @@ import (
 // MarshalJSON implements the json.Marshaller interface for type CreateWarehouseRequest.
 func (c CreateWarehouseRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
+	populate(objectMap, "creationPayload", c.CreationPayload)
 	populate(objectMap, "description", c.Description)
 	populate(objectMap, "displayName", c.DisplayName)
 	return json.Marshal(objectMap)
@@ -31,6 +32,9 @@ func (c *CreateWarehouseRequest) UnmarshalJSON(data []byte) error {
 	for key, val := range rawMsg {
 		var err error
 		switch key {
+		case "creationPayload":
+			err = unpopulate(val, "CreationPayload", &c.CreationPayload)
+			delete(rawMsg, key)
 		case "description":
 			err = unpopulate(val, "Description", &c.Description)
 			delete(rawMsg, key)
@@ -45,9 +49,37 @@ func (c *CreateWarehouseRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type CreationPayload.
+func (c CreationPayload) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "collationType", c.CollationType)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CreationPayload.
+func (c *CreationPayload) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "collationType":
+			err = unpopulate(val, "CollationType", &c.CollationType)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type Properties.
 func (p Properties) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
+	populate(objectMap, "collationType", p.CollationType)
 	populate(objectMap, "connectionString", p.ConnectionString)
 	populateDateTimeRFC3339(objectMap, "createdDate", p.CreatedDate)
 	populateDateTimeRFC3339(objectMap, "lastUpdatedTime", p.LastUpdatedTime)
@@ -63,6 +95,9 @@ func (p *Properties) UnmarshalJSON(data []byte) error {
 	for key, val := range rawMsg {
 		var err error
 		switch key {
+		case "collationType":
+			err = unpopulate(val, "CollationType", &p.CollationType)
+			delete(rawMsg, key)
 		case "connectionString":
 			err = unpopulate(val, "ConnectionString", &p.ConnectionString)
 			delete(rawMsg, key)

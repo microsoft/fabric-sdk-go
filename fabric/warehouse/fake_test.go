@@ -70,6 +70,7 @@ func (testsuite *FakeTestSuite) TestItems_ListWarehouses() {
 				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 				Properties: &warehouse.Properties{
+					CollationType:    to.Ptr(warehouse.CollationTypeLatin1General100CIASKSWSSCUTF8),
 					ConnectionString: to.Ptr("qvrmbuxie7we7glrekxgy6npqu-6xgyei3x2xiejip4iime6knh5m.datawarehouse.fabric.microsoft.com"),
 					CreatedDate:      to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-09-28T22:52:13.780Z"); return t }()),
 					LastUpdatedTime:  to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-10-04T22:56:33.283Z"); return t }()),
@@ -82,6 +83,7 @@ func (testsuite *FakeTestSuite) TestItems_ListWarehouses() {
 				ID:          to.Ptr("6281bf94-81b9-46b2-b8d3-79bb868fc822"),
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 				Properties: &warehouse.Properties{
+					CollationType:    to.Ptr(warehouse.CollationTypeLatin1General100BIN2UTF8),
 					ConnectionString: to.Ptr("qvrmbuxie7we7glrekxgy6npqu-6xgyei3x2xiejip4iime6knh5m.datawarehouse.fabric.microsoft.com"),
 					CreatedDate:      to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-11-21T13:14:30.540Z"); return t }()),
 					LastUpdatedTime:  to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-12-04T20:03:43.110Z"); return t }()),
@@ -134,6 +136,32 @@ func (testsuite *FakeTestSuite) TestItems_CreateWarehouse() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a warehouse example with payload"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCreateWarehouseRequest = warehouse.CreateWarehouseRequest{
+		Description: to.Ptr("A warehouse description."),
+		CreationPayload: &warehouse.CreationPayload{
+			CollationType: to.Ptr(warehouse.CollationTypeLatin1General100CIASKSWSSCUTF8),
+		},
+		DisplayName: to.Ptr("Warehouse 1"),
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginCreateWarehouse = func(ctx context.Context, workspaceID string, createWarehouseRequest warehouse.CreateWarehouseRequest, options *warehouse.ItemsClientBeginCreateWarehouseOptions) (resp azfake.PollerResponder[warehouse.ItemsClientCreateWarehouseResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateWarehouseRequest, createWarehouseRequest))
+		resp = azfake.PollerResponder[warehouse.ItemsClientCreateWarehouseResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, warehouse.ItemsClientCreateWarehouseResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateWarehouse(ctx, exampleWorkspaceID, exampleCreateWarehouseRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestItems_GetWarehouse() {
@@ -153,6 +181,7 @@ func (testsuite *FakeTestSuite) TestItems_GetWarehouse() {
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		Properties: &warehouse.Properties{
+			CollationType:    to.Ptr(warehouse.CollationTypeLatin1General100BIN2UTF8),
 			ConnectionString: to.Ptr("qvrmbuxie7we7glrekxgy6npqu-6xgyei3x2xiejip4iime6knh5m.datawarehouse.fabric.microsoft.com"),
 			CreatedDate:      to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-09-28T22:52:13.780Z"); return t }()),
 			LastUpdatedTime:  to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-10-04T22:56:33.283Z"); return t }()),
@@ -194,6 +223,12 @@ func (testsuite *FakeTestSuite) TestItems_UpdateWarehouse() {
 		DisplayName: to.Ptr("Warehouse's New name"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+		Properties: &warehouse.Properties{
+			CollationType:    to.Ptr(warehouse.CollationTypeLatin1General100BIN2UTF8),
+			ConnectionString: to.Ptr("x6eps4xrq2xudenlfv6naeo3i4-ro6aurrmwwpujdbmljjuqvyisi.msit-datawarehouse.fabric.microsoft.com"),
+			CreatedDate:      to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-03-04T18:20:39.526Z"); return t }()),
+			LastUpdatedTime:  to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-03-05T17:23:03.348Z"); return t }()),
+		},
 	}
 
 	testsuite.serverFactory.ItemsServer.UpdateWarehouse = func(ctx context.Context, workspaceID string, warehouseID string, updateWarehouseRequest warehouse.UpdateWarehouseRequest, options *warehouse.ItemsClientUpdateWarehouseOptions) (resp azfake.Responder[warehouse.ItemsClientUpdateWarehouseResponse], errResp azfake.ErrorResponder) {
