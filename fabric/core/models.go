@@ -639,10 +639,14 @@ type CreateItemRequest struct {
 	// REQUIRED; The item type.
 	Type *ItemType
 
-	// A set of properties used to create the item. Use creationPayload or definition. You can't use both at the same time.
+	// A set of properties used to create the item. The Create Item page of the relevant type indicates whether creationPayload
+	// is supported and lists the item's properties. Use creationPayload or definition
+	// . You can't use both at the same time.
 	CreationPayload any
 
-	// The item definition. Use definition or creationPayload. You can't use both at the same time.
+	// The item definition. The Create Item page of the relevant type indicates whether the definition is supported and details
+	// its structure. Use definition or creationPayload. You can't use both at the
+	// same time.
 	Definition *ItemDefinition
 
 	// The item description. Maximum length is 256 characters.

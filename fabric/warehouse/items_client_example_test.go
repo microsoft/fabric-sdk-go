@@ -47,6 +47,7 @@ func ExampleItemsClient_NewListWarehousesPager() {
 		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 			Properties: &warehouse.Properties{
+		// 				CollationType: to.Ptr(warehouse.CollationTypeLatin1General100CIASKSWSSCUTF8),
 		// 				ConnectionString: to.Ptr("qvrmbuxie7we7glrekxgy6npqu-6xgyei3x2xiejip4iime6knh5m.datawarehouse.fabric.microsoft.com"),
 		// 				CreatedDate: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-09-28T22:52:13.780Z"); return t}()),
 		// 				LastUpdatedTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-10-04T22:56:33.283Z"); return t}()),
@@ -59,6 +60,7 @@ func ExampleItemsClient_NewListWarehousesPager() {
 		// 			ID: to.Ptr("6281bf94-81b9-46b2-b8d3-79bb868fc822"),
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 			Properties: &warehouse.Properties{
+		// 				CollationType: to.Ptr(warehouse.CollationTypeLatin1General100BIN2UTF8),
 		// 				ConnectionString: to.Ptr("qvrmbuxie7we7glrekxgy6npqu-6xgyei3x2xiejip4iime6knh5m.datawarehouse.fabric.microsoft.com"),
 		// 				CreatedDate: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-11-21T13:14:30.540Z"); return t}()),
 		// 				LastUpdatedTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-12-04T20:03:43.110Z"); return t}()),
@@ -69,7 +71,7 @@ func ExampleItemsClient_NewListWarehousesPager() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_BeginCreateWarehouse() {
+func ExampleItemsClient_BeginCreateWarehouse_createAWarehouseExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -81,6 +83,33 @@ func ExampleItemsClient_BeginCreateWarehouse() {
 	}
 	poller, err := clientFactory.NewItemsClient().BeginCreateWarehouse(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", warehouse.CreateWarehouseRequest{
 		Description: to.Ptr("A warehouse description."),
+		DisplayName: to.Ptr("Warehouse 1"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginCreateWarehouse_createAWarehouseExampleWithPayload() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := warehouse.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginCreateWarehouse(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", warehouse.CreateWarehouseRequest{
+		Description: to.Ptr("A warehouse description."),
+		CreationPayload: &warehouse.CreationPayload{
+			CollationType: to.Ptr(warehouse.CollationTypeLatin1General100CIASKSWSSCUTF8),
+		},
 		DisplayName: to.Ptr("Warehouse 1"),
 	}, nil)
 	if err != nil {
@@ -117,6 +146,7 @@ func ExampleItemsClient_GetWarehouse() {
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// 	Properties: &warehouse.Properties{
+	// 		CollationType: to.Ptr(warehouse.CollationTypeLatin1General100BIN2UTF8),
 	// 		ConnectionString: to.Ptr("qvrmbuxie7we7glrekxgy6npqu-6xgyei3x2xiejip4iime6knh5m.datawarehouse.fabric.microsoft.com"),
 	// 		CreatedDate: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-09-28T22:52:13.780Z"); return t}()),
 	// 		LastUpdatedTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-10-04T22:56:33.283Z"); return t}()),
@@ -151,6 +181,12 @@ func ExampleItemsClient_UpdateWarehouse() {
 	// 	DisplayName: to.Ptr("Warehouse's New name"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+	// 	Properties: &warehouse.Properties{
+	// 		CollationType: to.Ptr(warehouse.CollationTypeLatin1General100BIN2UTF8),
+	// 		ConnectionString: to.Ptr("x6eps4xrq2xudenlfv6naeo3i4-ro6aurrmwwpujdbmljjuqvyisi.msit-datawarehouse.fabric.microsoft.com"),
+	// 		CreatedDate: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-03-04T18:20:39.526Z"); return t}()),
+	// 		LastUpdatedTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-03-05T17:23:03.348Z"); return t}()),
+	// 	},
 	// }
 }
 
