@@ -96,7 +96,7 @@ type EnvironmentProperties struct {
 	// The name of the default environment. Empty string indicated there is no workspace default environment.
 	Name *string
 
-	// Runtime [/fabric/data-engineering/runtime] version.
+	// Runtime [/fabric/data-engineering/runtime] version. For example: 1.3
 	RuntimeVersion *string
 }
 
@@ -110,14 +110,14 @@ type HighConcurrencyProperties struct {
 }
 
 type InstancePool struct {
-	// REQUIRED; Instance pool name.
-	Name *string
-
-	// REQUIRED; Instance pool type.
-	Type *CustomPoolType
-
 	// Instance pool ID.
 	ID *string
+
+	// Instance pool name.
+	Name *string
+
+	// Instance pool type.
+	Type *CustomPoolType
 }
 
 type JobsProperties struct {

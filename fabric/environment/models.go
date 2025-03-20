@@ -149,7 +149,7 @@ type SparkCompute struct {
 	// Environment pool has to be a valid custom pool. "Starter Pool" means use starter pool.
 	InstancePool *InstancePool
 
-	// Runtime version, find the supported fabric runtimes [/fabric/data-engineering/runtime].
+	// Runtime version, find the supported fabric runtimes [/fabric/data-engineering/runtime]. For example: 1.3
 	RuntimeVersion *string
 
 	// Spark properties.
@@ -196,7 +196,7 @@ type UpdateEnvironmentSparkComputeRequest struct {
 	// Environment pool has to be a valid custom pool. The name for a default workspace pool is Starter Pool.
 	InstancePool *InstancePool
 
-	// Runtime version, find the supported fabric runtimes [/fabric/data-engineering/runtime].
+	// Runtime version, find the supported fabric runtimes [/fabric/data-engineering/runtime]. For example: 1.3
 	RuntimeVersion *string
 
 	// Spark properties.

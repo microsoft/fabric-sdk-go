@@ -55,6 +55,7 @@ func ExampleWorkspaceSettingsClient_GetSparkSettings() {
 	// 		DefaultPool: &spark.InstancePool{
 	// 			Name: to.Ptr("Starter Pool"),
 	// 			Type: to.Ptr(spark.CustomPoolTypeWorkspace),
+	// 			ID: to.Ptr("00000000-0000-0000-0000-000000000000"),
 	// 		},
 	// 		StarterPool: &spark.StarterPoolProperties{
 	// 			MaxExecutors: to.Ptr[int32](1),
@@ -65,7 +66,57 @@ func ExampleWorkspaceSettingsClient_GetSparkSettings() {
 }
 
 // Generated from example definition
-func ExampleWorkspaceSettingsClient_UpdateSparkSettings() {
+func ExampleWorkspaceSettingsClient_UpdateSparkSettings_updateWorkspaceSparkSettingsDefaultPoolUsingPoolIdExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := spark.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewWorkspaceSettingsClient().UpdateSparkSettings(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", spark.UpdateWorkspaceSparkSettingsRequest{
+		Pool: &spark.PoolProperties{
+			DefaultPool: &spark.InstancePool{
+				ID: to.Ptr("00000000-0000-0000-0000-000000000000"),
+			},
+		},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.WorkspaceSparkSettings = spark.WorkspaceSparkSettings{
+	// 	AutomaticLog: &spark.AutomaticLogProperties{
+	// 		Enabled: to.Ptr(false),
+	// 	},
+	// 	Environment: &spark.EnvironmentProperties{
+	// 		Name: to.Ptr("environment1"),
+	// 		RuntimeVersion: to.Ptr("1.2"),
+	// 	},
+	// 	HighConcurrency: &spark.HighConcurrencyProperties{
+	// 		NotebookInteractiveRunEnabled: to.Ptr(false),
+	// 	},
+	// 	Pool: &spark.PoolProperties{
+	// 		CustomizeComputeEnabled: to.Ptr(false),
+	// 		DefaultPool: &spark.InstancePool{
+	// 			Name: to.Ptr("Starter Pool"),
+	// 			Type: to.Ptr(spark.CustomPoolTypeWorkspace),
+	// 			ID: to.Ptr("00000000-0000-0000-0000-000000000000"),
+	// 		},
+	// 		StarterPool: &spark.StarterPoolProperties{
+	// 			MaxExecutors: to.Ptr[int32](1),
+	// 			MaxNodeCount: to.Ptr[int32](3),
+	// 		},
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleWorkspaceSettingsClient_UpdateSparkSettings_updateWorkspaceSparkSettingsExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -130,6 +181,7 @@ func ExampleWorkspaceSettingsClient_UpdateSparkSettings() {
 	// 		DefaultPool: &spark.InstancePool{
 	// 			Name: to.Ptr("Starter Pool"),
 	// 			Type: to.Ptr(spark.CustomPoolTypeWorkspace),
+	// 			ID: to.Ptr("00000000-0000-0000-0000-000000000000"),
 	// 		},
 	// 		StarterPool: &spark.StarterPoolProperties{
 	// 			MaxExecutors: to.Ptr[int32](1),

@@ -41,6 +41,23 @@ func ExampleCustomPoolsClient_NewListWorkspaceCustomPoolsPager_listCustomPoolsEx
 		// page.CustomPools = spark.CustomPools{
 		// 	Value: []spark.CustomPool{
 		// 		{
+		// 			Name: to.Ptr("Starter Pool"),
+		// 			Type: to.Ptr(spark.CustomPoolTypeWorkspace),
+		// 			AutoScale: &spark.AutoScaleProperties{
+		// 				Enabled: to.Ptr(true),
+		// 				MaxNodeCount: to.Ptr[int32](10),
+		// 				MinNodeCount: to.Ptr[int32](1),
+		// 			},
+		// 			DynamicExecutorAllocation: &spark.DynamicExecutorAllocationProperties{
+		// 				Enabled: to.Ptr(true),
+		// 				MaxExecutors: to.Ptr[int32](9),
+		// 				MinExecutors: to.Ptr[int32](1),
+		// 			},
+		// 			ID: to.Ptr("00000000-0000-0000-0000-000000000000"),
+		// 			NodeFamily: to.Ptr(spark.NodeFamilyMemoryOptimized),
+		// 			NodeSize: to.Ptr(spark.NodeSizeMedium),
+		// 		},
+		// 		{
 		// 			Name: to.Ptr("pool1"),
 		// 			Type: to.Ptr(spark.CustomPoolTypeWorkspace),
 		// 			AutoScale: &spark.AutoScaleProperties{

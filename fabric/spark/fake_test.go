@@ -81,6 +81,7 @@ func (testsuite *FakeTestSuite) TestWorkspaceSettings_GetSparkSettings() {
 			DefaultPool: &spark.InstancePool{
 				Name: to.Ptr("Starter Pool"),
 				Type: to.Ptr(spark.CustomPoolTypeWorkspace),
+				ID:   to.Ptr("00000000-0000-0000-0000-000000000000"),
 			},
 			StarterPool: &spark.StarterPoolProperties{
 				MaxExecutors: to.Ptr[int32](1),
@@ -105,10 +106,61 @@ func (testsuite *FakeTestSuite) TestWorkspaceSettings_GetSparkSettings() {
 func (testsuite *FakeTestSuite) TestWorkspaceSettings_UpdateSparkSettings() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Update workspace Spark settings example"},
+		"example-id": {"Update workspace Spark settings default pool using pool ID example"},
 	})
 	var exampleWorkspaceID string
 	var exampleUpdateWorkspaceSettingsRequest spark.UpdateWorkspaceSparkSettingsRequest
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleUpdateWorkspaceSettingsRequest = spark.UpdateWorkspaceSparkSettingsRequest{
+		Pool: &spark.PoolProperties{
+			DefaultPool: &spark.InstancePool{
+				ID: to.Ptr("00000000-0000-0000-0000-000000000000"),
+			},
+		},
+	}
+
+	exampleRes := spark.WorkspaceSparkSettings{
+		AutomaticLog: &spark.AutomaticLogProperties{
+			Enabled: to.Ptr(false),
+		},
+		Environment: &spark.EnvironmentProperties{
+			Name:           to.Ptr("environment1"),
+			RuntimeVersion: to.Ptr("1.2"),
+		},
+		HighConcurrency: &spark.HighConcurrencyProperties{
+			NotebookInteractiveRunEnabled: to.Ptr(false),
+		},
+		Pool: &spark.PoolProperties{
+			CustomizeComputeEnabled: to.Ptr(false),
+			DefaultPool: &spark.InstancePool{
+				Name: to.Ptr("Starter Pool"),
+				Type: to.Ptr(spark.CustomPoolTypeWorkspace),
+				ID:   to.Ptr("00000000-0000-0000-0000-000000000000"),
+			},
+			StarterPool: &spark.StarterPoolProperties{
+				MaxExecutors: to.Ptr[int32](1),
+				MaxNodeCount: to.Ptr[int32](3),
+			},
+		},
+	}
+
+	testsuite.serverFactory.WorkspaceSettingsServer.UpdateSparkSettings = func(ctx context.Context, workspaceID string, updateWorkspaceSettingsRequest spark.UpdateWorkspaceSparkSettingsRequest, options *spark.WorkspaceSettingsClientUpdateSparkSettingsOptions) (resp azfake.Responder[spark.WorkspaceSettingsClientUpdateSparkSettingsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateWorkspaceSettingsRequest, updateWorkspaceSettingsRequest))
+		resp = azfake.Responder[spark.WorkspaceSettingsClientUpdateSparkSettingsResponse]{}
+		resp.SetResponse(http.StatusOK, spark.WorkspaceSettingsClientUpdateSparkSettingsResponse{WorkspaceSparkSettings: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspaceSettingsClient()
+	res, err := client.UpdateSparkSettings(ctx, exampleWorkspaceID, exampleUpdateWorkspaceSettingsRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.WorkspaceSparkSettings))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update workspace Spark settings example"},
+	})
 	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
 	exampleUpdateWorkspaceSettingsRequest = spark.UpdateWorkspaceSparkSettingsRequest{
 		AutomaticLog: &spark.AutomaticLogProperties{
@@ -139,7 +191,7 @@ func (testsuite *FakeTestSuite) TestWorkspaceSettings_UpdateSparkSettings() {
 		},
 	}
 
-	exampleRes := spark.WorkspaceSparkSettings{
+	exampleRes = spark.WorkspaceSparkSettings{
 		AutomaticLog: &spark.AutomaticLogProperties{
 			Enabled: to.Ptr(false),
 		},
@@ -160,6 +212,7 @@ func (testsuite *FakeTestSuite) TestWorkspaceSettings_UpdateSparkSettings() {
 			DefaultPool: &spark.InstancePool{
 				Name: to.Ptr("Starter Pool"),
 				Type: to.Ptr(spark.CustomPoolTypeWorkspace),
+				ID:   to.Ptr("00000000-0000-0000-0000-000000000000"),
 			},
 			StarterPool: &spark.StarterPoolProperties{
 				MaxExecutors: to.Ptr[int32](1),
@@ -176,8 +229,7 @@ func (testsuite *FakeTestSuite) TestWorkspaceSettings_UpdateSparkSettings() {
 		return
 	}
 
-	client := testsuite.clientFactory.NewWorkspaceSettingsClient()
-	res, err := client.UpdateSparkSettings(ctx, exampleWorkspaceID, exampleUpdateWorkspaceSettingsRequest, nil)
+	res, err = client.UpdateSparkSettings(ctx, exampleWorkspaceID, exampleUpdateWorkspaceSettingsRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.WorkspaceSparkSettings))
 }
@@ -192,6 +244,23 @@ func (testsuite *FakeTestSuite) TestCustomPools_ListWorkspaceCustomPools() {
 
 	exampleRes := spark.CustomPools{
 		Value: []spark.CustomPool{
+			{
+				Name: to.Ptr("Starter Pool"),
+				Type: to.Ptr(spark.CustomPoolTypeWorkspace),
+				AutoScale: &spark.AutoScaleProperties{
+					Enabled:      to.Ptr(true),
+					MaxNodeCount: to.Ptr[int32](10),
+					MinNodeCount: to.Ptr[int32](1),
+				},
+				DynamicExecutorAllocation: &spark.DynamicExecutorAllocationProperties{
+					Enabled:      to.Ptr(true),
+					MaxExecutors: to.Ptr[int32](9),
+					MinExecutors: to.Ptr[int32](1),
+				},
+				ID:         to.Ptr("00000000-0000-0000-0000-000000000000"),
+				NodeFamily: to.Ptr(spark.NodeFamilyMemoryOptimized),
+				NodeSize:   to.Ptr(spark.NodeSizeMedium),
+			},
 			{
 				Name: to.Ptr("pool1"),
 				Type: to.Ptr(spark.CustomPoolTypeWorkspace),
