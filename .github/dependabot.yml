@@ -13,6 +13,12 @@ updates:
     commit-message:
       prefix: ci
       include: scope
+    labels:
+      - "deps/github-actions"
+      - dependencies
+    groups:
+      all:
+        patterns: ["*"]
 
   - package-ecosystem: gomod
     directory: /
@@ -22,3 +28,9 @@ updates:
       prefix: build
       prefix-development: chore
       include: scope
+    labels:
+      - "deps/go"
+      - dependencies
+    groups:
+      all:
+        patterns: ["*"]
