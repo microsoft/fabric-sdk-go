@@ -90,6 +90,9 @@ type SparkJobDefinition struct {
 	// The spark job definition properties.
 	Properties *Properties
 
+	// READ-ONLY; The folder ID.
+	FolderID *string
+
 	// READ-ONLY; The item ID.
 	ID *string
 

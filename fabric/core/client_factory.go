@@ -79,6 +79,14 @@ func (c *ClientFactory) NewExternalDataSharesClient() *ExternalDataSharesClient 
 	}
 }
 
+// NewFoldersClient creates a new instance of FoldersClient.
+func (c *ClientFactory) NewFoldersClient() *FoldersClient {
+	return &FoldersClient{
+		internal: c.internal.WithClientName("core.FoldersClient"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewGatewaysClient creates a new instance of GatewaysClient.
 func (c *ClientFactory) NewGatewaysClient() *GatewaysClient {
 	return &GatewaysClient{

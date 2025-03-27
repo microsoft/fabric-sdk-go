@@ -99,6 +99,9 @@ type MirroredDatabase struct {
 	// The mirrored database properties.
 	Properties *Properties
 
+	// READ-ONLY; The folder ID.
+	FolderID *string
+
 	// READ-ONLY; The item ID.
 	ID *string
 

@@ -67,6 +67,9 @@ type Lakehouse struct {
 	// The lakehouse properties.
 	Properties *Properties
 
+	// READ-ONLY; The folder ID.
+	FolderID *string
+
 	// READ-ONLY; The item ID.
 	ID *string
 

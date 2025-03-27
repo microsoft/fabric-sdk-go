@@ -18,15 +18,17 @@ import (
 
 // ServerFactory is a fake server for instances of the eventstream.ClientFactory type.
 type ServerFactory struct {
-	ItemsServer ItemsServer
+	ItemsServer    ItemsServer
+	TopologyServer TopologyServer
 }
 
 // ServerFactoryTransport connects instances of eventstream.ClientFactory to instances of ServerFactory.
 // Don't use this type directly, use NewServerFactoryTransport instead.
 type ServerFactoryTransport struct {
-	srv           *ServerFactory
-	trMu          sync.Mutex
-	trItemsServer *ItemsServerTransport
+	srv              *ServerFactory
+	trMu             sync.Mutex
+	trItemsServer    *ItemsServerTransport
+	trTopologyServer *TopologyServerTransport
 }
 
 // NewServerFactoryTransport creates a new instance of ServerFactoryTransport with the provided implementation.
@@ -55,6 +57,9 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	case "ItemsClient":
 		initServer(s, &s.trItemsServer, func() *ItemsServerTransport { return NewItemsServerTransport(&s.srv.ItemsServer) })
 		resp, err = s.trItemsServer.Do(req)
+	case "TopologyClient":
+		initServer(s, &s.trTopologyServer, func() *TopologyServerTransport { return NewTopologyServerTransport(&s.srv.TopologyServer) })
+		resp, err = s.trTopologyServer.Do(req)
 	default:
 		err = fmt.Errorf("unhandled client %s", client)
 	}

@@ -45,3 +45,63 @@ type ItemsClientUpdateEventstreamResponse struct {
 	// An eventstream object.
 	Eventstream
 }
+
+// TopologyClientGetEventstreamDestinationConnectionResponse contains the response from method TopologyClient.GetEventstreamDestinationConnection.
+type TopologyClientGetEventstreamDestinationConnectionResponse struct {
+	// Represents the connection information for a destination custom endpoint.
+	DestinationConnectionResponse
+}
+
+// TopologyClientGetEventstreamDestinationResponse contains the response from method TopologyClient.GetEventstreamDestination.
+type TopologyClientGetEventstreamDestinationResponse struct {
+	// Represents an Eventstream destination response.
+	DestinationResponseClassification
+}
+
+// TopologyClientGetEventstreamSourceConnectionResponse contains the response from method TopologyClient.GetEventstreamSourceConnection.
+type TopologyClientGetEventstreamSourceConnectionResponse struct {
+	// Represents the connection information for a source custom endpoint.
+	SourceConnectionResponse
+}
+
+// TopologyClientGetEventstreamSourceResponse contains the response from method TopologyClient.GetEventstreamSource.
+type TopologyClientGetEventstreamSourceResponse struct {
+	// Represents an Eventstream source response.
+	SourceResponseClassification
+}
+
+// TopologyClientGetEventstreamTopologyResponse contains the response from method TopologyClient.GetEventstreamTopology.
+type TopologyClientGetEventstreamTopologyResponse struct {
+	// Represents the Eventstream topology response.
+	TopologyResponse
+}
+
+// TopologyClientPauseEventstreamDestinationResponse contains the response from method TopologyClient.PauseEventstreamDestination.
+type TopologyClientPauseEventstreamDestinationResponse struct {
+	// placeholder for future response values
+}
+
+// TopologyClientPauseEventstreamResponse contains the response from method TopologyClient.PauseEventstream.
+type TopologyClientPauseEventstreamResponse struct {
+	// placeholder for future response values
+}
+
+// TopologyClientPauseEventstreamSourceResponse contains the response from method TopologyClient.PauseEventstreamSource.
+type TopologyClientPauseEventstreamSourceResponse struct {
+	// placeholder for future response values
+}
+
+// TopologyClientResumeEventstreamDestinationResponse contains the response from method TopologyClient.ResumeEventstreamDestination.
+type TopologyClientResumeEventstreamDestinationResponse struct {
+	// placeholder for future response values
+}
+
+// TopologyClientResumeEventstreamResponse contains the response from method TopologyClient.ResumeEventstream.
+type TopologyClientResumeEventstreamResponse struct {
+	// placeholder for future response values
+}
+
+// TopologyClientResumeEventstreamSourceResponse contains the response from method TopologyClient.ResumeEventstreamSource.
+type TopologyClientResumeEventstreamSourceResponse struct {
+	// placeholder for future response values
+}

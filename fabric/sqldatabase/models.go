@@ -26,6 +26,9 @@ type SQLDatabase struct {
 	// The item display name.
 	DisplayName *string
 
+	// READ-ONLY; The folder ID.
+	FolderID *string
+
 	// READ-ONLY; The item ID.
 	ID *string
 

@@ -51,6 +51,7 @@ func ExampleItemsClient_NewListEventhousesPager() {
 		// 					"f1082404-7716-5b21-8778-e7a5e7a54d73",
 		// 					"8187f108-2404-4771-6e7a-5b218778e7a5"},
 		// 					IngestionServiceURI: to.Ptr("https://ingest-trd-f7k1b2rzuqrjmb3wpd.z5.kusto.fabric.microsoft.com"),
+		// 					MinimumConsumptionUnits: to.Ptr[float64](2.25),
 		// 					QueryServiceURI: to.Ptr("https://trd-f7k1b2rzuqrjmb3wpd.z5.kusto.fabric.microsoft.com"),
 		// 				},
 		// 			},
@@ -64,6 +65,7 @@ func ExampleItemsClient_NewListEventhousesPager() {
 		// 					DatabasesItemIDs: []string{
 		// 						"4d738187-f108-2404-4771-6e7a5b218778"},
 		// 						IngestionServiceURI: to.Ptr("https://ingest-trd-f7k1b2rzuqrjmb3wpd.z5.kusto.fabric.microsoft.com"),
+		// 						MinimumConsumptionUnits: to.Ptr[float64](0),
 		// 						QueryServiceURI: to.Ptr("https://trd-f7k1b2rzuqrjmb3wpd.z5.kusto.fabric.microsoft.com"),
 		// 					},
 		// 			}},
@@ -100,6 +102,7 @@ func ExampleItemsClient_GetEventhouse() {
 	// 			"f1082404-7716-5b21-8778-e7a5e7a54d73",
 	// 			"8187f108-2404-4771-6e7a-5b218778e7a5"},
 	// 			IngestionServiceURI: to.Ptr("https://ingest-trd-f7k1b2rzuqrjmb3wpd.z5.kusto.fabric.microsoft.com"),
+	// 			MinimumConsumptionUnits: to.Ptr[float64](0),
 	// 			QueryServiceURI: to.Ptr("https://trd-f7k1b2rzuqrjmb3wpd.z5.kusto.fabric.microsoft.com"),
 	// 		},
 	// 	}

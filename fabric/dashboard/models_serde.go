@@ -19,6 +19,7 @@ func (d Dashboard) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "description", d.Description)
 	populate(objectMap, "displayName", d.DisplayName)
+	populate(objectMap, "folderId", d.FolderID)
 	populate(objectMap, "id", d.ID)
 	populate(objectMap, "type", d.Type)
 	populate(objectMap, "workspaceId", d.WorkspaceID)
@@ -39,6 +40,9 @@ func (d *Dashboard) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "displayName":
 			err = unpopulate(val, "DisplayName", &d.DisplayName)
+			delete(rawMsg, key)
+		case "folderId":
+			err = unpopulate(val, "FolderID", &d.FolderID)
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &d.ID)

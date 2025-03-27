@@ -151,6 +151,7 @@ func (w Warehouse) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "description", w.Description)
 	populate(objectMap, "displayName", w.DisplayName)
+	populate(objectMap, "folderId", w.FolderID)
 	populate(objectMap, "id", w.ID)
 	populate(objectMap, "properties", w.Properties)
 	populate(objectMap, "type", w.Type)
@@ -172,6 +173,9 @@ func (w *Warehouse) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "displayName":
 			err = unpopulate(val, "DisplayName", &w.DisplayName)
+			delete(rawMsg, key)
+		case "folderId":
+			err = unpopulate(val, "FolderID", &w.FolderID)
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &w.ID)

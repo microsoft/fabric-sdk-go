@@ -92,6 +92,7 @@ type DynamicExecutorAllocationProperties struct {
 	MinExecutors *int32
 }
 
+// EnvironmentProperties - Properties of an environment.
 type EnvironmentProperties struct {
 	// The name of the default environment. Empty string indicated there is no workspace default environment.
 	Name *string
@@ -120,6 +121,7 @@ type InstancePool struct {
 	Type *CustomPoolType
 }
 
+// JobsProperties - Properties of a Spark job.
 type JobsProperties struct {
 	// Reserve maximum cores for active Spark jobs. When this setting is enabled, your Fabric capacity reserves the maximum number
 	// of cores needed for active Spark jobs, ensuring job reliability by making
@@ -133,6 +135,7 @@ type JobsProperties struct {
 	SessionTimeoutInMinutes *int32
 }
 
+// PoolProperties - Properties of a pool
 type PoolProperties struct {
 	// Customize compute configurations for items. False - Disabled, true - Enabled.
 	CustomizeComputeEnabled *bool

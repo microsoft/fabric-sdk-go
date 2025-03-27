@@ -67,6 +67,9 @@ type Environment struct {
 	// The environment properties.
 	Properties *PublishInfo
 
+	// READ-ONLY; The folder ID.
+	FolderID *string
+
 	// READ-ONLY; The item ID.
 	ID *string
 
@@ -86,6 +89,7 @@ type Environments struct {
 	ContinuationURI *string
 }
 
+// InstancePool - An instance of a pool.
 type InstancePool struct {
 	// REQUIRED; Instance pool name.
 	Name *string

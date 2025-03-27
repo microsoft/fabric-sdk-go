@@ -1325,6 +1325,37 @@ func (c *CreateExternalDataShareRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type CreateFolderRequest.
+func (c CreateFolderRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "displayName", c.DisplayName)
+	populate(objectMap, "parentFolderId", c.ParentFolderID)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CreateFolderRequest.
+func (c *CreateFolderRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "displayName":
+			err = unpopulate(val, "DisplayName", &c.DisplayName)
+			delete(rawMsg, key)
+		case "parentFolderId":
+			err = unpopulate(val, "ParentFolderID", &c.ParentFolderID)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type CreateGatewayRequest.
 func (c CreateGatewayRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -1359,6 +1390,7 @@ func (c CreateItemRequest) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "definition", c.Definition)
 	populate(objectMap, "description", c.Description)
 	populate(objectMap, "displayName", c.DisplayName)
+	populate(objectMap, "folderId", c.FolderID)
 	populate(objectMap, "type", c.Type)
 	return json.Marshal(objectMap)
 }
@@ -1383,6 +1415,9 @@ func (c *CreateItemRequest) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "displayName":
 			err = unpopulate(val, "DisplayName", &c.DisplayName)
+			delete(rawMsg, key)
+		case "folderId":
+			err = unpopulate(val, "FolderID", &c.FolderID)
 			delete(rawMsg, key)
 		case "type":
 			err = unpopulate(val, "Type", &c.Type)
@@ -2853,6 +2888,80 @@ func (f *FabricItemMember) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type Folder.
+func (f Folder) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "displayName", f.DisplayName)
+	populate(objectMap, "id", f.ID)
+	populate(objectMap, "parentFolderId", f.ParentFolderID)
+	populate(objectMap, "workspaceId", f.WorkspaceID)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type Folder.
+func (f *Folder) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", f, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "displayName":
+			err = unpopulate(val, "DisplayName", &f.DisplayName)
+			delete(rawMsg, key)
+		case "id":
+			err = unpopulate(val, "ID", &f.ID)
+			delete(rawMsg, key)
+		case "parentFolderId":
+			err = unpopulate(val, "ParentFolderID", &f.ParentFolderID)
+			delete(rawMsg, key)
+		case "workspaceId":
+			err = unpopulate(val, "WorkspaceID", &f.WorkspaceID)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", f, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type Folders.
+func (f Folders) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "continuationToken", f.ContinuationToken)
+	populate(objectMap, "continuationUri", f.ContinuationURI)
+	populate(objectMap, "value", f.Value)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type Folders.
+func (f *Folders) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", f, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "continuationToken":
+			err = unpopulate(val, "ContinuationToken", &f.ContinuationToken)
+			delete(rawMsg, key)
+		case "continuationUri":
+			err = unpopulate(val, "ContinuationURI", &f.ContinuationURI)
+			delete(rawMsg, key)
+		case "value":
+			err = unpopulate(val, "Value", &f.Value)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", f, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type Gateway.
 func (g Gateway) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -3324,6 +3433,7 @@ func (i Item) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "description", i.Description)
 	populate(objectMap, "displayName", i.DisplayName)
+	populate(objectMap, "folderId", i.FolderID)
 	populate(objectMap, "id", i.ID)
 	populate(objectMap, "type", i.Type)
 	populate(objectMap, "workspaceId", i.WorkspaceID)
@@ -3344,6 +3454,9 @@ func (i *Item) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "displayName":
 			err = unpopulate(val, "DisplayName", &i.DisplayName)
+			delete(rawMsg, key)
+		case "folderId":
+			err = unpopulate(val, "FolderID", &i.FolderID)
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &i.ID)
@@ -4256,6 +4369,33 @@ func (m *MicrosoftEntraMember) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "tenantId":
 			err = unpopulate(val, "TenantID", &m.TenantID)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", m, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type MoveFolderRequest.
+func (m MoveFolderRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "targetFolderId", m.TargetFolderID)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type MoveFolderRequest.
+func (m *MoveFolderRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", m, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "targetFolderId":
+			err = unpopulate(val, "TargetFolderID", &m.TargetFolderID)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -5314,6 +5454,33 @@ func (u *UpdateCredentialDetails) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "skipTestConnection":
 			err = unpopulate(val, "SkipTestConnection", &u.SkipTestConnection)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", u, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type UpdateFolderRequest.
+func (u UpdateFolderRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "displayName", u.DisplayName)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type UpdateFolderRequest.
+func (u *UpdateFolderRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", u, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "displayName":
+			err = unpopulate(val, "DisplayName", &u.DisplayName)
 			delete(rawMsg, key)
 		}
 		if err != nil {

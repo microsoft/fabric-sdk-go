@@ -50,6 +50,7 @@ func (m MLModel) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "description", m.Description)
 	populate(objectMap, "displayName", m.DisplayName)
+	populate(objectMap, "folderId", m.FolderID)
 	populate(objectMap, "id", m.ID)
 	populate(objectMap, "type", m.Type)
 	populate(objectMap, "workspaceId", m.WorkspaceID)
@@ -70,6 +71,9 @@ func (m *MLModel) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "displayName":
 			err = unpopulate(val, "DisplayName", &m.DisplayName)
+			delete(rawMsg, key)
+		case "folderId":
+			err = unpopulate(val, "FolderID", &m.FolderID)
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &m.ID)

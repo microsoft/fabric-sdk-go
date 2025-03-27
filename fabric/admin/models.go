@@ -46,11 +46,13 @@ type AssignDomainWorkspacesByCapacitiesRequest struct {
 
 // AssignDomainWorkspacesByIDsRequest - The request payload for assigning workspaces to a domain by workspace ID.
 type AssignDomainWorkspacesByIDsRequest struct {
+	// The workspace IDs that will be assigned to that domain.
 	WorkspacesIDs []string
 }
 
 // AssignDomainWorkspacesByPrincipalsRequest - The request payload for assigning workspaces to a domain by principal.
 type AssignDomainWorkspacesByPrincipalsRequest struct {
+	// The principals that are admins of the workspaces.
 	Principals []Principal
 }
 
@@ -186,14 +188,18 @@ type Domain struct {
 // DomainRoleAssignmentRequest - The request payload for assigning domain members for a domain by principal.
 type DomainRoleAssignmentRequest struct {
 	// REQUIRED; The update request type.
-	Type       *DomainRole
+	Type *DomainRole
+
+	// The principals that will be assigned to the domain role.
 	Principals []Principal
 }
 
 // DomainRoleUnassignmentRequest - The request payload for unassigning domain members by principal.
 type DomainRoleUnassignmentRequest struct {
 	// REQUIRED; The update request type.
-	Type       *DomainRole
+	Type *DomainRole
+
+	// The principals that will be unassigned from the domain role.
 	Principals []Principal
 }
 
@@ -656,6 +662,7 @@ type TenantSettings struct {
 
 // UnassignDomainWorkspacesByIDsRequest - The request payload for unassigning workspaces from a domain by workspace ID.
 type UnassignDomainWorkspacesByIDsRequest struct {
+	// The workspace IDs that will be unassigned from that domain.
 	WorkspacesIDs []string
 }
 

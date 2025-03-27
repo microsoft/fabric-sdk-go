@@ -178,6 +178,7 @@ func (e Eventhouse) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "description", e.Description)
 	populate(objectMap, "displayName", e.DisplayName)
+	populate(objectMap, "folderId", e.FolderID)
 	populate(objectMap, "id", e.ID)
 	populate(objectMap, "properties", e.Properties)
 	populate(objectMap, "type", e.Type)
@@ -199,6 +200,9 @@ func (e *Eventhouse) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "displayName":
 			err = unpopulate(val, "DisplayName", &e.DisplayName)
+			delete(rawMsg, key)
+		case "folderId":
+			err = unpopulate(val, "FolderID", &e.FolderID)
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &e.ID)
@@ -260,6 +264,7 @@ func (p Properties) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "databasesItemIds", p.DatabasesItemIDs)
 	populate(objectMap, "ingestionServiceUri", p.IngestionServiceURI)
+	populate(objectMap, "minimumConsumptionUnits", p.MinimumConsumptionUnits)
 	populate(objectMap, "queryServiceUri", p.QueryServiceURI)
 	return json.Marshal(objectMap)
 }
@@ -278,6 +283,9 @@ func (p *Properties) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "ingestionServiceUri":
 			err = unpopulate(val, "IngestionServiceURI", &p.IngestionServiceURI)
+			delete(rawMsg, key)
+		case "minimumConsumptionUnits":
+			err = unpopulate(val, "MinimumConsumptionUnits", &p.MinimumConsumptionUnits)
 			delete(rawMsg, key)
 		case "queryServiceUri":
 			err = unpopulate(val, "QueryServiceURI", &p.QueryServiceURI)

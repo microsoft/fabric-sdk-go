@@ -64,6 +64,9 @@ type Warehouse struct {
 	// The warehouse properties.
 	Properties *Properties
 
+	// READ-ONLY; The folder ID.
+	FolderID *string
+
 	// READ-ONLY; The item ID.
 	ID *string
 

@@ -627,28 +627,28 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ProvisionIdentity() {
 func (testsuite *FakeTestSuite) TestItems_ListItems() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"List item in workspace with continuation example"},
+		"example-id": {"List all items in a specific folder example"},
 	})
 	var exampleWorkspaceID string
-	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleWorkspaceID = "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"
 
 	exampleRes := core.Items{
-		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
-		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/workspaces/cfafbeb1-8037-4d0c-896e-a46fb27ff229/items?continuationToken=LDEsMTAwMDAwLDA%3D"),
 		Value: []core.Item{
 			{
 				Type:        to.Ptr(core.ItemTypeLakehouse),
-				Description: to.Ptr("A lakehouse used by the analytics team."),
+				Description: to.Ptr("A lakehouse used by the sales team."),
 				DisplayName: to.Ptr("Lakehouse"),
-				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
-				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+				FolderID:    to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+				ID:          to.Ptr("cccccccc-2222-3333-4444-dddddddddddd"),
+				WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
 			},
 			{
-				Type:        to.Ptr(core.ItemType("KustoDashboard")),
-				Description: to.Ptr("A notebook for refining medical data analysis through machine learning algorithms."),
+				Type:        to.Ptr(core.ItemTypeNotebook),
+				Description: to.Ptr("A notebook for refining Q1 of year 2024 sales data analysis through machine learning algorithms."),
 				DisplayName: to.Ptr("Notebook"),
-				ID:          to.Ptr("58fa1eac-9694-4a6b-ba25-3520288e8fea"),
-				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+				FolderID:    to.Ptr("cccccccc-8888-9999-0000-dddddddddddd"),
+				ID:          to.Ptr("dddddddd-3333-4444-5555-eeeeeeeeeeee"),
+				WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
 			}},
 	}
 
@@ -661,6 +661,8 @@ func (testsuite *FakeTestSuite) TestItems_ListItems() {
 
 	client := testsuite.clientFactory.NewItemsClient()
 	pager := client.NewListItemsPager(exampleWorkspaceID, &core.ItemsClientListItemsOptions{Type: nil,
+		Recursive:         nil,
+		RootFolderID:      to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
 		ContinuationToken: nil,
 	})
 	for pager.More() {
@@ -674,7 +676,7 @@ func (testsuite *FakeTestSuite) TestItems_ListItems() {
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"List items in workspace by type query parameter example"},
+		"example-id": {"List all items in workspace by type query parameter example"},
 	})
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
 
@@ -697,6 +699,8 @@ func (testsuite *FakeTestSuite) TestItems_ListItems() {
 	}
 
 	pager = client.NewListItemsPager(exampleWorkspaceID, &core.ItemsClientListItemsOptions{Type: to.Ptr("Lakehouse"),
+		Recursive:         nil,
+		RootFolderID:      nil,
 		ContinuationToken: nil,
 	})
 	for pager.More() {
@@ -710,7 +714,7 @@ func (testsuite *FakeTestSuite) TestItems_ListItems() {
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"List items in workspace example"},
+		"example-id": {"List all items in workspace example"},
 	})
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
 
@@ -740,6 +744,132 @@ func (testsuite *FakeTestSuite) TestItems_ListItems() {
 	}
 
 	pager = client.NewListItemsPager(exampleWorkspaceID, &core.ItemsClientListItemsOptions{Type: nil,
+		Recursive:         nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Items))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List direct items in a specific folder example"},
+	})
+	exampleWorkspaceID = "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"
+
+	exampleRes = core.Items{
+		Value: []core.Item{
+			{
+				Type:        to.Ptr(core.ItemTypeNotebook),
+				Description: to.Ptr("A notebook for refining year 2024 sales data analysis through machine learning algorithms."),
+				DisplayName: to.Ptr("Notebook"),
+				FolderID:    to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+				ID:          to.Ptr("dddddddd-3333-4444-5555-eeeeeeeeeeee"),
+				WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			}},
+	}
+
+	testsuite.serverFactory.ItemsServer.NewListItemsPager = func(workspaceID string, options *core.ItemsClientListItemsOptions) (resp azfake.PagerResponder[core.ItemsClientListItemsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.PagerResponder[core.ItemsClientListItemsResponse]{}
+		resp.AddPage(http.StatusOK, core.ItemsClientListItemsResponse{Items: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListItemsPager(exampleWorkspaceID, &core.ItemsClientListItemsOptions{Type: nil,
+		Recursive:         to.Ptr(false),
+		RootFolderID:      to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+		ContinuationToken: nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Items))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List direct items in workspace example"},
+	})
+	exampleWorkspaceID = "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"
+
+	exampleRes = core.Items{
+		Value: []core.Item{
+			{
+				Type:        to.Ptr(core.ItemTypeLakehouse),
+				Description: to.Ptr("A lakehouse shared by the all teams."),
+				DisplayName: to.Ptr("Lakehouse"),
+				ID:          to.Ptr("cccccccc-2222-3333-4444-dddddddddddd"),
+				WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			}},
+	}
+
+	testsuite.serverFactory.ItemsServer.NewListItemsPager = func(workspaceID string, options *core.ItemsClientListItemsOptions) (resp azfake.PagerResponder[core.ItemsClientListItemsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.PagerResponder[core.ItemsClientListItemsResponse]{}
+		resp.AddPage(http.StatusOK, core.ItemsClientListItemsResponse{Items: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListItemsPager(exampleWorkspaceID, &core.ItemsClientListItemsOptions{Type: nil,
+		Recursive:         to.Ptr(false),
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Items))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List items in workspace with continuation example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+
+	exampleRes = core.Items{
+		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/workspaces/cfafbeb1-8037-4d0c-896e-a46fb27ff229/items?continuationToken=LDEsMTAwMDAwLDA%3D"),
+		Value: []core.Item{
+			{
+				Type:        to.Ptr(core.ItemTypeLakehouse),
+				Description: to.Ptr("A lakehouse used by the analytics team."),
+				DisplayName: to.Ptr("Lakehouse"),
+				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+			},
+			{
+				Type:        to.Ptr(core.ItemType("KustoDashboard")),
+				Description: to.Ptr("A notebook for refining medical data analysis through machine learning algorithms."),
+				DisplayName: to.Ptr("Notebook"),
+				ID:          to.Ptr("58fa1eac-9694-4a6b-ba25-3520288e8fea"),
+				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+			}},
+	}
+
+	testsuite.serverFactory.ItemsServer.NewListItemsPager = func(workspaceID string, options *core.ItemsClientListItemsOptions) (resp azfake.PagerResponder[core.ItemsClientListItemsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.PagerResponder[core.ItemsClientListItemsResponse]{}
+		resp.AddPage(http.StatusOK, core.ItemsClientListItemsResponse{Items: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListItemsPager(exampleWorkspaceID, &core.ItemsClientListItemsOptions{Type: nil,
+		Recursive:         nil,
+		RootFolderID:      nil,
 		ContinuationToken: nil,
 	})
 	for pager.More() {
@@ -775,6 +905,30 @@ func (testsuite *FakeTestSuite) TestItems_CreateItem() {
 
 	client := testsuite.clientFactory.NewItemsClient()
 	poller, err := client.BeginCreateItem(ctx, exampleWorkspaceID, exampleCreateItemRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create an item in folder example"},
+	})
+	exampleWorkspaceID = "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"
+	exampleCreateItemRequest = core.CreateItemRequest{
+		Type:        to.Ptr(core.ItemTypeLakehouse),
+		DisplayName: to.Ptr("Item 1"),
+		FolderID:    to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginCreateItem = func(ctx context.Context, workspaceID string, createItemRequest core.CreateItemRequest, options *core.ItemsClientBeginCreateItemOptions) (resp azfake.PollerResponder[core.ItemsClientCreateItemResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateItemRequest, createItemRequest))
+		resp = azfake.PollerResponder[core.ItemsClientCreateItemResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, core.ItemsClientCreateItemResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateItem(ctx, exampleWorkspaceID, exampleCreateItemRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
@@ -3750,6 +3904,400 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_RevokeExternalDataShare()
 	client := testsuite.clientFactory.NewExternalDataSharesClient()
 	_, err = client.RevokeExternalDataShare(ctx, exampleWorkspaceID, exampleItemID, exampleExternalDataShareID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestFolders_ListFolders() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List all folders in workspace example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"
+
+	exampleRes := core.Folders{
+		Value: []core.Folder{
+			{
+				DisplayName: to.Ptr("Sales"),
+				ID:          to.Ptr("aaaaaaaa-6666-7777-8888-bbbbbbbbbbbb"),
+				WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			},
+			{
+				DisplayName:    to.Ptr("Y2024"),
+				ID:             to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+				ParentFolderID: to.Ptr("aaaaaaaa-6666-7777-8888-bbbbbbbbbbbb"),
+				WorkspaceID:    to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			},
+			{
+				DisplayName:    to.Ptr("Q1"),
+				ID:             to.Ptr("cccccccc-8888-9999-0000-dddddddddddd"),
+				ParentFolderID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+				WorkspaceID:    to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			},
+			{
+				DisplayName:    to.Ptr("Q2"),
+				ID:             to.Ptr("dddddddd-9999-0000-1111-eeeeeeeeeeee"),
+				ParentFolderID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+				WorkspaceID:    to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			}},
+	}
+
+	testsuite.serverFactory.FoldersServer.NewListFoldersPager = func(workspaceID string, options *core.FoldersClientListFoldersOptions) (resp azfake.PagerResponder[core.FoldersClientListFoldersResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.PagerResponder[core.FoldersClientListFoldersResponse]{}
+		resp.AddPage(http.StatusOK, core.FoldersClientListFoldersResponse{Folders: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewFoldersClient()
+	pager := client.NewListFoldersPager(exampleWorkspaceID, &core.FoldersClientListFoldersOptions{RootFolderID: nil,
+		Recursive:         nil,
+		ContinuationToken: nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Folders))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List all folders in workspace with continuation example"},
+	})
+	exampleWorkspaceID = "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"
+
+	exampleRes = core.Folders{
+		ContinuationToken: to.Ptr("MAEsMTbwMDAwLDA%5D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/workspaces/aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb/folders?continuationToken=MAEsMTbwMDAwLDA%5D"),
+		Value: []core.Folder{
+			{
+				DisplayName: to.Ptr("Sales"),
+				ID:          to.Ptr("aaaaaaaa-6666-7777-8888-bbbbbbbbbbbb"),
+				WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			},
+			{
+				DisplayName:    to.Ptr("Y2024"),
+				ID:             to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+				ParentFolderID: to.Ptr("aaaaaaaa-6666-7777-8888-bbbbbbbbbbbb"),
+				WorkspaceID:    to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			},
+			{
+				DisplayName:    to.Ptr("Q1"),
+				ID:             to.Ptr("cccccccc-8888-9999-0000-dddddddddddd"),
+				ParentFolderID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+				WorkspaceID:    to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			},
+			{
+				DisplayName:    to.Ptr("Q2"),
+				ID:             to.Ptr("dddddddd-9999-0000-1111-eeeeeeeeeeee"),
+				ParentFolderID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+				WorkspaceID:    to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			}},
+	}
+
+	testsuite.serverFactory.FoldersServer.NewListFoldersPager = func(workspaceID string, options *core.FoldersClientListFoldersOptions) (resp azfake.PagerResponder[core.FoldersClientListFoldersResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.PagerResponder[core.FoldersClientListFoldersResponse]{}
+		resp.AddPage(http.StatusOK, core.FoldersClientListFoldersResponse{Folders: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListFoldersPager(exampleWorkspaceID, &core.FoldersClientListFoldersOptions{RootFolderID: nil,
+		Recursive:         nil,
+		ContinuationToken: nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Folders))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List direct children folders under parent folder example"},
+	})
+	exampleWorkspaceID = "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"
+
+	exampleRes = core.Folders{
+		Value: []core.Folder{
+			{
+				DisplayName:    to.Ptr("Y2024"),
+				ID:             to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+				ParentFolderID: to.Ptr("aaaaaaaa-6666-7777-8888-bbbbbbbbbbbb"),
+				WorkspaceID:    to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			}},
+	}
+
+	testsuite.serverFactory.FoldersServer.NewListFoldersPager = func(workspaceID string, options *core.FoldersClientListFoldersOptions) (resp azfake.PagerResponder[core.FoldersClientListFoldersResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.PagerResponder[core.FoldersClientListFoldersResponse]{}
+		resp.AddPage(http.StatusOK, core.FoldersClientListFoldersResponse{Folders: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListFoldersPager(exampleWorkspaceID, &core.FoldersClientListFoldersOptions{RootFolderID: to.Ptr("aaaaaaaa-6666-7777-8888-bbbbbbbbbbbb"),
+		Recursive:         to.Ptr(false),
+		ContinuationToken: nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Folders))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List folders under parent folder recursively example"},
+	})
+	exampleWorkspaceID = "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"
+
+	exampleRes = core.Folders{
+		Value: []core.Folder{
+			{
+				DisplayName:    to.Ptr("Y2024"),
+				ID:             to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+				ParentFolderID: to.Ptr("aaaaaaaa-6666-7777-8888-bbbbbbbbbbbb"),
+				WorkspaceID:    to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			},
+			{
+				DisplayName:    to.Ptr("Q1"),
+				ID:             to.Ptr("cccccccc-8888-9999-0000-dddddddddddd"),
+				ParentFolderID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+				WorkspaceID:    to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			},
+			{
+				DisplayName:    to.Ptr("Q2"),
+				ID:             to.Ptr("dddddddd-9999-0000-1111-eeeeeeeeeeee"),
+				ParentFolderID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+				WorkspaceID:    to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			}},
+	}
+
+	testsuite.serverFactory.FoldersServer.NewListFoldersPager = func(workspaceID string, options *core.FoldersClientListFoldersOptions) (resp azfake.PagerResponder[core.FoldersClientListFoldersResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.PagerResponder[core.FoldersClientListFoldersResponse]{}
+		resp.AddPage(http.StatusOK, core.FoldersClientListFoldersResponse{Folders: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListFoldersPager(exampleWorkspaceID, &core.FoldersClientListFoldersOptions{RootFolderID: to.Ptr("aaaaaaaa-6666-7777-8888-bbbbbbbbbbbb"),
+		Recursive:         to.Ptr(true),
+		ContinuationToken: nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Folders))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestFolders_CreateFolder() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a folder under another folder example"},
+	})
+	var exampleWorkspaceID string
+	var exampleCreateFolderRequest core.CreateFolderRequest
+	exampleWorkspaceID = "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"
+	exampleCreateFolderRequest = core.CreateFolderRequest{
+		DisplayName:    to.Ptr("Q3"),
+		ParentFolderID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+	}
+
+	testsuite.serverFactory.FoldersServer.CreateFolder = func(ctx context.Context, workspaceID string, createFolderRequest core.CreateFolderRequest, options *core.FoldersClientCreateFolderOptions) (resp azfake.Responder[core.FoldersClientCreateFolderResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateFolderRequest, createFolderRequest))
+		resp = azfake.Responder[core.FoldersClientCreateFolderResponse]{}
+		resp.SetResponse(http.StatusCreated, core.FoldersClientCreateFolderResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewFoldersClient()
+	_, err = client.CreateFolder(ctx, exampleWorkspaceID, exampleCreateFolderRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a folder with the workspace as its parent folder example"},
+	})
+	exampleWorkspaceID = "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"
+	exampleCreateFolderRequest = core.CreateFolderRequest{
+		DisplayName: to.Ptr("A folder"),
+	}
+
+	testsuite.serverFactory.FoldersServer.CreateFolder = func(ctx context.Context, workspaceID string, createFolderRequest core.CreateFolderRequest, options *core.FoldersClientCreateFolderOptions) (resp azfake.Responder[core.FoldersClientCreateFolderResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateFolderRequest, createFolderRequest))
+		resp = azfake.Responder[core.FoldersClientCreateFolderResponse]{}
+		resp.SetResponse(http.StatusCreated, core.FoldersClientCreateFolderResponse{}, nil)
+		return
+	}
+
+	_, err = client.CreateFolder(ctx, exampleWorkspaceID, exampleCreateFolderRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestFolders_GetFolder() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a folder example"},
+	})
+	var exampleWorkspaceID string
+	var exampleFolderID string
+	exampleWorkspaceID = "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"
+	exampleFolderID = "bbbbbbbb-1111-2222-3333-cccccccccccc"
+
+	exampleRes := core.Folder{
+		DisplayName:    to.Ptr("A nested folder"),
+		ID:             to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+		ParentFolderID: to.Ptr("aaaaaaaa-6666-7777-8888-bbbbbbbbbbbb"),
+		WorkspaceID:    to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+	}
+
+	testsuite.serverFactory.FoldersServer.GetFolder = func(ctx context.Context, workspaceID string, folderID string, options *core.FoldersClientGetFolderOptions) (resp azfake.Responder[core.FoldersClientGetFolderResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleFolderID, folderID)
+		resp = azfake.Responder[core.FoldersClientGetFolderResponse]{}
+		resp.SetResponse(http.StatusOK, core.FoldersClientGetFolderResponse{Folder: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewFoldersClient()
+	res, err := client.GetFolder(ctx, exampleWorkspaceID, exampleFolderID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Folder))
+}
+
+func (testsuite *FakeTestSuite) TestFolders_UpdateFolder() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update a folder example"},
+	})
+	var exampleWorkspaceID string
+	var exampleFolderID string
+	var exampleUpdateFolderRequest core.UpdateFolderRequest
+	exampleWorkspaceID = "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"
+	exampleFolderID = "aaaaaaaa-6666-7777-8888-bbbbbbbbbbbb"
+	exampleUpdateFolderRequest = core.UpdateFolderRequest{
+		DisplayName: to.Ptr("A new Folder name"),
+	}
+
+	exampleRes := core.Folder{
+		DisplayName: to.Ptr("A new Folder name"),
+		ID:          to.Ptr("aaaaaaaa-6666-7777-8888-bbbbbbbbbbbb"),
+		WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+	}
+
+	testsuite.serverFactory.FoldersServer.UpdateFolder = func(ctx context.Context, workspaceID string, folderID string, updateFolderRequest core.UpdateFolderRequest, options *core.FoldersClientUpdateFolderOptions) (resp azfake.Responder[core.FoldersClientUpdateFolderResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleFolderID, folderID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateFolderRequest, updateFolderRequest))
+		resp = azfake.Responder[core.FoldersClientUpdateFolderResponse]{}
+		resp.SetResponse(http.StatusOK, core.FoldersClientUpdateFolderResponse{Folder: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewFoldersClient()
+	res, err := client.UpdateFolder(ctx, exampleWorkspaceID, exampleFolderID, exampleUpdateFolderRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Folder))
+}
+
+func (testsuite *FakeTestSuite) TestFolders_DeleteFolder() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete a folder example"},
+	})
+	var exampleWorkspaceID string
+	var exampleFolderID string
+	exampleWorkspaceID = "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"
+	exampleFolderID = "bbbbbbbb-1111-2222-3333-cccccccccccc"
+
+	testsuite.serverFactory.FoldersServer.DeleteFolder = func(ctx context.Context, workspaceID string, folderID string, options *core.FoldersClientDeleteFolderOptions) (resp azfake.Responder[core.FoldersClientDeleteFolderResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleFolderID, folderID)
+		resp = azfake.Responder[core.FoldersClientDeleteFolderResponse]{}
+		resp.SetResponse(http.StatusOK, core.FoldersClientDeleteFolderResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewFoldersClient()
+	_, err = client.DeleteFolder(ctx, exampleWorkspaceID, exampleFolderID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestFolders_MoveFolder() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Move a folder into another folder example"},
+	})
+	var exampleWorkspaceID string
+	var exampleFolderID string
+	var exampleMoveFolderRequest core.MoveFolderRequest
+	exampleWorkspaceID = "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"
+	exampleFolderID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+	exampleMoveFolderRequest = core.MoveFolderRequest{
+		TargetFolderID: to.Ptr("cccccccc-8888-9999-0000-dddddddddddd"),
+	}
+
+	exampleRes := core.Folder{
+		DisplayName:    to.Ptr("Q2"),
+		ID:             to.Ptr("dddddddd-9999-0000-1111-eeeeeeeeeeee"),
+		ParentFolderID: to.Ptr("cccccccc-8888-9999-0000-dddddddddddd"),
+		WorkspaceID:    to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+	}
+
+	testsuite.serverFactory.FoldersServer.MoveFolder = func(ctx context.Context, workspaceID string, folderID string, moveFolderRequest core.MoveFolderRequest, options *core.FoldersClientMoveFolderOptions) (resp azfake.Responder[core.FoldersClientMoveFolderResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleFolderID, folderID)
+		testsuite.Require().True(reflect.DeepEqual(exampleMoveFolderRequest, moveFolderRequest))
+		resp = azfake.Responder[core.FoldersClientMoveFolderResponse]{}
+		resp.SetResponse(http.StatusOK, core.FoldersClientMoveFolderResponse{Folder: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewFoldersClient()
+	res, err := client.MoveFolder(ctx, exampleWorkspaceID, exampleFolderID, exampleMoveFolderRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Folder))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Move a folder with the workspace as the destination example"},
+	})
+	exampleWorkspaceID = "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"
+	exampleFolderID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+	exampleMoveFolderRequest = core.MoveFolderRequest{}
+
+	exampleRes = core.Folder{
+		DisplayName: to.Ptr("Q2"),
+		ID:          to.Ptr("dddddddd-9999-0000-1111-eeeeeeeeeeee"),
+		WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+	}
+
+	testsuite.serverFactory.FoldersServer.MoveFolder = func(ctx context.Context, workspaceID string, folderID string, moveFolderRequest core.MoveFolderRequest, options *core.FoldersClientMoveFolderOptions) (resp azfake.Responder[core.FoldersClientMoveFolderResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleFolderID, folderID)
+		testsuite.Require().True(reflect.DeepEqual(exampleMoveFolderRequest, moveFolderRequest))
+		resp = azfake.Responder[core.FoldersClientMoveFolderResponse]{}
+		resp.SetResponse(http.StatusOK, core.FoldersClientMoveFolderResponse{Folder: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.MoveFolder(ctx, exampleWorkspaceID, exampleFolderID, exampleMoveFolderRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Folder))
 }
 
 func (testsuite *FakeTestSuite) TestManagedPrivateEndpoints_ListWorkspaceManagedPrivateEndpoints() {
