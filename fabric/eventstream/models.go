@@ -6,6 +6,684 @@
 
 package eventstream
 
+import "time"
+
+// ActivatorDestinationProperties - Activator destination properties.
+type ActivatorDestinationProperties struct {
+	// REQUIRED; The Activator item identifier.
+	ItemID *string
+
+	// REQUIRED; The Activator workspace identifier.
+	WorkspaceID *string
+
+	// Serialization information.
+	InputSerialization SerializationInfoClassification
+}
+
+// ActivatorDestinationResponse - Activator destination response.
+type ActivatorDestinationResponse struct {
+	// REQUIRED; A list of the references to the input nodes of the destination.
+	InputNodes []NodeReference
+
+	// REQUIRED; The unique name of the destination.
+	Name *string
+
+	// REQUIRED; The properties of the Activator destination.
+	Properties *ActivatorDestinationProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the destination.
+	Type *DestinationType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the destination.
+	ID *string
+
+	// The input schemas of the destination.
+	InputSchemas []InputSchema
+}
+
+// GetDestinationResponse implements the DestinationResponseClassification interface for type ActivatorDestinationResponse.
+func (a *ActivatorDestinationResponse) GetDestinationResponse() *DestinationResponse {
+	return &DestinationResponse{
+		Error:        a.Error,
+		ID:           a.ID,
+		InputNodes:   a.InputNodes,
+		InputSchemas: a.InputSchemas,
+		Name:         a.Name,
+		Status:       a.Status,
+		Type:         a.Type,
+	}
+}
+
+// AggregateOperator - Aggregate operator.
+type AggregateOperator struct {
+	// REQUIRED; A list of the references to the input nodes of the operator.
+	InputNodes []NodeReference
+
+	// REQUIRED; The name of the operator.
+	Name *string
+
+	// REQUIRED; Aggregate operator properties.
+	Properties *AggregateOperatorProperties
+
+	// REQUIRED; The type of the operator. Additional operator types may be added over time.
+	Type *OperatorType
+
+	// The input schemas of the operator.
+	InputSchemas []InputSchema
+}
+
+// GetOperator implements the OperatorClassification interface for type AggregateOperator.
+func (a *AggregateOperator) GetOperator() *Operator {
+	return &Operator{
+		InputNodes:   a.InputNodes,
+		InputSchemas: a.InputSchemas,
+		Name:         a.Name,
+		Type:         a.Type,
+	}
+}
+
+// AggregateOperatorProperties - Aggregate operator properties.
+type AggregateOperatorProperties struct {
+	// REQUIRED; A list of the aggregations.
+	Aggregations []InColumnAggregation
+}
+
+// Aggregation - Represents an aggregation on a column.
+type Aggregation struct {
+	// REQUIRED; The aggregation function.
+	AggregationFunction *AggregationFunction
+
+	// REQUIRED; Represents a reference to a column.
+	Column *ColumnReferenceExpression
+
+	// The alias of the aggregation.
+	Alias *string
+
+	// A list of the arguments for the aggregation.
+	Arguments []any
+}
+
+// AmazonKinesisSourceProperties - Amazon Kinesis source properties.
+type AmazonKinesisSourceProperties struct {
+	// REQUIRED; The Amazon Kinesis data connection identifier.
+	DataConnectionID *string
+
+	// REQUIRED; The Amazon Kinesis region name.
+	Region *AmazonKinesisSourcePropertiesRegion
+}
+
+// AmazonKinesisSourceResponse - Amazon Kinesis source properties response.
+type AmazonKinesisSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Amazon Kinesis source.
+	Properties *AmazonKinesisSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type AmazonKinesisSourceResponse.
+func (a *AmazonKinesisSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        a.Error,
+		ID:           a.ID,
+		InputSchemas: a.InputSchemas,
+		Name:         a.Name,
+		Status:       a.Status,
+		Type:         a.Type,
+	}
+}
+
+// AmazonMSKKafkaSourceProperties - Amazon MSK Kafka source properties.
+type AmazonMSKKafkaSourceProperties struct {
+	// REQUIRED; The auto offset reset property. Default is None.
+	AutoOffsetReset *BaseKafkaSourcePropertiesAutoOffsetReset
+
+	// REQUIRED; The consumer group name.
+	ConsumerGroupName *string
+
+	// REQUIRED; The Kafka data connection identifier.
+	DataConnectionID *string
+
+	// REQUIRED; The SASL mechanism.
+	SaslMechanism *AmazonMSKKafkaSourcePropertiesSaslMechanism
+
+	// REQUIRED; The security protocol.
+	SecurityProtocol *AmazonMSKKafkaSourcePropertiesSecurityProtocol
+
+	// REQUIRED; The Kafka topic.
+	Topic *string
+}
+
+// AmazonMSKKafkaSourceResponse - Amazon MSK Kafka source response.
+type AmazonMSKKafkaSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Amazon MSK Kafka source.
+	Properties *AmazonMSKKafkaSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type AmazonMSKKafkaSourceResponse.
+func (a *AmazonMSKKafkaSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        a.Error,
+		ID:           a.ID,
+		InputSchemas: a.InputSchemas,
+		Name:         a.Name,
+		Status:       a.Status,
+		Type:         a.Type,
+	}
+}
+
+// ApacheKafkaSourceProperties - Apache Kafka source properties.
+type ApacheKafkaSourceProperties struct {
+	// REQUIRED; The auto offset reset property. Default is None.
+	AutoOffsetReset *BaseKafkaSourcePropertiesAutoOffsetReset
+
+	// REQUIRED; The consumer group name.
+	ConsumerGroupName *string
+
+	// REQUIRED; The Kafka data connection identifier.
+	DataConnectionID *string
+
+	// REQUIRED; The SASL mechanism.
+	SaslMechanism *ApacheKafkaSourcePropertiesSaslMechanism
+
+	// REQUIRED; The security protocol.
+	SecurityProtocol *ApacheKafkaSourcePropertiesSecurityProtocol
+
+	// REQUIRED; The Kafka topic.
+	Topic *string
+}
+
+// ApacheKafkaSourceResponse - Apache Kafka source response.
+type ApacheKafkaSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Apache Kafka source.
+	Properties *ApacheKafkaSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type ApacheKafkaSourceResponse.
+func (a *ApacheKafkaSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        a.Error,
+		ID:           a.ID,
+		InputSchemas: a.InputSchemas,
+		Name:         a.Name,
+		Status:       a.Status,
+		Type:         a.Type,
+	}
+}
+
+// AvroSerializationInfo - Avro serialization information.
+type AvroSerializationInfo struct {
+	// REQUIRED; Avro serialization properties.
+	Properties any
+
+	// REQUIRED; The serialization type.
+	Type *SerializationType
+}
+
+// GetSerializationInfo implements the SerializationInfoClassification interface for type AvroSerializationInfo.
+func (a *AvroSerializationInfo) GetSerializationInfo() *SerializationInfo {
+	return &SerializationInfo{
+		Type: a.Type,
+	}
+}
+
+// AzureBlobStorageEvents - Azure Blob Storage events source.
+type AzureBlobStorageEvents struct {
+	// REQUIRED; The Azure resource identifier of the blob storage.
+	AzureResourceID *string
+
+	// REQUIRED; The included event types.
+	IncludedEventTypes []AzureBlobStorageEventsIncludedEventTypesItem
+
+	// The unique identifier of the source.
+	ID *string
+}
+
+// AzureBlobStorageEventsSourceProperties - Azure Blob Storage events source properties.
+type AzureBlobStorageEventsSourceProperties struct {
+	// REQUIRED; The Azure Blob Storage events.
+	AzureBlobStorageEvents []AzureBlobStorageEvents
+
+	// REQUIRED; Indicates whether to stream events.
+	StreamEvents *bool
+}
+
+// AzureBlobStorageEventsSourceResponse - Azure Blob Storage events source response.
+type AzureBlobStorageEventsSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Azure Blob Storage events source.
+	Properties *AzureBlobStorageEventsSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type AzureBlobStorageEventsSourceResponse.
+func (a *AzureBlobStorageEventsSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        a.Error,
+		ID:           a.ID,
+		InputSchemas: a.InputSchemas,
+		Name:         a.Name,
+		Status:       a.Status,
+		Type:         a.Type,
+	}
+}
+
+// AzureCosmosDBCDCSourceProperties - Azure Cosmos DB CDC source properties.
+type AzureCosmosDBCDCSourceProperties struct {
+	// REQUIRED; The container name.
+	ContainerName *string
+
+	// REQUIRED; The Azure Cosmos DB CDC data connection identifier.
+	DataConnectionID *string
+
+	// REQUIRED; The database name.
+	DatabaseName *string
+
+	// REQUIRED; The offset policy.
+	OffsetPolicy *AzureCosmosDBCDCSourcePropertiesOffsetPolicy
+}
+
+// AzureCosmosDBCDCSourceResponse - Azure Cosmos DB CDC source response.
+type AzureCosmosDBCDCSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Azure Cosmos DB CDC source.
+	Properties *AzureCosmosDBCDCSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type AzureCosmosDBCDCSourceResponse.
+func (a *AzureCosmosDBCDCSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        a.Error,
+		ID:           a.ID,
+		InputSchemas: a.InputSchemas,
+		Name:         a.Name,
+		Status:       a.Status,
+		Type:         a.Type,
+	}
+}
+
+// AzureEventHubSourceProperties - Azure Event Hub source properties.
+type AzureEventHubSourceProperties struct {
+	// REQUIRED; The consumer group name.
+	ConsumerGroupName *string
+
+	// REQUIRED; The Azure Event Hub data connection identifier.
+	DataConnectionID *string
+
+	// REQUIRED; Serialization information.
+	InputSerialization SerializationInfoClassification
+}
+
+// AzureEventHubSourceResponse - Azure Event Hub source response.
+type AzureEventHubSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Azure Event Hub source.
+	Properties *AzureEventHubSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type AzureEventHubSourceResponse.
+func (a *AzureEventHubSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        a.Error,
+		ID:           a.ID,
+		InputSchemas: a.InputSchemas,
+		Name:         a.Name,
+		Status:       a.Status,
+		Type:         a.Type,
+	}
+}
+
+// AzureIoTHubSourceProperties - Azure IoT Hub source properties.
+type AzureIoTHubSourceProperties struct {
+	// REQUIRED; The consumer group name.
+	ConsumerGroupName *string
+
+	// REQUIRED; The Azure IoT Hub data connection identifier.
+	DataConnectionID *string
+
+	// REQUIRED; Serialization information.
+	InputSerialization SerializationInfoClassification
+}
+
+// AzureIoTHubSourceResponse - Azure IoT Hub source response.
+type AzureIoTHubSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Azure IoT Hub source.
+	Properties *AzureIoTHubSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type AzureIoTHubSourceResponse.
+func (a *AzureIoTHubSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        a.Error,
+		ID:           a.ID,
+		InputSchemas: a.InputSchemas,
+		Name:         a.Name,
+		Status:       a.Status,
+		Type:         a.Type,
+	}
+}
+
+// AzureSQLDBCDCSourceResponse - Azure SQL DB CDC source response.
+type AzureSQLDBCDCSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; Base SQL CDC source properties.
+	Properties *BaseSQLCDCSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type AzureSQLDBCDCSourceResponse.
+func (a *AzureSQLDBCDCSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        a.Error,
+		ID:           a.ID,
+		InputSchemas: a.InputSchemas,
+		Name:         a.Name,
+		Status:       a.Status,
+		Type:         a.Type,
+	}
+}
+
+// AzureSQLMIDBCDCSourceResponse - Azure SQL MI DB CDC source response.
+type AzureSQLMIDBCDCSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; Base SQL CDC source properties.
+	Properties *BaseSQLCDCSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type AzureSQLMIDBCDCSourceResponse.
+func (a *AzureSQLMIDBCDCSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        a.Error,
+		ID:           a.ID,
+		InputSchemas: a.InputSchemas,
+		Name:         a.Name,
+		Status:       a.Status,
+		Type:         a.Type,
+	}
+}
+
+// BaseKafkaSourceProperties - Base Kafka source properties.
+type BaseKafkaSourceProperties struct {
+	// REQUIRED; The auto offset reset property. Default is None.
+	AutoOffsetReset *BaseKafkaSourcePropertiesAutoOffsetReset
+
+	// REQUIRED; The consumer group name.
+	ConsumerGroupName *string
+
+	// REQUIRED; The Kafka data connection identifier.
+	DataConnectionID *string
+
+	// REQUIRED; The Kafka topic.
+	Topic *string
+}
+
+// BaseSQLCDCSourceProperties - Base SQL CDC source properties.
+type BaseSQLCDCSourceProperties struct {
+	// REQUIRED; The SQL CDC data connection identifier.
+	DataConnectionID *string
+
+	// REQUIRED; The table name.
+	TableName *string
+}
+
+// CSVSerializationInfo - CSV serialization information.
+type CSVSerializationInfo struct {
+	// REQUIRED; CSV serialization properties.
+	Properties *CSVSerializationProperties
+
+	// REQUIRED; The serialization type.
+	Type *SerializationType
+}
+
+// GetSerializationInfo implements the SerializationInfoClassification interface for type CSVSerializationInfo.
+func (c *CSVSerializationInfo) GetSerializationInfo() *SerializationInfo {
+	return &SerializationInfo{
+		Type: c.Type,
+	}
+}
+
+// CSVSerializationProperties - CSV serialization properties.
+type CSVSerializationProperties struct {
+	// REQUIRED; The field delimiter.
+	FieldDelimiter *string
+
+	// The encoding type.
+	Encoding *CSVSerializationPropertiesEncoding
+
+	// The format type.
+	Format *CSVSerializationPropertiesFormat
+}
+
+// CastProperties - Properties for a cast operation.
+type CastProperties struct {
+	// REQUIRED; Represents a reference to a column.
+	Column *ColumnReferenceExpression
+
+	// REQUIRED; Represents the data type. Additional data types may be added over time.
+	TargetDataType *DataType
+}
+
+// ColumnReferenceExpression - Represents a reference to a column.
+type ColumnReferenceExpression struct {
+	// REQUIRED; The name of the column.
+	ColumnName *string
+
+	// The path segments to the column reference for nested columns.
+	ColumnPathSegments []string
+
+	// The name of the reference node.
+	Node *string
+}
+
+// ColumnSchema - Represents the schema of a column.
+type ColumnSchema struct {
+	// REQUIRED; The data type of the column.
+	Type *DataType
+
+	// A list of the fields for the record or array data type.
+	Fields []ColumnSchema
+
+	// The schema of the array items.
+	Items *ColumnSchema
+
+	// The name of the column.
+	Name *string
+}
+
+// ConfluentCloudSourceResponse - Confluent Cloud source response.
+type ConfluentCloudSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; Base Kafka source properties.
+	Properties *BaseKafkaSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type ConfluentCloudSourceResponse.
+func (c *ConfluentCloudSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        c.Error,
+		ID:           c.ID,
+		InputSchemas: c.InputSchemas,
+		Name:         c.Name,
+		Status:       c.Status,
+		Type:         c.Type,
+	}
+}
+
 // CreateEventstreamRequest - Create eventstream request payload.
 type CreateEventstreamRequest struct {
 	// REQUIRED; The eventstream display name. The display name must follow naming rules according to item type.
@@ -16,6 +694,119 @@ type CreateEventstreamRequest struct {
 
 	// The eventstream description. Maximum length is 256 characters.
 	Description *string
+}
+
+// CustomEndpointDestinationResponse - Custom endpoint events destination response.
+type CustomEndpointDestinationResponse struct {
+	// REQUIRED; A list of the references to the input nodes of the destination.
+	InputNodes []NodeReference
+
+	// REQUIRED; The unique name of the destination.
+	Name *string
+
+	// REQUIRED; The properties of the custom endpoint destination.
+	Properties any
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the destination.
+	Type *DestinationType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the destination.
+	ID *string
+
+	// The input schemas of the destination.
+	InputSchemas []InputSchema
+}
+
+// GetDestinationResponse implements the DestinationResponseClassification interface for type CustomEndpointDestinationResponse.
+func (c *CustomEndpointDestinationResponse) GetDestinationResponse() *DestinationResponse {
+	return &DestinationResponse{
+		Error:        c.Error,
+		ID:           c.ID,
+		InputNodes:   c.InputNodes,
+		InputSchemas: c.InputSchemas,
+		Name:         c.Name,
+		Status:       c.Status,
+		Type:         c.Type,
+	}
+}
+
+// CustomEndpointSourceResponse - Custom endpoint events source response.
+type CustomEndpointSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the custom endpoint events source.
+	Properties any
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type CustomEndpointSourceResponse.
+func (c *CustomEndpointSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        c.Error,
+		ID:           c.ID,
+		InputSchemas: c.InputSchemas,
+		Name:         c.Name,
+		Status:       c.Status,
+		Type:         c.Type,
+	}
+}
+
+// DataSourceStartRequest - Represents the request to start a data source.
+type DataSourceStartRequest struct {
+	// REQUIRED; The start type of the data source.
+	StartType *DataSourceStartType
+
+	// The custom start time of the data source in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	CustomStartDateTime *time.Time
+}
+
+// DefaultStreamResponse - Default stream response.
+type DefaultStreamResponse struct {
+	// REQUIRED; The unique identifier of the stream.
+	ID *string
+
+	// REQUIRED; A list of the references to the input nodes of the stream.
+	InputNodes []NodeReference
+
+	// REQUIRED; The unique name of the stream.
+	Name *string
+
+	// REQUIRED; The properties of the default stream.
+	Properties any
+
+	// REQUIRED; The type of the stream.
+	Type *StreamType
+}
+
+// GetStreamResponse implements the StreamResponseClassification interface for type DefaultStreamResponse.
+func (d *DefaultStreamResponse) GetStreamResponse() *StreamResponse {
+	return &StreamResponse{
+		ID:         d.ID,
+		InputNodes: d.InputNodes,
+		Name:       d.Name,
+		Type:       d.Type,
+	}
 }
 
 // Definition - Eventstream public definition object.
@@ -45,6 +836,211 @@ type DefinitionResponse struct {
 	Definition *Definition
 }
 
+// DerivedStreamProperties - The derived stream properties.
+type DerivedStreamProperties struct {
+	// Serialization information.
+	InputSerialization SerializationInfoClassification
+}
+
+// DerivedStreamResponse - Derived stream response.
+type DerivedStreamResponse struct {
+	// REQUIRED; The unique identifier of the stream.
+	ID *string
+
+	// REQUIRED; A list of the references to the input nodes of the stream.
+	InputNodes []NodeReference
+
+	// REQUIRED; The unique name of the stream.
+	Name *string
+
+	// REQUIRED; The properties of the derived stream.
+	Properties *DerivedStreamProperties
+
+	// REQUIRED; The type of the stream.
+	Type *StreamType
+}
+
+// GetStreamResponse implements the StreamResponseClassification interface for type DerivedStreamResponse.
+func (d *DerivedStreamResponse) GetStreamResponse() *StreamResponse {
+	return &StreamResponse{
+		ID:         d.ID,
+		InputNodes: d.InputNodes,
+		Name:       d.Name,
+		Type:       d.Type,
+	}
+}
+
+// DestinationConnectionResponse - Represents the connection information for a destination custom endpoint.
+type DestinationConnectionResponse struct {
+	// REQUIRED; The consumer group name.
+	ConsumerGroupName *string
+
+	// REQUIRED; The name of the EventHub.
+	EventHubName *string
+
+	// REQUIRED; The fully qualified namespace of the EventHub.
+	FullyQualifiedNamespace *string
+
+	// The access keys.
+	AccessKeys any
+}
+
+// DestinationResponse - Represents an Eventstream destination response.
+type DestinationResponse struct {
+	// REQUIRED; A list of the references to the input nodes of the destination.
+	InputNodes []NodeReference
+
+	// REQUIRED; The unique name of the destination.
+	Name *string
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the destination.
+	Type *DestinationType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the destination.
+	ID *string
+
+	// The input schemas of the destination.
+	InputSchemas []InputSchema
+}
+
+// GetDestinationResponse implements the DestinationResponseClassification interface for type DestinationResponse.
+func (d *DestinationResponse) GetDestinationResponse() *DestinationResponse { return d }
+
+// ErrorInfo - Represents the error information.
+type ErrorInfo struct {
+	// REQUIRED; The error message.
+	ErrorMessage *string
+
+	// The error code.
+	ErrorCode *string
+
+	// The error details.
+	ErrorDetails []string
+}
+
+// EventhouseDestinationProperties - Eventhouse destination properties.
+type EventhouseDestinationProperties struct {
+	// REQUIRED; The data ingestion mode.
+	DataIngestionMode *EventhouseDestinationPropertiesDataIngestionMode
+
+	// REQUIRED; The Eventhouse item identifier.
+	ItemID *string
+
+	// REQUIRED; The Eventhouse workspace identifier.
+	WorkspaceID *string
+}
+
+// GetEventhouseDestinationProperties implements the EventhouseDestinationPropertiesClassification interface for type EventhouseDestinationProperties.
+func (e *EventhouseDestinationProperties) GetEventhouseDestinationProperties() *EventhouseDestinationProperties {
+	return e
+}
+
+// EventhouseDestinationResponse - Eventhouse destination response.
+type EventhouseDestinationResponse struct {
+	// REQUIRED; A list of the references to the input nodes of the destination.
+	InputNodes []NodeReference
+
+	// REQUIRED; The unique name of the destination.
+	Name *string
+
+	// REQUIRED; Eventhouse destination properties.
+	Properties EventhouseDestinationPropertiesClassification
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the destination.
+	Type *DestinationType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the destination.
+	ID *string
+
+	// The input schemas of the destination.
+	InputSchemas []InputSchema
+}
+
+// GetDestinationResponse implements the DestinationResponseClassification interface for type EventhouseDestinationResponse.
+func (e *EventhouseDestinationResponse) GetDestinationResponse() *DestinationResponse {
+	return &DestinationResponse{
+		Error:        e.Error,
+		ID:           e.ID,
+		InputNodes:   e.InputNodes,
+		InputSchemas: e.InputSchemas,
+		Name:         e.Name,
+		Status:       e.Status,
+		Type:         e.Type,
+	}
+}
+
+// EventhouseDirectIngestionModeDestinationProperties - Eventhouse DirectIngestion mode destination properties.
+type EventhouseDirectIngestionModeDestinationProperties struct {
+	// REQUIRED; The data ingestion mode.
+	DataIngestionMode *EventhouseDestinationPropertiesDataIngestionMode
+
+	// REQUIRED; The Eventhouse item identifier.
+	ItemID *string
+
+	// REQUIRED; The Eventhouse workspace identifier.
+	WorkspaceID *string
+
+	// The connection name.
+	ConnectionName *string
+
+	// The mapping rule name.
+	MappingRuleName *string
+
+	// The KQL table name.
+	TableName *string
+}
+
+// GetEventhouseDestinationProperties implements the EventhouseDestinationPropertiesClassification interface for type EventhouseDirectIngestionModeDestinationProperties.
+func (e *EventhouseDirectIngestionModeDestinationProperties) GetEventhouseDestinationProperties() *EventhouseDestinationProperties {
+	return &EventhouseDestinationProperties{
+		DataIngestionMode: e.DataIngestionMode,
+		ItemID:            e.ItemID,
+		WorkspaceID:       e.WorkspaceID,
+	}
+}
+
+// EventhouseProcessedIngestionModeDestinationProperties - Eventhouse ProcessedIngestion mode destination properties.
+type EventhouseProcessedIngestionModeDestinationProperties struct {
+	// REQUIRED; The data ingestion mode.
+	DataIngestionMode *EventhouseDestinationPropertiesDataIngestionMode
+
+	// REQUIRED; The KQL database name.
+	DatabaseName *string
+
+	// REQUIRED; The Eventhouse item identifier.
+	ItemID *string
+
+	// REQUIRED; The KQL table name.
+	TableName *string
+
+	// REQUIRED; The Eventhouse workspace identifier.
+	WorkspaceID *string
+
+	// Serialization information.
+	InputSerialization SerializationInfoClassification
+}
+
+// GetEventhouseDestinationProperties implements the EventhouseDestinationPropertiesClassification interface for type EventhouseProcessedIngestionModeDestinationProperties.
+func (e *EventhouseProcessedIngestionModeDestinationProperties) GetEventhouseDestinationProperties() *EventhouseDestinationProperties {
+	return &EventhouseDestinationProperties{
+		DataIngestionMode: e.DataIngestionMode,
+		ItemID:            e.ItemID,
+		WorkspaceID:       e.WorkspaceID,
+	}
+}
+
 // Eventstream - An eventstream object.
 type Eventstream struct {
 	// REQUIRED; The item type.
@@ -55,6 +1051,9 @@ type Eventstream struct {
 
 	// The item display name.
 	DisplayName *string
+
+	// READ-ONLY; The folder ID.
+	FolderID *string
 
 	// READ-ONLY; The item ID.
 	ID *string
@@ -73,6 +1072,1118 @@ type Eventstreams struct {
 
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
+}
+
+// ExpandOperator - Expand operator.
+type ExpandOperator struct {
+	// REQUIRED; A list of the references to the input nodes of the operator.
+	InputNodes []NodeReference
+
+	// REQUIRED; The name of the operator.
+	Name *string
+
+	// REQUIRED; Expand operator properties.
+	Properties *ExpandOperatorProperties
+
+	// REQUIRED; The type of the operator. Additional operator types may be added over time.
+	Type *OperatorType
+
+	// The input schemas of the operator.
+	InputSchemas []InputSchema
+}
+
+// GetOperator implements the OperatorClassification interface for type ExpandOperator.
+func (e *ExpandOperator) GetOperator() *Operator {
+	return &Operator{
+		InputNodes:   e.InputNodes,
+		InputSchemas: e.InputSchemas,
+		Name:         e.Name,
+		Type:         e.Type,
+	}
+}
+
+// ExpandOperatorProperties - Expand operator properties.
+type ExpandOperatorProperties struct {
+	// REQUIRED; A list of the columns to expand.
+	Column []ColumnReferenceExpression
+
+	// Missing or empty columns setting. True - Ignore the columns, False - Do not ignore the columns.
+	IgnoreMissingOrEmpty *bool
+}
+
+// FabricCapacityUtilizationEventsSourceProperties - Fabric Capacity Utilization events source properties.
+type FabricCapacityUtilizationEventsSourceProperties struct {
+	// REQUIRED; The capacity identifier.
+	CapacityID *string
+
+	// REQUIRED
+	EventScope *FabricCapacityUtilizationEventsSourcePropertiesEventScope
+
+	// The advanced filters defined in https://learn.microsoft.com/en-us/azure/event-grid/event-filtering#advanced-filtering.
+	Filters any
+
+	// The included event types.
+	IncludedEventTypes []string
+}
+
+// FabricCapacityUtilizationEventsSourceResponse - Fabric Capacity Utilization events source response.
+type FabricCapacityUtilizationEventsSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Fabric Capacity Utilization events source.
+	Properties *FabricCapacityUtilizationEventsSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type FabricCapacityUtilizationEventsSourceResponse.
+func (f *FabricCapacityUtilizationEventsSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        f.Error,
+		ID:           f.ID,
+		InputSchemas: f.InputSchemas,
+		Name:         f.Name,
+		Status:       f.Status,
+		Type:         f.Type,
+	}
+}
+
+// FabricJobEventsSourceProperties - Fabric Job events source properties.
+type FabricJobEventsSourceProperties struct {
+	// REQUIRED
+	EventScope *FabricJobEventsSourcePropertiesEventScope
+
+	// REQUIRED; The item identifier.
+	ItemID *string
+
+	// REQUIRED; The workspace identifier.
+	WorkspaceID *string
+
+	// The advanced filters defined in https://learn.microsoft.com/en-us/azure/event-grid/event-filtering#advanced-filtering.
+	Filters any
+
+	// The included event types.
+	IncludedEventTypes []string
+}
+
+// FabricJobEventsSourceResponse - Fabric Job events source response.
+type FabricJobEventsSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Fabric Job events source.
+	Properties *FabricJobEventsSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type FabricJobEventsSourceResponse.
+func (f *FabricJobEventsSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        f.Error,
+		ID:           f.ID,
+		InputSchemas: f.InputSchemas,
+		Name:         f.Name,
+		Status:       f.Status,
+		Type:         f.Type,
+	}
+}
+
+// FabricOneLakeEventsSourceProperties - Fabric OneLake events source properties.
+type FabricOneLakeEventsSourceProperties struct {
+	// REQUIRED; The item identifier.
+	ItemID *string
+
+	// REQUIRED; The OneLake paths.
+	OneLakePaths []string
+
+	// REQUIRED; The tenant identifier.
+	TenantID *string
+
+	// REQUIRED; The workspace identifier.
+	WorkspaceID *string
+
+	// The advanced filters defined in https://learn.microsoft.com/en-us/azure/event-grid/event-filtering#advanced-filtering.
+	Filters any
+
+	// The included event types.
+	IncludedEventTypes []string
+}
+
+// FabricOneLakeEventsSourceResponse - Fabric OneLake events source response.
+type FabricOneLakeEventsSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Fabric OneLake events source.
+	Properties *FabricOneLakeEventsSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type FabricOneLakeEventsSourceResponse.
+func (f *FabricOneLakeEventsSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        f.Error,
+		ID:           f.ID,
+		InputSchemas: f.InputSchemas,
+		Name:         f.Name,
+		Status:       f.Status,
+		Type:         f.Type,
+	}
+}
+
+// FabricWorkspaceItemEventsSourceProperties - Fabric Workspace Item events source properties.
+type FabricWorkspaceItemEventsSourceProperties struct {
+	// REQUIRED
+	EventScope *FabricWorkspaceItemEventsSourcePropertiesEventScope
+
+	// REQUIRED; The workspace identifier.
+	WorkspaceID *string
+
+	// The advanced filters defined in https://learn.microsoft.com/en-us/azure/event-grid/event-filtering#advanced-filtering.
+	Filters any
+
+	// The included event types.
+	IncludedEventTypes []string
+
+	// The item identifier.
+	ItemID *string
+}
+
+// FabricWorkspaceItemEventsSourceResponse - Fabric Workspace Item events source response.
+type FabricWorkspaceItemEventsSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Fabric Workspace Item events source.
+	Properties *FabricWorkspaceItemEventsSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type FabricWorkspaceItemEventsSourceResponse.
+func (f *FabricWorkspaceItemEventsSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        f.Error,
+		ID:           f.ID,
+		InputSchemas: f.InputSchemas,
+		Name:         f.Name,
+		Status:       f.Status,
+		Type:         f.Type,
+	}
+}
+
+// FilterCondition - Represents a filter condition.
+type FilterCondition struct {
+	// REQUIRED; Represents a reference to a column.
+	Column *ColumnReferenceExpression
+
+	// REQUIRED; The operator type.
+	OperatorType *FilterConditionOperatorType
+
+	// Represents a literal expression.
+	Value *LiteralExpression
+}
+
+// FilterOperator - Filter operator.
+type FilterOperator struct {
+	// REQUIRED; A list of the references to the input nodes of the operator.
+	InputNodes []NodeReference
+
+	// REQUIRED; The name of the operator.
+	Name *string
+
+	// REQUIRED; Filter operator properties.
+	Properties *FilterOperatorProperties
+
+	// REQUIRED; The type of the operator. Additional operator types may be added over time.
+	Type *OperatorType
+
+	// The input schemas of the operator.
+	InputSchemas []InputSchema
+}
+
+// GetOperator implements the OperatorClassification interface for type FilterOperator.
+func (f *FilterOperator) GetOperator() *Operator {
+	return &Operator{
+		InputNodes:   f.InputNodes,
+		InputSchemas: f.InputSchemas,
+		Name:         f.Name,
+		Type:         f.Type,
+	}
+}
+
+// FilterOperatorProperties - Filter operator properties.
+type FilterOperatorProperties struct {
+	// REQUIRED; A list of the filter conditions.
+	Conditions []FilterCondition
+}
+
+// FunctionCallProperties - Properties for a function call operation.
+type FunctionCallProperties struct {
+	// REQUIRED; A list of the arguments for the function.
+	Arguments []any
+
+	// REQUIRED; The name of the function.
+	FunctionName *string
+}
+
+// GooglePubSubSourceProperties - Google Pub/Sub source properties.
+type GooglePubSubSourceProperties struct {
+	// REQUIRED; The Google Pub/Sub data connection identifier.
+	DataConnectionID *string
+}
+
+// GooglePubSubSourceResponse - Google Pub/Sub source response.
+type GooglePubSubSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Google Pub/Sub source.
+	Properties *GooglePubSubSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type GooglePubSubSourceResponse.
+func (g *GooglePubSubSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        g.Error,
+		ID:           g.ID,
+		InputSchemas: g.InputSchemas,
+		Name:         g.Name,
+		Status:       g.Status,
+		Type:         g.Type,
+	}
+}
+
+// GroupByOperator - GroupBy operator.
+type GroupByOperator struct {
+	// REQUIRED; A list of the references to the input nodes of the operator.
+	InputNodes []NodeReference
+
+	// REQUIRED; The name of the operator.
+	Name *string
+
+	// REQUIRED; GroupBy operator properties.
+	Properties *GroupByOperatorProperties
+
+	// REQUIRED; The type of the operator. Additional operator types may be added over time.
+	Type *OperatorType
+
+	// The input schemas of the operator.
+	InputSchemas []InputSchema
+}
+
+// GetOperator implements the OperatorClassification interface for type GroupByOperator.
+func (g *GroupByOperator) GetOperator() *Operator {
+	return &Operator{
+		InputNodes:   g.InputNodes,
+		InputSchemas: g.InputSchemas,
+		Name:         g.Name,
+		Type:         g.Type,
+	}
+}
+
+// GroupByOperatorProperties - GroupBy operator properties.
+type GroupByOperatorProperties struct {
+	// REQUIRED; A list of the aggregations.
+	Aggregations []Aggregation
+
+	// REQUIRED; A list of the columns to group by.
+	GroupBy []ColumnReferenceExpression
+
+	// REQUIRED; Represents the window for the group by operator.
+	Window GroupByWindowClassification
+}
+
+// GroupByWindow - Represents the window for the group by operator.
+type GroupByWindow struct {
+	// REQUIRED; The type of the window.
+	Type *GroupByWindowType
+}
+
+// GetGroupByWindow implements the GroupByWindowClassification interface for type GroupByWindow.
+func (g *GroupByWindow) GetGroupByWindow() *GroupByWindow { return g }
+
+type HoppingWindow struct {
+	// REQUIRED; The properties for a hopping window.
+	Properties *HoppingWindowProperties
+
+	// REQUIRED; The type of the window.
+	Type *GroupByWindowType
+}
+
+// GetGroupByWindow implements the GroupByWindowClassification interface for type HoppingWindow.
+func (h *HoppingWindow) GetGroupByWindow() *GroupByWindow {
+	return &GroupByWindow{
+		Type: h.Type,
+	}
+}
+
+// HoppingWindowProperties - Properties for a hopping window.
+type HoppingWindowProperties struct {
+	// REQUIRED; Represents the duration.
+	Duration *OperatorCommonDuration
+
+	// REQUIRED; Represents the duration.
+	HopSize *OperatorCommonDuration
+
+	// Represents the duration.
+	Offset *OperatorCommonDuration
+}
+
+// InColumnAggregation - Represents an aggregation on a column.
+type InColumnAggregation struct {
+	// REQUIRED; The aggregation function.
+	AggregationFunction *AggregationFunction
+
+	// REQUIRED; Represents a reference to a column.
+	Column *ColumnReferenceExpression
+
+	// REQUIRED; Represents the duration.
+	Duration *OperatorCommonDuration
+
+	// The alias of the aggregation.
+	Alias *string
+
+	// A list of the arguments for the aggregation.
+	Arguments []any
+
+	// A list of the columns to partition by.
+	PartitionBy []ColumnReferenceExpression
+}
+
+// InputSchema - Represents the input schema of the source, destination, or operator.
+type InputSchema struct {
+	// REQUIRED; The name of the input schema.
+	Name *string
+
+	// REQUIRED; Represents the schema of the data.
+	Schema *Schema
+}
+
+// JSONSerializationInfo - JSON serialization information.
+type JSONSerializationInfo struct {
+	// REQUIRED; JSON serialization properties.
+	Properties *JSONSerializationProperties
+
+	// REQUIRED; The serialization type.
+	Type *SerializationType
+}
+
+// GetSerializationInfo implements the SerializationInfoClassification interface for type JSONSerializationInfo.
+func (j *JSONSerializationInfo) GetSerializationInfo() *SerializationInfo {
+	return &SerializationInfo{
+		Type: j.Type,
+	}
+}
+
+// JSONSerializationProperties - JSON serialization properties.
+type JSONSerializationProperties struct {
+	// The encoding type.
+	Encoding *JSONSerializationPropertiesEncoding
+}
+
+// JoinOn - Represents a join condition.
+type JoinOn struct {
+	// REQUIRED; Represents a reference to a column.
+	Left *ColumnReferenceExpression
+
+	// REQUIRED; Represents a reference to a column.
+	Right *ColumnReferenceExpression
+}
+
+// JoinOperator - Join operator.
+type JoinOperator struct {
+	// REQUIRED; A list of the references to the input nodes of the operator.
+	InputNodes []NodeReference
+
+	// REQUIRED; The name of the operator.
+	Name *string
+
+	// REQUIRED; Join operator properties.
+	Properties *JoinOperatorProperties
+
+	// REQUIRED; The type of the operator. Additional operator types may be added over time.
+	Type *OperatorType
+
+	// The input schemas of the operator.
+	InputSchemas []InputSchema
+}
+
+// GetOperator implements the OperatorClassification interface for type JoinOperator.
+func (j *JoinOperator) GetOperator() *Operator {
+	return &Operator{
+		InputNodes:   j.InputNodes,
+		InputSchemas: j.InputSchemas,
+		Name:         j.Name,
+		Type:         j.Type,
+	}
+}
+
+// JoinOperatorProperties - Join operator properties.
+type JoinOperatorProperties struct {
+	// REQUIRED; Represents the duration.
+	Duration *OperatorCommonDuration
+
+	// REQUIRED; The type of the join.
+	JoinType *JoinOperatorPropertiesJoinType
+
+	// A list of the join conditions.
+	JoinOn []JoinOn
+}
+
+// LakehouseDestinationProperties - Lakehouse destination properties.
+type LakehouseDestinationProperties struct {
+	// REQUIRED; The delta table name.
+	DeltaTable *string
+
+	// REQUIRED; The Lakehouse item identifier.
+	ItemID *string
+
+	// REQUIRED; The Lakehouse workspace identifier.
+	WorkspaceID *string
+
+	// Serialization information.
+	InputSerialization SerializationInfoClassification
+
+	// The maximum duration in seconds for an output batch. Default is 120.
+	MaximumDurationInSeconds *int32
+
+	// The minimum number of rows for an output batch. Default is 100000.
+	MinimumRows *int32
+
+	// The schema name.
+	Schema *string
+}
+
+// LakehouseDestinationResponse - Lakehouse destination response.
+type LakehouseDestinationResponse struct {
+	// REQUIRED; A list of the references to the input nodes of the destination.
+	InputNodes []NodeReference
+
+	// REQUIRED; The unique name of the destination.
+	Name *string
+
+	// REQUIRED; The properties of the Lakehouse destination.
+	Properties *LakehouseDestinationProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the destination.
+	Type *DestinationType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the destination.
+	ID *string
+
+	// The input schemas of the destination.
+	InputSchemas []InputSchema
+}
+
+// GetDestinationResponse implements the DestinationResponseClassification interface for type LakehouseDestinationResponse.
+func (l *LakehouseDestinationResponse) GetDestinationResponse() *DestinationResponse {
+	return &DestinationResponse{
+		Error:        l.Error,
+		ID:           l.ID,
+		InputNodes:   l.InputNodes,
+		InputSchemas: l.InputSchemas,
+		Name:         l.Name,
+		Status:       l.Status,
+		Type:         l.Type,
+	}
+}
+
+// LiteralExpression - Represents a literal expression.
+type LiteralExpression struct {
+	// REQUIRED; The data type of the literal expression.
+	DataType *DataType
+
+	// REQUIRED; The value of the literal expression.
+	Value *string
+}
+
+// ManageFieldsCastOperation - Represents a manage fields cast operation.
+type ManageFieldsCastOperation struct {
+	// REQUIRED; The operation type.
+	OperationType *OperationType
+
+	// REQUIRED; The properties for a manage fields cast operation.
+	Properties *CastProperties
+
+	// The alias of the operation.
+	Alias *string
+}
+
+// GetManageFieldsOperation implements the ManageFieldsOperationClassification interface for type ManageFieldsCastOperation.
+func (m *ManageFieldsCastOperation) GetManageFieldsOperation() *ManageFieldsOperation {
+	return &ManageFieldsOperation{
+		Alias:         m.Alias,
+		OperationType: m.OperationType,
+	}
+}
+
+// ManageFieldsFunctionCallOperation - Represents a manage fields function call operation.
+type ManageFieldsFunctionCallOperation struct {
+	// REQUIRED; The operation type.
+	OperationType *OperationType
+
+	// REQUIRED; The properties for a manage fields function call operation.
+	Properties *FunctionCallProperties
+
+	// The alias of the operation.
+	Alias *string
+}
+
+// GetManageFieldsOperation implements the ManageFieldsOperationClassification interface for type ManageFieldsFunctionCallOperation.
+func (m *ManageFieldsFunctionCallOperation) GetManageFieldsOperation() *ManageFieldsOperation {
+	return &ManageFieldsOperation{
+		Alias:         m.Alias,
+		OperationType: m.OperationType,
+	}
+}
+
+// ManageFieldsOperation - Represents an operation on a column.
+type ManageFieldsOperation struct {
+	// REQUIRED; The operation type.
+	OperationType *OperationType
+
+	// The alias of the operation.
+	Alias *string
+}
+
+// GetManageFieldsOperation implements the ManageFieldsOperationClassification interface for type ManageFieldsOperation.
+func (m *ManageFieldsOperation) GetManageFieldsOperation() *ManageFieldsOperation { return m }
+
+// ManageFieldsOperator - ManageFields operator.
+type ManageFieldsOperator struct {
+	// REQUIRED; A list of the references to the input nodes of the operator.
+	InputNodes []NodeReference
+
+	// REQUIRED; The name of the operator.
+	Name *string
+
+	// REQUIRED; ManageFields operator properties.
+	Properties *ManageFieldsOperatorProperties
+
+	// REQUIRED; The type of the operator. Additional operator types may be added over time.
+	Type *OperatorType
+
+	// The input schemas of the operator.
+	InputSchemas []InputSchema
+}
+
+// GetOperator implements the OperatorClassification interface for type ManageFieldsOperator.
+func (m *ManageFieldsOperator) GetOperator() *Operator {
+	return &Operator{
+		InputNodes:   m.InputNodes,
+		InputSchemas: m.InputSchemas,
+		Name:         m.Name,
+		Type:         m.Type,
+	}
+}
+
+// ManageFieldsOperatorProperties - ManageFields operator properties.
+type ManageFieldsOperatorProperties struct {
+	// REQUIRED; A list of the columns to manage.
+	Columns []ManageFieldsOperationClassification
+}
+
+// ManageFieldsRenameOperation - Represents a manage fields rename operation.
+type ManageFieldsRenameOperation struct {
+	// REQUIRED; The operation type.
+	OperationType *OperationType
+
+	// REQUIRED; The properties for a manage fields rename operation.
+	Properties *RenameProperties
+
+	// The alias of the operation.
+	Alias *string
+}
+
+// GetManageFieldsOperation implements the ManageFieldsOperationClassification interface for type ManageFieldsRenameOperation.
+func (m *ManageFieldsRenameOperation) GetManageFieldsOperation() *ManageFieldsOperation {
+	return &ManageFieldsOperation{
+		Alias:         m.Alias,
+		OperationType: m.OperationType,
+	}
+}
+
+// MySQLCDCSourceResponse - MySQL CDC source response.
+type MySQLCDCSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; Anything
+	Properties any
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type MySQLCDCSourceResponse.
+func (m *MySQLCDCSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        m.Error,
+		ID:           m.ID,
+		InputSchemas: m.InputSchemas,
+		Name:         m.Name,
+		Status:       m.Status,
+		Type:         m.Type,
+	}
+}
+
+// NodeReference - Represents a reference to a node using its unique name.
+type NodeReference struct {
+	// REQUIRED; The unique name of the node.
+	Name *string
+}
+
+// Operator - Represents an Eventstream operator.
+type Operator struct {
+	// REQUIRED; A list of the references to the input nodes of the operator.
+	InputNodes []NodeReference
+
+	// REQUIRED; The name of the operator.
+	Name *string
+
+	// REQUIRED; The type of the operator. Additional operator types may be added over time.
+	Type *OperatorType
+
+	// The input schemas of the operator.
+	InputSchemas []InputSchema
+}
+
+// GetOperator implements the OperatorClassification interface for type Operator.
+func (o *Operator) GetOperator() *Operator { return o }
+
+// OperatorCommonDuration - Represents the duration.
+type OperatorCommonDuration struct {
+	// REQUIRED; The unit of the duration.
+	Unit *OperatorCommonDurationUnit
+
+	// REQUIRED; The value of the duration.
+	Value *int32
+}
+
+// PostgreSQLCDCSourceProperties - PostgreSQL CDC source properties.
+type PostgreSQLCDCSourceProperties struct {
+	// REQUIRED; The SQL CDC data connection identifier.
+	DataConnectionID *string
+
+	// REQUIRED; The slot name for the CDC connector.
+	SlotName *string
+
+	// REQUIRED; The table name.
+	TableName *string
+
+	// The port number. Default is 5432.
+	Port *int32
+}
+
+// PostgreSQLCDCSourceResponse - PostgreSQL CDC source response.
+type PostgreSQLCDCSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the PostgreSQL CDC source.
+	Properties *PostgreSQLCDCSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type PostgreSQLCDCSourceResponse.
+func (p *PostgreSQLCDCSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        p.Error,
+		ID:           p.ID,
+		InputSchemas: p.InputSchemas,
+		Name:         p.Name,
+		Status:       p.Status,
+		Type:         p.Type,
+	}
+}
+
+// RenameProperties - Properties for a rename operation.
+type RenameProperties struct {
+	// REQUIRED; Represents a reference to a column.
+	Column *ColumnReferenceExpression
+}
+
+// SQLServerOnVMDBCDCSourceResponse - Azure SQL Server on VM DB CDC source response.
+type SQLServerOnVMDBCDCSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; Base SQL CDC source properties.
+	Properties *BaseSQLCDCSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type SQLServerOnVMDBCDCSourceResponse.
+func (s *SQLServerOnVMDBCDCSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        s.Error,
+		ID:           s.ID,
+		InputSchemas: s.InputSchemas,
+		Name:         s.Name,
+		Status:       s.Status,
+		Type:         s.Type,
+	}
+}
+
+// SampleDataSourceProperties - Sample data source properties.
+type SampleDataSourceProperties struct {
+	// REQUIRED; The sample data type.
+	Type *SampleDataSourcePropertiesType
+}
+
+// SampleDataSourceResponse - Sample data events source response.
+type SampleDataSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the sample data events source.
+	Properties *SampleDataSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type SampleDataSourceResponse.
+func (s *SampleDataSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        s.Error,
+		ID:           s.ID,
+		InputSchemas: s.InputSchemas,
+		Name:         s.Name,
+		Status:       s.Status,
+		Type:         s.Type,
+	}
+}
+
+// Schema - Represents the schema of the data.
+type Schema struct {
+	// REQUIRED; A list of the columns in the schema.
+	Columns []ColumnSchema
+}
+
+// SerializationInfo - Serialization information.
+type SerializationInfo struct {
+	// REQUIRED; The serialization type.
+	Type *SerializationType
+}
+
+// GetSerializationInfo implements the SerializationInfoClassification interface for type SerializationInfo.
+func (s *SerializationInfo) GetSerializationInfo() *SerializationInfo { return s }
+
+type SessionWindow struct {
+	// REQUIRED; The properties for a session window.
+	Properties *SessionWindowProperties
+
+	// REQUIRED; The type of the window.
+	Type *GroupByWindowType
+}
+
+// GetGroupByWindow implements the GroupByWindowClassification interface for type SessionWindow.
+func (s *SessionWindow) GetGroupByWindow() *GroupByWindow {
+	return &GroupByWindow{
+		Type: s.Type,
+	}
+}
+
+// SessionWindowProperties - Properties for a session window.
+type SessionWindowProperties struct {
+	// REQUIRED; Represents the duration.
+	MaxDuration *OperatorCommonDuration
+
+	// REQUIRED; Represents the duration.
+	Timeout *OperatorCommonDuration
+
+	// Represents a reference to a column.
+	PartitionBy *ColumnReferenceExpression
+}
+
+type SlidingWindow struct {
+	// REQUIRED; The properties for a sliding window.
+	Properties *SlidingWindowProperties
+
+	// REQUIRED; The type of the window.
+	Type *GroupByWindowType
+}
+
+// GetGroupByWindow implements the GroupByWindowClassification interface for type SlidingWindow.
+func (s *SlidingWindow) GetGroupByWindow() *GroupByWindow {
+	return &GroupByWindow{
+		Type: s.Type,
+	}
+}
+
+// SlidingWindowProperties - Properties for a sliding window.
+type SlidingWindowProperties struct {
+	// REQUIRED; Represents the duration.
+	Duration *OperatorCommonDuration
+}
+
+type SnapshotWindow struct {
+	// REQUIRED; The properties for a snapshot window.
+	Properties any
+
+	// REQUIRED; The type of the window.
+	Type *GroupByWindowType
+}
+
+// GetGroupByWindow implements the GroupByWindowClassification interface for type SnapshotWindow.
+func (s *SnapshotWindow) GetGroupByWindow() *GroupByWindow {
+	return &GroupByWindow{
+		Type: s.Type,
+	}
+}
+
+// SourceConnectionResponse - Represents the connection information for a source custom endpoint.
+type SourceConnectionResponse struct {
+	// REQUIRED; The name of the EventHub.
+	EventHubName *string
+
+	// REQUIRED; The fully qualified namespace of the EventHub.
+	FullyQualifiedNamespace *string
+
+	// The access keys.
+	AccessKeys any
+}
+
+// SourceResponse - Represents an Eventstream source response.
+type SourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type SourceResponse.
+func (s *SourceResponse) GetSourceResponse() *SourceResponse { return s }
+
+// StreamResponse - Represents an Eventstream default or derived stream.
+type StreamResponse struct {
+	// REQUIRED; The unique identifier of the stream.
+	ID *string
+
+	// REQUIRED; A list of the references to the input nodes of the stream.
+	InputNodes []NodeReference
+
+	// REQUIRED; The unique name of the stream.
+	Name *string
+
+	// REQUIRED; The type of the stream.
+	Type *StreamType
+}
+
+// GetStreamResponse implements the StreamResponseClassification interface for type StreamResponse.
+func (s *StreamResponse) GetStreamResponse() *StreamResponse { return s }
+
+// TopologyResponse - Represents the Eventstream topology response.
+type TopologyResponse struct {
+	// Represents the compatibility level of the Eventstream topology. Additional compatibility levels may be added over time.
+	CompatibilityLevel *CompatibilityLevel
+
+	// A list of Eventstream destinations.
+	Destinations []DestinationResponseClassification
+
+	// A list of Eventstream operators.
+	Operators []OperatorClassification
+
+	// A list of Eventstream sources.
+	Sources []SourceResponseClassification
+
+	// A list of Eventstream default and derived streams.
+	Streams []StreamResponseClassification
+}
+
+type TumblingWindow struct {
+	// REQUIRED; The properties for a tumbling window.
+	Properties *TumblingWindowProperties
+
+	// REQUIRED; The type of the window.
+	Type *GroupByWindowType
+}
+
+// GetGroupByWindow implements the GroupByWindowClassification interface for type TumblingWindow.
+func (t *TumblingWindow) GetGroupByWindow() *GroupByWindow {
+	return &GroupByWindow{
+		Type: t.Type,
+	}
+}
+
+// TumblingWindowProperties - Properties for a tumbling window.
+type TumblingWindowProperties struct {
+	// REQUIRED; Represents the duration.
+	Duration *OperatorCommonDuration
+
+	// Represents the duration.
+	Offset *OperatorCommonDuration
+}
+
+// UnionOperator - Union operator.
+type UnionOperator struct {
+	// REQUIRED; A list of the references to the input nodes of the operator.
+	InputNodes []NodeReference
+
+	// REQUIRED; The name of the operator.
+	Name *string
+
+	// REQUIRED; Union operator properties.
+	Properties any
+
+	// REQUIRED; The type of the operator. Additional operator types may be added over time.
+	Type *OperatorType
+
+	// The input schemas of the operator.
+	InputSchemas []InputSchema
+}
+
+// GetOperator implements the OperatorClassification interface for type UnionOperator.
+func (u *UnionOperator) GetOperator() *Operator {
+	return &Operator{
+		InputNodes:   u.InputNodes,
+		InputSchemas: u.InputSchemas,
+		Name:         u.Name,
+		Type:         u.Type,
+	}
 }
 
 // UpdateEventstreamDefinitionRequest - Update eventstream public definition request payload.

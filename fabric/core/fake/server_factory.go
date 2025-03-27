@@ -22,6 +22,7 @@ type ServerFactory struct {
 	ConnectionsServer               ConnectionsServer
 	DeploymentPipelinesServer       DeploymentPipelinesServer
 	ExternalDataSharesServer        ExternalDataSharesServer
+	FoldersServer                   FoldersServer
 	GatewaysServer                  GatewaysServer
 	GitServer                       GitServer
 	ItemsServer                     ItemsServer
@@ -42,6 +43,7 @@ type ServerFactoryTransport struct {
 	trConnectionsServer               *ConnectionsServerTransport
 	trDeploymentPipelinesServer       *DeploymentPipelinesServerTransport
 	trExternalDataSharesServer        *ExternalDataSharesServerTransport
+	trFoldersServer                   *FoldersServerTransport
 	trGatewaysServer                  *GatewaysServerTransport
 	trGitServer                       *GitServerTransport
 	trItemsServer                     *ItemsServerTransport
@@ -92,6 +94,9 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return NewExternalDataSharesServerTransport(&s.srv.ExternalDataSharesServer)
 		})
 		resp, err = s.trExternalDataSharesServer.Do(req)
+	case "FoldersClient":
+		initServer(s, &s.trFoldersServer, func() *FoldersServerTransport { return NewFoldersServerTransport(&s.srv.FoldersServer) })
+		resp, err = s.trFoldersServer.Do(req)
 	case "GatewaysClient":
 		initServer(s, &s.trGatewaysServer, func() *GatewaysServerTransport { return NewGatewaysServerTransport(&s.srv.GatewaysServer) })
 		resp, err = s.trGatewaysServer.Do(req)

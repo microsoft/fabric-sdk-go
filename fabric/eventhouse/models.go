@@ -24,9 +24,11 @@ type CreateEventhouseRequest struct {
 
 // CreationPayload - Eventhouse item payload
 type CreationPayload struct {
-	// When activated, the eventhouse is always available at the selected minimum level and you pay at least the minimum compute
-	// selected. Supported values include [0, 2.25, 4.25, 8.5, 13, 18, 26, 34, 50] or
-	// any number between 51 and 322. For more information, see minimum consumption [/fabric/real-time-intelligence/eventhouse#minimum-consumption]
+	// Use Minimum consumption for highly time-sensitive systems to keep the service always available at a selected minimum level.
+	// You pay for the minimum consumption level or actual consumption if above the
+	// minimum. Supported values include [0, 2.25, 4.25, 8.5, 13, 18, 26, 34, 50] or any number between 51 and 322. For more information,
+	// see minimum consumption
+	// [/fabric/real-time-intelligence/eventhouse#minimum-consumption].
 	MinimumConsumptionUnits *float64
 }
 
@@ -71,6 +73,9 @@ type Eventhouse struct {
 	// The eventhouse properties.
 	Properties *Properties
 
+	// READ-ONLY; The folder ID.
+	FolderID *string
+
 	// READ-ONLY; The item ID.
 	ID *string
 
@@ -100,6 +105,13 @@ type Properties struct {
 
 	// List of all KQL database children
 	DatabasesItemIDs []string
+
+	// Use Minimum consumption for highly time-sensitive systems to keep the service always available at a selected minimum level.
+	// You pay for the minimum consumption level or actual consumption if above the
+	// minimum. Supported values include [0, 2.25, 4.25, 8.5, 13, 18, 26, 34, 50] or any number between 51 and 322. For more information,
+	// see minimum consumption
+	// [/fabric/real-time-intelligence/eventhouse#minimum-consumption].
+	MinimumConsumptionUnits *float64
 }
 
 // UpdateEventhouseDefinitionRequest - Update eventhouse public definition request payload.

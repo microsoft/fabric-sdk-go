@@ -205,7 +205,10 @@ type CommitToGitRequest struct {
 	// Caller-free comment for this commit. Maximum length is 300 characters. If no comment is provided by the caller, use the
 	// default Git provider comment.
 	Comment *string
-	Items   []ItemIdentifier
+
+	// Specific items to commit. This is relevant only for Selective commit mode. The items can be retrieved from the Git Status
+	// [/rest/api/fabric/core/git/get-status] API.
+	Items []ItemIdentifier
 
 	// Full SHA hash that the workspace is synced to. The hash can be retrieved from the Git Status [/rest/api/fabric/core/git/get-status]
 	// API.
@@ -622,6 +625,15 @@ type CreateExternalDataShareRequest struct {
 	Recipient *ExternalDataShareRecipient
 }
 
+// CreateFolderRequest - Create folder request payload.
+type CreateFolderRequest struct {
+	// REQUIRED; The folder display name. The name must meet Folder name requirements [/fabric/get-started/workspaces-folders#folder-name-requirements]
+	DisplayName *string
+
+	// The parent folder ID. If not specified or null, the folder is created with the workspace as its parent folder.
+	ParentFolderID *string
+}
+
 // CreateGatewayRequest - The base object of create gateway request.
 type CreateGatewayRequest struct {
 	// REQUIRED; The type of the gateway.
@@ -651,6 +663,9 @@ type CreateItemRequest struct {
 
 	// The item description. Maximum length is 256 characters.
 	Description *string
+
+	// The folder ID. If not specified or null, the item is created with the workspace as its folder.
+	FolderID *string
 }
 
 // CreateManagedPrivateEndpointRequest - Create managed private endpoint request payload.
@@ -1308,6 +1323,32 @@ type FabricItemMember struct {
 	SourcePath *string
 }
 
+// Folder - A folder object.
+type Folder struct {
+	// READ-ONLY; The folder display name.
+	DisplayName *string
+
+	// READ-ONLY; The folder ID.
+	ID *string
+
+	// READ-ONLY; The parent folder ID. If the parent folder is a workspace, parentFolderId is either not specified or null.
+	ParentFolderID *string
+
+	// READ-ONLY; The workspace ID.
+	WorkspaceID *string
+}
+
+type Folders struct {
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+
+	// READ-ONLY; A list of folders.
+	Value []Folder
+}
+
 // Gateway - The base object of gateway.
 type Gateway struct {
 	// REQUIRED; The object ID of the gateway.
@@ -1498,6 +1539,9 @@ type Item struct {
 
 	// The item display name.
 	DisplayName *string
+
+	// READ-ONLY; The folder ID.
+	FolderID *string
 
 	// READ-ONLY; The item ID.
 	ID *string
@@ -1828,6 +1872,12 @@ type MicrosoftEntraMember struct {
 
 	// The type of Microsoft Entra ID object. Additional objectType types may be added over time.
 	ObjectType *ObjectType
+}
+
+// MoveFolderRequest - Move folder request.
+type MoveFolderRequest struct {
+	// The destination folder ID. If not provided, the workspace is used as the destination folder.
+	TargetFolderID *string
 }
 
 // NoneGitCredentialsResponse - Not configured Git credentials.
@@ -2261,6 +2311,12 @@ type UpdateCredentialDetails struct {
 	// Whether the connection should skip the test connection during creation and update. True - Skip the test connection, False
 	// - Do not skip the test connection.
 	SkipTestConnection *bool
+}
+
+// UpdateFolderRequest - Update folder request.
+type UpdateFolderRequest struct {
+	// REQUIRED; The folder display name. The name must meet Folder name requirements [/fabric/get-started/workspaces-folders#folder-name-requirements]
+	DisplayName *string
 }
 
 // UpdateFromGitRequest - Contains the update from Git request data.

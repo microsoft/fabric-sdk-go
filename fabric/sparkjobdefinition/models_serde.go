@@ -240,6 +240,7 @@ func (s SparkJobDefinition) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "description", s.Description)
 	populate(objectMap, "displayName", s.DisplayName)
+	populate(objectMap, "folderId", s.FolderID)
 	populate(objectMap, "id", s.ID)
 	populate(objectMap, "properties", s.Properties)
 	populate(objectMap, "type", s.Type)
@@ -261,6 +262,9 @@ func (s *SparkJobDefinition) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "displayName":
 			err = unpopulate(val, "DisplayName", &s.DisplayName)
+			delete(rawMsg, key)
+		case "folderId":
+			err = unpopulate(val, "FolderID", &s.FolderID)
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &s.ID)

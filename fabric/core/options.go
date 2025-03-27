@@ -144,6 +144,46 @@ type ExternalDataSharesClientRevokeExternalDataShareOptions struct {
 	// placeholder for future optional parameters
 }
 
+// FoldersClientCreateFolderOptions contains the optional parameters for the FoldersClient.CreateFolder method.
+type FoldersClientCreateFolderOptions struct {
+	// placeholder for future optional parameters
+}
+
+// FoldersClientDeleteFolderOptions contains the optional parameters for the FoldersClient.DeleteFolder method.
+type FoldersClientDeleteFolderOptions struct {
+	// placeholder for future optional parameters
+}
+
+// FoldersClientGetFolderOptions contains the optional parameters for the FoldersClient.GetFolder method.
+type FoldersClientGetFolderOptions struct {
+	// placeholder for future optional parameters
+}
+
+// FoldersClientListFoldersOptions contains the optional parameters for the FoldersClient.NewListFoldersPager method.
+type FoldersClientListFoldersOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+
+	// Lists folders in a folder and its nested folders, or just a folder only. True - All folders in the folder and its nested
+	// folders are listed, False - Only folders in the folder are listed. The default
+	// value is true.
+	Recursive *bool
+
+	// This parameter allows users to filter folders based on a specific root folder. If not provided, the workspace is used as
+	// the root folder.
+	RootFolderID *string
+}
+
+// FoldersClientMoveFolderOptions contains the optional parameters for the FoldersClient.MoveFolder method.
+type FoldersClientMoveFolderOptions struct {
+	// placeholder for future optional parameters
+}
+
+// FoldersClientUpdateFolderOptions contains the optional parameters for the FoldersClient.UpdateFolder method.
+type FoldersClientUpdateFolderOptions struct {
+	// placeholder for future optional parameters
+}
+
 // GatewaysClientAddGatewayRoleAssignmentOptions contains the optional parameters for the GatewaysClient.AddGatewayRoleAssignment
 // method.
 type GatewaysClientAddGatewayRoleAssignmentOptions struct {
@@ -316,6 +356,15 @@ type ItemsClientListItemConnectionsOptions struct {
 type ItemsClientListItemsOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
+
+	// Lists items in a folder and its nested folders, or just a folder only. True - All items in the folder and its nested folders
+	// are listed, False - Only items in the folder are listed. The default value
+	// is true.
+	Recursive *bool
+
+	// This parameter allows users to filter items based on a specific root folder. If not provided, the workspace is used as
+	// the root folder.
+	RootFolderID *string
 
 	// The item's type.
 	Type *string

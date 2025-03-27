@@ -245,18 +245,15 @@ func PossibleErrDeploymentPipelineValues() []string {
 }
 
 type errDomain struct {
-	AssignGuestUserAsDomainAdminError          error
 	DomainSpecificUsersScopeCannotBeEmptyError error
 }
 
 var ErrDomain = errDomain{
-	AssignGuestUserAsDomainAdminError:          errors.New("AssignGuestUserAsDomainAdminError"),
 	DomainSpecificUsersScopeCannotBeEmptyError: errors.New("DomainSpecificUsersScopeCannotBeEmptyError"),
 }
 
 func PossibleErrDomainValues() []string {
 	return []string{
-		ErrDomain.AssignGuestUserAsDomainAdminError.Error(),
 		ErrDomain.DomainSpecificUsersScopeCannotBeEmptyError.Error(),
 	}
 }

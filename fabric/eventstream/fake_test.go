@@ -18,6 +18,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 
 	"reflect"
+	"time"
 
 	"github.com/stretchr/testify/suite"
 
@@ -344,4 +345,297 @@ func (testsuite *FakeTestSuite) TestItems_UpdateEventstreamDefinition() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get an eventstream topology example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEventstreamID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleEventstreamID = "8c500070-073f-4a88-b478-8fabe1941c52"
+
+	testsuite.serverFactory.TopologyServer.GetEventstreamTopology = func(ctx context.Context, workspaceID string, eventstreamID string, options *eventstream.TopologyClientGetEventstreamTopologyOptions) (resp azfake.Responder[eventstream.TopologyClientGetEventstreamTopologyResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEventstreamID, eventstreamID)
+		resp = azfake.Responder[eventstream.TopologyClientGetEventstreamTopologyResponse]{}
+		resp.SetResponse(http.StatusOK, eventstream.TopologyClientGetEventstreamTopologyResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTopologyClient()
+	_, err = client.GetEventstreamTopology(ctx, exampleWorkspaceID, exampleEventstreamID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestTopology_PauseEventstream() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Pause running an eventstream example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEventstreamID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleEventstreamID = "8c500070-073f-4a88-b478-8fabe1941c52"
+
+	testsuite.serverFactory.TopologyServer.PauseEventstream = func(ctx context.Context, workspaceID string, eventstreamID string, options *eventstream.TopologyClientPauseEventstreamOptions) (resp azfake.Responder[eventstream.TopologyClientPauseEventstreamResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEventstreamID, eventstreamID)
+		resp = azfake.Responder[eventstream.TopologyClientPauseEventstreamResponse]{}
+		resp.SetResponse(http.StatusOK, eventstream.TopologyClientPauseEventstreamResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTopologyClient()
+	_, err = client.PauseEventstream(ctx, exampleWorkspaceID, exampleEventstreamID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestTopology_ResumeEventstream() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Resume running an eventstream example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEventstreamID string
+	var exampleResumeEventstreamRequest eventstream.DataSourceStartRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleEventstreamID = "8c500070-073f-4a88-b478-8fabe1941c52"
+	exampleResumeEventstreamRequest = eventstream.DataSourceStartRequest{
+		StartType: to.Ptr(eventstream.DataSourceStartTypeNow),
+	}
+
+	testsuite.serverFactory.TopologyServer.ResumeEventstream = func(ctx context.Context, workspaceID string, eventstreamID string, resumeEventstreamRequest eventstream.DataSourceStartRequest, options *eventstream.TopologyClientResumeEventstreamOptions) (resp azfake.Responder[eventstream.TopologyClientResumeEventstreamResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEventstreamID, eventstreamID)
+		testsuite.Require().True(reflect.DeepEqual(exampleResumeEventstreamRequest, resumeEventstreamRequest))
+		resp = azfake.Responder[eventstream.TopologyClientResumeEventstreamResponse]{}
+		resp.SetResponse(http.StatusOK, eventstream.TopologyClientResumeEventstreamResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTopologyClient()
+	_, err = client.ResumeEventstream(ctx, exampleWorkspaceID, exampleEventstreamID, exampleResumeEventstreamRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestTopology_GetEventstreamSource() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get an eventstream source example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEventstreamID string
+	var exampleSourceID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleEventstreamID = "8c500070-073f-4a88-b478-8fabe1941c52"
+	exampleSourceID = "e2886002-d696-4c05-969c-51361365cc24"
+
+	testsuite.serverFactory.TopologyServer.GetEventstreamSource = func(ctx context.Context, workspaceID string, eventstreamID string, sourceID string, options *eventstream.TopologyClientGetEventstreamSourceOptions) (resp azfake.Responder[eventstream.TopologyClientGetEventstreamSourceResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEventstreamID, eventstreamID)
+		testsuite.Require().Equal(exampleSourceID, sourceID)
+		resp = azfake.Responder[eventstream.TopologyClientGetEventstreamSourceResponse]{}
+		resp.SetResponse(http.StatusOK, eventstream.TopologyClientGetEventstreamSourceResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTopologyClient()
+	_, err = client.GetEventstreamSource(ctx, exampleWorkspaceID, exampleEventstreamID, exampleSourceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestTopology_GetEventstreamDestination() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get an eventstream destination example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEventstreamID string
+	var exampleDestinationID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleEventstreamID = "8c500070-073f-4a88-b478-8fabe1941c52"
+	exampleDestinationID = "2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"
+
+	testsuite.serverFactory.TopologyServer.GetEventstreamDestination = func(ctx context.Context, workspaceID string, eventstreamID string, destinationID string, options *eventstream.TopologyClientGetEventstreamDestinationOptions) (resp azfake.Responder[eventstream.TopologyClientGetEventstreamDestinationResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEventstreamID, eventstreamID)
+		testsuite.Require().Equal(exampleDestinationID, destinationID)
+		resp = azfake.Responder[eventstream.TopologyClientGetEventstreamDestinationResponse]{}
+		resp.SetResponse(http.StatusOK, eventstream.TopologyClientGetEventstreamDestinationResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTopologyClient()
+	_, err = client.GetEventstreamDestination(ctx, exampleWorkspaceID, exampleEventstreamID, exampleDestinationID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestTopology_GetEventstreamSourceConnection() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get an eventstream source connection example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEventstreamID string
+	var exampleSourceID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleEventstreamID = "8c500070-073f-4a88-b478-8fabe1941c52"
+	exampleSourceID = "f344e2e0-e846-4991-ac26-d27dfb6a73c2"
+
+	testsuite.serverFactory.TopologyServer.GetEventstreamSourceConnection = func(ctx context.Context, workspaceID string, eventstreamID string, sourceID string, options *eventstream.TopologyClientGetEventstreamSourceConnectionOptions) (resp azfake.Responder[eventstream.TopologyClientGetEventstreamSourceConnectionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEventstreamID, eventstreamID)
+		testsuite.Require().Equal(exampleSourceID, sourceID)
+		resp = azfake.Responder[eventstream.TopologyClientGetEventstreamSourceConnectionResponse]{}
+		resp.SetResponse(http.StatusOK, eventstream.TopologyClientGetEventstreamSourceConnectionResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTopologyClient()
+	_, err = client.GetEventstreamSourceConnection(ctx, exampleWorkspaceID, exampleEventstreamID, exampleSourceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestTopology_GetEventstreamDestinationConnection() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get an eventstream destination connection example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEventstreamID string
+	var exampleDestinationID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleEventstreamID = "8c500070-073f-4a88-b478-8fabe1941c52"
+	exampleDestinationID = "2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"
+
+	testsuite.serverFactory.TopologyServer.GetEventstreamDestinationConnection = func(ctx context.Context, workspaceID string, eventstreamID string, destinationID string, options *eventstream.TopologyClientGetEventstreamDestinationConnectionOptions) (resp azfake.Responder[eventstream.TopologyClientGetEventstreamDestinationConnectionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEventstreamID, eventstreamID)
+		testsuite.Require().Equal(exampleDestinationID, destinationID)
+		resp = azfake.Responder[eventstream.TopologyClientGetEventstreamDestinationConnectionResponse]{}
+		resp.SetResponse(http.StatusOK, eventstream.TopologyClientGetEventstreamDestinationConnectionResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTopologyClient()
+	_, err = client.GetEventstreamDestinationConnection(ctx, exampleWorkspaceID, exampleEventstreamID, exampleDestinationID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestTopology_PauseEventstreamSource() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Pause running an eventstream source example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEventstreamID string
+	var exampleSourceID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleEventstreamID = "8c500070-073f-4a88-b478-8fabe1941c52"
+	exampleSourceID = "e2886002-d696-4c05-969c-51361365cc24"
+
+	testsuite.serverFactory.TopologyServer.PauseEventstreamSource = func(ctx context.Context, workspaceID string, eventstreamID string, sourceID string, options *eventstream.TopologyClientPauseEventstreamSourceOptions) (resp azfake.Responder[eventstream.TopologyClientPauseEventstreamSourceResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEventstreamID, eventstreamID)
+		testsuite.Require().Equal(exampleSourceID, sourceID)
+		resp = azfake.Responder[eventstream.TopologyClientPauseEventstreamSourceResponse]{}
+		resp.SetResponse(http.StatusOK, eventstream.TopologyClientPauseEventstreamSourceResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTopologyClient()
+	_, err = client.PauseEventstreamSource(ctx, exampleWorkspaceID, exampleEventstreamID, exampleSourceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestTopology_ResumeEventstreamSource() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Resume running an eventstream source example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEventstreamID string
+	var exampleSourceID string
+	var exampleResumeEventstreamSourceRequest eventstream.DataSourceStartRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleEventstreamID = "8c500070-073f-4a88-b478-8fabe1941c52"
+	exampleSourceID = "e2886002-d696-4c05-969c-51361365cc24"
+	exampleResumeEventstreamSourceRequest = eventstream.DataSourceStartRequest{
+		StartType: to.Ptr(eventstream.DataSourceStartTypeWhenLastStopped),
+	}
+
+	testsuite.serverFactory.TopologyServer.ResumeEventstreamSource = func(ctx context.Context, workspaceID string, eventstreamID string, sourceID string, resumeEventstreamSourceRequest eventstream.DataSourceStartRequest, options *eventstream.TopologyClientResumeEventstreamSourceOptions) (resp azfake.Responder[eventstream.TopologyClientResumeEventstreamSourceResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEventstreamID, eventstreamID)
+		testsuite.Require().Equal(exampleSourceID, sourceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleResumeEventstreamSourceRequest, resumeEventstreamSourceRequest))
+		resp = azfake.Responder[eventstream.TopologyClientResumeEventstreamSourceResponse]{}
+		resp.SetResponse(http.StatusOK, eventstream.TopologyClientResumeEventstreamSourceResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTopologyClient()
+	_, err = client.ResumeEventstreamSource(ctx, exampleWorkspaceID, exampleEventstreamID, exampleSourceID, exampleResumeEventstreamSourceRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestTopology_PauseEventstreamDestination() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Pause running an eventstream destination example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEventstreamID string
+	var exampleDestinationID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleEventstreamID = "8c500070-073f-4a88-b478-8fabe1941c52"
+	exampleDestinationID = "2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"
+
+	testsuite.serverFactory.TopologyServer.PauseEventstreamDestination = func(ctx context.Context, workspaceID string, eventstreamID string, destinationID string, options *eventstream.TopologyClientPauseEventstreamDestinationOptions) (resp azfake.Responder[eventstream.TopologyClientPauseEventstreamDestinationResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEventstreamID, eventstreamID)
+		testsuite.Require().Equal(exampleDestinationID, destinationID)
+		resp = azfake.Responder[eventstream.TopologyClientPauseEventstreamDestinationResponse]{}
+		resp.SetResponse(http.StatusOK, eventstream.TopologyClientPauseEventstreamDestinationResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTopologyClient()
+	_, err = client.PauseEventstreamDestination(ctx, exampleWorkspaceID, exampleEventstreamID, exampleDestinationID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestTopology_ResumeEventstreamDestination() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Resume running an eventstream destination example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEventstreamID string
+	var exampleDestinationID string
+	var exampleResumeEventstreamDestinationRequest eventstream.DataSourceStartRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleEventstreamID = "8c500070-073f-4a88-b478-8fabe1941c52"
+	exampleDestinationID = "2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"
+	exampleResumeEventstreamDestinationRequest = eventstream.DataSourceStartRequest{
+		CustomStartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-23T16:22:20.000Z"); return t }()),
+		StartType:           to.Ptr(eventstream.DataSourceStartTypeCustomTime),
+	}
+
+	testsuite.serverFactory.TopologyServer.ResumeEventstreamDestination = func(ctx context.Context, workspaceID string, eventstreamID string, destinationID string, resumeEventstreamDestinationRequest eventstream.DataSourceStartRequest, options *eventstream.TopologyClientResumeEventstreamDestinationOptions) (resp azfake.Responder[eventstream.TopologyClientResumeEventstreamDestinationResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEventstreamID, eventstreamID)
+		testsuite.Require().Equal(exampleDestinationID, destinationID)
+		testsuite.Require().True(reflect.DeepEqual(exampleResumeEventstreamDestinationRequest, resumeEventstreamDestinationRequest))
+		resp = azfake.Responder[eventstream.TopologyClientResumeEventstreamDestinationResponse]{}
+		resp.SetResponse(http.StatusOK, eventstream.TopologyClientResumeEventstreamDestinationResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTopologyClient()
+	_, err = client.ResumeEventstreamDestination(ctx, exampleWorkspaceID, exampleEventstreamID, exampleDestinationID, exampleResumeEventstreamDestinationRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
 }

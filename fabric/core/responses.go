@@ -130,6 +130,40 @@ type ExternalDataSharesClientRevokeExternalDataShareResponse struct {
 	// placeholder for future response values
 }
 
+// FoldersClientCreateFolderResponse contains the response from method FoldersClient.CreateFolder.
+type FoldersClientCreateFolderResponse struct {
+	// A folder object.
+	Folder
+}
+
+// FoldersClientDeleteFolderResponse contains the response from method FoldersClient.DeleteFolder.
+type FoldersClientDeleteFolderResponse struct {
+	// placeholder for future response values
+}
+
+// FoldersClientGetFolderResponse contains the response from method FoldersClient.GetFolder.
+type FoldersClientGetFolderResponse struct {
+	// A folder object.
+	Folder
+}
+
+// FoldersClientListFoldersResponse contains the response from method FoldersClient.NewListFoldersPager.
+type FoldersClientListFoldersResponse struct {
+	Folders
+}
+
+// FoldersClientMoveFolderResponse contains the response from method FoldersClient.MoveFolder.
+type FoldersClientMoveFolderResponse struct {
+	// A folder object.
+	Folder
+}
+
+// FoldersClientUpdateFolderResponse contains the response from method FoldersClient.UpdateFolder.
+type FoldersClientUpdateFolderResponse struct {
+	// A folder object.
+	Folder
+}
+
 // GatewaysClientAddGatewayRoleAssignmentResponse contains the response from method GatewaysClient.AddGatewayRoleAssignment.
 type GatewaysClientAddGatewayRoleAssignmentResponse struct {
 	// The gateway role assignment for a principal.

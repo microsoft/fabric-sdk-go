@@ -54,3 +54,11 @@ func (c *ClientFactory) NewItemsClient() *ItemsClient {
 		endpoint: c.endpoint,
 	}
 }
+
+// NewTopologyClient creates a new instance of TopologyClient.
+func (c *ClientFactory) NewTopologyClient() *TopologyClient {
+	return &TopologyClient{
+		internal: c.internal.WithClientName("eventstream.TopologyClient"),
+		endpoint: c.endpoint,
+	}
+}

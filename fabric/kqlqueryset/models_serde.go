@@ -147,6 +147,7 @@ func (k KQLQueryset) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "description", k.Description)
 	populate(objectMap, "displayName", k.DisplayName)
+	populate(objectMap, "folderId", k.FolderID)
 	populate(objectMap, "id", k.ID)
 	populate(objectMap, "type", k.Type)
 	populate(objectMap, "workspaceId", k.WorkspaceID)
@@ -167,6 +168,9 @@ func (k *KQLQueryset) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "displayName":
 			err = unpopulate(val, "DisplayName", &k.DisplayName)
+			delete(rawMsg, key)
+		case "folderId":
+			err = unpopulate(val, "FolderID", &k.FolderID)
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &k.ID)

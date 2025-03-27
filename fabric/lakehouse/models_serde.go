@@ -143,6 +143,7 @@ func (l Lakehouse) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "description", l.Description)
 	populate(objectMap, "displayName", l.DisplayName)
+	populate(objectMap, "folderId", l.FolderID)
 	populate(objectMap, "id", l.ID)
 	populate(objectMap, "properties", l.Properties)
 	populate(objectMap, "type", l.Type)
@@ -164,6 +165,9 @@ func (l *Lakehouse) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "displayName":
 			err = unpopulate(val, "DisplayName", &l.DisplayName)
+			delete(rawMsg, key)
+		case "folderId":
+			err = unpopulate(val, "FolderID", &l.FolderID)
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &l.ID)

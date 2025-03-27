@@ -19,6 +19,7 @@ func (p PaginatedReport) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "description", p.Description)
 	populate(objectMap, "displayName", p.DisplayName)
+	populate(objectMap, "folderId", p.FolderID)
 	populate(objectMap, "id", p.ID)
 	populate(objectMap, "type", p.Type)
 	populate(objectMap, "workspaceId", p.WorkspaceID)
@@ -39,6 +40,9 @@ func (p *PaginatedReport) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "displayName":
 			err = unpopulate(val, "DisplayName", &p.DisplayName)
+			delete(rawMsg, key)
+		case "folderId":
+			err = unpopulate(val, "FolderID", &p.FolderID)
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &p.ID)

@@ -147,6 +147,7 @@ func (r Reflex) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "description", r.Description)
 	populate(objectMap, "displayName", r.DisplayName)
+	populate(objectMap, "folderId", r.FolderID)
 	populate(objectMap, "id", r.ID)
 	populate(objectMap, "type", r.Type)
 	populate(objectMap, "workspaceId", r.WorkspaceID)
@@ -167,6 +168,9 @@ func (r *Reflex) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "displayName":
 			err = unpopulate(val, "DisplayName", &r.DisplayName)
+			delete(rawMsg, key)
+		case "folderId":
+			err = unpopulate(val, "FolderID", &r.FolderID)
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &r.ID)

@@ -28,6 +28,8 @@ func PossibleFileFormatValues() []FileFormat {
 type ItemType string
 
 const (
+	// ItemTypeCopyJob - A Copy job.
+	ItemTypeCopyJob ItemType = "CopyJob"
 	// ItemTypeDashboard - PowerBI dashboard.
 	ItemTypeDashboard ItemType = "Dashboard"
 	// ItemTypeDataPipeline - A data pipeline.
@@ -83,6 +85,7 @@ const (
 // PossibleItemTypeValues returns the possible values for the ItemType const type.
 func PossibleItemTypeValues() []ItemType {
 	return []ItemType{
+		ItemTypeCopyJob,
 		ItemTypeDashboard,
 		ItemTypeDataPipeline,
 		ItemTypeDatamart,

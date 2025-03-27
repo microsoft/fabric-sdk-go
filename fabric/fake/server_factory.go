@@ -16,6 +16,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 
 	adminfake "github.com/microsoft/fabric-sdk-go/fabric/admin/fake"
+	copyjobfake "github.com/microsoft/fabric-sdk-go/fabric/copyjob/fake"
 	corefake "github.com/microsoft/fabric-sdk-go/fabric/core/fake"
 	dashboardfake "github.com/microsoft/fabric-sdk-go/fabric/dashboard/fake"
 	datamartfake "github.com/microsoft/fabric-sdk-go/fabric/datamart/fake"
@@ -48,6 +49,7 @@ import (
 // ServerFactory is a fake server for instance of the fabric.Client type.
 type ServerFactory struct {
 	Admin              adminfake.ServerFactory
+	CopyJob            copyjobfake.ServerFactory
 	Core               corefake.ServerFactory
 	Dashboard          dashboardfake.ServerFactory
 	Datamart           datamartfake.ServerFactory
@@ -83,6 +85,7 @@ type ServerFactoryTransport struct {
 	srv                  *ServerFactory
 	trMu                 sync.Mutex
 	trAdmin              *adminfake.ServerFactoryTransport
+	trCopyJob            *copyjobfake.ServerFactoryTransport
 	trCore               *corefake.ServerFactoryTransport
 	trDashboard          *dashboardfake.ServerFactoryTransport
 	trDatamart           *datamartfake.ServerFactoryTransport
@@ -138,6 +141,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	case "admin":
 		initServer(s, &s.trAdmin, func() *adminfake.ServerFactoryTransport { return adminfake.NewServerFactoryTransport(&s.srv.Admin) })
 		resp, err = s.trAdmin.Do(req)
+	case "copyjob":
+		initServer(s, &s.trCopyJob, func() *copyjobfake.ServerFactoryTransport {
+			return copyjobfake.NewServerFactoryTransport(&s.srv.CopyJob)
+		})
+		resp, err = s.trCopyJob.Do(req)
 	case "core":
 		initServer(s, &s.trCore, func() *corefake.ServerFactoryTransport { return corefake.NewServerFactoryTransport(&s.srv.Core) })
 		resp, err = s.trCore.Do(req)

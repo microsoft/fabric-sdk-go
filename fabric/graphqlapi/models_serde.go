@@ -50,6 +50,7 @@ func (g GraphQLAPI) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "description", g.Description)
 	populate(objectMap, "displayName", g.DisplayName)
+	populate(objectMap, "folderId", g.FolderID)
 	populate(objectMap, "id", g.ID)
 	populate(objectMap, "type", g.Type)
 	populate(objectMap, "workspaceId", g.WorkspaceID)
@@ -70,6 +71,9 @@ func (g *GraphQLAPI) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "displayName":
 			err = unpopulate(val, "DisplayName", &g.DisplayName)
+			delete(rawMsg, key)
+		case "folderId":
+			err = unpopulate(val, "FolderID", &g.FolderID)
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &g.ID)

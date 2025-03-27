@@ -17,7 +17,94 @@ import (
 )
 
 // Generated from example definition
-func ExampleItemsClient_NewListItemsPager_listItemInWorkspaceWithContinuationExample() {
+func ExampleItemsClient_NewListItemsPager_listAllItemsInASpecificFolderExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewItemsClient().NewListItemsPager("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb", &core.ItemsClientListItemsOptions{Type: nil,
+		Recursive:         nil,
+		RootFolderID:      to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+		ContinuationToken: nil,
+	})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.Items = core.Items{
+		// 	Value: []core.Item{
+		// 		{
+		// 			Type: to.Ptr(core.ItemTypeLakehouse),
+		// 			Description: to.Ptr("A lakehouse used by the sales team."),
+		// 			DisplayName: to.Ptr("Lakehouse"),
+		// 			FolderID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+		// 			ID: to.Ptr("cccccccc-2222-3333-4444-dddddddddddd"),
+		// 			WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+		// 		},
+		// 		{
+		// 			Type: to.Ptr(core.ItemTypeNotebook),
+		// 			Description: to.Ptr("A notebook for refining Q1 of year 2024 sales data analysis through machine learning algorithms."),
+		// 			DisplayName: to.Ptr("Notebook"),
+		// 			FolderID: to.Ptr("cccccccc-8888-9999-0000-dddddddddddd"),
+		// 			ID: to.Ptr("dddddddd-3333-4444-5555-eeeeeeeeeeee"),
+		// 			WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_NewListItemsPager_listAllItemsInWorkspaceByTypeQueryParameterExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewItemsClient().NewListItemsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &core.ItemsClientListItemsOptions{Type: to.Ptr("Lakehouse"),
+		Recursive:         nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.Items = core.Items{
+		// 	Value: []core.Item{
+		// 		{
+		// 			Type: to.Ptr(core.ItemTypeLakehouse),
+		// 			Description: to.Ptr("A lakehouse used by the analytics team."),
+		// 			DisplayName: to.Ptr("Lakehouse Name 1"),
+		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_NewListItemsPager_listAllItemsInWorkspaceExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -28,6 +115,133 @@ func ExampleItemsClient_NewListItemsPager_listItemInWorkspaceWithContinuationExa
 		log.Fatalf("failed to create client: %v", err)
 	}
 	pager := clientFactory.NewItemsClient().NewListItemsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &core.ItemsClientListItemsOptions{Type: nil,
+		Recursive:         nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.Items = core.Items{
+		// 	Value: []core.Item{
+		// 		{
+		// 			Type: to.Ptr(core.ItemTypeLakehouse),
+		// 			Description: to.Ptr("A lakehouse used by the analytics team."),
+		// 			DisplayName: to.Ptr("Lakehouse"),
+		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+		// 		},
+		// 		{
+		// 			Type: to.Ptr(core.ItemType("KustoDashboard")),
+		// 			Description: to.Ptr("A notebook for refining medical data analysis through machine learning algorithms."),
+		// 			DisplayName: to.Ptr("Notebook"),
+		// 			ID: to.Ptr("58fa1eac-9694-4a6b-ba25-3520288e8fea"),
+		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_NewListItemsPager_listDirectItemsInASpecificFolderExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewItemsClient().NewListItemsPager("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb", &core.ItemsClientListItemsOptions{Type: nil,
+		Recursive:         to.Ptr(false),
+		RootFolderID:      to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+		ContinuationToken: nil,
+	})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.Items = core.Items{
+		// 	Value: []core.Item{
+		// 		{
+		// 			Type: to.Ptr(core.ItemTypeNotebook),
+		// 			Description: to.Ptr("A notebook for refining year 2024 sales data analysis through machine learning algorithms."),
+		// 			DisplayName: to.Ptr("Notebook"),
+		// 			FolderID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+		// 			ID: to.Ptr("dddddddd-3333-4444-5555-eeeeeeeeeeee"),
+		// 			WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_NewListItemsPager_listDirectItemsInWorkspaceExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewItemsClient().NewListItemsPager("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb", &core.ItemsClientListItemsOptions{Type: nil,
+		Recursive:         to.Ptr(false),
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.Items = core.Items{
+		// 	Value: []core.Item{
+		// 		{
+		// 			Type: to.Ptr(core.ItemTypeLakehouse),
+		// 			Description: to.Ptr("A lakehouse shared by the all teams."),
+		// 			DisplayName: to.Ptr("Lakehouse"),
+		// 			ID: to.Ptr("cccccccc-2222-3333-4444-dddddddddddd"),
+		// 			WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_NewListItemsPager_listItemsInWorkspaceWithContinuationExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewItemsClient().NewListItemsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &core.ItemsClientListItemsOptions{Type: nil,
+		Recursive:         nil,
+		RootFolderID:      nil,
 		ContinuationToken: nil,
 	})
 	for pager.More() {
@@ -63,88 +277,7 @@ func ExampleItemsClient_NewListItemsPager_listItemInWorkspaceWithContinuationExa
 }
 
 // Generated from example definition
-func ExampleItemsClient_NewListItemsPager_listItemsInWorkspaceByTypeQueryParameterExample() {
-	cred, err := azidentity.NewDefaultAzureCredential(nil)
-	if err != nil {
-		log.Fatalf("failed to obtain a credential: %v", err)
-	}
-	ctx := context.Background()
-	clientFactory, err := core.NewClientFactory(cred, nil, nil)
-	if err != nil {
-		log.Fatalf("failed to create client: %v", err)
-	}
-	pager := clientFactory.NewItemsClient().NewListItemsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &core.ItemsClientListItemsOptions{Type: to.Ptr("Lakehouse"),
-		ContinuationToken: nil,
-	})
-	for pager.More() {
-		page, err := pager.NextPage(ctx)
-		if err != nil {
-			log.Fatalf("failed to advance page: %v", err)
-		}
-		for _, v := range page.Value {
-			// You could use page here. We use blank identifier for just demo purposes.
-			_ = v
-		}
-		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
-		// page.Items = core.Items{
-		// 	Value: []core.Item{
-		// 		{
-		// 			Type: to.Ptr(core.ItemTypeLakehouse),
-		// 			Description: to.Ptr("A lakehouse used by the analytics team."),
-		// 			DisplayName: to.Ptr("Lakehouse Name 1"),
-		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
-		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
-		// 	}},
-		// }
-	}
-}
-
-// Generated from example definition
-func ExampleItemsClient_NewListItemsPager_listItemsInWorkspaceExample() {
-	cred, err := azidentity.NewDefaultAzureCredential(nil)
-	if err != nil {
-		log.Fatalf("failed to obtain a credential: %v", err)
-	}
-	ctx := context.Background()
-	clientFactory, err := core.NewClientFactory(cred, nil, nil)
-	if err != nil {
-		log.Fatalf("failed to create client: %v", err)
-	}
-	pager := clientFactory.NewItemsClient().NewListItemsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &core.ItemsClientListItemsOptions{Type: nil,
-		ContinuationToken: nil,
-	})
-	for pager.More() {
-		page, err := pager.NextPage(ctx)
-		if err != nil {
-			log.Fatalf("failed to advance page: %v", err)
-		}
-		for _, v := range page.Value {
-			// You could use page here. We use blank identifier for just demo purposes.
-			_ = v
-		}
-		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
-		// page.Items = core.Items{
-		// 	Value: []core.Item{
-		// 		{
-		// 			Type: to.Ptr(core.ItemTypeLakehouse),
-		// 			Description: to.Ptr("A lakehouse used by the analytics team."),
-		// 			DisplayName: to.Ptr("Lakehouse"),
-		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
-		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
-		// 		},
-		// 		{
-		// 			Type: to.Ptr(core.ItemType("KustoDashboard")),
-		// 			Description: to.Ptr("A notebook for refining medical data analysis through machine learning algorithms."),
-		// 			DisplayName: to.Ptr("Notebook"),
-		// 			ID: to.Ptr("58fa1eac-9694-4a6b-ba25-3520288e8fea"),
-		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
-		// 	}},
-		// }
-	}
-}
-
-// Generated from example definition
-func ExampleItemsClient_BeginCreateItem() {
+func ExampleItemsClient_BeginCreateItem_createAnItemExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -157,6 +290,31 @@ func ExampleItemsClient_BeginCreateItem() {
 	poller, err := clientFactory.NewItemsClient().BeginCreateItem(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", core.CreateItemRequest{
 		Type:        to.Ptr(core.ItemTypeLakehouse),
 		DisplayName: to.Ptr("Item 1"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginCreateItem_createAnItemInFolderExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginCreateItem(ctx, "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb", core.CreateItemRequest{
+		Type:        to.Ptr(core.ItemTypeLakehouse),
+		DisplayName: to.Ptr("Item 1"),
+		FolderID:    to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
 	}, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)

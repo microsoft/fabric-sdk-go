@@ -54,3 +54,67 @@ type ItemsClientListEventstreamsOptions struct {
 type ItemsClientUpdateEventstreamOptions struct {
 	// placeholder for future optional parameters
 }
+
+// TopologyClientGetEventstreamDestinationConnectionOptions contains the optional parameters for the TopologyClient.GetEventstreamDestinationConnection
+// method.
+type TopologyClientGetEventstreamDestinationConnectionOptions struct {
+	// placeholder for future optional parameters
+}
+
+// TopologyClientGetEventstreamDestinationOptions contains the optional parameters for the TopologyClient.GetEventstreamDestination
+// method.
+type TopologyClientGetEventstreamDestinationOptions struct {
+	// placeholder for future optional parameters
+}
+
+// TopologyClientGetEventstreamSourceConnectionOptions contains the optional parameters for the TopologyClient.GetEventstreamSourceConnection
+// method.
+type TopologyClientGetEventstreamSourceConnectionOptions struct {
+	// placeholder for future optional parameters
+}
+
+// TopologyClientGetEventstreamSourceOptions contains the optional parameters for the TopologyClient.GetEventstreamSource
+// method.
+type TopologyClientGetEventstreamSourceOptions struct {
+	// placeholder for future optional parameters
+}
+
+// TopologyClientGetEventstreamTopologyOptions contains the optional parameters for the TopologyClient.GetEventstreamTopology
+// method.
+type TopologyClientGetEventstreamTopologyOptions struct {
+	// placeholder for future optional parameters
+}
+
+// TopologyClientPauseEventstreamDestinationOptions contains the optional parameters for the TopologyClient.PauseEventstreamDestination
+// method.
+type TopologyClientPauseEventstreamDestinationOptions struct {
+	// placeholder for future optional parameters
+}
+
+// TopologyClientPauseEventstreamOptions contains the optional parameters for the TopologyClient.PauseEventstream method.
+type TopologyClientPauseEventstreamOptions struct {
+	// placeholder for future optional parameters
+}
+
+// TopologyClientPauseEventstreamSourceOptions contains the optional parameters for the TopologyClient.PauseEventstreamSource
+// method.
+type TopologyClientPauseEventstreamSourceOptions struct {
+	// placeholder for future optional parameters
+}
+
+// TopologyClientResumeEventstreamDestinationOptions contains the optional parameters for the TopologyClient.ResumeEventstreamDestination
+// method.
+type TopologyClientResumeEventstreamDestinationOptions struct {
+	// placeholder for future optional parameters
+}
+
+// TopologyClientResumeEventstreamOptions contains the optional parameters for the TopologyClient.ResumeEventstream method.
+type TopologyClientResumeEventstreamOptions struct {
+	// placeholder for future optional parameters
+}
+
+// TopologyClientResumeEventstreamSourceOptions contains the optional parameters for the TopologyClient.ResumeEventstreamSource
+// method.
+type TopologyClientResumeEventstreamSourceOptions struct {
+	// placeholder for future optional parameters
+}
