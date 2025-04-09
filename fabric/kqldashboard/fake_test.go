@@ -110,17 +110,19 @@ func (testsuite *FakeTestSuite) TestItems_CreateKQLDashboard() {
 		DisplayName: to.Ptr("KQLDashboard_1"),
 	}
 
-	testsuite.serverFactory.ItemsServer.CreateKQLDashboard = func(ctx context.Context, workspaceID string, createKQLDashboardRequest kqldashboard.CreateKQLDashboardRequest, options *kqldashboard.ItemsClientCreateKQLDashboardOptions) (resp azfake.Responder[kqldashboard.ItemsClientCreateKQLDashboardResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ItemsServer.BeginCreateKQLDashboard = func(ctx context.Context, workspaceID string, createKQLDashboardRequest kqldashboard.CreateKQLDashboardRequest, options *kqldashboard.ItemsClientBeginCreateKQLDashboardOptions) (resp azfake.PollerResponder[kqldashboard.ItemsClientCreateKQLDashboardResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().True(reflect.DeepEqual(exampleCreateKQLDashboardRequest, createKQLDashboardRequest))
-		resp = azfake.Responder[kqldashboard.ItemsClientCreateKQLDashboardResponse]{}
-		resp.SetResponse(http.StatusCreated, kqldashboard.ItemsClientCreateKQLDashboardResponse{}, nil)
+		resp = azfake.PollerResponder[kqldashboard.ItemsClientCreateKQLDashboardResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, kqldashboard.ItemsClientCreateKQLDashboardResponse{}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.CreateKQLDashboard(ctx, exampleWorkspaceID, exampleCreateKQLDashboardRequest, nil)
+	poller, err := client.BeginCreateKQLDashboard(ctx, exampleWorkspaceID, exampleCreateKQLDashboardRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -145,16 +147,18 @@ func (testsuite *FakeTestSuite) TestItems_CreateKQLDashboard() {
 		DisplayName: to.Ptr("KQL Dashboard 1"),
 	}
 
-	testsuite.serverFactory.ItemsServer.CreateKQLDashboard = func(ctx context.Context, workspaceID string, createKQLDashboardRequest kqldashboard.CreateKQLDashboardRequest, options *kqldashboard.ItemsClientCreateKQLDashboardOptions) (resp azfake.Responder[kqldashboard.ItemsClientCreateKQLDashboardResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ItemsServer.BeginCreateKQLDashboard = func(ctx context.Context, workspaceID string, createKQLDashboardRequest kqldashboard.CreateKQLDashboardRequest, options *kqldashboard.ItemsClientBeginCreateKQLDashboardOptions) (resp azfake.PollerResponder[kqldashboard.ItemsClientCreateKQLDashboardResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().True(reflect.DeepEqual(exampleCreateKQLDashboardRequest, createKQLDashboardRequest))
-		resp = azfake.Responder[kqldashboard.ItemsClientCreateKQLDashboardResponse]{}
-		resp.SetResponse(http.StatusCreated, kqldashboard.ItemsClientCreateKQLDashboardResponse{}, nil)
+		resp = azfake.PollerResponder[kqldashboard.ItemsClientCreateKQLDashboardResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, kqldashboard.ItemsClientCreateKQLDashboardResponse{}, nil)
 		return
 	}
 
-	_, err = client.CreateKQLDashboard(ctx, exampleWorkspaceID, exampleCreateKQLDashboardRequest, nil)
+	poller, err = client.BeginCreateKQLDashboard(ctx, exampleWorkspaceID, exampleCreateKQLDashboardRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestItems_GetKQLDashboard() {
@@ -276,17 +280,19 @@ func (testsuite *FakeTestSuite) TestItems_GetKQLDashboardDefinition() {
 		},
 	}
 
-	testsuite.serverFactory.ItemsServer.GetKQLDashboardDefinition = func(ctx context.Context, workspaceID string, kqlDashboardID string, options *kqldashboard.ItemsClientGetKQLDashboardDefinitionOptions) (resp azfake.Responder[kqldashboard.ItemsClientGetKQLDashboardDefinitionResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ItemsServer.BeginGetKQLDashboardDefinition = func(ctx context.Context, workspaceID string, kqlDashboardID string, options *kqldashboard.ItemsClientBeginGetKQLDashboardDefinitionOptions) (resp azfake.PollerResponder[kqldashboard.ItemsClientGetKQLDashboardDefinitionResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleKqlDashboardID, kqlDashboardID)
-		resp = azfake.Responder[kqldashboard.ItemsClientGetKQLDashboardDefinitionResponse]{}
-		resp.SetResponse(http.StatusOK, kqldashboard.ItemsClientGetKQLDashboardDefinitionResponse{DefinitionResponse: exampleRes}, nil)
+		resp = azfake.PollerResponder[kqldashboard.ItemsClientGetKQLDashboardDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, kqldashboard.ItemsClientGetKQLDashboardDefinitionResponse{DefinitionResponse: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	res, err := client.GetKQLDashboardDefinition(ctx, exampleWorkspaceID, exampleKqlDashboardID, &kqldashboard.ItemsClientGetKQLDashboardDefinitionOptions{Format: nil})
+	poller, err := client.BeginGetKQLDashboardDefinition(ctx, exampleWorkspaceID, exampleKqlDashboardID, &kqldashboard.ItemsClientBeginGetKQLDashboardDefinitionOptions{Format: nil})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DefinitionResponse))
 }
 
@@ -316,16 +322,18 @@ func (testsuite *FakeTestSuite) TestItems_UpdateKQLDashboardDefinition() {
 		},
 	}
 
-	testsuite.serverFactory.ItemsServer.UpdateKQLDashboardDefinition = func(ctx context.Context, workspaceID string, kqlDashboardID string, updateKQLDashboardDefinitionRequest kqldashboard.UpdateKQLDashboardDefinitionRequest, options *kqldashboard.ItemsClientUpdateKQLDashboardDefinitionOptions) (resp azfake.Responder[kqldashboard.ItemsClientUpdateKQLDashboardDefinitionResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ItemsServer.BeginUpdateKQLDashboardDefinition = func(ctx context.Context, workspaceID string, kqlDashboardID string, updateKQLDashboardDefinitionRequest kqldashboard.UpdateKQLDashboardDefinitionRequest, options *kqldashboard.ItemsClientBeginUpdateKQLDashboardDefinitionOptions) (resp azfake.PollerResponder[kqldashboard.ItemsClientUpdateKQLDashboardDefinitionResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleKqlDashboardID, kqlDashboardID)
 		testsuite.Require().True(reflect.DeepEqual(exampleUpdateKQLDashboardDefinitionRequest, updateKQLDashboardDefinitionRequest))
-		resp = azfake.Responder[kqldashboard.ItemsClientUpdateKQLDashboardDefinitionResponse]{}
-		resp.SetResponse(http.StatusOK, kqldashboard.ItemsClientUpdateKQLDashboardDefinitionResponse{}, nil)
+		resp = azfake.PollerResponder[kqldashboard.ItemsClientUpdateKQLDashboardDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, kqldashboard.ItemsClientUpdateKQLDashboardDefinitionResponse{}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.UpdateKQLDashboardDefinition(ctx, exampleWorkspaceID, exampleKqlDashboardID, exampleUpdateKQLDashboardDefinitionRequest, &kqldashboard.ItemsClientUpdateKQLDashboardDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	poller, err := client.BeginUpdateKQLDashboardDefinition(ctx, exampleWorkspaceID, exampleKqlDashboardID, exampleUpdateKQLDashboardDefinitionRequest, &kqldashboard.ItemsClientBeginUpdateKQLDashboardDefinitionOptions{UpdateMetadata: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }

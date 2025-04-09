@@ -26,9 +26,9 @@ import (
 
 // ItemsServer is a fake server for instances of the kqlqueryset.ItemsClient type.
 type ItemsServer struct {
-	// CreateKQLQueryset is the fake for method ItemsClient.CreateKQLQueryset
-	// HTTP status codes to indicate success: http.StatusCreated
-	CreateKQLQueryset func(ctx context.Context, workspaceID string, createKQLQuerysetRequest kqlqueryset.CreateKQLQuerysetRequest, options *kqlqueryset.ItemsClientCreateKQLQuerysetOptions) (resp azfake.Responder[kqlqueryset.ItemsClientCreateKQLQuerysetResponse], errResp azfake.ErrorResponder)
+	// BeginCreateKQLQueryset is the fake for method ItemsClient.BeginCreateKQLQueryset
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated, http.StatusAccepted
+	BeginCreateKQLQueryset func(ctx context.Context, workspaceID string, createKQLQuerysetRequest kqlqueryset.CreateKQLQuerysetRequest, options *kqlqueryset.ItemsClientBeginCreateKQLQuerysetOptions) (resp azfake.PollerResponder[kqlqueryset.ItemsClientCreateKQLQuerysetResponse], errResp azfake.ErrorResponder)
 
 	// DeleteKQLQueryset is the fake for method ItemsClient.DeleteKQLQueryset
 	// HTTP status codes to indicate success: http.StatusOK
@@ -38,9 +38,9 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetKQLQueryset func(ctx context.Context, workspaceID string, kqlQuerysetID string, options *kqlqueryset.ItemsClientGetKQLQuerysetOptions) (resp azfake.Responder[kqlqueryset.ItemsClientGetKQLQuerysetResponse], errResp azfake.ErrorResponder)
 
-	// GetKQLQuerysetDefinition is the fake for method ItemsClient.GetKQLQuerysetDefinition
-	// HTTP status codes to indicate success: http.StatusOK
-	GetKQLQuerysetDefinition func(ctx context.Context, workspaceID string, kqlQuerysetID string, options *kqlqueryset.ItemsClientGetKQLQuerysetDefinitionOptions) (resp azfake.Responder[kqlqueryset.ItemsClientGetKQLQuerysetDefinitionResponse], errResp azfake.ErrorResponder)
+	// BeginGetKQLQuerysetDefinition is the fake for method ItemsClient.BeginGetKQLQuerysetDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	BeginGetKQLQuerysetDefinition func(ctx context.Context, workspaceID string, kqlQuerysetID string, options *kqlqueryset.ItemsClientBeginGetKQLQuerysetDefinitionOptions) (resp azfake.PollerResponder[kqlqueryset.ItemsClientGetKQLQuerysetDefinitionResponse], errResp azfake.ErrorResponder)
 
 	// NewListKQLQuerysetsPager is the fake for method ItemsClient.NewListKQLQuerysetsPager
 	// HTTP status codes to indicate success: http.StatusOK
@@ -50,9 +50,9 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	UpdateKQLQueryset func(ctx context.Context, workspaceID string, kqlQuerysetID string, updateKQLQuerysetRequest kqlqueryset.UpdateKQLQuerysetRequest, options *kqlqueryset.ItemsClientUpdateKQLQuerysetOptions) (resp azfake.Responder[kqlqueryset.ItemsClientUpdateKQLQuerysetResponse], errResp azfake.ErrorResponder)
 
-	// UpdateKQLQuerysetDefinition is the fake for method ItemsClient.UpdateKQLQuerysetDefinition
-	// HTTP status codes to indicate success: http.StatusOK
-	UpdateKQLQuerysetDefinition func(ctx context.Context, workspaceID string, kqlQuerysetID string, updateKQLQuerysetDefinitionRequest kqlqueryset.UpdateKQLQuerysetDefinitionRequest, options *kqlqueryset.ItemsClientUpdateKQLQuerysetDefinitionOptions) (resp azfake.Responder[kqlqueryset.ItemsClientUpdateKQLQuerysetDefinitionResponse], errResp azfake.ErrorResponder)
+	// BeginUpdateKQLQuerysetDefinition is the fake for method ItemsClient.BeginUpdateKQLQuerysetDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
+	BeginUpdateKQLQuerysetDefinition func(ctx context.Context, workspaceID string, kqlQuerysetID string, updateKQLQuerysetDefinitionRequest kqlqueryset.UpdateKQLQuerysetDefinitionRequest, options *kqlqueryset.ItemsClientBeginUpdateKQLQuerysetDefinitionOptions) (resp azfake.PollerResponder[kqlqueryset.ItemsClientUpdateKQLQuerysetDefinitionResponse], errResp azfake.ErrorResponder)
 }
 
 // NewItemsServerTransport creates a new instance of ItemsServerTransport with the provided implementation.
@@ -60,16 +60,22 @@ type ItemsServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewItemsServerTransport(srv *ItemsServer) *ItemsServerTransport {
 	return &ItemsServerTransport{
-		srv:                      srv,
-		newListKQLQuerysetsPager: newTracker[azfake.PagerResponder[kqlqueryset.ItemsClientListKQLQuerysetsResponse]](),
+		srv:                              srv,
+		beginCreateKQLQueryset:           newTracker[azfake.PollerResponder[kqlqueryset.ItemsClientCreateKQLQuerysetResponse]](),
+		beginGetKQLQuerysetDefinition:    newTracker[azfake.PollerResponder[kqlqueryset.ItemsClientGetKQLQuerysetDefinitionResponse]](),
+		newListKQLQuerysetsPager:         newTracker[azfake.PagerResponder[kqlqueryset.ItemsClientListKQLQuerysetsResponse]](),
+		beginUpdateKQLQuerysetDefinition: newTracker[azfake.PollerResponder[kqlqueryset.ItemsClientUpdateKQLQuerysetDefinitionResponse]](),
 	}
 }
 
 // ItemsServerTransport connects instances of kqlqueryset.ItemsClient to instances of ItemsServer.
 // Don't use this type directly, use NewItemsServerTransport instead.
 type ItemsServerTransport struct {
-	srv                      *ItemsServer
-	newListKQLQuerysetsPager *tracker[azfake.PagerResponder[kqlqueryset.ItemsClientListKQLQuerysetsResponse]]
+	srv                              *ItemsServer
+	beginCreateKQLQueryset           *tracker[azfake.PollerResponder[kqlqueryset.ItemsClientCreateKQLQuerysetResponse]]
+	beginGetKQLQuerysetDefinition    *tracker[azfake.PollerResponder[kqlqueryset.ItemsClientGetKQLQuerysetDefinitionResponse]]
+	newListKQLQuerysetsPager         *tracker[azfake.PagerResponder[kqlqueryset.ItemsClientListKQLQuerysetsResponse]]
+	beginUpdateKQLQuerysetDefinition *tracker[azfake.PollerResponder[kqlqueryset.ItemsClientUpdateKQLQuerysetDefinitionResponse]]
 }
 
 // Do implements the policy.Transporter interface for ItemsServerTransport.
@@ -97,20 +103,20 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 		}
 		if !intercepted {
 			switch method {
-			case "ItemsClient.CreateKQLQueryset":
-				res.resp, res.err = i.dispatchCreateKQLQueryset(req)
+			case "ItemsClient.BeginCreateKQLQueryset":
+				res.resp, res.err = i.dispatchBeginCreateKQLQueryset(req)
 			case "ItemsClient.DeleteKQLQueryset":
 				res.resp, res.err = i.dispatchDeleteKQLQueryset(req)
 			case "ItemsClient.GetKQLQueryset":
 				res.resp, res.err = i.dispatchGetKQLQueryset(req)
-			case "ItemsClient.GetKQLQuerysetDefinition":
-				res.resp, res.err = i.dispatchGetKQLQuerysetDefinition(req)
+			case "ItemsClient.BeginGetKQLQuerysetDefinition":
+				res.resp, res.err = i.dispatchBeginGetKQLQuerysetDefinition(req)
 			case "ItemsClient.NewListKQLQuerysetsPager":
 				res.resp, res.err = i.dispatchNewListKQLQuerysetsPager(req)
 			case "ItemsClient.UpdateKQLQueryset":
 				res.resp, res.err = i.dispatchUpdateKQLQueryset(req)
-			case "ItemsClient.UpdateKQLQuerysetDefinition":
-				res.resp, res.err = i.dispatchUpdateKQLQuerysetDefinition(req)
+			case "ItemsClient.BeginUpdateKQLQuerysetDefinition":
+				res.resp, res.err = i.dispatchBeginUpdateKQLQuerysetDefinition(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -130,36 +136,47 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 	}
 }
 
-func (i *ItemsServerTransport) dispatchCreateKQLQueryset(req *http.Request) (*http.Response, error) {
-	if i.srv.CreateKQLQueryset == nil {
-		return nil, &nonRetriableError{errors.New("fake for method CreateKQLQueryset not implemented")}
+func (i *ItemsServerTransport) dispatchBeginCreateKQLQueryset(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginCreateKQLQueryset == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginCreateKQLQueryset not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/kqlQuerysets`
-	regex := regexp.MustCompile(regexStr)
-	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
-		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	beginCreateKQLQueryset := i.beginCreateKQLQueryset.get(req)
+	if beginCreateKQLQueryset == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/kqlQuerysets`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 1 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		body, err := server.UnmarshalRequestAsJSON[kqlqueryset.CreateKQLQuerysetRequest](req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		respr, errRespr := i.srv.BeginCreateKQLQueryset(req.Context(), workspaceIDParam, body, nil)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginCreateKQLQueryset = &respr
+		i.beginCreateKQLQueryset.add(req, beginCreateKQLQueryset)
 	}
-	body, err := server.UnmarshalRequestAsJSON[kqlqueryset.CreateKQLQuerysetRequest](req)
+
+	resp, err := server.PollerResponderNext(beginCreateKQLQueryset, req)
 	if err != nil {
 		return nil, err
 	}
-	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
-	if err != nil {
-		return nil, err
+
+	if !contains([]int{http.StatusOK, http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
+		i.beginCreateKQLQueryset.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
 	}
-	respr, errRespr := i.srv.CreateKQLQueryset(req.Context(), workspaceIDParam, body, nil)
-	if respErr := server.GetError(errRespr, req); respErr != nil {
-		return nil, respErr
+	if !server.PollerResponderMore(beginCreateKQLQueryset) {
+		i.beginCreateKQLQueryset.remove(req)
 	}
-	respContent := server.GetResponseContent(respr)
-	if !contains([]int{http.StatusCreated}, respContent.HTTPStatus) {
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated", respContent.HTTPStatus)}
-	}
-	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).KQLQueryset, req)
-	if err != nil {
-		return nil, err
-	}
+
 	return resp, nil
 }
 
@@ -229,48 +246,59 @@ func (i *ItemsServerTransport) dispatchGetKQLQueryset(req *http.Request) (*http.
 	return resp, nil
 }
 
-func (i *ItemsServerTransport) dispatchGetKQLQuerysetDefinition(req *http.Request) (*http.Response, error) {
-	if i.srv.GetKQLQuerysetDefinition == nil {
-		return nil, &nonRetriableError{errors.New("fake for method GetKQLQuerysetDefinition not implemented")}
+func (i *ItemsServerTransport) dispatchBeginGetKQLQuerysetDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginGetKQLQuerysetDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginGetKQLQuerysetDefinition not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/kqlQuerysets/(?P<kqlQuerysetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
-	regex := regexp.MustCompile(regexStr)
-	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
-		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
-	}
-	qp := req.URL.Query()
-	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
-	if err != nil {
-		return nil, err
-	}
-	kqlQuerysetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("kqlQuerysetId")])
-	if err != nil {
-		return nil, err
-	}
-	formatUnescaped, err := url.QueryUnescape(qp.Get("format"))
-	if err != nil {
-		return nil, err
-	}
-	formatParam := getOptional(formatUnescaped)
-	var options *kqlqueryset.ItemsClientGetKQLQuerysetDefinitionOptions
-	if formatParam != nil {
-		options = &kqlqueryset.ItemsClientGetKQLQuerysetDefinitionOptions{
-			Format: formatParam,
+	beginGetKQLQuerysetDefinition := i.beginGetKQLQuerysetDefinition.get(req)
+	if beginGetKQLQuerysetDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/kqlQuerysets/(?P<kqlQuerysetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		kqlQuerysetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("kqlQuerysetId")])
+		if err != nil {
+			return nil, err
+		}
+		formatUnescaped, err := url.QueryUnescape(qp.Get("format"))
+		if err != nil {
+			return nil, err
+		}
+		formatParam := getOptional(formatUnescaped)
+		var options *kqlqueryset.ItemsClientBeginGetKQLQuerysetDefinitionOptions
+		if formatParam != nil {
+			options = &kqlqueryset.ItemsClientBeginGetKQLQuerysetDefinitionOptions{
+				Format: formatParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginGetKQLQuerysetDefinition(req.Context(), workspaceIDParam, kqlQuerysetIDParam, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginGetKQLQuerysetDefinition = &respr
+		i.beginGetKQLQuerysetDefinition.add(req, beginGetKQLQuerysetDefinition)
 	}
-	respr, errRespr := i.srv.GetKQLQuerysetDefinition(req.Context(), workspaceIDParam, kqlQuerysetIDParam, options)
-	if respErr := server.GetError(errRespr, req); respErr != nil {
-		return nil, respErr
-	}
-	respContent := server.GetResponseContent(respr)
-	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
-	}
-	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).DefinitionResponse, req)
+
+	resp, err := server.PollerResponderNext(beginGetKQLQuerysetDefinition, req)
 	if err != nil {
 		return nil, err
 	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+		i.beginGetKQLQuerysetDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginGetKQLQuerysetDefinition) {
+		i.beginGetKQLQuerysetDefinition.remove(req)
+	}
+
 	return resp, nil
 }
 
@@ -360,55 +388,66 @@ func (i *ItemsServerTransport) dispatchUpdateKQLQueryset(req *http.Request) (*ht
 	return resp, nil
 }
 
-func (i *ItemsServerTransport) dispatchUpdateKQLQuerysetDefinition(req *http.Request) (*http.Response, error) {
-	if i.srv.UpdateKQLQuerysetDefinition == nil {
-		return nil, &nonRetriableError{errors.New("fake for method UpdateKQLQuerysetDefinition not implemented")}
+func (i *ItemsServerTransport) dispatchBeginUpdateKQLQuerysetDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginUpdateKQLQuerysetDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginUpdateKQLQuerysetDefinition not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/kqlQuerysets/(?P<kqlQuerysetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
-	regex := regexp.MustCompile(regexStr)
-	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
-		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
-	}
-	qp := req.URL.Query()
-	body, err := server.UnmarshalRequestAsJSON[kqlqueryset.UpdateKQLQuerysetDefinitionRequest](req)
-	if err != nil {
-		return nil, err
-	}
-	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
-	if err != nil {
-		return nil, err
-	}
-	kqlQuerysetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("kqlQuerysetId")])
-	if err != nil {
-		return nil, err
-	}
-	updateMetadataUnescaped, err := url.QueryUnescape(qp.Get("updateMetadata"))
-	if err != nil {
-		return nil, err
-	}
-	updateMetadataParam, err := parseOptional(updateMetadataUnescaped, strconv.ParseBool)
-	if err != nil {
-		return nil, err
-	}
-	var options *kqlqueryset.ItemsClientUpdateKQLQuerysetDefinitionOptions
-	if updateMetadataParam != nil {
-		options = &kqlqueryset.ItemsClientUpdateKQLQuerysetDefinitionOptions{
-			UpdateMetadata: updateMetadataParam,
+	beginUpdateKQLQuerysetDefinition := i.beginUpdateKQLQuerysetDefinition.get(req)
+	if beginUpdateKQLQuerysetDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/kqlQuerysets/(?P<kqlQuerysetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
+		qp := req.URL.Query()
+		body, err := server.UnmarshalRequestAsJSON[kqlqueryset.UpdateKQLQuerysetDefinitionRequest](req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		kqlQuerysetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("kqlQuerysetId")])
+		if err != nil {
+			return nil, err
+		}
+		updateMetadataUnescaped, err := url.QueryUnescape(qp.Get("updateMetadata"))
+		if err != nil {
+			return nil, err
+		}
+		updateMetadataParam, err := parseOptional(updateMetadataUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		var options *kqlqueryset.ItemsClientBeginUpdateKQLQuerysetDefinitionOptions
+		if updateMetadataParam != nil {
+			options = &kqlqueryset.ItemsClientBeginUpdateKQLQuerysetDefinitionOptions{
+				UpdateMetadata: updateMetadataParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginUpdateKQLQuerysetDefinition(req.Context(), workspaceIDParam, kqlQuerysetIDParam, body, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginUpdateKQLQuerysetDefinition = &respr
+		i.beginUpdateKQLQuerysetDefinition.add(req, beginUpdateKQLQuerysetDefinition)
 	}
-	respr, errRespr := i.srv.UpdateKQLQuerysetDefinition(req.Context(), workspaceIDParam, kqlQuerysetIDParam, body, options)
-	if respErr := server.GetError(errRespr, req); respErr != nil {
-		return nil, respErr
-	}
-	respContent := server.GetResponseContent(respr)
-	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
-	}
-	resp, err := server.NewResponse(respContent, req, nil)
+
+	resp, err := server.PollerResponderNext(beginUpdateKQLQuerysetDefinition, req)
 	if err != nil {
 		return nil, err
 	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
+		i.beginUpdateKQLQuerysetDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginUpdateKQLQuerysetDefinition) {
+		i.beginUpdateKQLQuerysetDefinition.remove(req)
+	}
+
 	return resp, nil
 }
 

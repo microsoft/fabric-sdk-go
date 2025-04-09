@@ -29,6 +29,9 @@ type GitClient struct {
 }
 
 // BeginCommitToGit - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// To use this API, the caller's Git credentials must be configured using Update My Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials]
+// API. You can use the Get My Git Credentials
+// [/rest/api/fabric/core/git/get-my-git-credentials] API to check the Git credentials configuration.
 // You can choose to commit all changes or only specific changed items. To sync the workspace for the first time, use this
 // API after the Connect [/rest/api/fabric/core/git/connect] and Initialize
 // Connection [/rest/api/fabric/core/git/initialize-connection] APIs.
@@ -38,7 +41,9 @@ type GitClient struct {
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Only supported when the Git provider is GitHub and all
+// the items [/rest/api/fabric/articles/item-management/item-management-overview]
+// involved in the operation support service principals |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -51,6 +56,9 @@ func (client *GitClient) BeginCommitToGit(ctx context.Context, workspaceID strin
 }
 
 // CommitToGit - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// To use this API, the caller's Git credentials must be configured using Update My Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials]
+// API. You can use the Get My Git Credentials
+// [/rest/api/fabric/core/git/get-my-git-credentials] API to check the Git credentials configuration.
 // You can choose to commit all changes or only specific changed items. To sync the workspace for the first time, use this
 // API after the Connect [/rest/api/fabric/core/git/connect] and Initialize
 // Connection [/rest/api/fabric/core/git/initialize-connection] APIs.
@@ -60,7 +68,9 @@ func (client *GitClient) BeginCommitToGit(ctx context.Context, workspaceID strin
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Only supported when the Git provider is GitHub and all
+// the items [/rest/api/fabric/articles/item-management/item-management-overview]
+// involved in the operation support service principals |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -109,6 +119,7 @@ func (client *GitClient) commitToGitCreateRequest(ctx context.Context, workspace
 // with either the Commit To Git [/rest/api/fabric/core/git/commit-to-git] or the Update From Git [/rest/api/fabric/core/git/update-from-git]
 // operation.
 // To get started with GitHub, see: Get started with Git integration [/fabric/cicd/git-integration/git-get-started?tabs=github].
+// To get the connection ID, see Automate Git integration [/fabric/cicd/git-integration/git-automation#get-or-create-git-provider-credentials-connection].
 // PERMISSIONS The caller must have an admin role for the workspace.
 // For configured connection Git credentials, the caller must have permission for the connection.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
@@ -116,7 +127,7 @@ func (client *GitClient) commitToGitCreateRequest(ctx context.Context, workspace
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Only supported when the Git provider is GitHub |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -169,7 +180,7 @@ func (client *GitClient) connectCreateRequest(ctx context.Context, workspaceID s
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -218,7 +229,7 @@ func (client *GitClient) disconnectCreateRequest(ctx context.Context, workspaceI
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -273,14 +284,14 @@ func (client *GitClient) getConnectionHandleResponse(resp *http.Response) (GitCl
 
 // GetMyGitCredentials - Indicates how the user's credentials are obtained for accessing the relevant Git provider, automatically
 // or through configured connection. If the user's credentials aren't configured, go to Update My
-// Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials].
+// Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials] API.
 // PERMISSIONS The caller must have a contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -334,15 +345,18 @@ func (client *GitClient) getMyGitCredentialsHandleResponse(resp *http.Response) 
 }
 
 // BeginGetStatus - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// The status indicates changes to the item(s) since the last workspace and remote branch sync. If both locations were modified,
-// the API flags a conflict.
+// The status indicates changes to items since the last workspace and remote branch sync. If the remote and workspace items
+// were both modified, the API flags a conflict.
+// To use this API, the caller's Git credentials must be configured using Update My Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials]
+// API. You can use the Get My Git Credentials
+// [/rest/api/fabric/core/git/get-my-git-credentials] API to check the Git credentials configuration.
 // PERMISSIONS The caller must have a contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.GitUpdate.All or Workspace.GitCommit.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Only supported when the Git provider is GitHub |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -354,15 +368,18 @@ func (client *GitClient) BeginGetStatus(ctx context.Context, workspaceID string,
 }
 
 // GetStatus - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// The status indicates changes to the item(s) since the last workspace and remote branch sync. If both locations were modified,
-// the API flags a conflict.
+// The status indicates changes to items since the last workspace and remote branch sync. If the remote and workspace items
+// were both modified, the API flags a conflict.
+// To use this API, the caller's Git credentials must be configured using Update My Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials]
+// API. You can use the Get My Git Credentials
+// [/rest/api/fabric/core/git/get-my-git-credentials] API to check the Git credentials configuration.
 // PERMISSIONS The caller must have a contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.GitUpdate.All or Workspace.GitCommit.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Only supported when the Git provider is GitHub |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -404,6 +421,9 @@ func (client *GitClient) getStatusCreateRequest(ctx context.Context, workspaceID
 }
 
 // BeginInitializeConnection - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// To use this API, the caller's Git credentials must be configured using Update My Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials]
+// API. You can use the Get My Git Credentials
+// [/rest/api/fabric/core/git/get-my-git-credentials] API to check the Git credentials configuration.
 // This API should be called after a successful call to the Connect [/rest/api/fabric/core/git/connect] API. To complete a
 // full sync of the workspace, use the Required Action
 // [initialize-connection#requiredaction] operation to call the relevant sync operation, either Commit To Git [/rest/api/fabric/core/git/commit-to-git]
@@ -415,7 +435,7 @@ func (client *GitClient) getStatusCreateRequest(ctx context.Context, workspaceID
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Only supported when the Git provider is GitHub |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -428,6 +448,9 @@ func (client *GitClient) BeginInitializeConnection(ctx context.Context, workspac
 }
 
 // InitializeConnection - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// To use this API, the caller's Git credentials must be configured using Update My Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials]
+// API. You can use the Get My Git Credentials
+// [/rest/api/fabric/core/git/get-my-git-credentials] API to check the Git credentials configuration.
 // This API should be called after a successful call to the Connect [/rest/api/fabric/core/git/connect] API. To complete a
 // full sync of the workspace, use the Required Action
 // [initialize-connection#requiredaction] operation to call the relevant sync operation, either Commit To Git [/rest/api/fabric/core/git/commit-to-git]
@@ -439,7 +462,7 @@ func (client *GitClient) BeginInitializeConnection(ctx context.Context, workspac
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Only supported when the Git provider is GitHub |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -487,16 +510,21 @@ func (client *GitClient) initializeConnectionCreateRequest(ctx context.Context, 
 }
 
 // BeginUpdateFromGit - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// To use this API, the caller's Git credentials must be configured using Update My Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials]
+// API. You can use the Get My Git Credentials
+// [/rest/api/fabric/core/git/get-my-git-credentials] API to check the Git credentials configuration.
 // The update only affects items in the workspace that were changed in those commits. If called after the Connect [/rest/api/fabric/core/git/connect]
 // and Initialize Connection
 // [/rest/api/fabric/core/git/initialize-connection] APIs, it will perform a full update of the entire workspace.
-// PERMISSIONS The caller must have a contributor or higher role for the workspace.
+// PERMISSIONS The caller must have an admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.GitUpdate.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Only supported when the Git provider is GitHub and all
+// the items [/rest/api/fabric/articles/item-management/item-management-overview]
+// involved in the operation support service principals |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -509,16 +537,21 @@ func (client *GitClient) BeginUpdateFromGit(ctx context.Context, workspaceID str
 }
 
 // UpdateFromGit - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// To use this API, the caller's Git credentials must be configured using Update My Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials]
+// API. You can use the Get My Git Credentials
+// [/rest/api/fabric/core/git/get-my-git-credentials] API to check the Git credentials configuration.
 // The update only affects items in the workspace that were changed in those commits. If called after the Connect [/rest/api/fabric/core/git/connect]
 // and Initialize Connection
 // [/rest/api/fabric/core/git/initialize-connection] APIs, it will perform a full update of the entire workspace.
-// PERMISSIONS The caller must have a contributor or higher role for the workspace.
+// PERMISSIONS The caller must have an admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.GitUpdate.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Only supported when the Git provider is GitHub and all
+// the items [/rest/api/fabric/articles/item-management/item-management-overview]
+// involved in the operation support service principals |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -563,7 +596,8 @@ func (client *GitClient) updateFromGitCreateRequest(ctx context.Context, workspa
 }
 
 // UpdateMyGitCredentials - Each user in the workspace has their own configured Git credentials. You can use Get My Git Credentials
-// [/rest/api/fabric/core/git/get-my-git-credentials] to get the Git credentials configuration.
+// [/rest/api/fabric/core/git/get-my-git-credentials] API to get the Git credentials configuration.
+// To get the connection ID, see Automate Git integration [/fabric/cicd/git-integration/git-automation#get-or-create-git-provider-credentials-connection].
 // PERMISSIONS The caller must have a contributor or higher workspace role.
 // For configured connection Git credentials, the caller must have permission for the connection.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
@@ -571,7 +605,7 @@ func (client *GitClient) updateFromGitCreateRequest(ctx context.Context, workspa
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Only supported when the Git provider is GitHub |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -634,6 +668,9 @@ func (client *GitClient) updateMyGitCredentialsHandleResponse(resp *http.Respons
 // CommitToGit - returns GitClientCommitToGitResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
+// To use this API, the caller's Git credentials must be configured using Update My Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials] API. You can use the Get My Git Credentials
+// [/rest/api/fabric/core/git/get-my-git-credentials] API to check the Git credentials configuration.
+//
 // You can choose to commit all changes or only specific changed items. To sync the workspace for the first time, use this API after the Connect [/rest/api/fabric/core/git/connect] and Initialize
 // Connection [/rest/api/fabric/core/git/initialize-connection] APIs.
 //
@@ -644,7 +681,8 @@ func (client *GitClient) updateMyGitCredentialsHandleResponse(resp *http.Respons
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Only supported when the Git provider is GitHub and all the items [/rest/api/fabric/articles/item-management/item-management-overview]
+// involved in the operation support service principals |
 //
 // INTERFACE
 // Generated from API version v1
@@ -706,7 +744,10 @@ func (client *GitClient) beginCommitToGit(ctx context.Context, workspaceID strin
 // GetStatus - returns GitClientGetStatusResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// The status indicates changes to the item(s) since the last workspace and remote branch sync. If both locations were modified, the API flags a conflict.
+// The status indicates changes to items since the last workspace and remote branch sync. If the remote and workspace items were both modified, the API flags a conflict.
+//
+// To use this API, the caller's Git credentials must be configured using Update My Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials] API. You can use the Get My Git Credentials
+// [/rest/api/fabric/core/git/get-my-git-credentials] API to check the Git credentials configuration.
 //
 // PERMISSIONS The caller must have a contributor or higher workspace role.
 //
@@ -715,7 +756,7 @@ func (client *GitClient) beginCommitToGit(ctx context.Context, workspaceID strin
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Only supported when the Git provider is GitHub |
 //
 // INTERFACE
 // Generated from API version v1
@@ -776,6 +817,9 @@ func (client *GitClient) beginGetStatus(ctx context.Context, workspaceID string,
 // InitializeConnection - returns GitClientInitializeConnectionResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
+// To use this API, the caller's Git credentials must be configured using Update My Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials] API. You can use the Get My Git Credentials
+// [/rest/api/fabric/core/git/get-my-git-credentials] API to check the Git credentials configuration.
+//
 // This API should be called after a successful call to the Connect [/rest/api/fabric/core/git/connect] API. To complete a full sync of the workspace, use the Required Action
 // [initialize-connection#requiredaction] operation to call the relevant sync operation, either Commit To Git [/rest/api/fabric/core/git/commit-to-git] or Update From Git
 // [/rest/api/fabric/core/git/update-from-git].
@@ -787,7 +831,7 @@ func (client *GitClient) beginGetStatus(ctx context.Context, workspaceID string,
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Only supported when the Git provider is GitHub |
 //
 // INTERFACE
 // Generated from API version v1
@@ -848,17 +892,21 @@ func (client *GitClient) beginInitializeConnection(ctx context.Context, workspac
 // UpdateFromGit - returns GitClientUpdateFromGitResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
+// To use this API, the caller's Git credentials must be configured using Update My Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials] API. You can use the Get My Git Credentials
+// [/rest/api/fabric/core/git/get-my-git-credentials] API to check the Git credentials configuration.
+//
 // The update only affects items in the workspace that were changed in those commits. If called after the Connect [/rest/api/fabric/core/git/connect] and Initialize Connection
 // [/rest/api/fabric/core/git/initialize-connection] APIs, it will perform a full update of the entire workspace.
 //
-// PERMISSIONS The caller must have a contributor or higher role for the workspace.
+// PERMISSIONS The caller must have an admin workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.GitUpdate.All
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Only supported when the Git provider is GitHub and all the items [/rest/api/fabric/articles/item-management/item-management-overview]
+// involved in the operation support service principals |
 //
 // INTERFACE
 // Generated from API version v1

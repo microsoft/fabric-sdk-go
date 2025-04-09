@@ -20,6 +20,7 @@ import (
 
 	"github.com/microsoft/fabric-sdk-go/fabric/core"
 	"github.com/microsoft/fabric-sdk-go/internal/iruntime"
+	"github.com/microsoft/fabric-sdk-go/internal/pollers/locasync"
 )
 
 // ItemsClient contains the methods for the Items group.
@@ -29,7 +30,8 @@ type ItemsClient struct {
 	endpoint string
 }
 
-// CreateKQLDashboard - To create a KQL dashboard with definition, refer to the KQL dashboard definition article [/rest/api/fabric/articles/item-management/definitions/kql-dashboard-definition].
+// BeginCreateKQLDashboard - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// To create a KQL dashboard with definition, refer to the KQL dashboard definition article [/rest/api/fabric/articles/item-management/definitions/kql-dashboard-definition].
 // PERMISSIONS
 // The caller must have contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
@@ -44,32 +46,49 @@ type ItemsClient struct {
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - createKQLDashboardRequest - Create KQL dashboard definition request payload.
-//   - options - ItemsClientCreateKQLDashboardOptions contains the optional parameters for the ItemsClient.CreateKQLDashboard
+//   - options - ItemsClientBeginCreateKQLDashboardOptions contains the optional parameters for the ItemsClient.BeginCreateKQLDashboard
 //     method.
-func (client *ItemsClient) CreateKQLDashboard(ctx context.Context, workspaceID string, createKQLDashboardRequest CreateKQLDashboardRequest, options *ItemsClientCreateKQLDashboardOptions) (ItemsClientCreateKQLDashboardResponse, error) {
+func (client *ItemsClient) BeginCreateKQLDashboard(ctx context.Context, workspaceID string, createKQLDashboardRequest CreateKQLDashboardRequest, options *ItemsClientBeginCreateKQLDashboardOptions) (*runtime.Poller[ItemsClientCreateKQLDashboardResponse], error) {
+	return client.beginCreateKQLDashboard(ctx, workspaceID, createKQLDashboardRequest, options)
+}
+
+// CreateKQLDashboard - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// To create a KQL dashboard with definition, refer to the KQL dashboard definition article [/rest/api/fabric/articles/item-management/definitions/kql-dashboard-definition].
+// PERMISSIONS
+// The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) createKQLDashboard(ctx context.Context, workspaceID string, createKQLDashboardRequest CreateKQLDashboardRequest, options *ItemsClientBeginCreateKQLDashboardOptions) (*http.Response, error) {
 	var err error
-	const operationName = "kqldashboard.ItemsClient.CreateKQLDashboard"
+	const operationName = "kqldashboard.ItemsClient.BeginCreateKQLDashboard"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
 	req, err := client.createKQLDashboardCreateRequest(ctx, workspaceID, createKQLDashboardRequest, options)
 	if err != nil {
-		return ItemsClientCreateKQLDashboardResponse{}, err
+		return nil, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return ItemsClientCreateKQLDashboardResponse{}, err
+		return nil, err
 	}
-	if !runtime.HasStatusCode(httpResp, http.StatusCreated) {
+	if !runtime.HasStatusCode(httpResp, http.StatusCreated, http.StatusAccepted) {
 		err = core.NewResponseError(httpResp)
-		return ItemsClientCreateKQLDashboardResponse{}, err
+		return nil, err
 	}
-	resp, err := client.createKQLDashboardHandleResponse(httpResp)
-	return resp, err
+	return httpResp, nil
 }
 
 // createKQLDashboardCreateRequest creates the CreateKQLDashboard request.
-func (client *ItemsClient) createKQLDashboardCreateRequest(ctx context.Context, workspaceID string, createKQLDashboardRequest CreateKQLDashboardRequest, _ *ItemsClientCreateKQLDashboardOptions) (*policy.Request, error) {
+func (client *ItemsClient) createKQLDashboardCreateRequest(ctx context.Context, workspaceID string, createKQLDashboardRequest CreateKQLDashboardRequest, _ *ItemsClientBeginCreateKQLDashboardOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/kqlDashboards"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -84,18 +103,6 @@ func (client *ItemsClient) createKQLDashboardCreateRequest(ctx context.Context, 
 		return nil, err
 	}
 	return req, nil
-}
-
-// createKQLDashboardHandleResponse handles the CreateKQLDashboard response.
-func (client *ItemsClient) createKQLDashboardHandleResponse(resp *http.Response) (ItemsClientCreateKQLDashboardResponse, error) {
-	result := ItemsClientCreateKQLDashboardResponse{}
-	if val := resp.Header.Get("Location"); val != "" {
-		result.Location = &val
-	}
-	if err := runtime.UnmarshalAsJSON(resp, &result.KQLDashboard); err != nil {
-		return ItemsClientCreateKQLDashboardResponse{}, err
-	}
-	return result, nil
 }
 
 // DeleteKQLDashboard - PERMISSIONS The caller must have contributor or higher workspace role.
@@ -217,7 +224,8 @@ func (client *ItemsClient) getKQLDashboardHandleResponse(resp *http.Response) (I
 	return result, nil
 }
 
-// GetKQLDashboardDefinition - PERMISSIONS The caller must have contributor or higher workspace role.
+// BeginGetKQLDashboardDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -230,32 +238,47 @@ func (client *ItemsClient) getKQLDashboardHandleResponse(resp *http.Response) (I
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - kqlDashboardID - The KQL dashboard ID.
-//   - options - ItemsClientGetKQLDashboardDefinitionOptions contains the optional parameters for the ItemsClient.GetKQLDashboardDefinition
+//   - options - ItemsClientBeginGetKQLDashboardDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetKQLDashboardDefinition
 //     method.
-func (client *ItemsClient) GetKQLDashboardDefinition(ctx context.Context, workspaceID string, kqlDashboardID string, options *ItemsClientGetKQLDashboardDefinitionOptions) (ItemsClientGetKQLDashboardDefinitionResponse, error) {
+func (client *ItemsClient) BeginGetKQLDashboardDefinition(ctx context.Context, workspaceID string, kqlDashboardID string, options *ItemsClientBeginGetKQLDashboardDefinitionOptions) (*runtime.Poller[ItemsClientGetKQLDashboardDefinitionResponse], error) {
+	return client.beginGetKQLDashboardDefinition(ctx, workspaceID, kqlDashboardID, options)
+}
+
+// GetKQLDashboardDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) getKQLDashboardDefinition(ctx context.Context, workspaceID string, kqlDashboardID string, options *ItemsClientBeginGetKQLDashboardDefinitionOptions) (*http.Response, error) {
 	var err error
-	const operationName = "kqldashboard.ItemsClient.GetKQLDashboardDefinition"
+	const operationName = "kqldashboard.ItemsClient.BeginGetKQLDashboardDefinition"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
 	req, err := client.getKQLDashboardDefinitionCreateRequest(ctx, workspaceID, kqlDashboardID, options)
 	if err != nil {
-		return ItemsClientGetKQLDashboardDefinitionResponse{}, err
+		return nil, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return ItemsClientGetKQLDashboardDefinitionResponse{}, err
+		return nil, err
 	}
-	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
 		err = core.NewResponseError(httpResp)
-		return ItemsClientGetKQLDashboardDefinitionResponse{}, err
+		return nil, err
 	}
-	resp, err := client.getKQLDashboardDefinitionHandleResponse(httpResp)
-	return resp, err
+	return httpResp, nil
 }
 
 // getKQLDashboardDefinitionCreateRequest creates the GetKQLDashboardDefinition request.
-func (client *ItemsClient) getKQLDashboardDefinitionCreateRequest(ctx context.Context, workspaceID string, kqlDashboardID string, options *ItemsClientGetKQLDashboardDefinitionOptions) (*policy.Request, error) {
+func (client *ItemsClient) getKQLDashboardDefinitionCreateRequest(ctx context.Context, workspaceID string, kqlDashboardID string, options *ItemsClientBeginGetKQLDashboardDefinitionOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/kqlDashboards/{kqlDashboardId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -276,15 +299,6 @@ func (client *ItemsClient) getKQLDashboardDefinitionCreateRequest(ctx context.Co
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
-}
-
-// getKQLDashboardDefinitionHandleResponse handles the GetKQLDashboardDefinition response.
-func (client *ItemsClient) getKQLDashboardDefinitionHandleResponse(resp *http.Response) (ItemsClientGetKQLDashboardDefinitionResponse, error) {
-	result := ItemsClientGetKQLDashboardDefinitionResponse{}
-	if err := runtime.UnmarshalAsJSON(resp, &result.DefinitionResponse); err != nil {
-		return ItemsClientGetKQLDashboardDefinitionResponse{}, err
-	}
-	return result, nil
 }
 
 // NewListKQLDashboardsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
@@ -422,7 +436,8 @@ func (client *ItemsClient) updateKQLDashboardHandleResponse(resp *http.Response)
 	return result, nil
 }
 
-// UpdateKQLDashboardDefinition - PERMISSIONS The caller must have contributor or higher workspace role.
+// BeginUpdateKQLDashboardDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -436,31 +451,47 @@ func (client *ItemsClient) updateKQLDashboardHandleResponse(resp *http.Response)
 //   - workspaceID - The workspace ID.
 //   - kqlDashboardID - The KQL dashboard ID.
 //   - updateKQLDashboardDefinitionRequest - Update KQL dashboard definition request payload.
-//   - options - ItemsClientUpdateKQLDashboardDefinitionOptions contains the optional parameters for the ItemsClient.UpdateKQLDashboardDefinition
+//   - options - ItemsClientBeginUpdateKQLDashboardDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateKQLDashboardDefinition
 //     method.
-func (client *ItemsClient) UpdateKQLDashboardDefinition(ctx context.Context, workspaceID string, kqlDashboardID string, updateKQLDashboardDefinitionRequest UpdateKQLDashboardDefinitionRequest, options *ItemsClientUpdateKQLDashboardDefinitionOptions) (ItemsClientUpdateKQLDashboardDefinitionResponse, error) {
+func (client *ItemsClient) BeginUpdateKQLDashboardDefinition(ctx context.Context, workspaceID string, kqlDashboardID string, updateKQLDashboardDefinitionRequest UpdateKQLDashboardDefinitionRequest, options *ItemsClientBeginUpdateKQLDashboardDefinitionOptions) (*runtime.Poller[ItemsClientUpdateKQLDashboardDefinitionResponse], error) {
+	return client.beginUpdateKQLDashboardDefinition(ctx, workspaceID, kqlDashboardID, updateKQLDashboardDefinitionRequest, options)
+}
+
+// UpdateKQLDashboardDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) updateKQLDashboardDefinition(ctx context.Context, workspaceID string, kqlDashboardID string, updateKQLDashboardDefinitionRequest UpdateKQLDashboardDefinitionRequest, options *ItemsClientBeginUpdateKQLDashboardDefinitionOptions) (*http.Response, error) {
 	var err error
-	const operationName = "kqldashboard.ItemsClient.UpdateKQLDashboardDefinition"
+	const operationName = "kqldashboard.ItemsClient.BeginUpdateKQLDashboardDefinition"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
 	req, err := client.updateKQLDashboardDefinitionCreateRequest(ctx, workspaceID, kqlDashboardID, updateKQLDashboardDefinitionRequest, options)
 	if err != nil {
-		return ItemsClientUpdateKQLDashboardDefinitionResponse{}, err
+		return nil, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return ItemsClientUpdateKQLDashboardDefinitionResponse{}, err
+		return nil, err
 	}
-	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
 		err = core.NewResponseError(httpResp)
-		return ItemsClientUpdateKQLDashboardDefinitionResponse{}, err
+		return nil, err
 	}
-	return ItemsClientUpdateKQLDashboardDefinitionResponse{}, nil
+	return httpResp, nil
 }
 
 // updateKQLDashboardDefinitionCreateRequest creates the UpdateKQLDashboardDefinition request.
-func (client *ItemsClient) updateKQLDashboardDefinitionCreateRequest(ctx context.Context, workspaceID string, kqlDashboardID string, updateKQLDashboardDefinitionRequest UpdateKQLDashboardDefinitionRequest, options *ItemsClientUpdateKQLDashboardDefinitionOptions) (*policy.Request, error) {
+func (client *ItemsClient) updateKQLDashboardDefinitionCreateRequest(ctx context.Context, workspaceID string, kqlDashboardID string, updateKQLDashboardDefinitionRequest UpdateKQLDashboardDefinitionRequest, options *ItemsClientBeginUpdateKQLDashboardDefinitionOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/kqlDashboards/{kqlDashboardId}/updateDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -487,6 +518,217 @@ func (client *ItemsClient) updateKQLDashboardDefinitionCreateRequest(ctx context
 }
 
 // Custom code starts below
+
+// CreateKQLDashboard - returns ItemsClientCreateKQLDashboardResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// To create a KQL dashboard with definition, refer to the KQL dashboard definition article [/rest/api/fabric/articles/item-management/definitions/kql-dashboard-definition].
+//
+// PERMISSIONS
+// The caller must have contributor or higher workspace role.
+//
+// # REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - createKQLDashboardRequest - Create KQL dashboard definition request payload.
+//   - options - ItemsClientBeginCreateKQLDashboardOptions contains the optional parameters for the ItemsClient.BeginCreateKQLDashboard method.
+func (client *ItemsClient) CreateKQLDashboard(ctx context.Context, workspaceID string, createKQLDashboardRequest CreateKQLDashboardRequest, options *ItemsClientBeginCreateKQLDashboardOptions) (ItemsClientCreateKQLDashboardResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginCreateKQLDashboard(ctx, workspaceID, createKQLDashboardRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientCreateKQLDashboardResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientCreateKQLDashboardResponse{}, err
+	}
+	return result, err
+}
+
+// beginCreateKQLDashboard creates the createKQLDashboard request.
+func (client *ItemsClient) beginCreateKQLDashboard(ctx context.Context, workspaceID string, createKQLDashboardRequest CreateKQLDashboardRequest, options *ItemsClientBeginCreateKQLDashboardOptions) (*runtime.Poller[ItemsClientCreateKQLDashboardResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.createKQLDashboard(ctx, workspaceID, createKQLDashboardRequest, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientCreateKQLDashboardResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientCreateKQLDashboardResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientCreateKQLDashboardResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientCreateKQLDashboardResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// GetKQLDashboardDefinition - returns ItemsClientGetKQLDashboardDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS The caller must have contributor or higher workspace role.
+//
+// # REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - kqlDashboardID - The KQL dashboard ID.
+//   - options - ItemsClientBeginGetKQLDashboardDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetKQLDashboardDefinition method.
+func (client *ItemsClient) GetKQLDashboardDefinition(ctx context.Context, workspaceID string, kqlDashboardID string, options *ItemsClientBeginGetKQLDashboardDefinitionOptions) (ItemsClientGetKQLDashboardDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginGetKQLDashboardDefinition(ctx, workspaceID, kqlDashboardID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientGetKQLDashboardDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientGetKQLDashboardDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginGetKQLDashboardDefinition creates the getKQLDashboardDefinition request.
+func (client *ItemsClient) beginGetKQLDashboardDefinition(ctx context.Context, workspaceID string, kqlDashboardID string, options *ItemsClientBeginGetKQLDashboardDefinitionOptions) (*runtime.Poller[ItemsClientGetKQLDashboardDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.getKQLDashboardDefinition(ctx, workspaceID, kqlDashboardID, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientGetKQLDashboardDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientGetKQLDashboardDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientGetKQLDashboardDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientGetKQLDashboardDefinitionResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// UpdateKQLDashboardDefinition - returns ItemsClientUpdateKQLDashboardDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS The caller must have contributor or higher workspace role.
+//
+// # REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - kqlDashboardID - The KQL dashboard ID.
+//   - updateKQLDashboardDefinitionRequest - Update KQL dashboard definition request payload.
+//   - options - ItemsClientBeginUpdateKQLDashboardDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateKQLDashboardDefinition method.
+func (client *ItemsClient) UpdateKQLDashboardDefinition(ctx context.Context, workspaceID string, kqlDashboardID string, updateKQLDashboardDefinitionRequest UpdateKQLDashboardDefinitionRequest, options *ItemsClientBeginUpdateKQLDashboardDefinitionOptions) (ItemsClientUpdateKQLDashboardDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginUpdateKQLDashboardDefinition(ctx, workspaceID, kqlDashboardID, updateKQLDashboardDefinitionRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientUpdateKQLDashboardDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientUpdateKQLDashboardDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginUpdateKQLDashboardDefinition creates the updateKQLDashboardDefinition request.
+func (client *ItemsClient) beginUpdateKQLDashboardDefinition(ctx context.Context, workspaceID string, kqlDashboardID string, updateKQLDashboardDefinitionRequest UpdateKQLDashboardDefinitionRequest, options *ItemsClientBeginUpdateKQLDashboardDefinitionOptions) (*runtime.Poller[ItemsClientUpdateKQLDashboardDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.updateKQLDashboardDefinition(ctx, workspaceID, kqlDashboardID, updateKQLDashboardDefinitionRequest, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateKQLDashboardDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientUpdateKQLDashboardDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateKQLDashboardDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientUpdateKQLDashboardDefinitionResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
 
 // ListKQLDashboards - returns array of KQLDashboard from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].

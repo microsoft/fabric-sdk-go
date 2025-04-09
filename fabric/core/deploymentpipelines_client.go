@@ -28,10 +28,293 @@ type DeploymentPipelinesClient struct {
 	endpoint string
 }
 
+// AddDeploymentPipelineRoleAssignment - PERMISSIONS The caller must have an admin deployment pipelines role.
+// REQUIRED DELEGATED SCOPES Pipeline.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - deploymentPipelineID - The deployment pipeline ID.
+//   - deploymentPipelineRoleAssignmentRequest - Add deployment pipeline role assignment request payload.
+//   - options - DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentOptions contains the optional parameters for the
+//     DeploymentPipelinesClient.AddDeploymentPipelineRoleAssignment method.
+func (client *DeploymentPipelinesClient) AddDeploymentPipelineRoleAssignment(ctx context.Context, deploymentPipelineID string, deploymentPipelineRoleAssignmentRequest AddDeploymentPipelineRoleAssignmentRequest, options *DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentOptions) (DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse, error) {
+	var err error
+	const operationName = "core.DeploymentPipelinesClient.AddDeploymentPipelineRoleAssignment"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.addDeploymentPipelineRoleAssignmentCreateRequest(ctx, deploymentPipelineID, deploymentPipelineRoleAssignmentRequest, options)
+	if err != nil {
+		return DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse{}, err
+	}
+	return DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse{}, nil
+}
+
+// addDeploymentPipelineRoleAssignmentCreateRequest creates the AddDeploymentPipelineRoleAssignment request.
+func (client *DeploymentPipelinesClient) addDeploymentPipelineRoleAssignmentCreateRequest(ctx context.Context, deploymentPipelineID string, deploymentPipelineRoleAssignmentRequest AddDeploymentPipelineRoleAssignmentRequest, _ *DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentOptions) (*policy.Request, error) {
+	urlPath := "/v1/deploymentPipelines/{deploymentPipelineId}/roleAssignments"
+	if deploymentPipelineID == "" {
+		return nil, errors.New("parameter deploymentPipelineID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{deploymentPipelineId}", url.PathEscape(deploymentPipelineID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, deploymentPipelineRoleAssignmentRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// AssignWorkspaceToStage - This operation will fail if there's an active deployment operation.
+// PERMISSIONS The caller must have an admin deployment pipelines role. The caller must have an admin workspace role.
+// REQUIRED DELEGATED SCOPES Pipeline.ReadWrite.All and Workspace.ReadWrite.All
+// LIMITATIONS
+// * The specified deployment pipeline stage must not be assigned to any other workspace.
+// * Only workspace admins can assign it to a deployment pipeline stage.
+// * The specified workspace isn't assigned to any other deployment pipeline stage.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - deploymentPipelineID - The deployment pipeline ID.
+//   - stageID - The deployment pipeline stage ID.
+//   - deploymentPipelineAssignWorkspaceRequest - The assign workspace request.
+//   - options - DeploymentPipelinesClientAssignWorkspaceToStageOptions contains the optional parameters for the DeploymentPipelinesClient.AssignWorkspaceToStage
+//     method.
+func (client *DeploymentPipelinesClient) AssignWorkspaceToStage(ctx context.Context, deploymentPipelineID string, stageID string, deploymentPipelineAssignWorkspaceRequest DeploymentPipelineAssignWorkspaceRequest, options *DeploymentPipelinesClientAssignWorkspaceToStageOptions) (DeploymentPipelinesClientAssignWorkspaceToStageResponse, error) {
+	var err error
+	const operationName = "core.DeploymentPipelinesClient.AssignWorkspaceToStage"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.assignWorkspaceToStageCreateRequest(ctx, deploymentPipelineID, stageID, deploymentPipelineAssignWorkspaceRequest, options)
+	if err != nil {
+		return DeploymentPipelinesClientAssignWorkspaceToStageResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return DeploymentPipelinesClientAssignWorkspaceToStageResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return DeploymentPipelinesClientAssignWorkspaceToStageResponse{}, err
+	}
+	return DeploymentPipelinesClientAssignWorkspaceToStageResponse{}, nil
+}
+
+// assignWorkspaceToStageCreateRequest creates the AssignWorkspaceToStage request.
+func (client *DeploymentPipelinesClient) assignWorkspaceToStageCreateRequest(ctx context.Context, deploymentPipelineID string, stageID string, deploymentPipelineAssignWorkspaceRequest DeploymentPipelineAssignWorkspaceRequest, _ *DeploymentPipelinesClientAssignWorkspaceToStageOptions) (*policy.Request, error) {
+	urlPath := "/v1/deploymentPipelines/{deploymentPipelineId}/stages/{stageId}/assignWorkspace"
+	if deploymentPipelineID == "" {
+		return nil, errors.New("parameter deploymentPipelineID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{deploymentPipelineId}", url.PathEscape(deploymentPipelineID))
+	if stageID == "" {
+		return nil, errors.New("parameter stageID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{stageId}", url.PathEscape(stageID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, deploymentPipelineAssignWorkspaceRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// CreateDeploymentPipeline - REQUIRED DELEGATED SCOPES Pipeline.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - createDeploymentPipelineRequest - The create pipeline request.
+//   - options - DeploymentPipelinesClientCreateDeploymentPipelineOptions contains the optional parameters for the DeploymentPipelinesClient.CreateDeploymentPipeline
+//     method.
+func (client *DeploymentPipelinesClient) CreateDeploymentPipeline(ctx context.Context, createDeploymentPipelineRequest CreateDeploymentPipelineRequest, options *DeploymentPipelinesClientCreateDeploymentPipelineOptions) (DeploymentPipelinesClientCreateDeploymentPipelineResponse, error) {
+	var err error
+	const operationName = "core.DeploymentPipelinesClient.CreateDeploymentPipeline"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.createDeploymentPipelineCreateRequest(ctx, createDeploymentPipelineRequest, options)
+	if err != nil {
+		return DeploymentPipelinesClientCreateDeploymentPipelineResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return DeploymentPipelinesClientCreateDeploymentPipelineResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusCreated) {
+		err = NewResponseError(httpResp)
+		return DeploymentPipelinesClientCreateDeploymentPipelineResponse{}, err
+	}
+	resp, err := client.createDeploymentPipelineHandleResponse(httpResp)
+	return resp, err
+}
+
+// createDeploymentPipelineCreateRequest creates the CreateDeploymentPipeline request.
+func (client *DeploymentPipelinesClient) createDeploymentPipelineCreateRequest(ctx context.Context, createDeploymentPipelineRequest CreateDeploymentPipelineRequest, _ *DeploymentPipelinesClientCreateDeploymentPipelineOptions) (*policy.Request, error) {
+	urlPath := "/v1/deploymentPipelines"
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, createDeploymentPipelineRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// createDeploymentPipelineHandleResponse handles the CreateDeploymentPipeline response.
+func (client *DeploymentPipelinesClient) createDeploymentPipelineHandleResponse(resp *http.Response) (DeploymentPipelinesClientCreateDeploymentPipelineResponse, error) {
+	result := DeploymentPipelinesClientCreateDeploymentPipelineResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.DeploymentPipelineExtendedInfo); err != nil {
+		return DeploymentPipelinesClientCreateDeploymentPipelineResponse{}, err
+	}
+	return result, nil
+}
+
+// DeleteDeploymentPipeline - PERMISSIONS The caller must have an admin deployment pipelines role.
+// This operation will fail if there's an active deployment operation.
+// REQUIRED DELEGATED SCOPES Pipeline.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - deploymentPipelineID - The deployment pipeline ID.
+//   - options - DeploymentPipelinesClientDeleteDeploymentPipelineOptions contains the optional parameters for the DeploymentPipelinesClient.DeleteDeploymentPipeline
+//     method.
+func (client *DeploymentPipelinesClient) DeleteDeploymentPipeline(ctx context.Context, deploymentPipelineID string, options *DeploymentPipelinesClientDeleteDeploymentPipelineOptions) (DeploymentPipelinesClientDeleteDeploymentPipelineResponse, error) {
+	var err error
+	const operationName = "core.DeploymentPipelinesClient.DeleteDeploymentPipeline"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.deleteDeploymentPipelineCreateRequest(ctx, deploymentPipelineID, options)
+	if err != nil {
+		return DeploymentPipelinesClientDeleteDeploymentPipelineResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return DeploymentPipelinesClientDeleteDeploymentPipelineResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return DeploymentPipelinesClientDeleteDeploymentPipelineResponse{}, err
+	}
+	return DeploymentPipelinesClientDeleteDeploymentPipelineResponse{}, nil
+}
+
+// deleteDeploymentPipelineCreateRequest creates the DeleteDeploymentPipeline request.
+func (client *DeploymentPipelinesClient) deleteDeploymentPipelineCreateRequest(ctx context.Context, deploymentPipelineID string, _ *DeploymentPipelinesClientDeleteDeploymentPipelineOptions) (*policy.Request, error) {
+	urlPath := "/v1/deploymentPipelines/{deploymentPipelineId}"
+	if deploymentPipelineID == "" {
+		return nil, errors.New("parameter deploymentPipelineID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{deploymentPipelineId}", url.PathEscape(deploymentPipelineID))
+	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// DeleteDeploymentPipelineRoleAssignment - PERMISSIONS The caller must have an admin deployment pipelines role.
+// REQUIRED DELEGATED SCOPES Pipeline.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - deploymentPipelineID - The deployment pipeline ID.
+//   - principalID - The principal ID.
+//   - options - DeploymentPipelinesClientDeleteDeploymentPipelineRoleAssignmentOptions contains the optional parameters for the
+//     DeploymentPipelinesClient.DeleteDeploymentPipelineRoleAssignment method.
+func (client *DeploymentPipelinesClient) DeleteDeploymentPipelineRoleAssignment(ctx context.Context, deploymentPipelineID string, principalID string, options *DeploymentPipelinesClientDeleteDeploymentPipelineRoleAssignmentOptions) (DeploymentPipelinesClientDeleteDeploymentPipelineRoleAssignmentResponse, error) {
+	var err error
+	const operationName = "core.DeploymentPipelinesClient.DeleteDeploymentPipelineRoleAssignment"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.deleteDeploymentPipelineRoleAssignmentCreateRequest(ctx, deploymentPipelineID, principalID, options)
+	if err != nil {
+		return DeploymentPipelinesClientDeleteDeploymentPipelineRoleAssignmentResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return DeploymentPipelinesClientDeleteDeploymentPipelineRoleAssignmentResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return DeploymentPipelinesClientDeleteDeploymentPipelineRoleAssignmentResponse{}, err
+	}
+	return DeploymentPipelinesClientDeleteDeploymentPipelineRoleAssignmentResponse{}, nil
+}
+
+// deleteDeploymentPipelineRoleAssignmentCreateRequest creates the DeleteDeploymentPipelineRoleAssignment request.
+func (client *DeploymentPipelinesClient) deleteDeploymentPipelineRoleAssignmentCreateRequest(ctx context.Context, deploymentPipelineID string, principalID string, _ *DeploymentPipelinesClientDeleteDeploymentPipelineRoleAssignmentOptions) (*policy.Request, error) {
+	urlPath := "/v1/deploymentPipelines/{deploymentPipelineId}/roleAssignments/{principalId}"
+	if deploymentPipelineID == "" {
+		return nil, errors.New("parameter deploymentPipelineID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{deploymentPipelineId}", url.PathEscape(deploymentPipelineID))
+	if principalID == "" {
+		return nil, errors.New("parameter principalID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{principalId}", url.PathEscape(principalID))
+	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
 // BeginDeployStageContent - To learn about items that are supported in deployment pipelines, see: Supported items [/fabric/cicd/deployment-pipelines/intro-to-deployment-pipelines#supported-items].
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The user must be at least a contributor on both source and target deployment workspaces. For more information,
-// see: Permissions [https://go.microsoft.com/fwlink/?linkid=2235654].
+// PERMISSIONS The caller must have an admin deployment pipelines role. The user must be at least a contributor on both source
+// and target deployment workspaces. For more information, see: Permissions
+// [https://go.microsoft.com/fwlink/?linkid=2235654].
 // REQUIRED DELEGATED SCOPES Pipeline.Deploy
 // LIMITATIONS Maximum 300 deployed items per request.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -54,8 +337,9 @@ func (client *DeploymentPipelinesClient) BeginDeployStageContent(ctx context.Con
 
 // DeployStageContent - To learn about items that are supported in deployment pipelines, see: Supported items [/fabric/cicd/deployment-pipelines/intro-to-deployment-pipelines#supported-items].
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The user must be at least a contributor on both source and target deployment workspaces. For more information,
-// see: Permissions [https://go.microsoft.com/fwlink/?linkid=2235654].
+// PERMISSIONS The caller must have an admin deployment pipelines role. The user must be at least a contributor on both source
+// and target deployment workspaces. For more information, see: Permissions
+// [https://go.microsoft.com/fwlink/?linkid=2235654].
 // REQUIRED DELEGATED SCOPES Pipeline.Deploy
 // LIMITATIONS Maximum 300 deployed items per request.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -107,7 +391,8 @@ func (client *DeploymentPipelinesClient) deployStageContentCreateRequest(ctx con
 	return req, nil
 }
 
-// GetDeploymentPipeline - REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
+// GetDeploymentPipeline - PERMISSIONS The caller must have an admin deployment pipelines role.
+// REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -160,16 +445,277 @@ func (client *DeploymentPipelinesClient) getDeploymentPipelineCreateRequest(ctx 
 // getDeploymentPipelineHandleResponse handles the GetDeploymentPipeline response.
 func (client *DeploymentPipelinesClient) getDeploymentPipelineHandleResponse(resp *http.Response) (DeploymentPipelinesClientGetDeploymentPipelineResponse, error) {
 	result := DeploymentPipelinesClientGetDeploymentPipelineResponse{}
-	if err := runtime.UnmarshalAsJSON(resp, &result.DeploymentPipeline); err != nil {
+	if err := runtime.UnmarshalAsJSON(resp, &result.DeploymentPipelineExtendedInfo); err != nil {
 		return DeploymentPipelinesClientGetDeploymentPipelineResponse{}, err
+	}
+	return result, nil
+}
+
+// GetDeploymentPipelineOperation - PERMISSIONS The caller must have an admin deployment pipelines role.
+// REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - deploymentPipelineID - The deployment pipeline ID.
+//   - operationID - The operation ID.
+//   - options - DeploymentPipelinesClientGetDeploymentPipelineOperationOptions contains the optional parameters for the DeploymentPipelinesClient.GetDeploymentPipelineOperation
+//     method.
+func (client *DeploymentPipelinesClient) GetDeploymentPipelineOperation(ctx context.Context, deploymentPipelineID string, operationID string, options *DeploymentPipelinesClientGetDeploymentPipelineOperationOptions) (DeploymentPipelinesClientGetDeploymentPipelineOperationResponse, error) {
+	var err error
+	const operationName = "core.DeploymentPipelinesClient.GetDeploymentPipelineOperation"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getDeploymentPipelineOperationCreateRequest(ctx, deploymentPipelineID, operationID, options)
+	if err != nil {
+		return DeploymentPipelinesClientGetDeploymentPipelineOperationResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return DeploymentPipelinesClientGetDeploymentPipelineOperationResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return DeploymentPipelinesClientGetDeploymentPipelineOperationResponse{}, err
+	}
+	resp, err := client.getDeploymentPipelineOperationHandleResponse(httpResp)
+	return resp, err
+}
+
+// getDeploymentPipelineOperationCreateRequest creates the GetDeploymentPipelineOperation request.
+func (client *DeploymentPipelinesClient) getDeploymentPipelineOperationCreateRequest(ctx context.Context, deploymentPipelineID string, operationID string, _ *DeploymentPipelinesClientGetDeploymentPipelineOperationOptions) (*policy.Request, error) {
+	urlPath := "/v1/deploymentPipelines/{deploymentPipelineId}/operations/{operationId}"
+	if deploymentPipelineID == "" {
+		return nil, errors.New("parameter deploymentPipelineID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{deploymentPipelineId}", url.PathEscape(deploymentPipelineID))
+	if operationID == "" {
+		return nil, errors.New("parameter operationID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{operationId}", url.PathEscape(operationID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getDeploymentPipelineOperationHandleResponse handles the GetDeploymentPipelineOperation response.
+func (client *DeploymentPipelinesClient) getDeploymentPipelineOperationHandleResponse(resp *http.Response) (DeploymentPipelinesClientGetDeploymentPipelineOperationResponse, error) {
+	result := DeploymentPipelinesClientGetDeploymentPipelineOperationResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.DeploymentPipelineOperationExtendedInfo); err != nil {
+		return DeploymentPipelinesClientGetDeploymentPipelineOperationResponse{}, err
+	}
+	return result, nil
+}
+
+// GetDeploymentPipelineStage - PERMISSIONS The caller must have an admin deployment pipelines role.
+// REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - deploymentPipelineID - The deployment pipeline ID.
+//   - stageID - The deployment pipeline stage ID.
+//   - options - DeploymentPipelinesClientGetDeploymentPipelineStageOptions contains the optional parameters for the DeploymentPipelinesClient.GetDeploymentPipelineStage
+//     method.
+func (client *DeploymentPipelinesClient) GetDeploymentPipelineStage(ctx context.Context, deploymentPipelineID string, stageID string, options *DeploymentPipelinesClientGetDeploymentPipelineStageOptions) (DeploymentPipelinesClientGetDeploymentPipelineStageResponse, error) {
+	var err error
+	const operationName = "core.DeploymentPipelinesClient.GetDeploymentPipelineStage"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getDeploymentPipelineStageCreateRequest(ctx, deploymentPipelineID, stageID, options)
+	if err != nil {
+		return DeploymentPipelinesClientGetDeploymentPipelineStageResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return DeploymentPipelinesClientGetDeploymentPipelineStageResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return DeploymentPipelinesClientGetDeploymentPipelineStageResponse{}, err
+	}
+	resp, err := client.getDeploymentPipelineStageHandleResponse(httpResp)
+	return resp, err
+}
+
+// getDeploymentPipelineStageCreateRequest creates the GetDeploymentPipelineStage request.
+func (client *DeploymentPipelinesClient) getDeploymentPipelineStageCreateRequest(ctx context.Context, deploymentPipelineID string, stageID string, _ *DeploymentPipelinesClientGetDeploymentPipelineStageOptions) (*policy.Request, error) {
+	urlPath := "/v1/deploymentPipelines/{deploymentPipelineId}/stages/{stageId}"
+	if deploymentPipelineID == "" {
+		return nil, errors.New("parameter deploymentPipelineID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{deploymentPipelineId}", url.PathEscape(deploymentPipelineID))
+	if stageID == "" {
+		return nil, errors.New("parameter stageID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{stageId}", url.PathEscape(stageID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getDeploymentPipelineStageHandleResponse handles the GetDeploymentPipelineStage response.
+func (client *DeploymentPipelinesClient) getDeploymentPipelineStageHandleResponse(resp *http.Response) (DeploymentPipelinesClientGetDeploymentPipelineStageResponse, error) {
+	result := DeploymentPipelinesClientGetDeploymentPipelineStageResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.DeploymentPipelineStage); err != nil {
+		return DeploymentPipelinesClientGetDeploymentPipelineStageResponse{}, err
+	}
+	return result, nil
+}
+
+// NewListDeploymentPipelineOperationsPager - PERMISSIONS The caller must have an admin deployment pipelines role.
+// REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+//
+// Generated from API version v1
+//   - deploymentPipelineID - The deployment pipeline ID.
+//   - options - DeploymentPipelinesClientListDeploymentPipelineOperationsOptions contains the optional parameters for the DeploymentPipelinesClient.NewListDeploymentPipelineOperationsPager
+//     method.
+func (client *DeploymentPipelinesClient) NewListDeploymentPipelineOperationsPager(deploymentPipelineID string, options *DeploymentPipelinesClientListDeploymentPipelineOperationsOptions) *runtime.Pager[DeploymentPipelinesClientListDeploymentPipelineOperationsResponse] {
+	return runtime.NewPager(runtime.PagingHandler[DeploymentPipelinesClientListDeploymentPipelineOperationsResponse]{
+		More: func(page DeploymentPipelinesClientListDeploymentPipelineOperationsResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *DeploymentPipelinesClientListDeploymentPipelineOperationsResponse) (DeploymentPipelinesClientListDeploymentPipelineOperationsResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "core.DeploymentPipelinesClient.NewListDeploymentPipelineOperationsPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.listDeploymentPipelineOperationsCreateRequest(ctx, deploymentPipelineID, options)
+			}, nil)
+			if err != nil {
+				return DeploymentPipelinesClientListDeploymentPipelineOperationsResponse{}, err
+			}
+			return client.listDeploymentPipelineOperationsHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
+}
+
+// listDeploymentPipelineOperationsCreateRequest creates the ListDeploymentPipelineOperations request.
+func (client *DeploymentPipelinesClient) listDeploymentPipelineOperationsCreateRequest(ctx context.Context, deploymentPipelineID string, options *DeploymentPipelinesClientListDeploymentPipelineOperationsOptions) (*policy.Request, error) {
+	urlPath := "/v1/deploymentPipelines/{deploymentPipelineId}/operations"
+	if deploymentPipelineID == "" {
+		return nil, errors.New("parameter deploymentPipelineID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{deploymentPipelineId}", url.PathEscape(deploymentPipelineID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// listDeploymentPipelineOperationsHandleResponse handles the ListDeploymentPipelineOperations response.
+func (client *DeploymentPipelinesClient) listDeploymentPipelineOperationsHandleResponse(resp *http.Response) (DeploymentPipelinesClientListDeploymentPipelineOperationsResponse, error) {
+	result := DeploymentPipelinesClientListDeploymentPipelineOperationsResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.DeploymentPipelineOperations); err != nil {
+		return DeploymentPipelinesClientListDeploymentPipelineOperationsResponse{}, err
+	}
+	return result, nil
+}
+
+// NewListDeploymentPipelineRoleAssignmentsPager - PERMISSIONS The caller must have an admin deployment pipelines role.
+// REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+//
+// Generated from API version v1
+//   - deploymentPipelineID - The deployment pipeline ID.
+//   - options - DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsOptions contains the optional parameters for the
+//     DeploymentPipelinesClient.NewListDeploymentPipelineRoleAssignmentsPager method.
+func (client *DeploymentPipelinesClient) NewListDeploymentPipelineRoleAssignmentsPager(deploymentPipelineID string, options *DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsOptions) *runtime.Pager[DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsResponse] {
+	return runtime.NewPager(runtime.PagingHandler[DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsResponse]{
+		More: func(page DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsResponse) (DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "core.DeploymentPipelinesClient.NewListDeploymentPipelineRoleAssignmentsPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.listDeploymentPipelineRoleAssignmentsCreateRequest(ctx, deploymentPipelineID, options)
+			}, nil)
+			if err != nil {
+				return DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsResponse{}, err
+			}
+			return client.listDeploymentPipelineRoleAssignmentsHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
+}
+
+// listDeploymentPipelineRoleAssignmentsCreateRequest creates the ListDeploymentPipelineRoleAssignments request.
+func (client *DeploymentPipelinesClient) listDeploymentPipelineRoleAssignmentsCreateRequest(ctx context.Context, deploymentPipelineID string, options *DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsOptions) (*policy.Request, error) {
+	urlPath := "/v1/deploymentPipelines/{deploymentPipelineId}/roleAssignments"
+	if deploymentPipelineID == "" {
+		return nil, errors.New("parameter deploymentPipelineID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{deploymentPipelineId}", url.PathEscape(deploymentPipelineID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// listDeploymentPipelineRoleAssignmentsHandleResponse handles the ListDeploymentPipelineRoleAssignments response.
+func (client *DeploymentPipelinesClient) listDeploymentPipelineRoleAssignmentsHandleResponse(resp *http.Response) (DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsResponse, error) {
+	result := DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.DeploymentPipelineRoleAssignments); err != nil {
+		return DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsResponse{}, err
 	}
 	return result, nil
 }
 
 // NewListDeploymentPipelineStageItemsPager - To learn about items that are supported in deployment pipelines, see: Supported
 // items [/fabric/cicd/deployment-pipelines/intro-to-deployment-pipelines#supported-items].
-// PERMISSIONS The user must be at least a workspace contributor assigned to the specified stage. For more information, see:
-// Permissions [https://go.microsoft.com/fwlink/?linkid=2235654].
+// PERMISSIONS The caller must have an admin deployment pipelines role. The user must be at least a workspace contributor
+// assigned to the specified stage. For more information, see: Permissions
+// [https://go.microsoft.com/fwlink/?linkid=2235654].
 // REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -239,7 +785,8 @@ func (client *DeploymentPipelinesClient) listDeploymentPipelineStageItemsHandleR
 	return result, nil
 }
 
-// NewListDeploymentPipelineStagesPager - REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
+// NewListDeploymentPipelineStagesPager - PERMISSIONS The caller must have an admin deployment pipelines role.
+// REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -362,6 +909,195 @@ func (client *DeploymentPipelinesClient) listDeploymentPipelinesHandleResponse(r
 	return result, nil
 }
 
+// UnassignWorkspaceFromStage - This operation will fail if there's an active deployment operation.
+// PERMISSIONS The caller must have an admin deployment pipelines role.
+// REQUIRED DELEGATED SCOPES Pipeline.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - deploymentPipelineID - The deployment pipeline ID.
+//   - stageID - The deployment pipeline stage ID.
+//   - options - DeploymentPipelinesClientUnassignWorkspaceFromStageOptions contains the optional parameters for the DeploymentPipelinesClient.UnassignWorkspaceFromStage
+//     method.
+func (client *DeploymentPipelinesClient) UnassignWorkspaceFromStage(ctx context.Context, deploymentPipelineID string, stageID string, options *DeploymentPipelinesClientUnassignWorkspaceFromStageOptions) (DeploymentPipelinesClientUnassignWorkspaceFromStageResponse, error) {
+	var err error
+	const operationName = "core.DeploymentPipelinesClient.UnassignWorkspaceFromStage"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.unassignWorkspaceFromStageCreateRequest(ctx, deploymentPipelineID, stageID, options)
+	if err != nil {
+		return DeploymentPipelinesClientUnassignWorkspaceFromStageResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return DeploymentPipelinesClientUnassignWorkspaceFromStageResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return DeploymentPipelinesClientUnassignWorkspaceFromStageResponse{}, err
+	}
+	return DeploymentPipelinesClientUnassignWorkspaceFromStageResponse{}, nil
+}
+
+// unassignWorkspaceFromStageCreateRequest creates the UnassignWorkspaceFromStage request.
+func (client *DeploymentPipelinesClient) unassignWorkspaceFromStageCreateRequest(ctx context.Context, deploymentPipelineID string, stageID string, _ *DeploymentPipelinesClientUnassignWorkspaceFromStageOptions) (*policy.Request, error) {
+	urlPath := "/v1/deploymentPipelines/{deploymentPipelineId}/stages/{stageId}/unassignWorkspace"
+	if deploymentPipelineID == "" {
+		return nil, errors.New("parameter deploymentPipelineID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{deploymentPipelineId}", url.PathEscape(deploymentPipelineID))
+	if stageID == "" {
+		return nil, errors.New("parameter stageID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{stageId}", url.PathEscape(stageID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// UpdateDeploymentPipeline - PERMISSIONS The caller must have an admin deployment pipelines role.
+// REQUIRED DELEGATED SCOPES Pipeline.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - deploymentPipelineID - The deployment pipeline ID.
+//   - updatePipelineRequest - The update pipeline request.
+//   - options - DeploymentPipelinesClientUpdateDeploymentPipelineOptions contains the optional parameters for the DeploymentPipelinesClient.UpdateDeploymentPipeline
+//     method.
+func (client *DeploymentPipelinesClient) UpdateDeploymentPipeline(ctx context.Context, deploymentPipelineID string, updatePipelineRequest UpdateDeploymentPipelineRequest, options *DeploymentPipelinesClientUpdateDeploymentPipelineOptions) (DeploymentPipelinesClientUpdateDeploymentPipelineResponse, error) {
+	var err error
+	const operationName = "core.DeploymentPipelinesClient.UpdateDeploymentPipeline"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateDeploymentPipelineCreateRequest(ctx, deploymentPipelineID, updatePipelineRequest, options)
+	if err != nil {
+		return DeploymentPipelinesClientUpdateDeploymentPipelineResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return DeploymentPipelinesClientUpdateDeploymentPipelineResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return DeploymentPipelinesClientUpdateDeploymentPipelineResponse{}, err
+	}
+	resp, err := client.updateDeploymentPipelineHandleResponse(httpResp)
+	return resp, err
+}
+
+// updateDeploymentPipelineCreateRequest creates the UpdateDeploymentPipeline request.
+func (client *DeploymentPipelinesClient) updateDeploymentPipelineCreateRequest(ctx context.Context, deploymentPipelineID string, updatePipelineRequest UpdateDeploymentPipelineRequest, _ *DeploymentPipelinesClientUpdateDeploymentPipelineOptions) (*policy.Request, error) {
+	urlPath := "/v1/deploymentPipelines/{deploymentPipelineId}"
+	if deploymentPipelineID == "" {
+		return nil, errors.New("parameter deploymentPipelineID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{deploymentPipelineId}", url.PathEscape(deploymentPipelineID))
+	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updatePipelineRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// updateDeploymentPipelineHandleResponse handles the UpdateDeploymentPipeline response.
+func (client *DeploymentPipelinesClient) updateDeploymentPipelineHandleResponse(resp *http.Response) (DeploymentPipelinesClientUpdateDeploymentPipelineResponse, error) {
+	result := DeploymentPipelinesClientUpdateDeploymentPipelineResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.DeploymentPipelineExtendedInfo); err != nil {
+		return DeploymentPipelinesClientUpdateDeploymentPipelineResponse{}, err
+	}
+	return result, nil
+}
+
+// UpdateDeploymentPipelineStage - PERMISSIONS The caller must have an admin deployment pipelines role.
+// REQUIRED DELEGATED SCOPES Pipeline.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - deploymentPipelineID - The deployment pipeline ID.
+//   - stageID - The deployment pipeline stage ID.
+//   - updatePipelineStageRequest - The update pipeline stage request.
+//   - options - DeploymentPipelinesClientUpdateDeploymentPipelineStageOptions contains the optional parameters for the DeploymentPipelinesClient.UpdateDeploymentPipelineStage
+//     method.
+func (client *DeploymentPipelinesClient) UpdateDeploymentPipelineStage(ctx context.Context, deploymentPipelineID string, stageID string, updatePipelineStageRequest DeploymentPipelineStageRequest, options *DeploymentPipelinesClientUpdateDeploymentPipelineStageOptions) (DeploymentPipelinesClientUpdateDeploymentPipelineStageResponse, error) {
+	var err error
+	const operationName = "core.DeploymentPipelinesClient.UpdateDeploymentPipelineStage"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateDeploymentPipelineStageCreateRequest(ctx, deploymentPipelineID, stageID, updatePipelineStageRequest, options)
+	if err != nil {
+		return DeploymentPipelinesClientUpdateDeploymentPipelineStageResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return DeploymentPipelinesClientUpdateDeploymentPipelineStageResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return DeploymentPipelinesClientUpdateDeploymentPipelineStageResponse{}, err
+	}
+	resp, err := client.updateDeploymentPipelineStageHandleResponse(httpResp)
+	return resp, err
+}
+
+// updateDeploymentPipelineStageCreateRequest creates the UpdateDeploymentPipelineStage request.
+func (client *DeploymentPipelinesClient) updateDeploymentPipelineStageCreateRequest(ctx context.Context, deploymentPipelineID string, stageID string, updatePipelineStageRequest DeploymentPipelineStageRequest, _ *DeploymentPipelinesClientUpdateDeploymentPipelineStageOptions) (*policy.Request, error) {
+	urlPath := "/v1/deploymentPipelines/{deploymentPipelineId}/stages/{stageId}"
+	if deploymentPipelineID == "" {
+		return nil, errors.New("parameter deploymentPipelineID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{deploymentPipelineId}", url.PathEscape(deploymentPipelineID))
+	if stageID == "" {
+		return nil, errors.New("parameter stageID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{stageId}", url.PathEscape(stageID))
+	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updatePipelineStageRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// updateDeploymentPipelineStageHandleResponse handles the UpdateDeploymentPipelineStage response.
+func (client *DeploymentPipelinesClient) updateDeploymentPipelineStageHandleResponse(resp *http.Response) (DeploymentPipelinesClientUpdateDeploymentPipelineStageResponse, error) {
+	result := DeploymentPipelinesClientUpdateDeploymentPipelineStageResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.DeploymentPipelineStage); err != nil {
+		return DeploymentPipelinesClientUpdateDeploymentPipelineStageResponse{}, err
+	}
+	return result, nil
+}
+
 // Custom code starts below
 
 // DeployStageContent - returns DeploymentPipelinesClientDeployStageContentResponse in sync mode.
@@ -369,7 +1105,8 @@ func (client *DeploymentPipelinesClient) listDeploymentPipelinesHandleResponse(r
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// PERMISSIONS The user must be at least a contributor on both source and target deployment workspaces. For more information, see: Permissions [https://go.microsoft.com/fwlink/?linkid=2235654].
+// PERMISSIONS The caller must have an admin deployment pipelines role. The user must be at least a contributor on both source and target deployment workspaces. For more information, see: Permissions
+// [https://go.microsoft.com/fwlink/?linkid=2235654].
 //
 // # REQUIRED DELEGATED SCOPES Pipeline.Deploy
 //
@@ -437,10 +1174,71 @@ func (client *DeploymentPipelinesClient) beginDeployStageContent(ctx context.Con
 	}
 }
 
+// ListDeploymentPipelineOperations - returns array of DeploymentPipelineOperation from all pages.
+// PERMISSIONS The caller must have an admin deployment pipelines role.
+//
+// # REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - deploymentPipelineID - The deployment pipeline ID.
+//   - options - DeploymentPipelinesClientListDeploymentPipelineOperationsOptions contains the optional parameters for the DeploymentPipelinesClient.NewListDeploymentPipelineOperationsPager method.
+func (client *DeploymentPipelinesClient) ListDeploymentPipelineOperations(ctx context.Context, deploymentPipelineID string, options *DeploymentPipelinesClientListDeploymentPipelineOperationsOptions) ([]DeploymentPipelineOperation, error) {
+	pager := client.NewListDeploymentPipelineOperationsPager(deploymentPipelineID, options)
+	mapper := func(resp DeploymentPipelinesClientListDeploymentPipelineOperationsResponse) []DeploymentPipelineOperation {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []DeploymentPipelineOperation{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []DeploymentPipelineOperation{}, err
+	}
+	return list, nil
+}
+
+// ListDeploymentPipelineRoleAssignments - returns array of DeploymentPipelineRoleAssignment from all pages.
+// PERMISSIONS The caller must have an admin deployment pipelines role.
+//
+// # REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - deploymentPipelineID - The deployment pipeline ID.
+//   - options - DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsOptions contains the optional parameters for the DeploymentPipelinesClient.NewListDeploymentPipelineRoleAssignmentsPager method.
+func (client *DeploymentPipelinesClient) ListDeploymentPipelineRoleAssignments(ctx context.Context, deploymentPipelineID string, options *DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsOptions) ([]DeploymentPipelineRoleAssignment, error) {
+	pager := client.NewListDeploymentPipelineRoleAssignmentsPager(deploymentPipelineID, options)
+	mapper := func(resp DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsResponse) []DeploymentPipelineRoleAssignment {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []DeploymentPipelineRoleAssignment{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []DeploymentPipelineRoleAssignment{}, err
+	}
+	return list, nil
+}
+
 // ListDeploymentPipelineStageItems - returns array of DeploymentPipelineStageItem from all pages.
 // To learn about items that are supported in deployment pipelines, see: Supported items [/fabric/cicd/deployment-pipelines/intro-to-deployment-pipelines#supported-items].
 //
-// PERMISSIONS The user must be at least a workspace contributor assigned to the specified stage. For more information, see: Permissions [https://go.microsoft.com/fwlink/?linkid=2235654].
+// PERMISSIONS The caller must have an admin deployment pipelines role. The user must be at least a workspace contributor assigned to the specified stage. For more information, see: Permissions
+// [https://go.microsoft.com/fwlink/?linkid=2235654].
 //
 // # REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
 //
@@ -471,7 +1269,9 @@ func (client *DeploymentPipelinesClient) ListDeploymentPipelineStageItems(ctx co
 }
 
 // ListDeploymentPipelineStages - returns array of DeploymentPipelineStage from all pages.
-// REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
+// PERMISSIONS The caller must have an admin deployment pipelines role.
+//
+// # REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

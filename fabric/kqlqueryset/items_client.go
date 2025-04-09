@@ -20,6 +20,7 @@ import (
 
 	"github.com/microsoft/fabric-sdk-go/fabric/core"
 	"github.com/microsoft/fabric-sdk-go/internal/iruntime"
+	"github.com/microsoft/fabric-sdk-go/internal/pollers/locasync"
 )
 
 // ItemsClient contains the methods for the Items group.
@@ -29,7 +30,8 @@ type ItemsClient struct {
 	endpoint string
 }
 
-// CreateKQLQueryset - To create a KQL queryset with definition, refer to the KQL queryset definition article [/rest/api/fabric/articles/item-management/definitions/kql-queryset-definition].
+// BeginCreateKQLQueryset - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// To create a KQL queryset with definition, refer to the KQL queryset definition article [/rest/api/fabric/articles/item-management/definitions/kql-queryset-definition].
 // PERMISSIONS The caller must have contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -43,31 +45,48 @@ type ItemsClient struct {
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - createKQLQuerysetRequest - Create item request payload.
-//   - options - ItemsClientCreateKQLQuerysetOptions contains the optional parameters for the ItemsClient.CreateKQLQueryset method.
-func (client *ItemsClient) CreateKQLQueryset(ctx context.Context, workspaceID string, createKQLQuerysetRequest CreateKQLQuerysetRequest, options *ItemsClientCreateKQLQuerysetOptions) (ItemsClientCreateKQLQuerysetResponse, error) {
+//   - options - ItemsClientBeginCreateKQLQuerysetOptions contains the optional parameters for the ItemsClient.BeginCreateKQLQueryset
+//     method.
+func (client *ItemsClient) BeginCreateKQLQueryset(ctx context.Context, workspaceID string, createKQLQuerysetRequest CreateKQLQuerysetRequest, options *ItemsClientBeginCreateKQLQuerysetOptions) (*runtime.Poller[ItemsClientCreateKQLQuerysetResponse], error) {
+	return client.beginCreateKQLQueryset(ctx, workspaceID, createKQLQuerysetRequest, options)
+}
+
+// CreateKQLQueryset - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// To create a KQL queryset with definition, refer to the KQL queryset definition article [/rest/api/fabric/articles/item-management/definitions/kql-queryset-definition].
+// PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) createKQLQueryset(ctx context.Context, workspaceID string, createKQLQuerysetRequest CreateKQLQuerysetRequest, options *ItemsClientBeginCreateKQLQuerysetOptions) (*http.Response, error) {
 	var err error
-	const operationName = "kqlqueryset.ItemsClient.CreateKQLQueryset"
+	const operationName = "kqlqueryset.ItemsClient.BeginCreateKQLQueryset"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
 	req, err := client.createKQLQuerysetCreateRequest(ctx, workspaceID, createKQLQuerysetRequest, options)
 	if err != nil {
-		return ItemsClientCreateKQLQuerysetResponse{}, err
+		return nil, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return ItemsClientCreateKQLQuerysetResponse{}, err
+		return nil, err
 	}
-	if !runtime.HasStatusCode(httpResp, http.StatusCreated) {
+	if !runtime.HasStatusCode(httpResp, http.StatusCreated, http.StatusAccepted) {
 		err = core.NewResponseError(httpResp)
-		return ItemsClientCreateKQLQuerysetResponse{}, err
+		return nil, err
 	}
-	resp, err := client.createKQLQuerysetHandleResponse(httpResp)
-	return resp, err
+	return httpResp, nil
 }
 
 // createKQLQuerysetCreateRequest creates the CreateKQLQueryset request.
-func (client *ItemsClient) createKQLQuerysetCreateRequest(ctx context.Context, workspaceID string, createKQLQuerysetRequest CreateKQLQuerysetRequest, _ *ItemsClientCreateKQLQuerysetOptions) (*policy.Request, error) {
+func (client *ItemsClient) createKQLQuerysetCreateRequest(ctx context.Context, workspaceID string, createKQLQuerysetRequest CreateKQLQuerysetRequest, _ *ItemsClientBeginCreateKQLQuerysetOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/kqlQuerysets"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -82,15 +101,6 @@ func (client *ItemsClient) createKQLQuerysetCreateRequest(ctx context.Context, w
 		return nil, err
 	}
 	return req, nil
-}
-
-// createKQLQuerysetHandleResponse handles the CreateKQLQueryset response.
-func (client *ItemsClient) createKQLQuerysetHandleResponse(resp *http.Response) (ItemsClientCreateKQLQuerysetResponse, error) {
-	result := ItemsClientCreateKQLQuerysetResponse{}
-	if err := runtime.UnmarshalAsJSON(resp, &result.KQLQueryset); err != nil {
-		return ItemsClientCreateKQLQuerysetResponse{}, err
-	}
-	return result, nil
 }
 
 // DeleteKQLQueryset - PERMISSIONS The caller must have contributor or higher workspace role.
@@ -211,7 +221,9 @@ func (client *ItemsClient) getKQLQuerysetHandleResponse(resp *http.Response) (It
 	return result, nil
 }
 
-// GetKQLQuerysetDefinition - PERMISSIONS The caller must have contributor or higher workspace role.
+// BeginGetKQLQuerysetDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS
+// The caller must have contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -224,32 +236,48 @@ func (client *ItemsClient) getKQLQuerysetHandleResponse(resp *http.Response) (It
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - kqlQuerysetID - The KQL queryset ID.
-//   - options - ItemsClientGetKQLQuerysetDefinitionOptions contains the optional parameters for the ItemsClient.GetKQLQuerysetDefinition
+//   - options - ItemsClientBeginGetKQLQuerysetDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetKQLQuerysetDefinition
 //     method.
-func (client *ItemsClient) GetKQLQuerysetDefinition(ctx context.Context, workspaceID string, kqlQuerysetID string, options *ItemsClientGetKQLQuerysetDefinitionOptions) (ItemsClientGetKQLQuerysetDefinitionResponse, error) {
+func (client *ItemsClient) BeginGetKQLQuerysetDefinition(ctx context.Context, workspaceID string, kqlQuerysetID string, options *ItemsClientBeginGetKQLQuerysetDefinitionOptions) (*runtime.Poller[ItemsClientGetKQLQuerysetDefinitionResponse], error) {
+	return client.beginGetKQLQuerysetDefinition(ctx, workspaceID, kqlQuerysetID, options)
+}
+
+// GetKQLQuerysetDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS
+// The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) getKQLQuerysetDefinition(ctx context.Context, workspaceID string, kqlQuerysetID string, options *ItemsClientBeginGetKQLQuerysetDefinitionOptions) (*http.Response, error) {
 	var err error
-	const operationName = "kqlqueryset.ItemsClient.GetKQLQuerysetDefinition"
+	const operationName = "kqlqueryset.ItemsClient.BeginGetKQLQuerysetDefinition"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
 	req, err := client.getKQLQuerysetDefinitionCreateRequest(ctx, workspaceID, kqlQuerysetID, options)
 	if err != nil {
-		return ItemsClientGetKQLQuerysetDefinitionResponse{}, err
+		return nil, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return ItemsClientGetKQLQuerysetDefinitionResponse{}, err
+		return nil, err
 	}
-	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
 		err = core.NewResponseError(httpResp)
-		return ItemsClientGetKQLQuerysetDefinitionResponse{}, err
+		return nil, err
 	}
-	resp, err := client.getKQLQuerysetDefinitionHandleResponse(httpResp)
-	return resp, err
+	return httpResp, nil
 }
 
 // getKQLQuerysetDefinitionCreateRequest creates the GetKQLQuerysetDefinition request.
-func (client *ItemsClient) getKQLQuerysetDefinitionCreateRequest(ctx context.Context, workspaceID string, kqlQuerysetID string, options *ItemsClientGetKQLQuerysetDefinitionOptions) (*policy.Request, error) {
+func (client *ItemsClient) getKQLQuerysetDefinitionCreateRequest(ctx context.Context, workspaceID string, kqlQuerysetID string, options *ItemsClientBeginGetKQLQuerysetDefinitionOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/kqlQuerysets/{kqlQuerysetId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -270,15 +298,6 @@ func (client *ItemsClient) getKQLQuerysetDefinitionCreateRequest(ctx context.Con
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
-}
-
-// getKQLQuerysetDefinitionHandleResponse handles the GetKQLQuerysetDefinition response.
-func (client *ItemsClient) getKQLQuerysetDefinitionHandleResponse(resp *http.Response) (ItemsClientGetKQLQuerysetDefinitionResponse, error) {
-	result := ItemsClientGetKQLQuerysetDefinitionResponse{}
-	if err := runtime.UnmarshalAsJSON(resp, &result.DefinitionResponse); err != nil {
-		return ItemsClientGetKQLQuerysetDefinitionResponse{}, err
-	}
-	return result, nil
 }
 
 // NewListKQLQuerysetsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
@@ -415,7 +434,8 @@ func (client *ItemsClient) updateKQLQuerysetHandleResponse(resp *http.Response) 
 	return result, nil
 }
 
-// UpdateKQLQuerysetDefinition - PERMISSIONS The caller must have contributor or higher workspace role.
+// BeginUpdateKQLQuerysetDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -429,31 +449,47 @@ func (client *ItemsClient) updateKQLQuerysetHandleResponse(resp *http.Response) 
 //   - workspaceID - The workspace ID.
 //   - kqlQuerysetID - The KQL queryset ID.
 //   - updateKQLQuerysetDefinitionRequest - Update KQL queryset definition request payload.
-//   - options - ItemsClientUpdateKQLQuerysetDefinitionOptions contains the optional parameters for the ItemsClient.UpdateKQLQuerysetDefinition
+//   - options - ItemsClientBeginUpdateKQLQuerysetDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateKQLQuerysetDefinition
 //     method.
-func (client *ItemsClient) UpdateKQLQuerysetDefinition(ctx context.Context, workspaceID string, kqlQuerysetID string, updateKQLQuerysetDefinitionRequest UpdateKQLQuerysetDefinitionRequest, options *ItemsClientUpdateKQLQuerysetDefinitionOptions) (ItemsClientUpdateKQLQuerysetDefinitionResponse, error) {
+func (client *ItemsClient) BeginUpdateKQLQuerysetDefinition(ctx context.Context, workspaceID string, kqlQuerysetID string, updateKQLQuerysetDefinitionRequest UpdateKQLQuerysetDefinitionRequest, options *ItemsClientBeginUpdateKQLQuerysetDefinitionOptions) (*runtime.Poller[ItemsClientUpdateKQLQuerysetDefinitionResponse], error) {
+	return client.beginUpdateKQLQuerysetDefinition(ctx, workspaceID, kqlQuerysetID, updateKQLQuerysetDefinitionRequest, options)
+}
+
+// UpdateKQLQuerysetDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) updateKQLQuerysetDefinition(ctx context.Context, workspaceID string, kqlQuerysetID string, updateKQLQuerysetDefinitionRequest UpdateKQLQuerysetDefinitionRequest, options *ItemsClientBeginUpdateKQLQuerysetDefinitionOptions) (*http.Response, error) {
 	var err error
-	const operationName = "kqlqueryset.ItemsClient.UpdateKQLQuerysetDefinition"
+	const operationName = "kqlqueryset.ItemsClient.BeginUpdateKQLQuerysetDefinition"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
 	req, err := client.updateKQLQuerysetDefinitionCreateRequest(ctx, workspaceID, kqlQuerysetID, updateKQLQuerysetDefinitionRequest, options)
 	if err != nil {
-		return ItemsClientUpdateKQLQuerysetDefinitionResponse{}, err
+		return nil, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return ItemsClientUpdateKQLQuerysetDefinitionResponse{}, err
+		return nil, err
 	}
-	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
 		err = core.NewResponseError(httpResp)
-		return ItemsClientUpdateKQLQuerysetDefinitionResponse{}, err
+		return nil, err
 	}
-	return ItemsClientUpdateKQLQuerysetDefinitionResponse{}, nil
+	return httpResp, nil
 }
 
 // updateKQLQuerysetDefinitionCreateRequest creates the UpdateKQLQuerysetDefinition request.
-func (client *ItemsClient) updateKQLQuerysetDefinitionCreateRequest(ctx context.Context, workspaceID string, kqlQuerysetID string, updateKQLQuerysetDefinitionRequest UpdateKQLQuerysetDefinitionRequest, options *ItemsClientUpdateKQLQuerysetDefinitionOptions) (*policy.Request, error) {
+func (client *ItemsClient) updateKQLQuerysetDefinitionCreateRequest(ctx context.Context, workspaceID string, kqlQuerysetID string, updateKQLQuerysetDefinitionRequest UpdateKQLQuerysetDefinitionRequest, options *ItemsClientBeginUpdateKQLQuerysetDefinitionOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/kqlQuerysets/{kqlQuerysetId}/updateDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -480,6 +516,217 @@ func (client *ItemsClient) updateKQLQuerysetDefinitionCreateRequest(ctx context.
 }
 
 // Custom code starts below
+
+// CreateKQLQueryset - returns ItemsClientCreateKQLQuerysetResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// To create a KQL queryset with definition, refer to the KQL queryset definition article [/rest/api/fabric/articles/item-management/definitions/kql-queryset-definition].
+//
+// PERMISSIONS The caller must have contributor or higher workspace role.
+//
+// # REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - createKQLQuerysetRequest - Create item request payload.
+//   - options - ItemsClientBeginCreateKQLQuerysetOptions contains the optional parameters for the ItemsClient.BeginCreateKQLQueryset method.
+func (client *ItemsClient) CreateKQLQueryset(ctx context.Context, workspaceID string, createKQLQuerysetRequest CreateKQLQuerysetRequest, options *ItemsClientBeginCreateKQLQuerysetOptions) (ItemsClientCreateKQLQuerysetResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginCreateKQLQueryset(ctx, workspaceID, createKQLQuerysetRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientCreateKQLQuerysetResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientCreateKQLQuerysetResponse{}, err
+	}
+	return result, err
+}
+
+// beginCreateKQLQueryset creates the createKQLQueryset request.
+func (client *ItemsClient) beginCreateKQLQueryset(ctx context.Context, workspaceID string, createKQLQuerysetRequest CreateKQLQuerysetRequest, options *ItemsClientBeginCreateKQLQuerysetOptions) (*runtime.Poller[ItemsClientCreateKQLQuerysetResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.createKQLQueryset(ctx, workspaceID, createKQLQuerysetRequest, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientCreateKQLQuerysetResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientCreateKQLQuerysetResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientCreateKQLQuerysetResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientCreateKQLQuerysetResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// GetKQLQuerysetDefinition - returns ItemsClientGetKQLQuerysetDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS
+// The caller must have contributor or higher workspace role.
+//
+// # REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - kqlQuerysetID - The KQL queryset ID.
+//   - options - ItemsClientBeginGetKQLQuerysetDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetKQLQuerysetDefinition method.
+func (client *ItemsClient) GetKQLQuerysetDefinition(ctx context.Context, workspaceID string, kqlQuerysetID string, options *ItemsClientBeginGetKQLQuerysetDefinitionOptions) (ItemsClientGetKQLQuerysetDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginGetKQLQuerysetDefinition(ctx, workspaceID, kqlQuerysetID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientGetKQLQuerysetDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientGetKQLQuerysetDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginGetKQLQuerysetDefinition creates the getKQLQuerysetDefinition request.
+func (client *ItemsClient) beginGetKQLQuerysetDefinition(ctx context.Context, workspaceID string, kqlQuerysetID string, options *ItemsClientBeginGetKQLQuerysetDefinitionOptions) (*runtime.Poller[ItemsClientGetKQLQuerysetDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.getKQLQuerysetDefinition(ctx, workspaceID, kqlQuerysetID, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientGetKQLQuerysetDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientGetKQLQuerysetDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientGetKQLQuerysetDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientGetKQLQuerysetDefinitionResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// UpdateKQLQuerysetDefinition - returns ItemsClientUpdateKQLQuerysetDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS The caller must have contributor or higher workspace role.
+//
+// # REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - kqlQuerysetID - The KQL queryset ID.
+//   - updateKQLQuerysetDefinitionRequest - Update KQL queryset definition request payload.
+//   - options - ItemsClientBeginUpdateKQLQuerysetDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateKQLQuerysetDefinition method.
+func (client *ItemsClient) UpdateKQLQuerysetDefinition(ctx context.Context, workspaceID string, kqlQuerysetID string, updateKQLQuerysetDefinitionRequest UpdateKQLQuerysetDefinitionRequest, options *ItemsClientBeginUpdateKQLQuerysetDefinitionOptions) (ItemsClientUpdateKQLQuerysetDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginUpdateKQLQuerysetDefinition(ctx, workspaceID, kqlQuerysetID, updateKQLQuerysetDefinitionRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientUpdateKQLQuerysetDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientUpdateKQLQuerysetDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginUpdateKQLQuerysetDefinition creates the updateKQLQuerysetDefinition request.
+func (client *ItemsClient) beginUpdateKQLQuerysetDefinition(ctx context.Context, workspaceID string, kqlQuerysetID string, updateKQLQuerysetDefinitionRequest UpdateKQLQuerysetDefinitionRequest, options *ItemsClientBeginUpdateKQLQuerysetDefinitionOptions) (*runtime.Poller[ItemsClientUpdateKQLQuerysetDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.updateKQLQuerysetDefinition(ctx, workspaceID, kqlQuerysetID, updateKQLQuerysetDefinitionRequest, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateKQLQuerysetDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientUpdateKQLQuerysetDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateKQLQuerysetDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientUpdateKQLQuerysetDefinitionResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
 
 // ListKQLQuerysets - returns array of KQLQueryset from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].

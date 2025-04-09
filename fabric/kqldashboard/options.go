@@ -6,21 +6,37 @@
 
 package kqldashboard
 
-// ItemsClientCreateKQLDashboardOptions contains the optional parameters for the ItemsClient.CreateKQLDashboard method.
-type ItemsClientCreateKQLDashboardOptions struct {
-	// placeholder for future optional parameters
+// ItemsClientBeginCreateKQLDashboardOptions contains the optional parameters for the ItemsClient.BeginCreateKQLDashboard
+// method.
+type ItemsClientBeginCreateKQLDashboardOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// ItemsClientBeginGetKQLDashboardDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetKQLDashboardDefinition
+// method.
+type ItemsClientBeginGetKQLDashboardDefinitionOptions struct {
+	// The format of the KQL dashboard public definition.
+	Format *string
+
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// ItemsClientBeginUpdateKQLDashboardDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateKQLDashboardDefinition
+// method.
+type ItemsClientBeginUpdateKQLDashboardDefinitionOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+
+	// When set to true and the .platform file is provided as part of the definition, the item's metadata is updated using the
+	// metadata in the .platform file
+	UpdateMetadata *bool
 }
 
 // ItemsClientDeleteKQLDashboardOptions contains the optional parameters for the ItemsClient.DeleteKQLDashboard method.
 type ItemsClientDeleteKQLDashboardOptions struct {
 	// placeholder for future optional parameters
-}
-
-// ItemsClientGetKQLDashboardDefinitionOptions contains the optional parameters for the ItemsClient.GetKQLDashboardDefinition
-// method.
-type ItemsClientGetKQLDashboardDefinitionOptions struct {
-	// The format of the KQL dashboard public definition.
-	Format *string
 }
 
 // ItemsClientGetKQLDashboardOptions contains the optional parameters for the ItemsClient.GetKQLDashboard method.
@@ -32,14 +48,6 @@ type ItemsClientGetKQLDashboardOptions struct {
 type ItemsClientListKQLDashboardsOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
-}
-
-// ItemsClientUpdateKQLDashboardDefinitionOptions contains the optional parameters for the ItemsClient.UpdateKQLDashboardDefinition
-// method.
-type ItemsClientUpdateKQLDashboardDefinitionOptions struct {
-	// When set to true and the .platform file is provided as part of the definition, the item's metadata is updated using the
-	// metadata in the .platform file
-	UpdateMetadata *bool
 }
 
 // ItemsClientUpdateKQLDashboardOptions contains the optional parameters for the ItemsClient.UpdateKQLDashboard method.

@@ -117,17 +117,19 @@ func (testsuite *FakeTestSuite) TestItems_CreateKQLQueryset() {
 		DisplayName: to.Ptr("KQLQueryset_1"),
 	}
 
-	testsuite.serverFactory.ItemsServer.CreateKQLQueryset = func(ctx context.Context, workspaceID string, createKQLQuerysetRequest kqlqueryset.CreateKQLQuerysetRequest, options *kqlqueryset.ItemsClientCreateKQLQuerysetOptions) (resp azfake.Responder[kqlqueryset.ItemsClientCreateKQLQuerysetResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ItemsServer.BeginCreateKQLQueryset = func(ctx context.Context, workspaceID string, createKQLQuerysetRequest kqlqueryset.CreateKQLQuerysetRequest, options *kqlqueryset.ItemsClientBeginCreateKQLQuerysetOptions) (resp azfake.PollerResponder[kqlqueryset.ItemsClientCreateKQLQuerysetResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().True(reflect.DeepEqual(exampleCreateKQLQuerysetRequest, createKQLQuerysetRequest))
-		resp = azfake.Responder[kqlqueryset.ItemsClientCreateKQLQuerysetResponse]{}
-		resp.SetResponse(http.StatusCreated, kqlqueryset.ItemsClientCreateKQLQuerysetResponse{}, nil)
+		resp = azfake.PollerResponder[kqlqueryset.ItemsClientCreateKQLQuerysetResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, kqlqueryset.ItemsClientCreateKQLQuerysetResponse{}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.CreateKQLQueryset(ctx, exampleWorkspaceID, exampleCreateKQLQuerysetRequest, nil)
+	poller, err := client.BeginCreateKQLQueryset(ctx, exampleWorkspaceID, exampleCreateKQLQuerysetRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -147,16 +149,18 @@ func (testsuite *FakeTestSuite) TestItems_CreateKQLQueryset() {
 		DisplayName: to.Ptr("KQLQueryset_1"),
 	}
 
-	testsuite.serverFactory.ItemsServer.CreateKQLQueryset = func(ctx context.Context, workspaceID string, createKQLQuerysetRequest kqlqueryset.CreateKQLQuerysetRequest, options *kqlqueryset.ItemsClientCreateKQLQuerysetOptions) (resp azfake.Responder[kqlqueryset.ItemsClientCreateKQLQuerysetResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ItemsServer.BeginCreateKQLQueryset = func(ctx context.Context, workspaceID string, createKQLQuerysetRequest kqlqueryset.CreateKQLQuerysetRequest, options *kqlqueryset.ItemsClientBeginCreateKQLQuerysetOptions) (resp azfake.PollerResponder[kqlqueryset.ItemsClientCreateKQLQuerysetResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().True(reflect.DeepEqual(exampleCreateKQLQuerysetRequest, createKQLQuerysetRequest))
-		resp = azfake.Responder[kqlqueryset.ItemsClientCreateKQLQuerysetResponse]{}
-		resp.SetResponse(http.StatusCreated, kqlqueryset.ItemsClientCreateKQLQuerysetResponse{}, nil)
+		resp = azfake.PollerResponder[kqlqueryset.ItemsClientCreateKQLQuerysetResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, kqlqueryset.ItemsClientCreateKQLQuerysetResponse{}, nil)
 		return
 	}
 
-	_, err = client.CreateKQLQueryset(ctx, exampleWorkspaceID, exampleCreateKQLQuerysetRequest, nil)
+	poller, err = client.BeginCreateKQLQueryset(ctx, exampleWorkspaceID, exampleCreateKQLQuerysetRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestItems_GetKQLQueryset() {
@@ -278,17 +282,19 @@ func (testsuite *FakeTestSuite) TestItems_GetKQLQuerysetDefinition() {
 		},
 	}
 
-	testsuite.serverFactory.ItemsServer.GetKQLQuerysetDefinition = func(ctx context.Context, workspaceID string, kqlQuerysetID string, options *kqlqueryset.ItemsClientGetKQLQuerysetDefinitionOptions) (resp azfake.Responder[kqlqueryset.ItemsClientGetKQLQuerysetDefinitionResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ItemsServer.BeginGetKQLQuerysetDefinition = func(ctx context.Context, workspaceID string, kqlQuerysetID string, options *kqlqueryset.ItemsClientBeginGetKQLQuerysetDefinitionOptions) (resp azfake.PollerResponder[kqlqueryset.ItemsClientGetKQLQuerysetDefinitionResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleKqlQuerysetID, kqlQuerysetID)
-		resp = azfake.Responder[kqlqueryset.ItemsClientGetKQLQuerysetDefinitionResponse]{}
-		resp.SetResponse(http.StatusOK, kqlqueryset.ItemsClientGetKQLQuerysetDefinitionResponse{DefinitionResponse: exampleRes}, nil)
+		resp = azfake.PollerResponder[kqlqueryset.ItemsClientGetKQLQuerysetDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, kqlqueryset.ItemsClientGetKQLQuerysetDefinitionResponse{DefinitionResponse: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	res, err := client.GetKQLQuerysetDefinition(ctx, exampleWorkspaceID, exampleKqlQuerysetID, &kqlqueryset.ItemsClientGetKQLQuerysetDefinitionOptions{Format: nil})
+	poller, err := client.BeginGetKQLQuerysetDefinition(ctx, exampleWorkspaceID, exampleKqlQuerysetID, &kqlqueryset.ItemsClientBeginGetKQLQuerysetDefinitionOptions{Format: nil})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DefinitionResponse))
 }
 
@@ -318,16 +324,18 @@ func (testsuite *FakeTestSuite) TestItems_UpdateKQLQuerysetDefinition() {
 		},
 	}
 
-	testsuite.serverFactory.ItemsServer.UpdateKQLQuerysetDefinition = func(ctx context.Context, workspaceID string, kqlQuerysetID string, updateKQLQuerysetDefinitionRequest kqlqueryset.UpdateKQLQuerysetDefinitionRequest, options *kqlqueryset.ItemsClientUpdateKQLQuerysetDefinitionOptions) (resp azfake.Responder[kqlqueryset.ItemsClientUpdateKQLQuerysetDefinitionResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ItemsServer.BeginUpdateKQLQuerysetDefinition = func(ctx context.Context, workspaceID string, kqlQuerysetID string, updateKQLQuerysetDefinitionRequest kqlqueryset.UpdateKQLQuerysetDefinitionRequest, options *kqlqueryset.ItemsClientBeginUpdateKQLQuerysetDefinitionOptions) (resp azfake.PollerResponder[kqlqueryset.ItemsClientUpdateKQLQuerysetDefinitionResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleKqlQuerysetID, kqlQuerysetID)
 		testsuite.Require().True(reflect.DeepEqual(exampleUpdateKQLQuerysetDefinitionRequest, updateKQLQuerysetDefinitionRequest))
-		resp = azfake.Responder[kqlqueryset.ItemsClientUpdateKQLQuerysetDefinitionResponse]{}
-		resp.SetResponse(http.StatusOK, kqlqueryset.ItemsClientUpdateKQLQuerysetDefinitionResponse{}, nil)
+		resp = azfake.PollerResponder[kqlqueryset.ItemsClientUpdateKQLQuerysetDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, kqlqueryset.ItemsClientUpdateKQLQuerysetDefinitionResponse{}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.UpdateKQLQuerysetDefinition(ctx, exampleWorkspaceID, exampleKqlQuerysetID, exampleUpdateKQLQuerysetDefinitionRequest, &kqlqueryset.ItemsClientUpdateKQLQuerysetDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	poller, err := client.BeginUpdateKQLQuerysetDefinition(ctx, exampleWorkspaceID, exampleKqlQuerysetID, exampleUpdateKQLQuerysetDefinitionRequest, &kqlqueryset.ItemsClientBeginUpdateKQLQuerysetDefinitionOptions{UpdateMetadata: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }

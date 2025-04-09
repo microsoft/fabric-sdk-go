@@ -262,6 +262,8 @@ const (
 	ItemTypeSemanticModel ItemType = "SemanticModel"
 	// ItemTypeSparkJobDefinition - A spark job definition.
 	ItemTypeSparkJobDefinition ItemType = "SparkJobDefinition"
+	// ItemTypeVariableLibrary - A VariableLibrary.
+	ItemTypeVariableLibrary ItemType = "VariableLibrary"
 	// ItemTypeWarehouse - A warehouse.
 	ItemTypeWarehouse ItemType = "Warehouse"
 )
@@ -294,6 +296,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeSQLEndpoint,
 		ItemTypeSemanticModel,
 		ItemTypeSparkJobDefinition,
+		ItemTypeVariableLibrary,
 		ItemTypeWarehouse,
 	}
 }

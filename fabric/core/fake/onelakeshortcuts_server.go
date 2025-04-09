@@ -26,7 +26,7 @@ import (
 // OneLakeShortcutsServer is a fake server for instances of the core.OneLakeShortcutsClient type.
 type OneLakeShortcutsServer struct {
 	// CreateShortcut is the fake for method OneLakeShortcutsClient.CreateShortcut
-	// HTTP status codes to indicate success: http.StatusCreated
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated
 	CreateShortcut func(ctx context.Context, workspaceID string, itemID string, createShortcutRequest core.CreateShortcutRequest, options *core.OneLakeShortcutsClientCreateShortcutOptions) (resp azfake.Responder[core.OneLakeShortcutsClientCreateShortcutResponse], errResp azfake.ErrorResponder)
 
 	// DeleteShortcut is the fake for method OneLakeShortcutsClient.DeleteShortcut
@@ -158,8 +158,8 @@ func (o *OneLakeShortcutsServerTransport) dispatchCreateShortcut(req *http.Reque
 		return nil, respErr
 	}
 	respContent := server.GetResponseContent(respr)
-	if !contains([]int{http.StatusCreated}, respContent.HTTPStatus) {
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated", respContent.HTTPStatus)}
+	if !contains([]int{http.StatusOK, http.StatusCreated}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusCreated", respContent.HTTPStatus)}
 	}
 	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).Shortcut, req)
 	if err != nil {

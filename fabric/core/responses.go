@@ -74,16 +74,65 @@ type ConnectionsClientUpdateConnectionRoleAssignmentResponse struct {
 	ConnectionRoleAssignment
 }
 
+// DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse contains the response from method DeploymentPipelinesClient.AddDeploymentPipelineRoleAssignment.
+type DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse struct {
+	// placeholder for future response values
+}
+
+// DeploymentPipelinesClientAssignWorkspaceToStageResponse contains the response from method DeploymentPipelinesClient.AssignWorkspaceToStage.
+type DeploymentPipelinesClientAssignWorkspaceToStageResponse struct {
+	// placeholder for future response values
+}
+
+// DeploymentPipelinesClientCreateDeploymentPipelineResponse contains the response from method DeploymentPipelinesClient.CreateDeploymentPipeline.
+type DeploymentPipelinesClientCreateDeploymentPipelineResponse struct {
+	// A Fabric deployment pipeline.
+	DeploymentPipelineExtendedInfo
+}
+
+// DeploymentPipelinesClientDeleteDeploymentPipelineResponse contains the response from method DeploymentPipelinesClient.DeleteDeploymentPipeline.
+type DeploymentPipelinesClientDeleteDeploymentPipelineResponse struct {
+	// placeholder for future response values
+}
+
+// DeploymentPipelinesClientDeleteDeploymentPipelineRoleAssignmentResponse contains the response from method DeploymentPipelinesClient.DeleteDeploymentPipelineRoleAssignment.
+type DeploymentPipelinesClientDeleteDeploymentPipelineRoleAssignmentResponse struct {
+	// placeholder for future response values
+}
+
 // DeploymentPipelinesClientDeployStageContentResponse contains the response from method DeploymentPipelinesClient.BeginDeployStageContent.
 type DeploymentPipelinesClientDeployStageContentResponse struct {
 	// A Fabric deployment pipeline operation.
-	DeploymentPipelineOperation
+	DeploymentPipelineOperationExtendedInfo
+}
+
+// DeploymentPipelinesClientGetDeploymentPipelineOperationResponse contains the response from method DeploymentPipelinesClient.GetDeploymentPipelineOperation.
+type DeploymentPipelinesClientGetDeploymentPipelineOperationResponse struct {
+	// A Fabric deployment pipeline operation.
+	DeploymentPipelineOperationExtendedInfo
 }
 
 // DeploymentPipelinesClientGetDeploymentPipelineResponse contains the response from method DeploymentPipelinesClient.GetDeploymentPipeline.
 type DeploymentPipelinesClientGetDeploymentPipelineResponse struct {
 	// A Fabric deployment pipeline.
-	DeploymentPipeline
+	DeploymentPipelineExtendedInfo
+}
+
+// DeploymentPipelinesClientGetDeploymentPipelineStageResponse contains the response from method DeploymentPipelinesClient.GetDeploymentPipelineStage.
+type DeploymentPipelinesClientGetDeploymentPipelineStageResponse struct {
+	// A Fabric deployment pipeline stage.
+	DeploymentPipelineStage
+}
+
+// DeploymentPipelinesClientListDeploymentPipelineOperationsResponse contains the response from method DeploymentPipelinesClient.NewListDeploymentPipelineOperationsPager.
+type DeploymentPipelinesClientListDeploymentPipelineOperationsResponse struct {
+	// A collection of Fabric deployment pipeline operations.
+	DeploymentPipelineOperations
+}
+
+// DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsResponse contains the response from method DeploymentPipelinesClient.NewListDeploymentPipelineRoleAssignmentsPager.
+type DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsResponse struct {
+	DeploymentPipelineRoleAssignments
 }
 
 // DeploymentPipelinesClientListDeploymentPipelineStageItemsResponse contains the response from method DeploymentPipelinesClient.NewListDeploymentPipelineStageItemsPager.
@@ -102,6 +151,23 @@ type DeploymentPipelinesClientListDeploymentPipelineStagesResponse struct {
 type DeploymentPipelinesClientListDeploymentPipelinesResponse struct {
 	// A collection of Fabric deployment pipelines.
 	DeploymentPipelines
+}
+
+// DeploymentPipelinesClientUnassignWorkspaceFromStageResponse contains the response from method DeploymentPipelinesClient.UnassignWorkspaceFromStage.
+type DeploymentPipelinesClientUnassignWorkspaceFromStageResponse struct {
+	// placeholder for future response values
+}
+
+// DeploymentPipelinesClientUpdateDeploymentPipelineResponse contains the response from method DeploymentPipelinesClient.UpdateDeploymentPipeline.
+type DeploymentPipelinesClientUpdateDeploymentPipelineResponse struct {
+	// A Fabric deployment pipeline.
+	DeploymentPipelineExtendedInfo
+}
+
+// DeploymentPipelinesClientUpdateDeploymentPipelineStageResponse contains the response from method DeploymentPipelinesClient.UpdateDeploymentPipelineStage.
+type DeploymentPipelinesClientUpdateDeploymentPipelineStageResponse struct {
+	// A Fabric deployment pipeline stage.
+	DeploymentPipelineStage
 }
 
 // ExternalDataSharesClientCreateExternalDataShareResponse contains the response from method ExternalDataSharesClient.CreateExternalDataShare.

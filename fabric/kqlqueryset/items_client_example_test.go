@@ -66,7 +66,7 @@ func ExampleItemsClient_NewListKQLQuerysetsPager() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_CreateKQLQueryset_createAKqlQuerysetExample() {
+func ExampleItemsClient_BeginCreateKQLQueryset_createAKqlQuerysetExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -76,17 +76,21 @@ func ExampleItemsClient_CreateKQLQueryset_createAKqlQuerysetExample() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewItemsClient().CreateKQLQueryset(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", kqlqueryset.CreateKQLQuerysetRequest{
+	poller, err := clientFactory.NewItemsClient().BeginCreateKQLQueryset(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", kqlqueryset.CreateKQLQuerysetRequest{
 		Description: to.Ptr("A KQL queryset description"),
 		DisplayName: to.Ptr("KQLQueryset_1"),
 	}, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
 }
 
 // Generated from example definition
-func ExampleItemsClient_CreateKQLQueryset_createAKqlQuerysetWithDefinitionExample() {
+func ExampleItemsClient_BeginCreateKQLQueryset_createAKqlQuerysetWithDefinitionExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -96,7 +100,7 @@ func ExampleItemsClient_CreateKQLQueryset_createAKqlQuerysetWithDefinitionExampl
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewItemsClient().CreateKQLQueryset(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", kqlqueryset.CreateKQLQuerysetRequest{
+	poller, err := clientFactory.NewItemsClient().BeginCreateKQLQueryset(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", kqlqueryset.CreateKQLQuerysetRequest{
 		Description: to.Ptr("A KQL queryset description"),
 		Definition: &kqlqueryset.Definition{
 			Parts: []kqlqueryset.DefinitionPart{
@@ -110,6 +114,10 @@ func ExampleItemsClient_CreateKQLQueryset_createAKqlQuerysetWithDefinitionExampl
 	}, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
 	}
 }
 
@@ -188,7 +196,7 @@ func ExampleItemsClient_DeleteKQLQueryset() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_GetKQLQuerysetDefinition() {
+func ExampleItemsClient_BeginGetKQLQuerysetDefinition() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -198,9 +206,13 @@ func ExampleItemsClient_GetKQLQuerysetDefinition() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewItemsClient().GetKQLQuerysetDefinition(ctx, "314fff62-7c47-4225-9a6c-1a2220f4ce32", "9b7de20c-a62f-470e-931d-e7e53f373c0c", &kqlqueryset.ItemsClientGetKQLQuerysetDefinitionOptions{Format: nil})
+	poller, err := clientFactory.NewItemsClient().BeginGetKQLQuerysetDefinition(ctx, "314fff62-7c47-4225-9a6c-1a2220f4ce32", "9b7de20c-a62f-470e-931d-e7e53f373c0c", &kqlqueryset.ItemsClientBeginGetKQLQuerysetDefinitionOptions{Format: nil})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
+	}
+	res, err := poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
 	}
 	// You could use response here. We use blank identifier for just demo purposes.
 	_ = res
@@ -223,7 +235,7 @@ func ExampleItemsClient_GetKQLQuerysetDefinition() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_UpdateKQLQuerysetDefinition() {
+func ExampleItemsClient_BeginUpdateKQLQuerysetDefinition() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -233,7 +245,7 @@ func ExampleItemsClient_UpdateKQLQuerysetDefinition() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewItemsClient().UpdateKQLQuerysetDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", kqlqueryset.UpdateKQLQuerysetDefinitionRequest{
+	poller, err := clientFactory.NewItemsClient().BeginUpdateKQLQuerysetDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", kqlqueryset.UpdateKQLQuerysetDefinitionRequest{
 		Definition: &kqlqueryset.Definition{
 			Parts: []kqlqueryset.DefinitionPart{
 				{
@@ -247,8 +259,12 @@ func ExampleItemsClient_UpdateKQLQuerysetDefinition() {
 					PayloadType: to.Ptr(kqlqueryset.PayloadTypeInlineBase64),
 				}},
 		},
-	}, &kqlqueryset.ItemsClientUpdateKQLQuerysetDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	}, &kqlqueryset.ItemsClientBeginUpdateKQLQuerysetDefinitionOptions{UpdateMetadata: to.Ptr(true)})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
 	}
 }

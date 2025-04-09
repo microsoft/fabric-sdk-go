@@ -6,13 +6,10 @@
 
 package kqldashboard
 
-// ItemsClientCreateKQLDashboardResponse contains the response from method ItemsClient.CreateKQLDashboard.
+// ItemsClientCreateKQLDashboardResponse contains the response from method ItemsClient.BeginCreateKQLDashboard.
 type ItemsClientCreateKQLDashboardResponse struct {
 	// A KQL dashboard object.
 	KQLDashboard
-
-	// Location contains the information returned from the Location header response.
-	Location *string
 }
 
 // ItemsClientDeleteKQLDashboardResponse contains the response from method ItemsClient.DeleteKQLDashboard.
@@ -20,7 +17,7 @@ type ItemsClientDeleteKQLDashboardResponse struct {
 	// placeholder for future response values
 }
 
-// ItemsClientGetKQLDashboardDefinitionResponse contains the response from method ItemsClient.GetKQLDashboardDefinition.
+// ItemsClientGetKQLDashboardDefinitionResponse contains the response from method ItemsClient.BeginGetKQLDashboardDefinition.
 type ItemsClientGetKQLDashboardDefinitionResponse struct {
 	// KQL dashboard public definition response.
 	DefinitionResponse
@@ -38,7 +35,7 @@ type ItemsClientListKQLDashboardsResponse struct {
 	KQLDashboards
 }
 
-// ItemsClientUpdateKQLDashboardDefinitionResponse contains the response from method ItemsClient.UpdateKQLDashboardDefinition.
+// ItemsClientUpdateKQLDashboardDefinitionResponse contains the response from method ItemsClient.BeginUpdateKQLDashboardDefinition.
 type ItemsClientUpdateKQLDashboardDefinitionResponse struct {
 	// placeholder for future response values
 }

@@ -489,6 +489,7 @@ type errItem struct {
 	ItemTypeDoesNotSupportCreationPayload               error
 	InvalidPlatformFile                                 error
 	MLModelDisplayNameCannotBeChanged                   error
+	WorkspaceItemsLimitExceeded                         error
 }
 
 var ErrItem = errItem{
@@ -511,6 +512,7 @@ var ErrItem = errItem{
 	ItemTypeDoesNotSupportCreationPayload:               errors.New("ItemTypeDoesNotSupportCreationPayload"),
 	InvalidPlatformFile:                                 errors.New("InvalidPlatformFile"),
 	MLModelDisplayNameCannotBeChanged:                   errors.New("MLModelDisplayNameCannotBeChanged"),
+	WorkspaceItemsLimitExceeded:                         errors.New("WorkspaceItemsLimitExceeded"),
 }
 
 func PossibleErrItemValues() []string {
@@ -534,6 +536,7 @@ func PossibleErrItemValues() []string {
 		ErrItem.ItemTypeDoesNotSupportCreationPayload.Error(),
 		ErrItem.InvalidPlatformFile.Error(),
 		ErrItem.MLModelDisplayNameCannotBeChanged.Error(),
+		ErrItem.WorkspaceItemsLimitExceeded.Error(),
 	}
 }
 

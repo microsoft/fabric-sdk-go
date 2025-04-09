@@ -4,7 +4,7 @@
 // Changes may cause incorrect behavior and will be lost if the code is regenerated.
 // SPDX-License-Identifier: MIT
 
-package kqldatabase
+package variablelibrary
 
 // ItemType - The type of the item. Additional item types may be added over time.
 type ItemType string
@@ -111,24 +111,5 @@ const (
 func PossiblePayloadTypeValues() []PayloadType {
 	return []PayloadType{
 		PayloadTypeInlineBase64,
-	}
-}
-
-// Type - The KQL database type. Additional KQLDatabaseType types may be added over time.
-type Type string
-
-const (
-	// TypeReadWrite - Allows read and write operations on the database.
-	TypeReadWrite Type = "ReadWrite"
-	// TypeShortcut - A shortcut is an embedded reference allowing read only operations on a source database. The source can be
-	// in the same or different tenants, either in an Azure Data Explorer cluster or a Fabric Eventhouse.
-	TypeShortcut Type = "Shortcut"
-)
-
-// PossibleKqlDatabaseTypeValues returns the possible values for the Type const type.
-func PossibleKqlDatabaseTypeValues() []Type {
-	return []Type{
-		TypeReadWrite,
-		TypeShortcut,
 	}
 }

@@ -25,6 +25,26 @@ import (
 
 // DeploymentPipelinesServer is a fake server for instances of the core.DeploymentPipelinesClient type.
 type DeploymentPipelinesServer struct {
+	// AddDeploymentPipelineRoleAssignment is the fake for method DeploymentPipelinesClient.AddDeploymentPipelineRoleAssignment
+	// HTTP status codes to indicate success: http.StatusOK
+	AddDeploymentPipelineRoleAssignment func(ctx context.Context, deploymentPipelineID string, deploymentPipelineRoleAssignmentRequest core.AddDeploymentPipelineRoleAssignmentRequest, options *core.DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentOptions) (resp azfake.Responder[core.DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse], errResp azfake.ErrorResponder)
+
+	// AssignWorkspaceToStage is the fake for method DeploymentPipelinesClient.AssignWorkspaceToStage
+	// HTTP status codes to indicate success: http.StatusOK
+	AssignWorkspaceToStage func(ctx context.Context, deploymentPipelineID string, stageID string, deploymentPipelineAssignWorkspaceRequest core.DeploymentPipelineAssignWorkspaceRequest, options *core.DeploymentPipelinesClientAssignWorkspaceToStageOptions) (resp azfake.Responder[core.DeploymentPipelinesClientAssignWorkspaceToStageResponse], errResp azfake.ErrorResponder)
+
+	// CreateDeploymentPipeline is the fake for method DeploymentPipelinesClient.CreateDeploymentPipeline
+	// HTTP status codes to indicate success: http.StatusCreated
+	CreateDeploymentPipeline func(ctx context.Context, createDeploymentPipelineRequest core.CreateDeploymentPipelineRequest, options *core.DeploymentPipelinesClientCreateDeploymentPipelineOptions) (resp azfake.Responder[core.DeploymentPipelinesClientCreateDeploymentPipelineResponse], errResp azfake.ErrorResponder)
+
+	// DeleteDeploymentPipeline is the fake for method DeploymentPipelinesClient.DeleteDeploymentPipeline
+	// HTTP status codes to indicate success: http.StatusOK
+	DeleteDeploymentPipeline func(ctx context.Context, deploymentPipelineID string, options *core.DeploymentPipelinesClientDeleteDeploymentPipelineOptions) (resp azfake.Responder[core.DeploymentPipelinesClientDeleteDeploymentPipelineResponse], errResp azfake.ErrorResponder)
+
+	// DeleteDeploymentPipelineRoleAssignment is the fake for method DeploymentPipelinesClient.DeleteDeploymentPipelineRoleAssignment
+	// HTTP status codes to indicate success: http.StatusOK
+	DeleteDeploymentPipelineRoleAssignment func(ctx context.Context, deploymentPipelineID string, principalID string, options *core.DeploymentPipelinesClientDeleteDeploymentPipelineRoleAssignmentOptions) (resp azfake.Responder[core.DeploymentPipelinesClientDeleteDeploymentPipelineRoleAssignmentResponse], errResp azfake.ErrorResponder)
+
 	// BeginDeployStageContent is the fake for method DeploymentPipelinesClient.BeginDeployStageContent
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
 	BeginDeployStageContent func(ctx context.Context, deploymentPipelineID string, deployRequest core.DeployRequest, options *core.DeploymentPipelinesClientBeginDeployStageContentOptions) (resp azfake.PollerResponder[core.DeploymentPipelinesClientDeployStageContentResponse], errResp azfake.ErrorResponder)
@@ -32,6 +52,22 @@ type DeploymentPipelinesServer struct {
 	// GetDeploymentPipeline is the fake for method DeploymentPipelinesClient.GetDeploymentPipeline
 	// HTTP status codes to indicate success: http.StatusOK
 	GetDeploymentPipeline func(ctx context.Context, deploymentPipelineID string, options *core.DeploymentPipelinesClientGetDeploymentPipelineOptions) (resp azfake.Responder[core.DeploymentPipelinesClientGetDeploymentPipelineResponse], errResp azfake.ErrorResponder)
+
+	// GetDeploymentPipelineOperation is the fake for method DeploymentPipelinesClient.GetDeploymentPipelineOperation
+	// HTTP status codes to indicate success: http.StatusOK
+	GetDeploymentPipelineOperation func(ctx context.Context, deploymentPipelineID string, operationID string, options *core.DeploymentPipelinesClientGetDeploymentPipelineOperationOptions) (resp azfake.Responder[core.DeploymentPipelinesClientGetDeploymentPipelineOperationResponse], errResp azfake.ErrorResponder)
+
+	// GetDeploymentPipelineStage is the fake for method DeploymentPipelinesClient.GetDeploymentPipelineStage
+	// HTTP status codes to indicate success: http.StatusOK
+	GetDeploymentPipelineStage func(ctx context.Context, deploymentPipelineID string, stageID string, options *core.DeploymentPipelinesClientGetDeploymentPipelineStageOptions) (resp azfake.Responder[core.DeploymentPipelinesClientGetDeploymentPipelineStageResponse], errResp azfake.ErrorResponder)
+
+	// NewListDeploymentPipelineOperationsPager is the fake for method DeploymentPipelinesClient.NewListDeploymentPipelineOperationsPager
+	// HTTP status codes to indicate success: http.StatusOK
+	NewListDeploymentPipelineOperationsPager func(deploymentPipelineID string, options *core.DeploymentPipelinesClientListDeploymentPipelineOperationsOptions) (resp azfake.PagerResponder[core.DeploymentPipelinesClientListDeploymentPipelineOperationsResponse])
+
+	// NewListDeploymentPipelineRoleAssignmentsPager is the fake for method DeploymentPipelinesClient.NewListDeploymentPipelineRoleAssignmentsPager
+	// HTTP status codes to indicate success: http.StatusOK
+	NewListDeploymentPipelineRoleAssignmentsPager func(deploymentPipelineID string, options *core.DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsOptions) (resp azfake.PagerResponder[core.DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsResponse])
 
 	// NewListDeploymentPipelineStageItemsPager is the fake for method DeploymentPipelinesClient.NewListDeploymentPipelineStageItemsPager
 	// HTTP status codes to indicate success: http.StatusOK
@@ -44,6 +80,18 @@ type DeploymentPipelinesServer struct {
 	// NewListDeploymentPipelinesPager is the fake for method DeploymentPipelinesClient.NewListDeploymentPipelinesPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListDeploymentPipelinesPager func(options *core.DeploymentPipelinesClientListDeploymentPipelinesOptions) (resp azfake.PagerResponder[core.DeploymentPipelinesClientListDeploymentPipelinesResponse])
+
+	// UnassignWorkspaceFromStage is the fake for method DeploymentPipelinesClient.UnassignWorkspaceFromStage
+	// HTTP status codes to indicate success: http.StatusOK
+	UnassignWorkspaceFromStage func(ctx context.Context, deploymentPipelineID string, stageID string, options *core.DeploymentPipelinesClientUnassignWorkspaceFromStageOptions) (resp azfake.Responder[core.DeploymentPipelinesClientUnassignWorkspaceFromStageResponse], errResp azfake.ErrorResponder)
+
+	// UpdateDeploymentPipeline is the fake for method DeploymentPipelinesClient.UpdateDeploymentPipeline
+	// HTTP status codes to indicate success: http.StatusOK
+	UpdateDeploymentPipeline func(ctx context.Context, deploymentPipelineID string, updatePipelineRequest core.UpdateDeploymentPipelineRequest, options *core.DeploymentPipelinesClientUpdateDeploymentPipelineOptions) (resp azfake.Responder[core.DeploymentPipelinesClientUpdateDeploymentPipelineResponse], errResp azfake.ErrorResponder)
+
+	// UpdateDeploymentPipelineStage is the fake for method DeploymentPipelinesClient.UpdateDeploymentPipelineStage
+	// HTTP status codes to indicate success: http.StatusOK
+	UpdateDeploymentPipelineStage func(ctx context.Context, deploymentPipelineID string, stageID string, updatePipelineStageRequest core.DeploymentPipelineStageRequest, options *core.DeploymentPipelinesClientUpdateDeploymentPipelineStageOptions) (resp azfake.Responder[core.DeploymentPipelinesClientUpdateDeploymentPipelineStageResponse], errResp azfake.ErrorResponder)
 }
 
 // NewDeploymentPipelinesServerTransport creates a new instance of DeploymentPipelinesServerTransport with the provided implementation.
@@ -53,20 +101,24 @@ func NewDeploymentPipelinesServerTransport(srv *DeploymentPipelinesServer) *Depl
 	return &DeploymentPipelinesServerTransport{
 		srv:                                      srv,
 		beginDeployStageContent:                  newTracker[azfake.PollerResponder[core.DeploymentPipelinesClientDeployStageContentResponse]](),
-		newListDeploymentPipelineStageItemsPager: newTracker[azfake.PagerResponder[core.DeploymentPipelinesClientListDeploymentPipelineStageItemsResponse]](),
-		newListDeploymentPipelineStagesPager:     newTracker[azfake.PagerResponder[core.DeploymentPipelinesClientListDeploymentPipelineStagesResponse]](),
-		newListDeploymentPipelinesPager:          newTracker[azfake.PagerResponder[core.DeploymentPipelinesClientListDeploymentPipelinesResponse]](),
+		newListDeploymentPipelineOperationsPager: newTracker[azfake.PagerResponder[core.DeploymentPipelinesClientListDeploymentPipelineOperationsResponse]](),
+		newListDeploymentPipelineRoleAssignmentsPager: newTracker[azfake.PagerResponder[core.DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsResponse]](),
+		newListDeploymentPipelineStageItemsPager:      newTracker[azfake.PagerResponder[core.DeploymentPipelinesClientListDeploymentPipelineStageItemsResponse]](),
+		newListDeploymentPipelineStagesPager:          newTracker[azfake.PagerResponder[core.DeploymentPipelinesClientListDeploymentPipelineStagesResponse]](),
+		newListDeploymentPipelinesPager:               newTracker[azfake.PagerResponder[core.DeploymentPipelinesClientListDeploymentPipelinesResponse]](),
 	}
 }
 
 // DeploymentPipelinesServerTransport connects instances of core.DeploymentPipelinesClient to instances of DeploymentPipelinesServer.
 // Don't use this type directly, use NewDeploymentPipelinesServerTransport instead.
 type DeploymentPipelinesServerTransport struct {
-	srv                                      *DeploymentPipelinesServer
-	beginDeployStageContent                  *tracker[azfake.PollerResponder[core.DeploymentPipelinesClientDeployStageContentResponse]]
-	newListDeploymentPipelineStageItemsPager *tracker[azfake.PagerResponder[core.DeploymentPipelinesClientListDeploymentPipelineStageItemsResponse]]
-	newListDeploymentPipelineStagesPager     *tracker[azfake.PagerResponder[core.DeploymentPipelinesClientListDeploymentPipelineStagesResponse]]
-	newListDeploymentPipelinesPager          *tracker[azfake.PagerResponder[core.DeploymentPipelinesClientListDeploymentPipelinesResponse]]
+	srv                                           *DeploymentPipelinesServer
+	beginDeployStageContent                       *tracker[azfake.PollerResponder[core.DeploymentPipelinesClientDeployStageContentResponse]]
+	newListDeploymentPipelineOperationsPager      *tracker[azfake.PagerResponder[core.DeploymentPipelinesClientListDeploymentPipelineOperationsResponse]]
+	newListDeploymentPipelineRoleAssignmentsPager *tracker[azfake.PagerResponder[core.DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsResponse]]
+	newListDeploymentPipelineStageItemsPager      *tracker[azfake.PagerResponder[core.DeploymentPipelinesClientListDeploymentPipelineStageItemsResponse]]
+	newListDeploymentPipelineStagesPager          *tracker[azfake.PagerResponder[core.DeploymentPipelinesClientListDeploymentPipelineStagesResponse]]
+	newListDeploymentPipelinesPager               *tracker[azfake.PagerResponder[core.DeploymentPipelinesClientListDeploymentPipelinesResponse]]
 }
 
 // Do implements the policy.Transporter interface for DeploymentPipelinesServerTransport.
@@ -94,16 +146,40 @@ func (d *DeploymentPipelinesServerTransport) dispatchToMethodFake(req *http.Requ
 		}
 		if !intercepted {
 			switch method {
+			case "DeploymentPipelinesClient.AddDeploymentPipelineRoleAssignment":
+				res.resp, res.err = d.dispatchAddDeploymentPipelineRoleAssignment(req)
+			case "DeploymentPipelinesClient.AssignWorkspaceToStage":
+				res.resp, res.err = d.dispatchAssignWorkspaceToStage(req)
+			case "DeploymentPipelinesClient.CreateDeploymentPipeline":
+				res.resp, res.err = d.dispatchCreateDeploymentPipeline(req)
+			case "DeploymentPipelinesClient.DeleteDeploymentPipeline":
+				res.resp, res.err = d.dispatchDeleteDeploymentPipeline(req)
+			case "DeploymentPipelinesClient.DeleteDeploymentPipelineRoleAssignment":
+				res.resp, res.err = d.dispatchDeleteDeploymentPipelineRoleAssignment(req)
 			case "DeploymentPipelinesClient.BeginDeployStageContent":
 				res.resp, res.err = d.dispatchBeginDeployStageContent(req)
 			case "DeploymentPipelinesClient.GetDeploymentPipeline":
 				res.resp, res.err = d.dispatchGetDeploymentPipeline(req)
+			case "DeploymentPipelinesClient.GetDeploymentPipelineOperation":
+				res.resp, res.err = d.dispatchGetDeploymentPipelineOperation(req)
+			case "DeploymentPipelinesClient.GetDeploymentPipelineStage":
+				res.resp, res.err = d.dispatchGetDeploymentPipelineStage(req)
+			case "DeploymentPipelinesClient.NewListDeploymentPipelineOperationsPager":
+				res.resp, res.err = d.dispatchNewListDeploymentPipelineOperationsPager(req)
+			case "DeploymentPipelinesClient.NewListDeploymentPipelineRoleAssignmentsPager":
+				res.resp, res.err = d.dispatchNewListDeploymentPipelineRoleAssignmentsPager(req)
 			case "DeploymentPipelinesClient.NewListDeploymentPipelineStageItemsPager":
 				res.resp, res.err = d.dispatchNewListDeploymentPipelineStageItemsPager(req)
 			case "DeploymentPipelinesClient.NewListDeploymentPipelineStagesPager":
 				res.resp, res.err = d.dispatchNewListDeploymentPipelineStagesPager(req)
 			case "DeploymentPipelinesClient.NewListDeploymentPipelinesPager":
 				res.resp, res.err = d.dispatchNewListDeploymentPipelinesPager(req)
+			case "DeploymentPipelinesClient.UnassignWorkspaceFromStage":
+				res.resp, res.err = d.dispatchUnassignWorkspaceFromStage(req)
+			case "DeploymentPipelinesClient.UpdateDeploymentPipeline":
+				res.resp, res.err = d.dispatchUpdateDeploymentPipeline(req)
+			case "DeploymentPipelinesClient.UpdateDeploymentPipelineStage":
+				res.resp, res.err = d.dispatchUpdateDeploymentPipelineStage(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -121,6 +197,161 @@ func (d *DeploymentPipelinesServerTransport) dispatchToMethodFake(req *http.Requ
 	case res := <-resultChan:
 		return res.resp, res.err
 	}
+}
+
+func (d *DeploymentPipelinesServerTransport) dispatchAddDeploymentPipelineRoleAssignment(req *http.Request) (*http.Response, error) {
+	if d.srv.AddDeploymentPipelineRoleAssignment == nil {
+		return nil, &nonRetriableError{errors.New("fake for method AddDeploymentPipelineRoleAssignment not implemented")}
+	}
+	const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/roleAssignments`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 1 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.AddDeploymentPipelineRoleAssignmentRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	deploymentPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("deploymentPipelineId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := d.srv.AddDeploymentPipelineRoleAssignment(req.Context(), deploymentPipelineIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (d *DeploymentPipelinesServerTransport) dispatchAssignWorkspaceToStage(req *http.Request) (*http.Response, error) {
+	if d.srv.AssignWorkspaceToStage == nil {
+		return nil, &nonRetriableError{errors.New("fake for method AssignWorkspaceToStage not implemented")}
+	}
+	const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/stages/(?P<stageId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/assignWorkspace`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.DeploymentPipelineAssignWorkspaceRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	deploymentPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("deploymentPipelineId")])
+	if err != nil {
+		return nil, err
+	}
+	stageIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("stageId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := d.srv.AssignWorkspaceToStage(req.Context(), deploymentPipelineIDParam, stageIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (d *DeploymentPipelinesServerTransport) dispatchCreateDeploymentPipeline(req *http.Request) (*http.Response, error) {
+	if d.srv.CreateDeploymentPipeline == nil {
+		return nil, &nonRetriableError{errors.New("fake for method CreateDeploymentPipeline not implemented")}
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.CreateDeploymentPipelineRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := d.srv.CreateDeploymentPipeline(req.Context(), body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusCreated}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).DeploymentPipelineExtendedInfo, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (d *DeploymentPipelinesServerTransport) dispatchDeleteDeploymentPipeline(req *http.Request) (*http.Response, error) {
+	if d.srv.DeleteDeploymentPipeline == nil {
+		return nil, &nonRetriableError{errors.New("fake for method DeleteDeploymentPipeline not implemented")}
+	}
+	const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 1 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	deploymentPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("deploymentPipelineId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := d.srv.DeleteDeploymentPipeline(req.Context(), deploymentPipelineIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (d *DeploymentPipelinesServerTransport) dispatchDeleteDeploymentPipelineRoleAssignment(req *http.Request) (*http.Response, error) {
+	if d.srv.DeleteDeploymentPipelineRoleAssignment == nil {
+		return nil, &nonRetriableError{errors.New("fake for method DeleteDeploymentPipelineRoleAssignment not implemented")}
+	}
+	const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/roleAssignments/(?P<principalId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	deploymentPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("deploymentPipelineId")])
+	if err != nil {
+		return nil, err
+	}
+	principalIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("principalId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := d.srv.DeleteDeploymentPipelineRoleAssignment(req.Context(), deploymentPipelineIDParam, principalIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 func (d *DeploymentPipelinesServerTransport) dispatchBeginDeployStageContent(req *http.Request) (*http.Response, error) {
@@ -189,9 +420,173 @@ func (d *DeploymentPipelinesServerTransport) dispatchGetDeploymentPipeline(req *
 	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
 	}
-	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).DeploymentPipeline, req)
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).DeploymentPipelineExtendedInfo, req)
 	if err != nil {
 		return nil, err
+	}
+	return resp, nil
+}
+
+func (d *DeploymentPipelinesServerTransport) dispatchGetDeploymentPipelineOperation(req *http.Request) (*http.Response, error) {
+	if d.srv.GetDeploymentPipelineOperation == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetDeploymentPipelineOperation not implemented")}
+	}
+	const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/operations/(?P<operationId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	deploymentPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("deploymentPipelineId")])
+	if err != nil {
+		return nil, err
+	}
+	operationIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("operationId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := d.srv.GetDeploymentPipelineOperation(req.Context(), deploymentPipelineIDParam, operationIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).DeploymentPipelineOperationExtendedInfo, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (d *DeploymentPipelinesServerTransport) dispatchGetDeploymentPipelineStage(req *http.Request) (*http.Response, error) {
+	if d.srv.GetDeploymentPipelineStage == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetDeploymentPipelineStage not implemented")}
+	}
+	const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/stages/(?P<stageId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	deploymentPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("deploymentPipelineId")])
+	if err != nil {
+		return nil, err
+	}
+	stageIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("stageId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := d.srv.GetDeploymentPipelineStage(req.Context(), deploymentPipelineIDParam, stageIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).DeploymentPipelineStage, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (d *DeploymentPipelinesServerTransport) dispatchNewListDeploymentPipelineOperationsPager(req *http.Request) (*http.Response, error) {
+	if d.srv.NewListDeploymentPipelineOperationsPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListDeploymentPipelineOperationsPager not implemented")}
+	}
+	newListDeploymentPipelineOperationsPager := d.newListDeploymentPipelineOperationsPager.get(req)
+	if newListDeploymentPipelineOperationsPager == nil {
+		const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/operations`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 1 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		deploymentPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("deploymentPipelineId")])
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *core.DeploymentPipelinesClientListDeploymentPipelineOperationsOptions
+		if continuationTokenParam != nil {
+			options = &core.DeploymentPipelinesClientListDeploymentPipelineOperationsOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := d.srv.NewListDeploymentPipelineOperationsPager(deploymentPipelineIDParam, options)
+		newListDeploymentPipelineOperationsPager = &resp
+		d.newListDeploymentPipelineOperationsPager.add(req, newListDeploymentPipelineOperationsPager)
+		server.PagerResponderInjectNextLinks(newListDeploymentPipelineOperationsPager, req, func(page *core.DeploymentPipelinesClientListDeploymentPipelineOperationsResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
+	}
+	resp, err := server.PagerResponderNext(newListDeploymentPipelineOperationsPager, req)
+	if err != nil {
+		return nil, err
+	}
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		d.newListDeploymentPipelineOperationsPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
+	}
+	if !server.PagerResponderMore(newListDeploymentPipelineOperationsPager) {
+		d.newListDeploymentPipelineOperationsPager.remove(req)
+	}
+	return resp, nil
+}
+
+func (d *DeploymentPipelinesServerTransport) dispatchNewListDeploymentPipelineRoleAssignmentsPager(req *http.Request) (*http.Response, error) {
+	if d.srv.NewListDeploymentPipelineRoleAssignmentsPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListDeploymentPipelineRoleAssignmentsPager not implemented")}
+	}
+	newListDeploymentPipelineRoleAssignmentsPager := d.newListDeploymentPipelineRoleAssignmentsPager.get(req)
+	if newListDeploymentPipelineRoleAssignmentsPager == nil {
+		const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/roleAssignments`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 1 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		deploymentPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("deploymentPipelineId")])
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *core.DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsOptions
+		if continuationTokenParam != nil {
+			options = &core.DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := d.srv.NewListDeploymentPipelineRoleAssignmentsPager(deploymentPipelineIDParam, options)
+		newListDeploymentPipelineRoleAssignmentsPager = &resp
+		d.newListDeploymentPipelineRoleAssignmentsPager.add(req, newListDeploymentPipelineRoleAssignmentsPager)
+		server.PagerResponderInjectNextLinks(newListDeploymentPipelineRoleAssignmentsPager, req, func(page *core.DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
+	}
+	resp, err := server.PagerResponderNext(newListDeploymentPipelineRoleAssignmentsPager, req)
+	if err != nil {
+		return nil, err
+	}
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		d.newListDeploymentPipelineRoleAssignmentsPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
+	}
+	if !server.PagerResponderMore(newListDeploymentPipelineRoleAssignmentsPager) {
+		d.newListDeploymentPipelineRoleAssignmentsPager.remove(req)
 	}
 	return resp, nil
 }
@@ -333,6 +728,109 @@ func (d *DeploymentPipelinesServerTransport) dispatchNewListDeploymentPipelinesP
 	}
 	if !server.PagerResponderMore(newListDeploymentPipelinesPager) {
 		d.newListDeploymentPipelinesPager.remove(req)
+	}
+	return resp, nil
+}
+
+func (d *DeploymentPipelinesServerTransport) dispatchUnassignWorkspaceFromStage(req *http.Request) (*http.Response, error) {
+	if d.srv.UnassignWorkspaceFromStage == nil {
+		return nil, &nonRetriableError{errors.New("fake for method UnassignWorkspaceFromStage not implemented")}
+	}
+	const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/stages/(?P<stageId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/unassignWorkspace`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	deploymentPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("deploymentPipelineId")])
+	if err != nil {
+		return nil, err
+	}
+	stageIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("stageId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := d.srv.UnassignWorkspaceFromStage(req.Context(), deploymentPipelineIDParam, stageIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (d *DeploymentPipelinesServerTransport) dispatchUpdateDeploymentPipeline(req *http.Request) (*http.Response, error) {
+	if d.srv.UpdateDeploymentPipeline == nil {
+		return nil, &nonRetriableError{errors.New("fake for method UpdateDeploymentPipeline not implemented")}
+	}
+	const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 1 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.UpdateDeploymentPipelineRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	deploymentPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("deploymentPipelineId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := d.srv.UpdateDeploymentPipeline(req.Context(), deploymentPipelineIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).DeploymentPipelineExtendedInfo, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (d *DeploymentPipelinesServerTransport) dispatchUpdateDeploymentPipelineStage(req *http.Request) (*http.Response, error) {
+	if d.srv.UpdateDeploymentPipelineStage == nil {
+		return nil, &nonRetriableError{errors.New("fake for method UpdateDeploymentPipelineStage not implemented")}
+	}
+	const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/stages/(?P<stageId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.DeploymentPipelineStageRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	deploymentPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("deploymentPipelineId")])
+	if err != nil {
+		return nil, err
+	}
+	stageIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("stageId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := d.srv.UpdateDeploymentPipelineStage(req.Context(), deploymentPipelineIDParam, stageIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).DeploymentPipelineStage, req)
+	if err != nil {
+		return nil, err
 	}
 	return resp, nil
 }

@@ -43,6 +43,7 @@ import (
 	sparkjobdefinitionfake "github.com/microsoft/fabric-sdk-go/fabric/sparkjobdefinition/fake"
 	sqldatabasefake "github.com/microsoft/fabric-sdk-go/fabric/sqldatabase/fake"
 	sqlendpointfake "github.com/microsoft/fabric-sdk-go/fabric/sqlendpoint/fake"
+	variablelibraryfake "github.com/microsoft/fabric-sdk-go/fabric/variablelibrary/fake"
 	warehousefake "github.com/microsoft/fabric-sdk-go/fabric/warehouse/fake"
 )
 
@@ -76,6 +77,7 @@ type ServerFactory struct {
 	SparkJobDefinition sparkjobdefinitionfake.ServerFactory
 	SQLDatabase        sqldatabasefake.ServerFactory
 	SQLEndpoint        sqlendpointfake.ServerFactory
+	VariableLibrary    variablelibraryfake.ServerFactory
 	Warehouse          warehousefake.ServerFactory
 }
 
@@ -112,6 +114,7 @@ type ServerFactoryTransport struct {
 	trSparkJobDefinition *sparkjobdefinitionfake.ServerFactoryTransport
 	trSQLDatabase        *sqldatabasefake.ServerFactoryTransport
 	trSQLEndpoint        *sqlendpointfake.ServerFactoryTransport
+	trVariableLibrary    *variablelibraryfake.ServerFactoryTransport
 	trWarehouse          *warehousefake.ServerFactoryTransport
 }
 
@@ -268,6 +271,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return sqlendpointfake.NewServerFactoryTransport(&s.srv.SQLEndpoint)
 		})
 		resp, err = s.trSQLEndpoint.Do(req)
+	case "variablelibrary":
+		initServer(s, &s.trVariableLibrary, func() *variablelibraryfake.ServerFactoryTransport {
+			return variablelibraryfake.NewServerFactoryTransport(&s.srv.VariableLibrary)
+		})
+		resp, err = s.trVariableLibrary.Do(req)
 	case "warehouse":
 		initServer(s, &s.trWarehouse, func() *warehousefake.ServerFactoryTransport {
 			return warehousefake.NewServerFactoryTransport(&s.srv.Warehouse)
