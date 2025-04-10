@@ -63,6 +63,14 @@ func (c *ClientFactory) NewItemsClient() *ItemsClient {
 	}
 }
 
+// NewLivySessionsClient creates a new instance of LivySessionsClient.
+func (c *ClientFactory) NewLivySessionsClient() *LivySessionsClient {
+	return &LivySessionsClient{
+		internal: c.internal.WithClientName("lakehouse.LivySessionsClient"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewTablesClient creates a new instance of TablesClient.
 func (c *ClientFactory) NewTablesClient() *TablesClient {
 	return &TablesClient{

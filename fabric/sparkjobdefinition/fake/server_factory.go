@@ -20,6 +20,7 @@ import (
 type ServerFactory struct {
 	BackgroundJobsServer BackgroundJobsServer
 	ItemsServer          ItemsServer
+	LivySessionsServer   LivySessionsServer
 }
 
 // ServerFactoryTransport connects instances of sparkjobdefinition.ClientFactory to instances of ServerFactory.
@@ -29,6 +30,7 @@ type ServerFactoryTransport struct {
 	trMu                   sync.Mutex
 	trBackgroundJobsServer *BackgroundJobsServerTransport
 	trItemsServer          *ItemsServerTransport
+	trLivySessionsServer   *LivySessionsServerTransport
 }
 
 // NewServerFactoryTransport creates a new instance of ServerFactoryTransport with the provided implementation.
@@ -62,6 +64,9 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	case "ItemsClient":
 		initServer(s, &s.trItemsServer, func() *ItemsServerTransport { return NewItemsServerTransport(&s.srv.ItemsServer) })
 		resp, err = s.trItemsServer.Do(req)
+	case "LivySessionsClient":
+		initServer(s, &s.trLivySessionsServer, func() *LivySessionsServerTransport { return NewLivySessionsServerTransport(&s.srv.LivySessionsServer) })
+		resp, err = s.trLivySessionsServer.Do(req)
 	default:
 		err = fmt.Errorf("unhandled client %s", client)
 	}

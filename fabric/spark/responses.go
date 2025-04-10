@@ -37,6 +37,12 @@ type CustomPoolsClientUpdateWorkspaceCustomPoolResponse struct {
 	CustomPool
 }
 
+// LivySessionsClientListLivySessionsResponse contains the response from method LivySessionsClient.NewListLivySessionsPager.
+type LivySessionsClientListLivySessionsResponse struct {
+	// A paginated list of livy sessions.
+	LivySessions
+}
+
 // WorkspaceSettingsClientGetSparkSettingsResponse contains the response from method WorkspaceSettingsClient.GetSparkSettings.
 type WorkspaceSettingsClientGetSparkSettingsResponse struct {
 	// Workspace Spark settings.

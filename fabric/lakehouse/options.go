@@ -39,6 +39,21 @@ type ItemsClientUpdateLakehouseOptions struct {
 	// placeholder for future optional parameters
 }
 
+// LivySessionsClientGetLivySessionOptions contains the optional parameters for the LivySessionsClient.GetLivySession method.
+type LivySessionsClientGetLivySessionOptions struct {
+	// placeholder for future optional parameters
+}
+
+// LivySessionsClientListLivySessionsOptions contains the optional parameters for the LivySessionsClient.NewListLivySessionsPager
+// method.
+type LivySessionsClientListLivySessionsOptions struct {
+	// Token to retrieve the next page of results, if available.
+	ContinuationToken *string
+
+	// The maximum number of results per page to return.
+	MaxResults *int32
+}
+
 // TablesClientBeginLoadTableOptions contains the optional parameters for the TablesClient.BeginLoadTable method.
 type TablesClientBeginLoadTableOptions struct {
 	// Resumes the long-running operation from the provided token.

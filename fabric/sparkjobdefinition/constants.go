@@ -6,6 +6,42 @@
 
 package sparkjobdefinition
 
+// GroupType - The type of the group. Additional group types may be added over time.
+type GroupType string
+
+const (
+	// GroupTypeDistributionList - Principal is a distribution list.
+	GroupTypeDistributionList GroupType = "DistributionList"
+	// GroupTypeSecurityGroup - Principal is a security group.
+	GroupTypeSecurityGroup GroupType = "SecurityGroup"
+	// GroupTypeUnknown - Principal group type is unknown.
+	GroupTypeUnknown GroupType = "Unknown"
+)
+
+// PossibleGroupTypeValues returns the possible values for the GroupType const type.
+func PossibleGroupTypeValues() []GroupType {
+	return []GroupType{
+		GroupTypeDistributionList,
+		GroupTypeSecurityGroup,
+		GroupTypeUnknown,
+	}
+}
+
+// ItemReferenceType - The Item reference type. Additional ItemReferenceType types may be added over time.
+type ItemReferenceType string
+
+const (
+	// ItemReferenceTypeByID - The item is referenced by its ID.
+	ItemReferenceTypeByID ItemReferenceType = "ById"
+)
+
+// PossibleItemReferenceTypeValues returns the possible values for the ItemReferenceType const type.
+func PossibleItemReferenceTypeValues() []ItemReferenceType {
+	return []ItemReferenceType{
+		ItemReferenceTypeByID,
+	}
+}
+
 // ItemType - The type of the item. Additional item types may be added over time.
 type ItemType string
 
@@ -99,6 +135,50 @@ func PossibleItemTypeValues() []ItemType {
 	}
 }
 
+// JobType - Type of the job. Values are: Unknown, SparkSession, SparkBatch, JupyterSession. Additional LivySessionJobType
+// types may be added over time.
+type JobType string
+
+const (
+	// JobTypeJupyterSession - Job type is from jupyter session.
+	JobTypeJupyterSession JobType = "JupyterSession"
+	// JobTypeSparkBatch - Job type is from a spark batch.
+	JobTypeSparkBatch JobType = "SparkBatch"
+	// JobTypeSparkSession - Job type is from a spark session.
+	JobTypeSparkSession JobType = "SparkSession"
+	// JobTypeUnknown - Job type is unknown.
+	JobTypeUnknown JobType = "Unknown"
+)
+
+// PossibleJobTypeValues returns the possible values for the JobType const type.
+func PossibleJobTypeValues() []JobType {
+	return []JobType{
+		JobTypeJupyterSession,
+		JobTypeSparkBatch,
+		JobTypeSparkSession,
+		JobTypeUnknown,
+	}
+}
+
+// Origin - Origin of the job. Values are: SubmittedJob, PendingJob. Additional LivySessionOrigin types may be added over
+// time.
+type Origin string
+
+const (
+	// OriginPendingJob - Job is coming from pending data source.
+	OriginPendingJob Origin = "PendingJob"
+	// OriginSubmittedJob - Job is coming from submitted data source.
+	OriginSubmittedJob Origin = "SubmittedJob"
+)
+
+// PossibleOriginValues returns the possible values for the Origin const type.
+func PossibleOriginValues() []Origin {
+	return []Origin{
+		OriginPendingJob,
+		OriginSubmittedJob,
+	}
+}
+
 // PayloadType - The type of the definition part payload. Additional payload types may be added over time.
 type PayloadType string
 
@@ -111,5 +191,84 @@ const (
 func PossiblePayloadTypeValues() []PayloadType {
 	return []PayloadType{
 		PayloadTypeInlineBase64,
+	}
+}
+
+// PrincipalType - The type of the principal. Additional principal types may be added over time.
+type PrincipalType string
+
+const (
+	// PrincipalTypeGroup - Principal is a security group.
+	PrincipalTypeGroup PrincipalType = "Group"
+	// PrincipalTypeServicePrincipal - Principal is a Microsoft Entra service principal.
+	PrincipalTypeServicePrincipal PrincipalType = "ServicePrincipal"
+	// PrincipalTypeServicePrincipalProfile - Principal is a service principal profile.
+	PrincipalTypeServicePrincipalProfile PrincipalType = "ServicePrincipalProfile"
+	// PrincipalTypeUser - Principal is a Microsoft Entra user principal.
+	PrincipalTypeUser PrincipalType = "User"
+)
+
+// PossiblePrincipalTypeValues returns the possible values for the PrincipalType const type.
+func PossiblePrincipalTypeValues() []PrincipalType {
+	return []PrincipalType{
+		PrincipalTypeGroup,
+		PrincipalTypeServicePrincipal,
+		PrincipalTypeServicePrincipalProfile,
+		PrincipalTypeUser,
+	}
+}
+
+// State - Current state of the job. Values are: NotStarted, InProgress, Cancelled, Succeeded, Stopped, Failed, Unknown. Additional
+// LivySessionState types may be added over time.
+type State string
+
+const (
+	// StateCancelled - Job got cancelled.
+	StateCancelled State = "Cancelled"
+	// StateFailed - Job failed or its session timed out.
+	StateFailed State = "Failed"
+	// StateInProgress - Job is in running or is cancelling state.
+	StateInProgress State = "InProgress"
+	// StateNotStarted - Job is queued, is starting or in library packaging state.
+	StateNotStarted State = "NotStarted"
+	// StateSucceeded - Job has stopped or is in success state.
+	StateSucceeded State = "Succeeded"
+	// StateUnknown - Job is in invalid state.
+	StateUnknown State = "Unknown"
+)
+
+// PossibleStateValues returns the possible values for the State const type.
+func PossibleStateValues() []State {
+	return []State{
+		StateCancelled,
+		StateFailed,
+		StateInProgress,
+		StateNotStarted,
+		StateSucceeded,
+		StateUnknown,
+	}
+}
+
+// TimeUnit - The unit of time for the duration. Additional duration types may be added over time.
+type TimeUnit string
+
+const (
+	// TimeUnitDays - Duration in days.
+	TimeUnitDays TimeUnit = "Days"
+	// TimeUnitHours - Duration in hours.
+	TimeUnitHours TimeUnit = "Hours"
+	// TimeUnitMinutes - Duration in minutes.
+	TimeUnitMinutes TimeUnit = "Minutes"
+	// TimeUnitSeconds - Duration in seconds.
+	TimeUnitSeconds TimeUnit = "Seconds"
+)
+
+// PossibleTimeUnitValues returns the possible values for the TimeUnit const type.
+func PossibleTimeUnitValues() []TimeUnit {
+	return []TimeUnit{
+		TimeUnitDays,
+		TimeUnitHours,
+		TimeUnitMinutes,
+		TimeUnitSeconds,
 	}
 }

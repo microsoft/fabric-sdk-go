@@ -55,6 +55,14 @@ func (c *ClientFactory) NewCustomPoolsClient() *CustomPoolsClient {
 	}
 }
 
+// NewLivySessionsClient creates a new instance of LivySessionsClient.
+func (c *ClientFactory) NewLivySessionsClient() *LivySessionsClient {
+	return &LivySessionsClient{
+		internal: c.internal.WithClientName("spark.LivySessionsClient"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewWorkspaceSettingsClient creates a new instance of WorkspaceSettingsClient.
 func (c *ClientFactory) NewWorkspaceSettingsClient() *WorkspaceSettingsClient {
 	return &WorkspaceSettingsClient{

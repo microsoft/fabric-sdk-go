@@ -37,6 +37,16 @@ type CustomPoolsClientUpdateWorkspaceCustomPoolOptions struct {
 	// placeholder for future optional parameters
 }
 
+// LivySessionsClientListLivySessionsOptions contains the optional parameters for the LivySessionsClient.NewListLivySessionsPager
+// method.
+type LivySessionsClientListLivySessionsOptions struct {
+	// Token to retrieve the next page of results, if available.
+	ContinuationToken *string
+
+	// The maximum number of results per page to return.
+	MaxResults *int32
+}
+
 // WorkspaceSettingsClientGetSparkSettingsOptions contains the optional parameters for the WorkspaceSettingsClient.GetSparkSettings
 // method.
 type WorkspaceSettingsClientGetSparkSettingsOptions struct {
