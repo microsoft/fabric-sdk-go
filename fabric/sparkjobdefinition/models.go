@@ -6,6 +6,8 @@
 
 package sparkjobdefinition
 
+import "time"
+
 // CreateSparkJobDefinitionRequest - Create spark job definition request payload.
 type CreateSparkJobDefinitionRequest struct {
 	// REQUIRED; The spark job definition display name. The display name must follow naming rules according to item type.
@@ -16,6 +18,15 @@ type CreateSparkJobDefinitionRequest struct {
 
 	// The spark job definition description. Maximum length is 256 characters.
 	Description *string
+}
+
+// Duration - A duration.
+type Duration struct {
+	// REQUIRED; The unit of time for the duration. Additional duration types may be added over time.
+	TimeUnit *TimeUnit
+
+	// REQUIRED; The number of timeUnits in the duration.
+	Value *float32
 }
 
 // ExecutionData for spark job definition run if customer wants to override default values.
@@ -31,6 +42,178 @@ type ExecutionData struct {
 
 	// Main class name to be used. This is not needed for python and r executable files.
 	MainClass *string
+}
+
+// ItemReference - An item reference object.
+type ItemReference struct {
+	// REQUIRED; The item reference type.
+	ReferenceType *ItemReferenceType
+}
+
+// GetItemReference implements the ItemReferenceClassification interface for type ItemReference.
+func (i *ItemReference) GetItemReference() *ItemReference { return i }
+
+// ItemReferenceByID - An item reference by ID object.
+type ItemReferenceByID struct {
+	// REQUIRED; The ID of the item.
+	ItemID *string
+
+	// REQUIRED; The item reference type.
+	ReferenceType *ItemReferenceType
+
+	// REQUIRED; The workspace ID of the item.
+	WorkspaceID *string
+}
+
+// GetItemReference implements the ItemReferenceClassification interface for type ItemReferenceByID.
+func (i *ItemReferenceByID) GetItemReference() *ItemReference {
+	return &ItemReference{
+		ReferenceType: i.ReferenceType,
+	}
+}
+
+// LivySession - The livy session response
+type LivySession struct {
+	// Current attempt number.
+	AttemptNumber *int32
+
+	// Reason for the job cancellation.
+	CancellationReason *string
+
+	// ID of the capacity.
+	CapacityID *string
+
+	// ID of the consumer.
+	ConsumerID *Principal
+
+	// ID of the item creator. When isHighConcurrency is set to true this value might be different than itemId.
+	CreatorItem *ItemReferenceByID
+
+	// Timestamp when the job ended in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	EndDateTime *time.Time
+
+	// Flag indicating high concurrency.
+	IsHighConcurrency *bool
+
+	// ID of the item.
+	Item *ItemReferenceByID
+
+	// Name of the item.
+	ItemName *string
+
+	// The item type.
+	ItemType *ItemType
+
+	// ID of the job instance.
+	JobInstanceID *string
+
+	// Current state of the job.
+	JobType *JobType
+
+	// ID of the Livy session or Livy batch.
+	LivyID *string
+
+	// Name of the Livy session or Livy batch.
+	LivyName *string
+
+	// The URI used to retrieve all Livy sessions for a given item.
+	LivySessionItemResourceURI *string
+
+	// Maximum number of attempts.
+	MaxNumberOfAttempts *int32
+
+	// Name of the operation. Possible values include: Notebook run, Notebook HC run and Notebook pipeline run.
+	OperationName *string
+
+	// Origin of the job.
+	Origin *Origin
+
+	// Duration for which the job was queued.
+	QueuedDuration *Duration
+
+	// Time it took the job to run.
+	RunningDuration *Duration
+
+	// The fabric runtime version.
+	RuntimeVersion *string
+
+	// A Spark application ID is a unique identifier assigned to each Apache Spark application. It also appears in the Spark UI.
+	SparkApplicationID *string
+
+	// Timestamp when the job started in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	StartDateTime *time.Time
+
+	// Current state of the job.
+	State *State
+
+	// Timestamp when the job was submitted in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	SubmittedDateTime *time.Time
+
+	// ID of the submitter.
+	Submitter *Principal
+
+	// Total duration of the job.
+	TotalDuration *Duration
+}
+
+// LivySessions - A paginated list of livy sessions.
+type LivySessions struct {
+	// REQUIRED; A list of livy sessions.
+	Value []LivySession
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
+// Principal - Represents an identity or a Microsoft Entra group.
+type Principal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// Group specific details. Applicable when the principal type is Group.
+	GroupDetails *PrincipalGroupDetails
+
+	// Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
+	ServicePrincipalProfileDetails *PrincipalServicePrincipalProfileDetails
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+
+	// READ-ONLY; Service principal specific details. Applicable when the principal type is ServicePrincipal.
+	ServicePrincipalDetails *PrincipalServicePrincipalDetails
+
+	// READ-ONLY; User principal specific details. Applicable when the principal type is User.
+	UserDetails *PrincipalUserDetails
+}
+
+// PrincipalGroupDetails - Group specific details. Applicable when the principal type is Group.
+type PrincipalGroupDetails struct {
+	// The type of the group. Additional group types may be added over time.
+	GroupType *GroupType
+}
+
+// PrincipalServicePrincipalDetails - Service principal specific details. Applicable when the principal type is ServicePrincipal.
+type PrincipalServicePrincipalDetails struct {
+	// READ-ONLY; The service principal's Microsoft Entra AppId.
+	AADAppID *string
+}
+
+// PrincipalServicePrincipalProfileDetails - Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
+type PrincipalServicePrincipalProfileDetails struct {
+	// The service principal profile's parent principal.
+	ParentPrincipal *Principal
+}
+
+// PrincipalUserDetails - User principal specific details. Applicable when the principal type is User.
+type PrincipalUserDetails struct {
+	// READ-ONLY; The user principal name.
+	UserPrincipalName *string
 }
 
 // Properties - The spark job definition properties.

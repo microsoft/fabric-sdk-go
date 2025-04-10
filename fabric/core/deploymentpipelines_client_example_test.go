@@ -95,6 +95,42 @@ func ExampleDeploymentPipelinesClient_NewListDeploymentPipelinesPager_listDeploy
 }
 
 // Generated from example definition
+func ExampleDeploymentPipelinesClient_CreateDeploymentPipeline() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewDeploymentPipelinesClient().CreateDeploymentPipeline(ctx, core.CreateDeploymentPipelineRequest{
+		Description: to.Ptr("My deployment pipeline description"),
+		DisplayName: to.Ptr("My Deployment Pipeline Name"),
+		Stages: []core.DeploymentPipelineStageRequest{
+			{
+				Description: to.Ptr("Development stage description"),
+				DisplayName: to.Ptr("Development"),
+				IsPublic:    to.Ptr(false),
+			},
+			{
+				Description: to.Ptr("Test stage description"),
+				DisplayName: to.Ptr("Test"),
+				IsPublic:    to.Ptr(false),
+			},
+			{
+				Description: to.Ptr("Production stage description"),
+				DisplayName: to.Ptr("Production"),
+				IsPublic:    to.Ptr(true),
+			}},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
 func ExampleDeploymentPipelinesClient_GetDeploymentPipeline() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -112,10 +148,557 @@ func ExampleDeploymentPipelinesClient_GetDeploymentPipeline() {
 	// You could use response here. We use blank identifier for just demo purposes.
 	_ = res
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
-	// res.DeploymentPipeline = core.DeploymentPipeline{
+	// res.DeploymentPipelineExtendedInfo = core.DeploymentPipelineExtendedInfo{
 	// 	Description: to.Ptr("Fabric deployment pipeline to manage marketing reports"),
 	// 	DisplayName: to.Ptr("Marketing Deployment Pipeline"),
 	// 	ID: to.Ptr("a5ded933-57b7-41f4-b072-ed4c1f9d5824"),
+	// 	Stages: []core.DeploymentPipelineStage{
+	// 		{
+	// 			Description: to.Ptr("Design, review, and revise your content in a development workspace. When it's ready to test and preview, deploy the content to the test stage."),
+	// 			DisplayName: to.Ptr("Development"),
+	// 			ID: to.Ptr("2e6f0272-e809-410a-be63-50e1d97ba75a"),
+	// 			IsPublic: to.Ptr(false),
+	// 			Order: to.Ptr[int32](0),
+	// 			WorkspaceID: to.Ptr("4de5bcc4-2c88-4efe-b827-4ee7b289b496"),
+	// 			WorkspaceName: to.Ptr("Workpsace-Development"),
+	// 		},
+	// 		{
+	// 			Description: to.Ptr("Test and verify your content in a preproduction workspace. When it's ready, deploy the content to the production stage."),
+	// 			DisplayName: to.Ptr("Test"),
+	// 			ID: to.Ptr("d2056166-041c-4a56-8d37-ea90038bc0d6"),
+	// 			IsPublic: to.Ptr(false),
+	// 			Order: to.Ptr[int32](1),
+	// 			WorkspaceID: to.Ptr("44b499cf-1eeb-45e2-9ada-63b6ec9d516e"),
+	// 		},
+	// 		{
+	// 			Description: to.Ptr("Your content has been tested and is ready for your customers as an app or by access to the production workspace."),
+	// 			DisplayName: to.Ptr("Production"),
+	// 			ID: to.Ptr("4c3eb03b-fbbb-4605-9b1a-6fba1003679e"),
+	// 			IsPublic: to.Ptr(true),
+	// 			Order: to.Ptr[int32](2),
+	// 	}},
+	// }
+}
+
+// Generated from example definition
+func ExampleDeploymentPipelinesClient_UpdateDeploymentPipeline() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewDeploymentPipelinesClient().UpdateDeploymentPipeline(ctx, "a5ded933-57b7-41f4-b072-ed4c1f9d5824", core.UpdateDeploymentPipelineRequest{
+		Description: to.Ptr("Updated deployment pipeline description"),
+		DisplayName: to.Ptr("Updated Deployment Pipeline Name"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.DeploymentPipelineExtendedInfo = core.DeploymentPipelineExtendedInfo{
+	// 	Description: to.Ptr("Updated deployment pipeline description"),
+	// 	DisplayName: to.Ptr("Updated Deployment Pipeline Name"),
+	// 	ID: to.Ptr("a5ded933-57b7-41f4-b072-ed4c1f9d5824"),
+	// 	Stages: []core.DeploymentPipelineStage{
+	// 		{
+	// 			Description: to.Ptr("Development stage description"),
+	// 			DisplayName: to.Ptr("Development"),
+	// 			ID: to.Ptr("2e6f0272-e809-410a-be63-50e1d97ba75a"),
+	// 			IsPublic: to.Ptr(false),
+	// 			Order: to.Ptr[int32](0),
+	// 		},
+	// 		{
+	// 			Description: to.Ptr("Test stage description"),
+	// 			DisplayName: to.Ptr("Test"),
+	// 			ID: to.Ptr("d2056166-041c-4a56-8d37-ea90038bc0d6"),
+	// 			IsPublic: to.Ptr(false),
+	// 			Order: to.Ptr[int32](0),
+	// 		},
+	// 		{
+	// 			Description: to.Ptr("Production stage description"),
+	// 			DisplayName: to.Ptr("Production"),
+	// 			ID: to.Ptr("4c3eb03b-fbbb-4605-9b1a-6fba1003679e"),
+	// 			IsPublic: to.Ptr(true),
+	// 			Order: to.Ptr[int32](0),
+	// 	}},
+	// }
+}
+
+// Generated from example definition
+func ExampleDeploymentPipelinesClient_DeleteDeploymentPipeline() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewDeploymentPipelinesClient().DeleteDeploymentPipeline(ctx, "a5ded933-57b7-41f4-b072-ed4c1f9d5824", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleDeploymentPipelinesClient_NewListDeploymentPipelineRoleAssignmentsPager_listRoleAssignmentsOfADeploymentPipelineExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewDeploymentPipelinesClient().NewListDeploymentPipelineRoleAssignmentsPager("8ce96c50-85a0-4db3-85c6-7ccc3ed46523", &core.DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.DeploymentPipelineRoleAssignments = core.DeploymentPipelineRoleAssignments{
+		// 	Value: []core.DeploymentPipelineRoleAssignment{
+		// 		{
+		// 			Principal: &core.Principal{
+		// 				Type: to.Ptr(core.PrincipalTypeUser),
+		// 				ID: to.Ptr("6e335e92-a2a2-4b5a-970a-bd6a89fbb765"),
+		// 			},
+		// 			Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
+		// 		},
+		// 		{
+		// 			Principal: &core.Principal{
+		// 				Type: to.Ptr(core.PrincipalTypeGroup),
+		// 				ID: to.Ptr("154aef10-47b8-48c4-ab97-f0bf9d5f8fcf"),
+		// 			},
+		// 			Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
+		// 		},
+		// 		{
+		// 			Principal: &core.Principal{
+		// 				Type: to.Ptr(core.PrincipalTypeServicePrincipal),
+		// 				ID: to.Ptr("a35d842b-90d5-59a1-c56a-5f8fcff0bf9d"),
+		// 			},
+		// 			Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
+func ExampleDeploymentPipelinesClient_NewListDeploymentPipelineRoleAssignmentsPager_listRoleAssignmentsOfADeploymentPipelineWithContinuationExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewDeploymentPipelinesClient().NewListDeploymentPipelineRoleAssignmentsPager("8ce96c50-85a0-4db3-85c6-7ccc3ed46523", &core.DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.DeploymentPipelineRoleAssignments = core.DeploymentPipelineRoleAssignments{
+		// 	ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		// 	ContinuationURI: to.Ptr("https://api.fabric.microsoft.com/v1/deploymentPipelines/8ce96c50-85a0-4db3-85c6-7ccc3ed46523/roleAssignments?continuationToken=LDEsMTAwMDAwLDA%3D"),
+		// 	Value: []core.DeploymentPipelineRoleAssignment{
+		// 		{
+		// 			Principal: &core.Principal{
+		// 				Type: to.Ptr(core.PrincipalTypeUser),
+		// 				ID: to.Ptr("6e335e92-a2a2-4b5a-970a-bd6a89fbb765"),
+		// 			},
+		// 			Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
+		// 		},
+		// 		{
+		// 			Principal: &core.Principal{
+		// 				Type: to.Ptr(core.PrincipalTypeGroup),
+		// 				ID: to.Ptr("154aef10-47b8-48c4-ab97-f0bf9d5f8fcf"),
+		// 			},
+		// 			Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
+		// 		},
+		// 		{
+		// 			Principal: &core.Principal{
+		// 				Type: to.Ptr(core.PrincipalTypeServicePrincipal),
+		// 				ID: to.Ptr("a35d842b-90d5-59a1-c56a-5f8fcff0bf9d"),
+		// 			},
+		// 			Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
+func ExampleDeploymentPipelinesClient_AddDeploymentPipelineRoleAssignment_addAGroupRoleAssignmentToADeploymentPipelineExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewDeploymentPipelinesClient().AddDeploymentPipelineRoleAssignment(ctx, "8ce96c50-85a0-4db3-85c6-7ccc3ed46523", core.AddDeploymentPipelineRoleAssignmentRequest{
+		Principal: &core.Principal{
+			Type: to.Ptr(core.PrincipalTypeGroup),
+			ID:   to.Ptr("154aef10-47b8-48c4-ab97-f0bf9d5f8fcf"),
+		},
+		Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleDeploymentPipelinesClient_AddDeploymentPipelineRoleAssignment_addAServicePrincipalRoleAssignmentToADeploymentPipelineExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewDeploymentPipelinesClient().AddDeploymentPipelineRoleAssignment(ctx, "8ce96c50-85a0-4db3-85c6-7ccc3ed46523", core.AddDeploymentPipelineRoleAssignmentRequest{
+		Principal: &core.Principal{
+			Type: to.Ptr(core.PrincipalTypeServicePrincipal),
+			ID:   to.Ptr("a35d842b-90d5-59a1-c56a-5f8fcff0bf9d"),
+		},
+		Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleDeploymentPipelinesClient_AddDeploymentPipelineRoleAssignment_addAUserRoleAssignmentToADeploymentPipelineExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewDeploymentPipelinesClient().AddDeploymentPipelineRoleAssignment(ctx, "8ce96c50-85a0-4db3-85c6-7ccc3ed46523", core.AddDeploymentPipelineRoleAssignmentRequest{
+		Principal: &core.Principal{
+			Type: to.Ptr(core.PrincipalTypeUser),
+			ID:   to.Ptr("a35d842b-90d5-59a2-c56a-5f8fcff0bf9d"),
+		},
+		Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleDeploymentPipelinesClient_DeleteDeploymentPipelineRoleAssignment_removeGroupRoleAssignmentFromADeploymentPipelineExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewDeploymentPipelinesClient().DeleteDeploymentPipelineRoleAssignment(ctx, "8ce96c50-85a0-4db3-85c6-7ccc3ed46523", "5dba60b0-d9a7-42a3-b12c-6d9d51e7739a", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleDeploymentPipelinesClient_DeleteDeploymentPipelineRoleAssignment_removeServicePrincipalRoleAssignmentFromADeploymentPipelineExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewDeploymentPipelinesClient().DeleteDeploymentPipelineRoleAssignment(ctx, "8ce96c50-85a0-4db3-85c6-7ccc3ed46523", "a35d842b-90d5-59a1-c56a-5f8fcff0bf9d", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleDeploymentPipelinesClient_NewListDeploymentPipelineOperationsPager_listDeploymentPipelineOperationsExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewDeploymentPipelinesClient().NewListDeploymentPipelineOperationsPager("a5ded933-57b7-41f4-b072-ed4c1f9d5824", &core.DeploymentPipelinesClientListDeploymentPipelineOperationsOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.DeploymentPipelineOperations = core.DeploymentPipelineOperations{
+		// 	Value: []core.DeploymentPipelineOperation{
+		// 		{
+		// 			Type: to.Ptr(core.DeploymentPipelineOperationTypeDeploy),
+		// 			ExecutionEndTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2020-12-13T09:26:43.153Z"); return t}()),
+		// 			ExecutionStartTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2020-12-13T09:25:43.153Z"); return t}()),
+		// 			ID: to.Ptr("1065e6a3-a020-4c0c-ada7-92b5fe99eec5"),
+		// 			LastUpdatedTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2020-12-13T09:26:43.153Z"); return t}()),
+		// 			Note: &core.DeploymentPipelineOperationNote{
+		// 				Content: to.Ptr("Sample note"),
+		// 			},
+		// 			PerformedBy: &core.Principal{
+		// 				Type: to.Ptr(core.PrincipalTypeUser),
+		// 				ID: to.Ptr("a35d842b-90d5-59a2-c56a-5f8fcff0bf9d"),
+		// 			},
+		// 			PreDeploymentDiffInformation: &core.PreDeploymentDiffInformation{
+		// 				DifferentItemsCount: to.Ptr[int32](0),
+		// 				NewItemsCount: to.Ptr[int32](0),
+		// 				NoDifferenceItemsCount: to.Ptr[int32](1),
+		// 			},
+		// 			SourceStageID: to.Ptr("2e6f0272-e809-410a-be63-50e1d97ba75a"),
+		// 			Status: to.Ptr(core.DeploymentPipelineOperationStatusSucceeded),
+		// 			TargetStageID: to.Ptr("d2056166-041c-4a56-8d37-ea90038bc0d6"),
+		// 		},
+		// 		{
+		// 			Type: to.Ptr(core.DeploymentPipelineOperationTypeDeploy),
+		// 			ExecutionEndTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2020-12-13T09:26:43.153Z"); return t}()),
+		// 			ExecutionStartTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2020-12-14T09:25:43.153Z"); return t}()),
+		// 			ID: to.Ptr("7e113010-3264-41e4-93c1-1dfb34a93d06"),
+		// 			LastUpdatedTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2020-12-14T09:26:43.153Z"); return t}()),
+		// 			Note: &core.DeploymentPipelineOperationNote{
+		// 				Content: to.Ptr("Lorem ipsum odor amet, consectetuer adipiscing elit. Himenaeos litora volutpat sem eget ipsum sollicitudin ad porta ligula tristique sapien suscipit magnis pulvinar placerat in vulputate aliquam mauris aptent velit phasellus netus fringilla ad taciti in himenaeos eu vitae feugiat et auctor class maximus urna integer erat amet efficitur ex tellus conubia lorem nam viverra cras magnis potenti pharetra natoque suscipit scelerisque eros adipiscing mollis sagittis habitasse ligula nullam rhoncus at scelerisque justo dolor pretium libero urna massa tristique diam viverra aenean mauris malesuada mus sed ultrices consectetur tristique pretium imperdiet vulputate ligula senectus pretium aenean inceptos id cras magna ut nisl etiam eget magna nibh feugiat duis imperdiet ut ornare arcu primis curae taciti purus quisque turpis lacus auctor ligula tristique placerat consectetur mus vitae penatibus varius proin ligula viverra diam neque at tortor porttitor urna ullamcorper ut nec lobortis porta urna egestas eu cursus ante "),
+		// 				IsTruncated: to.Ptr(true),
+		// 			},
+		// 			PerformedBy: &core.Principal{
+		// 				Type: to.Ptr(core.PrincipalTypeUser),
+		// 				ID: to.Ptr("a35d842b-90d5-59a2-c56a-5f8fcff0bf9d"),
+		// 			},
+		// 			PreDeploymentDiffInformation: &core.PreDeploymentDiffInformation{
+		// 				DifferentItemsCount: to.Ptr[int32](0),
+		// 				NewItemsCount: to.Ptr[int32](1),
+		// 				NoDifferenceItemsCount: to.Ptr[int32](0),
+		// 			},
+		// 			SourceStageID: to.Ptr("2e6f0272-e809-410a-be63-50e1d97ba75a"),
+		// 			Status: to.Ptr(core.DeploymentPipelineOperationStatusFailed),
+		// 			TargetStageID: to.Ptr("d2056166-041c-4a56-8d37-ea90038bc0d6"),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
+func ExampleDeploymentPipelinesClient_NewListDeploymentPipelineOperationsPager_listDeploymentPipelineOperationsWithContinuationExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewDeploymentPipelinesClient().NewListDeploymentPipelineOperationsPager("a5ded933-57b7-41f4-b072-ed4c1f9d5824", &core.DeploymentPipelinesClientListDeploymentPipelineOperationsOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.DeploymentPipelineOperations = core.DeploymentPipelineOperations{
+		// 	ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		// 	ContinuationURI: to.Ptr("https://api.fabric.microsoft.com/v1/deploymentPipelines/a5ded933-57b7-41f4-b072-ed4c1f9d5824/operations?continuationToken=LDEsMTAwMDAwLDA%3D"),
+		// 	Value: []core.DeploymentPipelineOperation{
+		// 		{
+		// 			Type: to.Ptr(core.DeploymentPipelineOperationTypeDeploy),
+		// 			ExecutionEndTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2020-12-13T09:26:43.153Z"); return t}()),
+		// 			ExecutionStartTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2020-12-13T09:25:43.153Z"); return t}()),
+		// 			ID: to.Ptr("1065e6a3-a020-4c0c-ada7-92b5fe99eec5"),
+		// 			LastUpdatedTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2020-12-13T09:26:43.153Z"); return t}()),
+		// 			Note: &core.DeploymentPipelineOperationNote{
+		// 				Content: to.Ptr("Sample note"),
+		// 			},
+		// 			PerformedBy: &core.Principal{
+		// 				Type: to.Ptr(core.PrincipalTypeUser),
+		// 				ID: to.Ptr("a35d842b-90d5-59a2-c56a-5f8fcff0bf9d"),
+		// 			},
+		// 			PreDeploymentDiffInformation: &core.PreDeploymentDiffInformation{
+		// 				DifferentItemsCount: to.Ptr[int32](0),
+		// 				NewItemsCount: to.Ptr[int32](0),
+		// 				NoDifferenceItemsCount: to.Ptr[int32](1),
+		// 			},
+		// 			SourceStageID: to.Ptr("2e6f0272-e809-410a-be63-50e1d97ba75a"),
+		// 			Status: to.Ptr(core.DeploymentPipelineOperationStatusSucceeded),
+		// 			TargetStageID: to.Ptr("d2056166-041c-4a56-8d37-ea90038bc0d6"),
+		// 		},
+		// 		{
+		// 			Type: to.Ptr(core.DeploymentPipelineOperationTypeDeploy),
+		// 			ExecutionEndTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2020-12-13T09:26:43.153Z"); return t}()),
+		// 			ExecutionStartTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2020-12-14T09:25:43.153Z"); return t}()),
+		// 			ID: to.Ptr("7e113010-3264-41e4-93c1-1dfb34a93d06"),
+		// 			LastUpdatedTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2020-12-14T09:26:43.153Z"); return t}()),
+		// 			Note: &core.DeploymentPipelineOperationNote{
+		// 				Content: to.Ptr("Lorem ipsum odor amet, consectetuer adipiscing elit. Himenaeos litora volutpat sem eget ipsum sollicitudin ad porta ligula tristique sapien suscipit magnis pulvinar placerat in vulputate aliquam mauris aptent velit phasellus netus fringilla ad taciti in himenaeos eu vitae feugiat et auctor class maximus urna integer erat amet efficitur ex tellus conubia lorem nam viverra cras magnis potenti pharetra natoque suscipit scelerisque eros adipiscing mollis sagittis habitasse ligula nullam rhoncus at scelerisque justo dolor pretium libero urna massa tristique diam viverra aenean mauris malesuada mus sed ultrices consectetur tristique pretium imperdiet vulputate ligula senectus pretium aenean inceptos id cras magna ut nisl etiam eget magna nibh feugiat duis imperdiet ut ornare arcu primis curae taciti purus quisque turpis lacus auctor ligula tristique placerat consectetur mus vitae penatibus varius proin ligula viverra diam neque at tortor porttitor urna ullamcorper ut nec lobortis porta urna egestas eu cursus ante "),
+		// 				IsTruncated: to.Ptr(true),
+		// 			},
+		// 			PerformedBy: &core.Principal{
+		// 				Type: to.Ptr(core.PrincipalTypeUser),
+		// 				ID: to.Ptr("a35d842b-90d5-59a2-c56a-5f8fcff0bf9d"),
+		// 			},
+		// 			PreDeploymentDiffInformation: &core.PreDeploymentDiffInformation{
+		// 				DifferentItemsCount: to.Ptr[int32](0),
+		// 				NewItemsCount: to.Ptr[int32](1),
+		// 				NoDifferenceItemsCount: to.Ptr[int32](0),
+		// 			},
+		// 			SourceStageID: to.Ptr("2e6f0272-e809-410a-be63-50e1d97ba75a"),
+		// 			Status: to.Ptr(core.DeploymentPipelineOperationStatusFailed),
+		// 			TargetStageID: to.Ptr("d2056166-041c-4a56-8d37-ea90038bc0d6"),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
+func ExampleDeploymentPipelinesClient_GetDeploymentPipelineOperation() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewDeploymentPipelinesClient().GetDeploymentPipelineOperation(ctx, "a5ded933-57b7-41f4-b072-ed4c1f9d5824", "1065e6a3-a020-4c0c-ada7-92b5fe99eec5", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.DeploymentPipelineOperationExtendedInfo = core.DeploymentPipelineOperationExtendedInfo{
+	// 	Type: to.Ptr(core.DeploymentPipelineOperationTypeDeploy),
+	// 	ExecutionEndTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2020-12-13T09:26:43.153Z"); return t}()),
+	// 	ExecutionStartTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2020-12-13T09:25:43.153Z"); return t}()),
+	// 	ID: to.Ptr("1065e6a3-a020-4c0c-ada7-92b5fe99eec5"),
+	// 	LastUpdatedTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2020-12-13T09:26:43.153Z"); return t}()),
+	// 	Note: &core.DeploymentPipelineOperationNote{
+	// 		Content: to.Ptr("Sample note"),
+	// 	},
+	// 	PerformedBy: &core.Principal{
+	// 		Type: to.Ptr(core.PrincipalTypeUser),
+	// 		ID: to.Ptr("a35d842b-90d5-59a2-c56a-5f8fcff0bf9d"),
+	// 	},
+	// 	PreDeploymentDiffInformation: &core.PreDeploymentDiffInformation{
+	// 		DifferentItemsCount: to.Ptr[int32](1),
+	// 		NewItemsCount: to.Ptr[int32](3),
+	// 		NoDifferenceItemsCount: to.Ptr[int32](1),
+	// 	},
+	// 	SourceStageID: to.Ptr("2e6f0272-e809-410a-be63-50e1d97ba75a"),
+	// 	Status: to.Ptr(core.DeploymentPipelineOperationStatusSucceeded),
+	// 	TargetStageID: to.Ptr("d2056166-041c-4a56-8d37-ea90038bc0d6"),
+	// 	ExecutionPlan: &core.DeploymentExecutionPlan{
+	// 		Steps: []core.DeploymentExecutionStep{
+	// 			{
+	// 				Description: to.Ptr("DataflowDeployment"),
+	// 				Index: to.Ptr[int32](0),
+	// 				PreDeploymentDiffState: to.Ptr(core.ItemPreDeploymentDiffStateNew),
+	// 				SourceAndTarget: &core.DeploymentSourceAndTarget{
+	// 					ItemType: to.Ptr(core.ItemType("Dataflow")),
+	// 					SourceItemDisplayName: to.Ptr("Source dataflow"),
+	// 					SourceItemID: to.Ptr("29efcfb0-0063-44af-a4ed-6c0bee3417d3"),
+	// 				},
+	// 				Status: to.Ptr(core.DeploymentPipelineOperationStatusSucceeded),
+	// 			},
+	// 			{
+	// 				Description: to.Ptr("DatamartDeployment"),
+	// 				Index: to.Ptr[int32](1),
+	// 				PreDeploymentDiffState: to.Ptr(core.ItemPreDeploymentDiffStateNew),
+	// 				SourceAndTarget: &core.DeploymentSourceAndTarget{
+	// 					ItemType: to.Ptr(core.ItemTypeDatamart),
+	// 					SourceItemDisplayName: to.Ptr("Source datamart"),
+	// 					SourceItemID: to.Ptr("645cd81f-1b21-4006-82b6-54cc7ec0352e"),
+	// 				},
+	// 				Status: to.Ptr(core.DeploymentPipelineOperationStatusSucceeded),
+	// 			},
+	// 			{
+	// 				Description: to.Ptr("DatasetDeployment"),
+	// 				Index: to.Ptr[int32](2),
+	// 				PreDeploymentDiffState: to.Ptr(core.ItemPreDeploymentDiffStateNoDifference),
+	// 				SourceAndTarget: &core.DeploymentSourceAndTarget{
+	// 					ItemType: to.Ptr(core.ItemTypeSemanticModel),
+	// 					SourceItemDisplayName: to.Ptr("Source dataset"),
+	// 					SourceItemID: to.Ptr("1a201f2a-d1d8-45c0-8c61-1676338517de"),
+	// 					TargetItemDisplayName: to.Ptr("Target dataset"),
+	// 					TargetItemID: to.Ptr("dd3b6aa1-4d40-405c-a19b-48314a27e8ee"),
+	// 				},
+	// 				Status: to.Ptr(core.DeploymentPipelineOperationStatusSucceeded),
+	// 			},
+	// 			{
+	// 				Description: to.Ptr("ReportDeployment"),
+	// 				Index: to.Ptr[int32](3),
+	// 				PreDeploymentDiffState: to.Ptr(core.ItemPreDeploymentDiffStateDifferent),
+	// 				SourceAndTarget: &core.DeploymentSourceAndTarget{
+	// 					ItemType: to.Ptr(core.ItemTypeReport),
+	// 					SourceItemDisplayName: to.Ptr("Source report"),
+	// 					SourceItemID: to.Ptr("2d225191-65f8-4ec3-b77d-06100602b1f7"),
+	// 					TargetItemDisplayName: to.Ptr("Target report"),
+	// 					TargetItemID: to.Ptr("9d5c1f0f-f85c-48f4-8a8e-4c77547116b3"),
+	// 				},
+	// 				Status: to.Ptr(core.DeploymentPipelineOperationStatusSucceeded),
+	// 			},
+	// 			{
+	// 				Description: to.Ptr("DashboardDeployment"),
+	// 				Index: to.Ptr[int32](4),
+	// 				PreDeploymentDiffState: to.Ptr(core.ItemPreDeploymentDiffStateNew),
+	// 				SourceAndTarget: &core.DeploymentSourceAndTarget{
+	// 					ItemType: to.Ptr(core.ItemTypeDashboard),
+	// 					SourceItemDisplayName: to.Ptr("Source dashboard"),
+	// 					SourceItemID: to.Ptr("9046e4cc-8aea-4a7a-a3b5-1a78b1447d82"),
+	// 				},
+	// 				Status: to.Ptr(core.DeploymentPipelineOperationStatusSucceeded),
+	// 		}},
+	// 	},
 	// }
 }
 
@@ -223,6 +806,66 @@ func ExampleDeploymentPipelinesClient_NewListDeploymentPipelineStagesPager_listT
 		// 	}},
 		// }
 	}
+}
+
+// Generated from example definition
+func ExampleDeploymentPipelinesClient_GetDeploymentPipelineStage() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewDeploymentPipelinesClient().GetDeploymentPipelineStage(ctx, "a5ded933-57b7-41f4-b072-ed4c1f9d5824", "2e6f0272-e809-410a-be63-50e1d97ba75a", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.DeploymentPipelineStage = core.DeploymentPipelineStage{
+	// 	Description: to.Ptr("Design, review, and revise your content in a development workspace. When it's ready to test and preview, deploy the content to the test stage."),
+	// 	DisplayName: to.Ptr("Development"),
+	// 	ID: to.Ptr("2e6f0272-e809-410a-be63-50e1d97ba75a"),
+	// 	IsPublic: to.Ptr(false),
+	// 	Order: to.Ptr[int32](0),
+	// 	WorkspaceID: to.Ptr("4de5bcc4-2c88-4efe-b827-4ee7b289b496"),
+	// 	WorkspaceName: to.Ptr("Workpsace-Development"),
+	// }
+}
+
+// Generated from example definition
+func ExampleDeploymentPipelinesClient_UpdateDeploymentPipelineStage() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewDeploymentPipelinesClient().UpdateDeploymentPipelineStage(ctx, "a5ded933-57b7-41f4-b072-ed4c1f9d5824", "2e6f0272-e809-410a-be63-50e1d97ba75a", core.DeploymentPipelineStageRequest{
+		Description: to.Ptr("Updated deployment pipeline stage description"),
+		DisplayName: to.Ptr("Updated Stage Name"),
+		IsPublic:    to.Ptr(true),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.DeploymentPipelineStage = core.DeploymentPipelineStage{
+	// 	Description: to.Ptr("Updated deployment pipeline stage description"),
+	// 	DisplayName: to.Ptr("Updated Stage Name"),
+	// 	ID: to.Ptr("2e6f0272-e809-410a-be63-50e1d97ba75a"),
+	// 	IsPublic: to.Ptr(true),
+	// 	Order: to.Ptr[int32](0),
+	// }
 }
 
 // Generated from example definition
@@ -405,5 +1048,41 @@ func ExampleDeploymentPipelinesClient_BeginDeployStageContent_exampleOfDeploying
 	_, err = poller.PollUntilDone(ctx, nil)
 	if err != nil {
 		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleDeploymentPipelinesClient_AssignWorkspaceToStage() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewDeploymentPipelinesClient().AssignWorkspaceToStage(ctx, "a5ded933-57b7-41f4-b072-ed4c1f9d5824", "db1577e0-0132-4d6d-92b9-952c359988f2", core.DeploymentPipelineAssignWorkspaceRequest{
+		WorkspaceID: to.Ptr("4de5bcc4-2c88-4efe-b827-4ee7b289b496"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleDeploymentPipelinesClient_UnassignWorkspaceFromStage() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewDeploymentPipelinesClient().UnassignWorkspaceFromStage(ctx, "a5ded933-57b7-41f4-b072-ed4c1f9d5824", "db1577e0-0132-4d6d-92b9-952c359988f2", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
 	}
 }

@@ -85,6 +85,18 @@ type ConnectionsClientUpdateConnectionRoleAssignmentOptions struct {
 	// placeholder for future optional parameters
 }
 
+// DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentOptions contains the optional parameters for the DeploymentPipelinesClient.AddDeploymentPipelineRoleAssignment
+// method.
+type DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentOptions struct {
+	// placeholder for future optional parameters
+}
+
+// DeploymentPipelinesClientAssignWorkspaceToStageOptions contains the optional parameters for the DeploymentPipelinesClient.AssignWorkspaceToStage
+// method.
+type DeploymentPipelinesClientAssignWorkspaceToStageOptions struct {
+	// placeholder for future optional parameters
+}
+
 // DeploymentPipelinesClientBeginDeployStageContentOptions contains the optional parameters for the DeploymentPipelinesClient.BeginDeployStageContent
 // method.
 type DeploymentPipelinesClientBeginDeployStageContentOptions struct {
@@ -92,10 +104,54 @@ type DeploymentPipelinesClientBeginDeployStageContentOptions struct {
 	ResumeToken string
 }
 
+// DeploymentPipelinesClientCreateDeploymentPipelineOptions contains the optional parameters for the DeploymentPipelinesClient.CreateDeploymentPipeline
+// method.
+type DeploymentPipelinesClientCreateDeploymentPipelineOptions struct {
+	// placeholder for future optional parameters
+}
+
+// DeploymentPipelinesClientDeleteDeploymentPipelineOptions contains the optional parameters for the DeploymentPipelinesClient.DeleteDeploymentPipeline
+// method.
+type DeploymentPipelinesClientDeleteDeploymentPipelineOptions struct {
+	// placeholder for future optional parameters
+}
+
+// DeploymentPipelinesClientDeleteDeploymentPipelineRoleAssignmentOptions contains the optional parameters for the DeploymentPipelinesClient.DeleteDeploymentPipelineRoleAssignment
+// method.
+type DeploymentPipelinesClientDeleteDeploymentPipelineRoleAssignmentOptions struct {
+	// placeholder for future optional parameters
+}
+
+// DeploymentPipelinesClientGetDeploymentPipelineOperationOptions contains the optional parameters for the DeploymentPipelinesClient.GetDeploymentPipelineOperation
+// method.
+type DeploymentPipelinesClientGetDeploymentPipelineOperationOptions struct {
+	// placeholder for future optional parameters
+}
+
 // DeploymentPipelinesClientGetDeploymentPipelineOptions contains the optional parameters for the DeploymentPipelinesClient.GetDeploymentPipeline
 // method.
 type DeploymentPipelinesClientGetDeploymentPipelineOptions struct {
 	// placeholder for future optional parameters
+}
+
+// DeploymentPipelinesClientGetDeploymentPipelineStageOptions contains the optional parameters for the DeploymentPipelinesClient.GetDeploymentPipelineStage
+// method.
+type DeploymentPipelinesClientGetDeploymentPipelineStageOptions struct {
+	// placeholder for future optional parameters
+}
+
+// DeploymentPipelinesClientListDeploymentPipelineOperationsOptions contains the optional parameters for the DeploymentPipelinesClient.NewListDeploymentPipelineOperationsPager
+// method.
+type DeploymentPipelinesClientListDeploymentPipelineOperationsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsOptions contains the optional parameters for the DeploymentPipelinesClient.NewListDeploymentPipelineRoleAssignmentsPager
+// method.
+type DeploymentPipelinesClientListDeploymentPipelineRoleAssignmentsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
 }
 
 // DeploymentPipelinesClientListDeploymentPipelineStageItemsOptions contains the optional parameters for the DeploymentPipelinesClient.NewListDeploymentPipelineStageItemsPager
@@ -117,6 +173,24 @@ type DeploymentPipelinesClientListDeploymentPipelineStagesOptions struct {
 type DeploymentPipelinesClientListDeploymentPipelinesOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
+}
+
+// DeploymentPipelinesClientUnassignWorkspaceFromStageOptions contains the optional parameters for the DeploymentPipelinesClient.UnassignWorkspaceFromStage
+// method.
+type DeploymentPipelinesClientUnassignWorkspaceFromStageOptions struct {
+	// placeholder for future optional parameters
+}
+
+// DeploymentPipelinesClientUpdateDeploymentPipelineOptions contains the optional parameters for the DeploymentPipelinesClient.UpdateDeploymentPipeline
+// method.
+type DeploymentPipelinesClientUpdateDeploymentPipelineOptions struct {
+	// placeholder for future optional parameters
+}
+
+// DeploymentPipelinesClientUpdateDeploymentPipelineStageOptions contains the optional parameters for the DeploymentPipelinesClient.UpdateDeploymentPipelineStage
+// method.
+type DeploymentPipelinesClientUpdateDeploymentPipelineStageOptions struct {
+	// placeholder for future optional parameters
 }
 
 // ExternalDataSharesClientCreateExternalDataShareOptions contains the optional parameters for the ExternalDataSharesClient.CreateExternalDataShare

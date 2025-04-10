@@ -59,7 +59,7 @@ func ExampleItemsClient_NewListKQLDashboardsPager() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_CreateKQLDashboard_createAKqlDashboardExample() {
+func ExampleItemsClient_BeginCreateKQLDashboard_createAKqlDashboardExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -69,17 +69,21 @@ func ExampleItemsClient_CreateKQLDashboard_createAKqlDashboardExample() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewItemsClient().CreateKQLDashboard(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", kqldashboard.CreateKQLDashboardRequest{
+	poller, err := clientFactory.NewItemsClient().BeginCreateKQLDashboard(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", kqldashboard.CreateKQLDashboardRequest{
 		Description: to.Ptr("A KQL dashboard description"),
 		DisplayName: to.Ptr("KQLDashboard_1"),
 	}, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
 }
 
 // Generated from example definition
-func ExampleItemsClient_CreateKQLDashboard_createAKqlDashboardExampleWithDefinition() {
+func ExampleItemsClient_BeginCreateKQLDashboard_createAKqlDashboardExampleWithDefinition() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -89,7 +93,7 @@ func ExampleItemsClient_CreateKQLDashboard_createAKqlDashboardExampleWithDefinit
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewItemsClient().CreateKQLDashboard(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", kqldashboard.CreateKQLDashboardRequest{
+	poller, err := clientFactory.NewItemsClient().BeginCreateKQLDashboard(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", kqldashboard.CreateKQLDashboardRequest{
 		Description: to.Ptr("A KQL dashboard description"),
 		Definition: &kqldashboard.Definition{
 			Parts: []kqldashboard.DefinitionPart{
@@ -108,6 +112,10 @@ func ExampleItemsClient_CreateKQLDashboard_createAKqlDashboardExampleWithDefinit
 	}, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
 	}
 }
 
@@ -186,7 +194,7 @@ func ExampleItemsClient_DeleteKQLDashboard() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_GetKQLDashboardDefinition() {
+func ExampleItemsClient_BeginGetKQLDashboardDefinition() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -196,9 +204,13 @@ func ExampleItemsClient_GetKQLDashboardDefinition() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewItemsClient().GetKQLDashboardDefinition(ctx, "6e335e92-a2a2-4b5a-970a-bd6a89fbb765", "cfafbeb1-8037-4d0c-896e-a46fb27ff229", &kqldashboard.ItemsClientGetKQLDashboardDefinitionOptions{Format: nil})
+	poller, err := clientFactory.NewItemsClient().BeginGetKQLDashboardDefinition(ctx, "6e335e92-a2a2-4b5a-970a-bd6a89fbb765", "cfafbeb1-8037-4d0c-896e-a46fb27ff229", &kqldashboard.ItemsClientBeginGetKQLDashboardDefinitionOptions{Format: nil})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
+	}
+	res, err := poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
 	}
 	// You could use response here. We use blank identifier for just demo purposes.
 	_ = res
@@ -221,7 +233,7 @@ func ExampleItemsClient_GetKQLDashboardDefinition() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_UpdateKQLDashboardDefinition() {
+func ExampleItemsClient_BeginUpdateKQLDashboardDefinition() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -231,7 +243,7 @@ func ExampleItemsClient_UpdateKQLDashboardDefinition() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewItemsClient().UpdateKQLDashboardDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", kqldashboard.UpdateKQLDashboardDefinitionRequest{
+	poller, err := clientFactory.NewItemsClient().BeginUpdateKQLDashboardDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", kqldashboard.UpdateKQLDashboardDefinitionRequest{
 		Definition: &kqldashboard.Definition{
 			Parts: []kqldashboard.DefinitionPart{
 				{
@@ -245,8 +257,12 @@ func ExampleItemsClient_UpdateKQLDashboardDefinition() {
 					PayloadType: to.Ptr(kqldashboard.PayloadTypeInlineBase64),
 				}},
 		},
-	}, &kqldashboard.ItemsClientUpdateKQLDashboardDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	}, &kqldashboard.ItemsClientBeginUpdateKQLDashboardDefinitionOptions{UpdateMetadata: to.Ptr(true)})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
 	}
 }

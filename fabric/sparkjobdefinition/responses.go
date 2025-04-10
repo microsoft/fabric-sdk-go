@@ -54,3 +54,15 @@ type ItemsClientUpdateSparkJobDefinitionResponse struct {
 	// A spark job definition object.
 	SparkJobDefinition
 }
+
+// LivySessionsClientGetLivySessionResponse contains the response from method LivySessionsClient.GetLivySession.
+type LivySessionsClientGetLivySessionResponse struct {
+	// The livy session response
+	LivySession
+}
+
+// LivySessionsClientListLivySessionsResponse contains the response from method LivySessionsClient.NewListLivySessionsPager.
+type LivySessionsClientListLivySessionsResponse struct {
+	// A paginated list of livy sessions.
+	LivySessions
+}

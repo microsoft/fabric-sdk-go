@@ -26,9 +26,9 @@ import (
 
 // ItemsServer is a fake server for instances of the kqldashboard.ItemsClient type.
 type ItemsServer struct {
-	// CreateKQLDashboard is the fake for method ItemsClient.CreateKQLDashboard
-	// HTTP status codes to indicate success: http.StatusCreated
-	CreateKQLDashboard func(ctx context.Context, workspaceID string, createKQLDashboardRequest kqldashboard.CreateKQLDashboardRequest, options *kqldashboard.ItemsClientCreateKQLDashboardOptions) (resp azfake.Responder[kqldashboard.ItemsClientCreateKQLDashboardResponse], errResp azfake.ErrorResponder)
+	// BeginCreateKQLDashboard is the fake for method ItemsClient.BeginCreateKQLDashboard
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated, http.StatusAccepted
+	BeginCreateKQLDashboard func(ctx context.Context, workspaceID string, createKQLDashboardRequest kqldashboard.CreateKQLDashboardRequest, options *kqldashboard.ItemsClientBeginCreateKQLDashboardOptions) (resp azfake.PollerResponder[kqldashboard.ItemsClientCreateKQLDashboardResponse], errResp azfake.ErrorResponder)
 
 	// DeleteKQLDashboard is the fake for method ItemsClient.DeleteKQLDashboard
 	// HTTP status codes to indicate success: http.StatusOK
@@ -38,9 +38,9 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetKQLDashboard func(ctx context.Context, workspaceID string, kqlDashboardID string, options *kqldashboard.ItemsClientGetKQLDashboardOptions) (resp azfake.Responder[kqldashboard.ItemsClientGetKQLDashboardResponse], errResp azfake.ErrorResponder)
 
-	// GetKQLDashboardDefinition is the fake for method ItemsClient.GetKQLDashboardDefinition
-	// HTTP status codes to indicate success: http.StatusOK
-	GetKQLDashboardDefinition func(ctx context.Context, workspaceID string, kqlDashboardID string, options *kqldashboard.ItemsClientGetKQLDashboardDefinitionOptions) (resp azfake.Responder[kqldashboard.ItemsClientGetKQLDashboardDefinitionResponse], errResp azfake.ErrorResponder)
+	// BeginGetKQLDashboardDefinition is the fake for method ItemsClient.BeginGetKQLDashboardDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	BeginGetKQLDashboardDefinition func(ctx context.Context, workspaceID string, kqlDashboardID string, options *kqldashboard.ItemsClientBeginGetKQLDashboardDefinitionOptions) (resp azfake.PollerResponder[kqldashboard.ItemsClientGetKQLDashboardDefinitionResponse], errResp azfake.ErrorResponder)
 
 	// NewListKQLDashboardsPager is the fake for method ItemsClient.NewListKQLDashboardsPager
 	// HTTP status codes to indicate success: http.StatusOK
@@ -50,9 +50,9 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	UpdateKQLDashboard func(ctx context.Context, workspaceID string, kqlDashboardID string, updateKQLDashboardRequest kqldashboard.UpdateKQLDashboardRequest, options *kqldashboard.ItemsClientUpdateKQLDashboardOptions) (resp azfake.Responder[kqldashboard.ItemsClientUpdateKQLDashboardResponse], errResp azfake.ErrorResponder)
 
-	// UpdateKQLDashboardDefinition is the fake for method ItemsClient.UpdateKQLDashboardDefinition
-	// HTTP status codes to indicate success: http.StatusOK
-	UpdateKQLDashboardDefinition func(ctx context.Context, workspaceID string, kqlDashboardID string, updateKQLDashboardDefinitionRequest kqldashboard.UpdateKQLDashboardDefinitionRequest, options *kqldashboard.ItemsClientUpdateKQLDashboardDefinitionOptions) (resp azfake.Responder[kqldashboard.ItemsClientUpdateKQLDashboardDefinitionResponse], errResp azfake.ErrorResponder)
+	// BeginUpdateKQLDashboardDefinition is the fake for method ItemsClient.BeginUpdateKQLDashboardDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
+	BeginUpdateKQLDashboardDefinition func(ctx context.Context, workspaceID string, kqlDashboardID string, updateKQLDashboardDefinitionRequest kqldashboard.UpdateKQLDashboardDefinitionRequest, options *kqldashboard.ItemsClientBeginUpdateKQLDashboardDefinitionOptions) (resp azfake.PollerResponder[kqldashboard.ItemsClientUpdateKQLDashboardDefinitionResponse], errResp azfake.ErrorResponder)
 }
 
 // NewItemsServerTransport creates a new instance of ItemsServerTransport with the provided implementation.
@@ -60,16 +60,22 @@ type ItemsServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewItemsServerTransport(srv *ItemsServer) *ItemsServerTransport {
 	return &ItemsServerTransport{
-		srv:                       srv,
-		newListKQLDashboardsPager: newTracker[azfake.PagerResponder[kqldashboard.ItemsClientListKQLDashboardsResponse]](),
+		srv:                               srv,
+		beginCreateKQLDashboard:           newTracker[azfake.PollerResponder[kqldashboard.ItemsClientCreateKQLDashboardResponse]](),
+		beginGetKQLDashboardDefinition:    newTracker[azfake.PollerResponder[kqldashboard.ItemsClientGetKQLDashboardDefinitionResponse]](),
+		newListKQLDashboardsPager:         newTracker[azfake.PagerResponder[kqldashboard.ItemsClientListKQLDashboardsResponse]](),
+		beginUpdateKQLDashboardDefinition: newTracker[azfake.PollerResponder[kqldashboard.ItemsClientUpdateKQLDashboardDefinitionResponse]](),
 	}
 }
 
 // ItemsServerTransport connects instances of kqldashboard.ItemsClient to instances of ItemsServer.
 // Don't use this type directly, use NewItemsServerTransport instead.
 type ItemsServerTransport struct {
-	srv                       *ItemsServer
-	newListKQLDashboardsPager *tracker[azfake.PagerResponder[kqldashboard.ItemsClientListKQLDashboardsResponse]]
+	srv                               *ItemsServer
+	beginCreateKQLDashboard           *tracker[azfake.PollerResponder[kqldashboard.ItemsClientCreateKQLDashboardResponse]]
+	beginGetKQLDashboardDefinition    *tracker[azfake.PollerResponder[kqldashboard.ItemsClientGetKQLDashboardDefinitionResponse]]
+	newListKQLDashboardsPager         *tracker[azfake.PagerResponder[kqldashboard.ItemsClientListKQLDashboardsResponse]]
+	beginUpdateKQLDashboardDefinition *tracker[azfake.PollerResponder[kqldashboard.ItemsClientUpdateKQLDashboardDefinitionResponse]]
 }
 
 // Do implements the policy.Transporter interface for ItemsServerTransport.
@@ -97,20 +103,20 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 		}
 		if !intercepted {
 			switch method {
-			case "ItemsClient.CreateKQLDashboard":
-				res.resp, res.err = i.dispatchCreateKQLDashboard(req)
+			case "ItemsClient.BeginCreateKQLDashboard":
+				res.resp, res.err = i.dispatchBeginCreateKQLDashboard(req)
 			case "ItemsClient.DeleteKQLDashboard":
 				res.resp, res.err = i.dispatchDeleteKQLDashboard(req)
 			case "ItemsClient.GetKQLDashboard":
 				res.resp, res.err = i.dispatchGetKQLDashboard(req)
-			case "ItemsClient.GetKQLDashboardDefinition":
-				res.resp, res.err = i.dispatchGetKQLDashboardDefinition(req)
+			case "ItemsClient.BeginGetKQLDashboardDefinition":
+				res.resp, res.err = i.dispatchBeginGetKQLDashboardDefinition(req)
 			case "ItemsClient.NewListKQLDashboardsPager":
 				res.resp, res.err = i.dispatchNewListKQLDashboardsPager(req)
 			case "ItemsClient.UpdateKQLDashboard":
 				res.resp, res.err = i.dispatchUpdateKQLDashboard(req)
-			case "ItemsClient.UpdateKQLDashboardDefinition":
-				res.resp, res.err = i.dispatchUpdateKQLDashboardDefinition(req)
+			case "ItemsClient.BeginUpdateKQLDashboardDefinition":
+				res.resp, res.err = i.dispatchBeginUpdateKQLDashboardDefinition(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -130,39 +136,47 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 	}
 }
 
-func (i *ItemsServerTransport) dispatchCreateKQLDashboard(req *http.Request) (*http.Response, error) {
-	if i.srv.CreateKQLDashboard == nil {
-		return nil, &nonRetriableError{errors.New("fake for method CreateKQLDashboard not implemented")}
+func (i *ItemsServerTransport) dispatchBeginCreateKQLDashboard(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginCreateKQLDashboard == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginCreateKQLDashboard not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/kqlDashboards`
-	regex := regexp.MustCompile(regexStr)
-	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
-		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	beginCreateKQLDashboard := i.beginCreateKQLDashboard.get(req)
+	if beginCreateKQLDashboard == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/kqlDashboards`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 1 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		body, err := server.UnmarshalRequestAsJSON[kqldashboard.CreateKQLDashboardRequest](req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		respr, errRespr := i.srv.BeginCreateKQLDashboard(req.Context(), workspaceIDParam, body, nil)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginCreateKQLDashboard = &respr
+		i.beginCreateKQLDashboard.add(req, beginCreateKQLDashboard)
 	}
-	body, err := server.UnmarshalRequestAsJSON[kqldashboard.CreateKQLDashboardRequest](req)
+
+	resp, err := server.PollerResponderNext(beginCreateKQLDashboard, req)
 	if err != nil {
 		return nil, err
 	}
-	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
-	if err != nil {
-		return nil, err
+
+	if !contains([]int{http.StatusOK, http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
+		i.beginCreateKQLDashboard.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
 	}
-	respr, errRespr := i.srv.CreateKQLDashboard(req.Context(), workspaceIDParam, body, nil)
-	if respErr := server.GetError(errRespr, req); respErr != nil {
-		return nil, respErr
+	if !server.PollerResponderMore(beginCreateKQLDashboard) {
+		i.beginCreateKQLDashboard.remove(req)
 	}
-	respContent := server.GetResponseContent(respr)
-	if !contains([]int{http.StatusCreated}, respContent.HTTPStatus) {
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated", respContent.HTTPStatus)}
-	}
-	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).KQLDashboard, req)
-	if err != nil {
-		return nil, err
-	}
-	if val := server.GetResponse(respr).Location; val != nil {
-		resp.Header.Set("Location", *val)
-	}
+
 	return resp, nil
 }
 
@@ -232,48 +246,59 @@ func (i *ItemsServerTransport) dispatchGetKQLDashboard(req *http.Request) (*http
 	return resp, nil
 }
 
-func (i *ItemsServerTransport) dispatchGetKQLDashboardDefinition(req *http.Request) (*http.Response, error) {
-	if i.srv.GetKQLDashboardDefinition == nil {
-		return nil, &nonRetriableError{errors.New("fake for method GetKQLDashboardDefinition not implemented")}
+func (i *ItemsServerTransport) dispatchBeginGetKQLDashboardDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginGetKQLDashboardDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginGetKQLDashboardDefinition not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/kqlDashboards/(?P<kqlDashboardId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
-	regex := regexp.MustCompile(regexStr)
-	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
-		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
-	}
-	qp := req.URL.Query()
-	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
-	if err != nil {
-		return nil, err
-	}
-	kqlDashboardIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("kqlDashboardId")])
-	if err != nil {
-		return nil, err
-	}
-	formatUnescaped, err := url.QueryUnescape(qp.Get("format"))
-	if err != nil {
-		return nil, err
-	}
-	formatParam := getOptional(formatUnescaped)
-	var options *kqldashboard.ItemsClientGetKQLDashboardDefinitionOptions
-	if formatParam != nil {
-		options = &kqldashboard.ItemsClientGetKQLDashboardDefinitionOptions{
-			Format: formatParam,
+	beginGetKQLDashboardDefinition := i.beginGetKQLDashboardDefinition.get(req)
+	if beginGetKQLDashboardDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/kqlDashboards/(?P<kqlDashboardId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		kqlDashboardIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("kqlDashboardId")])
+		if err != nil {
+			return nil, err
+		}
+		formatUnescaped, err := url.QueryUnescape(qp.Get("format"))
+		if err != nil {
+			return nil, err
+		}
+		formatParam := getOptional(formatUnescaped)
+		var options *kqldashboard.ItemsClientBeginGetKQLDashboardDefinitionOptions
+		if formatParam != nil {
+			options = &kqldashboard.ItemsClientBeginGetKQLDashboardDefinitionOptions{
+				Format: formatParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginGetKQLDashboardDefinition(req.Context(), workspaceIDParam, kqlDashboardIDParam, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginGetKQLDashboardDefinition = &respr
+		i.beginGetKQLDashboardDefinition.add(req, beginGetKQLDashboardDefinition)
 	}
-	respr, errRespr := i.srv.GetKQLDashboardDefinition(req.Context(), workspaceIDParam, kqlDashboardIDParam, options)
-	if respErr := server.GetError(errRespr, req); respErr != nil {
-		return nil, respErr
-	}
-	respContent := server.GetResponseContent(respr)
-	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
-	}
-	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).DefinitionResponse, req)
+
+	resp, err := server.PollerResponderNext(beginGetKQLDashboardDefinition, req)
 	if err != nil {
 		return nil, err
 	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+		i.beginGetKQLDashboardDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginGetKQLDashboardDefinition) {
+		i.beginGetKQLDashboardDefinition.remove(req)
+	}
+
 	return resp, nil
 }
 
@@ -363,55 +388,66 @@ func (i *ItemsServerTransport) dispatchUpdateKQLDashboard(req *http.Request) (*h
 	return resp, nil
 }
 
-func (i *ItemsServerTransport) dispatchUpdateKQLDashboardDefinition(req *http.Request) (*http.Response, error) {
-	if i.srv.UpdateKQLDashboardDefinition == nil {
-		return nil, &nonRetriableError{errors.New("fake for method UpdateKQLDashboardDefinition not implemented")}
+func (i *ItemsServerTransport) dispatchBeginUpdateKQLDashboardDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginUpdateKQLDashboardDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginUpdateKQLDashboardDefinition not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/kqlDashboards/(?P<kqlDashboardId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
-	regex := regexp.MustCompile(regexStr)
-	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
-		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
-	}
-	qp := req.URL.Query()
-	body, err := server.UnmarshalRequestAsJSON[kqldashboard.UpdateKQLDashboardDefinitionRequest](req)
-	if err != nil {
-		return nil, err
-	}
-	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
-	if err != nil {
-		return nil, err
-	}
-	kqlDashboardIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("kqlDashboardId")])
-	if err != nil {
-		return nil, err
-	}
-	updateMetadataUnescaped, err := url.QueryUnescape(qp.Get("updateMetadata"))
-	if err != nil {
-		return nil, err
-	}
-	updateMetadataParam, err := parseOptional(updateMetadataUnescaped, strconv.ParseBool)
-	if err != nil {
-		return nil, err
-	}
-	var options *kqldashboard.ItemsClientUpdateKQLDashboardDefinitionOptions
-	if updateMetadataParam != nil {
-		options = &kqldashboard.ItemsClientUpdateKQLDashboardDefinitionOptions{
-			UpdateMetadata: updateMetadataParam,
+	beginUpdateKQLDashboardDefinition := i.beginUpdateKQLDashboardDefinition.get(req)
+	if beginUpdateKQLDashboardDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/kqlDashboards/(?P<kqlDashboardId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
+		qp := req.URL.Query()
+		body, err := server.UnmarshalRequestAsJSON[kqldashboard.UpdateKQLDashboardDefinitionRequest](req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		kqlDashboardIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("kqlDashboardId")])
+		if err != nil {
+			return nil, err
+		}
+		updateMetadataUnescaped, err := url.QueryUnescape(qp.Get("updateMetadata"))
+		if err != nil {
+			return nil, err
+		}
+		updateMetadataParam, err := parseOptional(updateMetadataUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		var options *kqldashboard.ItemsClientBeginUpdateKQLDashboardDefinitionOptions
+		if updateMetadataParam != nil {
+			options = &kqldashboard.ItemsClientBeginUpdateKQLDashboardDefinitionOptions{
+				UpdateMetadata: updateMetadataParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginUpdateKQLDashboardDefinition(req.Context(), workspaceIDParam, kqlDashboardIDParam, body, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginUpdateKQLDashboardDefinition = &respr
+		i.beginUpdateKQLDashboardDefinition.add(req, beginUpdateKQLDashboardDefinition)
 	}
-	respr, errRespr := i.srv.UpdateKQLDashboardDefinition(req.Context(), workspaceIDParam, kqlDashboardIDParam, body, options)
-	if respErr := server.GetError(errRespr, req); respErr != nil {
-		return nil, respErr
-	}
-	respContent := server.GetResponseContent(respr)
-	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
-	}
-	resp, err := server.NewResponse(respContent, req, nil)
+
+	resp, err := server.PollerResponderNext(beginUpdateKQLDashboardDefinition, req)
 	if err != nil {
 		return nil, err
 	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
+		i.beginUpdateKQLDashboardDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginUpdateKQLDashboardDefinition) {
+		i.beginUpdateKQLDashboardDefinition.remove(req)
+	}
+
 	return resp, nil
 }
 

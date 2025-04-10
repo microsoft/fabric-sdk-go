@@ -59,7 +59,7 @@ func (client *OneLakeShortcutsClient) CreateShortcut(ctx context.Context, worksp
 	if err != nil {
 		return OneLakeShortcutsClientCreateShortcutResponse{}, err
 	}
-	if !runtime.HasStatusCode(httpResp, http.StatusCreated) {
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusCreated) {
 		err = NewResponseError(httpResp)
 		return OneLakeShortcutsClientCreateShortcutResponse{}, err
 	}

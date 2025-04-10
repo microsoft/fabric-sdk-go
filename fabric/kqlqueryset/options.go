@@ -6,21 +6,36 @@
 
 package kqlqueryset
 
-// ItemsClientCreateKQLQuerysetOptions contains the optional parameters for the ItemsClient.CreateKQLQueryset method.
-type ItemsClientCreateKQLQuerysetOptions struct {
-	// placeholder for future optional parameters
+// ItemsClientBeginCreateKQLQuerysetOptions contains the optional parameters for the ItemsClient.BeginCreateKQLQueryset method.
+type ItemsClientBeginCreateKQLQuerysetOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// ItemsClientBeginGetKQLQuerysetDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetKQLQuerysetDefinition
+// method.
+type ItemsClientBeginGetKQLQuerysetDefinitionOptions struct {
+	// The format of the KQL queryset public definition.
+	Format *string
+
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// ItemsClientBeginUpdateKQLQuerysetDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateKQLQuerysetDefinition
+// method.
+type ItemsClientBeginUpdateKQLQuerysetDefinitionOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+
+	// When set to true and the .platform file is provided as part of the definition, the item's metadata is updated using the
+	// metadata in the .platform file
+	UpdateMetadata *bool
 }
 
 // ItemsClientDeleteKQLQuerysetOptions contains the optional parameters for the ItemsClient.DeleteKQLQueryset method.
 type ItemsClientDeleteKQLQuerysetOptions struct {
 	// placeholder for future optional parameters
-}
-
-// ItemsClientGetKQLQuerysetDefinitionOptions contains the optional parameters for the ItemsClient.GetKQLQuerysetDefinition
-// method.
-type ItemsClientGetKQLQuerysetDefinitionOptions struct {
-	// The format of the KQL queryset public definition.
-	Format *string
 }
 
 // ItemsClientGetKQLQuerysetOptions contains the optional parameters for the ItemsClient.GetKQLQueryset method.
@@ -32,14 +47,6 @@ type ItemsClientGetKQLQuerysetOptions struct {
 type ItemsClientListKQLQuerysetsOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
-}
-
-// ItemsClientUpdateKQLQuerysetDefinitionOptions contains the optional parameters for the ItemsClient.UpdateKQLQuerysetDefinition
-// method.
-type ItemsClientUpdateKQLQuerysetDefinitionOptions struct {
-	// When set to true and the .platform file is provided as part of the definition, the item's metadata is updated using the
-	// metadata in the .platform file
-	UpdateMetadata *bool
 }
 
 // ItemsClientUpdateKQLQuerysetOptions contains the optional parameters for the ItemsClient.UpdateKQLQueryset method.

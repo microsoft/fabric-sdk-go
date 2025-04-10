@@ -592,6 +592,21 @@ func PossibleDeploymentPipelineOperationTypeValues() []DeploymentPipelineOperati
 	}
 }
 
+// DeploymentPipelineRole - A Deployment Pipeline role. Additional Deployment Pipeline roles may be added over time.
+type DeploymentPipelineRole string
+
+const (
+	// DeploymentPipelineRoleAdmin - Enables administrative access to the deployment pipeline.
+	DeploymentPipelineRoleAdmin DeploymentPipelineRole = "Admin"
+)
+
+// PossibleDeploymentPipelineRoleValues returns the possible values for the DeploymentPipelineRole const type.
+func PossibleDeploymentPipelineRoleValues() []DeploymentPipelineRole {
+	return []DeploymentPipelineRole{
+		DeploymentPipelineRoleAdmin,
+	}
+}
+
 // Effect - The effect that a role has on access to the data resource. Currently, the only supported effect type is Permit,
 // which grants access to the resource. Additional effect types may be added over time.
 type Effect string
@@ -904,6 +919,8 @@ const (
 	ItemTypeSemanticModel ItemType = "SemanticModel"
 	// ItemTypeSparkJobDefinition - A spark job definition.
 	ItemTypeSparkJobDefinition ItemType = "SparkJobDefinition"
+	// ItemTypeVariableLibrary - A VariableLibrary.
+	ItemTypeVariableLibrary ItemType = "VariableLibrary"
 	// ItemTypeWarehouse - A warehouse.
 	ItemTypeWarehouse ItemType = "Warehouse"
 )
@@ -936,6 +953,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeSQLEndpoint,
 		ItemTypeSemanticModel,
 		ItemTypeSparkJobDefinition,
+		ItemTypeVariableLibrary,
 		ItemTypeWarehouse,
 	}
 }
@@ -1152,16 +1170,24 @@ const (
 	// ShortcutConflictPolicyAbort - When a shortcut with the same name and path already exists the shortcut creation will be
 	// cancelled.
 	ShortcutConflictPolicyAbort ShortcutConflictPolicy = "Abort"
+	// ShortcutConflictPolicyCreateOrOverwrite - When a shortcut with the same name and path already exists the shortcut creation
+	// will overwrite the existing shortcut. Create shortcut if it does not exist.
+	ShortcutConflictPolicyCreateOrOverwrite ShortcutConflictPolicy = "CreateOrOverwrite"
 	// ShortcutConflictPolicyGenerateUniqueName - When a shortcut with the same name and path already exists the shortcut creation
 	// will continue with a new unique shortcut name.
 	ShortcutConflictPolicyGenerateUniqueName ShortcutConflictPolicy = "GenerateUniqueName"
+	// ShortcutConflictPolicyOverwriteOnly - When a shortcut with the same name and path already exists the shortcut creation
+	// will overwrite the existing shortcut.
+	ShortcutConflictPolicyOverwriteOnly ShortcutConflictPolicy = "OverwriteOnly"
 )
 
 // PossibleShortcutConflictPolicyValues returns the possible values for the ShortcutConflictPolicy const type.
 func PossibleShortcutConflictPolicyValues() []ShortcutConflictPolicy {
 	return []ShortcutConflictPolicy{
 		ShortcutConflictPolicyAbort,
+		ShortcutConflictPolicyCreateOrOverwrite,
 		ShortcutConflictPolicyGenerateUniqueName,
+		ShortcutConflictPolicyOverwriteOnly,
 	}
 }
 

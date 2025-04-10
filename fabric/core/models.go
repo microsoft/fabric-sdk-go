@@ -17,6 +17,15 @@ type AddConnectionRoleAssignmentRequest struct {
 	Role *ConnectionRole
 }
 
+// AddDeploymentPipelineRoleAssignmentRequest - Add deployment pipeline role assignment request payload.
+type AddDeploymentPipelineRoleAssignmentRequest struct {
+	// REQUIRED; The principal.
+	Principal *Principal
+
+	// REQUIRED; The deployment pipeline role of the principal.
+	Role *DeploymentPipelineRole
+}
+
 // AddGatewayRoleAssignmentRequest - The add gateway role assignment request for a principal.
 type AddGatewayRoleAssignmentRequest struct {
 	// REQUIRED; The principal.
@@ -607,6 +616,20 @@ type CreateCredentialDetails struct {
 	SkipTestConnection *bool
 }
 
+// CreateDeploymentPipelineRequest - A request to create a new deployment pipeline.
+type CreateDeploymentPipelineRequest struct {
+	// REQUIRED; The display name for the deployment pipeline.
+	// The display name cannot contain more than 256 characters.
+	DisplayName *string
+
+	// REQUIRED; The collection of deployment pipeline stages.
+	Stages []DeploymentPipelineStageRequest
+
+	// The description for the deployment pipeline.
+	// The description cannot contain more than 1024 characters.
+	Description *string
+}
+
 // CreateExternalDataShareRequest - The request payload for creating an external data share.
 type CreateExternalDataShareRequest struct {
 	// REQUIRED; The path or list of paths that are to be externally shared. You can share up to 100 paths in each share. A valid
@@ -1047,10 +1070,32 @@ type DeploymentPipeline struct {
 	Description *string
 }
 
+// DeploymentPipelineAssignWorkspaceRequest - A request to assign a workspace to a deployment pipeline stage.
+type DeploymentPipelineAssignWorkspaceRequest struct {
+	// REQUIRED; The workspace ID.
+	WorkspaceID *string
+}
+
+// DeploymentPipelineExtendedInfo - A Fabric deployment pipeline.
+type DeploymentPipelineExtendedInfo struct {
+	// REQUIRED; The deployment pipeline display name.
+	DisplayName *string
+
+	// REQUIRED; The collection of deployment pipeline stages.
+	Stages []DeploymentPipelineStage
+
+	// READ-ONLY; The deployment pipeline ID.
+	ID *string
+
+	// The deployment pipeline description.
+	Description *string
+}
+
 // DeploymentPipelineNewWorkspaceConfiguration - The configuration details for creating a new workspace. Required when deploying
 // to a stage that has no assigned workspaces.
 type DeploymentPipelineNewWorkspaceConfiguration struct {
 	// REQUIRED; The name of the new workspace.
+	// The display name cannot contain more than 256 characters.
 	Name *string
 
 	// The ID of the capacity that the new workspace will be assigned to. If unspecified and the API caller has permissions for
@@ -1061,6 +1106,43 @@ type DeploymentPipelineNewWorkspaceConfiguration struct {
 
 // DeploymentPipelineOperation - A Fabric deployment pipeline operation.
 type DeploymentPipelineOperation struct {
+	// A note representing a description of the operation.
+	Note *DeploymentPipelineOperationNote
+
+	// The principal that performed the deployment pipeline operation.
+	PerformedBy *Principal
+
+	// READ-ONLY; The operation ID.
+	ID *string
+
+	// READ-ONLY; The date and time that the operation was last updated.
+	LastUpdatedTime *time.Time
+
+	// READ-ONLY; The deployment pipeline operation status. Additional statuses may be added over time.
+	Status *DeploymentPipelineOperationStatus
+
+	// READ-ONLY; The operation type. Additional types may be added over time.
+	Type *DeploymentPipelineOperationType
+
+	// READ-ONLY; The date and time that the operation ended.
+	ExecutionEndTime *time.Time
+
+	// READ-ONLY; The date and time that the operation started.
+	ExecutionStartTime *time.Time
+
+	// READ-ONLY; The number of deployed items in the source stage, that are new, identical or different to items in the target
+	// stage, before deployment.
+	PreDeploymentDiffInformation *PreDeploymentDiffInformation
+
+	// READ-ONLY; The ID of a source deployment pipeline stage.
+	SourceStageID *string
+
+	// READ-ONLY; The ID of a target deployment pipeline stage.
+	TargetStageID *string
+}
+
+// DeploymentPipelineOperationExtendedInfo - A Fabric deployment pipeline operation.
+type DeploymentPipelineOperationExtendedInfo struct {
 	// A note representing a description of the operation.
 	Note *DeploymentPipelineOperationNote
 
@@ -1103,6 +1185,42 @@ type DeploymentPipelineOperation struct {
 type DeploymentPipelineOperationNote struct {
 	// REQUIRED; Text describing the deployment.
 	Content *string
+
+	// Indicates whether the note content is truncated. True - the note content is truncated, False - the note content isn't truncated.
+	// Default value is false.
+	IsTruncated *bool
+}
+
+// DeploymentPipelineOperations - A collection of Fabric deployment pipeline operations.
+type DeploymentPipelineOperations struct {
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+
+	// The collection of deployment pipeline operations.
+	Value []DeploymentPipelineOperation
+}
+
+// DeploymentPipelineRoleAssignment - A Fabric principal role assignment for a deployment pipeline.
+type DeploymentPipelineRoleAssignment struct {
+	// READ-ONLY; The principal.
+	Principal *Principal
+
+	// READ-ONLY; The deployment pipeline role of the principal.
+	Role *DeploymentPipelineRole
+}
+
+type DeploymentPipelineRoleAssignments struct {
+	// REQUIRED
+	Value []DeploymentPipelineRoleAssignment
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
 }
 
 // DeploymentPipelineStage - A Fabric deployment pipeline stage.
@@ -1164,6 +1282,20 @@ type DeploymentPipelineStageItems struct {
 
 	// The items collection.
 	Value []DeploymentPipelineStageItem
+}
+
+// DeploymentPipelineStageRequest - A Fabric deployment pipeline stage.
+type DeploymentPipelineStageRequest struct {
+	// REQUIRED; The deployment pipeline stage display name.
+	// The display name cannot contain more than 256 characters.
+	DisplayName *string
+
+	// The deployment pipeline stage description.
+	// The description cannot contain more than 1024 characters.
+	Description *string
+
+	// Whether the deployment pipeline stage is public.
+	IsPublic *bool
 }
 
 // DeploymentPipelineStages - A collection of Fabric deployment pipeline stages.
@@ -2311,6 +2443,18 @@ type UpdateCredentialDetails struct {
 	// Whether the connection should skip the test connection during creation and update. True - Skip the test connection, False
 	// - Do not skip the test connection.
 	SkipTestConnection *bool
+}
+
+// UpdateDeploymentPipelineRequest - A request to update an existing deployment pipeline. An updated display name and/or a
+// description is required.
+type UpdateDeploymentPipelineRequest struct {
+	// The description for the deployment pipeline.
+	// The description cannot contain more than 1024 characters.
+	Description *string
+
+	// The display name for the deployment pipeline.
+	// The display name cannot contain more than 256 characters.
+	DisplayName *string
 }
 
 // UpdateFolderRequest - Update folder request.

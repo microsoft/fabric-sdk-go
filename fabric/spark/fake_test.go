@@ -18,6 +18,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 
 	"reflect"
+	"time"
 
 	"github.com/stretchr/testify/suite"
 
@@ -504,4 +505,178 @@ func (testsuite *FakeTestSuite) TestCustomPools_UpdateWorkspaceCustomPool() {
 	res, err := client.UpdateWorkspaceCustomPool(ctx, exampleWorkspaceID, examplePoolID, exampleUpdateCustomPoolRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.CustomPool))
+}
+
+func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessions() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List all livy sessions example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "f8113ba8-dd81-443e-811a-b385340f3f05"
+
+	exampleRes := spark.LivySessions{
+		Value: []spark.LivySession{
+			{
+				AttemptNumber:      to.Ptr[int32](1),
+				CancellationReason: to.Ptr("User cancelled the Spark batch"),
+				CapacityID:         to.Ptr("3c0cd366-dc28-4b6d-a525-4d415a8666e7"),
+				CreatorItem: &spark.ItemReferenceByID{
+					ReferenceType: to.Ptr(spark.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("8cee7699-2e81-4121-9a53-cc9025046193"),
+					WorkspaceID:   to.Ptr("f8113ba8-dd81-443e-811a-b385340f3f05"),
+				},
+				EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:37:30.000Z"); return t }()),
+				Item: &spark.ItemReferenceByID{
+					ReferenceType: to.Ptr(spark.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("8cee7699-2e81-4121-9a53-cc9025046193"),
+					WorkspaceID:   to.Ptr("f8113ba8-dd81-443e-811a-b385340f3f05"),
+				},
+				ItemName:                   to.Ptr("nb_itemName1"),
+				ItemType:                   to.Ptr(spark.ItemTypeNotebook),
+				JobInstanceID:              to.Ptr("c2baabbd-5327-430c-87a6-ff4f98285601"),
+				JobType:                    to.Ptr(spark.JobTypeSparkBatch),
+				LivyID:                     to.Ptr("9611f500-bf44-42e0-a0de-78dacb374398"),
+				LivyName:                   to.Ptr("random_test_name_app"),
+				LivySessionItemResourceURI: to.Ptr(""),
+				MaxNumberOfAttempts:        to.Ptr[int32](1),
+				OperationName:              to.Ptr("Batch Livy Run"),
+				Origin:                     to.Ptr(spark.OriginSubmittedJob),
+				QueuedDuration: &spark.Duration{
+					TimeUnit: to.Ptr(spark.TimeUnitSeconds),
+					Value:    to.Ptr[float32](1),
+				},
+				RunningDuration: &spark.Duration{
+					TimeUnit: to.Ptr(spark.TimeUnitSeconds),
+					Value:    to.Ptr[float32](180),
+				},
+				RuntimeVersion:     to.Ptr("1.3"),
+				SparkApplicationID: to.Ptr("application_1730933685452_0001"),
+				StartDateTime:      to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:34:11.000Z"); return t }()),
+				State:              to.Ptr(spark.StateCancelled),
+				SubmittedDateTime:  to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:32:03.000Z"); return t }()),
+				Submitter: &spark.Principal{
+					Type: to.Ptr(spark.PrincipalTypeUser),
+					ID:   to.Ptr("6f23a8a6-d954-4550-b91a-4df73ccd0311"),
+				},
+				TotalDuration: &spark.Duration{
+					TimeUnit: to.Ptr(spark.TimeUnitSeconds),
+					Value:    to.Ptr[float32](360),
+				},
+			},
+			{
+				AttemptNumber:      to.Ptr[int32](1),
+				CancellationReason: to.Ptr("User cancelled the Spark batch"),
+				CapacityID:         to.Ptr("3c0cd366-dc28-4b6d-a525-4d415a8666e7"),
+				CreatorItem: &spark.ItemReferenceByID{
+					ReferenceType: to.Ptr(spark.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("7dee7699-2e81-4121-9a53-cc9025046197"),
+					WorkspaceID:   to.Ptr("f8113ba8-dd81-443e-811a-b385340f3f05"),
+				},
+				EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:37:30.000Z"); return t }()),
+				Item: &spark.ItemReferenceByID{
+					ReferenceType: to.Ptr(spark.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("7dee7699-2e81-4121-9a53-cc9025046197"),
+					WorkspaceID:   to.Ptr("f8113ba8-dd81-443e-811a-b385340f3f05"),
+				},
+				ItemName:                   to.Ptr("lh_itemName2"),
+				ItemType:                   to.Ptr(spark.ItemTypeLakehouse),
+				JobInstanceID:              to.Ptr("c2baabbd-5327-430c-87a6-ff4f98285601"),
+				JobType:                    to.Ptr(spark.JobTypeSparkBatch),
+				LivyID:                     to.Ptr("4311f500-bf44-42e0-a0de-78dacb374397"),
+				LivyName:                   to.Ptr("random_test_name_app"),
+				LivySessionItemResourceURI: to.Ptr(""),
+				MaxNumberOfAttempts:        to.Ptr[int32](1),
+				OperationName:              to.Ptr("Batch Livy Run"),
+				Origin:                     to.Ptr(spark.OriginSubmittedJob),
+				QueuedDuration: &spark.Duration{
+					TimeUnit: to.Ptr(spark.TimeUnitSeconds),
+					Value:    to.Ptr[float32](1),
+				},
+				RunningDuration: &spark.Duration{
+					TimeUnit: to.Ptr(spark.TimeUnitSeconds),
+					Value:    to.Ptr[float32](180),
+				},
+				RuntimeVersion:     to.Ptr("1.3"),
+				SparkApplicationID: to.Ptr("application_1730933685452_0001"),
+				StartDateTime:      to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:34:11.000Z"); return t }()),
+				State:              to.Ptr(spark.StateCancelled),
+				SubmittedDateTime:  to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:32:03.000Z"); return t }()),
+				Submitter: &spark.Principal{
+					Type: to.Ptr(spark.PrincipalTypeUser),
+					ID:   to.Ptr("6f23a8a6-d954-4550-b91a-4df73ccd0311"),
+				},
+				TotalDuration: &spark.Duration{
+					TimeUnit: to.Ptr(spark.TimeUnitSeconds),
+					Value:    to.Ptr[float32](360),
+				},
+			},
+			{
+				AttemptNumber:      to.Ptr[int32](1),
+				CancellationReason: to.Ptr("User cancelled the Spark batch"),
+				CapacityID:         to.Ptr("3c0cd366-dc28-4b6d-a525-4d415a8666e7"),
+				CreatorItem: &spark.ItemReferenceByID{
+					ReferenceType: to.Ptr(spark.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("4aee7698-2e81-4121-9a53-cc9025046198"),
+					WorkspaceID:   to.Ptr("f8113ba8-dd81-443e-811a-b385340f3f05"),
+				},
+				EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:37:30.000Z"); return t }()),
+				Item: &spark.ItemReferenceByID{
+					ReferenceType: to.Ptr(spark.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("4aee7698-2e81-4121-9a53-cc9025046198"),
+					WorkspaceID:   to.Ptr("f8113ba8-dd81-443e-811a-b385340f3f05"),
+				},
+				ItemName:                   to.Ptr("sjd_itemName3"),
+				ItemType:                   to.Ptr(spark.ItemTypeSparkJobDefinition),
+				JobInstanceID:              to.Ptr("c2baabbd-5327-430c-87a6-ff4f98285601"),
+				JobType:                    to.Ptr(spark.JobTypeSparkBatch),
+				LivyID:                     to.Ptr("7611f500-bf44-42e0-a0de-78dacb374395"),
+				LivyName:                   to.Ptr("random_test_name_app"),
+				LivySessionItemResourceURI: to.Ptr(""),
+				MaxNumberOfAttempts:        to.Ptr[int32](1),
+				OperationName:              to.Ptr("Batch Livy Run"),
+				Origin:                     to.Ptr(spark.OriginSubmittedJob),
+				QueuedDuration: &spark.Duration{
+					TimeUnit: to.Ptr(spark.TimeUnitSeconds),
+					Value:    to.Ptr[float32](1),
+				},
+				RunningDuration: &spark.Duration{
+					TimeUnit: to.Ptr(spark.TimeUnitSeconds),
+					Value:    to.Ptr[float32](180),
+				},
+				RuntimeVersion:     to.Ptr("1.3"),
+				SparkApplicationID: to.Ptr("application_1730933685452_0001"),
+				StartDateTime:      to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:34:11.000Z"); return t }()),
+				State:              to.Ptr(spark.StateCancelled),
+				SubmittedDateTime:  to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:32:03.000Z"); return t }()),
+				Submitter: &spark.Principal{
+					Type: to.Ptr(spark.PrincipalTypeUser),
+					ID:   to.Ptr("6f23a8a6-d954-4550-b91a-4df73ccd0311"),
+				},
+				TotalDuration: &spark.Duration{
+					TimeUnit: to.Ptr(spark.TimeUnitSeconds),
+					Value:    to.Ptr[float32](360),
+				},
+			}},
+	}
+
+	testsuite.serverFactory.LivySessionsServer.NewListLivySessionsPager = func(workspaceID string, options *spark.LivySessionsClientListLivySessionsOptions) (resp azfake.PagerResponder[spark.LivySessionsClientListLivySessionsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.PagerResponder[spark.LivySessionsClientListLivySessionsResponse]{}
+		resp.AddPage(http.StatusOK, spark.LivySessionsClientListLivySessionsResponse{LivySessions: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewLivySessionsClient()
+	pager := client.NewListLivySessionsPager(exampleWorkspaceID, &spark.LivySessionsClientListLivySessionsOptions{MaxResults: nil,
+		ContinuationToken: nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.LivySessions))
+		if err == nil {
+			break
+		}
+	}
 }

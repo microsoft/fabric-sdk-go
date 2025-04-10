@@ -201,6 +201,48 @@ func ExampleOneLakeShortcutsClient_NewListShortcutsPager_listShortcutsWithContin
 }
 
 // Generated from example definition
+func ExampleOneLakeShortcutsClient_CreateShortcut_createOrUpdateShortcutTargetToOneLake() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewOneLakeShortcutsClient().CreateShortcut(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff222", "25bac802-080d-4f73-8a42-1b406eb1fceb", core.CreateShortcutRequest{
+		Name: to.Ptr("MyOneLakeShortcut"),
+		Path: to.Ptr("Files/blafolder/folder3"),
+		Target: &core.CreatableShortcutTarget{
+			OneLake: &core.OneLake{
+				Path:        to.Ptr("Tables/myTablesFolder/someTableSubFolder"),
+				ItemID:      to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
+				WorkspaceID: to.Ptr("acafbeb1-8037-4d0c-896e-a46fb27ff256"),
+			},
+		},
+	}, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: to.Ptr(core.ShortcutConflictPolicyCreateOrOverwrite)})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.Shortcut = core.Shortcut{
+	// 	Name: to.Ptr("MyOneLakeShortcut"),
+	// 	Path: to.Ptr("Files/blafolder/folder3"),
+	// 	Target: &core.Target{
+	// 		Type: to.Ptr(core.TypeOneLake),
+	// 		OneLake: &core.OneLake{
+	// 			Path: to.Ptr("Tables/myTablesFolder/someTableSubFolder"),
+	// 			ItemID: to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
+	// 			WorkspaceID: to.Ptr("acafbeb1-8037-4d0c-896e-a46fb27ff256"),
+	// 		},
+	// 	},
+	// }
+}
+
+// Generated from example definition
 func ExampleOneLakeShortcutsClient_CreateShortcut_createShortcutAdlsGen2TargetExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -334,6 +376,48 @@ func ExampleOneLakeShortcutsClient_CreateShortcut_createShortcutS3CompatibleTarg
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
+}
+
+// Generated from example definition
+func ExampleOneLakeShortcutsClient_CreateShortcut_updateShortcutTargetToOneLake() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewOneLakeShortcutsClient().CreateShortcut(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff222", "25bac802-080d-4f73-8a42-1b406eb1fceb", core.CreateShortcutRequest{
+		Name: to.Ptr("MyOneLakeShortcut"),
+		Path: to.Ptr("Files/blafolder/folder3"),
+		Target: &core.CreatableShortcutTarget{
+			OneLake: &core.OneLake{
+				Path:        to.Ptr("Tables/myTablesFolder/someTableSubFolder"),
+				ItemID:      to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
+				WorkspaceID: to.Ptr("acafbeb1-8037-4d0c-896e-a46fb27ff256"),
+			},
+		},
+	}, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: to.Ptr(core.ShortcutConflictPolicyCreateOrOverwrite)})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.Shortcut = core.Shortcut{
+	// 	Name: to.Ptr("MyOneLakeShortcut"),
+	// 	Path: to.Ptr("Files/blafolder/folder3"),
+	// 	Target: &core.Target{
+	// 		Type: to.Ptr(core.TypeOneLake),
+	// 		OneLake: &core.OneLake{
+	// 			Path: to.Ptr("Tables/myTablesFolder/someTableSubFolder"),
+	// 			ItemID: to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
+	// 			WorkspaceID: to.Ptr("acafbeb1-8037-4d0c-896e-a46fb27ff256"),
+	// 		},
+	// 	},
+	// }
 }
 
 // Generated from example definition

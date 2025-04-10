@@ -62,3 +62,11 @@ func (c *ClientFactory) NewItemsClient() *ItemsClient {
 		endpoint: c.endpoint,
 	}
 }
+
+// NewLivySessionsClient creates a new instance of LivySessionsClient.
+func (c *ClientFactory) NewLivySessionsClient() *LivySessionsClient {
+	return &LivySessionsClient{
+		internal: c.internal.WithClientName("sparkjobdefinition.LivySessionsClient"),
+		endpoint: c.endpoint,
+	}
+}
