@@ -25,7 +25,7 @@ type Client struct {
 //   - endpoint - pass nil to accept the default values.
 //   - options - pass nil to accept the default values.
 func NewClient(credential azcore.TokenCredential, endpoint *string, options *azcore.ClientOptions) (*Client, error) {
-	sc, err := iruntime.NewServiceClient(credential, endpoint, options)
+	sc, err := iruntime.NewServiceClient(credential, Version, endpoint, options)
 	if err != nil {
 		return nil, err
 	}
