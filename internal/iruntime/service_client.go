@@ -57,7 +57,7 @@ func NewServiceClient(credential azcore.TokenCredential, version string, endpoin
 		},
 	}
 
-	client, err := azcore.NewClient("fabric", version, plOpts, options)
+	client, err := azcore.NewClient("fabric", "v"+version, plOpts, options)
 	if err != nil {
 		return nil, err
 	}
