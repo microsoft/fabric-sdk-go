@@ -26,7 +26,7 @@ type ClientFactory struct {
 //   - endpoint - pass nil to accept the default values.
 //   - options - pass nil to accept the default values.
 func NewClientFactory(credential azcore.TokenCredential, endpoint *string, options *azcore.ClientOptions) (*ClientFactory, error) {
-	sc, err := iruntime.NewServiceClient(credential, endpoint, options)
+	sc, err := iruntime.NewServiceClient(credential, fabric.Version, endpoint, options)
 	if err != nil {
 		return nil, err
 	}

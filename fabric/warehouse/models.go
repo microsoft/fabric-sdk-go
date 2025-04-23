@@ -26,6 +26,15 @@ type CreationPayload struct {
 	CollationType *CollationType
 }
 
+// ItemTag - Represents a tag applied on an item.
+type ItemTag struct {
+	// REQUIRED; The name of the tag.
+	DisplayName *string
+
+	// REQUIRED; The tag ID.
+	ID *string
+}
+
 // Properties - The warehouse item properties.
 type Properties struct {
 	// REQUIRED; The SQL connection string connected to the workspace containing this warehouse.
@@ -69,6 +78,9 @@ type Warehouse struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; List of applied tags.
+	Tags []ItemTag
 
 	// READ-ONLY; The workspace ID.
 	WorkspaceID *string

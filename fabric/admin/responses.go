@@ -117,6 +117,23 @@ type LabelsClientBulkSetLabelsResponse struct {
 	ItemsChangeLabelResponse
 }
 
+// TagsClientBulkCreateTagsResponse contains the response from method TagsClient.BulkCreateTags.
+type TagsClientBulkCreateTagsResponse struct {
+	// A response wrapper for a list of created tags.
+	CreateTagsResponse
+}
+
+// TagsClientDeleteTagResponse contains the response from method TagsClient.DeleteTag.
+type TagsClientDeleteTagResponse struct {
+	// placeholder for future response values
+}
+
+// TagsClientUpdateTagResponse contains the response from method TagsClient.UpdateTag.
+type TagsClientUpdateTagResponse struct {
+	// Represents a tag.
+	Tag
+}
+
 // TenantsClientDeleteCapacityTenantSettingOverrideResponse contains the response from method TenantsClient.DeleteCapacityTenantSettingOverride.
 type TenantsClientDeleteCapacityTenantSettingOverrideResponse struct {
 	// placeholder for future response values

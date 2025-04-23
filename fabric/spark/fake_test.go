@@ -668,9 +668,7 @@ func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessions() {
 	}
 
 	client := testsuite.clientFactory.NewLivySessionsClient()
-	pager := client.NewListLivySessionsPager(exampleWorkspaceID, &spark.LivySessionsClientListLivySessionsOptions{MaxResults: nil,
-		ContinuationToken: nil,
-	})
+	pager := client.NewListLivySessionsPager(exampleWorkspaceID, &spark.LivySessionsClientListLivySessionsOptions{ContinuationToken: nil})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")

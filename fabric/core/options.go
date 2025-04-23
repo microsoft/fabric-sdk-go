@@ -601,6 +601,12 @@ type OneLakeShortcutsClientListShortcutsOptions struct {
 	ParentPath *string
 }
 
+// TagsClientListTagsOptions contains the optional parameters for the TagsClient.NewListTagsPager method.
+type TagsClientListTagsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
 // WorkspacesClientAddWorkspaceRoleAssignmentOptions contains the optional parameters for the WorkspacesClient.AddWorkspaceRoleAssignment
 // method.
 type WorkspacesClientAddWorkspaceRoleAssignmentOptions struct {

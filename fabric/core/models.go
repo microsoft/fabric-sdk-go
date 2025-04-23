@@ -1678,6 +1678,9 @@ type Item struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; List of applied tags.
+	Tags []ItemTag
+
 	// READ-ONLY; The workspace ID.
 	WorkspaceID *string
 }
@@ -1854,6 +1857,15 @@ type ItemSchedules struct {
 
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
+}
+
+// ItemTag - Represents a tag applied on an item.
+type ItemTag struct {
+	// REQUIRED; The name of the tag.
+	DisplayName *string
+
+	// REQUIRED; The tag ID.
+	ID *string
 }
 
 type Items struct {
@@ -2375,6 +2387,27 @@ type Shortcut struct {
 type Shortcuts struct {
 	// REQUIRED; A list of shortcuts.
 	Value []Shortcut
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
+// Tag - Represents a tag.
+type Tag struct {
+	// REQUIRED; The name of the tag.
+	DisplayName *string
+
+	// REQUIRED; The tag object ID.
+	ID *string
+}
+
+// Tags - A response wrapper for a list of tags.
+type Tags struct {
+	// REQUIRED; An array of tags
+	Value []Tag
 
 	// The token for the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationToken *string

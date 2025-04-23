@@ -163,6 +163,21 @@ type LabelsClientBulkSetLabelsOptions struct {
 	// placeholder for future optional parameters
 }
 
+// TagsClientBulkCreateTagsOptions contains the optional parameters for the TagsClient.BulkCreateTags method.
+type TagsClientBulkCreateTagsOptions struct {
+	// placeholder for future optional parameters
+}
+
+// TagsClientDeleteTagOptions contains the optional parameters for the TagsClient.DeleteTag method.
+type TagsClientDeleteTagOptions struct {
+	// placeholder for future optional parameters
+}
+
+// TagsClientUpdateTagOptions contains the optional parameters for the TagsClient.UpdateTag method.
+type TagsClientUpdateTagOptions struct {
+	// placeholder for future optional parameters
+}
+
 // TenantsClientDeleteCapacityTenantSettingOverrideOptions contains the optional parameters for the TenantsClient.DeleteCapacityTenantSettingOverride
 // method.
 type TenantsClientDeleteCapacityTenantSettingOverrideOptions struct {

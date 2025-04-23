@@ -26,7 +26,7 @@ type ClientFactory struct {
 //   - endpoint - pass nil to accept the default values.
 //   - options - pass nil to accept the default values.
 func NewClientFactory(credential azcore.TokenCredential, endpoint *string, options *azcore.ClientOptions) (*ClientFactory, error) {
-	sc, err := iruntime.NewServiceClient(credential, endpoint, options)
+	sc, err := iruntime.NewServiceClient(credential, fabric.Version, endpoint, options)
 	if err != nil {
 		return nil, err
 	}
@@ -147,6 +147,14 @@ func (c *ClientFactory) NewOneLakeDataAccessSecurityClient() *OneLakeDataAccessS
 func (c *ClientFactory) NewOneLakeShortcutsClient() *OneLakeShortcutsClient {
 	return &OneLakeShortcutsClient{
 		internal: c.internal.WithClientName("core.OneLakeShortcutsClient"),
+		endpoint: c.endpoint,
+	}
+}
+
+// NewTagsClient creates a new instance of TagsClient.
+func (c *ClientFactory) NewTagsClient() *TagsClient {
+	return &TagsClient{
+		internal: c.internal.WithClientName("core.TagsClient"),
 		endpoint: c.endpoint,
 	}
 }

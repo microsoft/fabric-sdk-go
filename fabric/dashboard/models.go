@@ -23,6 +23,9 @@ type Dashboard struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; List of applied tags.
+	Tags []ItemTag
+
 	// READ-ONLY; The workspace ID.
 	WorkspaceID *string
 }
@@ -37,4 +40,13 @@ type Dashboards struct {
 
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
+}
+
+// ItemTag - Represents a tag applied on an item.
+type ItemTag struct {
+	// REQUIRED; The name of the tag.
+	DisplayName *string
+
+	// REQUIRED; The tag ID.
+	ID *string
 }

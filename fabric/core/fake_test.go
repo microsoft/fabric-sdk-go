@@ -3066,6 +3066,117 @@ func (testsuite *FakeTestSuite) TestOneLakeShortcuts_ResetShortcutCache() {
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
 
+func (testsuite *FakeTestSuite) TestTags_ListTags() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List of all tenant's tags example"},
+	})
+
+	exampleRes := core.Tags{
+		Value: []core.Tag{
+			{
+				DisplayName: to.Ptr("Finance"),
+				ID:          to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+			},
+			{
+				DisplayName: to.Ptr("Human resources"),
+				ID:          to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
+			},
+			{
+				DisplayName: to.Ptr("Engineering P1"),
+				ID:          to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
+			},
+			{
+				DisplayName: to.Ptr("Marketing Q1"),
+				ID:          to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
+			},
+			{
+				DisplayName: to.Ptr("HR Sales Q1"),
+				ID:          to.Ptr("17df435d-9efd-48c1-a937-7d6fd70ab26a"),
+			},
+			{
+				DisplayName: to.Ptr("Root"),
+				ID:          to.Ptr("fb765fe3-d404-4f24-9d67-5916449c4c50"),
+			},
+			{
+				DisplayName: to.Ptr("Legal EMEA"),
+				ID:          to.Ptr("bda31be4-7efe-4272-8b85-e1b2ff0f0592"),
+			}},
+	}
+
+	testsuite.serverFactory.TagsServer.NewListTagsPager = func(options *core.TagsClientListTagsOptions) (resp azfake.PagerResponder[core.TagsClientListTagsResponse]) {
+		resp = azfake.PagerResponder[core.TagsClientListTagsResponse]{}
+		resp.AddPage(http.StatusOK, core.TagsClientListTagsResponse{Tags: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTagsClient()
+	pager := client.NewListTagsPager(&core.TagsClientListTagsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Tags))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List of all tenant's tags with continuation example"},
+	})
+
+	exampleRes = core.Tags{
+		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/tags?continuationToken=LDEsMTAwMDAwLDA%3D"),
+		Value: []core.Tag{
+			{
+				DisplayName: to.Ptr("Finance"),
+				ID:          to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+			},
+			{
+				DisplayName: to.Ptr("Human resources"),
+				ID:          to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
+			},
+			{
+				DisplayName: to.Ptr("Engineering P1"),
+				ID:          to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
+			},
+			{
+				DisplayName: to.Ptr("Marketing Q1"),
+				ID:          to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
+			},
+			{
+				DisplayName: to.Ptr("HR Sales Q1"),
+				ID:          to.Ptr("17df435d-9efd-48c1-a937-7d6fd70ab26a"),
+			},
+			{
+				DisplayName: to.Ptr("Root"),
+				ID:          to.Ptr("fb765fe3-d404-4f24-9d67-5916449c4c50"),
+			},
+			{
+				DisplayName: to.Ptr("Legal EMEA"),
+				ID:          to.Ptr("bda31be4-7efe-4272-8b85-e1b2ff0f0592"),
+			}},
+	}
+
+	testsuite.serverFactory.TagsServer.NewListTagsPager = func(options *core.TagsClientListTagsOptions) (resp azfake.PagerResponder[core.TagsClientListTagsResponse]) {
+		resp = azfake.PagerResponder[core.TagsClientListTagsResponse]{}
+		resp.AddPage(http.StatusOK, core.TagsClientListTagsResponse{Tags: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListTagsPager(&core.TagsClientListTagsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Tags))
+		if err == nil {
+			break
+		}
+	}
+}
+
 func (testsuite *FakeTestSuite) TestDeploymentPipelines_ListDeploymentPipelines() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{

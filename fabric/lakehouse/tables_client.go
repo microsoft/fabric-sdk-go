@@ -30,8 +30,7 @@ type TablesClient struct {
 	endpoint string
 }
 
-// NewListTablesPager - This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 100 records can
-// be returned per request. With the URI provided in the response, you can get the next page of records.
+// NewListTablesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // REQUIRED DELEGATED SCOPES Lakehouse.Read.All or Lakehouse.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -257,7 +256,7 @@ func (client *TablesClient) beginLoadTable(ctx context.Context, workspaceID stri
 }
 
 // ListTables - returns array of Table from all pages.
-// This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 100 records can be returned per request. With the URI provided in the response, you can get the next page of records.
+// This API supports pagination [/rest/api/fabric/articles/pagination].
 //
 // # REQUIRED DELEGATED SCOPES Lakehouse.Read.All or Lakehouse.ReadWrite.All
 //

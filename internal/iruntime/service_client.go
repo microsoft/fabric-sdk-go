@@ -18,10 +18,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 )
 
-const (
-	moduleVersion      = "0.1.0"
-	defaultApiEndpoint = "https://api.fabric.microsoft.com"
-)
+const defaultApiEndpoint = "https://api.fabric.microsoft.com"
 
 // ServiceClient is used to create any client in this module.
 // It's a wrapper around azcore.Client and set default endpoint if not specified.
@@ -36,7 +33,7 @@ type ServiceClient struct {
 //   - credential - used to authorize requests. Usually a credential from azidentity.
 //   - endpoint - pass nil to accept the default values.
 //   - options - pass nil to accept the default values.
-func NewServiceClient(credential azcore.TokenCredential, endpoint *string, options *azcore.ClientOptions) (*ServiceClient, error) {
+func NewServiceClient(credential azcore.TokenCredential, version string, endpoint *string, options *azcore.ClientOptions) (*ServiceClient, error) {
 	apiEndpoint, err := getEndpoint(endpoint)
 	if err != nil {
 		return nil, err
@@ -58,7 +55,7 @@ func NewServiceClient(credential azcore.TokenCredential, endpoint *string, optio
 		},
 	}
 
-	client, err := azcore.NewClient("fabric", "v"+moduleVersion, plOpts, options)
+	client, err := azcore.NewClient("fabric", "v"+version, plOpts, options)
 	if err != nil {
 		return nil, err
 	}

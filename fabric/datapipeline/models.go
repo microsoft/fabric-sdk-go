@@ -35,6 +35,9 @@ type DataPipeline struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; List of applied tags.
+	Tags []ItemTag
+
 	// READ-ONLY; The workspace ID.
 	WorkspaceID *string
 }
@@ -76,6 +79,15 @@ type DefinitionPart struct {
 type DefinitionResponse struct {
 	// READ-ONLY; Data pipeline public definition object.
 	Definition *Definition
+}
+
+// ItemTag - Represents a tag applied on an item.
+type ItemTag struct {
+	// REQUIRED; The name of the tag.
+	DisplayName *string
+
+	// REQUIRED; The tag ID.
+	ID *string
 }
 
 // UpdateDataPipelineDefinitionRequest - Update data pipeline public definition request payload.

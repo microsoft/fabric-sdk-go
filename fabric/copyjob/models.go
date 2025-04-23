@@ -23,6 +23,9 @@ type CopyJob struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; List of applied tags.
+	Tags []ItemTag
+
 	// READ-ONLY; The workspace ID.
 	WorkspaceID *string
 }
@@ -78,6 +81,15 @@ type DefinitionResponse struct {
 	// READ-ONLY; CopyJob public definition object. Refer to Copy job definition [/rest/api/fabric/articles/item-management/definitions/copyjob-definition]
 	// for more details on how to craft a CopyJob public definition.
 	Definition *Definition
+}
+
+// ItemTag - Represents a tag applied on an item.
+type ItemTag struct {
+	// REQUIRED; The name of the tag.
+	DisplayName *string
+
+	// REQUIRED; The tag ID.
+	ID *string
 }
 
 // UpdateCopyJobDefinitionRequest - Update CopyJob public definition request payload.

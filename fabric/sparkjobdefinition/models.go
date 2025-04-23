@@ -72,6 +72,15 @@ func (i *ItemReferenceByID) GetItemReference() *ItemReference {
 	}
 }
 
+// ItemTag - Represents a tag applied on an item.
+type ItemTag struct {
+	// REQUIRED; The name of the tag.
+	DisplayName *string
+
+	// REQUIRED; The tag ID.
+	ID *string
+}
+
 // LivySession - The livy session response
 type LivySession struct {
 	// Current attempt number.
@@ -278,6 +287,9 @@ type SparkJobDefinition struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; List of applied tags.
+	Tags []ItemTag
 
 	// READ-ONLY; The workspace ID.
 	WorkspaceID *string

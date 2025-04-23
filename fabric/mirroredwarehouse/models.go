@@ -6,6 +6,15 @@
 
 package mirroredwarehouse
 
+// ItemTag - Represents a tag applied on an item.
+type ItemTag struct {
+	// REQUIRED; The name of the tag.
+	DisplayName *string
+
+	// REQUIRED; The tag ID.
+	ID *string
+}
+
 // MirroredWarehouse - A mirrored warehouse object.
 type MirroredWarehouse struct {
 	// REQUIRED; The item type.
@@ -22,6 +31,9 @@ type MirroredWarehouse struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; List of applied tags.
+	Tags []ItemTag
 
 	// READ-ONLY; The workspace ID.
 	WorkspaceID *string

@@ -22,6 +22,7 @@ type ServerFactory struct {
 	ExternalDataSharesServer ExternalDataSharesServer
 	ItemsServer              ItemsServer
 	LabelsServer             LabelsServer
+	TagsServer               TagsServer
 	TenantsServer            TenantsServer
 	UsersServer              UsersServer
 	WorkspacesServer         WorkspacesServer
@@ -36,6 +37,7 @@ type ServerFactoryTransport struct {
 	trExternalDataSharesServer *ExternalDataSharesServerTransport
 	trItemsServer              *ItemsServerTransport
 	trLabelsServer             *LabelsServerTransport
+	trTagsServer               *TagsServerTransport
 	trTenantsServer            *TenantsServerTransport
 	trUsersServer              *UsersServerTransport
 	trWorkspacesServer         *WorkspacesServerTransport
@@ -78,6 +80,9 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	case "LabelsClient":
 		initServer(s, &s.trLabelsServer, func() *LabelsServerTransport { return NewLabelsServerTransport(&s.srv.LabelsServer) })
 		resp, err = s.trLabelsServer.Do(req)
+	case "TagsClient":
+		initServer(s, &s.trTagsServer, func() *TagsServerTransport { return NewTagsServerTransport(&s.srv.TagsServer) })
+		resp, err = s.trTagsServer.Do(req)
 	case "TenantsClient":
 		initServer(s, &s.trTenantsServer, func() *TenantsServerTransport { return NewTenantsServerTransport(&s.srv.TenantsServer) })
 		resp, err = s.trTenantsServer.Do(req)

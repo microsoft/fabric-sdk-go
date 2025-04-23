@@ -142,6 +142,37 @@ func (d *DefinitionResponse) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type ItemTag.
+func (i ItemTag) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "displayName", i.DisplayName)
+	populate(objectMap, "id", i.ID)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ItemTag.
+func (i *ItemTag) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", i, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "displayName":
+			err = unpopulate(val, "DisplayName", &i.DisplayName)
+			delete(rawMsg, key)
+		case "id":
+			err = unpopulate(val, "ID", &i.ID)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", i, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type KQLDashboard.
 func (k KQLDashboard) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -149,6 +180,7 @@ func (k KQLDashboard) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", k.DisplayName)
 	populate(objectMap, "folderId", k.FolderID)
 	populate(objectMap, "id", k.ID)
+	populate(objectMap, "tags", k.Tags)
 	populate(objectMap, "type", k.Type)
 	populate(objectMap, "workspaceId", k.WorkspaceID)
 	return json.Marshal(objectMap)
@@ -174,6 +206,9 @@ func (k *KQLDashboard) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &k.ID)
+			delete(rawMsg, key)
+		case "tags":
+			err = unpopulate(val, "Tags", &k.Tags)
 			delete(rawMsg, key)
 		case "type":
 			err = unpopulate(val, "Type", &k.Type)

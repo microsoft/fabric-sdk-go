@@ -15,6 +15,15 @@ type CreateSQLDatabaseRequest struct {
 	Description *string
 }
 
+// ItemTag - Represents a tag applied on an item.
+type ItemTag struct {
+	// REQUIRED; The name of the tag.
+	DisplayName *string
+
+	// REQUIRED; The tag ID.
+	ID *string
+}
+
 // SQLDatabase - A SQL database object.
 type SQLDatabase struct {
 	// REQUIRED; The item type.
@@ -31,6 +40,9 @@ type SQLDatabase struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; List of applied tags.
+	Tags []ItemTag
 
 	// READ-ONLY; The workspace ID.
 	WorkspaceID *string

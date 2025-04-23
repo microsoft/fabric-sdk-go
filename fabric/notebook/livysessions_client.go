@@ -11,7 +11,6 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
-	"strconv"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -99,8 +98,7 @@ func (client *LivySessionsClient) getLivySessionHandleResponse(resp *http.Respon
 	return result, nil
 }
 
-// NewListLivySessionsPager - This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 100 records
-// can be returned per request. With the URI provided in the response, you can get the next page of records.
+// NewListLivySessionsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Notebook.Read.All or Notebook.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -157,9 +155,6 @@ func (client *LivySessionsClient) listLivySessionsCreateRequest(ctx context.Cont
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
 	}
-	if options != nil && options.MaxResults != nil {
-		reqQP.Set("maxResults", strconv.FormatInt(int64(*options.MaxResults), 10))
-	}
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
@@ -177,7 +172,7 @@ func (client *LivySessionsClient) listLivySessionsHandleResponse(resp *http.Resp
 // Custom code starts below
 
 // ListLivySessions - returns array of LivySession from all pages.
-// This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 100 records can be returned per request. With the URI provided in the response, you can get the next page of records.
+// This API supports pagination [/rest/api/fabric/articles/pagination].
 //
 // PERMISSIONS The caller must have viewer or higher workspace role.
 //

@@ -31,6 +31,7 @@ type ServerFactory struct {
 	ManagedPrivateEndpointsServer   ManagedPrivateEndpointsServer
 	OneLakeDataAccessSecurityServer OneLakeDataAccessSecurityServer
 	OneLakeShortcutsServer          OneLakeShortcutsServer
+	TagsServer                      TagsServer
 	WorkspacesServer                WorkspacesServer
 }
 
@@ -52,6 +53,7 @@ type ServerFactoryTransport struct {
 	trManagedPrivateEndpointsServer   *ManagedPrivateEndpointsServerTransport
 	trOneLakeDataAccessSecurityServer *OneLakeDataAccessSecurityServerTransport
 	trOneLakeShortcutsServer          *OneLakeShortcutsServerTransport
+	trTagsServer                      *TagsServerTransport
 	trWorkspacesServer                *WorkspacesServerTransport
 }
 
@@ -129,6 +131,9 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return NewOneLakeShortcutsServerTransport(&s.srv.OneLakeShortcutsServer)
 		})
 		resp, err = s.trOneLakeShortcutsServer.Do(req)
+	case "TagsClient":
+		initServer(s, &s.trTagsServer, func() *TagsServerTransport { return NewTagsServerTransport(&s.srv.TagsServer) })
+		resp, err = s.trTagsServer.Do(req)
 	case "WorkspacesClient":
 		initServer(s, &s.trWorkspacesServer, func() *WorkspacesServerTransport { return NewWorkspacesServerTransport(&s.srv.WorkspacesServer) })
 		resp, err = s.trWorkspacesServer.Do(req)
