@@ -231,6 +231,37 @@ func (i *ItemReferenceByID) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type ItemTag.
+func (i ItemTag) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "displayName", i.DisplayName)
+	populate(objectMap, "id", i.ID)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ItemTag.
+func (i *ItemTag) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", i, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "displayName":
+			err = unpopulate(val, "DisplayName", &i.DisplayName)
+			delete(rawMsg, key)
+		case "id":
+			err = unpopulate(val, "ID", &i.ID)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", i, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type Lakehouse.
 func (l Lakehouse) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -239,6 +270,7 @@ func (l Lakehouse) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "folderId", l.FolderID)
 	populate(objectMap, "id", l.ID)
 	populate(objectMap, "properties", l.Properties)
+	populate(objectMap, "tags", l.Tags)
 	populate(objectMap, "type", l.Type)
 	populate(objectMap, "workspaceId", l.WorkspaceID)
 	return json.Marshal(objectMap)
@@ -267,6 +299,9 @@ func (l *Lakehouse) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "properties":
 			err = unpopulate(val, "Properties", &l.Properties)
+			delete(rawMsg, key)
+		case "tags":
+			err = unpopulate(val, "Tags", &l.Tags)
 			delete(rawMsg, key)
 		case "type":
 			err = unpopulate(val, "Type", &l.Type)

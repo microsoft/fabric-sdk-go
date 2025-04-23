@@ -49,9 +49,6 @@ type LivySessionsClientGetLivySessionOptions struct {
 type LivySessionsClientListLivySessionsOptions struct {
 	// Token to retrieve the next page of results, if available.
 	ContinuationToken *string
-
-	// The maximum number of results per page to return.
-	MaxResults *int32
 }
 
 // TablesClientBeginLoadTableOptions contains the optional parameters for the TablesClient.BeginLoadTable method.

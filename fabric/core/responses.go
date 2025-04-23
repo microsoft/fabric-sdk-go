@@ -552,6 +552,12 @@ type OneLakeShortcutsClientResetShortcutCacheResponse struct {
 	// placeholder for future response values
 }
 
+// TagsClientListTagsResponse contains the response from method TagsClient.NewListTagsPager.
+type TagsClientListTagsResponse struct {
+	// A response wrapper for a list of tags.
+	Tags
+}
+
 // WorkspacesClientAddWorkspaceRoleAssignmentResponse contains the response from method WorkspacesClient.AddWorkspaceRoleAssignment.
 type WorkspacesClientAddWorkspaceRoleAssignmentResponse struct {
 	// A workspace role assignment object.

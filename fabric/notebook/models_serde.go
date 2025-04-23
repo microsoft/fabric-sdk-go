@@ -235,6 +235,37 @@ func (i *ItemReferenceByID) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type ItemTag.
+func (i ItemTag) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "displayName", i.DisplayName)
+	populate(objectMap, "id", i.ID)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ItemTag.
+func (i *ItemTag) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", i, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "displayName":
+			err = unpopulate(val, "DisplayName", &i.DisplayName)
+			delete(rawMsg, key)
+		case "id":
+			err = unpopulate(val, "ID", &i.ID)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", i, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type LivySession.
 func (l LivySession) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -408,6 +439,7 @@ func (n Notebook) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", n.DisplayName)
 	populate(objectMap, "folderId", n.FolderID)
 	populate(objectMap, "id", n.ID)
+	populate(objectMap, "tags", n.Tags)
 	populate(objectMap, "type", n.Type)
 	populate(objectMap, "workspaceId", n.WorkspaceID)
 	return json.Marshal(objectMap)
@@ -433,6 +465,9 @@ func (n *Notebook) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &n.ID)
+			delete(rawMsg, key)
+		case "tags":
+			err = unpopulate(val, "Tags", &n.Tags)
 			delete(rawMsg, key)
 		case "type":
 			err = unpopulate(val, "Type", &n.Type)

@@ -1576,6 +1576,77 @@ func (testsuite *FakeTestSuite) TestDomains_RoleAssignmentsBulkUnassign() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
+func (testsuite *FakeTestSuite) TestTags_BulkCreateTags() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create tags in bulk example"},
+	})
+	var exampleCreateTagsRequest admin.CreateTagsRequest
+	exampleCreateTagsRequest = admin.CreateTagsRequest{}
+
+	testsuite.serverFactory.TagsServer.BulkCreateTags = func(ctx context.Context, createTagsRequest admin.CreateTagsRequest, options *admin.TagsClientBulkCreateTagsOptions) (resp azfake.Responder[admin.TagsClientBulkCreateTagsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateTagsRequest, createTagsRequest))
+		resp = azfake.Responder[admin.TagsClientBulkCreateTagsResponse]{}
+		resp.SetResponse(http.StatusCreated, admin.TagsClientBulkCreateTagsResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTagsClient()
+	_, err = client.BulkCreateTags(ctx, exampleCreateTagsRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestTags_DeleteTag() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete a tag example"},
+	})
+	var exampleTagID string
+	exampleTagID = "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f"
+
+	testsuite.serverFactory.TagsServer.DeleteTag = func(ctx context.Context, tagID string, options *admin.TagsClientDeleteTagOptions) (resp azfake.Responder[admin.TagsClientDeleteTagResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleTagID, tagID)
+		resp = azfake.Responder[admin.TagsClientDeleteTagResponse]{}
+		resp.SetResponse(http.StatusOK, admin.TagsClientDeleteTagResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTagsClient()
+	_, err = client.DeleteTag(ctx, exampleTagID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestTags_UpdateTag() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update a tag example"},
+	})
+	var exampleTagID string
+	var exampleUpdateTagRequest admin.UpdateTagRequest
+	exampleTagID = "d889df97-7061-45f6-98b8-c53a83c2cf68"
+	exampleUpdateTagRequest = admin.UpdateTagRequest{
+		DisplayName: to.Ptr("Tag's new name."),
+	}
+
+	exampleRes := admin.Tag{
+		DisplayName: to.Ptr("Tag's new name."),
+		ID:          to.Ptr("d889df97-7061-45f6-98b8-c53a83c2cf68"),
+	}
+
+	testsuite.serverFactory.TagsServer.UpdateTag = func(ctx context.Context, tagID string, updateTagRequest admin.UpdateTagRequest, options *admin.TagsClientUpdateTagOptions) (resp azfake.Responder[admin.TagsClientUpdateTagResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleTagID, tagID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateTagRequest, updateTagRequest))
+		resp = azfake.Responder[admin.TagsClientUpdateTagResponse]{}
+		resp.SetResponse(http.StatusOK, admin.TagsClientUpdateTagResponse{Tag: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTagsClient()
+	res, err := client.UpdateTag(ctx, exampleTagID, exampleUpdateTagRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Tag))
+}
+
 func (testsuite *FakeTestSuite) TestLabels_BulkRemoveLabels() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{

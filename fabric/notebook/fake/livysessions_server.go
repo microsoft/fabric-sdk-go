@@ -13,7 +13,6 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
-	"strconv"
 	"strings"
 
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
@@ -158,29 +157,14 @@ func (l *LivySessionsServerTransport) dispatchNewListLivySessionsPager(req *http
 		if err != nil {
 			return nil, err
 		}
-		maxResultsUnescaped, err := url.QueryUnescape(qp.Get("maxResults"))
-		if err != nil {
-			return nil, err
-		}
-		maxResultsParam, err := parseOptional(maxResultsUnescaped, func(v string) (int32, error) {
-			p, parseErr := strconv.ParseInt(v, 10, 32)
-			if parseErr != nil {
-				return 0, parseErr
-			}
-			return int32(p), nil
-		})
-		if err != nil {
-			return nil, err
-		}
 		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
 		if err != nil {
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
 		var options *notebook.LivySessionsClientListLivySessionsOptions
-		if maxResultsParam != nil || continuationTokenParam != nil {
+		if continuationTokenParam != nil {
 			options = &notebook.LivySessionsClientListLivySessionsOptions{
-				MaxResults:        maxResultsParam,
 				ContinuationToken: continuationTokenParam,
 			}
 		}

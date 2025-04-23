@@ -26,9 +26,7 @@ func ExampleLivySessionsClient_NewListLivySessionsPager() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewLivySessionsClient().NewListLivySessionsPager("f8113ba8-dd81-443e-811a-b385340f3f05", &spark.LivySessionsClientListLivySessionsOptions{MaxResults: nil,
-		ContinuationToken: nil,
-	})
+	pager := clientFactory.NewLivySessionsClient().NewListLivySessionsPager("f8113ba8-dd81-443e-811a-b385340f3f05", &spark.LivySessionsClientListLivySessionsOptions{ContinuationToken: nil})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
 		if err != nil {

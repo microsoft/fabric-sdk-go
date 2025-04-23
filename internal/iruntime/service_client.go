@@ -18,9 +18,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 )
 
-const (
-	defaultApiEndpoint = "https://api.fabric.microsoft.com"
-)
+const defaultApiEndpoint = "https://api.fabric.microsoft.com"
 
 // ServiceClient is used to create any client in this module.
 // It's a wrapper around azcore.Client and set default endpoint if not specified.

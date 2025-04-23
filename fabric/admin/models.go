@@ -167,6 +167,24 @@ type CreateDomainRequest struct {
 	ParentDomainID *string
 }
 
+// CreateTagRequest - The request payload for creating a tag.
+type CreateTagRequest struct {
+	// REQUIRED; The tag display name. The display name cannot contain more than 40 characters.
+	DisplayName *string
+}
+
+// CreateTagsRequest - This is a request wrapper for a creating a list of tags.
+type CreateTagsRequest struct {
+	// REQUIRED; An array of createTagRequest
+	CreateTagsRequest []CreateTagRequest
+}
+
+// CreateTagsResponse - A response wrapper for a list of created tags.
+type CreateTagsResponse struct {
+	// REQUIRED; An array of tags
+	Tags []Tag
+}
+
 // Domain - Represents a domain or subdomain.
 type Domain struct {
 	// REQUIRED; The domain contributors scope.
@@ -587,6 +605,15 @@ type SetLabelsRequest struct {
 	DelegatedPrincipal *Principal
 }
 
+// Tag - Represents a tag.
+type Tag struct {
+	// REQUIRED; The name of the tag.
+	DisplayName *string
+
+	// REQUIRED; The tag object ID.
+	ID *string
+}
+
 // TenantSetting - Tenant level setting details.
 type TenantSetting struct {
 	// REQUIRED; Indicates if the tenant setting is enabled for a security group. False - The tenant setting is enabled for the
@@ -697,6 +724,12 @@ type UpdateDomainRequest struct {
 	Description *string
 
 	// The domain display name. The display name cannot contain more than 40 characters.
+	DisplayName *string
+}
+
+// UpdateTagRequest - The request payload for updating a tag.
+type UpdateTagRequest struct {
+	// REQUIRED; The tag display name. The display name cannot contain more than 40 characters.
 	DisplayName *string
 }
 

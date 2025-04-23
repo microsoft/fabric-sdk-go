@@ -15,6 +15,15 @@ type CreateMLModelRequest struct {
 	Description *string
 }
 
+// ItemTag - Represents a tag applied on an item.
+type ItemTag struct {
+	// REQUIRED; The name of the tag.
+	DisplayName *string
+
+	// REQUIRED; The tag ID.
+	ID *string
+}
+
 // MLModel - A machine learning model object.
 type MLModel struct {
 	// REQUIRED; The item type.
@@ -31,6 +40,9 @@ type MLModel struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; List of applied tags.
+	Tags []ItemTag
 
 	// READ-ONLY; The workspace ID.
 	WorkspaceID *string

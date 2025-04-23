@@ -47,6 +47,15 @@ type DefinitionResponse struct {
 	Definition *Definition
 }
 
+// ItemTag - Represents a tag applied on an item.
+type ItemTag struct {
+	// REQUIRED; The name of the tag.
+	DisplayName *string
+
+	// REQUIRED; The tag ID.
+	ID *string
+}
+
 // Reflex - A Reflex object.
 type Reflex struct {
 	// REQUIRED; The item type.
@@ -63,6 +72,9 @@ type Reflex struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; List of applied tags.
+	Tags []ItemTag
 
 	// READ-ONLY; The workspace ID.
 	WorkspaceID *string

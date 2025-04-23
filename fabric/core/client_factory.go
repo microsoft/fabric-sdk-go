@@ -151,6 +151,14 @@ func (c *ClientFactory) NewOneLakeShortcutsClient() *OneLakeShortcutsClient {
 	}
 }
 
+// NewTagsClient creates a new instance of TagsClient.
+func (c *ClientFactory) NewTagsClient() *TagsClient {
+	return &TagsClient{
+		internal: c.internal.WithClientName("core.TagsClient"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewWorkspacesClient creates a new instance of WorkspacesClient.
 func (c *ClientFactory) NewWorkspacesClient() *WorkspacesClient {
 	return &WorkspacesClient{

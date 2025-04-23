@@ -6,6 +6,15 @@
 
 package paginatedreport
 
+// ItemTag - Represents a tag applied on an item.
+type ItemTag struct {
+	// REQUIRED; The name of the tag.
+	DisplayName *string
+
+	// REQUIRED; The tag ID.
+	ID *string
+}
+
 // PaginatedReport - A paginated report object.
 type PaginatedReport struct {
 	// REQUIRED; The item type.
@@ -22,6 +31,9 @@ type PaginatedReport struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; List of applied tags.
+	Tags []ItemTag
 
 	// READ-ONLY; The workspace ID.
 	WorkspaceID *string
