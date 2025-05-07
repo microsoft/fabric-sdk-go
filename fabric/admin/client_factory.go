@@ -55,10 +55,10 @@ func (c *ClientFactory) NewDomainsClient() *DomainsClient {
 	}
 }
 
-// NewExternalDataSharesClient creates a new instance of ExternalDataSharesClient.
-func (c *ClientFactory) NewExternalDataSharesClient() *ExternalDataSharesClient {
-	return &ExternalDataSharesClient{
-		internal: c.internal.WithClientName("admin.ExternalDataSharesClient"),
+// NewExternalDataSharesProviderClient creates a new instance of ExternalDataSharesProviderClient.
+func (c *ClientFactory) NewExternalDataSharesProviderClient() *ExternalDataSharesProviderClient {
+	return &ExternalDataSharesProviderClient{
+		internal: c.internal.WithClientName("admin.ExternalDataSharesProviderClient"),
 		endpoint: c.endpoint,
 	}
 }

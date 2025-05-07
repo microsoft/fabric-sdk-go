@@ -170,8 +170,8 @@ type DeploymentPipelinesClientUpdateDeploymentPipelineStageResponse struct {
 	DeploymentPipelineStage
 }
 
-// ExternalDataSharesClientCreateExternalDataShareResponse contains the response from method ExternalDataSharesClient.CreateExternalDataShare.
-type ExternalDataSharesClientCreateExternalDataShareResponse struct {
+// ExternalDataSharesProviderClientCreateExternalDataShareResponse contains the response from method ExternalDataSharesProviderClient.CreateExternalDataShare.
+type ExternalDataSharesProviderClientCreateExternalDataShareResponse struct {
 	// An external data share object.
 	ExternalDataShare
 
@@ -179,21 +179,33 @@ type ExternalDataSharesClientCreateExternalDataShareResponse struct {
 	Location *string
 }
 
-// ExternalDataSharesClientGetExternalDataShareResponse contains the response from method ExternalDataSharesClient.GetExternalDataShare.
-type ExternalDataSharesClientGetExternalDataShareResponse struct {
+// ExternalDataSharesProviderClientGetExternalDataShareResponse contains the response from method ExternalDataSharesProviderClient.GetExternalDataShare.
+type ExternalDataSharesProviderClientGetExternalDataShareResponse struct {
 	// An external data share object.
 	ExternalDataShare
 }
 
-// ExternalDataSharesClientListExternalDataSharesInItemResponse contains the response from method ExternalDataSharesClient.NewListExternalDataSharesInItemPager.
-type ExternalDataSharesClientListExternalDataSharesInItemResponse struct {
+// ExternalDataSharesProviderClientListExternalDataSharesInItemResponse contains the response from method ExternalDataSharesProviderClient.NewListExternalDataSharesInItemPager.
+type ExternalDataSharesProviderClientListExternalDataSharesInItemResponse struct {
 	// A list of external data shares with a continuation token.
 	ExternalDataShares
 }
 
-// ExternalDataSharesClientRevokeExternalDataShareResponse contains the response from method ExternalDataSharesClient.RevokeExternalDataShare.
-type ExternalDataSharesClientRevokeExternalDataShareResponse struct {
+// ExternalDataSharesProviderClientRevokeExternalDataShareResponse contains the response from method ExternalDataSharesProviderClient.RevokeExternalDataShare.
+type ExternalDataSharesProviderClientRevokeExternalDataShareResponse struct {
 	// placeholder for future response values
+}
+
+// ExternalDataSharesRecipientClientAcceptExternalDataShareInvitationResponse contains the response from method ExternalDataSharesRecipientClient.AcceptExternalDataShareInvitation.
+type ExternalDataSharesRecipientClientAcceptExternalDataShareInvitationResponse struct {
+	// The response for accepting an external data share invitation.
+	AcceptExternalDataShareInvitationResponse
+}
+
+// ExternalDataSharesRecipientClientGetExternalDataShareInvitationDetailsResponse contains the response from method ExternalDataSharesRecipientClient.GetExternalDataShareInvitationDetails.
+type ExternalDataSharesRecipientClientGetExternalDataShareInvitationDetailsResponse struct {
+	// External data share invitation details.
+	ExternalDataShareInvitationDetails
 }
 
 // FoldersClientCreateFolderResponse contains the response from method FoldersClient.CreateFolder.
@@ -552,10 +564,20 @@ type OneLakeShortcutsClientResetShortcutCacheResponse struct {
 	// placeholder for future response values
 }
 
+// TagsClientApplyTagsResponse contains the response from method TagsClient.ApplyTags.
+type TagsClientApplyTagsResponse struct {
+	// placeholder for future response values
+}
+
 // TagsClientListTagsResponse contains the response from method TagsClient.NewListTagsPager.
 type TagsClientListTagsResponse struct {
 	// A response wrapper for a list of tags.
 	Tags
+}
+
+// TagsClientUnapplyTagsResponse contains the response from method TagsClient.UnapplyTags.
+type TagsClientUnapplyTagsResponse struct {
+	// placeholder for future response values
 }
 
 // WorkspacesClientAddWorkspaceRoleAssignmentResponse contains the response from method WorkspacesClient.AddWorkspaceRoleAssignment.

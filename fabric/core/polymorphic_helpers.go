@@ -97,6 +97,27 @@ func unmarshalCredentialsClassification(rawMsg json.RawMessage) (CredentialsClas
 	return b, nil
 }
 
+func unmarshalExternalDataShareAcceptRequestPayloadClassification(rawMsg json.RawMessage) (ExternalDataShareAcceptRequestPayloadClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b ExternalDataShareAcceptRequestPayloadClassification
+	switch m["payloadType"] {
+	case string(ExternalDataShareAcceptRequestPayloadTypeShortcutCreation):
+		b = &ShortcutCreationPayload{}
+	default:
+		b = &ExternalDataShareAcceptRequestPayload{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
 func unmarshalGatewayClassification(rawMsg json.RawMessage) (GatewayClassification, error) {
 	if rawMsg == nil || string(rawMsg) == "null" {
 		return nil, nil

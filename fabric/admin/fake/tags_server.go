@@ -18,6 +18,7 @@ import (
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/fake/server"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 
 	"github.com/microsoft/fabric-sdk-go/fabric/admin"
 )
@@ -32,6 +33,10 @@ type TagsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	DeleteTag func(ctx context.Context, tagID string, options *admin.TagsClientDeleteTagOptions) (resp azfake.Responder[admin.TagsClientDeleteTagResponse], errResp azfake.ErrorResponder)
 
+	// NewListTagsPager is the fake for method TagsClient.NewListTagsPager
+	// HTTP status codes to indicate success: http.StatusOK
+	NewListTagsPager func(options *admin.TagsClientListTagsOptions) (resp azfake.PagerResponder[admin.TagsClientListTagsResponse])
+
 	// UpdateTag is the fake for method TagsClient.UpdateTag
 	// HTTP status codes to indicate success: http.StatusOK
 	UpdateTag func(ctx context.Context, tagID string, updateTagRequest admin.UpdateTagRequest, options *admin.TagsClientUpdateTagOptions) (resp azfake.Responder[admin.TagsClientUpdateTagResponse], errResp azfake.ErrorResponder)
@@ -41,13 +46,17 @@ type TagsServer struct {
 // The returned TagsServerTransport instance is connected to an instance of admin.TagsClient via the
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewTagsServerTransport(srv *TagsServer) *TagsServerTransport {
-	return &TagsServerTransport{srv: srv}
+	return &TagsServerTransport{
+		srv:              srv,
+		newListTagsPager: newTracker[azfake.PagerResponder[admin.TagsClientListTagsResponse]](),
+	}
 }
 
 // TagsServerTransport connects instances of admin.TagsClient to instances of TagsServer.
 // Don't use this type directly, use NewTagsServerTransport instead.
 type TagsServerTransport struct {
-	srv *TagsServer
+	srv              *TagsServer
+	newListTagsPager *tracker[azfake.PagerResponder[admin.TagsClientListTagsResponse]]
 }
 
 // Do implements the policy.Transporter interface for TagsServerTransport.
@@ -79,6 +88,8 @@ func (t *TagsServerTransport) dispatchToMethodFake(req *http.Request, method str
 				res.resp, res.err = t.dispatchBulkCreateTags(req)
 			case "TagsClient.DeleteTag":
 				res.resp, res.err = t.dispatchDeleteTag(req)
+			case "TagsClient.NewListTagsPager":
+				res.resp, res.err = t.dispatchNewListTagsPager(req)
 			case "TagsClient.UpdateTag":
 				res.resp, res.err = t.dispatchUpdateTag(req)
 			default:
@@ -148,6 +159,45 @@ func (t *TagsServerTransport) dispatchDeleteTag(req *http.Request) (*http.Respon
 	resp, err := server.NewResponse(respContent, req, nil)
 	if err != nil {
 		return nil, err
+	}
+	return resp, nil
+}
+
+func (t *TagsServerTransport) dispatchNewListTagsPager(req *http.Request) (*http.Response, error) {
+	if t.srv.NewListTagsPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListTagsPager not implemented")}
+	}
+	newListTagsPager := t.newListTagsPager.get(req)
+	if newListTagsPager == nil {
+		qp := req.URL.Query()
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *admin.TagsClientListTagsOptions
+		if continuationTokenParam != nil {
+			options = &admin.TagsClientListTagsOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := t.srv.NewListTagsPager(options)
+		newListTagsPager = &resp
+		t.newListTagsPager.add(req, newListTagsPager)
+		server.PagerResponderInjectNextLinks(newListTagsPager, req, func(page *admin.TagsClientListTagsResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
+	}
+	resp, err := server.PagerResponderNext(newListTagsPager, req)
+	if err != nil {
+		return nil, err
+	}
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		t.newListTagsPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
+	}
+	if !server.PagerResponderMore(newListTagsPager) {
+		t.newListTagsPager.remove(req)
 	}
 	return resp, nil
 }

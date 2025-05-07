@@ -8,6 +8,27 @@ package core
 
 import "time"
 
+// AcceptExternalDataShareInvitationRequest - The request payload for accepting an external data share invitation.
+type AcceptExternalDataShareInvitationRequest struct {
+	// REQUIRED; The item ID.
+	ItemID *string
+
+	// REQUIRED; The payload for the Accept External Data Share invitation request.
+	Payload ExternalDataShareAcceptRequestPayloadClassification
+
+	// REQUIRED; The provider tenant ID.
+	ProviderTenantID *string
+
+	// REQUIRED; The workspace ID.
+	WorkspaceID *string
+}
+
+// AcceptExternalDataShareInvitationResponse - The response for accepting an external data share invitation.
+type AcceptExternalDataShareInvitationResponse struct {
+	// READ-ONLY; A list of shortcuts that were created by accepting an external data share invitation.
+	Value []ExternalDataShareShortcutInfo
+}
+
 // AddConnectionRoleAssignmentRequest - The add connection role assignment request for a principal.
 type AddConnectionRoleAssignmentRequest struct {
 	// REQUIRED; The principal.
@@ -92,6 +113,12 @@ func (a *AnonymousCredentials) GetCredentials() *Credentials {
 	return &Credentials{
 		CredentialType: a.CredentialType,
 	}
+}
+
+// ApplyTagsRequest - The request payload for applying tags.
+type ApplyTagsRequest struct {
+	// REQUIRED; The array of tag IDs.
+	Tags []string
 }
 
 // AssignWorkspaceToCapacityRequest - A capacity assignment request.
@@ -635,9 +662,7 @@ type CreateExternalDataShareRequest struct {
 	// REQUIRED; The path or list of paths that are to be externally shared. You can share up to 100 paths in each share. A valid
 	// path to an external data share must start with "Files/" or "Tables/". You can't share
 	// the root folder itself (Files or Tables).
-	// * For example, these paths are valid:
-	//
-	//
+	// For example, these paths are valid:
 	// * "Files/MyFolder1"
 	//
 	//
@@ -646,6 +671,15 @@ type CreateExternalDataShareRequest struct {
 
 	// REQUIRED; The recipient who is invited to accept the external data share.
 	Recipient *ExternalDataShareRecipient
+}
+
+// CreateExternalDataShareShortcutRequest - Definitions for creating an external data share shortcut.
+type CreateExternalDataShareShortcutRequest struct {
+	// REQUIRED; Unique identifier of the target path, as returned by 'GetExternalDataShareInvitationDetails' operation.
+	PathID *string
+
+	// REQUIRED; Name of the shortcut.
+	ShortcutName *string
 }
 
 // CreateFolderRequest - Create folder request payload.
@@ -1417,6 +1451,51 @@ type ExternalDataShare struct {
 	InvitationURL *string
 }
 
+// ExternalDataShareAcceptRequestPayload - Payload for the Accept External Data Share invitation request
+type ExternalDataShareAcceptRequestPayload struct {
+	// REQUIRED; The external data share acceptance type. Additional types may be added over time.
+	PayloadType *ExternalDataShareAcceptRequestPayloadType
+}
+
+// GetExternalDataShareAcceptRequestPayload implements the ExternalDataShareAcceptRequestPayloadClassification interface for
+// type ExternalDataShareAcceptRequestPayload.
+func (e *ExternalDataShareAcceptRequestPayload) GetExternalDataShareAcceptRequestPayload() *ExternalDataShareAcceptRequestPayload {
+	return e
+}
+
+// ExternalDataShareInvitationDetails - External data share invitation details.
+type ExternalDataShareInvitationDetails struct {
+	// READ-ONLY; Information about the paths included in the external data share.
+	PathsDetails []ExternalDataSharePathDetails
+
+	// READ-ONLY; Information about the external data share's provider tenant.
+	ProviderTenantDetails *ExternalDataShareProviderTenantDetails
+}
+
+// ExternalDataSharePathDetails - Details of a path that was shared as part of external data sharing.
+type ExternalDataSharePathDetails struct {
+	// READ-ONLY; The name of the content that was shared.
+	Name *string
+
+	// READ-ONLY; Unique identifier of the path.
+	PathID *string
+
+	// READ-ONLY; The type of the external data share.
+	Type *ExternalDataSharePathType
+}
+
+// ExternalDataShareProviderTenantDetails - External data share's provider tenant details.
+type ExternalDataShareProviderTenantDetails struct {
+	// READ-ONLY; The provider tenant display name.
+	DisplayName *string
+
+	// READ-ONLY; The provider tenant ID.
+	TenantID *string
+
+	// READ-ONLY; The provider tenant verified domain name (in Entra ID).
+	VerifiedDomainName *string
+}
+
 // ExternalDataShareRecipient - A representation of the the external data share recipient.
 type ExternalDataShareRecipient struct {
 	// REQUIRED; The recipient's email address.
@@ -1424,6 +1503,21 @@ type ExternalDataShareRecipient struct {
 
 	// The recipient's tenant ID.
 	TenantID *string
+}
+
+// ExternalDataShareShortcutInfo - Information about a shortcut that was created by accepting an external data share invitation.
+type ExternalDataShareShortcutInfo struct {
+	// READ-ONLY; The item ID.
+	ItemID *string
+
+	// READ-ONLY; The name of the shortcut.
+	Name *string
+
+	// READ-ONLY; The path in which the shortcut was created.
+	Path *string
+
+	// READ-ONLY; The workspace ID.
+	WorkspaceID *string
 }
 
 // ExternalDataShareTarget - An object containing the properties of the target external data share.
@@ -2384,6 +2478,35 @@ type Shortcut struct {
 	Target *Target
 }
 
+// ShortcutCreationPayload - Request payload for shortcut creation
+type ShortcutCreationPayload struct {
+	// REQUIRED; The external data share acceptance type. Additional types may be added over time.
+	PayloadType *ExternalDataShareAcceptRequestPayloadType
+
+	// A list of definitions for creating the external data share shortcuts.
+	CreateShortcutRequests []CreateExternalDataShareShortcutRequest
+
+	// A full path in a data item, in which to create the shortcut pointing to the external data. A valid path to accept an external
+	// data share in must start with "Files/" or "Tables/".
+	// For example, these paths are valid:
+	// * "Files/"
+	//
+	//
+	// * "Files/MyFolder1"
+	//
+	//
+	// * "Tables/"
+	Path *string
+}
+
+// GetExternalDataShareAcceptRequestPayload implements the ExternalDataShareAcceptRequestPayloadClassification interface for
+// type ShortcutCreationPayload.
+func (s *ShortcutCreationPayload) GetExternalDataShareAcceptRequestPayload() *ExternalDataShareAcceptRequestPayload {
+	return &ExternalDataShareAcceptRequestPayload{
+		PayloadType: s.PayloadType,
+	}
+}
+
 type Shortcuts struct {
 	// REQUIRED; A list of shortcuts.
 	Value []Shortcut
@@ -2442,6 +2565,12 @@ type Target struct {
 
 	// An object containing the properties of the target S3 compatible data source.
 	S3Compatible *S3Compatible
+}
+
+// UnapplyTagsRequest - The request payload for unapplying tags.
+type UnapplyTagsRequest struct {
+	// REQUIRED; The array of tag IDs.
+	Tags []string
 }
 
 // UpdateConnectionRequest - The base object of update connection request.

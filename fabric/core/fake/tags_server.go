@@ -7,10 +7,12 @@
 package fake
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strings"
 
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
@@ -23,9 +25,17 @@ import (
 
 // TagsServer is a fake server for instances of the core.TagsClient type.
 type TagsServer struct {
+	// ApplyTags is the fake for method TagsClient.ApplyTags
+	// HTTP status codes to indicate success: http.StatusOK
+	ApplyTags func(ctx context.Context, workspaceID string, itemID string, applyTagsRequest core.ApplyTagsRequest, options *core.TagsClientApplyTagsOptions) (resp azfake.Responder[core.TagsClientApplyTagsResponse], errResp azfake.ErrorResponder)
+
 	// NewListTagsPager is the fake for method TagsClient.NewListTagsPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListTagsPager func(options *core.TagsClientListTagsOptions) (resp azfake.PagerResponder[core.TagsClientListTagsResponse])
+
+	// UnapplyTags is the fake for method TagsClient.UnapplyTags
+	// HTTP status codes to indicate success: http.StatusOK
+	UnapplyTags func(ctx context.Context, workspaceID string, itemID string, unapplyTagsRequest core.UnapplyTagsRequest, options *core.TagsClientUnapplyTagsOptions) (resp azfake.Responder[core.TagsClientUnapplyTagsResponse], errResp azfake.ErrorResponder)
 }
 
 // NewTagsServerTransport creates a new instance of TagsServerTransport with the provided implementation.
@@ -70,8 +80,12 @@ func (t *TagsServerTransport) dispatchToMethodFake(req *http.Request, method str
 		}
 		if !intercepted {
 			switch method {
+			case "TagsClient.ApplyTags":
+				res.resp, res.err = t.dispatchApplyTags(req)
 			case "TagsClient.NewListTagsPager":
 				res.resp, res.err = t.dispatchNewListTagsPager(req)
+			case "TagsClient.UnapplyTags":
+				res.resp, res.err = t.dispatchUnapplyTags(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -89,6 +103,43 @@ func (t *TagsServerTransport) dispatchToMethodFake(req *http.Request, method str
 	case res := <-resultChan:
 		return res.resp, res.err
 	}
+}
+
+func (t *TagsServerTransport) dispatchApplyTags(req *http.Request) (*http.Response, error) {
+	if t.srv.ApplyTags == nil {
+		return nil, &nonRetriableError{errors.New("fake for method ApplyTags not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/items/(?P<itemId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/applyTags`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.ApplyTagsRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	itemIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("itemId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := t.srv.ApplyTags(req.Context(), workspaceIDParam, itemIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 func (t *TagsServerTransport) dispatchNewListTagsPager(req *http.Request) (*http.Response, error) {
@@ -126,6 +177,43 @@ func (t *TagsServerTransport) dispatchNewListTagsPager(req *http.Request) (*http
 	}
 	if !server.PagerResponderMore(newListTagsPager) {
 		t.newListTagsPager.remove(req)
+	}
+	return resp, nil
+}
+
+func (t *TagsServerTransport) dispatchUnapplyTags(req *http.Request) (*http.Response, error) {
+	if t.srv.UnapplyTags == nil {
+		return nil, &nonRetriableError{errors.New("fake for method UnapplyTags not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/items/(?P<itemId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/unapplyTags`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.UnapplyTagsRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	itemIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("itemId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := t.srv.UnapplyTags(req.Context(), workspaceIDParam, itemIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
 	}
 	return resp, nil
 }

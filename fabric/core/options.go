@@ -193,28 +193,40 @@ type DeploymentPipelinesClientUpdateDeploymentPipelineStageOptions struct {
 	// placeholder for future optional parameters
 }
 
-// ExternalDataSharesClientCreateExternalDataShareOptions contains the optional parameters for the ExternalDataSharesClient.CreateExternalDataShare
+// ExternalDataSharesProviderClientCreateExternalDataShareOptions contains the optional parameters for the ExternalDataSharesProviderClient.CreateExternalDataShare
 // method.
-type ExternalDataSharesClientCreateExternalDataShareOptions struct {
+type ExternalDataSharesProviderClientCreateExternalDataShareOptions struct {
 	// placeholder for future optional parameters
 }
 
-// ExternalDataSharesClientGetExternalDataShareOptions contains the optional parameters for the ExternalDataSharesClient.GetExternalDataShare
+// ExternalDataSharesProviderClientGetExternalDataShareOptions contains the optional parameters for the ExternalDataSharesProviderClient.GetExternalDataShare
 // method.
-type ExternalDataSharesClientGetExternalDataShareOptions struct {
+type ExternalDataSharesProviderClientGetExternalDataShareOptions struct {
 	// placeholder for future optional parameters
 }
 
-// ExternalDataSharesClientListExternalDataSharesInItemOptions contains the optional parameters for the ExternalDataSharesClient.NewListExternalDataSharesInItemPager
+// ExternalDataSharesProviderClientListExternalDataSharesInItemOptions contains the optional parameters for the ExternalDataSharesProviderClient.NewListExternalDataSharesInItemPager
 // method.
-type ExternalDataSharesClientListExternalDataSharesInItemOptions struct {
+type ExternalDataSharesProviderClientListExternalDataSharesInItemOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
 }
 
-// ExternalDataSharesClientRevokeExternalDataShareOptions contains the optional parameters for the ExternalDataSharesClient.RevokeExternalDataShare
+// ExternalDataSharesProviderClientRevokeExternalDataShareOptions contains the optional parameters for the ExternalDataSharesProviderClient.RevokeExternalDataShare
 // method.
-type ExternalDataSharesClientRevokeExternalDataShareOptions struct {
+type ExternalDataSharesProviderClientRevokeExternalDataShareOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ExternalDataSharesRecipientClientAcceptExternalDataShareInvitationOptions contains the optional parameters for the ExternalDataSharesRecipientClient.AcceptExternalDataShareInvitation
+// method.
+type ExternalDataSharesRecipientClientAcceptExternalDataShareInvitationOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ExternalDataSharesRecipientClientGetExternalDataShareInvitationDetailsOptions contains the optional parameters for the
+// ExternalDataSharesRecipientClient.GetExternalDataShareInvitationDetails method.
+type ExternalDataSharesRecipientClientGetExternalDataShareInvitationDetailsOptions struct {
 	// placeholder for future optional parameters
 }
 
@@ -601,10 +613,20 @@ type OneLakeShortcutsClientListShortcutsOptions struct {
 	ParentPath *string
 }
 
+// TagsClientApplyTagsOptions contains the optional parameters for the TagsClient.ApplyTags method.
+type TagsClientApplyTagsOptions struct {
+	// placeholder for future optional parameters
+}
+
 // TagsClientListTagsOptions contains the optional parameters for the TagsClient.NewListTagsPager method.
 type TagsClientListTagsOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
+}
+
+// TagsClientUnapplyTagsOptions contains the optional parameters for the TagsClient.UnapplyTags method.
+type TagsClientUnapplyTagsOptions struct {
+	// placeholder for future optional parameters
 }
 
 // WorkspacesClientAddWorkspaceRoleAssignmentOptions contains the optional parameters for the WorkspacesClient.AddWorkspaceRoleAssignment

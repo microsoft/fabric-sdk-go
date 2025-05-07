@@ -76,14 +76,14 @@ type DomainsClientUpdateDomainResponse struct {
 	Domain
 }
 
-// ExternalDataSharesClientListExternalDataSharesResponse contains the response from method ExternalDataSharesClient.NewListExternalDataSharesPager.
-type ExternalDataSharesClientListExternalDataSharesResponse struct {
+// ExternalDataSharesProviderClientListExternalDataSharesResponse contains the response from method ExternalDataSharesProviderClient.NewListExternalDataSharesPager.
+type ExternalDataSharesProviderClientListExternalDataSharesResponse struct {
 	// A list of external data shares with a continuation token.
 	ExternalDataShares
 }
 
-// ExternalDataSharesClientRevokeExternalDataShareResponse contains the response from method ExternalDataSharesClient.RevokeExternalDataShare.
-type ExternalDataSharesClientRevokeExternalDataShareResponse struct {
+// ExternalDataSharesProviderClientRevokeExternalDataShareResponse contains the response from method ExternalDataSharesProviderClient.RevokeExternalDataShare.
+type ExternalDataSharesProviderClientRevokeExternalDataShareResponse struct {
 	// placeholder for future response values
 }
 
@@ -126,6 +126,12 @@ type TagsClientBulkCreateTagsResponse struct {
 // TagsClientDeleteTagResponse contains the response from method TagsClient.DeleteTag.
 type TagsClientDeleteTagResponse struct {
 	// placeholder for future response values
+}
+
+// TagsClientListTagsResponse contains the response from method TagsClient.NewListTagsPager.
+type TagsClientListTagsResponse struct {
+	// A response wrapper for a list of tags.
+	TagsInfo
 }
 
 // TagsClientUpdateTagResponse contains the response from method TagsClient.UpdateTag.

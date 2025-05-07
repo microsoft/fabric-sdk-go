@@ -84,16 +84,16 @@ type DomainsClientUpdateDomainOptions struct {
 	// placeholder for future optional parameters
 }
 
-// ExternalDataSharesClientListExternalDataSharesOptions contains the optional parameters for the ExternalDataSharesClient.NewListExternalDataSharesPager
+// ExternalDataSharesProviderClientListExternalDataSharesOptions contains the optional parameters for the ExternalDataSharesProviderClient.NewListExternalDataSharesPager
 // method.
-type ExternalDataSharesClientListExternalDataSharesOptions struct {
+type ExternalDataSharesProviderClientListExternalDataSharesOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
 }
 
-// ExternalDataSharesClientRevokeExternalDataShareOptions contains the optional parameters for the ExternalDataSharesClient.RevokeExternalDataShare
+// ExternalDataSharesProviderClientRevokeExternalDataShareOptions contains the optional parameters for the ExternalDataSharesProviderClient.RevokeExternalDataShare
 // method.
-type ExternalDataSharesClientRevokeExternalDataShareOptions struct {
+type ExternalDataSharesProviderClientRevokeExternalDataShareOptions struct {
 	// placeholder for future optional parameters
 }
 
@@ -171,6 +171,12 @@ type TagsClientBulkCreateTagsOptions struct {
 // TagsClientDeleteTagOptions contains the optional parameters for the TagsClient.DeleteTag method.
 type TagsClientDeleteTagOptions struct {
 	// placeholder for future optional parameters
+}
+
+// TagsClientListTagsOptions contains the optional parameters for the TagsClient.NewListTagsPager method.
+type TagsClientListTagsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
 }
 
 // TagsClientUpdateTagOptions contains the optional parameters for the TagsClient.UpdateTag method.

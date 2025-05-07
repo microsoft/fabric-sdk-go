@@ -71,10 +71,18 @@ func (c *ClientFactory) NewDeploymentPipelinesClient() *DeploymentPipelinesClien
 	}
 }
 
-// NewExternalDataSharesClient creates a new instance of ExternalDataSharesClient.
-func (c *ClientFactory) NewExternalDataSharesClient() *ExternalDataSharesClient {
-	return &ExternalDataSharesClient{
-		internal: c.internal.WithClientName("core.ExternalDataSharesClient"),
+// NewExternalDataSharesProviderClient creates a new instance of ExternalDataSharesProviderClient.
+func (c *ClientFactory) NewExternalDataSharesProviderClient() *ExternalDataSharesProviderClient {
+	return &ExternalDataSharesProviderClient{
+		internal: c.internal.WithClientName("core.ExternalDataSharesProviderClient"),
+		endpoint: c.endpoint,
+	}
+}
+
+// NewExternalDataSharesRecipientClient creates a new instance of ExternalDataSharesRecipientClient.
+func (c *ClientFactory) NewExternalDataSharesRecipientClient() *ExternalDataSharesRecipientClient {
+	return &ExternalDataSharesRecipientClient{
+		internal: c.internal.WithClientName("core.ExternalDataSharesRecipientClient"),
 		endpoint: c.endpoint,
 	}
 }

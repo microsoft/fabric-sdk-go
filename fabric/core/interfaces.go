@@ -45,6 +45,15 @@ type CredentialsClassification interface {
 	GetCredentials() *Credentials
 }
 
+// ExternalDataShareAcceptRequestPayloadClassification provides polymorphic access to related types.
+// Call the interface's GetExternalDataShareAcceptRequestPayload() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *ExternalDataShareAcceptRequestPayload, *ShortcutCreationPayload
+type ExternalDataShareAcceptRequestPayloadClassification interface {
+	// GetExternalDataShareAcceptRequestPayload returns the ExternalDataShareAcceptRequestPayload content of the underlying type.
+	GetExternalDataShareAcceptRequestPayload() *ExternalDataShareAcceptRequestPayload
+}
+
 // GatewayClassification provides polymorphic access to related types.
 // Call the interface's GetGateway() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:

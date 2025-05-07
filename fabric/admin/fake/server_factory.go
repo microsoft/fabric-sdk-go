@@ -18,29 +18,29 @@ import (
 
 // ServerFactory is a fake server for instances of the admin.ClientFactory type.
 type ServerFactory struct {
-	DomainsServer            DomainsServer
-	ExternalDataSharesServer ExternalDataSharesServer
-	ItemsServer              ItemsServer
-	LabelsServer             LabelsServer
-	TagsServer               TagsServer
-	TenantsServer            TenantsServer
-	UsersServer              UsersServer
-	WorkspacesServer         WorkspacesServer
+	DomainsServer                    DomainsServer
+	ExternalDataSharesProviderServer ExternalDataSharesProviderServer
+	ItemsServer                      ItemsServer
+	LabelsServer                     LabelsServer
+	TagsServer                       TagsServer
+	TenantsServer                    TenantsServer
+	UsersServer                      UsersServer
+	WorkspacesServer                 WorkspacesServer
 }
 
 // ServerFactoryTransport connects instances of admin.ClientFactory to instances of ServerFactory.
 // Don't use this type directly, use NewServerFactoryTransport instead.
 type ServerFactoryTransport struct {
-	srv                        *ServerFactory
-	trMu                       sync.Mutex
-	trDomainsServer            *DomainsServerTransport
-	trExternalDataSharesServer *ExternalDataSharesServerTransport
-	trItemsServer              *ItemsServerTransport
-	trLabelsServer             *LabelsServerTransport
-	trTagsServer               *TagsServerTransport
-	trTenantsServer            *TenantsServerTransport
-	trUsersServer              *UsersServerTransport
-	trWorkspacesServer         *WorkspacesServerTransport
+	srv                                *ServerFactory
+	trMu                               sync.Mutex
+	trDomainsServer                    *DomainsServerTransport
+	trExternalDataSharesProviderServer *ExternalDataSharesProviderServerTransport
+	trItemsServer                      *ItemsServerTransport
+	trLabelsServer                     *LabelsServerTransport
+	trTagsServer                       *TagsServerTransport
+	trTenantsServer                    *TenantsServerTransport
+	trUsersServer                      *UsersServerTransport
+	trWorkspacesServer                 *WorkspacesServerTransport
 }
 
 // NewServerFactoryTransport creates a new instance of ServerFactoryTransport with the provided implementation.
@@ -69,11 +69,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	case "DomainsClient":
 		initServer(s, &s.trDomainsServer, func() *DomainsServerTransport { return NewDomainsServerTransport(&s.srv.DomainsServer) })
 		resp, err = s.trDomainsServer.Do(req)
-	case "ExternalDataSharesClient":
-		initServer(s, &s.trExternalDataSharesServer, func() *ExternalDataSharesServerTransport {
-			return NewExternalDataSharesServerTransport(&s.srv.ExternalDataSharesServer)
+	case "ExternalDataSharesProviderClient":
+		initServer(s, &s.trExternalDataSharesProviderServer, func() *ExternalDataSharesProviderServerTransport {
+			return NewExternalDataSharesProviderServerTransport(&s.srv.ExternalDataSharesProviderServer)
 		})
-		resp, err = s.trExternalDataSharesServer.Do(req)
+		resp, err = s.trExternalDataSharesProviderServer.Do(req)
 	case "ItemsClient":
 		initServer(s, &s.trItemsServer, func() *ItemsServerTransport { return NewItemsServerTransport(&s.srv.ItemsServer) })
 		resp, err = s.trItemsServer.Do(req)

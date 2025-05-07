@@ -43,16 +43,26 @@ func ExampleItemsClient_NewListSQLDatabasesPager() {
 		// 		{
 		// 			Type: to.Ptr(sqldatabase.ItemTypeSQLDatabase),
 		// 			Description: to.Ptr("A SQLDatabase description."),
-		// 			DisplayName: to.Ptr("SQLDatabase Name 1"),
+		// 			DisplayName: to.Ptr("SQLDatabase1"),
 		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+		// 			Properties: &sqldatabase.Properties{
+		// 				ConnectionString: to.Ptr("Data Source=fvzeldvqgvce3b2hxvbg4hnjqu-nowrtjcsie2e3ny6v4ojbd3esa.database.fabric.microsoft.com,1433;Initial Catalog=SQLDatabase1-45c6e7cf-89b1-4a69-b4e1-5495271c7e45;MultipleActiveResultSets=False;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False"),
+		// 				DatabaseName: to.Ptr("SQLDatabase1-45c6e7cf-89b1-4a69-b4e1-5495271c7e45"),
+		// 				ServerFqdn: to.Ptr("fvzeldvqgvce3b2hxvbg4hnjqu-nowrtjcsie2e3ny6v4ojbd3esa.database.fabric.microsoft.com,1433"),
+		// 			},
 		// 		},
 		// 		{
 		// 			Type: to.Ptr(sqldatabase.ItemTypeSQLDatabase),
 		// 			Description: to.Ptr("A SQLDatabase description."),
-		// 			DisplayName: to.Ptr("SQLDatabase Name 2"),
+		// 			DisplayName: to.Ptr("SQLDatabase2"),
 		// 			ID: to.Ptr("f697fb63-abd4-4399-9548-be7e3c3c0dac"),
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+		// 			Properties: &sqldatabase.Properties{
+		// 				ConnectionString: to.Ptr("Data Source=x6eps4xrq2xudenlfv6naeo3i4-cfqmbux5lgvuzcoypz4jiwkqxq.database.fabric.microsoft.com,1433;Initial Catalog=SQLDatabase2-85fdf021-23ed-4307-be63-92e553a22d54;MultipleActiveResultSets=False;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False"),
+		// 				DatabaseName: to.Ptr("SQLDatabase2-85fdf021-23ed-4307-be63-92e553a22d54"),
+		// 				ServerFqdn: to.Ptr("x6eps4xrq2xudenlfv6naeo3i4-cfqmbux5lgvuzcoypz4jiwkqxq.database.fabric.microsoft.com,1433"),
+		// 			},
 		// 	}},
 		// }
 	}
@@ -103,9 +113,14 @@ func ExampleItemsClient_GetSQLDatabase() {
 	// res.SQLDatabase = sqldatabase.SQLDatabase{
 	// 	Type: to.Ptr(sqldatabase.ItemTypeSQLDatabase),
 	// 	Description: to.Ptr("A SQLDatabase description."),
-	// 	DisplayName: to.Ptr("SQLDatabase 1"),
+	// 	DisplayName: to.Ptr("SQLDatabase1"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+	// 	Properties: &sqldatabase.Properties{
+	// 		ConnectionString: to.Ptr("Data Source=fvzeldvqgvce3b2hxvbg4hnjqu-nowrtjcsie2e3ny6v4ojbd3esa.database.fabric.microsoft.com,1433;Initial Catalog=SQLDatabase1-45c6e7cf-89b1-4a69-b4e1-5495271c7e45;MultipleActiveResultSets=False;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False"),
+	// 		DatabaseName: to.Ptr("SQLDatabase1-45c6e7cf-89b1-4a69-b4e1-5495271c7e45"),
+	// 		ServerFqdn: to.Ptr("fvzeldvqgvce3b2hxvbg4hnjqu-nowrtjcsie2e3ny6v4ojbd3esa.database.fabric.microsoft.com,1433"),
+	// 	},
 	// }
 }
 

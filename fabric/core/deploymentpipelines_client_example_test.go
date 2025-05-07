@@ -644,7 +644,7 @@ func ExampleDeploymentPipelinesClient_GetDeploymentPipelineOperation() {
 	// 				Index: to.Ptr[int32](0),
 	// 				PreDeploymentDiffState: to.Ptr(core.ItemPreDeploymentDiffStateNew),
 	// 				SourceAndTarget: &core.DeploymentSourceAndTarget{
-	// 					ItemType: to.Ptr(core.ItemType("Dataflow")),
+	// 					ItemType: to.Ptr(core.ItemTypeDataflow),
 	// 					SourceItemDisplayName: to.Ptr("Source dataflow"),
 	// 					SourceItemID: to.Ptr("29efcfb0-0063-44af-a4ed-6c0bee3417d3"),
 	// 				},

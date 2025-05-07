@@ -1576,6 +1576,117 @@ func (testsuite *FakeTestSuite) TestDomains_RoleAssignmentsBulkUnassign() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
+func (testsuite *FakeTestSuite) TestTags_ListTags() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List of all tenant's tags example"},
+	})
+
+	exampleRes := admin.TagsInfo{
+		Value: []admin.TagInfo{
+			{
+				DisplayName: to.Ptr("Finance"),
+				ID:          to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+			},
+			{
+				DisplayName: to.Ptr("Human resources"),
+				ID:          to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
+			},
+			{
+				DisplayName: to.Ptr("Engineering P1"),
+				ID:          to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
+			},
+			{
+				DisplayName: to.Ptr("Marketing Q1"),
+				ID:          to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
+			},
+			{
+				DisplayName: to.Ptr("HR Sales Q1"),
+				ID:          to.Ptr("17df435d-9efd-48c1-a937-7d6fd70ab26a"),
+			},
+			{
+				DisplayName: to.Ptr("Root"),
+				ID:          to.Ptr("fb765fe3-d404-4f24-9d67-5916449c4c50"),
+			},
+			{
+				DisplayName: to.Ptr("Legal EMEA"),
+				ID:          to.Ptr("bda31be4-7efe-4272-8b85-e1b2ff0f0592"),
+			}},
+	}
+
+	testsuite.serverFactory.TagsServer.NewListTagsPager = func(options *admin.TagsClientListTagsOptions) (resp azfake.PagerResponder[admin.TagsClientListTagsResponse]) {
+		resp = azfake.PagerResponder[admin.TagsClientListTagsResponse]{}
+		resp.AddPage(http.StatusOK, admin.TagsClientListTagsResponse{TagsInfo: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTagsClient()
+	pager := client.NewListTagsPager(&admin.TagsClientListTagsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.TagsInfo))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List of all tenant's tags with continuation example"},
+	})
+
+	exampleRes = admin.TagsInfo{
+		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/admin/tags?continuationToken=LDEsMTAwMDAwLDA%3D"),
+		Value: []admin.TagInfo{
+			{
+				DisplayName: to.Ptr("Finance"),
+				ID:          to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+			},
+			{
+				DisplayName: to.Ptr("Human resources"),
+				ID:          to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
+			},
+			{
+				DisplayName: to.Ptr("Engineering P1"),
+				ID:          to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
+			},
+			{
+				DisplayName: to.Ptr("Marketing Q1"),
+				ID:          to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
+			},
+			{
+				DisplayName: to.Ptr("HR Sales Q1"),
+				ID:          to.Ptr("17df435d-9efd-48c1-a937-7d6fd70ab26a"),
+			},
+			{
+				DisplayName: to.Ptr("Root"),
+				ID:          to.Ptr("fb765fe3-d404-4f24-9d67-5916449c4c50"),
+			},
+			{
+				DisplayName: to.Ptr("Legal EMEA"),
+				ID:          to.Ptr("bda31be4-7efe-4272-8b85-e1b2ff0f0592"),
+			}},
+	}
+
+	testsuite.serverFactory.TagsServer.NewListTagsPager = func(options *admin.TagsClientListTagsOptions) (resp azfake.PagerResponder[admin.TagsClientListTagsResponse]) {
+		resp = azfake.PagerResponder[admin.TagsClientListTagsResponse]{}
+		resp.AddPage(http.StatusOK, admin.TagsClientListTagsResponse{TagsInfo: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListTagsPager(&admin.TagsClientListTagsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.TagsInfo))
+		if err == nil {
+			break
+		}
+	}
+}
+
 func (testsuite *FakeTestSuite) TestTags_BulkCreateTags() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -1797,7 +1908,7 @@ func (testsuite *FakeTestSuite) TestLabels_BulkSetLabels() {
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ItemsChangeLabelResponse))
 }
 
-func (testsuite *FakeTestSuite) TestExternalDataShares_ListExternalDataShares() {
+func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_ListExternalDataShares() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"List external data shares in the tenant example"},
@@ -1816,7 +1927,7 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_ListExternalDataShares() 
 				},
 				ExpirationTimeUTC: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-12-13T00:00:00.000Z"); return t }()),
 				ID:                to.Ptr("dccc162f-7a41-4720-83c3-5c7e81187959"),
-				InvitationURL:     to.Ptr("https://app.fabric.microsoft.com/externaldatasharing/accept?si=VyT5NJ3%2bNkySqEmf368Pjw-dccc162f-7a41-4720-83c3-5c7e81187959"),
+				InvitationURL:     to.Ptr("https://app.fabric.microsoft.com/externaldatasharing/accept?providerTenantId=34f92457-fe9d-4c36-92a8-499fdfaf0f8f&shareId=dccc162f-7a41-4720-83c3-5c7e81187959"),
 				ItemID:            to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 				Paths: []string{
 					"Files/Sales/Contoso_Sales_2023"},
@@ -1838,7 +1949,7 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_ListExternalDataShares() 
 				},
 				ExpirationTimeUTC: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-08-31T00:00:00.000Z"); return t }()),
 				ID:                to.Ptr("96c21561-65b8-4b23-bb9a-ee8cef945c45"),
-				InvitationURL:     to.Ptr("https://app.fabric.microsoft.com/externaldatasharing/accept?si=VyT5NJ3%2bNkySqEmf368Pjw-96c21561-65b8-4b23-bb9a-ee8cef945c45"),
+				InvitationURL:     to.Ptr("https://app.fabric.microsoft.com/externaldatasharing/accept?providerTenantId=34f92457-fe9d-4c36-92a8-499fdfaf0f8f&shareId=96c21561-65b8-4b23-bb9a-ee8cef945c45"),
 				ItemID:            to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 				Paths: []string{
 					"Files/Sales/Contoso_Sales_2023"},
@@ -1859,7 +1970,7 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_ListExternalDataShares() 
 				},
 				ExpirationTimeUTC: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-01-01T00:00:00.000Z"); return t }()),
 				ID:                to.Ptr("0f40aeca-8f78-4a6f-a552-e5c45faadc60"),
-				InvitationURL:     to.Ptr("https://app.fabric.microsoft.com/externaldatasharing/accept?si=VyT5NJ3%2bNkySqEmf368Pjw-0f40aeca-8f78-4a6f-a552-e5c45faadc60"),
+				InvitationURL:     to.Ptr("https://app.fabric.microsoft.com/externaldatasharing/accept?providerTenantId=34f92457-fe9d-4c36-92a8-499fdfaf0f8f&shareId=0f40aeca-8f78-4a6f-a552-e5c45faadc60"),
 				ItemID:            to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 				Paths: []string{
 					"Files/Sales/Contoso_Sales_2023"},
@@ -1881,7 +1992,7 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_ListExternalDataShares() 
 				},
 				ExpirationTimeUTC: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-12-01T00:00:00.000Z"); return t }()),
 				ID:                to.Ptr("89e82a82-0140-4837-8eee-9c919e3e5952"),
-				InvitationURL:     to.Ptr("https://app.fabric.microsoft.com/externaldatasharing/accept?si=VyT5NJ3%2bNkySqEmf368Pjw-89e82a82-0140-4837-8eee-9c919e3e5952"),
+				InvitationURL:     to.Ptr("https://app.fabric.microsoft.com/externaldatasharing/accept?providerTenantId=34f92457-fe9d-4c36-92a8-499fdfaf0f8f&shareId=89e82a82-0140-4837-8eee-9c919e3e5952"),
 				ItemID:            to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 				Paths: []string{
 					"Files/Sales/Contoso_Sales_2023"},
@@ -1893,14 +2004,14 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_ListExternalDataShares() 
 			}},
 	}
 
-	testsuite.serverFactory.ExternalDataSharesServer.NewListExternalDataSharesPager = func(options *admin.ExternalDataSharesClientListExternalDataSharesOptions) (resp azfake.PagerResponder[admin.ExternalDataSharesClientListExternalDataSharesResponse]) {
-		resp = azfake.PagerResponder[admin.ExternalDataSharesClientListExternalDataSharesResponse]{}
-		resp.AddPage(http.StatusOK, admin.ExternalDataSharesClientListExternalDataSharesResponse{ExternalDataShares: exampleRes}, nil)
+	testsuite.serverFactory.ExternalDataSharesProviderServer.NewListExternalDataSharesPager = func(options *admin.ExternalDataSharesProviderClientListExternalDataSharesOptions) (resp azfake.PagerResponder[admin.ExternalDataSharesProviderClientListExternalDataSharesResponse]) {
+		resp = azfake.PagerResponder[admin.ExternalDataSharesProviderClientListExternalDataSharesResponse]{}
+		resp.AddPage(http.StatusOK, admin.ExternalDataSharesProviderClientListExternalDataSharesResponse{ExternalDataShares: exampleRes}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewExternalDataSharesClient()
-	pager := client.NewListExternalDataSharesPager(&admin.ExternalDataSharesClientListExternalDataSharesOptions{ContinuationToken: nil})
+	client := testsuite.clientFactory.NewExternalDataSharesProviderClient()
+	pager := client.NewListExternalDataSharesPager(&admin.ExternalDataSharesProviderClientListExternalDataSharesOptions{ContinuationToken: nil})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")
@@ -1911,7 +2022,7 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_ListExternalDataShares() 
 	}
 }
 
-func (testsuite *FakeTestSuite) TestExternalDataShares_RevokeExternalDataShare() {
+func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_RevokeExternalDataShare() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Revoke external data share example"},
@@ -1923,16 +2034,16 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_RevokeExternalDataShare()
 	exampleItemID = "5b218778-e7a5-4d73-8187-f10824047715"
 	exampleExternalDataShareID = "dccc162f-7a41-4720-83c3-5c7e81187959"
 
-	testsuite.serverFactory.ExternalDataSharesServer.RevokeExternalDataShare = func(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, options *admin.ExternalDataSharesClientRevokeExternalDataShareOptions) (resp azfake.Responder[admin.ExternalDataSharesClientRevokeExternalDataShareResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ExternalDataSharesProviderServer.RevokeExternalDataShare = func(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, options *admin.ExternalDataSharesProviderClientRevokeExternalDataShareOptions) (resp azfake.Responder[admin.ExternalDataSharesProviderClientRevokeExternalDataShareResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleItemID, itemID)
 		testsuite.Require().Equal(exampleExternalDataShareID, externalDataShareID)
-		resp = azfake.Responder[admin.ExternalDataSharesClientRevokeExternalDataShareResponse]{}
-		resp.SetResponse(http.StatusOK, admin.ExternalDataSharesClientRevokeExternalDataShareResponse{}, nil)
+		resp = azfake.Responder[admin.ExternalDataSharesProviderClientRevokeExternalDataShareResponse]{}
+		resp.SetResponse(http.StatusOK, admin.ExternalDataSharesProviderClientRevokeExternalDataShareResponse{}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewExternalDataSharesClient()
+	client := testsuite.clientFactory.NewExternalDataSharesProviderClient()
 	_, err = client.RevokeExternalDataShare(ctx, exampleWorkspaceID, exampleItemID, exampleExternalDataShareID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }

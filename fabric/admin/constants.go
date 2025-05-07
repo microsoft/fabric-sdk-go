@@ -218,6 +218,8 @@ const (
 	ItemTypeDashboard ItemType = "Dashboard"
 	// ItemTypeDataPipeline - A data pipeline.
 	ItemTypeDataPipeline ItemType = "DataPipeline"
+	// ItemTypeDataflow - A Dataflow.
+	ItemTypeDataflow ItemType = "Dataflow"
 	// ItemTypeDatamart - PowerBI datamart.
 	ItemTypeDatamart ItemType = "Datamart"
 	// ItemTypeEnvironment - An environment.
@@ -274,6 +276,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeCopyJob,
 		ItemTypeDashboard,
 		ItemTypeDataPipeline,
+		ItemTypeDataflow,
 		ItemTypeDatamart,
 		ItemTypeEnvironment,
 		ItemTypeEventhouse,

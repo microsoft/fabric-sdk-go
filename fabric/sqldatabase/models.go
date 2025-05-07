@@ -24,6 +24,18 @@ type ItemTag struct {
 	ID *string
 }
 
+// Properties - The SQL database properties.
+type Properties struct {
+	// REQUIRED; The connection string of the database.
+	ConnectionString *string
+
+	// REQUIRED; The database name.
+	DatabaseName *string
+
+	// REQUIRED; The server fully qualified domain name (FQDN).
+	ServerFqdn *string
+}
+
 // SQLDatabase - A SQL database object.
 type SQLDatabase struct {
 	// REQUIRED; The item type.
@@ -34,6 +46,9 @@ type SQLDatabase struct {
 
 	// The item display name.
 	DisplayName *string
+
+	// The SQLDatabase properties.
+	Properties *Properties
 
 	// READ-ONLY; The folder ID.
 	FolderID *string

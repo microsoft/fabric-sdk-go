@@ -10,6 +10,8 @@ import (
 	"context"
 	"errors"
 	"net/http"
+	"net/url"
+	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
@@ -23,6 +25,71 @@ import (
 type TagsClient struct {
 	internal *azcore.Client
 	endpoint string
+}
+
+// ApplyTags - PERMISSIONS The caller must have contributor or higher role on the workspace.
+// REQUIRED DELEGATED SCOPES ItemMetadata.ReadWrite.All or these scope types:
+// * Generic scope: Item.ReadWrite.All
+//
+// * Specific scope: itemType.ReadWrite.All (for example: Notebook.ReadWrite.All)
+//
+// For more information about scopes, see Scopes article [/rest/api/fabric/articles/scopes].
+//
+// LIMITATIONS Maximum 25 requests per hour per principal.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - itemID - The item ID.
+//   - applyTagsRequest - The request payload for applying tags.
+//   - options - TagsClientApplyTagsOptions contains the optional parameters for the TagsClient.ApplyTags method.
+func (client *TagsClient) ApplyTags(ctx context.Context, workspaceID string, itemID string, applyTagsRequest ApplyTagsRequest, options *TagsClientApplyTagsOptions) (TagsClientApplyTagsResponse, error) {
+	var err error
+	const operationName = "core.TagsClient.ApplyTags"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.applyTagsCreateRequest(ctx, workspaceID, itemID, applyTagsRequest, options)
+	if err != nil {
+		return TagsClientApplyTagsResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return TagsClientApplyTagsResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return TagsClientApplyTagsResponse{}, err
+	}
+	return TagsClientApplyTagsResponse{}, nil
+}
+
+// applyTagsCreateRequest creates the ApplyTags request.
+func (client *TagsClient) applyTagsCreateRequest(ctx context.Context, workspaceID string, itemID string, applyTagsRequest ApplyTagsRequest, _ *TagsClientApplyTagsOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/applyTags"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if itemID == "" {
+		return nil, errors.New("parameter itemID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{itemId}", url.PathEscape(itemID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, applyTagsRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
 }
 
 // NewListTagsPager - REQUIRED DELEGATED SCOPES Tag.Read.All
@@ -82,6 +149,71 @@ func (client *TagsClient) listTagsHandleResponse(resp *http.Response) (TagsClien
 		return TagsClientListTagsResponse{}, err
 	}
 	return result, nil
+}
+
+// UnapplyTags - PERMISSIONS The caller must have contributor or higher role on the workspace.
+// REQUIRED DELEGATED SCOPES ItemMetadata.ReadWrite.All or these scope types:
+// * Generic scope: Item.ReadWrite.All
+//
+// * Specific scope: itemType.ReadWrite.All (for example: Notebook.ReadWrite.All)
+//
+// For more information about scopes, see Scopes article [/rest/api/fabric/articles/scopes].
+//
+// LIMITATIONS Maximum 25 requests per hour per principal.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - itemID - The item ID.
+//   - unapplyTagsRequest - The request payload for unapplying tags.
+//   - options - TagsClientUnapplyTagsOptions contains the optional parameters for the TagsClient.UnapplyTags method.
+func (client *TagsClient) UnapplyTags(ctx context.Context, workspaceID string, itemID string, unapplyTagsRequest UnapplyTagsRequest, options *TagsClientUnapplyTagsOptions) (TagsClientUnapplyTagsResponse, error) {
+	var err error
+	const operationName = "core.TagsClient.UnapplyTags"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.unapplyTagsCreateRequest(ctx, workspaceID, itemID, unapplyTagsRequest, options)
+	if err != nil {
+		return TagsClientUnapplyTagsResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return TagsClientUnapplyTagsResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return TagsClientUnapplyTagsResponse{}, err
+	}
+	return TagsClientUnapplyTagsResponse{}, nil
+}
+
+// unapplyTagsCreateRequest creates the UnapplyTags request.
+func (client *TagsClient) unapplyTagsCreateRequest(ctx context.Context, workspaceID string, itemID string, unapplyTagsRequest UnapplyTagsRequest, _ *TagsClientUnapplyTagsOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/unapplyTags"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if itemID == "" {
+		return nil, errors.New("parameter itemID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{itemId}", url.PathEscape(itemID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, unapplyTagsRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
 }
 
 // Custom code starts below
