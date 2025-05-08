@@ -3177,6 +3177,68 @@ func (testsuite *FakeTestSuite) TestTags_ListTags() {
 	}
 }
 
+func (testsuite *FakeTestSuite) TestTags_ApplyTags() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Apply tags example"},
+	})
+	var exampleWorkspaceID string
+	var exampleItemID string
+	var exampleApplyTagsRequest core.ApplyTagsRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleItemID = "cfafbeb1-8037-4d0c-896e-a46fb27ff230"
+	exampleApplyTagsRequest = core.ApplyTagsRequest{
+		Tags: []string{
+			"97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f",
+			"41d5b790-76d9-4ebe-9f06-b34cc280a612",
+			"7b8e5ada-2dee-4b97-915e-0b9d3b416b1e"},
+	}
+
+	testsuite.serverFactory.TagsServer.ApplyTags = func(ctx context.Context, workspaceID string, itemID string, applyTagsRequest core.ApplyTagsRequest, options *core.TagsClientApplyTagsOptions) (resp azfake.Responder[core.TagsClientApplyTagsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().True(reflect.DeepEqual(exampleApplyTagsRequest, applyTagsRequest))
+		resp = azfake.Responder[core.TagsClientApplyTagsResponse]{}
+		resp.SetResponse(http.StatusOK, core.TagsClientApplyTagsResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTagsClient()
+	_, err = client.ApplyTags(ctx, exampleWorkspaceID, exampleItemID, exampleApplyTagsRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestTags_UnapplyTags() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Unapply tags example"},
+	})
+	var exampleWorkspaceID string
+	var exampleItemID string
+	var exampleUnapplyTagsRequest core.UnapplyTagsRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleItemID = "cfafbeb1-8037-4d0c-896e-a46fb27ff230"
+	exampleUnapplyTagsRequest = core.UnapplyTagsRequest{
+		Tags: []string{
+			"97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f",
+			"41d5b790-76d9-4ebe-9f06-b34cc280a612",
+			"7b8e5ada-2dee-4b97-915e-0b9d3b416b1e"},
+	}
+
+	testsuite.serverFactory.TagsServer.UnapplyTags = func(ctx context.Context, workspaceID string, itemID string, unapplyTagsRequest core.UnapplyTagsRequest, options *core.TagsClientUnapplyTagsOptions) (resp azfake.Responder[core.TagsClientUnapplyTagsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUnapplyTagsRequest, unapplyTagsRequest))
+		resp = azfake.Responder[core.TagsClientUnapplyTagsResponse]{}
+		resp.SetResponse(http.StatusOK, core.TagsClientUnapplyTagsResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTagsClient()
+	_, err = client.UnapplyTags(ctx, exampleWorkspaceID, exampleItemID, exampleUnapplyTagsRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
 func (testsuite *FakeTestSuite) TestDeploymentPipelines_ListDeploymentPipelines() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -3826,7 +3888,7 @@ func (testsuite *FakeTestSuite) TestDeploymentPipelines_GetDeploymentPipelineOpe
 					Index:                  to.Ptr[int32](0),
 					PreDeploymentDiffState: to.Ptr(core.ItemPreDeploymentDiffStateNew),
 					SourceAndTarget: &core.DeploymentSourceAndTarget{
-						ItemType:              to.Ptr(core.ItemType("Dataflow")),
+						ItemType:              to.Ptr(core.ItemTypeDataflow),
 						SourceItemDisplayName: to.Ptr("Source dataflow"),
 						SourceItemID:          to.Ptr("29efcfb0-0063-44af-a4ed-6c0bee3417d3"),
 					},
@@ -4585,7 +4647,7 @@ func (testsuite *FakeTestSuite) TestOneLakeDataAccessSecurity_CreateOrUpdateData
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
-func (testsuite *FakeTestSuite) TestExternalDataShares_CreateExternalDataShare() {
+func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_CreateExternalDataShare() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Create an external data share example"},
@@ -4603,16 +4665,16 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_CreateExternalDataShare()
 		},
 	}
 
-	testsuite.serverFactory.ExternalDataSharesServer.CreateExternalDataShare = func(ctx context.Context, workspaceID string, itemID string, createExternalDataShareRequest core.CreateExternalDataShareRequest, options *core.ExternalDataSharesClientCreateExternalDataShareOptions) (resp azfake.Responder[core.ExternalDataSharesClientCreateExternalDataShareResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ExternalDataSharesProviderServer.CreateExternalDataShare = func(ctx context.Context, workspaceID string, itemID string, createExternalDataShareRequest core.CreateExternalDataShareRequest, options *core.ExternalDataSharesProviderClientCreateExternalDataShareOptions) (resp azfake.Responder[core.ExternalDataSharesProviderClientCreateExternalDataShareResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleItemID, itemID)
 		testsuite.Require().True(reflect.DeepEqual(exampleCreateExternalDataShareRequest, createExternalDataShareRequest))
-		resp = azfake.Responder[core.ExternalDataSharesClientCreateExternalDataShareResponse]{}
-		resp.SetResponse(http.StatusCreated, core.ExternalDataSharesClientCreateExternalDataShareResponse{}, nil)
+		resp = azfake.Responder[core.ExternalDataSharesProviderClientCreateExternalDataShareResponse]{}
+		resp.SetResponse(http.StatusCreated, core.ExternalDataSharesProviderClientCreateExternalDataShareResponse{}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewExternalDataSharesClient()
+	client := testsuite.clientFactory.NewExternalDataSharesProviderClient()
 	_, err = client.CreateExternalDataShare(ctx, exampleWorkspaceID, exampleItemID, exampleCreateExternalDataShareRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 
@@ -4631,12 +4693,12 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_CreateExternalDataShare()
 		},
 	}
 
-	testsuite.serverFactory.ExternalDataSharesServer.CreateExternalDataShare = func(ctx context.Context, workspaceID string, itemID string, createExternalDataShareRequest core.CreateExternalDataShareRequest, options *core.ExternalDataSharesClientCreateExternalDataShareOptions) (resp azfake.Responder[core.ExternalDataSharesClientCreateExternalDataShareResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ExternalDataSharesProviderServer.CreateExternalDataShare = func(ctx context.Context, workspaceID string, itemID string, createExternalDataShareRequest core.CreateExternalDataShareRequest, options *core.ExternalDataSharesProviderClientCreateExternalDataShareOptions) (resp azfake.Responder[core.ExternalDataSharesProviderClientCreateExternalDataShareResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleItemID, itemID)
 		testsuite.Require().True(reflect.DeepEqual(exampleCreateExternalDataShareRequest, createExternalDataShareRequest))
-		resp = azfake.Responder[core.ExternalDataSharesClientCreateExternalDataShareResponse]{}
-		resp.SetResponse(http.StatusCreated, core.ExternalDataSharesClientCreateExternalDataShareResponse{}, nil)
+		resp = azfake.Responder[core.ExternalDataSharesProviderClientCreateExternalDataShareResponse]{}
+		resp.SetResponse(http.StatusCreated, core.ExternalDataSharesProviderClientCreateExternalDataShareResponse{}, nil)
 		return
 	}
 
@@ -4659,12 +4721,12 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_CreateExternalDataShare()
 		},
 	}
 
-	testsuite.serverFactory.ExternalDataSharesServer.CreateExternalDataShare = func(ctx context.Context, workspaceID string, itemID string, createExternalDataShareRequest core.CreateExternalDataShareRequest, options *core.ExternalDataSharesClientCreateExternalDataShareOptions) (resp azfake.Responder[core.ExternalDataSharesClientCreateExternalDataShareResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ExternalDataSharesProviderServer.CreateExternalDataShare = func(ctx context.Context, workspaceID string, itemID string, createExternalDataShareRequest core.CreateExternalDataShareRequest, options *core.ExternalDataSharesProviderClientCreateExternalDataShareOptions) (resp azfake.Responder[core.ExternalDataSharesProviderClientCreateExternalDataShareResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleItemID, itemID)
 		testsuite.Require().True(reflect.DeepEqual(exampleCreateExternalDataShareRequest, createExternalDataShareRequest))
-		resp = azfake.Responder[core.ExternalDataSharesClientCreateExternalDataShareResponse]{}
-		resp.SetResponse(http.StatusCreated, core.ExternalDataSharesClientCreateExternalDataShareResponse{}, nil)
+		resp = azfake.Responder[core.ExternalDataSharesProviderClientCreateExternalDataShareResponse]{}
+		resp.SetResponse(http.StatusCreated, core.ExternalDataSharesProviderClientCreateExternalDataShareResponse{}, nil)
 		return
 	}
 
@@ -4672,7 +4734,7 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_CreateExternalDataShare()
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
-func (testsuite *FakeTestSuite) TestExternalDataShares_ListExternalDataSharesInItem() {
+func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_ListExternalDataSharesInItem() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"List external data shares of an item example"},
@@ -4691,7 +4753,7 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_ListExternalDataSharesInI
 				},
 				ExpirationTimeUTC: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-12-13T00:00:00.000Z"); return t }()),
 				ID:                to.Ptr("dccc162f-7a41-4720-83c3-5c7e81187959"),
-				InvitationURL:     to.Ptr("https://app.fabric.microsoft.com/externaldatasharing/accept?si=VyT5NJ3%2bNkySqEmf368Pjw-dccc162f-7a41-4720-83c3-5c7e81187959"),
+				InvitationURL:     to.Ptr("https://app.fabric.microsoft.com/externaldatasharing/accept?providerTenantId=34f92457-fe9d-4c36-92a8-499fdfaf0f8f&shareId=dccc162f-7a41-4720-83c3-5c7e81187959"),
 				ItemID:            to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 				Paths: []string{
 					"Files/Sales/Contoso_Sales_2023"},
@@ -4709,7 +4771,7 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_ListExternalDataSharesInI
 				},
 				ExpirationTimeUTC: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-08-31T00:00:00.000Z"); return t }()),
 				ID:                to.Ptr("96c21561-65b8-4b23-bb9a-ee8cef945c45"),
-				InvitationURL:     to.Ptr("https://app.fabric.microsoft.com/externaldatasharing/accept?si=VyT5NJ3%2bNkySqEmf368Pjw-96c21561-65b8-4b23-bb9a-ee8cef945c45"),
+				InvitationURL:     to.Ptr("https://app.fabric.microsoft.com/externaldatasharing/accept?providerTenantId=34f92457-fe9d-4c36-92a8-499fdfaf0f8f&shareId=96c21561-65b8-4b23-bb9a-ee8cef945c45"),
 				ItemID:            to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 				Paths: []string{
 					"Files/Sales/Contoso_Sales_2023"},
@@ -4726,7 +4788,7 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_ListExternalDataSharesInI
 				},
 				ExpirationTimeUTC: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-01-01T00:00:00.000Z"); return t }()),
 				ID:                to.Ptr("0f40aeca-8f78-4a6f-a552-e5c45faadc60"),
-				InvitationURL:     to.Ptr("https://app.fabric.microsoft.com/externaldatasharing/accept?si=VyT5NJ3%2bNkySqEmf368Pjw-0f40aeca-8f78-4a6f-a552-e5c45faadc60"),
+				InvitationURL:     to.Ptr("https://app.fabric.microsoft.com/externaldatasharing/accept?providerTenantId=34f92457-fe9d-4c36-92a8-499fdfaf0f8f&shareId=0f40aeca-8f78-4a6f-a552-e5c45faadc60"),
 				ItemID:            to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 				Paths: []string{
 					"Files/Sales/Contoso_Sales_2023"},
@@ -4744,7 +4806,7 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_ListExternalDataSharesInI
 				},
 				ExpirationTimeUTC: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-12-01T00:00:00.000Z"); return t }()),
 				ID:                to.Ptr("89e82a82-0140-4837-8eee-9c919e3e5952"),
-				InvitationURL:     to.Ptr("https://app.fabric.microsoft.com/externaldatasharing/accept?si=VyT5NJ3%2bNkySqEmf368Pjw-89e82a82-0140-4837-8eee-9c919e3e5952"),
+				InvitationURL:     to.Ptr("https://app.fabric.microsoft.com/externaldatasharing/accept?providerTenantId=34f92457-fe9d-4c36-92a8-499fdfaf0f8f&shareId=89e82a82-0140-4837-8eee-9c919e3e5952"),
 				ItemID:            to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 				Paths: []string{
 					"Files/Sales/Contoso_Sales_2023"},
@@ -4756,16 +4818,16 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_ListExternalDataSharesInI
 			}},
 	}
 
-	testsuite.serverFactory.ExternalDataSharesServer.NewListExternalDataSharesInItemPager = func(workspaceID string, itemID string, options *core.ExternalDataSharesClientListExternalDataSharesInItemOptions) (resp azfake.PagerResponder[core.ExternalDataSharesClientListExternalDataSharesInItemResponse]) {
+	testsuite.serverFactory.ExternalDataSharesProviderServer.NewListExternalDataSharesInItemPager = func(workspaceID string, itemID string, options *core.ExternalDataSharesProviderClientListExternalDataSharesInItemOptions) (resp azfake.PagerResponder[core.ExternalDataSharesProviderClientListExternalDataSharesInItemResponse]) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleItemID, itemID)
-		resp = azfake.PagerResponder[core.ExternalDataSharesClientListExternalDataSharesInItemResponse]{}
-		resp.AddPage(http.StatusOK, core.ExternalDataSharesClientListExternalDataSharesInItemResponse{ExternalDataShares: exampleRes}, nil)
+		resp = azfake.PagerResponder[core.ExternalDataSharesProviderClientListExternalDataSharesInItemResponse]{}
+		resp.AddPage(http.StatusOK, core.ExternalDataSharesProviderClientListExternalDataSharesInItemResponse{ExternalDataShares: exampleRes}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewExternalDataSharesClient()
-	pager := client.NewListExternalDataSharesInItemPager(exampleWorkspaceID, exampleItemID, &core.ExternalDataSharesClientListExternalDataSharesInItemOptions{ContinuationToken: nil})
+	client := testsuite.clientFactory.NewExternalDataSharesProviderClient()
+	pager := client.NewListExternalDataSharesInItemPager(exampleWorkspaceID, exampleItemID, &core.ExternalDataSharesProviderClientListExternalDataSharesInItemOptions{ContinuationToken: nil})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")
@@ -4776,7 +4838,7 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_ListExternalDataSharesInI
 	}
 }
 
-func (testsuite *FakeTestSuite) TestExternalDataShares_GetExternalDataShare() {
+func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_GetExternalDataShare() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Get external data share example"},
@@ -4795,7 +4857,7 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_GetExternalDataShare() {
 		},
 		ExpirationTimeUTC: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-12-13T00:00:00.000Z"); return t }()),
 		ID:                to.Ptr("dccc162f-7a41-4720-83c3-5c7e81187959"),
-		InvitationURL:     to.Ptr("https://app.fabric.microsoft.com/externaldatasharing/accept?si=VyT5NJ3%2bNkySqEmf368Pjw-dccc162f-7a41-4720-83c3-5c7e81187959"),
+		InvitationURL:     to.Ptr("https://app.fabric.microsoft.com/externaldatasharing/accept?providerTenantId=34f92457-fe9d-4c36-92a8-499fdfaf0f8f&shareId=dccc162f-7a41-4720-83c3-5c7e81187959"),
 		ItemID:            to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 		Paths: []string{
 			"Files/Sales/Contoso_Sales_2023"},
@@ -4806,22 +4868,22 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_GetExternalDataShare() {
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	}
 
-	testsuite.serverFactory.ExternalDataSharesServer.GetExternalDataShare = func(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, options *core.ExternalDataSharesClientGetExternalDataShareOptions) (resp azfake.Responder[core.ExternalDataSharesClientGetExternalDataShareResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ExternalDataSharesProviderServer.GetExternalDataShare = func(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, options *core.ExternalDataSharesProviderClientGetExternalDataShareOptions) (resp azfake.Responder[core.ExternalDataSharesProviderClientGetExternalDataShareResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleItemID, itemID)
 		testsuite.Require().Equal(exampleExternalDataShareID, externalDataShareID)
-		resp = azfake.Responder[core.ExternalDataSharesClientGetExternalDataShareResponse]{}
-		resp.SetResponse(http.StatusOK, core.ExternalDataSharesClientGetExternalDataShareResponse{ExternalDataShare: exampleRes}, nil)
+		resp = azfake.Responder[core.ExternalDataSharesProviderClientGetExternalDataShareResponse]{}
+		resp.SetResponse(http.StatusOK, core.ExternalDataSharesProviderClientGetExternalDataShareResponse{ExternalDataShare: exampleRes}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewExternalDataSharesClient()
+	client := testsuite.clientFactory.NewExternalDataSharesProviderClient()
 	res, err := client.GetExternalDataShare(ctx, exampleWorkspaceID, exampleItemID, exampleExternalDataShareID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ExternalDataShare))
 }
 
-func (testsuite *FakeTestSuite) TestExternalDataShares_RevokeExternalDataShare() {
+func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_RevokeExternalDataShare() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Revoke external data share example"},
@@ -4833,18 +4895,118 @@ func (testsuite *FakeTestSuite) TestExternalDataShares_RevokeExternalDataShare()
 	exampleItemID = "5b218778-e7a5-4d73-8187-f10824047715"
 	exampleExternalDataShareID = "dccc162f-7a41-4720-83c3-5c7e81187959"
 
-	testsuite.serverFactory.ExternalDataSharesServer.RevokeExternalDataShare = func(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, options *core.ExternalDataSharesClientRevokeExternalDataShareOptions) (resp azfake.Responder[core.ExternalDataSharesClientRevokeExternalDataShareResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ExternalDataSharesProviderServer.RevokeExternalDataShare = func(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, options *core.ExternalDataSharesProviderClientRevokeExternalDataShareOptions) (resp azfake.Responder[core.ExternalDataSharesProviderClientRevokeExternalDataShareResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleItemID, itemID)
 		testsuite.Require().Equal(exampleExternalDataShareID, externalDataShareID)
-		resp = azfake.Responder[core.ExternalDataSharesClientRevokeExternalDataShareResponse]{}
-		resp.SetResponse(http.StatusOK, core.ExternalDataSharesClientRevokeExternalDataShareResponse{}, nil)
+		resp = azfake.Responder[core.ExternalDataSharesProviderClientRevokeExternalDataShareResponse]{}
+		resp.SetResponse(http.StatusOK, core.ExternalDataSharesProviderClientRevokeExternalDataShareResponse{}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewExternalDataSharesClient()
+	client := testsuite.clientFactory.NewExternalDataSharesProviderClient()
 	_, err = client.RevokeExternalDataShare(ctx, exampleWorkspaceID, exampleItemID, exampleExternalDataShareID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestExternalDataSharesRecipient_GetExternalDataShareInvitationDetails() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get external data share invitation details example"},
+	})
+	var exampleInvitationID string
+	var exampleProviderTenantID string
+	exampleInvitationID = "dccc162f-7a41-4720-83c3-5c7e81187959"
+	exampleProviderTenantID = "34f92457-fe9d-4c36-92a8-499fdfaf0f8f"
+
+	exampleRes := core.ExternalDataShareInvitationDetails{
+		PathsDetails: []core.ExternalDataSharePathDetails{
+			{
+				Name:   to.Ptr("Contoso_Sales_2023"),
+				Type:   to.Ptr(core.ExternalDataSharePathTypeFolder),
+				PathID: to.Ptr("5c95314c-ef86-4663-9f1e-dee186f38715"),
+			},
+			{
+				Name:   to.Ptr("Contoso_Sales_2024"),
+				Type:   to.Ptr(core.ExternalDataSharePathTypeFolder),
+				PathID: to.Ptr("6c95314c-ef86-4663-9f1e-dee186f38716"),
+			}},
+		ProviderTenantDetails: &core.ExternalDataShareProviderTenantDetails{
+			DisplayName:        to.Ptr("Contoso, Ltd"),
+			TenantID:           to.Ptr("34f92457-fe9d-4c36-92a8-499fdfaf0f8f"),
+			VerifiedDomainName: to.Ptr("contoso.com"),
+		},
+	}
+
+	testsuite.serverFactory.ExternalDataSharesRecipientServer.GetExternalDataShareInvitationDetails = func(ctx context.Context, invitationID string, providerTenantID string, options *core.ExternalDataSharesRecipientClientGetExternalDataShareInvitationDetailsOptions) (resp azfake.Responder[core.ExternalDataSharesRecipientClientGetExternalDataShareInvitationDetailsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleInvitationID, invitationID)
+		testsuite.Require().Equal(exampleProviderTenantID, providerTenantID)
+		resp = azfake.Responder[core.ExternalDataSharesRecipientClientGetExternalDataShareInvitationDetailsResponse]{}
+		resp.SetResponse(http.StatusOK, core.ExternalDataSharesRecipientClientGetExternalDataShareInvitationDetailsResponse{ExternalDataShareInvitationDetails: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewExternalDataSharesRecipientClient()
+	res, err := client.GetExternalDataShareInvitationDetails(ctx, exampleInvitationID, exampleProviderTenantID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ExternalDataShareInvitationDetails))
+}
+
+func (testsuite *FakeTestSuite) TestExternalDataSharesRecipient_AcceptExternalDataShareInvitation() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Accept external data share invitation example"},
+	})
+	var exampleInvitationID string
+	var exampleAcceptExternalDataShareRequest core.AcceptExternalDataShareInvitationRequest
+	exampleInvitationID = "dccc162f-7a41-4720-83c3-5c7e81187959"
+	exampleAcceptExternalDataShareRequest = core.AcceptExternalDataShareInvitationRequest{
+		ItemID: to.Ptr("a6549838-dfbc-4905-b1c0-67f2946f9cc4"),
+		Payload: &core.ShortcutCreationPayload{
+			PayloadType: to.Ptr(core.ExternalDataShareAcceptRequestPayloadTypeShortcutCreation),
+			Path:        to.Ptr("Files/DataFromContoso"),
+			CreateShortcutRequests: []core.CreateExternalDataShareShortcutRequest{
+				{
+					PathID:       to.Ptr("5c95314c-ef86-4663-9f1e-dee186f38715"),
+					ShortcutName: to.Ptr("Shortcut_To_Contoso_Sales_2023"),
+				},
+				{
+					PathID:       to.Ptr("6c95314c-ef86-4663-9f1e-dee186f38716"),
+					ShortcutName: to.Ptr("Shortcut_To_Contoso_Sales_2024"),
+				}},
+		},
+		ProviderTenantID: to.Ptr("34f92457-fe9d-4c36-92a8-499fdfaf0f8f"),
+		WorkspaceID:      to.Ptr("7c7eb7fa-00e9-4614-8123-715c42497314"),
+	}
+
+	exampleRes := core.AcceptExternalDataShareInvitationResponse{
+		Value: []core.ExternalDataShareShortcutInfo{
+			{
+				Name:        to.Ptr("Shortcut_To_Contoso_Sales_2023"),
+				Path:        to.Ptr("Files/DataFromContoso"),
+				ItemID:      to.Ptr("a6549838-dfbc-4905-b1c0-67f2946f9cc4"),
+				WorkspaceID: to.Ptr("7c7eb7fa-00e9-4614-8123-715c42497314"),
+			},
+			{
+				Name:        to.Ptr("Shortcut_To_Contoso_Sales_2024"),
+				Path:        to.Ptr("Files/DataFromContoso"),
+				ItemID:      to.Ptr("a6549838-dfbc-4905-b1c0-67f2946f9cc4"),
+				WorkspaceID: to.Ptr("7c7eb7fa-00e9-4614-8123-715c42497314"),
+			}},
+	}
+
+	testsuite.serverFactory.ExternalDataSharesRecipientServer.AcceptExternalDataShareInvitation = func(ctx context.Context, invitationID string, acceptExternalDataShareRequest core.AcceptExternalDataShareInvitationRequest, options *core.ExternalDataSharesRecipientClientAcceptExternalDataShareInvitationOptions) (resp azfake.Responder[core.ExternalDataSharesRecipientClientAcceptExternalDataShareInvitationResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleInvitationID, invitationID)
+		testsuite.Require().True(reflect.DeepEqual(exampleAcceptExternalDataShareRequest, acceptExternalDataShareRequest))
+		resp = azfake.Responder[core.ExternalDataSharesRecipientClientAcceptExternalDataShareInvitationResponse]{}
+		resp.SetResponse(http.StatusOK, core.ExternalDataSharesRecipientClientAcceptExternalDataShareInvitationResponse{AcceptExternalDataShareInvitationResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewExternalDataSharesRecipientClient()
+	res, err := client.AcceptExternalDataShareInvitation(ctx, exampleInvitationID, exampleAcceptExternalDataShareRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.AcceptExternalDataShareInvitationResponse))
 }
 
 func (testsuite *FakeTestSuite) TestFolders_ListFolders() {

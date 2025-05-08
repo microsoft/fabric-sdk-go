@@ -623,6 +623,41 @@ func PossibleEffectValues() []Effect {
 	}
 }
 
+// ExternalDataShareAcceptRequestPayloadType - The external data share acceptance type. Additional types may be added over
+// time.
+type ExternalDataShareAcceptRequestPayloadType string
+
+const (
+	// ExternalDataShareAcceptRequestPayloadTypeShortcutCreation - A OneLake shortcut.
+	ExternalDataShareAcceptRequestPayloadTypeShortcutCreation ExternalDataShareAcceptRequestPayloadType = "ShortcutCreation"
+)
+
+// PossibleExternalDataShareAcceptRequestPayloadTypeValues returns the possible values for the ExternalDataShareAcceptRequestPayloadType const type.
+func PossibleExternalDataShareAcceptRequestPayloadTypeValues() []ExternalDataShareAcceptRequestPayloadType {
+	return []ExternalDataShareAcceptRequestPayloadType{
+		ExternalDataShareAcceptRequestPayloadTypeShortcutCreation,
+	}
+}
+
+// ExternalDataSharePathType - The type of a path in an external data share. Additional ExternalDataSharePathType types may
+// be added over time.
+type ExternalDataSharePathType string
+
+const (
+	// ExternalDataSharePathTypeFolder - The external data share path is of type: Folder
+	ExternalDataSharePathTypeFolder ExternalDataSharePathType = "Folder"
+	// ExternalDataSharePathTypeTable - The external data share path is of type: Table
+	ExternalDataSharePathTypeTable ExternalDataSharePathType = "Table"
+)
+
+// PossibleExternalDataSharePathTypeValues returns the possible values for the ExternalDataSharePathType const type.
+func PossibleExternalDataSharePathTypeValues() []ExternalDataSharePathType {
+	return []ExternalDataSharePathType{
+		ExternalDataSharePathTypeFolder,
+		ExternalDataSharePathTypeTable,
+	}
+}
+
 // ExternalDataShareStatus - The status of a given external data share. Additional ExternalDataShareStatus types may be added
 // over time.
 type ExternalDataShareStatus string
@@ -875,6 +910,8 @@ const (
 	ItemTypeDashboard ItemType = "Dashboard"
 	// ItemTypeDataPipeline - A data pipeline.
 	ItemTypeDataPipeline ItemType = "DataPipeline"
+	// ItemTypeDataflow - A Dataflow.
+	ItemTypeDataflow ItemType = "Dataflow"
 	// ItemTypeDatamart - PowerBI datamart.
 	ItemTypeDatamart ItemType = "Datamart"
 	// ItemTypeEnvironment - An environment.
@@ -931,6 +968,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeCopyJob,
 		ItemTypeDashboard,
 		ItemTypeDataPipeline,
+		ItemTypeDataflow,
 		ItemTypeDatamart,
 		ItemTypeEnvironment,
 		ItemTypeEventhouse,

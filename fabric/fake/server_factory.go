@@ -19,6 +19,7 @@ import (
 	copyjobfake "github.com/microsoft/fabric-sdk-go/fabric/copyjob/fake"
 	corefake "github.com/microsoft/fabric-sdk-go/fabric/core/fake"
 	dashboardfake "github.com/microsoft/fabric-sdk-go/fabric/dashboard/fake"
+	dataflowfake "github.com/microsoft/fabric-sdk-go/fabric/dataflow/fake"
 	datamartfake "github.com/microsoft/fabric-sdk-go/fabric/datamart/fake"
 	datapipelinefake "github.com/microsoft/fabric-sdk-go/fabric/datapipeline/fake"
 	environmentfake "github.com/microsoft/fabric-sdk-go/fabric/environment/fake"
@@ -53,6 +54,7 @@ type ServerFactory struct {
 	CopyJob            copyjobfake.ServerFactory
 	Core               corefake.ServerFactory
 	Dashboard          dashboardfake.ServerFactory
+	Dataflow           dataflowfake.ServerFactory
 	Datamart           datamartfake.ServerFactory
 	DataPipeline       datapipelinefake.ServerFactory
 	Environment        environmentfake.ServerFactory
@@ -90,6 +92,7 @@ type ServerFactoryTransport struct {
 	trCopyJob            *copyjobfake.ServerFactoryTransport
 	trCore               *corefake.ServerFactoryTransport
 	trDashboard          *dashboardfake.ServerFactoryTransport
+	trDataflow           *dataflowfake.ServerFactoryTransport
 	trDatamart           *datamartfake.ServerFactoryTransport
 	trDataPipeline       *datapipelinefake.ServerFactoryTransport
 	trEnvironment        *environmentfake.ServerFactoryTransport
@@ -157,6 +160,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return dashboardfake.NewServerFactoryTransport(&s.srv.Dashboard)
 		})
 		resp, err = s.trDashboard.Do(req)
+	case "dataflow":
+		initServer(s, &s.trDataflow, func() *dataflowfake.ServerFactoryTransport {
+			return dataflowfake.NewServerFactoryTransport(&s.srv.Dataflow)
+		})
+		resp, err = s.trDataflow.Do(req)
 	case "datamart":
 		initServer(s, &s.trDatamart, func() *datamartfake.ServerFactoryTransport {
 			return datamartfake.NewServerFactoryTransport(&s.srv.Datamart)

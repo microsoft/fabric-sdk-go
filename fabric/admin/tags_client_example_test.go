@@ -17,6 +17,120 @@ import (
 )
 
 // Generated from example definition
+func ExampleTagsClient_NewListTagsPager_listOfAllTenantsTagsExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := admin.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewTagsClient().NewListTagsPager(&admin.TagsClientListTagsOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.TagsInfo = admin.TagsInfo{
+		// 	Value: []admin.TagInfo{
+		// 		{
+		// 			DisplayName: to.Ptr("Finance"),
+		// 			ID: to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+		// 		},
+		// 		{
+		// 			DisplayName: to.Ptr("Human resources"),
+		// 			ID: to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
+		// 		},
+		// 		{
+		// 			DisplayName: to.Ptr("Engineering P1"),
+		// 			ID: to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
+		// 		},
+		// 		{
+		// 			DisplayName: to.Ptr("Marketing Q1"),
+		// 			ID: to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
+		// 		},
+		// 		{
+		// 			DisplayName: to.Ptr("HR Sales Q1"),
+		// 			ID: to.Ptr("17df435d-9efd-48c1-a937-7d6fd70ab26a"),
+		// 		},
+		// 		{
+		// 			DisplayName: to.Ptr("Root"),
+		// 			ID: to.Ptr("fb765fe3-d404-4f24-9d67-5916449c4c50"),
+		// 		},
+		// 		{
+		// 			DisplayName: to.Ptr("Legal EMEA"),
+		// 			ID: to.Ptr("bda31be4-7efe-4272-8b85-e1b2ff0f0592"),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
+func ExampleTagsClient_NewListTagsPager_listOfAllTenantsTagsWithContinuationExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := admin.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewTagsClient().NewListTagsPager(&admin.TagsClientListTagsOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.TagsInfo = admin.TagsInfo{
+		// 	ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		// 	ContinuationURI: to.Ptr("https://api.fabric.microsoft.com/v1/admin/tags?continuationToken=LDEsMTAwMDAwLDA%3D"),
+		// 	Value: []admin.TagInfo{
+		// 		{
+		// 			DisplayName: to.Ptr("Finance"),
+		// 			ID: to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+		// 		},
+		// 		{
+		// 			DisplayName: to.Ptr("Human resources"),
+		// 			ID: to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
+		// 		},
+		// 		{
+		// 			DisplayName: to.Ptr("Engineering P1"),
+		// 			ID: to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
+		// 		},
+		// 		{
+		// 			DisplayName: to.Ptr("Marketing Q1"),
+		// 			ID: to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
+		// 		},
+		// 		{
+		// 			DisplayName: to.Ptr("HR Sales Q1"),
+		// 			ID: to.Ptr("17df435d-9efd-48c1-a937-7d6fd70ab26a"),
+		// 		},
+		// 		{
+		// 			DisplayName: to.Ptr("Root"),
+		// 			ID: to.Ptr("fb765fe3-d404-4f24-9d67-5916449c4c50"),
+		// 		},
+		// 		{
+		// 			DisplayName: to.Ptr("Legal EMEA"),
+		// 			ID: to.Ptr("bda31be4-7efe-4272-8b85-e1b2ff0f0592"),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
 func ExampleTagsClient_BulkCreateTags() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {

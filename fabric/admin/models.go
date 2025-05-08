@@ -614,6 +614,27 @@ type Tag struct {
 	ID *string
 }
 
+// TagInfo - Represents a tag.
+type TagInfo struct {
+	// REQUIRED; The name of the tag.
+	DisplayName *string
+
+	// REQUIRED; The tag object ID.
+	ID *string
+}
+
+// TagsInfo - A response wrapper for a list of tags.
+type TagsInfo struct {
+	// REQUIRED; An array of tags
+	Value []TagInfo
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
 // TenantSetting - Tenant level setting details.
 type TenantSetting struct {
 	// REQUIRED; Indicates if the tenant setting is enabled for a security group. False - The tenant setting is enabled for the

@@ -92,7 +92,7 @@ func (client *ItemsClient) createSQLDatabase(ctx context.Context, workspaceID st
 
 // createSQLDatabaseCreateRequest creates the CreateSQLDatabase request.
 func (client *ItemsClient) createSQLDatabaseCreateRequest(ctx context.Context, workspaceID string, createSQLDatabaseRequest CreateSQLDatabaseRequest, _ *ItemsClientBeginCreateSQLDatabaseOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/SQLDatabases"
+	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -145,7 +145,7 @@ func (client *ItemsClient) DeleteSQLDatabase(ctx context.Context, workspaceID st
 
 // deleteSQLDatabaseCreateRequest creates the DeleteSQLDatabase request.
 func (client *ItemsClient) deleteSQLDatabaseCreateRequest(ctx context.Context, workspaceID string, sqlDatabaseID string, _ *ItemsClientDeleteSQLDatabaseOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/SQLDatabases/{SQLDatabaseId}"
+	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/{SQLDatabaseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -200,7 +200,7 @@ func (client *ItemsClient) GetSQLDatabase(ctx context.Context, workspaceID strin
 
 // getSQLDatabaseCreateRequest creates the GetSQLDatabase request.
 func (client *ItemsClient) getSQLDatabaseCreateRequest(ctx context.Context, workspaceID string, sqlDatabaseID string, _ *ItemsClientGetSQLDatabaseOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/SQLDatabases/{SQLDatabaseId}"
+	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/{SQLDatabaseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -265,7 +265,7 @@ func (client *ItemsClient) NewListSQLDatabasesPager(workspaceID string, options 
 
 // listSQLDatabasesCreateRequest creates the ListSQLDatabases request.
 func (client *ItemsClient) listSQLDatabasesCreateRequest(ctx context.Context, workspaceID string, options *ItemsClientListSQLDatabasesOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/SQLDatabases"
+	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -331,7 +331,7 @@ func (client *ItemsClient) UpdateSQLDatabase(ctx context.Context, workspaceID st
 
 // updateSQLDatabaseCreateRequest creates the UpdateSQLDatabase request.
 func (client *ItemsClient) updateSQLDatabaseCreateRequest(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseRequest UpdateSQLDatabaseRequest, _ *ItemsClientUpdateSQLDatabaseOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/SQLDatabases/{SQLDatabaseId}"
+	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/{SQLDatabaseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}

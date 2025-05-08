@@ -18,43 +18,45 @@ import (
 
 // ServerFactory is a fake server for instances of the core.ClientFactory type.
 type ServerFactory struct {
-	CapacitiesServer                CapacitiesServer
-	ConnectionsServer               ConnectionsServer
-	DeploymentPipelinesServer       DeploymentPipelinesServer
-	ExternalDataSharesServer        ExternalDataSharesServer
-	FoldersServer                   FoldersServer
-	GatewaysServer                  GatewaysServer
-	GitServer                       GitServer
-	ItemsServer                     ItemsServer
-	JobSchedulerServer              JobSchedulerServer
-	LongRunningOperationsServer     LongRunningOperationsServer
-	ManagedPrivateEndpointsServer   ManagedPrivateEndpointsServer
-	OneLakeDataAccessSecurityServer OneLakeDataAccessSecurityServer
-	OneLakeShortcutsServer          OneLakeShortcutsServer
-	TagsServer                      TagsServer
-	WorkspacesServer                WorkspacesServer
+	CapacitiesServer                  CapacitiesServer
+	ConnectionsServer                 ConnectionsServer
+	DeploymentPipelinesServer         DeploymentPipelinesServer
+	ExternalDataSharesProviderServer  ExternalDataSharesProviderServer
+	ExternalDataSharesRecipientServer ExternalDataSharesRecipientServer
+	FoldersServer                     FoldersServer
+	GatewaysServer                    GatewaysServer
+	GitServer                         GitServer
+	ItemsServer                       ItemsServer
+	JobSchedulerServer                JobSchedulerServer
+	LongRunningOperationsServer       LongRunningOperationsServer
+	ManagedPrivateEndpointsServer     ManagedPrivateEndpointsServer
+	OneLakeDataAccessSecurityServer   OneLakeDataAccessSecurityServer
+	OneLakeShortcutsServer            OneLakeShortcutsServer
+	TagsServer                        TagsServer
+	WorkspacesServer                  WorkspacesServer
 }
 
 // ServerFactoryTransport connects instances of core.ClientFactory to instances of ServerFactory.
 // Don't use this type directly, use NewServerFactoryTransport instead.
 type ServerFactoryTransport struct {
-	srv                               *ServerFactory
-	trMu                              sync.Mutex
-	trCapacitiesServer                *CapacitiesServerTransport
-	trConnectionsServer               *ConnectionsServerTransport
-	trDeploymentPipelinesServer       *DeploymentPipelinesServerTransport
-	trExternalDataSharesServer        *ExternalDataSharesServerTransport
-	trFoldersServer                   *FoldersServerTransport
-	trGatewaysServer                  *GatewaysServerTransport
-	trGitServer                       *GitServerTransport
-	trItemsServer                     *ItemsServerTransport
-	trJobSchedulerServer              *JobSchedulerServerTransport
-	trLongRunningOperationsServer     *LongRunningOperationsServerTransport
-	trManagedPrivateEndpointsServer   *ManagedPrivateEndpointsServerTransport
-	trOneLakeDataAccessSecurityServer *OneLakeDataAccessSecurityServerTransport
-	trOneLakeShortcutsServer          *OneLakeShortcutsServerTransport
-	trTagsServer                      *TagsServerTransport
-	trWorkspacesServer                *WorkspacesServerTransport
+	srv                                 *ServerFactory
+	trMu                                sync.Mutex
+	trCapacitiesServer                  *CapacitiesServerTransport
+	trConnectionsServer                 *ConnectionsServerTransport
+	trDeploymentPipelinesServer         *DeploymentPipelinesServerTransport
+	trExternalDataSharesProviderServer  *ExternalDataSharesProviderServerTransport
+	trExternalDataSharesRecipientServer *ExternalDataSharesRecipientServerTransport
+	trFoldersServer                     *FoldersServerTransport
+	trGatewaysServer                    *GatewaysServerTransport
+	trGitServer                         *GitServerTransport
+	trItemsServer                       *ItemsServerTransport
+	trJobSchedulerServer                *JobSchedulerServerTransport
+	trLongRunningOperationsServer       *LongRunningOperationsServerTransport
+	trManagedPrivateEndpointsServer     *ManagedPrivateEndpointsServerTransport
+	trOneLakeDataAccessSecurityServer   *OneLakeDataAccessSecurityServerTransport
+	trOneLakeShortcutsServer            *OneLakeShortcutsServerTransport
+	trTagsServer                        *TagsServerTransport
+	trWorkspacesServer                  *WorkspacesServerTransport
 }
 
 // NewServerFactoryTransport creates a new instance of ServerFactoryTransport with the provided implementation.
@@ -91,11 +93,16 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return NewDeploymentPipelinesServerTransport(&s.srv.DeploymentPipelinesServer)
 		})
 		resp, err = s.trDeploymentPipelinesServer.Do(req)
-	case "ExternalDataSharesClient":
-		initServer(s, &s.trExternalDataSharesServer, func() *ExternalDataSharesServerTransport {
-			return NewExternalDataSharesServerTransport(&s.srv.ExternalDataSharesServer)
+	case "ExternalDataSharesProviderClient":
+		initServer(s, &s.trExternalDataSharesProviderServer, func() *ExternalDataSharesProviderServerTransport {
+			return NewExternalDataSharesProviderServerTransport(&s.srv.ExternalDataSharesProviderServer)
 		})
-		resp, err = s.trExternalDataSharesServer.Do(req)
+		resp, err = s.trExternalDataSharesProviderServer.Do(req)
+	case "ExternalDataSharesRecipientClient":
+		initServer(s, &s.trExternalDataSharesRecipientServer, func() *ExternalDataSharesRecipientServerTransport {
+			return NewExternalDataSharesRecipientServerTransport(&s.srv.ExternalDataSharesRecipientServer)
+		})
+		resp, err = s.trExternalDataSharesRecipientServer.Do(req)
 	case "FoldersClient":
 		initServer(s, &s.trFoldersServer, func() *FoldersServerTransport { return NewFoldersServerTransport(&s.srv.FoldersServer) })
 		resp, err = s.trFoldersServer.Do(req)

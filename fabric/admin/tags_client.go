@@ -18,6 +18,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 
 	"github.com/microsoft/fabric-sdk-go/fabric/core"
+	"github.com/microsoft/fabric-sdk-go/internal/iruntime"
 )
 
 // TagsClient contains the methods for the Tags group.
@@ -136,6 +137,65 @@ func (client *TagsClient) deleteTagCreateRequest(ctx context.Context, tagID stri
 	return req, nil
 }
 
+// NewListTagsPager - REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
+// LIMITATIONS Maximum 25 requests per one minute per principal.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+//
+// Generated from API version v1
+//   - options - TagsClientListTagsOptions contains the optional parameters for the TagsClient.NewListTagsPager method.
+func (client *TagsClient) NewListTagsPager(options *TagsClientListTagsOptions) *runtime.Pager[TagsClientListTagsResponse] {
+	return runtime.NewPager(runtime.PagingHandler[TagsClientListTagsResponse]{
+		More: func(page TagsClientListTagsResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *TagsClientListTagsResponse) (TagsClientListTagsResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "admin.TagsClient.NewListTagsPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.listTagsCreateRequest(ctx, options)
+			}, nil)
+			if err != nil {
+				return TagsClientListTagsResponse{}, err
+			}
+			return client.listTagsHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
+}
+
+// listTagsCreateRequest creates the ListTags request.
+func (client *TagsClient) listTagsCreateRequest(ctx context.Context, options *TagsClientListTagsOptions) (*policy.Request, error) {
+	urlPath := "/v1/admin/tags"
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// listTagsHandleResponse handles the ListTags response.
+func (client *TagsClient) listTagsHandleResponse(resp *http.Response) (TagsClientListTagsResponse, error) {
+	result := TagsClientListTagsResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.TagsInfo); err != nil {
+		return TagsClientListTagsResponse{}, err
+	}
+	return result, nil
+}
+
 // UpdateTag - PERMISSIONS The caller must have administrator rights such as Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
@@ -201,3 +261,32 @@ func (client *TagsClient) updateTagHandleResponse(resp *http.Response) (TagsClie
 }
 
 // Custom code starts below
+
+// ListTags - returns array of TagInfo from all pages.
+// REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
+//
+// LIMITATIONS Maximum 25 requests per one minute per principal.
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - options - TagsClientListTagsOptions contains the optional parameters for the TagsClient.NewListTagsPager method.
+func (client *TagsClient) ListTags(ctx context.Context, options *TagsClientListTagsOptions) ([]TagInfo, error) {
+	pager := client.NewListTagsPager(options)
+	mapper := func(resp TagsClientListTagsResponse) []TagInfo {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []TagInfo{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []TagInfo{}, err
+	}
+	return list, nil
+}

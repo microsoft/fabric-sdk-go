@@ -23,44 +23,44 @@ import (
 	"github.com/microsoft/fabric-sdk-go/fabric/core"
 )
 
-// ExternalDataSharesServer is a fake server for instances of the core.ExternalDataSharesClient type.
-type ExternalDataSharesServer struct {
-	// CreateExternalDataShare is the fake for method ExternalDataSharesClient.CreateExternalDataShare
+// ExternalDataSharesProviderServer is a fake server for instances of the core.ExternalDataSharesProviderClient type.
+type ExternalDataSharesProviderServer struct {
+	// CreateExternalDataShare is the fake for method ExternalDataSharesProviderClient.CreateExternalDataShare
 	// HTTP status codes to indicate success: http.StatusCreated
-	CreateExternalDataShare func(ctx context.Context, workspaceID string, itemID string, createExternalDataShareRequest core.CreateExternalDataShareRequest, options *core.ExternalDataSharesClientCreateExternalDataShareOptions) (resp azfake.Responder[core.ExternalDataSharesClientCreateExternalDataShareResponse], errResp azfake.ErrorResponder)
+	CreateExternalDataShare func(ctx context.Context, workspaceID string, itemID string, createExternalDataShareRequest core.CreateExternalDataShareRequest, options *core.ExternalDataSharesProviderClientCreateExternalDataShareOptions) (resp azfake.Responder[core.ExternalDataSharesProviderClientCreateExternalDataShareResponse], errResp azfake.ErrorResponder)
 
-	// GetExternalDataShare is the fake for method ExternalDataSharesClient.GetExternalDataShare
+	// GetExternalDataShare is the fake for method ExternalDataSharesProviderClient.GetExternalDataShare
 	// HTTP status codes to indicate success: http.StatusOK
-	GetExternalDataShare func(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, options *core.ExternalDataSharesClientGetExternalDataShareOptions) (resp azfake.Responder[core.ExternalDataSharesClientGetExternalDataShareResponse], errResp azfake.ErrorResponder)
+	GetExternalDataShare func(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, options *core.ExternalDataSharesProviderClientGetExternalDataShareOptions) (resp azfake.Responder[core.ExternalDataSharesProviderClientGetExternalDataShareResponse], errResp azfake.ErrorResponder)
 
-	// NewListExternalDataSharesInItemPager is the fake for method ExternalDataSharesClient.NewListExternalDataSharesInItemPager
+	// NewListExternalDataSharesInItemPager is the fake for method ExternalDataSharesProviderClient.NewListExternalDataSharesInItemPager
 	// HTTP status codes to indicate success: http.StatusOK
-	NewListExternalDataSharesInItemPager func(workspaceID string, itemID string, options *core.ExternalDataSharesClientListExternalDataSharesInItemOptions) (resp azfake.PagerResponder[core.ExternalDataSharesClientListExternalDataSharesInItemResponse])
+	NewListExternalDataSharesInItemPager func(workspaceID string, itemID string, options *core.ExternalDataSharesProviderClientListExternalDataSharesInItemOptions) (resp azfake.PagerResponder[core.ExternalDataSharesProviderClientListExternalDataSharesInItemResponse])
 
-	// RevokeExternalDataShare is the fake for method ExternalDataSharesClient.RevokeExternalDataShare
+	// RevokeExternalDataShare is the fake for method ExternalDataSharesProviderClient.RevokeExternalDataShare
 	// HTTP status codes to indicate success: http.StatusOK
-	RevokeExternalDataShare func(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, options *core.ExternalDataSharesClientRevokeExternalDataShareOptions) (resp azfake.Responder[core.ExternalDataSharesClientRevokeExternalDataShareResponse], errResp azfake.ErrorResponder)
+	RevokeExternalDataShare func(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, options *core.ExternalDataSharesProviderClientRevokeExternalDataShareOptions) (resp azfake.Responder[core.ExternalDataSharesProviderClientRevokeExternalDataShareResponse], errResp azfake.ErrorResponder)
 }
 
-// NewExternalDataSharesServerTransport creates a new instance of ExternalDataSharesServerTransport with the provided implementation.
-// The returned ExternalDataSharesServerTransport instance is connected to an instance of core.ExternalDataSharesClient via the
+// NewExternalDataSharesProviderServerTransport creates a new instance of ExternalDataSharesProviderServerTransport with the provided implementation.
+// The returned ExternalDataSharesProviderServerTransport instance is connected to an instance of core.ExternalDataSharesProviderClient via the
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
-func NewExternalDataSharesServerTransport(srv *ExternalDataSharesServer) *ExternalDataSharesServerTransport {
-	return &ExternalDataSharesServerTransport{
+func NewExternalDataSharesProviderServerTransport(srv *ExternalDataSharesProviderServer) *ExternalDataSharesProviderServerTransport {
+	return &ExternalDataSharesProviderServerTransport{
 		srv:                                  srv,
-		newListExternalDataSharesInItemPager: newTracker[azfake.PagerResponder[core.ExternalDataSharesClientListExternalDataSharesInItemResponse]](),
+		newListExternalDataSharesInItemPager: newTracker[azfake.PagerResponder[core.ExternalDataSharesProviderClientListExternalDataSharesInItemResponse]](),
 	}
 }
 
-// ExternalDataSharesServerTransport connects instances of core.ExternalDataSharesClient to instances of ExternalDataSharesServer.
-// Don't use this type directly, use NewExternalDataSharesServerTransport instead.
-type ExternalDataSharesServerTransport struct {
-	srv                                  *ExternalDataSharesServer
-	newListExternalDataSharesInItemPager *tracker[azfake.PagerResponder[core.ExternalDataSharesClientListExternalDataSharesInItemResponse]]
+// ExternalDataSharesProviderServerTransport connects instances of core.ExternalDataSharesProviderClient to instances of ExternalDataSharesProviderServer.
+// Don't use this type directly, use NewExternalDataSharesProviderServerTransport instead.
+type ExternalDataSharesProviderServerTransport struct {
+	srv                                  *ExternalDataSharesProviderServer
+	newListExternalDataSharesInItemPager *tracker[azfake.PagerResponder[core.ExternalDataSharesProviderClientListExternalDataSharesInItemResponse]]
 }
 
-// Do implements the policy.Transporter interface for ExternalDataSharesServerTransport.
-func (e *ExternalDataSharesServerTransport) Do(req *http.Request) (*http.Response, error) {
+// Do implements the policy.Transporter interface for ExternalDataSharesProviderServerTransport.
+func (e *ExternalDataSharesProviderServerTransport) Do(req *http.Request) (*http.Response, error) {
 	rawMethod := req.Context().Value(runtime.CtxAPINameKey{})
 	method, ok := rawMethod.(string)
 	if !ok {
@@ -72,25 +72,25 @@ func (e *ExternalDataSharesServerTransport) Do(req *http.Request) (*http.Respons
 	return e.dispatchToMethodFake(req, method)
 }
 
-func (e *ExternalDataSharesServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
+func (e *ExternalDataSharesProviderServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
 	resultChan := make(chan result)
 	defer close(resultChan)
 
 	go func() {
 		var intercepted bool
 		var res result
-		if externalDataSharesServerTransportInterceptor != nil {
-			res.resp, res.err, intercepted = externalDataSharesServerTransportInterceptor.Do(req)
+		if externalDataSharesProviderServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = externalDataSharesProviderServerTransportInterceptor.Do(req)
 		}
 		if !intercepted {
 			switch method {
-			case "ExternalDataSharesClient.CreateExternalDataShare":
+			case "ExternalDataSharesProviderClient.CreateExternalDataShare":
 				res.resp, res.err = e.dispatchCreateExternalDataShare(req)
-			case "ExternalDataSharesClient.GetExternalDataShare":
+			case "ExternalDataSharesProviderClient.GetExternalDataShare":
 				res.resp, res.err = e.dispatchGetExternalDataShare(req)
-			case "ExternalDataSharesClient.NewListExternalDataSharesInItemPager":
+			case "ExternalDataSharesProviderClient.NewListExternalDataSharesInItemPager":
 				res.resp, res.err = e.dispatchNewListExternalDataSharesInItemPager(req)
-			case "ExternalDataSharesClient.RevokeExternalDataShare":
+			case "ExternalDataSharesProviderClient.RevokeExternalDataShare":
 				res.resp, res.err = e.dispatchRevokeExternalDataShare(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
@@ -111,7 +111,7 @@ func (e *ExternalDataSharesServerTransport) dispatchToMethodFake(req *http.Reque
 	}
 }
 
-func (e *ExternalDataSharesServerTransport) dispatchCreateExternalDataShare(req *http.Request) (*http.Response, error) {
+func (e *ExternalDataSharesProviderServerTransport) dispatchCreateExternalDataShare(req *http.Request) (*http.Response, error) {
 	if e.srv.CreateExternalDataShare == nil {
 		return nil, &nonRetriableError{errors.New("fake for method CreateExternalDataShare not implemented")}
 	}
@@ -151,7 +151,7 @@ func (e *ExternalDataSharesServerTransport) dispatchCreateExternalDataShare(req 
 	return resp, nil
 }
 
-func (e *ExternalDataSharesServerTransport) dispatchGetExternalDataShare(req *http.Request) (*http.Response, error) {
+func (e *ExternalDataSharesProviderServerTransport) dispatchGetExternalDataShare(req *http.Request) (*http.Response, error) {
 	if e.srv.GetExternalDataShare == nil {
 		return nil, &nonRetriableError{errors.New("fake for method GetExternalDataShare not implemented")}
 	}
@@ -188,7 +188,7 @@ func (e *ExternalDataSharesServerTransport) dispatchGetExternalDataShare(req *ht
 	return resp, nil
 }
 
-func (e *ExternalDataSharesServerTransport) dispatchNewListExternalDataSharesInItemPager(req *http.Request) (*http.Response, error) {
+func (e *ExternalDataSharesProviderServerTransport) dispatchNewListExternalDataSharesInItemPager(req *http.Request) (*http.Response, error) {
 	if e.srv.NewListExternalDataSharesInItemPager == nil {
 		return nil, &nonRetriableError{errors.New("fake for method NewListExternalDataSharesInItemPager not implemented")}
 	}
@@ -214,16 +214,16 @@ func (e *ExternalDataSharesServerTransport) dispatchNewListExternalDataSharesInI
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
-		var options *core.ExternalDataSharesClientListExternalDataSharesInItemOptions
+		var options *core.ExternalDataSharesProviderClientListExternalDataSharesInItemOptions
 		if continuationTokenParam != nil {
-			options = &core.ExternalDataSharesClientListExternalDataSharesInItemOptions{
+			options = &core.ExternalDataSharesProviderClientListExternalDataSharesInItemOptions{
 				ContinuationToken: continuationTokenParam,
 			}
 		}
 		resp := e.srv.NewListExternalDataSharesInItemPager(workspaceIDParam, itemIDParam, options)
 		newListExternalDataSharesInItemPager = &resp
 		e.newListExternalDataSharesInItemPager.add(req, newListExternalDataSharesInItemPager)
-		server.PagerResponderInjectNextLinks(newListExternalDataSharesInItemPager, req, func(page *core.ExternalDataSharesClientListExternalDataSharesInItemResponse, createLink func() string) {
+		server.PagerResponderInjectNextLinks(newListExternalDataSharesInItemPager, req, func(page *core.ExternalDataSharesProviderClientListExternalDataSharesInItemResponse, createLink func() string) {
 			page.ContinuationURI = to.Ptr(createLink())
 		})
 	}
@@ -241,7 +241,7 @@ func (e *ExternalDataSharesServerTransport) dispatchNewListExternalDataSharesInI
 	return resp, nil
 }
 
-func (e *ExternalDataSharesServerTransport) dispatchRevokeExternalDataShare(req *http.Request) (*http.Response, error) {
+func (e *ExternalDataSharesProviderServerTransport) dispatchRevokeExternalDataShare(req *http.Request) (*http.Response, error) {
 	if e.srv.RevokeExternalDataShare == nil {
 		return nil, &nonRetriableError{errors.New("fake for method RevokeExternalDataShare not implemented")}
 	}
@@ -278,8 +278,8 @@ func (e *ExternalDataSharesServerTransport) dispatchRevokeExternalDataShare(req 
 	return resp, nil
 }
 
-// set this to conditionally intercept incoming requests to ExternalDataSharesServerTransport
-var externalDataSharesServerTransportInterceptor interface {
+// set this to conditionally intercept incoming requests to ExternalDataSharesProviderServerTransport
+var externalDataSharesProviderServerTransportInterceptor interface {
 	// Do returns true if the server transport should use the returned response/error
 	Do(*http.Request) (*http.Response, error, bool)
 }

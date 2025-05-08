@@ -21,9 +21,9 @@ import (
 	"github.com/microsoft/fabric-sdk-go/internal/iruntime"
 )
 
-// ExternalDataSharesClient contains the methods for the ExternalDataShares group.
+// ExternalDataSharesProviderClient contains the methods for the ExternalDataSharesProvider group.
 // Don't use this type directly, use a constructor function instead.
-type ExternalDataSharesClient struct {
+type ExternalDataSharesProviderClient struct {
 	internal *azcore.Client
 	endpoint string
 }
@@ -31,7 +31,7 @@ type ExternalDataSharesClient struct {
 // NewListExternalDataSharesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All
-// REQUIRED TENANT SETTINGS To use this API, enable the 'External data sharing' admin switch for the calling principal.
+// REQUIRED TENANT SETTINGS To use this API, enable the External data sharing admin switch for the calling principal.
 // LIMITATIONS Maximum 10 requests per minute.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -41,15 +41,15 @@ type ExternalDataSharesClient struct {
 // INTERFACE
 //
 // Generated from API version v1
-//   - options - ExternalDataSharesClientListExternalDataSharesOptions contains the optional parameters for the ExternalDataSharesClient.NewListExternalDataSharesPager
+//   - options - ExternalDataSharesProviderClientListExternalDataSharesOptions contains the optional parameters for the ExternalDataSharesProviderClient.NewListExternalDataSharesPager
 //     method.
-func (client *ExternalDataSharesClient) NewListExternalDataSharesPager(options *ExternalDataSharesClientListExternalDataSharesOptions) *runtime.Pager[ExternalDataSharesClientListExternalDataSharesResponse] {
-	return runtime.NewPager(runtime.PagingHandler[ExternalDataSharesClientListExternalDataSharesResponse]{
-		More: func(page ExternalDataSharesClientListExternalDataSharesResponse) bool {
+func (client *ExternalDataSharesProviderClient) NewListExternalDataSharesPager(options *ExternalDataSharesProviderClientListExternalDataSharesOptions) *runtime.Pager[ExternalDataSharesProviderClientListExternalDataSharesResponse] {
+	return runtime.NewPager(runtime.PagingHandler[ExternalDataSharesProviderClientListExternalDataSharesResponse]{
+		More: func(page ExternalDataSharesProviderClientListExternalDataSharesResponse) bool {
 			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
 		},
-		Fetcher: func(ctx context.Context, page *ExternalDataSharesClientListExternalDataSharesResponse) (ExternalDataSharesClientListExternalDataSharesResponse, error) {
-			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "admin.ExternalDataSharesClient.NewListExternalDataSharesPager")
+		Fetcher: func(ctx context.Context, page *ExternalDataSharesProviderClientListExternalDataSharesResponse) (ExternalDataSharesProviderClientListExternalDataSharesResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "admin.ExternalDataSharesProviderClient.NewListExternalDataSharesPager")
 			nextLink := ""
 			if page != nil {
 				nextLink = *page.ContinuationURI
@@ -58,7 +58,7 @@ func (client *ExternalDataSharesClient) NewListExternalDataSharesPager(options *
 				return client.listExternalDataSharesCreateRequest(ctx, options)
 			}, nil)
 			if err != nil {
-				return ExternalDataSharesClientListExternalDataSharesResponse{}, err
+				return ExternalDataSharesProviderClientListExternalDataSharesResponse{}, err
 			}
 			return client.listExternalDataSharesHandleResponse(resp)
 		},
@@ -67,7 +67,7 @@ func (client *ExternalDataSharesClient) NewListExternalDataSharesPager(options *
 }
 
 // listExternalDataSharesCreateRequest creates the ListExternalDataShares request.
-func (client *ExternalDataSharesClient) listExternalDataSharesCreateRequest(ctx context.Context, options *ExternalDataSharesClientListExternalDataSharesOptions) (*policy.Request, error) {
+func (client *ExternalDataSharesProviderClient) listExternalDataSharesCreateRequest(ctx context.Context, options *ExternalDataSharesProviderClientListExternalDataSharesOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/items/externalDataShares"
 	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
@@ -83,17 +83,17 @@ func (client *ExternalDataSharesClient) listExternalDataSharesCreateRequest(ctx 
 }
 
 // listExternalDataSharesHandleResponse handles the ListExternalDataShares response.
-func (client *ExternalDataSharesClient) listExternalDataSharesHandleResponse(resp *http.Response) (ExternalDataSharesClientListExternalDataSharesResponse, error) {
-	result := ExternalDataSharesClientListExternalDataSharesResponse{}
+func (client *ExternalDataSharesProviderClient) listExternalDataSharesHandleResponse(resp *http.Response) (ExternalDataSharesProviderClientListExternalDataSharesResponse, error) {
+	result := ExternalDataSharesProviderClientListExternalDataSharesResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.ExternalDataShares); err != nil {
-		return ExternalDataSharesClientListExternalDataSharesResponse{}, err
+		return ExternalDataSharesProviderClientListExternalDataSharesResponse{}, err
 	}
 	return result, nil
 }
 
 // RevokeExternalDataShare - PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All
-// REQUIRED TENANT SETTINGS To use this API, enable the 'External data sharing' admin switch for the calling principal.
+// REQUIRED TENANT SETTINGS To use this API, enable the External data sharing admin switch for the calling principal.
 // LIMITATIONS Maximum 10 requests per minute.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -107,31 +107,31 @@ func (client *ExternalDataSharesClient) listExternalDataSharesHandleResponse(res
 //   - workspaceID - The workspace ID.
 //   - itemID - The item ID.
 //   - externalDataShareID - The external data share ID.
-//   - options - ExternalDataSharesClientRevokeExternalDataShareOptions contains the optional parameters for the ExternalDataSharesClient.RevokeExternalDataShare
+//   - options - ExternalDataSharesProviderClientRevokeExternalDataShareOptions contains the optional parameters for the ExternalDataSharesProviderClient.RevokeExternalDataShare
 //     method.
-func (client *ExternalDataSharesClient) RevokeExternalDataShare(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, options *ExternalDataSharesClientRevokeExternalDataShareOptions) (ExternalDataSharesClientRevokeExternalDataShareResponse, error) {
+func (client *ExternalDataSharesProviderClient) RevokeExternalDataShare(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, options *ExternalDataSharesProviderClientRevokeExternalDataShareOptions) (ExternalDataSharesProviderClientRevokeExternalDataShareResponse, error) {
 	var err error
-	const operationName = "admin.ExternalDataSharesClient.RevokeExternalDataShare"
+	const operationName = "admin.ExternalDataSharesProviderClient.RevokeExternalDataShare"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
 	req, err := client.revokeExternalDataShareCreateRequest(ctx, workspaceID, itemID, externalDataShareID, options)
 	if err != nil {
-		return ExternalDataSharesClientRevokeExternalDataShareResponse{}, err
+		return ExternalDataSharesProviderClientRevokeExternalDataShareResponse{}, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return ExternalDataSharesClientRevokeExternalDataShareResponse{}, err
+		return ExternalDataSharesProviderClientRevokeExternalDataShareResponse{}, err
 	}
 	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
 		err = core.NewResponseError(httpResp)
-		return ExternalDataSharesClientRevokeExternalDataShareResponse{}, err
+		return ExternalDataSharesProviderClientRevokeExternalDataShareResponse{}, err
 	}
-	return ExternalDataSharesClientRevokeExternalDataShareResponse{}, nil
+	return ExternalDataSharesProviderClientRevokeExternalDataShareResponse{}, nil
 }
 
 // revokeExternalDataShareCreateRequest creates the RevokeExternalDataShare request.
-func (client *ExternalDataSharesClient) revokeExternalDataShareCreateRequest(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, _ *ExternalDataSharesClientRevokeExternalDataShareOptions) (*policy.Request, error) {
+func (client *ExternalDataSharesProviderClient) revokeExternalDataShareCreateRequest(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, _ *ExternalDataSharesProviderClientRevokeExternalDataShareOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/workspaces/{workspaceId}/items/{itemId}/externalDataShares/{externalDataShareId}/revoke"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -162,7 +162,7 @@ func (client *ExternalDataSharesClient) revokeExternalDataShareCreateRequest(ctx
 //
 // # REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All
 //
-// REQUIRED TENANT SETTINGS To use this API, enable the 'External data sharing' admin switch for the calling principal.
+// REQUIRED TENANT SETTINGS To use this API, enable the External data sharing admin switch for the calling principal.
 //
 // LIMITATIONS Maximum 10 requests per minute.
 //
@@ -173,10 +173,10 @@ func (client *ExternalDataSharesClient) revokeExternalDataShareCreateRequest(ctx
 //
 // INTERFACE
 // Generated from API version v1
-//   - options - ExternalDataSharesClientListExternalDataSharesOptions contains the optional parameters for the ExternalDataSharesClient.NewListExternalDataSharesPager method.
-func (client *ExternalDataSharesClient) ListExternalDataShares(ctx context.Context, options *ExternalDataSharesClientListExternalDataSharesOptions) ([]ExternalDataShare, error) {
+//   - options - ExternalDataSharesProviderClientListExternalDataSharesOptions contains the optional parameters for the ExternalDataSharesProviderClient.NewListExternalDataSharesPager method.
+func (client *ExternalDataSharesProviderClient) ListExternalDataShares(ctx context.Context, options *ExternalDataSharesProviderClientListExternalDataSharesOptions) ([]ExternalDataShare, error) {
 	pager := client.NewListExternalDataSharesPager(options)
-	mapper := func(resp ExternalDataSharesClientListExternalDataSharesResponse) []ExternalDataShare {
+	mapper := func(resp ExternalDataSharesProviderClientListExternalDataSharesResponse) []ExternalDataShare {
 		return resp.Value
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
