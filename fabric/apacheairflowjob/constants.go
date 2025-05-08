@@ -4,7 +4,7 @@
 // Changes may cause incorrect behavior and will be lost if the code is regenerated.
 // SPDX-License-Identifier: MIT
 
-package mirroredwarehouse
+package apacheairflowjob
 
 // ItemType - The type of the item. Additional item types may be added over time.
 type ItemType string
@@ -102,5 +102,20 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeSparkJobDefinition,
 		ItemTypeVariableLibrary,
 		ItemTypeWarehouse,
+	}
+}
+
+// PayloadType - The type of the definition part payload. Additional payload types may be added over time.
+type PayloadType string
+
+const (
+	// PayloadTypeInlineBase64 - Inline Base 64.
+	PayloadTypeInlineBase64 PayloadType = "InlineBase64"
+)
+
+// PossiblePayloadTypeValues returns the possible values for the PayloadType const type.
+func PossiblePayloadTypeValues() []PayloadType {
+	return []PayloadType{
+		PayloadTypeInlineBase64,
 	}
 }

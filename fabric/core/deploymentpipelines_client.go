@@ -321,8 +321,9 @@ func (client *DeploymentPipelinesClient) deleteDeploymentPipelineRoleAssignmentC
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | Only Power BI Items [/rest/api/fabric/articles/item-management/item-management-overview#power-bi]
-// are supported |
+// [/entra/identity/managed-identities-azure-resources/overview] | Only supported when all the items [/rest/api/fabric/articles/item-management/item-management-overview]
+// involved in the operation support
+// service principals |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -346,8 +347,9 @@ func (client *DeploymentPipelinesClient) BeginDeployStageContent(ctx context.Con
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | Only Power BI Items [/rest/api/fabric/articles/item-management/item-management-overview#power-bi]
-// are supported |
+// [/entra/identity/managed-identities-azure-resources/overview] | Only supported when all the items [/rest/api/fabric/articles/item-management/item-management-overview]
+// involved in the operation support
+// service principals |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -1115,7 +1117,8 @@ func (client *DeploymentPipelinesClient) updateDeploymentPipelineStageHandleResp
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | Only Power BI Items [/rest/api/fabric/articles/item-management/item-management-overview#power-bi] are supported |
+// [/entra/identity/managed-identities-azure-resources/overview] | Only supported when all the items [/rest/api/fabric/articles/item-management/item-management-overview] involved in the operation support
+// service principals |
 //
 // INTERFACE
 // Generated from API version v1

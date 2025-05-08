@@ -904,6 +904,8 @@ func PossibleItemPreDeploymentDiffStateValues() []ItemPreDeploymentDiffState {
 type ItemType string
 
 const (
+	// ItemTypeApacheAirflowJob - An ApacheAirflowJob.
+	ItemTypeApacheAirflowJob ItemType = "ApacheAirflowJob"
 	// ItemTypeCopyJob - A Copy job.
 	ItemTypeCopyJob ItemType = "CopyJob"
 	// ItemTypeDashboard - PowerBI dashboard.
@@ -965,6 +967,7 @@ const (
 // PossibleItemTypeValues returns the possible values for the ItemType const type.
 func PossibleItemTypeValues() []ItemType {
 	return []ItemType{
+		ItemTypeApacheAirflowJob,
 		ItemTypeCopyJob,
 		ItemTypeDashboard,
 		ItemTypeDataPipeline,
