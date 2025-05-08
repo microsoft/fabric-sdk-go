@@ -16,6 +16,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 
 	adminfake "github.com/microsoft/fabric-sdk-go/fabric/admin/fake"
+	apacheairflowjobfake "github.com/microsoft/fabric-sdk-go/fabric/apacheairflowjob/fake"
 	copyjobfake "github.com/microsoft/fabric-sdk-go/fabric/copyjob/fake"
 	corefake "github.com/microsoft/fabric-sdk-go/fabric/core/fake"
 	dashboardfake "github.com/microsoft/fabric-sdk-go/fabric/dashboard/fake"
@@ -51,6 +52,7 @@ import (
 // ServerFactory is a fake server for instance of the fabric.Client type.
 type ServerFactory struct {
 	Admin              adminfake.ServerFactory
+	Apache             apacheairflowjobfake.ServerFactory
 	CopyJob            copyjobfake.ServerFactory
 	Core               corefake.ServerFactory
 	Dashboard          dashboardfake.ServerFactory
@@ -89,6 +91,7 @@ type ServerFactoryTransport struct {
 	srv                  *ServerFactory
 	trMu                 sync.Mutex
 	trAdmin              *adminfake.ServerFactoryTransport
+	trApache             *apacheairflowjobfake.ServerFactoryTransport
 	trCopyJob            *copyjobfake.ServerFactoryTransport
 	trCore               *corefake.ServerFactoryTransport
 	trDashboard          *dashboardfake.ServerFactoryTransport
@@ -147,6 +150,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	case "admin":
 		initServer(s, &s.trAdmin, func() *adminfake.ServerFactoryTransport { return adminfake.NewServerFactoryTransport(&s.srv.Admin) })
 		resp, err = s.trAdmin.Do(req)
+	case "apacheairflowjob":
+		initServer(s, &s.trApache, func() *apacheairflowjobfake.ServerFactoryTransport {
+			return apacheairflowjobfake.NewServerFactoryTransport(&s.srv.Apache)
+		})
+		resp, err = s.trApache.Do(req)
 	case "copyjob":
 		initServer(s, &s.trCopyJob, func() *copyjobfake.ServerFactoryTransport {
 			return copyjobfake.NewServerFactoryTransport(&s.srv.CopyJob)
