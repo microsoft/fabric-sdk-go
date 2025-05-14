@@ -87,6 +87,28 @@ func (a *AzureDevOpsDetails) GetGitProviderDetails() *GitProviderDetails {
 	}
 }
 
+// BulkRemoveSharingLinksRequest - A list of items for which all sharing links and related access is required to be removed.
+// Also accepts the type of sharing link to be removed.
+type BulkRemoveSharingLinksRequest struct {
+	// REQUIRED; A list of items. The list includes item ID and type.
+	Items []ItemInfo
+
+	// REQUIRED; Specifies the type of sharing link that is required to be deleted for each Fabric item. Additional sharing link
+	// types may be added over time.
+	SharingLinkType *SharingLinkType
+}
+
+// BulkRemoveSharingLinksResponse - A list of the unique IDs and sharing links removal status of the Fabric items in remove
+// sharing links request
+type BulkRemoveSharingLinksResponse struct {
+	// A list of items remove sharing link status.
+	ItemsRemoveSharingLinksStatus []ItemRemoveSharingLinksStatus
+
+	// READ-ONLY; Specifies the type of sharing link that is requested for deletion for each Fabric item. Additional sharing link
+	// types may be added over time.
+	SharingLinkType *SharingLinkType
+}
+
 // CapacityTenantSetting - Capacity tenant setting details.
 type CapacityTenantSetting struct {
 	// REQUIRED; Indicates if the tenant setting is enabled for a security group. False - The tenant setting is enabled for the
@@ -504,6 +526,18 @@ type ItemInfo struct {
 	Type *ItemType
 }
 
+// ItemRemoveSharingLinksStatus - The unique ID and sharing links removal status of a Fabric item
+type ItemRemoveSharingLinksStatus struct {
+	// REQUIRED; An ID in UUID format.
+	ID *string
+
+	// REQUIRED; The item type.
+	Type *ItemType
+
+	// READ-ONLY; The status of sharing links removal operation. Additional property types may be added over time.
+	Status *SharingLinksRemovalStatus
+}
+
 // Items - A list of items.
 type Items struct {
 	// The token for the next result set batch. If there are no more records, it's removed from the response.
@@ -569,6 +603,13 @@ type PrincipalServicePrincipalProfileDetails struct {
 type PrincipalUserDetails struct {
 	// READ-ONLY; The user principal name.
 	UserPrincipalName *string
+}
+
+// RemoveAllSharingLinksRequest - Accepts the type of sharing link to be removed for all Fabric items in organization.
+type RemoveAllSharingLinksRequest struct {
+	// REQUIRED; Specifies the type of sharing link that is required to be deleted. Additional sharing link types may be added
+	// over time.
+	SharingLinkType *SharingLinkType
 }
 
 // RemoveLabelsRequest - A list of items requiring an information protection label update. Each item in the list includes

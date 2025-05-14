@@ -591,6 +591,8 @@ const (
 	ItemTypeVariableLibrary ItemType = "VariableLibrary"
 	// ItemTypeWarehouse - A warehouse.
 	ItemTypeWarehouse ItemType = "Warehouse"
+	// ItemTypeWarehouseSnapshot - A Warehouse snapshot.
+	ItemTypeWarehouseSnapshot ItemType = "WarehouseSnapshot"
 )
 
 // PossibleItemTypeValues returns the possible values for the ItemType const type.
@@ -625,6 +627,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeSparkJobDefinition,
 		ItemTypeVariableLibrary,
 		ItemTypeWarehouse,
+		ItemTypeWarehouseSnapshot,
 	}
 }
 

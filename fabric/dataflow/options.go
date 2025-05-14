@@ -6,6 +6,31 @@
 
 package dataflow
 
+// BackgroundJobsClientRunOnDemandApplyChangesOptions contains the optional parameters for the BackgroundJobsClient.RunOnDemandApplyChanges
+// method.
+type BackgroundJobsClientRunOnDemandApplyChangesOptions struct {
+	// placeholder for future optional parameters
+}
+
+// BackgroundJobsClientRunOnDemandExecuteOptions contains the optional parameters for the BackgroundJobsClient.RunOnDemandExecute
+// method.
+type BackgroundJobsClientRunOnDemandExecuteOptions struct {
+	// Run on-demand item job request payload.
+	RunOnDemandItemJobRequest *RunOnDemandDataflowExecuteJobRequest
+}
+
+// BackgroundJobsClientScheduleApplyChangesOptions contains the optional parameters for the BackgroundJobsClient.ScheduleApplyChanges
+// method.
+type BackgroundJobsClientScheduleApplyChangesOptions struct {
+	// placeholder for future optional parameters
+}
+
+// BackgroundJobsClientScheduleExecuteOptions contains the optional parameters for the BackgroundJobsClient.ScheduleExecute
+// method.
+type BackgroundJobsClientScheduleExecuteOptions struct {
+	// placeholder for future optional parameters
+}
+
 // ItemsClientBeginCreateDataflowOptions contains the optional parameters for the ItemsClient.BeginCreateDataflow method.
 type ItemsClientBeginCreateDataflowOptions struct {
 	// Resumes the long-running operation from the provided token.

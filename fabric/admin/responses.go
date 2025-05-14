@@ -117,6 +117,17 @@ type LabelsClientBulkSetLabelsResponse struct {
 	ItemsChangeLabelResponse
 }
 
+// SharingLinksClientBulkRemoveSharingLinksResponse contains the response from method SharingLinksClient.BeginBulkRemoveSharingLinks.
+type SharingLinksClientBulkRemoveSharingLinksResponse struct {
+	// A list of the unique IDs and sharing links removal status of the Fabric items in remove sharing links request
+	BulkRemoveSharingLinksResponse
+}
+
+// SharingLinksClientRemoveAllSharingLinksResponse contains the response from method SharingLinksClient.BeginRemoveAllSharingLinks.
+type SharingLinksClientRemoveAllSharingLinksResponse struct {
+	// placeholder for future response values
+}
+
 // TagsClientBulkCreateTagsResponse contains the response from method TagsClient.BulkCreateTags.
 type TagsClientBulkCreateTagsResponse struct {
 	// A response wrapper for a list of created tags.

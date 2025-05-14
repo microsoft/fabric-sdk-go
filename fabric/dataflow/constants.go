@@ -6,6 +6,78 @@
 
 package dataflow
 
+// DayOfWeek - Days of the week
+type DayOfWeek string
+
+const (
+	// DayOfWeekFriday - Friday
+	DayOfWeekFriday DayOfWeek = "Friday"
+	// DayOfWeekMonday - Monday
+	DayOfWeekMonday DayOfWeek = "Monday"
+	// DayOfWeekSaturday - Saturday
+	DayOfWeekSaturday DayOfWeek = "Saturday"
+	// DayOfWeekSunday - Sunday
+	DayOfWeekSunday DayOfWeek = "Sunday"
+	// DayOfWeekThursday - Thursday
+	DayOfWeekThursday DayOfWeek = "Thursday"
+	// DayOfWeekTuesday - Tuesday
+	DayOfWeekTuesday DayOfWeek = "Tuesday"
+	// DayOfWeekWednesday - Wednesday
+	DayOfWeekWednesday DayOfWeek = "Wednesday"
+)
+
+// PossibleDayOfWeekValues returns the possible values for the DayOfWeek const type.
+func PossibleDayOfWeekValues() []DayOfWeek {
+	return []DayOfWeek{
+		DayOfWeekFriday,
+		DayOfWeekMonday,
+		DayOfWeekSaturday,
+		DayOfWeekSunday,
+		DayOfWeekThursday,
+		DayOfWeekTuesday,
+		DayOfWeekWednesday,
+	}
+}
+
+// ExecuteOption - Options to run the execute operation. Additional executeOptions may be added over time.
+type ExecuteOption string
+
+const (
+	// ExecuteOptionApplyChangesIfNeeded - Appply Changes operation is done if needed.
+	ExecuteOptionApplyChangesIfNeeded ExecuteOption = "ApplyChangesIfNeeded"
+	// ExecuteOptionSkipApplyChanges - Default Value. Apply Changes operation is skipped
+	ExecuteOptionSkipApplyChanges ExecuteOption = "SkipApplyChanges"
+)
+
+// PossibleExecuteOptionValues returns the possible values for the ExecuteOption const type.
+func PossibleExecuteOptionValues() []ExecuteOption {
+	return []ExecuteOption{
+		ExecuteOptionApplyChangesIfNeeded,
+		ExecuteOptionSkipApplyChanges,
+	}
+}
+
+// GroupType - The type of the group. Additional group types may be added over time.
+type GroupType string
+
+const (
+	// GroupTypeDistributionList - Principal is a distribution list.
+	GroupTypeDistributionList GroupType = "DistributionList"
+	// GroupTypeSecurityGroup - Principal is a security group.
+	GroupTypeSecurityGroup GroupType = "SecurityGroup"
+	// GroupTypeUnknown - Principal group type is unknown.
+	GroupTypeUnknown GroupType = "Unknown"
+)
+
+// PossibleGroupTypeValues returns the possible values for the GroupType const type.
+func PossibleGroupTypeValues() []GroupType {
+	return []GroupType{
+		GroupTypeDistributionList,
+		GroupTypeSecurityGroup,
+		GroupTypeUnknown,
+	}
+}
+
 // ItemType - The type of the item. Additional item types may be added over time.
 type ItemType string
 
@@ -68,6 +140,8 @@ const (
 	ItemTypeVariableLibrary ItemType = "VariableLibrary"
 	// ItemTypeWarehouse - A warehouse.
 	ItemTypeWarehouse ItemType = "Warehouse"
+	// ItemTypeWarehouseSnapshot - A Warehouse snapshot.
+	ItemTypeWarehouseSnapshot ItemType = "WarehouseSnapshot"
 )
 
 // PossibleItemTypeValues returns the possible values for the ItemType const type.
@@ -102,6 +176,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeSparkJobDefinition,
 		ItemTypeVariableLibrary,
 		ItemTypeWarehouse,
+		ItemTypeWarehouseSnapshot,
 	}
 }
 
@@ -117,5 +192,65 @@ const (
 func PossiblePayloadTypeValues() []PayloadType {
 	return []PayloadType{
 		PayloadTypeInlineBase64,
+	}
+}
+
+// PrincipalType - The type of the principal. Additional principal types may be added over time.
+type PrincipalType string
+
+const (
+	// PrincipalTypeGroup - Principal is a security group.
+	PrincipalTypeGroup PrincipalType = "Group"
+	// PrincipalTypeServicePrincipal - Principal is a Microsoft Entra service principal.
+	PrincipalTypeServicePrincipal PrincipalType = "ServicePrincipal"
+	// PrincipalTypeServicePrincipalProfile - Principal is a service principal profile.
+	PrincipalTypeServicePrincipalProfile PrincipalType = "ServicePrincipalProfile"
+	// PrincipalTypeUser - Principal is a Microsoft Entra user principal.
+	PrincipalTypeUser PrincipalType = "User"
+)
+
+// PossiblePrincipalTypeValues returns the possible values for the PrincipalType const type.
+func PossiblePrincipalTypeValues() []PrincipalType {
+	return []PrincipalType{
+		PrincipalTypeGroup,
+		PrincipalTypeServicePrincipal,
+		PrincipalTypeServicePrincipalProfile,
+		PrincipalTypeUser,
+	}
+}
+
+// ScheduleType - A string represents the type of the plan. Additional planType types may be added over time.
+type ScheduleType string
+
+const (
+	// ScheduleTypeCron - A type of schedule triggers jobs periodically.
+	ScheduleTypeCron ScheduleType = "Cron"
+	// ScheduleTypeDaily - A type of schedule triggers jobs daily.
+	ScheduleTypeDaily ScheduleType = "Daily"
+	// ScheduleTypeWeekly - A type of schedule triggers jobs by the week.
+	ScheduleTypeWeekly ScheduleType = "Weekly"
+)
+
+// PossibleScheduleTypeValues returns the possible values for the ScheduleType const type.
+func PossibleScheduleTypeValues() []ScheduleType {
+	return []ScheduleType{
+		ScheduleTypeCron,
+		ScheduleTypeDaily,
+		ScheduleTypeWeekly,
+	}
+}
+
+// Type - The parameter type. Additional parameter types may be added over time.
+type Type string
+
+const (
+	// TypeAutomatic - Value must be Automatic
+	TypeAutomatic Type = "Automatic"
+)
+
+// PossibleTypeValues returns the possible values for the Type const type.
+func PossibleTypeValues() []Type {
+	return []Type{
+		TypeAutomatic,
 	}
 }

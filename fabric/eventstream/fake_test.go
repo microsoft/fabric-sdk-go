@@ -148,6 +148,11 @@ func (testsuite *FakeTestSuite) TestItems_CreateEventstream() {
 					PayloadType: to.Ptr(eventstream.PayloadTypeInlineBase64),
 				},
 				{
+					Path:        to.Ptr("eventstreamProperties.json"),
+					Payload:     to.Ptr("ewogICJyZXRlbnRpb25UaW1l..V2ZWwiOiAiTG93Igp9"),
+					PayloadType: to.Ptr(eventstream.PayloadTypeInlineBase64),
+				},
+				{
 					Path:        to.Ptr(".platform"),
 					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
 					PayloadType: to.Ptr(eventstream.PayloadTypeInlineBase64),
@@ -282,6 +287,11 @@ func (testsuite *FakeTestSuite) TestItems_GetEventstreamDefinition() {
 					PayloadType: to.Ptr(eventstream.PayloadTypeInlineBase64),
 				},
 				{
+					Path:        to.Ptr("eventstreamProperties.json"),
+					Payload:     to.Ptr("ewogICJyZXRlbnRpb25UaW1l..V2ZWwiOiAiTG93Igp9"),
+					PayloadType: to.Ptr(eventstream.PayloadTypeInlineBase64),
+				},
+				{
 					Path:        to.Ptr(".platform"),
 					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
 					PayloadType: to.Ptr(eventstream.PayloadTypeInlineBase64),
@@ -321,6 +331,11 @@ func (testsuite *FakeTestSuite) TestItems_UpdateEventstreamDefinition() {
 				{
 					Path:        to.Ptr("eventstream.json"),
 					Payload:     to.Ptr("SSdkIGxpa2UgdG8gdGVsbCBh..IGpva2UgZm9yIHlvdS4K"),
+					PayloadType: to.Ptr(eventstream.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("eventstreamProperties.json"),
+					Payload:     to.Ptr("ewogICJyZXRlbnRpb25UaW1l..V2ZWwiOiAiTG93Igp9"),
 					PayloadType: to.Ptr(eventstream.PayloadTypeInlineBase64),
 				},
 				{

@@ -18,15 +18,17 @@ import (
 
 // ServerFactory is a fake server for instances of the dataflow.ClientFactory type.
 type ServerFactory struct {
-	ItemsServer ItemsServer
+	BackgroundJobsServer BackgroundJobsServer
+	ItemsServer          ItemsServer
 }
 
 // ServerFactoryTransport connects instances of dataflow.ClientFactory to instances of ServerFactory.
 // Don't use this type directly, use NewServerFactoryTransport instead.
 type ServerFactoryTransport struct {
-	srv           *ServerFactory
-	trMu          sync.Mutex
-	trItemsServer *ItemsServerTransport
+	srv                    *ServerFactory
+	trMu                   sync.Mutex
+	trBackgroundJobsServer *BackgroundJobsServerTransport
+	trItemsServer          *ItemsServerTransport
 }
 
 // NewServerFactoryTransport creates a new instance of ServerFactoryTransport with the provided implementation.
@@ -52,6 +54,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	var err error
 
 	switch client {
+	case "BackgroundJobsClient":
+		initServer(s, &s.trBackgroundJobsServer, func() *BackgroundJobsServerTransport {
+			return NewBackgroundJobsServerTransport(&s.srv.BackgroundJobsServer)
+		})
+		resp, err = s.trBackgroundJobsServer.Do(req)
 	case "ItemsClient":
 		initServer(s, &s.trItemsServer, func() *ItemsServerTransport { return NewItemsServerTransport(&s.srv.ItemsServer) })
 		resp, err = s.trItemsServer.Do(req)

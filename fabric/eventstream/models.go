@@ -8,6 +8,21 @@ package eventstream
 
 import "time"
 
+// AccessKeys - The access keys.
+type AccessKeys struct {
+	// REQUIRED; The primary connection string.
+	PrimaryConnectionString *string
+
+	// REQUIRED; The primary key.
+	PrimaryKey *string
+
+	// REQUIRED; The secondary connection string.
+	SecondaryConnectionString *string
+
+	// REQUIRED; The secondary key.
+	SecondaryKey *string
+}
+
 // ActivatorDestinationProperties - Activator destination properties.
 type ActivatorDestinationProperties struct {
 	// REQUIRED; The Activator item identifier.
@@ -882,7 +897,7 @@ type DestinationConnectionResponse struct {
 	FullyQualifiedNamespace *string
 
 	// The access keys.
-	AccessKeys any
+	AccessKeys *AccessKeys
 }
 
 // DestinationResponse - Represents an Eventstream destination response.
@@ -2083,7 +2098,7 @@ type SourceConnectionResponse struct {
 	FullyQualifiedNamespace *string
 
 	// The access keys.
-	AccessKeys any
+	AccessKeys *AccessKeys
 }
 
 // SourceResponse - Represents an Eventstream source response.

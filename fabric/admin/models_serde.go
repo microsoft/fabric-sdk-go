@@ -220,6 +220,68 @@ func (a *AzureDevOpsDetails) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type BulkRemoveSharingLinksRequest.
+func (b BulkRemoveSharingLinksRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "items", b.Items)
+	populate(objectMap, "sharingLinkType", b.SharingLinkType)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type BulkRemoveSharingLinksRequest.
+func (b *BulkRemoveSharingLinksRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", b, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "items":
+			err = unpopulate(val, "Items", &b.Items)
+			delete(rawMsg, key)
+		case "sharingLinkType":
+			err = unpopulate(val, "SharingLinkType", &b.SharingLinkType)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", b, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type BulkRemoveSharingLinksResponse.
+func (b BulkRemoveSharingLinksResponse) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "itemsRemoveSharingLinksStatus", b.ItemsRemoveSharingLinksStatus)
+	populate(objectMap, "sharingLinkType", b.SharingLinkType)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type BulkRemoveSharingLinksResponse.
+func (b *BulkRemoveSharingLinksResponse) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", b, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "itemsRemoveSharingLinksStatus":
+			err = unpopulate(val, "ItemsRemoveSharingLinksStatus", &b.ItemsRemoveSharingLinksStatus)
+			delete(rawMsg, key)
+		case "sharingLinkType":
+			err = unpopulate(val, "SharingLinkType", &b.SharingLinkType)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", b, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type CapacityTenantSetting.
 func (c CapacityTenantSetting) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -1322,6 +1384,41 @@ func (i *ItemInfo) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type ItemRemoveSharingLinksStatus.
+func (i ItemRemoveSharingLinksStatus) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "id", i.ID)
+	populate(objectMap, "status", i.Status)
+	populate(objectMap, "type", i.Type)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ItemRemoveSharingLinksStatus.
+func (i *ItemRemoveSharingLinksStatus) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", i, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "id":
+			err = unpopulate(val, "ID", &i.ID)
+			delete(rawMsg, key)
+		case "status":
+			err = unpopulate(val, "Status", &i.Status)
+			delete(rawMsg, key)
+		case "type":
+			err = unpopulate(val, "Type", &i.Type)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", i, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type Items.
 func (i Items) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -1538,6 +1635,33 @@ func (p *PrincipalUserDetails) UnmarshalJSON(data []byte) error {
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", p, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type RemoveAllSharingLinksRequest.
+func (r RemoveAllSharingLinksRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "sharingLinkType", r.SharingLinkType)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type RemoveAllSharingLinksRequest.
+func (r *RemoveAllSharingLinksRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", r, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "sharingLinkType":
+			err = unpopulate(val, "SharingLinkType", &r.SharingLinkType)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", r, err)
 		}
 	}
 	return nil

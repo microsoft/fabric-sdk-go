@@ -79,6 +79,14 @@ func (c *ClientFactory) NewLabelsClient() *LabelsClient {
 	}
 }
 
+// NewSharingLinksClient creates a new instance of SharingLinksClient.
+func (c *ClientFactory) NewSharingLinksClient() *SharingLinksClient {
+	return &SharingLinksClient{
+		internal: c.internal.WithClientName("admin.SharingLinksClient"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewTagsClient creates a new instance of TagsClient.
 func (c *ClientFactory) NewTagsClient() *TagsClient {
 	return &TagsClient{
