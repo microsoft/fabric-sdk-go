@@ -47,6 +47,14 @@ func NewClientFactoryWithClient(client fabric.Client) *ClientFactory {
 	}
 }
 
+// NewBackgroundJobsClient creates a new instance of BackgroundJobsClient.
+func (c *ClientFactory) NewBackgroundJobsClient() *BackgroundJobsClient {
+	return &BackgroundJobsClient{
+		internal: c.internal.WithClientName("dataflow.BackgroundJobsClient"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewItemsClient creates a new instance of ItemsClient.
 func (c *ClientFactory) NewItemsClient() *ItemsClient {
 	return &ItemsClient{

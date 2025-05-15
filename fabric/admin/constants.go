@@ -270,6 +270,8 @@ const (
 	ItemTypeVariableLibrary ItemType = "VariableLibrary"
 	// ItemTypeWarehouse - A warehouse.
 	ItemTypeWarehouse ItemType = "Warehouse"
+	// ItemTypeWarehouseSnapshot - A Warehouse snapshot.
+	ItemTypeWarehouseSnapshot ItemType = "WarehouseSnapshot"
 )
 
 // PossibleItemTypeValues returns the possible values for the ItemType const type.
@@ -304,6 +306,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeSparkJobDefinition,
 		ItemTypeVariableLibrary,
 		ItemTypeWarehouse,
+		ItemTypeWarehouseSnapshot,
 	}
 }
 
@@ -328,6 +331,41 @@ func PossiblePrincipalTypeValues() []PrincipalType {
 		PrincipalTypeServicePrincipal,
 		PrincipalTypeServicePrincipalProfile,
 		PrincipalTypeUser,
+	}
+}
+
+// SharingLinkType - Specifies the type of sharing link that is required to be deleted for each Fabric item. Additional sharing
+// link types may be added over time.
+type SharingLinkType string
+
+const (
+	// SharingLinkTypeOrgLink - The sharing link grants access to entire organization (default value).
+	SharingLinkTypeOrgLink SharingLinkType = "OrgLink"
+)
+
+// PossibleSharingLinkTypeValues returns the possible values for the SharingLinkType const type.
+func PossibleSharingLinkTypeValues() []SharingLinkType {
+	return []SharingLinkType{
+		SharingLinkTypeOrgLink,
+	}
+}
+
+// SharingLinksRemovalStatus - The status of removal of sharing links. Additional SharingLinksRemovalStatus types may be added
+// over time.
+type SharingLinksRemovalStatus string
+
+const (
+	// SharingLinksRemovalStatusNotFound - The Fabric item ID, label or type wasn't found.
+	SharingLinksRemovalStatusNotFound SharingLinksRemovalStatus = "NotFound"
+	// SharingLinksRemovalStatusSucceeded - All sharing links were removed.
+	SharingLinksRemovalStatusSucceeded SharingLinksRemovalStatus = "Succeeded"
+)
+
+// PossibleSharingLinksRemovalStatusValues returns the possible values for the SharingLinksRemovalStatus const type.
+func PossibleSharingLinksRemovalStatusValues() []SharingLinksRemovalStatus {
+	return []SharingLinksRemovalStatus{
+		SharingLinksRemovalStatusNotFound,
+		SharingLinksRemovalStatusSucceeded,
 	}
 }
 

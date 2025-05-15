@@ -2047,3 +2047,94 @@ func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_RevokeExternalDat
 	_, err = client.RevokeExternalDataShare(ctx, exampleWorkspaceID, exampleItemID, exampleExternalDataShareID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
+
+func (testsuite *FakeTestSuite) TestSharingLinks_RemoveAllSharingLinks() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Remove all sharing links example"},
+	})
+	var exampleRemoveAllSharingLinksRequest admin.RemoveAllSharingLinksRequest
+	exampleRemoveAllSharingLinksRequest = admin.RemoveAllSharingLinksRequest{
+		SharingLinkType: to.Ptr(admin.SharingLinkTypeOrgLink),
+	}
+
+	testsuite.serverFactory.SharingLinksServer.BeginRemoveAllSharingLinks = func(ctx context.Context, removeAllSharingLinksRequest admin.RemoveAllSharingLinksRequest, options *admin.SharingLinksClientBeginRemoveAllSharingLinksOptions) (resp azfake.PollerResponder[admin.SharingLinksClientRemoveAllSharingLinksResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().True(reflect.DeepEqual(exampleRemoveAllSharingLinksRequest, removeAllSharingLinksRequest))
+		resp = azfake.PollerResponder[admin.SharingLinksClientRemoveAllSharingLinksResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, admin.SharingLinksClientRemoveAllSharingLinksResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewSharingLinksClient()
+	poller, err := client.BeginRemoveAllSharingLinks(ctx, exampleRemoveAllSharingLinksRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestSharingLinks_BulkRemoveSharingLinks() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Remove sharing links for specific items example"},
+	})
+	var exampleBulkRemoveSharingLinksRequest admin.BulkRemoveSharingLinksRequest
+	exampleBulkRemoveSharingLinksRequest = admin.BulkRemoveSharingLinksRequest{
+		Items: []admin.ItemInfo{
+			{
+				Type: to.Ptr(admin.ItemTypeReport),
+				ID:   to.Ptr("fe472f5e-636e-4c10-a1c6-7e9edc0b542a"),
+			},
+			{
+				Type: to.Ptr(admin.ItemTypeReport),
+				ID:   to.Ptr("476fcafe-b514-495d-b13f-ca9a4f0b1d8b"),
+			},
+			{
+				Type: to.Ptr(admin.ItemTypeReport),
+				ID:   to.Ptr("fe472f5e-636e-4c10-a1c6-7e9edc0b542c"),
+			},
+			{
+				Type: to.Ptr(admin.ItemTypeNotebook),
+				ID:   to.Ptr("476fcafe-b514-495d-b13f-ca9a4f0b1d8f"),
+			}},
+		SharingLinkType: to.Ptr(admin.SharingLinkTypeOrgLink),
+	}
+
+	exampleRes := admin.BulkRemoveSharingLinksResponse{
+		ItemsRemoveSharingLinksStatus: []admin.ItemRemoveSharingLinksStatus{
+			{
+				Type:   to.Ptr(admin.ItemTypeReport),
+				ID:     to.Ptr("fe472f5e-636e-4c10-a1c6-7e9edc0b542a"),
+				Status: to.Ptr(admin.SharingLinksRemovalStatusNotFound),
+			},
+			{
+				Type:   to.Ptr(admin.ItemTypeReport),
+				ID:     to.Ptr("476fcafe-b514-495d-b13f-ca9a4f0b1d8b"),
+				Status: to.Ptr(admin.SharingLinksRemovalStatus("Failed")),
+			},
+			{
+				Type:   to.Ptr(admin.ItemTypeReport),
+				ID:     to.Ptr("fe472f5e-636e-4c10-a1c6-7e9edc0b542c"),
+				Status: to.Ptr(admin.SharingLinksRemovalStatusSucceeded),
+			},
+			{
+				Type:   to.Ptr(admin.ItemTypeNotebook),
+				ID:     to.Ptr("476fcafe-b514-495d-b13f-ca9a4f0b1d8f"),
+				Status: to.Ptr(admin.SharingLinksRemovalStatusSucceeded),
+			}},
+		SharingLinkType: to.Ptr(admin.SharingLinkTypeOrgLink),
+	}
+
+	testsuite.serverFactory.SharingLinksServer.BeginBulkRemoveSharingLinks = func(ctx context.Context, bulkRemoveSharingLinksRequest admin.BulkRemoveSharingLinksRequest, options *admin.SharingLinksClientBeginBulkRemoveSharingLinksOptions) (resp azfake.PollerResponder[admin.SharingLinksClientBulkRemoveSharingLinksResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().True(reflect.DeepEqual(exampleBulkRemoveSharingLinksRequest, bulkRemoveSharingLinksRequest))
+		resp = azfake.PollerResponder[admin.SharingLinksClientBulkRemoveSharingLinksResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, admin.SharingLinksClientBulkRemoveSharingLinksResponse{BulkRemoveSharingLinksResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewSharingLinksClient()
+	poller, err := client.BeginBulkRemoveSharingLinks(ctx, exampleBulkRemoveSharingLinksRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.BulkRemoveSharingLinksResponse))
+}

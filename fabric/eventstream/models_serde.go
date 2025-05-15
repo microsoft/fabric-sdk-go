@@ -14,6 +14,45 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 )
 
+// MarshalJSON implements the json.Marshaller interface for type AccessKeys.
+func (a AccessKeys) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "primaryConnectionString", a.PrimaryConnectionString)
+	populate(objectMap, "primaryKey", a.PrimaryKey)
+	populate(objectMap, "secondaryConnectionString", a.SecondaryConnectionString)
+	populate(objectMap, "secondaryKey", a.SecondaryKey)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type AccessKeys.
+func (a *AccessKeys) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", a, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "primaryConnectionString":
+			err = unpopulate(val, "PrimaryConnectionString", &a.PrimaryConnectionString)
+			delete(rawMsg, key)
+		case "primaryKey":
+			err = unpopulate(val, "PrimaryKey", &a.PrimaryKey)
+			delete(rawMsg, key)
+		case "secondaryConnectionString":
+			err = unpopulate(val, "SecondaryConnectionString", &a.SecondaryConnectionString)
+			delete(rawMsg, key)
+		case "secondaryKey":
+			err = unpopulate(val, "SecondaryKey", &a.SecondaryKey)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", a, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type ActivatorDestinationProperties.
 func (a ActivatorDestinationProperties) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -1676,7 +1715,7 @@ func (d *DerivedStreamResponse) UnmarshalJSON(data []byte) error {
 // MarshalJSON implements the json.Marshaller interface for type DestinationConnectionResponse.
 func (d DestinationConnectionResponse) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
-	populateAny(objectMap, "accessKeys", d.AccessKeys)
+	populate(objectMap, "accessKeys", d.AccessKeys)
 	populate(objectMap, "consumerGroupName", d.ConsumerGroupName)
 	populate(objectMap, "eventHubName", d.EventHubName)
 	populate(objectMap, "fullyQualifiedNamespace", d.FullyQualifiedNamespace)
@@ -4128,7 +4167,7 @@ func (s *SnapshotWindow) UnmarshalJSON(data []byte) error {
 // MarshalJSON implements the json.Marshaller interface for type SourceConnectionResponse.
 func (s SourceConnectionResponse) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
-	populateAny(objectMap, "accessKeys", s.AccessKeys)
+	populate(objectMap, "accessKeys", s.AccessKeys)
 	populate(objectMap, "eventHubName", s.EventHubName)
 	populate(objectMap, "fullyQualifiedNamespace", s.FullyQualifiedNamespace)
 	return json.Marshal(objectMap)

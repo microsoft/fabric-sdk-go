@@ -907,7 +907,8 @@ type Credentials struct {
 func (c *Credentials) GetCredentials() *Credentials { return c }
 
 type CronScheduleConfig struct {
-	// REQUIRED; The end time for this schedule. The end time must be later than the start time.
+	// REQUIRED; The end time for this schedule. The end time must be later than the start time. It has to be in UTC, using the
+	// YYYY-MM-DDTHH:mm:ssZ format.
 	EndDateTime *time.Time
 
 	// REQUIRED; The time interval in minutes. A number between 1 and 5270400 (10 years).
@@ -916,7 +917,8 @@ type CronScheduleConfig struct {
 	// REQUIRED; The time zone identifier registry on local computer for windows, see Default Time Zones [/windows-hardware/manufacture/desktop/default-time-zones]
 	LocalTimeZoneID *string
 
-	// REQUIRED; The start time for this schedule. If the start time is in the past, it will trigger a job instantly.
+	// REQUIRED; The start time for this schedule. If the start time is in the past, it will trigger a job instantly. The time
+	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
 	StartDateTime *time.Time
 
 	// REQUIRED; A string represents the type of the plan. Additional planType types may be added over time.
@@ -934,13 +936,15 @@ func (c *CronScheduleConfig) GetScheduleConfig() *ScheduleConfig {
 }
 
 type DailyScheduleConfig struct {
-	// REQUIRED; The end time for this schedule. The end time must be later than the start time.
+	// REQUIRED; The end time for this schedule. The end time must be later than the start time. It has to be in UTC, using the
+	// YYYY-MM-DDTHH:mm:ssZ format.
 	EndDateTime *time.Time
 
 	// REQUIRED; The time zone identifier registry on local computer for windows, see Default Time Zones [/windows-hardware/manufacture/desktop/default-time-zones]
 	LocalTimeZoneID *string
 
-	// REQUIRED; The start time for this schedule. If the start time is in the past, it will trigger a job instantly.
+	// REQUIRED; The start time for this schedule. If the start time is in the past, it will trigger a job instantly. The time
+	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
 	StartDateTime *time.Time
 
 	// REQUIRED; A list of time slots in hh:mm format, at most 100 elements are allowed.
@@ -1934,7 +1938,7 @@ type ItemSchedule struct {
 	// The actual data contains the time/weekdays of this schedule.
 	Configuration ScheduleConfigClassification
 
-	// The created time stamp of this schedule in Utc.
+	// The created time stamp of this schedule in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
 	CreatedDateTime *time.Time
 
 	// The user identity that created this schedule or last modified.
@@ -2410,13 +2414,15 @@ type S3Compatible struct {
 
 // ScheduleConfig - Item schedule plan detail settings.
 type ScheduleConfig struct {
-	// REQUIRED; The end time for this schedule. The end time must be later than the start time.
+	// REQUIRED; The end time for this schedule. The end time must be later than the start time. It has to be in UTC, using the
+	// YYYY-MM-DDTHH:mm:ssZ format.
 	EndDateTime *time.Time
 
 	// REQUIRED; The time zone identifier registry on local computer for windows, see Default Time Zones [/windows-hardware/manufacture/desktop/default-time-zones]
 	LocalTimeZoneID *string
 
-	// REQUIRED; The start time for this schedule. If the start time is in the past, it will trigger a job instantly.
+	// REQUIRED; The start time for this schedule. If the start time is in the past, it will trigger a job instantly. The time
+	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
 	StartDateTime *time.Time
 
 	// REQUIRED; A string represents the type of the plan. Additional planType types may be added over time.
@@ -3008,13 +3014,15 @@ func (v *VirtualNetworkGateway) GetGateway() *Gateway {
 }
 
 type WeeklyScheduleConfig struct {
-	// REQUIRED; The end time for this schedule. The end time must be later than the start time.
+	// REQUIRED; The end time for this schedule. The end time must be later than the start time. It has to be in UTC, using the
+	// YYYY-MM-DDTHH:mm:ssZ format.
 	EndDateTime *time.Time
 
 	// REQUIRED; The time zone identifier registry on local computer for windows, see Default Time Zones [/windows-hardware/manufacture/desktop/default-time-zones]
 	LocalTimeZoneID *string
 
-	// REQUIRED; The start time for this schedule. If the start time is in the past, it will trigger a job instantly.
+	// REQUIRED; The start time for this schedule. If the start time is in the past, it will trigger a job instantly. The time
+	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
 	StartDateTime *time.Time
 
 	// REQUIRED; A list of time slots in hh:mm format, at most 100 elements are allowed.

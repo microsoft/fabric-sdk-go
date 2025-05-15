@@ -163,6 +163,20 @@ type LabelsClientBulkSetLabelsOptions struct {
 	// placeholder for future optional parameters
 }
 
+// SharingLinksClientBeginBulkRemoveSharingLinksOptions contains the optional parameters for the SharingLinksClient.BeginBulkRemoveSharingLinks
+// method.
+type SharingLinksClientBeginBulkRemoveSharingLinksOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// SharingLinksClientBeginRemoveAllSharingLinksOptions contains the optional parameters for the SharingLinksClient.BeginRemoveAllSharingLinks
+// method.
+type SharingLinksClientBeginRemoveAllSharingLinksOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
 // TagsClientBulkCreateTagsOptions contains the optional parameters for the TagsClient.BulkCreateTags method.
 type TagsClientBulkCreateTagsOptions struct {
 	// placeholder for future optional parameters

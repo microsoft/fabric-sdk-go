@@ -47,6 +47,7 @@ import (
 	sqlendpointfake "github.com/microsoft/fabric-sdk-go/fabric/sqlendpoint/fake"
 	variablelibraryfake "github.com/microsoft/fabric-sdk-go/fabric/variablelibrary/fake"
 	warehousefake "github.com/microsoft/fabric-sdk-go/fabric/warehouse/fake"
+	warehousesnapshotfake "github.com/microsoft/fabric-sdk-go/fabric/warehousesnapshot/fake"
 )
 
 // ServerFactory is a fake server for instance of the fabric.Client type.
@@ -83,6 +84,7 @@ type ServerFactory struct {
 	SQLEndpoint        sqlendpointfake.ServerFactory
 	VariableLibrary    variablelibraryfake.ServerFactory
 	Warehouse          warehousefake.ServerFactory
+	WarehouseSnapshot  warehousesnapshotfake.ServerFactory
 }
 
 // ServerFactoryTransport connects instance of fabric.Client to instance of ServerFactory.
@@ -122,6 +124,7 @@ type ServerFactoryTransport struct {
 	trSQLEndpoint        *sqlendpointfake.ServerFactoryTransport
 	trVariableLibrary    *variablelibraryfake.ServerFactoryTransport
 	trWarehouse          *warehousefake.ServerFactoryTransport
+	trWarehouseSnapshot  *warehousesnapshotfake.ServerFactoryTransport
 }
 
 // NewServerFactoryTransport creates a new instance of ServerFactoryTransport with the provided implementation.
@@ -297,6 +300,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return warehousefake.NewServerFactoryTransport(&s.srv.Warehouse)
 		})
 		resp, err = s.trWarehouse.Do(req)
+	case "warehousesnapshot":
+		initServer(s, &s.trWarehouseSnapshot, func() *warehousesnapshotfake.ServerFactoryTransport {
+			return warehousesnapshotfake.NewServerFactoryTransport(&s.srv.WarehouseSnapshot)
+		})
+		resp, err = s.trWarehouseSnapshot.Do(req)
 	default:
 		err = fmt.Errorf("unhandled client %s", client)
 	}

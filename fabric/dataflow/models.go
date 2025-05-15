@@ -6,6 +6,26 @@
 
 package dataflow
 
+import "time"
+
+// CreateDataflowApplyChangesScheduleRequest - Create dataflow apply changes schedule plan request payload.
+type CreateDataflowApplyChangesScheduleRequest struct {
+	// REQUIRED; The actual data contains the time/weekdays of this schedule.
+	Configuration ScheduleConfigClassification
+
+	// REQUIRED; Whether this schedule is enabled. True - Enabled, False - Disabled.
+	Enabled *bool
+}
+
+// CreateDataflowExecuteScheduleRequest - Create dataflow execute schedule plan request payload.
+type CreateDataflowExecuteScheduleRequest struct {
+	// REQUIRED; The actual data contains the time/weekdays of this schedule.
+	Configuration ScheduleConfigClassification
+
+	// REQUIRED; Whether this schedule is enabled. True - Enabled, False - Disabled.
+	Enabled *bool
+}
+
 // CreateDataflowRequest - Create Dataflow request payload.
 type CreateDataflowRequest struct {
 	// REQUIRED; The Dataflow display name. The display name must follow naming rules according to item type.
@@ -16,6 +36,64 @@ type CreateDataflowRequest struct {
 
 	// The Dataflow description. Maximum length is 256 characters.
 	Description *string
+}
+
+type CronScheduleConfig struct {
+	// REQUIRED; The end time for this schedule. The end time must be later than the start time. It has to be in UTC, using the
+	// YYYY-MM-DDTHH:mm:ssZ format.
+	EndDateTime *time.Time
+
+	// REQUIRED; The time interval in minutes. A number between 1 and 5270400 (10 years).
+	Interval *int32
+
+	// REQUIRED; The time zone identifier registry on local computer for windows, see Default Time Zones [/windows-hardware/manufacture/desktop/default-time-zones]
+	LocalTimeZoneID *string
+
+	// REQUIRED; The start time for this schedule. If the start time is in the past, it will trigger a job instantly. The time
+	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	StartDateTime *time.Time
+
+	// REQUIRED; A string represents the type of the plan. Additional planType types may be added over time.
+	Type *ScheduleType
+}
+
+// GetScheduleConfig implements the ScheduleConfigClassification interface for type CronScheduleConfig.
+func (c *CronScheduleConfig) GetScheduleConfig() *ScheduleConfig {
+	return &ScheduleConfig{
+		EndDateTime:     c.EndDateTime,
+		LocalTimeZoneID: c.LocalTimeZoneID,
+		StartDateTime:   c.StartDateTime,
+		Type:            c.Type,
+	}
+}
+
+type DailyScheduleConfig struct {
+	// REQUIRED; The end time for this schedule. The end time must be later than the start time. It has to be in UTC, using the
+	// YYYY-MM-DDTHH:mm:ssZ format.
+	EndDateTime *time.Time
+
+	// REQUIRED; The time zone identifier registry on local computer for windows, see Default Time Zones [/windows-hardware/manufacture/desktop/default-time-zones]
+	LocalTimeZoneID *string
+
+	// REQUIRED; The start time for this schedule. If the start time is in the past, it will trigger a job instantly. The time
+	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	StartDateTime *time.Time
+
+	// REQUIRED; A list of time slots in hh:mm format, at most 100 elements are allowed.
+	Times []string
+
+	// REQUIRED; A string represents the type of the plan. Additional planType types may be added over time.
+	Type *ScheduleType
+}
+
+// GetScheduleConfig implements the ScheduleConfigClassification interface for type DailyScheduleConfig.
+func (d *DailyScheduleConfig) GetScheduleConfig() *ScheduleConfig {
+	return &ScheduleConfig{
+		EndDateTime:     d.EndDateTime,
+		LocalTimeZoneID: d.LocalTimeZoneID,
+		StartDateTime:   d.StartDateTime,
+		Type:            d.Type,
+	}
 }
 
 // Dataflow - A Dataflow object.
@@ -80,6 +158,27 @@ type DefinitionResponse struct {
 	Definition *Definition
 }
 
+// ExecutionPayload - The execution data payload for Dataflow
+type ExecutionPayload struct {
+	// Options to run the execute operation. Additional executeOptions may be added over time.
+	ExecuteOption *ExecuteOption
+
+	// A list of parameters to override during execution.
+	Parameters []ItemJobParameter
+}
+
+// ItemJobParameter - Parameter details.
+type ItemJobParameter struct {
+	// REQUIRED; Name of the parameter.
+	ParameterName *string
+
+	// REQUIRED; The parameter type. Additional parameter types may be added over time.
+	Type *Type
+
+	// REQUIRED; The value of the parameter to override during execution.
+	Value any
+}
+
 // ItemTag - Represents a tag applied on an item.
 type ItemTag struct {
 	// REQUIRED; The name of the tag.
@@ -88,6 +187,98 @@ type ItemTag struct {
 	// REQUIRED; The tag ID.
 	ID *string
 }
+
+// Principal - Represents an identity or a Microsoft Entra group.
+type Principal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// Group specific details. Applicable when the principal type is Group.
+	GroupDetails *PrincipalGroupDetails
+
+	// Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
+	ServicePrincipalProfileDetails *PrincipalServicePrincipalProfileDetails
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+
+	// READ-ONLY; Service principal specific details. Applicable when the principal type is ServicePrincipal.
+	ServicePrincipalDetails *PrincipalServicePrincipalDetails
+
+	// READ-ONLY; User principal specific details. Applicable when the principal type is User.
+	UserDetails *PrincipalUserDetails
+}
+
+// PrincipalGroupDetails - Group specific details. Applicable when the principal type is Group.
+type PrincipalGroupDetails struct {
+	// The type of the group. Additional group types may be added over time.
+	GroupType *GroupType
+}
+
+// PrincipalServicePrincipalDetails - Service principal specific details. Applicable when the principal type is ServicePrincipal.
+type PrincipalServicePrincipalDetails struct {
+	// READ-ONLY; The service principal's Microsoft Entra AppId.
+	AADAppID *string
+}
+
+// PrincipalServicePrincipalProfileDetails - Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
+type PrincipalServicePrincipalProfileDetails struct {
+	// The service principal profile's parent principal.
+	ParentPrincipal *Principal
+}
+
+// PrincipalUserDetails - User principal specific details. Applicable when the principal type is User.
+type PrincipalUserDetails struct {
+	// READ-ONLY; The user principal name.
+	UserPrincipalName *string
+}
+
+// RunOnDemandDataflowExecuteJobRequest - Run on demand execute dataflow job instance payload
+type RunOnDemandDataflowExecuteJobRequest struct {
+	// Payload for run on-demand execute job request. Needed only if the dataflow has parameterization enabled.
+	ExecutionData *ExecutionPayload
+}
+
+// Schedule - Dataflow schedule.
+type Schedule struct {
+	// REQUIRED; Whether this schedule is enabled. True - Enabled, False - Disabled.
+	Enabled *bool
+
+	// REQUIRED; The schedule ID.
+	ID *string
+
+	// The actual data contains the time/weekdays of this schedule.
+	Configuration ScheduleConfigClassification
+
+	// The created time stamp of this schedule in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	CreatedDateTime *time.Time
+
+	// The user identity that created this schedule or last modified.
+	Owner *Principal
+}
+
+// ScheduleConfig - Item schedule plan detail settings.
+type ScheduleConfig struct {
+	// REQUIRED; The end time for this schedule. The end time must be later than the start time. It has to be in UTC, using the
+	// YYYY-MM-DDTHH:mm:ssZ format.
+	EndDateTime *time.Time
+
+	// REQUIRED; The time zone identifier registry on local computer for windows, see Default Time Zones [/windows-hardware/manufacture/desktop/default-time-zones]
+	LocalTimeZoneID *string
+
+	// REQUIRED; The start time for this schedule. If the start time is in the past, it will trigger a job instantly. The time
+	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	StartDateTime *time.Time
+
+	// REQUIRED; A string represents the type of the plan. Additional planType types may be added over time.
+	Type *ScheduleType
+}
+
+// GetScheduleConfig implements the ScheduleConfigClassification interface for type ScheduleConfig.
+func (s *ScheduleConfig) GetScheduleConfig() *ScheduleConfig { return s }
 
 // UpdateDataflowDefinitionRequest - Update Dataflow public definition request payload.
 type UpdateDataflowDefinitionRequest struct {
@@ -103,4 +294,36 @@ type UpdateDataflowRequest struct {
 
 	// The Dataflow display name. The display name must follow naming rules according to item type.
 	DisplayName *string
+}
+
+type WeeklyScheduleConfig struct {
+	// REQUIRED; The end time for this schedule. The end time must be later than the start time. It has to be in UTC, using the
+	// YYYY-MM-DDTHH:mm:ssZ format.
+	EndDateTime *time.Time
+
+	// REQUIRED; The time zone identifier registry on local computer for windows, see Default Time Zones [/windows-hardware/manufacture/desktop/default-time-zones]
+	LocalTimeZoneID *string
+
+	// REQUIRED; The start time for this schedule. If the start time is in the past, it will trigger a job instantly. The time
+	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	StartDateTime *time.Time
+
+	// REQUIRED; A list of time slots in hh:mm format, at most 100 elements are allowed.
+	Times []string
+
+	// REQUIRED; A string represents the type of the plan. Additional planType types may be added over time.
+	Type *ScheduleType
+
+	// REQUIRED; A list of weekdays, at most seven elements are allowed.
+	Weekdays []DayOfWeek
+}
+
+// GetScheduleConfig implements the ScheduleConfigClassification interface for type WeeklyScheduleConfig.
+func (w *WeeklyScheduleConfig) GetScheduleConfig() *ScheduleConfig {
+	return &ScheduleConfig{
+		EndDateTime:     w.EndDateTime,
+		LocalTimeZoneID: w.LocalTimeZoneID,
+		StartDateTime:   w.StartDateTime,
+		Type:            w.Type,
+	}
 }

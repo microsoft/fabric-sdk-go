@@ -6,6 +6,42 @@
 
 package dataflow
 
+// BackgroundJobsClientRunOnDemandApplyChangesResponse contains the response from method BackgroundJobsClient.RunOnDemandApplyChanges.
+type BackgroundJobsClientRunOnDemandApplyChangesResponse struct {
+	// Location contains the information returned from the Location header response.
+	Location *string
+
+	// RetryAfter contains the information returned from the Retry-After header response.
+	RetryAfter *int32
+}
+
+// BackgroundJobsClientRunOnDemandExecuteResponse contains the response from method BackgroundJobsClient.RunOnDemandExecute.
+type BackgroundJobsClientRunOnDemandExecuteResponse struct {
+	// Location contains the information returned from the Location header response.
+	Location *string
+
+	// RetryAfter contains the information returned from the Retry-After header response.
+	RetryAfter *int32
+}
+
+// BackgroundJobsClientScheduleApplyChangesResponse contains the response from method BackgroundJobsClient.ScheduleApplyChanges.
+type BackgroundJobsClientScheduleApplyChangesResponse struct {
+	// Dataflow schedule.
+	Schedule
+
+	// Location contains the information returned from the Location header response.
+	Location *string
+}
+
+// BackgroundJobsClientScheduleExecuteResponse contains the response from method BackgroundJobsClient.ScheduleExecute.
+type BackgroundJobsClientScheduleExecuteResponse struct {
+	// Dataflow schedule.
+	Schedule
+
+	// Location contains the information returned from the Location header response.
+	Location *string
+}
+
 // ItemsClientCreateDataflowResponse contains the response from method ItemsClient.BeginCreateDataflow.
 type ItemsClientCreateDataflowResponse struct {
 	// A Dataflow object.
