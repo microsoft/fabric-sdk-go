@@ -59,7 +59,7 @@ func ExampleItemsClient_NewListGraphQLApisPager() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_BeginCreateGraphQLAPI() {
+func ExampleItemsClient_BeginCreateGraphQLAPI_createAApiForGraphQlExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -72,6 +72,44 @@ func ExampleItemsClient_BeginCreateGraphQLAPI() {
 	poller, err := clientFactory.NewItemsClient().BeginCreateGraphQLAPI(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", graphqlapi.CreateGraphQLAPIRequest{
 		Description: to.Ptr("An API for GraphQL item description."),
 		DisplayName: to.Ptr("GraphQL 1"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginCreateGraphQLAPI_createAGraphQlApiWithPublicDefinitionExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := graphqlapi.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginCreateGraphQLAPI(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", graphqlapi.CreateGraphQLAPIRequest{
+		Description: to.Ptr("An API for GraphQL item description."),
+		Definition: &graphqlapi.PublicDefinition{
+			Format: to.Ptr("GraphQLApiV1"),
+			Parts: []graphqlapi.PublicDefinitionPart{
+				{
+					Path:        to.Ptr("graphql-definition.json"),
+					Payload:     to.Ptr("eyJleGVjdXRhYmxlRm..OWRmNDhhY2ZmZTgifQ=="),
+					PayloadType: to.Ptr(graphqlapi.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(graphqlapi.PayloadTypeInlineBase64),
+				}},
+		},
+		DisplayName: to.Ptr("GraphQLApi 1"),
 	}, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
@@ -153,5 +191,79 @@ func ExampleItemsClient_DeleteGraphQLAPI() {
 	_, err = clientFactory.NewItemsClient().DeleteGraphQLAPI(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginGetGraphQLAPIDefinition() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := graphqlapi.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginGetGraphQLAPIDefinition(ctx, "6e335e92-a2a2-4b5a-970a-bd6a89fbb765", "cfafbeb1-8037-4d0c-896e-a46fb27ff229", &graphqlapi.ItemsClientBeginGetGraphQLAPIDefinitionOptions{Format: nil})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	res, err := poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.DefinitionResponse = graphqlapi.DefinitionResponse{
+	// 	Definition: &graphqlapi.PublicDefinition{
+	// 		Parts: []graphqlapi.PublicDefinitionPart{
+	// 			{
+	// 				Path: to.Ptr("graphql-definition.json"),
+	// 				Payload: to.Ptr("ew0KICAiZXhlY3V0YW..OWRmNDhhY2ZmZTgifQ"),
+	// 				PayloadType: to.Ptr(graphqlapi.PayloadTypeInlineBase64),
+	// 			},
+	// 			{
+	// 				Path: to.Ptr(".platform"),
+	// 				Payload: to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+	// 				PayloadType: to.Ptr(graphqlapi.PayloadTypeInlineBase64),
+	// 		}},
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginUpdateGraphQLAPIDefinition() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := graphqlapi.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginUpdateGraphQLAPIDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", graphqlapi.UpdateGraphQLAPIDefinitionRequest{
+		Definition: &graphqlapi.PublicDefinition{
+			Parts: []graphqlapi.PublicDefinitionPart{
+				{
+					Path:        to.Ptr("graphql-definition.json"),
+					Payload:     to.Ptr("ew0KICAiZXhlY3V0YW..OWRmNDhhY2ZmZTgifQ=="),
+					PayloadType: to.Ptr(graphqlapi.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(graphqlapi.PayloadTypeInlineBase64),
+				}},
+		},
+	}, &graphqlapi.ItemsClientBeginUpdateGraphQLAPIDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
 	}
 }

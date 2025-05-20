@@ -76,7 +76,45 @@ func ExampleItemsClient_BeginCreateNotebook_createANotebookExample() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_BeginCreateNotebook_createANotebookWithPublicDefinitionExample() {
+func ExampleItemsClient_BeginCreateNotebook_createANotebookWithPublicDefinitionInFabricGitSourceFormatExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := notebook.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginCreateNotebook(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", notebook.CreateNotebookRequest{
+		Description: to.Ptr("A notebook description"),
+		Definition: &notebook.Definition{
+			Format: to.Ptr("fabricGitSource"),
+			Parts: []notebook.DefinitionPart{
+				{
+					Path:        to.Ptr("notebook-content.py"),
+					Payload:     to.Ptr("eyJuYmZvcm1hdCI6N..5ndWUiOiJweXRob24ifX19"),
+					PayloadType: to.Ptr(notebook.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(notebook.PayloadTypeInlineBase64),
+				}},
+		},
+		DisplayName: to.Ptr("Notebook 1"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginCreateNotebook_createANotebookWithPublicDefinitionInIpynbFormatExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -92,7 +130,7 @@ func ExampleItemsClient_BeginCreateNotebook_createANotebookWithPublicDefinitionE
 			Format: to.Ptr("ipynb"),
 			Parts: []notebook.DefinitionPart{
 				{
-					Path:        to.Ptr("notebook-content.py"),
+					Path:        to.Ptr("notebook-content.ipynb"),
 					Payload:     to.Ptr("eyJuYmZvcm1hdCI6N..5ndWUiOiJweXRob24ifX19"),
 					PayloadType: to.Ptr(notebook.PayloadTypeInlineBase64),
 				},
@@ -188,7 +226,7 @@ func ExampleItemsClient_DeleteNotebook() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_BeginGetNotebookDefinition() {
+func ExampleItemsClient_BeginGetNotebookDefinition_getANotebookDefinitionInFabricGitSourceFormatExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -227,7 +265,46 @@ func ExampleItemsClient_BeginGetNotebookDefinition() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_BeginUpdateNotebookDefinition() {
+func ExampleItemsClient_BeginGetNotebookDefinition_getANotebookDefinitionInIpynbFormatExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := notebook.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginGetNotebookDefinition(ctx, "6e335e92-a2a2-4b5a-970a-bd6a89fbb765", "cfafbeb1-8037-4d0c-896e-a46fb27ff229", &notebook.ItemsClientBeginGetNotebookDefinitionOptions{Format: to.Ptr("ipynb")})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	res, err := poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.DefinitionResponse = notebook.DefinitionResponse{
+	// 	Definition: &notebook.Definition{
+	// 		Parts: []notebook.DefinitionPart{
+	// 			{
+	// 				Path: to.Ptr("notebook-content.ipynb"),
+	// 				Payload: to.Ptr("IyBGYWJyaWMgbm90ZWJv..5ndWUiOiJweXRob24ifX19"),
+	// 				PayloadType: to.Ptr(notebook.PayloadTypeInlineBase64),
+	// 			},
+	// 			{
+	// 				Path: to.Ptr(".platform"),
+	// 				Payload: to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+	// 				PayloadType: to.Ptr(notebook.PayloadTypeInlineBase64),
+	// 		}},
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginUpdateNotebookDefinition_updateANotebookDefinitionInFabricGitSourceFormatExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -242,6 +319,42 @@ func ExampleItemsClient_BeginUpdateNotebookDefinition() {
 			Parts: []notebook.DefinitionPart{
 				{
 					Path:        to.Ptr("notebook-content.py"),
+					Payload:     to.Ptr("IyBGYWJyaWMgbm90ZWJv..."),
+					PayloadType: to.Ptr(notebook.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(notebook.PayloadTypeInlineBase64),
+				}},
+		},
+	}, &notebook.ItemsClientBeginUpdateNotebookDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginUpdateNotebookDefinition_updateANotebookDefinitionInIpynbFormatExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := notebook.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginUpdateNotebookDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", notebook.UpdateNotebookDefinitionRequest{
+		Definition: &notebook.Definition{
+			Format: to.Ptr("ipynb"),
+			Parts: []notebook.DefinitionPart{
+				{
+					Path:        to.Ptr("notebook-content.ipynb"),
 					Payload:     to.Ptr("IyBGYWJyaWMgbm90ZWJv..."),
 					PayloadType: to.Ptr(notebook.PayloadTypeInlineBase64),
 				},

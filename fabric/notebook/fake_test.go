@@ -120,7 +120,44 @@ func (testsuite *FakeTestSuite) TestItems_CreateNotebook() {
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Create a notebook with public definition example"},
+		"example-id": {"Create a notebook with public definition in fabricGitSource format example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCreateNotebookRequest = notebook.CreateNotebookRequest{
+		Description: to.Ptr("A notebook description"),
+		Definition: &notebook.Definition{
+			Format: to.Ptr("fabricGitSource"),
+			Parts: []notebook.DefinitionPart{
+				{
+					Path:        to.Ptr("notebook-content.py"),
+					Payload:     to.Ptr("eyJuYmZvcm1hdCI6N..5ndWUiOiJweXRob24ifX19"),
+					PayloadType: to.Ptr(notebook.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(notebook.PayloadTypeInlineBase64),
+				}},
+		},
+		DisplayName: to.Ptr("Notebook 1"),
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginCreateNotebook = func(ctx context.Context, workspaceID string, createNotebookRequest notebook.CreateNotebookRequest, options *notebook.ItemsClientBeginCreateNotebookOptions) (resp azfake.PollerResponder[notebook.ItemsClientCreateNotebookResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateNotebookRequest, createNotebookRequest))
+		resp = azfake.PollerResponder[notebook.ItemsClientCreateNotebookResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, notebook.ItemsClientCreateNotebookResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateNotebook(ctx, exampleWorkspaceID, exampleCreateNotebookRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a notebook with public definition in ipynb format example"},
 	})
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
 	exampleCreateNotebookRequest = notebook.CreateNotebookRequest{
@@ -129,7 +166,7 @@ func (testsuite *FakeTestSuite) TestItems_CreateNotebook() {
 			Format: to.Ptr("ipynb"),
 			Parts: []notebook.DefinitionPart{
 				{
-					Path:        to.Ptr("notebook-content.py"),
+					Path:        to.Ptr("notebook-content.ipynb"),
 					Payload:     to.Ptr("eyJuYmZvcm1hdCI6N..5ndWUiOiJweXRob24ifX19"),
 					PayloadType: to.Ptr(notebook.PayloadTypeInlineBase64),
 				},
@@ -252,7 +289,7 @@ func (testsuite *FakeTestSuite) TestItems_DeleteNotebook() {
 func (testsuite *FakeTestSuite) TestItems_GetNotebookDefinition() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Get a notebook definition example"},
+		"example-id": {"Get a notebook definition in fabricGitSource format example"},
 	})
 	var exampleWorkspaceID string
 	var exampleNotebookID string
@@ -289,12 +326,49 @@ func (testsuite *FakeTestSuite) TestItems_GetNotebookDefinition() {
 	res, err := poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DefinitionResponse))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a notebook definition in ipynb format example"},
+	})
+	exampleWorkspaceID = "6e335e92-a2a2-4b5a-970a-bd6a89fbb765"
+	exampleNotebookID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+
+	exampleRes = notebook.DefinitionResponse{
+		Definition: &notebook.Definition{
+			Parts: []notebook.DefinitionPart{
+				{
+					Path:        to.Ptr("notebook-content.ipynb"),
+					Payload:     to.Ptr("IyBGYWJyaWMgbm90ZWJv..5ndWUiOiJweXRob24ifX19"),
+					PayloadType: to.Ptr(notebook.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(notebook.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginGetNotebookDefinition = func(ctx context.Context, workspaceID string, notebookID string, options *notebook.ItemsClientBeginGetNotebookDefinitionOptions) (resp azfake.PollerResponder[notebook.ItemsClientGetNotebookDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleNotebookID, notebookID)
+		resp = azfake.PollerResponder[notebook.ItemsClientGetNotebookDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, notebook.ItemsClientGetNotebookDefinitionResponse{DefinitionResponse: exampleRes}, nil)
+		return
+	}
+
+	poller, err = client.BeginGetNotebookDefinition(ctx, exampleWorkspaceID, exampleNotebookID, &notebook.ItemsClientBeginGetNotebookDefinitionOptions{Format: to.Ptr("ipynb")})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DefinitionResponse))
 }
 
 func (testsuite *FakeTestSuite) TestItems_UpdateNotebookDefinition() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Update a notebook definition example"},
+		"example-id": {"Update a notebook definition in fabricGitSource format example"},
 	})
 	var exampleWorkspaceID string
 	var exampleNotebookID string
@@ -328,6 +402,43 @@ func (testsuite *FakeTestSuite) TestItems_UpdateNotebookDefinition() {
 
 	client := testsuite.clientFactory.NewItemsClient()
 	poller, err := client.BeginUpdateNotebookDefinition(ctx, exampleWorkspaceID, exampleNotebookID, exampleUpdateNotebookDefinitionRequest, &notebook.ItemsClientBeginUpdateNotebookDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update a notebook definition in ipynb format example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleNotebookID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleUpdateNotebookDefinitionRequest = notebook.UpdateNotebookDefinitionRequest{
+		Definition: &notebook.Definition{
+			Format: to.Ptr("ipynb"),
+			Parts: []notebook.DefinitionPart{
+				{
+					Path:        to.Ptr("notebook-content.ipynb"),
+					Payload:     to.Ptr("IyBGYWJyaWMgbm90ZWJv..."),
+					PayloadType: to.Ptr(notebook.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(notebook.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginUpdateNotebookDefinition = func(ctx context.Context, workspaceID string, notebookID string, updateNotebookDefinitionRequest notebook.UpdateNotebookDefinitionRequest, options *notebook.ItemsClientBeginUpdateNotebookDefinitionOptions) (resp azfake.PollerResponder[notebook.ItemsClientUpdateNotebookDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleNotebookID, notebookID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateNotebookDefinitionRequest, updateNotebookDefinitionRequest))
+		resp = azfake.PollerResponder[notebook.ItemsClientUpdateNotebookDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, notebook.ItemsClientUpdateNotebookDefinitionResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginUpdateNotebookDefinition(ctx, exampleWorkspaceID, exampleNotebookID, exampleUpdateNotebookDefinitionRequest, &notebook.ItemsClientBeginUpdateNotebookDefinitionOptions{UpdateMetadata: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")

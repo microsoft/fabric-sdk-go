@@ -409,6 +409,41 @@ func (a *AutomaticGitCredentialsResponse) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type AzureBlobStorage.
+func (a AzureBlobStorage) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "connectionId", a.ConnectionID)
+	populate(objectMap, "location", a.Location)
+	populate(objectMap, "subpath", a.Subpath)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type AzureBlobStorage.
+func (a *AzureBlobStorage) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", a, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "connectionId":
+			err = unpopulate(val, "ConnectionID", &a.ConnectionID)
+			delete(rawMsg, key)
+		case "location":
+			err = unpopulate(val, "Location", &a.Location)
+			delete(rawMsg, key)
+		case "subpath":
+			err = unpopulate(val, "Subpath", &a.Subpath)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", a, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type AzureDevOpsDetails.
 func (a AzureDevOpsDetails) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -1220,6 +1255,7 @@ func (c CreatableShortcutTarget) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "adlsGen2", c.AdlsGen2)
 	populate(objectMap, "amazonS3", c.AmazonS3)
+	populate(objectMap, "azureBlobStorage", c.AzureBlobStorage)
 	populate(objectMap, "dataverse", c.Dataverse)
 	populate(objectMap, "googleCloudStorage", c.GoogleCloudStorage)
 	populate(objectMap, "oneLake", c.OneLake)
@@ -1241,6 +1277,9 @@ func (c *CreatableShortcutTarget) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "amazonS3":
 			err = unpopulate(val, "AmazonS3", &c.AmazonS3)
+			delete(rawMsg, key)
+		case "azureBlobStorage":
+			err = unpopulate(val, "AzureBlobStorage", &c.AzureBlobStorage)
 			delete(rawMsg, key)
 		case "dataverse":
 			err = unpopulate(val, "Dataverse", &c.Dataverse)
@@ -6082,6 +6121,7 @@ func (t Target) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "adlsGen2", t.AdlsGen2)
 	populate(objectMap, "amazonS3", t.AmazonS3)
+	populate(objectMap, "azureBlobStorage", t.AzureBlobStorage)
 	populate(objectMap, "dataverse", t.Dataverse)
 	populate(objectMap, "externalDataShare", t.ExternalDataShare)
 	populate(objectMap, "googleCloudStorage", t.GoogleCloudStorage)
@@ -6105,6 +6145,9 @@ func (t *Target) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "amazonS3":
 			err = unpopulate(val, "AmazonS3", &t.AmazonS3)
+			delete(rawMsg, key)
+		case "azureBlobStorage":
+			err = unpopulate(val, "AzureBlobStorage", &t.AzureBlobStorage)
 			delete(rawMsg, key)
 		case "dataverse":
 			err = unpopulate(val, "Dataverse", &t.Dataverse)

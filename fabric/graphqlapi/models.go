@@ -11,8 +11,17 @@ type CreateGraphQLAPIRequest struct {
 	// REQUIRED; The API for GraphQL display name. The display name must follow naming rules according to item type.
 	DisplayName *string
 
+	// The API for GraphQL public definition.
+	Definition *PublicDefinition
+
 	// The API for GraphQL description. Maximum length is 256 characters.
 	Description *string
+}
+
+// DefinitionResponse - API for GraphQL public definition response.
+type DefinitionResponse struct {
+	// READ-ONLY; API for GraphQL public definition object. To create the definition, see GraphQLApi definition [/rest/api/fabric/articles/item-management/definitions/graphql-api-definition].
+	Definition *PublicDefinition
 }
 
 // GraphQLAPI - An API for GraphQL item.
@@ -58,6 +67,33 @@ type ItemTag struct {
 
 	// REQUIRED; The tag ID.
 	ID *string
+}
+
+// PublicDefinition - API for GraphQL public definition object. To create the definition, see GraphQLApi definition [/rest/api/fabric/articles/item-management/definitions/graphql-api-definition].
+type PublicDefinition struct {
+	// REQUIRED; A list of definition parts.
+	Parts []PublicDefinitionPart
+
+	// The format of the item definition.
+	Format *string
+}
+
+// PublicDefinitionPart - API for GraphQL definition part object.
+type PublicDefinitionPart struct {
+	// The API for GraphQL definition part path.
+	Path *string
+
+	// The API for GraphQL definition part payload.
+	Payload *string
+
+	// The payload type.
+	PayloadType *PayloadType
+}
+
+// UpdateGraphQLAPIDefinitionRequest - Update API for GraphQL public definition request payload.
+type UpdateGraphQLAPIDefinitionRequest struct {
+	// REQUIRED; API for GraphQL public definition object. To create the definition, see GraphQLApi definition [/rest/api/fabric/articles/item-management/definitions/graphql-api-definition].
+	Definition *PublicDefinition
 }
 
 // UpdateGraphQLAPIRequest - Update API for GraphQL request.

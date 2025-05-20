@@ -58,6 +58,10 @@ const (
 	ItemTypeDataflow ItemType = "Dataflow"
 	// ItemTypeDatamart - PowerBI datamart.
 	ItemTypeDatamart ItemType = "Datamart"
+	// ItemTypeDigitalTwinBuilder - A DigitalTwinBuilder.
+	ItemTypeDigitalTwinBuilder ItemType = "DigitalTwinBuilder"
+	// ItemTypeDigitalTwinBuilderFlow - A Digital Twin Builder Flow.
+	ItemTypeDigitalTwinBuilderFlow ItemType = "DigitalTwinBuilderFlow"
 	// ItemTypeEnvironment - An environment.
 	ItemTypeEnvironment ItemType = "Environment"
 	// ItemTypeEventhouse - An eventhouse.
@@ -117,6 +121,8 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
 		ItemTypeDatamart,
+		ItemTypeDigitalTwinBuilder,
+		ItemTypeDigitalTwinBuilderFlow,
 		ItemTypeEnvironment,
 		ItemTypeEventhouse,
 		ItemTypeEventstream,

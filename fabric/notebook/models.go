@@ -26,13 +26,15 @@ type Definition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []DefinitionPart
 
-	// The format of the Notebook definition. Supported format: ipynb.
+	// The format of the Notebook definition. Supported format: ipynb and fabricGitSource. If no format is provided, fabricGitSource
+	// is used.
 	Format *string
 }
 
 // DefinitionPart - Notebook definition part object.
 type DefinitionPart struct {
-	// The notebook part path.
+	// The notebook part path. Supported notebook content extensions: .ipynb for ipynb format; .py, .scala, .r, .sql for fabricGitSource
+	// format.
 	Path *string
 
 	// The notebook part payload.

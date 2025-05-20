@@ -12,6 +12,27 @@ type ItemsClientBeginCreateGraphQLAPIOptions struct {
 	ResumeToken string
 }
 
+// ItemsClientBeginGetGraphQLAPIDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetGraphQLAPIDefinition
+// method.
+type ItemsClientBeginGetGraphQLAPIDefinitionOptions struct {
+	// The format of the GraphQLApi public definition.
+	Format *string
+
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// ItemsClientBeginUpdateGraphQLAPIDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateGraphQLAPIDefinition
+// method.
+type ItemsClientBeginUpdateGraphQLAPIDefinitionOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+
+	// When set to true and the .platform file is provided as part of the definition, the item's metadata is updated using the
+	// metadata in the .platform file
+	UpdateMetadata *bool
+}
+
 // ItemsClientDeleteGraphQLAPIOptions contains the optional parameters for the ItemsClient.DeleteGraphQLAPI method.
 type ItemsClientDeleteGraphQLAPIOptions struct {
 	// placeholder for future optional parameters
