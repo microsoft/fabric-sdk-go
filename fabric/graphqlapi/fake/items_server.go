@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
@@ -37,6 +38,10 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetGraphQLAPI func(ctx context.Context, workspaceID string, graphQLAPIID string, options *graphqlapi.ItemsClientGetGraphQLAPIOptions) (resp azfake.Responder[graphqlapi.ItemsClientGetGraphQLAPIResponse], errResp azfake.ErrorResponder)
 
+	// BeginGetGraphQLAPIDefinition is the fake for method ItemsClient.BeginGetGraphQLAPIDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	BeginGetGraphQLAPIDefinition func(ctx context.Context, workspaceID string, graphQLAPIID string, options *graphqlapi.ItemsClientBeginGetGraphQLAPIDefinitionOptions) (resp azfake.PollerResponder[graphqlapi.ItemsClientGetGraphQLAPIDefinitionResponse], errResp azfake.ErrorResponder)
+
 	// NewListGraphQLApisPager is the fake for method ItemsClient.NewListGraphQLApisPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListGraphQLApisPager func(workspaceID string, options *graphqlapi.ItemsClientListGraphQLApisOptions) (resp azfake.PagerResponder[graphqlapi.ItemsClientListGraphQLApisResponse])
@@ -44,6 +49,10 @@ type ItemsServer struct {
 	// UpdateGraphQLAPI is the fake for method ItemsClient.UpdateGraphQLAPI
 	// HTTP status codes to indicate success: http.StatusOK
 	UpdateGraphQLAPI func(ctx context.Context, workspaceID string, graphQLAPIID string, updateGraphQLAPIRequest graphqlapi.UpdateGraphQLAPIRequest, options *graphqlapi.ItemsClientUpdateGraphQLAPIOptions) (resp azfake.Responder[graphqlapi.ItemsClientUpdateGraphQLAPIResponse], errResp azfake.ErrorResponder)
+
+	// BeginUpdateGraphQLAPIDefinition is the fake for method ItemsClient.BeginUpdateGraphQLAPIDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
+	BeginUpdateGraphQLAPIDefinition func(ctx context.Context, workspaceID string, graphQLAPIID string, updateGraphQLAPIDefinitionRequest graphqlapi.UpdateGraphQLAPIDefinitionRequest, options *graphqlapi.ItemsClientBeginUpdateGraphQLAPIDefinitionOptions) (resp azfake.PollerResponder[graphqlapi.ItemsClientUpdateGraphQLAPIDefinitionResponse], errResp azfake.ErrorResponder)
 }
 
 // NewItemsServerTransport creates a new instance of ItemsServerTransport with the provided implementation.
@@ -51,18 +60,22 @@ type ItemsServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewItemsServerTransport(srv *ItemsServer) *ItemsServerTransport {
 	return &ItemsServerTransport{
-		srv:                     srv,
-		beginCreateGraphQLAPI:   newTracker[azfake.PollerResponder[graphqlapi.ItemsClientCreateGraphQLAPIResponse]](),
-		newListGraphQLApisPager: newTracker[azfake.PagerResponder[graphqlapi.ItemsClientListGraphQLApisResponse]](),
+		srv:                             srv,
+		beginCreateGraphQLAPI:           newTracker[azfake.PollerResponder[graphqlapi.ItemsClientCreateGraphQLAPIResponse]](),
+		beginGetGraphQLAPIDefinition:    newTracker[azfake.PollerResponder[graphqlapi.ItemsClientGetGraphQLAPIDefinitionResponse]](),
+		newListGraphQLApisPager:         newTracker[azfake.PagerResponder[graphqlapi.ItemsClientListGraphQLApisResponse]](),
+		beginUpdateGraphQLAPIDefinition: newTracker[azfake.PollerResponder[graphqlapi.ItemsClientUpdateGraphQLAPIDefinitionResponse]](),
 	}
 }
 
 // ItemsServerTransport connects instances of graphqlapi.ItemsClient to instances of ItemsServer.
 // Don't use this type directly, use NewItemsServerTransport instead.
 type ItemsServerTransport struct {
-	srv                     *ItemsServer
-	beginCreateGraphQLAPI   *tracker[azfake.PollerResponder[graphqlapi.ItemsClientCreateGraphQLAPIResponse]]
-	newListGraphQLApisPager *tracker[azfake.PagerResponder[graphqlapi.ItemsClientListGraphQLApisResponse]]
+	srv                             *ItemsServer
+	beginCreateGraphQLAPI           *tracker[azfake.PollerResponder[graphqlapi.ItemsClientCreateGraphQLAPIResponse]]
+	beginGetGraphQLAPIDefinition    *tracker[azfake.PollerResponder[graphqlapi.ItemsClientGetGraphQLAPIDefinitionResponse]]
+	newListGraphQLApisPager         *tracker[azfake.PagerResponder[graphqlapi.ItemsClientListGraphQLApisResponse]]
+	beginUpdateGraphQLAPIDefinition *tracker[azfake.PollerResponder[graphqlapi.ItemsClientUpdateGraphQLAPIDefinitionResponse]]
 }
 
 // Do implements the policy.Transporter interface for ItemsServerTransport.
@@ -96,10 +109,14 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 				res.resp, res.err = i.dispatchDeleteGraphQLAPI(req)
 			case "ItemsClient.GetGraphQLAPI":
 				res.resp, res.err = i.dispatchGetGraphQLAPI(req)
+			case "ItemsClient.BeginGetGraphQLAPIDefinition":
+				res.resp, res.err = i.dispatchBeginGetGraphQLAPIDefinition(req)
 			case "ItemsClient.NewListGraphQLApisPager":
 				res.resp, res.err = i.dispatchNewListGraphQLApisPager(req)
 			case "ItemsClient.UpdateGraphQLAPI":
 				res.resp, res.err = i.dispatchUpdateGraphQLAPI(req)
+			case "ItemsClient.BeginUpdateGraphQLAPIDefinition":
+				res.resp, res.err = i.dispatchBeginUpdateGraphQLAPIDefinition(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -229,6 +246,62 @@ func (i *ItemsServerTransport) dispatchGetGraphQLAPI(req *http.Request) (*http.R
 	return resp, nil
 }
 
+func (i *ItemsServerTransport) dispatchBeginGetGraphQLAPIDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginGetGraphQLAPIDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginGetGraphQLAPIDefinition not implemented")}
+	}
+	beginGetGraphQLAPIDefinition := i.beginGetGraphQLAPIDefinition.get(req)
+	if beginGetGraphQLAPIDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphQLApis/(?P<GraphQLApiId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		graphQLAPIIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("GraphQLApiId")])
+		if err != nil {
+			return nil, err
+		}
+		formatUnescaped, err := url.QueryUnescape(qp.Get("format"))
+		if err != nil {
+			return nil, err
+		}
+		formatParam := getOptional(formatUnescaped)
+		var options *graphqlapi.ItemsClientBeginGetGraphQLAPIDefinitionOptions
+		if formatParam != nil {
+			options = &graphqlapi.ItemsClientBeginGetGraphQLAPIDefinitionOptions{
+				Format: formatParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginGetGraphQLAPIDefinition(req.Context(), workspaceIDParam, graphQLAPIIDParam, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginGetGraphQLAPIDefinition = &respr
+		i.beginGetGraphQLAPIDefinition.add(req, beginGetGraphQLAPIDefinition)
+	}
+
+	resp, err := server.PollerResponderNext(beginGetGraphQLAPIDefinition, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+		i.beginGetGraphQLAPIDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginGetGraphQLAPIDefinition) {
+		i.beginGetGraphQLAPIDefinition.remove(req)
+	}
+
+	return resp, nil
+}
+
 func (i *ItemsServerTransport) dispatchNewListGraphQLApisPager(req *http.Request) (*http.Response, error) {
 	if i.srv.NewListGraphQLApisPager == nil {
 		return nil, &nonRetriableError{errors.New("fake for method NewListGraphQLApisPager not implemented")}
@@ -312,6 +385,69 @@ func (i *ItemsServerTransport) dispatchUpdateGraphQLAPI(req *http.Request) (*htt
 	if err != nil {
 		return nil, err
 	}
+	return resp, nil
+}
+
+func (i *ItemsServerTransport) dispatchBeginUpdateGraphQLAPIDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginUpdateGraphQLAPIDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginUpdateGraphQLAPIDefinition not implemented")}
+	}
+	beginUpdateGraphQLAPIDefinition := i.beginUpdateGraphQLAPIDefinition.get(req)
+	if beginUpdateGraphQLAPIDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphQLApis/(?P<GraphQLApiId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		body, err := server.UnmarshalRequestAsJSON[graphqlapi.UpdateGraphQLAPIDefinitionRequest](req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		graphQLAPIIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("GraphQLApiId")])
+		if err != nil {
+			return nil, err
+		}
+		updateMetadataUnescaped, err := url.QueryUnescape(qp.Get("updateMetadata"))
+		if err != nil {
+			return nil, err
+		}
+		updateMetadataParam, err := parseOptional(updateMetadataUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		var options *graphqlapi.ItemsClientBeginUpdateGraphQLAPIDefinitionOptions
+		if updateMetadataParam != nil {
+			options = &graphqlapi.ItemsClientBeginUpdateGraphQLAPIDefinitionOptions{
+				UpdateMetadata: updateMetadataParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginUpdateGraphQLAPIDefinition(req.Context(), workspaceIDParam, graphQLAPIIDParam, body, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginUpdateGraphQLAPIDefinition = &respr
+		i.beginUpdateGraphQLAPIDefinition.add(req, beginUpdateGraphQLAPIDefinition)
+	}
+
+	resp, err := server.PollerResponderNext(beginUpdateGraphQLAPIDefinition, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
+		i.beginUpdateGraphQLAPIDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginUpdateGraphQLAPIDefinition) {
+		i.beginUpdateGraphQLAPIDefinition.remove(req)
+	}
+
 	return resp, nil
 }
 

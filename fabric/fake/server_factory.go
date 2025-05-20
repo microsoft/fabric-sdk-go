@@ -23,6 +23,7 @@ import (
 	dataflowfake "github.com/microsoft/fabric-sdk-go/fabric/dataflow/fake"
 	datamartfake "github.com/microsoft/fabric-sdk-go/fabric/datamart/fake"
 	datapipelinefake "github.com/microsoft/fabric-sdk-go/fabric/datapipeline/fake"
+	digitaltwinbuilderfake "github.com/microsoft/fabric-sdk-go/fabric/digitaltwinbuilder/fake"
 	environmentfake "github.com/microsoft/fabric-sdk-go/fabric/environment/fake"
 	eventhousefake "github.com/microsoft/fabric-sdk-go/fabric/eventhouse/fake"
 	eventstreamfake "github.com/microsoft/fabric-sdk-go/fabric/eventstream/fake"
@@ -60,6 +61,7 @@ type ServerFactory struct {
 	Dataflow           dataflowfake.ServerFactory
 	Datamart           datamartfake.ServerFactory
 	DataPipeline       datapipelinefake.ServerFactory
+	DigitalTwinBuilder digitaltwinbuilderfake.ServerFactory
 	Environment        environmentfake.ServerFactory
 	Eventhouse         eventhousefake.ServerFactory
 	Eventstream        eventstreamfake.ServerFactory
@@ -100,6 +102,7 @@ type ServerFactoryTransport struct {
 	trDataflow           *dataflowfake.ServerFactoryTransport
 	trDatamart           *datamartfake.ServerFactoryTransport
 	trDataPipeline       *datapipelinefake.ServerFactoryTransport
+	trDigitalTwinBuilder *digitaltwinbuilderfake.ServerFactoryTransport
 	trEnvironment        *environmentfake.ServerFactoryTransport
 	trEventhouse         *eventhousefake.ServerFactoryTransport
 	trEventstream        *eventstreamfake.ServerFactoryTransport
@@ -186,6 +189,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return datapipelinefake.NewServerFactoryTransport(&s.srv.DataPipeline)
 		})
 		resp, err = s.trDataPipeline.Do(req)
+	case "digitaltwinbuilder":
+		initServer(s, &s.trDigitalTwinBuilder, func() *digitaltwinbuilderfake.ServerFactoryTransport {
+			return digitaltwinbuilderfake.NewServerFactoryTransport(&s.srv.DigitalTwinBuilder)
+		})
+		resp, err = s.trDigitalTwinBuilder.Do(req)
 	case "environment":
 		initServer(s, &s.trEnvironment, func() *environmentfake.ServerFactoryTransport {
 			return environmentfake.NewServerFactoryTransport(&s.srv.Environment)

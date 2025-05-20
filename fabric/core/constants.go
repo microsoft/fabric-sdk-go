@@ -916,6 +916,8 @@ const (
 	ItemTypeDataflow ItemType = "Dataflow"
 	// ItemTypeDatamart - PowerBI datamart.
 	ItemTypeDatamart ItemType = "Datamart"
+	// ItemTypeDigitalTwinBuilder - A DigitalTwinBuilder.
+	ItemTypeDigitalTwinBuilder ItemType = "DigitalTwinBuilder"
 	// ItemTypeEnvironment - An environment.
 	ItemTypeEnvironment ItemType = "Environment"
 	// ItemTypeEventhouse - An eventhouse.
@@ -975,6 +977,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
 		ItemTypeDatamart,
+		ItemTypeDigitalTwinBuilder,
 		ItemTypeEnvironment,
 		ItemTypeEventhouse,
 		ItemTypeEventstream,
@@ -1301,6 +1304,8 @@ const (
 	TypeAdlsGen2 Type = "AdlsGen2"
 	// TypeAmazonS3 - AmazonS3
 	TypeAmazonS3 Type = "AmazonS3"
+	// TypeAzureBlobStorage - AzureBlobStorage
+	TypeAzureBlobStorage Type = "AzureBlobStorage"
 	// TypeDataverse - Dataverse
 	TypeDataverse Type = "Dataverse"
 	// TypeExternalDataShare - ExternalDataShare
@@ -1318,6 +1323,7 @@ func PossibleTypeValues() []Type {
 	return []Type{
 		TypeAdlsGen2,
 		TypeAmazonS3,
+		TypeAzureBlobStorage,
 		TypeDataverse,
 		TypeExternalDataShare,
 		TypeGoogleCloudStorage,

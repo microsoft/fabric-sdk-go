@@ -4,7 +4,7 @@
 // Changes may cause incorrect behavior and will be lost if the code is regenerated.
 // SPDX-License-Identifier: MIT
 
-package graphqlapi_test
+package digitaltwinbuilder_test
 
 import (
 	"context"
@@ -13,21 +13,21 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 
-	"github.com/microsoft/fabric-sdk-go/fabric/graphqlapi"
+	"github.com/microsoft/fabric-sdk-go/fabric/digitaltwinbuilder"
 )
 
 // Generated from example definition
-func ExampleItemsClient_NewListGraphQLApisPager() {
+func ExampleItemsClient_NewListDigitalTwinBuildersPager() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
 	}
 	ctx := context.Background()
-	clientFactory, err := graphqlapi.NewClientFactory(cred, nil, nil)
+	clientFactory, err := digitaltwinbuilder.NewClientFactory(cred, nil, nil)
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewItemsClient().NewListGraphQLApisPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &graphqlapi.ItemsClientListGraphQLApisOptions{ContinuationToken: nil})
+	pager := clientFactory.NewItemsClient().NewListDigitalTwinBuildersPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &digitaltwinbuilder.ItemsClientListDigitalTwinBuildersOptions{ContinuationToken: nil})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
 		if err != nil {
@@ -38,19 +38,19 @@ func ExampleItemsClient_NewListGraphQLApisPager() {
 			_ = v
 		}
 		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
-		// page.GraphQLApis = graphqlapi.GraphQLApis{
-		// 	Value: []graphqlapi.GraphQLAPI{
+		// page.DigitalTwinBuilders = digitaltwinbuilder.DigitalTwinBuilders{
+		// 	Value: []digitaltwinbuilder.DigitalTwinBuilder{
 		// 		{
-		// 			Type: to.Ptr(graphqlapi.ItemTypeGraphQLAPI),
-		// 			Description: to.Ptr("An API for GraphQL item description."),
-		// 			DisplayName: to.Ptr("GraphQL 1"),
+		// 			Type: to.Ptr(digitaltwinbuilder.ItemTypeDigitalTwinBuilder),
+		// 			Description: to.Ptr("A digitaltwinbuilder description."),
+		// 			DisplayName: to.Ptr("DigitalTwinBuilder Name 1"),
 		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 		},
 		// 		{
-		// 			Type: to.Ptr(graphqlapi.ItemTypeGraphQLAPI),
-		// 			Description: to.Ptr("An API for GraphQL description."),
-		// 			DisplayName: to.Ptr("GraphQL 2"),
+		// 			Type: to.Ptr(digitaltwinbuilder.ItemTypeDigitalTwinBuilder),
+		// 			Description: to.Ptr("A digitaltwinbuilder description."),
+		// 			DisplayName: to.Ptr("DigitalTwinBuilder Name 2"),
 		// 			ID: to.Ptr("f697fb63-abd4-4399-9548-be7e3c3c0dac"),
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 	}},
@@ -59,19 +59,19 @@ func ExampleItemsClient_NewListGraphQLApisPager() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_BeginCreateGraphQLAPI_createAApiForGraphQlExample() {
+func ExampleItemsClient_BeginCreateDigitalTwinBuilder_createADigitaltwinbuilderExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
 	}
 	ctx := context.Background()
-	clientFactory, err := graphqlapi.NewClientFactory(cred, nil, nil)
+	clientFactory, err := digitaltwinbuilder.NewClientFactory(cred, nil, nil)
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	poller, err := clientFactory.NewItemsClient().BeginCreateGraphQLAPI(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", graphqlapi.CreateGraphQLAPIRequest{
-		Description: to.Ptr("An API for GraphQL item description."),
-		DisplayName: to.Ptr("GraphQL 1"),
+	poller, err := clientFactory.NewItemsClient().BeginCreateDigitalTwinBuilder(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", digitaltwinbuilder.CreateDigitalTwinBuilderRequest{
+		Description: to.Ptr("A digitaltwinbuilder description."),
+		DisplayName: to.Ptr("DigitalTwinBuilder 1"),
 	}, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
@@ -83,33 +83,32 @@ func ExampleItemsClient_BeginCreateGraphQLAPI_createAApiForGraphQlExample() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_BeginCreateGraphQLAPI_createAGraphQlApiWithPublicDefinitionExample() {
+func ExampleItemsClient_BeginCreateDigitalTwinBuilder_createADigitaltwinbuilderWithPublicDefinitionExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
 	}
 	ctx := context.Background()
-	clientFactory, err := graphqlapi.NewClientFactory(cred, nil, nil)
+	clientFactory, err := digitaltwinbuilder.NewClientFactory(cred, nil, nil)
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	poller, err := clientFactory.NewItemsClient().BeginCreateGraphQLAPI(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", graphqlapi.CreateGraphQLAPIRequest{
-		Description: to.Ptr("An API for GraphQL item description."),
-		Definition: &graphqlapi.PublicDefinition{
-			Format: to.Ptr("GraphQLApiV1"),
-			Parts: []graphqlapi.PublicDefinitionPart{
+	poller, err := clientFactory.NewItemsClient().BeginCreateDigitalTwinBuilder(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", digitaltwinbuilder.CreateDigitalTwinBuilderRequest{
+		Description: to.Ptr("An digitaltwinbuilder description."),
+		Definition: &digitaltwinbuilder.Definition{
+			Parts: []digitaltwinbuilder.DefinitionPart{
 				{
-					Path:        to.Ptr("graphql-definition.json"),
-					Payload:     to.Ptr("eyJleGVjdXRhYmxlRm..OWRmNDhhY2ZmZTgifQ=="),
-					PayloadType: to.Ptr(graphqlapi.PayloadTypeInlineBase64),
+					Path:        to.Ptr("definition.json"),
+					Payload:     to.Ptr("ew0KICAibGFrZWhvdXNlSWQiOiAiYjliNWQzNmYtNDQ0NS00MDNiLWFjODctMDE2YjFjZDIwMjExIg0KfQ=="),
+					PayloadType: to.Ptr(digitaltwinbuilder.PayloadTypeInlineBase64),
 				},
 				{
 					Path:        to.Ptr(".platform"),
 					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
-					PayloadType: to.Ptr(graphqlapi.PayloadTypeInlineBase64),
+					PayloadType: to.Ptr(digitaltwinbuilder.PayloadTypeInlineBase64),
 				}},
 		},
-		DisplayName: to.Ptr("GraphQLApi 1"),
+		DisplayName: to.Ptr("DigitalTwinBuilder_1"),
 	}, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
@@ -121,46 +120,46 @@ func ExampleItemsClient_BeginCreateGraphQLAPI_createAGraphQlApiWithPublicDefinit
 }
 
 // Generated from example definition
-func ExampleItemsClient_GetGraphQLAPI() {
+func ExampleItemsClient_GetDigitalTwinBuilder() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
 	}
 	ctx := context.Background()
-	clientFactory, err := graphqlapi.NewClientFactory(cred, nil, nil)
+	clientFactory, err := digitaltwinbuilder.NewClientFactory(cred, nil, nil)
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewItemsClient().GetGraphQLAPI(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", nil)
+	res, err := clientFactory.NewItemsClient().GetDigitalTwinBuilder(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
 	// You could use response here. We use blank identifier for just demo purposes.
 	_ = res
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
-	// res.GraphQLAPI = graphqlapi.GraphQLAPI{
-	// 	Type: to.Ptr(graphqlapi.ItemTypeGraphQLAPI),
-	// 	Description: to.Ptr("A GraphQL item description."),
-	// 	DisplayName: to.Ptr("GraphQL 1"),
+	// res.DigitalTwinBuilder = digitaltwinbuilder.DigitalTwinBuilder{
+	// 	Type: to.Ptr(digitaltwinbuilder.ItemTypeDigitalTwinBuilder),
+	// 	Description: to.Ptr("A digitaltwinbuilder description."),
+	// 	DisplayName: to.Ptr("DigitalTwinBuilder 1"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// }
 }
 
 // Generated from example definition
-func ExampleItemsClient_UpdateGraphQLAPI() {
+func ExampleItemsClient_UpdateDigitalTwinBuilder() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
 	}
 	ctx := context.Background()
-	clientFactory, err := graphqlapi.NewClientFactory(cred, nil, nil)
+	clientFactory, err := digitaltwinbuilder.NewClientFactory(cred, nil, nil)
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewItemsClient().UpdateGraphQLAPI(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", graphqlapi.UpdateGraphQLAPIRequest{
-		Description: to.Ptr("An API for GraphQL's New description"),
-		DisplayName: to.Ptr("An API for GraphQL's New name"),
+	res, err := clientFactory.NewItemsClient().UpdateDigitalTwinBuilder(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", digitaltwinbuilder.UpdateDigitalTwinBuilderRequest{
+		Description: to.Ptr("A new description for digitaltwinbuilder."),
+		DisplayName: to.Ptr("DigitalTwinBuilder_New_Name"),
 	}, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
@@ -168,44 +167,44 @@ func ExampleItemsClient_UpdateGraphQLAPI() {
 	// You could use response here. We use blank identifier for just demo purposes.
 	_ = res
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
-	// res.GraphQLAPI = graphqlapi.GraphQLAPI{
-	// 	Type: to.Ptr(graphqlapi.ItemTypeGraphQLAPI),
-	// 	Description: to.Ptr("An API for GraphQL's New description"),
-	// 	DisplayName: to.Ptr("GraphQLApi's New name"),
+	// res.DigitalTwinBuilder = digitaltwinbuilder.DigitalTwinBuilder{
+	// 	Type: to.Ptr(digitaltwinbuilder.ItemTypeDigitalTwinBuilder),
+	// 	Description: to.Ptr("A new description for digitaltwinbuilder."),
+	// 	DisplayName: to.Ptr("DigitalTwinBuilder_New_Name"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// }
 }
 
 // Generated from example definition
-func ExampleItemsClient_DeleteGraphQLAPI() {
+func ExampleItemsClient_DeleteDigitalTwinBuilder() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
 	}
 	ctx := context.Background()
-	clientFactory, err := graphqlapi.NewClientFactory(cred, nil, nil)
+	clientFactory, err := digitaltwinbuilder.NewClientFactory(cred, nil, nil)
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewItemsClient().DeleteGraphQLAPI(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", nil)
+	_, err = clientFactory.NewItemsClient().DeleteDigitalTwinBuilder(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
 }
 
 // Generated from example definition
-func ExampleItemsClient_BeginGetGraphQLAPIDefinition() {
+func ExampleItemsClient_BeginGetDigitalTwinBuilderDefinition() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
 	}
 	ctx := context.Background()
-	clientFactory, err := graphqlapi.NewClientFactory(cred, nil, nil)
+	clientFactory, err := digitaltwinbuilder.NewClientFactory(cred, nil, nil)
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	poller, err := clientFactory.NewItemsClient().BeginGetGraphQLAPIDefinition(ctx, "6e335e92-a2a2-4b5a-970a-bd6a89fbb765", "cfafbeb1-8037-4d0c-896e-a46fb27ff229", &graphqlapi.ItemsClientBeginGetGraphQLAPIDefinitionOptions{Format: nil})
+	poller, err := clientFactory.NewItemsClient().BeginGetDigitalTwinBuilderDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", &digitaltwinbuilder.ItemsClientBeginGetDigitalTwinBuilderDefinitionOptions{Format: nil})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -216,49 +215,49 @@ func ExampleItemsClient_BeginGetGraphQLAPIDefinition() {
 	// You could use response here. We use blank identifier for just demo purposes.
 	_ = res
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
-	// res.DefinitionResponse = graphqlapi.DefinitionResponse{
-	// 	Definition: &graphqlapi.PublicDefinition{
-	// 		Parts: []graphqlapi.PublicDefinitionPart{
+	// res.DefinitionResponse = digitaltwinbuilder.DefinitionResponse{
+	// 	Definition: &digitaltwinbuilder.Definition{
+	// 		Parts: []digitaltwinbuilder.DefinitionPart{
 	// 			{
-	// 				Path: to.Ptr("graphql-definition.json"),
-	// 				Payload: to.Ptr("ew0KICAiZXhlY3V0YW..OWRmNDhhY2ZmZTgifQ"),
-	// 				PayloadType: to.Ptr(graphqlapi.PayloadTypeInlineBase64),
+	// 				Path: to.Ptr("definition.json"),
+	// 				Payload: to.Ptr("ew0KICAibGFrZWhvdXNlSWQiOiAiYjliNWQzNmYtNDQ0NS00MDNiLWFjODctMDE2YjFjZDIwMjExIg0KfQ=="),
+	// 				PayloadType: to.Ptr(digitaltwinbuilder.PayloadTypeInlineBase64),
 	// 			},
 	// 			{
 	// 				Path: to.Ptr(".platform"),
 	// 				Payload: to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
-	// 				PayloadType: to.Ptr(graphqlapi.PayloadTypeInlineBase64),
+	// 				PayloadType: to.Ptr(digitaltwinbuilder.PayloadTypeInlineBase64),
 	// 		}},
 	// 	},
 	// }
 }
 
 // Generated from example definition
-func ExampleItemsClient_BeginUpdateGraphQLAPIDefinition() {
+func ExampleItemsClient_BeginUpdateDigitalTwinBuilderDefinition() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
 	}
 	ctx := context.Background()
-	clientFactory, err := graphqlapi.NewClientFactory(cred, nil, nil)
+	clientFactory, err := digitaltwinbuilder.NewClientFactory(cred, nil, nil)
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	poller, err := clientFactory.NewItemsClient().BeginUpdateGraphQLAPIDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", graphqlapi.UpdateGraphQLAPIDefinitionRequest{
-		Definition: &graphqlapi.PublicDefinition{
-			Parts: []graphqlapi.PublicDefinitionPart{
+	poller, err := clientFactory.NewItemsClient().BeginUpdateDigitalTwinBuilderDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", digitaltwinbuilder.UpdateDigitalTwinBuilderDefinitionRequest{
+		Definition: &digitaltwinbuilder.Definition{
+			Parts: []digitaltwinbuilder.DefinitionPart{
 				{
-					Path:        to.Ptr("graphql-definition.json"),
-					Payload:     to.Ptr("ew0KICAiZXhlY3V0YW..OWRmNDhhY2ZmZTgifQ=="),
-					PayloadType: to.Ptr(graphqlapi.PayloadTypeInlineBase64),
+					Path:        to.Ptr("definition.json"),
+					Payload:     to.Ptr("ew0KICAibGFrZWhvdXNlSWQiOiAiYjliNWQzNmYtNDQ0NS00MDNiLWFjODctMDE2YjFjZDIwMjExIg0KfQ=="),
+					PayloadType: to.Ptr(digitaltwinbuilder.PayloadTypeInlineBase64),
 				},
 				{
 					Path:        to.Ptr(".platform"),
 					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
-					PayloadType: to.Ptr(graphqlapi.PayloadTypeInlineBase64),
+					PayloadType: to.Ptr(digitaltwinbuilder.PayloadTypeInlineBase64),
 				}},
 		},
-	}, &graphqlapi.ItemsClientBeginUpdateGraphQLAPIDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	}, &digitaltwinbuilder.ItemsClientBeginUpdateDigitalTwinBuilderDefinitionOptions{UpdateMetadata: to.Ptr(true)})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

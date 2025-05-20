@@ -11,6 +11,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -30,6 +31,7 @@ type ItemsClient struct {
 }
 
 // BeginCreateGraphQLAPI - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// To create GraphQLApi item with a public definition, refer to GraphQLApi definition [/rest/api/fabric/articles/item-management/definitions/graphql-api-definition].
 // PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
@@ -39,7 +41,8 @@ type ItemsClient struct {
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes, except for definition payload with SQL analytics endpoint
+// |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -53,6 +56,7 @@ func (client *ItemsClient) BeginCreateGraphQLAPI(ctx context.Context, workspaceI
 }
 
 // CreateGraphQLAPI - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// To create GraphQLApi item with a public definition, refer to GraphQLApi definition [/rest/api/fabric/articles/item-management/definitions/graphql-api-definition].
 // PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
@@ -62,7 +66,8 @@ func (client *ItemsClient) BeginCreateGraphQLAPI(ctx context.Context, workspaceI
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes, except for definition payload with SQL analytics endpoint
+// |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -224,6 +229,89 @@ func (client *ItemsClient) getGraphQLAPIHandleResponse(resp *http.Response) (Ite
 	return result, nil
 }
 
+// BeginGetGraphQLAPIDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// When you get a GraphQLApi public definition [/rest/api/fabric/articles/item-management/definitions/graphql-api-definition],
+// the sensitivity label is not a part of the definition.
+// PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
+// LIMITATIONS This API is blocked for a with an encrypted sensitivity label.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - graphQLAPIID - The GraphQLApi ID.
+//   - options - ItemsClientBeginGetGraphQLAPIDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetGraphQLAPIDefinition
+//     method.
+func (client *ItemsClient) BeginGetGraphQLAPIDefinition(ctx context.Context, workspaceID string, graphQLAPIID string, options *ItemsClientBeginGetGraphQLAPIDefinitionOptions) (*runtime.Poller[ItemsClientGetGraphQLAPIDefinitionResponse], error) {
+	return client.beginGetGraphQLAPIDefinition(ctx, workspaceID, graphQLAPIID, options)
+}
+
+// GetGraphQLAPIDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// When you get a GraphQLApi public definition [/rest/api/fabric/articles/item-management/definitions/graphql-api-definition],
+// the sensitivity label is not a part of the definition.
+// PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
+// LIMITATIONS This API is blocked for a with an encrypted sensitivity label.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) getGraphQLAPIDefinition(ctx context.Context, workspaceID string, graphQLAPIID string, options *ItemsClientBeginGetGraphQLAPIDefinitionOptions) (*http.Response, error) {
+	var err error
+	const operationName = "graphqlapi.ItemsClient.BeginGetGraphQLAPIDefinition"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getGraphQLAPIDefinitionCreateRequest(ctx, workspaceID, graphQLAPIID, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// getGraphQLAPIDefinitionCreateRequest creates the GetGraphQLAPIDefinition request.
+func (client *ItemsClient) getGraphQLAPIDefinitionCreateRequest(ctx context.Context, workspaceID string, graphQLAPIID string, options *ItemsClientBeginGetGraphQLAPIDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/GraphQLApis/{GraphQLApiId}/getDefinition"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if graphQLAPIID == "" {
+		return nil, errors.New("parameter graphQLAPIID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{GraphQLApiId}", url.PathEscape(graphQLAPIID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.Format != nil {
+		reqQP.Set("format", *options.Format)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
 // NewListGraphQLApisPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
@@ -358,10 +446,97 @@ func (client *ItemsClient) updateGraphQLAPIHandleResponse(resp *http.Response) (
 	return result, nil
 }
 
+// BeginUpdateGraphQLAPIDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Updating the GraphQLApi's definition, does not affect its sensitivity label.
+// PERMISSIONS The API caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes, except for definition payload with SQL analytics endpoint
+// |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - graphQLAPIID - The GraphQLApi ID.
+//   - updateGraphQLAPIDefinitionRequest - Update GraphQLApi definition request payload.
+//   - options - ItemsClientBeginUpdateGraphQLAPIDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateGraphQLAPIDefinition
+//     method.
+func (client *ItemsClient) BeginUpdateGraphQLAPIDefinition(ctx context.Context, workspaceID string, graphQLAPIID string, updateGraphQLAPIDefinitionRequest UpdateGraphQLAPIDefinitionRequest, options *ItemsClientBeginUpdateGraphQLAPIDefinitionOptions) (*runtime.Poller[ItemsClientUpdateGraphQLAPIDefinitionResponse], error) {
+	return client.beginUpdateGraphQLAPIDefinition(ctx, workspaceID, graphQLAPIID, updateGraphQLAPIDefinitionRequest, options)
+}
+
+// UpdateGraphQLAPIDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Updating the GraphQLApi's definition, does not affect its sensitivity label.
+// PERMISSIONS The API caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes, except for definition payload with SQL analytics endpoint
+// |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) updateGraphQLAPIDefinition(ctx context.Context, workspaceID string, graphQLAPIID string, updateGraphQLAPIDefinitionRequest UpdateGraphQLAPIDefinitionRequest, options *ItemsClientBeginUpdateGraphQLAPIDefinitionOptions) (*http.Response, error) {
+	var err error
+	const operationName = "graphqlapi.ItemsClient.BeginUpdateGraphQLAPIDefinition"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateGraphQLAPIDefinitionCreateRequest(ctx, workspaceID, graphQLAPIID, updateGraphQLAPIDefinitionRequest, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// updateGraphQLAPIDefinitionCreateRequest creates the UpdateGraphQLAPIDefinition request.
+func (client *ItemsClient) updateGraphQLAPIDefinitionCreateRequest(ctx context.Context, workspaceID string, graphQLAPIID string, updateGraphQLAPIDefinitionRequest UpdateGraphQLAPIDefinitionRequest, options *ItemsClientBeginUpdateGraphQLAPIDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/GraphQLApis/{GraphQLApiId}/updateDefinition"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if graphQLAPIID == "" {
+		return nil, errors.New("parameter graphQLAPIID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{GraphQLApiId}", url.PathEscape(graphQLAPIID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.UpdateMetadata != nil {
+		reqQP.Set("updateMetadata", strconv.FormatBool(*options.UpdateMetadata))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateGraphQLAPIDefinitionRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // Custom code starts below
 
 // CreateGraphQLAPI - returns ItemsClientCreateGraphQLAPIResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// To create GraphQLApi item with a public definition, refer to GraphQLApi definition [/rest/api/fabric/articles/item-management/definitions/graphql-api-definition].
 //
 // PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
@@ -373,7 +548,7 @@ func (client *ItemsClient) updateGraphQLAPIHandleResponse(resp *http.Response) (
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes, except for definition payload with SQL analytics endpoint |
 //
 // INTERFACE
 // Generated from API version v1
@@ -426,6 +601,151 @@ func (client *ItemsClient) beginCreateGraphQLAPI(ctx context.Context, workspaceI
 			return nil, err
 		}
 		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientCreateGraphQLAPIResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// GetGraphQLAPIDefinition - returns ItemsClientGetGraphQLAPIDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// When you get a GraphQLApi public definition [/rest/api/fabric/articles/item-management/definitions/graphql-api-definition], the sensitivity label is not a part of the definition.
+//
+// PERMISSIONS The caller must have contributor or higher workspace role.
+//
+// # REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
+//
+// LIMITATIONS This API is blocked for a with an encrypted sensitivity label.
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - graphQLAPIID - The GraphQLApi ID.
+//   - options - ItemsClientBeginGetGraphQLAPIDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetGraphQLAPIDefinition method.
+func (client *ItemsClient) GetGraphQLAPIDefinition(ctx context.Context, workspaceID string, graphQLAPIID string, options *ItemsClientBeginGetGraphQLAPIDefinitionOptions) (ItemsClientGetGraphQLAPIDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginGetGraphQLAPIDefinition(ctx, workspaceID, graphQLAPIID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientGetGraphQLAPIDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientGetGraphQLAPIDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginGetGraphQLAPIDefinition creates the getGraphQLAPIDefinition request.
+func (client *ItemsClient) beginGetGraphQLAPIDefinition(ctx context.Context, workspaceID string, graphQLAPIID string, options *ItemsClientBeginGetGraphQLAPIDefinitionOptions) (*runtime.Poller[ItemsClientGetGraphQLAPIDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.getGraphQLAPIDefinition(ctx, workspaceID, graphQLAPIID, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientGetGraphQLAPIDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientGetGraphQLAPIDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientGetGraphQLAPIDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientGetGraphQLAPIDefinitionResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// UpdateGraphQLAPIDefinition - returns ItemsClientUpdateGraphQLAPIDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// Updating the GraphQLApi's definition, does not affect its sensitivity label.
+//
+// PERMISSIONS The API caller must have contributor or higher workspace role.
+//
+// # REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes, except for definition payload with SQL analytics endpoint |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - graphQLAPIID - The GraphQLApi ID.
+//   - updateGraphQLAPIDefinitionRequest - Update GraphQLApi definition request payload.
+//   - options - ItemsClientBeginUpdateGraphQLAPIDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateGraphQLAPIDefinition method.
+func (client *ItemsClient) UpdateGraphQLAPIDefinition(ctx context.Context, workspaceID string, graphQLAPIID string, updateGraphQLAPIDefinitionRequest UpdateGraphQLAPIDefinitionRequest, options *ItemsClientBeginUpdateGraphQLAPIDefinitionOptions) (ItemsClientUpdateGraphQLAPIDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginUpdateGraphQLAPIDefinition(ctx, workspaceID, graphQLAPIID, updateGraphQLAPIDefinitionRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientUpdateGraphQLAPIDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientUpdateGraphQLAPIDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginUpdateGraphQLAPIDefinition creates the updateGraphQLAPIDefinition request.
+func (client *ItemsClient) beginUpdateGraphQLAPIDefinition(ctx context.Context, workspaceID string, graphQLAPIID string, updateGraphQLAPIDefinitionRequest UpdateGraphQLAPIDefinitionRequest, options *ItemsClientBeginUpdateGraphQLAPIDefinitionOptions) (*runtime.Poller[ItemsClientUpdateGraphQLAPIDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.updateGraphQLAPIDefinition(ctx, workspaceID, graphQLAPIID, updateGraphQLAPIDefinitionRequest, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateGraphQLAPIDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientUpdateGraphQLAPIDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateGraphQLAPIDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientUpdateGraphQLAPIDefinitionResponse]{
 			Handler: handler,
 			Tracer:  client.internal.Tracer(),
 		})

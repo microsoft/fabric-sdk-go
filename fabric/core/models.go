@@ -154,6 +154,27 @@ func (a *AutomaticGitCredentialsResponse) GetGitCredentialsConfigurationResponse
 	}
 }
 
+// AzureBlobStorage - An object containing the properties of the target Azure Blob Storage data source.
+type AzureBlobStorage struct {
+	// REQUIRED; A string representing the connection that is bound with the shortcut. The connectionId is a unique identifier
+	// used to establish a connection between the shortcut and the target datasource. To find
+	// this connection ID, first create a cloud connection [/fabric/data-factory/data-source-management#add-a-data-source] to
+	// be used by the shortcut when connecting to the Azure Blob Storage data location.
+	// Open the cloud connection's settings view and copy the GUID that is the connection ID.
+	ConnectionID *string
+
+	// REQUIRED; Specifies the location of the target Azure Blob Storage container. The URI must be in the format https://[account-name].blob.core.windows.net
+	// where [account-name] is the name of the target Azure Blob
+	// Storage account.
+	Location *string
+
+	// REQUIRED; Specifies the container and subfolder within the Azure Blob Storage account where the target folder is located.
+	// Must be of the format [container]/[subfolder]. [Container] is the name of the container
+	// that holds the files and folders. [Subfolder] is the name of the subfolder within the container and is optional. For example:
+	// /mycontainer/mysubfolder
+	Subpath *string
+}
+
 // AzureDevOpsDetails - Azure DevOps provider details.
 type AzureDevOpsDetails struct {
 	// REQUIRED; The branch name. Maximum length is 250 characters.
@@ -555,6 +576,9 @@ type CreatableShortcutTarget struct {
 	// An object containing the properties of the target Amazon S3 data source.
 	AmazonS3 *AmazonS3
 
+	// An object containing the properties of the target Azure Blob Storage data source.
+	AzureBlobStorage *AzureBlobStorage
+
 	// An object containing the properties of the target Dataverse data source.
 	Dataverse *Dataverse
 
@@ -819,7 +843,8 @@ type CreateShortcutRequest struct {
 	Path *string
 
 	// REQUIRED; An object that contains the target datasource, and it must specify exactly one of the supported destinations:
-	// OneLake, Amazon S3, ADLS Gen2, Google Cloud Storage, S3 compatible or Dataverse.
+	// OneLake, Amazon S3, ADLS Gen2, Google Cloud Storage, S3 compatible, Dataverse or Azure
+	// Blob storage.
 	Target *CreatableShortcutTarget
 }
 
@@ -2556,6 +2581,9 @@ type Target struct {
 
 	// An object containing the properties of the target Amazon S3 data source.
 	AmazonS3 *AmazonS3
+
+	// An object containing the properties of the target Azure Blob Storage data source.
+	AzureBlobStorage *AzureBlobStorage
 
 	// An object containing the properties of the target Dataverse data source.
 	Dataverse *Dataverse

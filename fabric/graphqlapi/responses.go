@@ -17,6 +17,12 @@ type ItemsClientDeleteGraphQLAPIResponse struct {
 	// placeholder for future response values
 }
 
+// ItemsClientGetGraphQLAPIDefinitionResponse contains the response from method ItemsClient.BeginGetGraphQLAPIDefinition.
+type ItemsClientGetGraphQLAPIDefinitionResponse struct {
+	// API for GraphQL public definition response.
+	DefinitionResponse
+}
+
 // ItemsClientGetGraphQLAPIResponse contains the response from method ItemsClient.GetGraphQLAPI.
 type ItemsClientGetGraphQLAPIResponse struct {
 	// An API for GraphQL item.
@@ -27,6 +33,11 @@ type ItemsClientGetGraphQLAPIResponse struct {
 type ItemsClientListGraphQLApisResponse struct {
 	// A list of API for GraphQL items.
 	GraphQLApis
+}
+
+// ItemsClientUpdateGraphQLAPIDefinitionResponse contains the response from method ItemsClient.BeginUpdateGraphQLAPIDefinition.
+type ItemsClientUpdateGraphQLAPIDefinitionResponse struct {
+	// placeholder for future response values
 }
 
 // ItemsClientUpdateGraphQLAPIResponse contains the response from method ItemsClient.UpdateGraphQLAPI.

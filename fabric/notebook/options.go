@@ -15,7 +15,8 @@ type ItemsClientBeginCreateNotebookOptions struct {
 // ItemsClientBeginGetNotebookDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetNotebookDefinition
 // method.
 type ItemsClientBeginGetNotebookDefinitionOptions struct {
-	// The format of the notebook public definition.
+	// The format of the notebook public definition. Supported format: ipynb and fabricGitSource. If no format is provided, fabricGitSource
+	// is used.
 	Format *string
 
 	// Resumes the long-running operation from the provided token.

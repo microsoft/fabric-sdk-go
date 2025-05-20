@@ -2731,6 +2731,36 @@ func (testsuite *FakeTestSuite) TestOneLakeShortcuts_CreateShortcut() {
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create shortcut Azure Blob Storage target example"},
+	})
+	exampleWorkspaceID = "bf94607f-3ba1-4a95-8259-27649ccd7755"
+	exampleItemID = "884e71cd-f5b4-45f9-8e00-b71355f7ea5d"
+	exampleCreateShortcutRequest = core.CreateShortcutRequest{
+		Name: to.Ptr("MyAzureBlobStorage"),
+		Path: to.Ptr("Files"),
+		Target: &core.CreatableShortcutTarget{
+			AzureBlobStorage: &core.AzureBlobStorage{
+				ConnectionID: to.Ptr("97e33458-1353-4911-96b1-6f4f4bbfd335"),
+				Location:     to.Ptr("https://azureblobstoragetesting.blob.core.windows.net"),
+				Subpath:      to.Ptr("/tables"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.OneLakeShortcutsServer.CreateShortcut = func(ctx context.Context, workspaceID string, itemID string, createShortcutRequest core.CreateShortcutRequest, options *core.OneLakeShortcutsClientCreateShortcutOptions) (resp azfake.Responder[core.OneLakeShortcutsClientCreateShortcutResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateShortcutRequest, createShortcutRequest))
+		resp = azfake.Responder[core.OneLakeShortcutsClientCreateShortcutResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeShortcutsClientCreateShortcutResponse{}, nil)
+		return
+	}
+
+	_, err = client.CreateShortcut(ctx, exampleWorkspaceID, exampleItemID, exampleCreateShortcutRequest, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Create shortcut Google Cloud Storage target example"},
 	})
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff222"
@@ -2868,18 +2898,55 @@ func (testsuite *FakeTestSuite) TestOneLakeShortcuts_CreateShortcut() {
 func (testsuite *FakeTestSuite) TestOneLakeShortcuts_GetShortcut() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Get shortcut ExternalDataShare target example"},
+		"example-id": {"Get shortcut AzureBlobStorage target example"},
 	})
 	var exampleWorkspaceID string
 	var exampleItemID string
 	var exampleShortcutPath string
 	var exampleShortcutName string
+	exampleWorkspaceID = "bf94607f-3ba1-4a95-8259-27649ccd7755"
+	exampleItemID = "884e71cd-f5b4-45f9-8e00-b71355f7ea5d"
+	exampleShortcutPath = "Files"
+	exampleShortcutName = "MyAzureBlobStorage"
+
+	exampleRes := core.Shortcut{
+		Name: to.Ptr("MyAzureBlobStorage"),
+		Path: to.Ptr("Files"),
+		Target: &core.Target{
+			Type: to.Ptr(core.TypeAzureBlobStorage),
+			AzureBlobStorage: &core.AzureBlobStorage{
+				ConnectionID: to.Ptr("97e33458-1353-4911-96b1-6f4f4bbfd335"),
+				Location:     to.Ptr("https://azureblobstoragetesting.blob.core.windows.net"),
+				Subpath:      to.Ptr("tables"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.OneLakeShortcutsServer.GetShortcut = func(ctx context.Context, workspaceID string, itemID string, shortcutPath string, shortcutName string, options *core.OneLakeShortcutsClientGetShortcutOptions) (resp azfake.Responder[core.OneLakeShortcutsClientGetShortcutResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().Equal(exampleShortcutPath, shortcutPath)
+		testsuite.Require().Equal(exampleShortcutName, shortcutName)
+		resp = azfake.Responder[core.OneLakeShortcutsClientGetShortcutResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeShortcutsClientGetShortcutResponse{Shortcut: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewOneLakeShortcutsClient()
+	res, err := client.GetShortcut(ctx, exampleWorkspaceID, exampleItemID, exampleShortcutPath, exampleShortcutName, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Shortcut))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get shortcut ExternalDataShare target example"},
+	})
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff222"
 	exampleItemID = "25bac802-080d-4f73-8a42-1b406eb1fceb"
 	exampleShortcutPath = "Files/blafolder/folder3"
 	exampleShortcutName = "MyExternalDataShareShortcut"
 
-	exampleRes := core.Shortcut{
+	exampleRes = core.Shortcut{
 		Name: to.Ptr("MyExternalDataShareShortcut"),
 		Path: to.Ptr("Files/blafolder/folder3"),
 		Target: &core.Target{
@@ -2900,8 +2967,7 @@ func (testsuite *FakeTestSuite) TestOneLakeShortcuts_GetShortcut() {
 		return
 	}
 
-	client := testsuite.clientFactory.NewOneLakeShortcutsClient()
-	res, err := client.GetShortcut(ctx, exampleWorkspaceID, exampleItemID, exampleShortcutPath, exampleShortcutName, nil)
+	res, err = client.GetShortcut(ctx, exampleWorkspaceID, exampleItemID, exampleShortcutPath, exampleShortcutName, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Shortcut))
 
