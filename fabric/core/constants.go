@@ -918,6 +918,8 @@ const (
 	ItemTypeDatamart ItemType = "Datamart"
 	// ItemTypeDigitalTwinBuilder - A DigitalTwinBuilder.
 	ItemTypeDigitalTwinBuilder ItemType = "DigitalTwinBuilder"
+	// ItemTypeDigitalTwinBuilderFlow - A Digital Twin Builder Flow.
+	ItemTypeDigitalTwinBuilderFlow ItemType = "DigitalTwinBuilderFlow"
 	// ItemTypeEnvironment - An environment.
 	ItemTypeEnvironment ItemType = "Environment"
 	// ItemTypeEventhouse - An eventhouse.
@@ -978,6 +980,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeDataflow,
 		ItemTypeDatamart,
 		ItemTypeDigitalTwinBuilder,
+		ItemTypeDigitalTwinBuilderFlow,
 		ItemTypeEnvironment,
 		ItemTypeEventhouse,
 		ItemTypeEventstream,

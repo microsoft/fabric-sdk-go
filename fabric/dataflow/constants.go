@@ -43,9 +43,10 @@ func PossibleDayOfWeekValues() []DayOfWeek {
 type ExecuteOption string
 
 const (
-	// ExecuteOptionApplyChangesIfNeeded - Appply Changes operation is done if needed.
+	// ExecuteOptionApplyChangesIfNeeded - Appply Changes operation is done if needed. Can be used when the latest changes are
+	// required for Execute.
 	ExecuteOptionApplyChangesIfNeeded ExecuteOption = "ApplyChangesIfNeeded"
-	// ExecuteOptionSkipApplyChanges - Default Value. Apply Changes operation is skipped
+	// ExecuteOptionSkipApplyChanges - Default Value. Apply Changes operation is skipped.
 	ExecuteOptionSkipApplyChanges ExecuteOption = "SkipApplyChanges"
 )
 
@@ -96,6 +97,8 @@ const (
 	ItemTypeDatamart ItemType = "Datamart"
 	// ItemTypeDigitalTwinBuilder - A DigitalTwinBuilder.
 	ItemTypeDigitalTwinBuilder ItemType = "DigitalTwinBuilder"
+	// ItemTypeDigitalTwinBuilderFlow - A Digital Twin Builder Flow.
+	ItemTypeDigitalTwinBuilderFlow ItemType = "DigitalTwinBuilderFlow"
 	// ItemTypeEnvironment - An environment.
 	ItemTypeEnvironment ItemType = "Environment"
 	// ItemTypeEventhouse - An eventhouse.
@@ -156,6 +159,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeDataflow,
 		ItemTypeDatamart,
 		ItemTypeDigitalTwinBuilder,
+		ItemTypeDigitalTwinBuilderFlow,
 		ItemTypeEnvironment,
 		ItemTypeEventhouse,
 		ItemTypeEventstream,

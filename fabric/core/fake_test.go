@@ -3501,14 +3501,14 @@ func (testsuite *FakeTestSuite) TestDeploymentPipelines_UpdateDeploymentPipeline
 				DisplayName: to.Ptr("Test"),
 				ID:          to.Ptr("d2056166-041c-4a56-8d37-ea90038bc0d6"),
 				IsPublic:    to.Ptr(false),
-				Order:       to.Ptr[int32](0),
+				Order:       to.Ptr[int32](1),
 			},
 			{
 				Description: to.Ptr("Production stage description"),
 				DisplayName: to.Ptr("Production"),
 				ID:          to.Ptr("4c3eb03b-fbbb-4605-9b1a-6fba1003679e"),
 				IsPublic:    to.Ptr(true),
-				Order:       to.Ptr[int32](0),
+				Order:       to.Ptr[int32](2),
 			}},
 	}
 
