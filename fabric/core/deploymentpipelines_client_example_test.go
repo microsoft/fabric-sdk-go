@@ -272,6 +272,7 @@ func ExampleDeploymentPipelinesClient_NewListDeploymentPipelineRoleAssignmentsPa
 		// page.DeploymentPipelineRoleAssignments = core.DeploymentPipelineRoleAssignments{
 		// 	Value: []core.DeploymentPipelineRoleAssignment{
 		// 		{
+	  // 		  ID: to.Ptr("6e335e92-a2a2-4b5a-970a-bd6a89fbb765"),
 		// 			Principal: &core.Principal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				ID: to.Ptr("6e335e92-a2a2-4b5a-970a-bd6a89fbb765"),
@@ -279,6 +280,7 @@ func ExampleDeploymentPipelinesClient_NewListDeploymentPipelineRoleAssignmentsPa
 		// 			Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
 		// 		},
 		// 		{
+	  // 			ID: to.Ptr("154aef10-47b8-48c4-ab97-f0bf9d5f8fcf"),
 		// 			Principal: &core.Principal{
 		// 				Type: to.Ptr(core.PrincipalTypeGroup),
 		// 				ID: to.Ptr("154aef10-47b8-48c4-ab97-f0bf9d5f8fcf"),
@@ -286,6 +288,7 @@ func ExampleDeploymentPipelinesClient_NewListDeploymentPipelineRoleAssignmentsPa
 		// 			Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
 		// 		},
 		// 		{
+	  // 			ID: to.Ptr("a35d842b-90d5-59a1-c56a-5f8fcff0bf9d"),
 		// 			Principal: &core.Principal{
 		// 				Type: to.Ptr(core.PrincipalTypeServicePrincipal),
 		// 				ID: to.Ptr("a35d842b-90d5-59a1-c56a-5f8fcff0bf9d"),
@@ -323,6 +326,7 @@ func ExampleDeploymentPipelinesClient_NewListDeploymentPipelineRoleAssignmentsPa
 		// 	ContinuationURI: to.Ptr("https://api.fabric.microsoft.com/v1/deploymentPipelines/8ce96c50-85a0-4db3-85c6-7ccc3ed46523/roleAssignments?continuationToken=LDEsMTAwMDAwLDA%3D"),
 		// 	Value: []core.DeploymentPipelineRoleAssignment{
 		// 		{
+	  // 			ID: to.Ptr("6e335e92-a2a2-4b5a-970a-bd6a89fbb765"),
 		// 			Principal: &core.Principal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				ID: to.Ptr("6e335e92-a2a2-4b5a-970a-bd6a89fbb765"),
@@ -330,6 +334,7 @@ func ExampleDeploymentPipelinesClient_NewListDeploymentPipelineRoleAssignmentsPa
 		// 			Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
 		// 		},
 		// 		{
+	  // 		  ID: to.Ptr("154aef10-47b8-48c4-ab97-f0bf9d5f8fcf"),
 		// 			Principal: &core.Principal{
 		// 				Type: to.Ptr(core.PrincipalTypeGroup),
 		// 				ID: to.Ptr("154aef10-47b8-48c4-ab97-f0bf9d5f8fcf"),
@@ -337,6 +342,7 @@ func ExampleDeploymentPipelinesClient_NewListDeploymentPipelineRoleAssignmentsPa
 		// 			Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
 		// 		},
 		// 		{
+	  // 			ID: to.Ptr("a35d842b-90d5-59a1-c56a-5f8fcff0bf9d"),
 		// 			Principal: &core.Principal{
 		// 				Type: to.Ptr(core.PrincipalTypeServicePrincipal),
 		// 				ID: to.Ptr("a35d842b-90d5-59a1-c56a-5f8fcff0bf9d"),

@@ -2750,6 +2750,7 @@ func (d *DeploymentPipelineOperations) UnmarshalJSON(data []byte) error {
 // MarshalJSON implements the json.Marshaller interface for type DeploymentPipelineRoleAssignment.
 func (d DeploymentPipelineRoleAssignment) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
+	populate(objectMap, "id", d.ID)
 	populate(objectMap, "principal", d.Principal)
 	populate(objectMap, "role", d.Role)
 	return json.Marshal(objectMap)
@@ -2764,6 +2765,9 @@ func (d *DeploymentPipelineRoleAssignment) UnmarshalJSON(data []byte) error {
 	for key, val := range rawMsg {
 		var err error
 		switch key {
+		case "id":
+			err = unpopulate(val, "ID", &g.ID)
+			delete(rawMsg, key)
 		case "principal":
 			err = unpopulate(val, "Principal", &d.Principal)
 			delete(rawMsg, key)

@@ -1268,6 +1268,8 @@ type DeploymentPipelineOperations struct {
 
 // DeploymentPipelineRoleAssignment - A Fabric principal role assignment for a deployment pipeline.
 type DeploymentPipelineRoleAssignment struct {
+	// READ-ONLY; The object ID of the deployment pipeline role assignment.
+	ID *string
 	// READ-ONLY; The principal.
 	Principal *Principal
 
