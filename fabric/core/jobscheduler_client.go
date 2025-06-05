@@ -419,6 +419,8 @@ func (client *JobSchedulerClient) getItemScheduleHandleResponse(resp *http.Respo
 //
 // for more information about scopes, see scopes article [/rest/api/fabric/articles/scopes].
 //
+// LIMITATIONS
+// * Most items have a limit of 100 recently completed entities, and there is not limit for active entities.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -744,6 +746,10 @@ func (client *JobSchedulerClient) updateItemScheduleHandleResponse(resp *http.Re
 //   - Specific scope: itemType.ReadWrite.All or itemType.Read.All (for example: Notebook.ReadWrite.All)
 //
 //     for more information about scopes, see scopes article [/rest/api/fabric/articles/scopes].
+//
+// LIMITATIONS
+//
+//   - Most items have a limit of 100 recently completed entities, and there is not limit for active entities.
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

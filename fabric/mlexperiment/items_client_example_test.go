@@ -46,6 +46,9 @@ func ExampleItemsClient_NewListMLExperimentsPager() {
 		// 			DisplayName: to.Ptr("MLExperiment_1"),
 		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+		// 			Properties: &mlexperiment.Properties{
+		// 				MlFlowExperimentID: to.Ptr("7b0f1b08-da51-4561-a0ed-c0a2833f50c0"),
+		// 			},
 		// 		},
 		// 		{
 		// 			Type: to.Ptr(mlexperiment.ItemTypeMLExperiment),
@@ -53,6 +56,9 @@ func ExampleItemsClient_NewListMLExperimentsPager() {
 		// 			DisplayName: to.Ptr("MLExperiment_2"),
 		// 			ID: to.Ptr("6c192553-2375-4ba1-a61c-dec7729bdccc"),
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+		// 			Properties: &mlexperiment.Properties{
+		// 				MlFlowExperimentID: to.Ptr("d5d773cb-cf52-4b9b-b78b-760324ea161e"),
+		// 			},
 		// 	}},
 		// }
 	}
@@ -106,6 +112,9 @@ func ExampleItemsClient_GetMLExperiment() {
 	// 	DisplayName: to.Ptr("MLExperiment_1"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+	// 	Properties: &mlexperiment.Properties{
+	// 		MlFlowExperimentID: to.Ptr("d5d773cb-cf52-4b9b-b78b-760324ea161e"),
+	// 	},
 	// }
 }
 
@@ -136,6 +145,9 @@ func ExampleItemsClient_UpdateMLExperiment() {
 	// 	DisplayName: to.Ptr("MLExperiment_New_Name"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+	// 	Properties: &mlexperiment.Properties{
+	// 		MlFlowExperimentID: to.Ptr("d5d773cb-cf52-4b9b-b78b-760324ea161e"),
+	// 	},
 	// }
 }
 

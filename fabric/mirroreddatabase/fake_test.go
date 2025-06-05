@@ -412,6 +412,7 @@ func (testsuite *FakeTestSuite) TestMirroring_GetTablesMirroringStatus() {
 					ProcessedBytes:   to.Ptr[int64](1247),
 					ProcessedRows:    to.Ptr[int64](6),
 				},
+				SourceObjectType: to.Ptr(mirroreddatabase.TableSourceObjectTypeTable),
 				SourceSchemaName: to.Ptr("dbo"),
 				SourceTableName:  to.Ptr("test"),
 				Status:           to.Ptr(mirroreddatabase.TableMirroringStatusReplicating),

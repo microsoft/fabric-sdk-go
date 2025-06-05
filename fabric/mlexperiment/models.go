@@ -35,6 +35,9 @@ type MLExperiment struct {
 	// The item display name.
 	DisplayName *string
 
+	// The machine learning experiment properties.
+	Properties *Properties
+
 	// READ-ONLY; The folder ID.
 	FolderID *string
 
@@ -58,6 +61,12 @@ type MLExperiments struct {
 
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
+}
+
+// Properties - The machine learning experiment properties.
+type Properties struct {
+	// READ-ONLY; The internal machine learning flow experiment ID.
+	MlFlowExperimentID *string
 }
 
 // UpdateMLExperimentRequest - Update machine learning experiment request.

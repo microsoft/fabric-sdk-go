@@ -569,6 +569,8 @@ const (
 	ItemTypeMLExperiment ItemType = "MLExperiment"
 	// ItemTypeMLModel - A machine learning model.
 	ItemTypeMLModel ItemType = "MLModel"
+	// ItemTypeMirroredAzureDatabricksCatalog - A mirrored azure databricks catalog.
+	ItemTypeMirroredAzureDatabricksCatalog ItemType = "MirroredAzureDatabricksCatalog"
 	// ItemTypeMirroredDatabase - A mirrored database.
 	ItemTypeMirroredDatabase ItemType = "MirroredDatabase"
 	// ItemTypeMirroredWarehouse - A mirrored warehouse.
@@ -620,6 +622,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeLakehouse,
 		ItemTypeMLExperiment,
 		ItemTypeMLModel,
+		ItemTypeMirroredAzureDatabricksCatalog,
 		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
 		ItemTypeMountedDataFactory,

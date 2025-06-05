@@ -29,6 +29,10 @@ type ExternalDataSharesProviderServer struct {
 	// HTTP status codes to indicate success: http.StatusCreated
 	CreateExternalDataShare func(ctx context.Context, workspaceID string, itemID string, createExternalDataShareRequest core.CreateExternalDataShareRequest, options *core.ExternalDataSharesProviderClientCreateExternalDataShareOptions) (resp azfake.Responder[core.ExternalDataSharesProviderClientCreateExternalDataShareResponse], errResp azfake.ErrorResponder)
 
+	// DeleteExternalDataShare is the fake for method ExternalDataSharesProviderClient.DeleteExternalDataShare
+	// HTTP status codes to indicate success: http.StatusOK
+	DeleteExternalDataShare func(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, options *core.ExternalDataSharesProviderClientDeleteExternalDataShareOptions) (resp azfake.Responder[core.ExternalDataSharesProviderClientDeleteExternalDataShareResponse], errResp azfake.ErrorResponder)
+
 	// GetExternalDataShare is the fake for method ExternalDataSharesProviderClient.GetExternalDataShare
 	// HTTP status codes to indicate success: http.StatusOK
 	GetExternalDataShare func(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, options *core.ExternalDataSharesProviderClientGetExternalDataShareOptions) (resp azfake.Responder[core.ExternalDataSharesProviderClientGetExternalDataShareResponse], errResp azfake.ErrorResponder)
@@ -86,6 +90,8 @@ func (e *ExternalDataSharesProviderServerTransport) dispatchToMethodFake(req *ht
 			switch method {
 			case "ExternalDataSharesProviderClient.CreateExternalDataShare":
 				res.resp, res.err = e.dispatchCreateExternalDataShare(req)
+			case "ExternalDataSharesProviderClient.DeleteExternalDataShare":
+				res.resp, res.err = e.dispatchDeleteExternalDataShare(req)
 			case "ExternalDataSharesProviderClient.GetExternalDataShare":
 				res.resp, res.err = e.dispatchGetExternalDataShare(req)
 			case "ExternalDataSharesProviderClient.NewListExternalDataSharesInItemPager":
@@ -147,6 +153,43 @@ func (e *ExternalDataSharesProviderServerTransport) dispatchCreateExternalDataSh
 	}
 	if val := server.GetResponse(respr).Location; val != nil {
 		resp.Header.Set("Location", *val)
+	}
+	return resp, nil
+}
+
+func (e *ExternalDataSharesProviderServerTransport) dispatchDeleteExternalDataShare(req *http.Request) (*http.Response, error) {
+	if e.srv.DeleteExternalDataShare == nil {
+		return nil, &nonRetriableError{errors.New("fake for method DeleteExternalDataShare not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/items/(?P<itemId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/externalDataShares/(?P<externalDataShareId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	itemIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("itemId")])
+	if err != nil {
+		return nil, err
+	}
+	externalDataShareIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("externalDataShareId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := e.srv.DeleteExternalDataShare(req.Context(), workspaceIDParam, itemIDParam, externalDataShareIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
 	}
 	return resp, nil
 }

@@ -224,6 +224,23 @@ func ExampleExternalDataSharesProviderClient_GetExternalDataShare() {
 }
 
 // Generated from example definition
+func ExampleExternalDataSharesProviderClient_DeleteExternalDataShare() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewExternalDataSharesProviderClient().DeleteExternalDataShare(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", "dccc162f-7a41-4720-83c3-5c7e81187959", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
 func ExampleExternalDataSharesProviderClient_RevokeExternalDataShare() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {

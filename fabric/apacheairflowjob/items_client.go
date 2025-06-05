@@ -43,7 +43,7 @@ type ItemsClient struct {
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -69,7 +69,7 @@ func (client *ItemsClient) BeginCreateApacheAirflowJob(ctx context.Context, work
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -119,7 +119,7 @@ func (client *ItemsClient) createApacheAirflowJobCreateRequest(ctx context.Conte
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -174,7 +174,7 @@ func (client *ItemsClient) deleteApacheAirflowJobCreateRequest(ctx context.Conte
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -240,7 +240,7 @@ func (client *ItemsClient) getApacheAirflowJobHandleResponse(resp *http.Response
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -260,7 +260,7 @@ func (client *ItemsClient) BeginGetApacheAirflowJobDefinition(ctx context.Contex
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -382,7 +382,7 @@ func (client *ItemsClient) listApacheAirflowJobsHandleResponse(resp *http.Respon
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -453,7 +453,7 @@ func (client *ItemsClient) updateApacheAirflowJobHandleResponse(resp *http.Respo
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -475,7 +475,7 @@ func (client *ItemsClient) BeginUpdateApacheAirflowJobDefinition(ctx context.Con
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -546,7 +546,7 @@ func (client *ItemsClient) updateApacheAirflowJobDefinitionCreateRequest(ctx con
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
 // Generated from API version v1
@@ -615,7 +615,7 @@ func (client *ItemsClient) beginCreateApacheAirflowJob(ctx context.Context, work
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
 // Generated from API version v1
@@ -686,7 +686,7 @@ func (client *ItemsClient) beginGetApacheAirflowJobDefinition(ctx context.Contex
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
 // Generated from API version v1

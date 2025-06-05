@@ -179,6 +179,11 @@ type ExternalDataSharesProviderClientCreateExternalDataShareResponse struct {
 	Location *string
 }
 
+// ExternalDataSharesProviderClientDeleteExternalDataShareResponse contains the response from method ExternalDataSharesProviderClient.DeleteExternalDataShare.
+type ExternalDataSharesProviderClientDeleteExternalDataShareResponse struct {
+	// placeholder for future response values
+}
+
 // ExternalDataSharesProviderClientGetExternalDataShareResponse contains the response from method ExternalDataSharesProviderClient.GetExternalDataShare.
 type ExternalDataSharesProviderClientGetExternalDataShareResponse struct {
 	// An external data share object.

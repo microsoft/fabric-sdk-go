@@ -161,11 +161,15 @@ func (client *WorkspacesClient) assignToCapacityCreateRequest(ctx context.Contex
 }
 
 // CreateWorkspace - PERMISSIONS
-// * The caller must have permission to create workspaces granted by the tenant admin. For more information see: create workspaces
+// * The caller must have permission to create workspaces granted by Fabric administrator. For more information see: create
+// workspaces
 // [/fabric/admin/portal-workspace#create-workspaces-new-workspace-experience].
 // * The caller must have contributor permissions or be an Admin on the capacity. For more information, see: capacity user
 // permissions
 // [/power-bi/enterprise/service-admin-premium-manage#manage-user-permissions].
+// * Service Principals must have permission granted by Fabric administrator. For more information see: Service principals
+// can create workspaces, connections, and deployment pipelines
+// [/fabric/admin/service-admin-portal-developer#service-principals-can-create-workspaces-connections-and-deployment-pipelines].
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.

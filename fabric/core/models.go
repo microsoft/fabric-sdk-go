@@ -621,10 +621,12 @@ func (c *CreateCloudConnectionRequest) GetCreateConnectionRequest() *CreateConne
 
 // CreateConnectionDetails - The connection details input for create operations.
 type CreateConnectionDetails struct {
-	// REQUIRED; The creation method used to create the connection.
+	// REQUIRED; The creation method used to create the connection. For a list of creation methods use the ListSupportedConnectionTypes
+	// [/rest/api/fabric/core/connections/list-supported-connection-types] API.
 	CreationMethod *string
 
-	// REQUIRED; The list of connection parameters.
+	// REQUIRED; The list of connection parameters. For a list of parameters for each creation method use the ListSupportedConnectionTypes
+	// [/rest/api/fabric/core/connections/list-supported-connection-types] API.
 	Parameters []ConnectionDetailsParameterClassification
 
 	// REQUIRED; The type of the connection.
