@@ -146,7 +146,10 @@ func (client *DeploymentPipelinesClient) assignWorkspaceToStageCreateRequest(ctx
 	return req, nil
 }
 
-// CreateDeploymentPipeline - REQUIRED DELEGATED SCOPES Pipeline.ReadWrite.All
+// CreateDeploymentPipeline - PERMISSIONS Service Principals must have permission granted by Fabric administrator. For more
+// information see: Service principals can create workspaces, connections, and deployment pipelines
+// [/fabric/admin/service-admin-portal-developer#service-principals-can-create-workspaces-connections-and-deployment-pipelines].
+// REQUIRED DELEGATED SCOPES Pipeline.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]

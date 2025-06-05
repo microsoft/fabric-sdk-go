@@ -199,6 +199,12 @@ type ExternalDataSharesProviderClientCreateExternalDataShareOptions struct {
 	// placeholder for future optional parameters
 }
 
+// ExternalDataSharesProviderClientDeleteExternalDataShareOptions contains the optional parameters for the ExternalDataSharesProviderClient.DeleteExternalDataShare
+// method.
+type ExternalDataSharesProviderClientDeleteExternalDataShareOptions struct {
+	// placeholder for future optional parameters
+}
+
 // ExternalDataSharesProviderClientGetExternalDataShareOptions contains the optional parameters for the ExternalDataSharesProviderClient.GetExternalDataShare
 // method.
 type ExternalDataSharesProviderClientGetExternalDataShareOptions struct {

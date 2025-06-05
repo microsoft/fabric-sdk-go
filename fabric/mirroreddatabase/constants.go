@@ -46,6 +46,8 @@ const (
 	ItemTypeMLExperiment ItemType = "MLExperiment"
 	// ItemTypeMLModel - A machine learning model.
 	ItemTypeMLModel ItemType = "MLModel"
+	// ItemTypeMirroredAzureDatabricksCatalog - A mirrored azure databricks catalog.
+	ItemTypeMirroredAzureDatabricksCatalog ItemType = "MirroredAzureDatabricksCatalog"
 	// ItemTypeMirroredDatabase - A mirrored database.
 	ItemTypeMirroredDatabase ItemType = "MirroredDatabase"
 	// ItemTypeMirroredWarehouse - A mirrored warehouse.
@@ -97,6 +99,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeLakehouse,
 		ItemTypeMLExperiment,
 		ItemTypeMLModel,
+		ItemTypeMirroredAzureDatabricksCatalog,
 		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
 		ItemTypeMountedDataFactory,
@@ -209,5 +212,23 @@ func PossibleTableMirroringStatusValues() []TableMirroringStatus {
 		TableMirroringStatusReseeding,
 		TableMirroringStatusSnapshotting,
 		TableMirroringStatusStopped,
+	}
+}
+
+// TableSourceObjectType - The table source object type. Additional TableSourceObjectType types may be added over time.
+type TableSourceObjectType string
+
+const (
+	// TableSourceObjectTypeTable - Table type
+	TableSourceObjectTypeTable TableSourceObjectType = "Table"
+	// TableSourceObjectTypeView - View type
+	TableSourceObjectTypeView TableSourceObjectType = "View"
+)
+
+// PossibleTableSourceObjectTypeValues returns the possible values for the TableSourceObjectType const type.
+func PossibleTableSourceObjectTypeValues() []TableSourceObjectType {
+	return []TableSourceObjectType{
+		TableSourceObjectTypeTable,
+		TableSourceObjectTypeView,
 	}
 }

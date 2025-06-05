@@ -181,6 +181,9 @@ type TableMirroringMetrics struct {
 
 // TableMirroringStatusResponse - Table mirroring status response.
 type TableMirroringStatusResponse struct {
+	// REQUIRED; Source object type.
+	SourceObjectType *TableSourceObjectType
+
 	// REQUIRED; The mirroring status type of table.
 	Status *TableMirroringStatus
 

@@ -108,6 +108,74 @@ func (client *ExternalDataSharesProviderClient) createExternalDataShareHandleRes
 	return result, nil
 }
 
+// DeleteExternalDataShare - PERMISSIONS The caller must have read and reshare permissions on the item.
+// REQUIRED DELEGATED SCOPES Item APIs can have one of these scopes in their token:
+// * Generic scope: Item.ExternalDataShare.All
+//
+// * Specific scope: itemType.ExternalDataShare.All, for example: Lakehouse.ExternalDataShare.All
+//
+// For more information about scopes, see scopes article [/rest/api/fabric/articles/scopes].
+//
+// REQUIRED TENANT SETTINGS To use this API, enable the External data sharing admin switch for the calling principal.
+// LIMITATIONS Maximum 10 requests per minute.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - itemID - The item ID.
+//   - externalDataShareID - The external data share ID.
+//   - options - ExternalDataSharesProviderClientDeleteExternalDataShareOptions contains the optional parameters for the ExternalDataSharesProviderClient.DeleteExternalDataShare
+//     method.
+func (client *ExternalDataSharesProviderClient) DeleteExternalDataShare(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, options *ExternalDataSharesProviderClientDeleteExternalDataShareOptions) (ExternalDataSharesProviderClientDeleteExternalDataShareResponse, error) {
+	var err error
+	const operationName = "core.ExternalDataSharesProviderClient.DeleteExternalDataShare"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.deleteExternalDataShareCreateRequest(ctx, workspaceID, itemID, externalDataShareID, options)
+	if err != nil {
+		return ExternalDataSharesProviderClientDeleteExternalDataShareResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return ExternalDataSharesProviderClientDeleteExternalDataShareResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return ExternalDataSharesProviderClientDeleteExternalDataShareResponse{}, err
+	}
+	return ExternalDataSharesProviderClientDeleteExternalDataShareResponse{}, nil
+}
+
+// deleteExternalDataShareCreateRequest creates the DeleteExternalDataShare request.
+func (client *ExternalDataSharesProviderClient) deleteExternalDataShareCreateRequest(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, _ *ExternalDataSharesProviderClientDeleteExternalDataShareOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/externalDataShares/{externalDataShareId}"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if itemID == "" {
+		return nil, errors.New("parameter itemID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{itemId}", url.PathEscape(itemID))
+	if externalDataShareID == "" {
+		return nil, errors.New("parameter externalDataShareID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{externalDataShareId}", url.PathEscape(externalDataShareID))
+	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
 // GetExternalDataShare - PERMISSIONS The caller must have read and reshare permissions on the item.
 // REQUIRED DELEGATED SCOPES Item APIs can have one of these scopes in their token:
 // * Generic scope: Item.ExternalDataShare.All

@@ -99,7 +99,11 @@ func (client *ConnectionsClient) addConnectionRoleAssignmentHandleResponse(resp 
 }
 
 // CreateConnection - To encrypt credentials, see Configure credentials programmatically [/power-bi/developer/embedded/configure-credentials].
-// PERMISSIONS If creating a gateway connection, the caller must have permissions for the gateway.
+// PERMISSIONS
+// * If creating a gateway connection, the caller must have permissions for the gateway..
+// * Service Principals must have permission granted by Fabric administrator. For more information see: Service principals
+// can create workspaces, connections, and deployment pipelines
+// [/fabric/admin/service-admin-portal-developer#service-principals-can-create-workspaces-connections-and-deployment-pipelines].
 // REQUIRED DELEGATED SCOPES Connection.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.

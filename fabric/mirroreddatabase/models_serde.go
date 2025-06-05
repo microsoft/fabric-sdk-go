@@ -509,6 +509,7 @@ func (t TableMirroringStatusResponse) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "error", t.Error)
 	populate(objectMap, "metrics", t.Metrics)
+	populate(objectMap, "sourceObjectType", t.SourceObjectType)
 	populate(objectMap, "sourceSchemaName", t.SourceSchemaName)
 	populate(objectMap, "sourceTableName", t.SourceTableName)
 	populate(objectMap, "status", t.Status)
@@ -529,6 +530,9 @@ func (t *TableMirroringStatusResponse) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "metrics":
 			err = unpopulate(val, "Metrics", &t.Metrics)
+			delete(rawMsg, key)
+		case "sourceObjectType":
+			err = unpopulate(val, "SourceObjectType", &t.SourceObjectType)
 			delete(rawMsg, key)
 		case "sourceSchemaName":
 			err = unpopulate(val, "SourceSchemaName", &t.SourceSchemaName)

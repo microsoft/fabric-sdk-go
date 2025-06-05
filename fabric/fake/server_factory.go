@@ -33,6 +33,7 @@ import (
 	kqldatabasefake "github.com/microsoft/fabric-sdk-go/fabric/kqldatabase/fake"
 	kqlquerysetfake "github.com/microsoft/fabric-sdk-go/fabric/kqlqueryset/fake"
 	lakehousefake "github.com/microsoft/fabric-sdk-go/fabric/lakehouse/fake"
+	mirroredazuredatabrickscatalogfake "github.com/microsoft/fabric-sdk-go/fabric/mirroredazuredatabrickscatalog/fake"
 	mirroreddatabasefake "github.com/microsoft/fabric-sdk-go/fabric/mirroreddatabase/fake"
 	mirroredwarehousefake "github.com/microsoft/fabric-sdk-go/fabric/mirroredwarehouse/fake"
 	mlexperimentfake "github.com/microsoft/fabric-sdk-go/fabric/mlexperiment/fake"
@@ -54,83 +55,85 @@ import (
 
 // ServerFactory is a fake server for instance of the fabric.Client type.
 type ServerFactory struct {
-	Admin                  adminfake.ServerFactory
-	Apache                 apacheairflowjobfake.ServerFactory
-	CopyJob                copyjobfake.ServerFactory
-	Core                   corefake.ServerFactory
-	Dashboard              dashboardfake.ServerFactory
-	Dataflow               dataflowfake.ServerFactory
-	Datamart               datamartfake.ServerFactory
-	DataPipeline           datapipelinefake.ServerFactory
-	DigitalTwinBuilder     digitaltwinbuilderfake.ServerFactory
-	DigitalTwinBuilderFlow digitaltwinbuilderflowfake.ServerFactory
-	Environment            environmentfake.ServerFactory
-	Eventhouse             eventhousefake.ServerFactory
-	Eventstream            eventstreamfake.ServerFactory
-	GraphQLApi             graphqlapifake.ServerFactory
-	KQLDashboard           kqldashboardfake.ServerFactory
-	KQLDatabase            kqldatabasefake.ServerFactory
-	KQLQueryset            kqlquerysetfake.ServerFactory
-	Lakehouse              lakehousefake.ServerFactory
-	MirroredDatabase       mirroreddatabasefake.ServerFactory
-	MirroredWarehouse      mirroredwarehousefake.ServerFactory
-	MLExperiment           mlexperimentfake.ServerFactory
-	MLModel                mlmodelfake.ServerFactory
-	MountedDataFactory     mounteddatafactoryfake.ServerFactory
-	Notebook               notebookfake.ServerFactory
-	PaginatedReport        paginatedreportfake.ServerFactory
-	Reflex                 reflexfake.ServerFactory
-	Report                 reportfake.ServerFactory
-	SemanticModel          semanticmodelfake.ServerFactory
-	Spark                  sparkfake.ServerFactory
-	SparkJobDefinition     sparkjobdefinitionfake.ServerFactory
-	SQLDatabase            sqldatabasefake.ServerFactory
-	SQLEndpoint            sqlendpointfake.ServerFactory
-	VariableLibrary        variablelibraryfake.ServerFactory
-	Warehouse              warehousefake.ServerFactory
-	WarehouseSnapshot      warehousesnapshotfake.ServerFactory
+	Admin                          adminfake.ServerFactory
+	Apache                         apacheairflowjobfake.ServerFactory
+	CopyJob                        copyjobfake.ServerFactory
+	Core                           corefake.ServerFactory
+	Dashboard                      dashboardfake.ServerFactory
+	Dataflow                       dataflowfake.ServerFactory
+	Datamart                       datamartfake.ServerFactory
+	DataPipeline                   datapipelinefake.ServerFactory
+	DigitalTwinBuilder             digitaltwinbuilderfake.ServerFactory
+	DigitalTwinBuilderFlow         digitaltwinbuilderflowfake.ServerFactory
+	Environment                    environmentfake.ServerFactory
+	Eventhouse                     eventhousefake.ServerFactory
+	Eventstream                    eventstreamfake.ServerFactory
+	GraphQLApi                     graphqlapifake.ServerFactory
+	KQLDashboard                   kqldashboardfake.ServerFactory
+	KQLDatabase                    kqldatabasefake.ServerFactory
+	KQLQueryset                    kqlquerysetfake.ServerFactory
+	Lakehouse                      lakehousefake.ServerFactory
+	MirroredAzureDatabricksCatalog mirroredazuredatabrickscatalogfake.ServerFactory
+	MirroredDatabase               mirroreddatabasefake.ServerFactory
+	MirroredWarehouse              mirroredwarehousefake.ServerFactory
+	MLExperiment                   mlexperimentfake.ServerFactory
+	MLModel                        mlmodelfake.ServerFactory
+	MountedDataFactory             mounteddatafactoryfake.ServerFactory
+	Notebook                       notebookfake.ServerFactory
+	PaginatedReport                paginatedreportfake.ServerFactory
+	Reflex                         reflexfake.ServerFactory
+	Report                         reportfake.ServerFactory
+	SemanticModel                  semanticmodelfake.ServerFactory
+	Spark                          sparkfake.ServerFactory
+	SparkJobDefinition             sparkjobdefinitionfake.ServerFactory
+	SQLDatabase                    sqldatabasefake.ServerFactory
+	SQLEndpoint                    sqlendpointfake.ServerFactory
+	VariableLibrary                variablelibraryfake.ServerFactory
+	Warehouse                      warehousefake.ServerFactory
+	WarehouseSnapshot              warehousesnapshotfake.ServerFactory
 }
 
 // ServerFactoryTransport connects instance of fabric.Client to instance of ServerFactory.
 // Don't use this type directly, use NewServerFactoryTransport instead.
 type ServerFactoryTransport struct {
-	srv                      *ServerFactory
-	trMu                     sync.Mutex
-	trAdmin                  *adminfake.ServerFactoryTransport
-	trApache                 *apacheairflowjobfake.ServerFactoryTransport
-	trCopyJob                *copyjobfake.ServerFactoryTransport
-	trCore                   *corefake.ServerFactoryTransport
-	trDashboard              *dashboardfake.ServerFactoryTransport
-	trDataflow               *dataflowfake.ServerFactoryTransport
-	trDatamart               *datamartfake.ServerFactoryTransport
-	trDataPipeline           *datapipelinefake.ServerFactoryTransport
-	trDigitalTwinBuilder     *digitaltwinbuilderfake.ServerFactoryTransport
-	trDigitalTwinBuilderFlow *digitaltwinbuilderflowfake.ServerFactoryTransport
-	trEnvironment            *environmentfake.ServerFactoryTransport
-	trEventhouse             *eventhousefake.ServerFactoryTransport
-	trEventstream            *eventstreamfake.ServerFactoryTransport
-	trGraphQLApi             *graphqlapifake.ServerFactoryTransport
-	trKQLDashboard           *kqldashboardfake.ServerFactoryTransport
-	trKQLDatabase            *kqldatabasefake.ServerFactoryTransport
-	trKQLQueryset            *kqlquerysetfake.ServerFactoryTransport
-	trLakehouse              *lakehousefake.ServerFactoryTransport
-	trMirroredDatabase       *mirroreddatabasefake.ServerFactoryTransport
-	trMirroredWarehouse      *mirroredwarehousefake.ServerFactoryTransport
-	trMLExperiment           *mlexperimentfake.ServerFactoryTransport
-	trMLModel                *mlmodelfake.ServerFactoryTransport
-	trMountedDataFactory     *mounteddatafactoryfake.ServerFactoryTransport
-	trNotebook               *notebookfake.ServerFactoryTransport
-	trPaginatedReport        *paginatedreportfake.ServerFactoryTransport
-	trReflex                 *reflexfake.ServerFactoryTransport
-	trReport                 *reportfake.ServerFactoryTransport
-	trSemanticModel          *semanticmodelfake.ServerFactoryTransport
-	trSpark                  *sparkfake.ServerFactoryTransport
-	trSparkJobDefinition     *sparkjobdefinitionfake.ServerFactoryTransport
-	trSQLDatabase            *sqldatabasefake.ServerFactoryTransport
-	trSQLEndpoint            *sqlendpointfake.ServerFactoryTransport
-	trVariableLibrary        *variablelibraryfake.ServerFactoryTransport
-	trWarehouse              *warehousefake.ServerFactoryTransport
-	trWarehouseSnapshot      *warehousesnapshotfake.ServerFactoryTransport
+	srv                              *ServerFactory
+	trMu                             sync.Mutex
+	trAdmin                          *adminfake.ServerFactoryTransport
+	trApache                         *apacheairflowjobfake.ServerFactoryTransport
+	trCopyJob                        *copyjobfake.ServerFactoryTransport
+	trCore                           *corefake.ServerFactoryTransport
+	trDashboard                      *dashboardfake.ServerFactoryTransport
+	trDataflow                       *dataflowfake.ServerFactoryTransport
+	trDatamart                       *datamartfake.ServerFactoryTransport
+	trDataPipeline                   *datapipelinefake.ServerFactoryTransport
+	trDigitalTwinBuilder             *digitaltwinbuilderfake.ServerFactoryTransport
+	trDigitalTwinBuilderFlow         *digitaltwinbuilderflowfake.ServerFactoryTransport
+	trEnvironment                    *environmentfake.ServerFactoryTransport
+	trEventhouse                     *eventhousefake.ServerFactoryTransport
+	trEventstream                    *eventstreamfake.ServerFactoryTransport
+	trGraphQLApi                     *graphqlapifake.ServerFactoryTransport
+	trKQLDashboard                   *kqldashboardfake.ServerFactoryTransport
+	trKQLDatabase                    *kqldatabasefake.ServerFactoryTransport
+	trKQLQueryset                    *kqlquerysetfake.ServerFactoryTransport
+	trLakehouse                      *lakehousefake.ServerFactoryTransport
+	trMirroredAzureDatabricksCatalog *mirroredazuredatabrickscatalogfake.ServerFactoryTransport
+	trMirroredDatabase               *mirroreddatabasefake.ServerFactoryTransport
+	trMirroredWarehouse              *mirroredwarehousefake.ServerFactoryTransport
+	trMLExperiment                   *mlexperimentfake.ServerFactoryTransport
+	trMLModel                        *mlmodelfake.ServerFactoryTransport
+	trMountedDataFactory             *mounteddatafactoryfake.ServerFactoryTransport
+	trNotebook                       *notebookfake.ServerFactoryTransport
+	trPaginatedReport                *paginatedreportfake.ServerFactoryTransport
+	trReflex                         *reflexfake.ServerFactoryTransport
+	trReport                         *reportfake.ServerFactoryTransport
+	trSemanticModel                  *semanticmodelfake.ServerFactoryTransport
+	trSpark                          *sparkfake.ServerFactoryTransport
+	trSparkJobDefinition             *sparkjobdefinitionfake.ServerFactoryTransport
+	trSQLDatabase                    *sqldatabasefake.ServerFactoryTransport
+	trSQLEndpoint                    *sqlendpointfake.ServerFactoryTransport
+	trVariableLibrary                *variablelibraryfake.ServerFactoryTransport
+	trWarehouse                      *warehousefake.ServerFactoryTransport
+	trWarehouseSnapshot              *warehousesnapshotfake.ServerFactoryTransport
 }
 
 // NewServerFactoryTransport creates a new instance of ServerFactoryTransport with the provided implementation.
@@ -242,6 +245,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return lakehousefake.NewServerFactoryTransport(&s.srv.Lakehouse)
 		})
 		resp, err = s.trLakehouse.Do(req)
+	case "mirroredazuredatabrickscatalog":
+		initServer(s, &s.trMirroredAzureDatabricksCatalog, func() *mirroredazuredatabrickscatalogfake.ServerFactoryTransport {
+			return mirroredazuredatabrickscatalogfake.NewServerFactoryTransport(&s.srv.MirroredAzureDatabricksCatalog)
+		})
+		resp, err = s.trMirroredAzureDatabricksCatalog.Do(req)
 	case "mirroreddatabase":
 		initServer(s, &s.trMirroredDatabase, func() *mirroreddatabasefake.ServerFactoryTransport {
 			return mirroreddatabasefake.NewServerFactoryTransport(&s.srv.MirroredDatabase)

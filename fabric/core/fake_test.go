@@ -4949,6 +4949,32 @@ func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_GetExternalDataSh
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ExternalDataShare))
 }
 
+func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_DeleteExternalDataShare() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete external data share example"},
+	})
+	var exampleWorkspaceID string
+	var exampleItemID string
+	var exampleExternalDataShareID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleItemID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleExternalDataShareID = "dccc162f-7a41-4720-83c3-5c7e81187959"
+
+	testsuite.serverFactory.ExternalDataSharesProviderServer.DeleteExternalDataShare = func(ctx context.Context, workspaceID string, itemID string, externalDataShareID string, options *core.ExternalDataSharesProviderClientDeleteExternalDataShareOptions) (resp azfake.Responder[core.ExternalDataSharesProviderClientDeleteExternalDataShareResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().Equal(exampleExternalDataShareID, externalDataShareID)
+		resp = azfake.Responder[core.ExternalDataSharesProviderClientDeleteExternalDataShareResponse]{}
+		resp.SetResponse(http.StatusOK, core.ExternalDataSharesProviderClientDeleteExternalDataShareResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewExternalDataSharesProviderClient()
+	_, err = client.DeleteExternalDataShare(ctx, exampleWorkspaceID, exampleItemID, exampleExternalDataShareID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
 func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_RevokeExternalDataShare() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
