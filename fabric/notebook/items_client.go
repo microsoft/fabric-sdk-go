@@ -33,7 +33,7 @@ type ItemsClient struct {
 // BeginCreateNotebook - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create notebook with definition, refer to Notebook definition [/rest/api/fabric/articles/item-management/definitions/notebook-definition]
 // article.
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Notebook.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a notebook the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
@@ -58,7 +58,7 @@ func (client *ItemsClient) BeginCreateNotebook(ctx context.Context, workspaceID 
 // CreateNotebook - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create notebook with definition, refer to Notebook definition [/rest/api/fabric/articles/item-management/definitions/notebook-definition]
 // article.
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Notebook.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a notebook the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
@@ -111,7 +111,7 @@ func (client *ItemsClient) createNotebookCreateRequest(ctx context.Context, work
 	return req, nil
 }
 
-// DeleteNotebook - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteNotebook - PERMISSIONS The caller must have write permissions for the notebook.
 // REQUIRED DELEGATED SCOPES Notebook.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -165,7 +165,7 @@ func (client *ItemsClient) deleteNotebookCreateRequest(ctx context.Context, work
 	return req, nil
 }
 
-// GetNotebook - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetNotebook - PERMISSIONS The caller must have read permissions for the notebook.
 // REQUIRED DELEGATED SCOPES Notebook.Read.All or Notebook.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -231,7 +231,7 @@ func (client *ItemsClient) getNotebookHandleResponse(resp *http.Response) (Items
 
 // BeginGetNotebookDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a notebook's public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the notebook.
 // REQUIRED DELEGATED SCOPES Notebook.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS This API is blocked for a notebook with an encrypted sensitivity label.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -253,7 +253,7 @@ func (client *ItemsClient) BeginGetNotebookDefinition(ctx context.Context, works
 
 // GetNotebookDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a notebook's public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the notebook.
 // REQUIRED DELEGATED SCOPES Notebook.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS This API is blocked for a notebook with an encrypted sensitivity label.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -311,7 +311,7 @@ func (client *ItemsClient) getNotebookDefinitionCreateRequest(ctx context.Contex
 }
 
 // NewListNotebooksPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -375,7 +375,7 @@ func (client *ItemsClient) listNotebooksHandleResponse(resp *http.Response) (Ite
 	return result, nil
 }
 
-// UpdateNotebook - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateNotebook - PERMISSIONS The caller must have read and write permissions for the notebook.
 // REQUIRED DELEGATED SCOPES Notebook.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -445,7 +445,7 @@ func (client *ItemsClient) updateNotebookHandleResponse(resp *http.Response) (It
 
 // BeginUpdateNotebookDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the notebook's definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the notebook.
 // REQUIRED DELEGATED SCOPES Notebook.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -467,7 +467,7 @@ func (client *ItemsClient) BeginUpdateNotebookDefinition(ctx context.Context, wo
 
 // UpdateNotebookDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the notebook's definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the notebook.
 // REQUIRED DELEGATED SCOPES Notebook.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -533,7 +533,7 @@ func (client *ItemsClient) updateNotebookDefinitionCreateRequest(ctx context.Con
 //
 // To create notebook with definition, refer to Notebook definition [/rest/api/fabric/articles/item-management/definitions/notebook-definition] article.
 //
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Notebook.ReadWrite.All or Item.ReadWrite.All
 //
 // LIMITATIONS
@@ -607,7 +607,7 @@ func (client *ItemsClient) beginCreateNotebook(ctx context.Context, workspaceID 
 //
 // When you get a notebook's public definition, the sensitivity label is not a part of the definition.
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the notebook.
 //
 // # REQUIRED DELEGATED SCOPES Notebook.ReadWrite.All or Item.ReadWrite.All
 //
@@ -680,7 +680,7 @@ func (client *ItemsClient) beginGetNotebookDefinition(ctx context.Context, works
 //
 // Updating the notebook's definition, does not affect its sensitivity label.
 //
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the notebook.
 //
 // # REQUIRED DELEGATED SCOPES Notebook.ReadWrite.All or Item.ReadWrite.All
 //
@@ -750,7 +750,7 @@ func (client *ItemsClient) beginUpdateNotebookDefinition(ctx context.Context, wo
 // ListNotebooks - returns array of Notebook from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

@@ -32,7 +32,7 @@ type ItemsClient struct {
 
 // BeginCreateSemanticModel - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // This API requires a definition [/rest/api/fabric/articles/item-management/definitions/semantic-model-definition].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES SemanticModel.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a semantic model, the user must have the appropriate license. For more information see: Microsoft Fabric license
@@ -56,7 +56,7 @@ func (client *ItemsClient) BeginCreateSemanticModel(ctx context.Context, workspa
 
 // CreateSemanticModel - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // This API requires a definition [/rest/api/fabric/articles/item-management/definitions/semantic-model-definition].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES SemanticModel.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a semantic model, the user must have the appropriate license. For more information see: Microsoft Fabric license
@@ -109,7 +109,7 @@ func (client *ItemsClient) createSemanticModelCreateRequest(ctx context.Context,
 	return req, nil
 }
 
-// DeleteSemanticModel - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteSemanticModel - PERMISSIONS The caller must have write permissions for the semantic model.
 // REQUIRED DELEGATED SCOPES SemanticModel.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -164,7 +164,7 @@ func (client *ItemsClient) deleteSemanticModelCreateRequest(ctx context.Context,
 	return req, nil
 }
 
-// GetSemanticModel - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetSemanticModel - PERMISSIONS The caller must have read permissions for the semantic model.
 // REQUIRED DELEGATED SCOPES SemanticModel.Read.All or SemanticModel.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -230,7 +230,7 @@ func (client *ItemsClient) getSemanticModelHandleResponse(resp *http.Response) (
 
 // BeginGetSemanticModelDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a semantic model's public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the semantic model.
 // REQUIRED DELEGATED SCOPES SemanticModel.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS This API is blocked for a semantic model with an encrypted sensitivity label.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -252,7 +252,7 @@ func (client *ItemsClient) BeginGetSemanticModelDefinition(ctx context.Context, 
 
 // GetSemanticModelDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a semantic model's public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the semantic model.
 // REQUIRED DELEGATED SCOPES SemanticModel.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS This API is blocked for a semantic model with an encrypted sensitivity label.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -310,7 +310,7 @@ func (client *ItemsClient) getSemanticModelDefinitionCreateRequest(ctx context.C
 }
 
 // NewListSemanticModelsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -375,7 +375,7 @@ func (client *ItemsClient) listSemanticModelsHandleResponse(resp *http.Response)
 	return result, nil
 }
 
-// UpdateSemanticModel - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateSemanticModel - PERMISSIONS The caller must have read and write permissions for the semantic model.
 // REQUIRED DELEGATED SCOPES SemanticModel.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -446,7 +446,7 @@ func (client *ItemsClient) updateSemanticModelHandleResponse(resp *http.Response
 
 // BeginUpdateSemanticModelDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the semantic model's definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the semantic model.
 // REQUIRED DELEGATED SCOPES SemanticModel.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -468,7 +468,7 @@ func (client *ItemsClient) BeginUpdateSemanticModelDefinition(ctx context.Contex
 
 // UpdateSemanticModelDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the semantic model's definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the semantic model.
 // REQUIRED DELEGATED SCOPES SemanticModel.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -534,7 +534,7 @@ func (client *ItemsClient) updateSemanticModelDefinitionCreateRequest(ctx contex
 //
 // This API requires a definition [/rest/api/fabric/articles/item-management/definitions/semantic-model-definition].
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have a contributor workspace role.
 //
 // # REQUIRED DELEGATED SCOPES SemanticModel.ReadWrite.All or Item.ReadWrite.All
 //
@@ -609,7 +609,7 @@ func (client *ItemsClient) beginCreateSemanticModel(ctx context.Context, workspa
 //
 // When you get a semantic model's public definition, the sensitivity label is not a part of the definition.
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the semantic model.
 //
 // # REQUIRED DELEGATED SCOPES SemanticModel.ReadWrite.All or Item.ReadWrite.All
 //
@@ -682,7 +682,7 @@ func (client *ItemsClient) beginGetSemanticModelDefinition(ctx context.Context, 
 //
 // Updating the semantic model's definition, does not affect its sensitivity label.
 //
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the semantic model.
 //
 // # REQUIRED DELEGATED SCOPES SemanticModel.ReadWrite.All or Item.ReadWrite.All
 //
@@ -752,7 +752,7 @@ func (client *ItemsClient) beginUpdateSemanticModelDefinition(ctx context.Contex
 // ListSemanticModels - returns array of SemanticModel from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

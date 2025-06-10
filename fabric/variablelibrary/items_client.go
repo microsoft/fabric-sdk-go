@@ -33,7 +33,7 @@ type ItemsClient struct {
 // BeginCreateVariableLibrary - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create VariableLibrary with a public definition, refer to VariableLibrary [/rest/api/fabric/articles/item-management/definitions/variable-library-definition]
 // article.
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES VariableLibrary.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a VariableLibrary the workspace must be on a supported Fabric capacity. For more information see: Microsoft
@@ -59,7 +59,7 @@ func (client *ItemsClient) BeginCreateVariableLibrary(ctx context.Context, works
 // CreateVariableLibrary - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create VariableLibrary with a public definition, refer to VariableLibrary [/rest/api/fabric/articles/item-management/definitions/variable-library-definition]
 // article.
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES VariableLibrary.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a VariableLibrary the workspace must be on a supported Fabric capacity. For more information see: Microsoft
@@ -113,7 +113,7 @@ func (client *ItemsClient) createVariableLibraryCreateRequest(ctx context.Contex
 	return req, nil
 }
 
-// DeleteVariableLibrary - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteVariableLibrary - PERMISSIONS The caller must have write permissions for the variable library.
 // REQUIRED DELEGATED SCOPES VariableLibrary.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -168,7 +168,7 @@ func (client *ItemsClient) deleteVariableLibraryCreateRequest(ctx context.Contex
 	return req, nil
 }
 
-// GetVariableLibrary - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetVariableLibrary - PERMISSIONS The caller must have read permissions for the variable library.
 // REQUIRED DELEGATED SCOPES VariableLibrary.Read.All or VariableLibrary.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -235,7 +235,7 @@ func (client *ItemsClient) getVariableLibraryHandleResponse(resp *http.Response)
 
 // BeginGetVariableLibraryDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a VariableLibrary's public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the variable library.
 // REQUIRED DELEGATED SCOPES VariableLibrary.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -256,7 +256,7 @@ func (client *ItemsClient) BeginGetVariableLibraryDefinition(ctx context.Context
 
 // GetVariableLibraryDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a VariableLibrary's public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the variable library.
 // REQUIRED DELEGATED SCOPES VariableLibrary.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -313,7 +313,7 @@ func (client *ItemsClient) getVariableLibraryDefinitionCreateRequest(ctx context
 }
 
 // NewListVariableLibrariesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -378,7 +378,7 @@ func (client *ItemsClient) listVariableLibrariesHandleResponse(resp *http.Respon
 	return result, nil
 }
 
-// UpdateVariableLibrary - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateVariableLibrary - PERMISSIONS The caller must have read and write permissions for the variable library.
 // REQUIRED DELEGATED SCOPES VariableLibrary.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -449,7 +449,7 @@ func (client *ItemsClient) updateVariableLibraryHandleResponse(resp *http.Respon
 
 // BeginUpdateVariableLibraryDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the VariableLibrary's definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the variable library.
 // REQUIRED DELEGATED SCOPES VariableLibrary.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -471,7 +471,7 @@ func (client *ItemsClient) BeginUpdateVariableLibraryDefinition(ctx context.Cont
 
 // UpdateVariableLibraryDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the VariableLibrary's definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the variable library.
 // REQUIRED DELEGATED SCOPES VariableLibrary.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -537,8 +537,9 @@ func (client *ItemsClient) updateVariableLibraryDefinitionCreateRequest(ctx cont
 //
 // To create VariableLibrary with a public definition, refer to VariableLibrary [/rest/api/fabric/articles/item-management/definitions/variable-library-definition] article.
 //
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
-// REQUIRED DELEGATED SCOPES VariableLibrary.ReadWrite.All or Item.ReadWrite.All
+// PERMISSIONS The caller must have a contributor workspace role.
+//
+// # REQUIRED DELEGATED SCOPES VariableLibrary.ReadWrite.All or Item.ReadWrite.All
 //
 // LIMITATIONS
 //
@@ -612,7 +613,7 @@ func (client *ItemsClient) beginCreateVariableLibrary(ctx context.Context, works
 //
 // When you get a VariableLibrary's public definition, the sensitivity label is not a part of the definition.
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the variable library.
 //
 // # REQUIRED DELEGATED SCOPES VariableLibrary.ReadWrite.All or Item.ReadWrite.All
 //
@@ -683,7 +684,7 @@ func (client *ItemsClient) beginGetVariableLibraryDefinition(ctx context.Context
 //
 // Updating the VariableLibrary's definition, does not affect its sensitivity label.
 //
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the variable library.
 //
 // # REQUIRED DELEGATED SCOPES VariableLibrary.ReadWrite.All or Item.ReadWrite.All
 //
@@ -753,7 +754,7 @@ func (client *ItemsClient) beginUpdateVariableLibraryDefinition(ctx context.Cont
 // ListVariableLibraries - returns array of VariableLibrary from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

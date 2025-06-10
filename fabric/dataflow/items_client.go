@@ -33,7 +33,7 @@ type ItemsClient struct {
 // BeginCreateDataflow - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create Dataflow with a public definition, refer to Dataflow [/rest/api/fabric/articles/item-management/definitions/dataflow-definition]
 // article.
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Dataflow.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a Dataflow the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
@@ -58,7 +58,7 @@ func (client *ItemsClient) BeginCreateDataflow(ctx context.Context, workspaceID 
 // CreateDataflow - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create Dataflow with a public definition, refer to Dataflow [/rest/api/fabric/articles/item-management/definitions/dataflow-definition]
 // article.
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Dataflow.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a Dataflow the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
@@ -111,7 +111,7 @@ func (client *ItemsClient) createDataflowCreateRequest(ctx context.Context, work
 	return req, nil
 }
 
-// DeleteDataflow - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteDataflow - PERMISSIONS The caller must have write permissions for the dataflow.
 // REQUIRED DELEGATED SCOPES Dataflow.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -165,7 +165,7 @@ func (client *ItemsClient) deleteDataflowCreateRequest(ctx context.Context, work
 	return req, nil
 }
 
-// GetDataflow - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetDataflow - PERMISSIONS The caller must have read permissions for the dataflow.
 // REQUIRED DELEGATED SCOPES Dataflow.Read.All or Dataflow.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -231,7 +231,7 @@ func (client *ItemsClient) getDataflowHandleResponse(resp *http.Response) (Items
 
 // BeginGetDataflowDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a Dataflow's public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the dataflow.
 // REQUIRED DELEGATED SCOPES Dataflow.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -252,7 +252,7 @@ func (client *ItemsClient) BeginGetDataflowDefinition(ctx context.Context, works
 
 // GetDataflowDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a Dataflow's public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the dataflow.
 // REQUIRED DELEGATED SCOPES Dataflow.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -304,7 +304,7 @@ func (client *ItemsClient) getDataflowDefinitionCreateRequest(ctx context.Contex
 }
 
 // NewListDataflowsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -368,7 +368,7 @@ func (client *ItemsClient) listDataflowsHandleResponse(resp *http.Response) (Ite
 	return result, nil
 }
 
-// UpdateDataflow - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateDataflow - PERMISSIONS The caller must have read and write permissions for the dataflow.
 // REQUIRED DELEGATED SCOPES Dataflow.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -438,7 +438,7 @@ func (client *ItemsClient) updateDataflowHandleResponse(resp *http.Response) (It
 
 // BeginUpdateDataflowDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the Dataflow's definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the dataflow.
 // REQUIRED DELEGATED SCOPES Dataflow.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -460,7 +460,7 @@ func (client *ItemsClient) BeginUpdateDataflowDefinition(ctx context.Context, wo
 
 // UpdateDataflowDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the Dataflow's definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the dataflow.
 // REQUIRED DELEGATED SCOPES Dataflow.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -526,7 +526,7 @@ func (client *ItemsClient) updateDataflowDefinitionCreateRequest(ctx context.Con
 //
 // To create Dataflow with a public definition, refer to Dataflow [/rest/api/fabric/articles/item-management/definitions/dataflow-definition] article.
 //
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Dataflow.ReadWrite.All or Item.ReadWrite.All
 //
 // LIMITATIONS
@@ -600,7 +600,7 @@ func (client *ItemsClient) beginCreateDataflow(ctx context.Context, workspaceID 
 //
 // When you get a Dataflow's public definition, the sensitivity label is not a part of the definition.
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the dataflow.
 //
 // # REQUIRED DELEGATED SCOPES Dataflow.ReadWrite.All or Item.ReadWrite.All
 //
@@ -671,7 +671,7 @@ func (client *ItemsClient) beginGetDataflowDefinition(ctx context.Context, works
 //
 // Updating the Dataflow's definition, does not affect its sensitivity label.
 //
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the dataflow.
 //
 // # REQUIRED DELEGATED SCOPES Dataflow.ReadWrite.All or Item.ReadWrite.All
 //
@@ -741,7 +741,7 @@ func (client *ItemsClient) beginUpdateDataflowDefinition(ctx context.Context, wo
 // ListDataflows - returns array of Dataflow from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

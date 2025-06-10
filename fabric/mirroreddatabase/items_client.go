@@ -32,7 +32,7 @@ type ItemsClient struct {
 // CreateMirroredDatabase - This API does not support creating a mirrored database without a definition. To create Mirrored
 // database with definition, refer to Mirrored database definition
 // [/rest/api/fabric/articles/item-management/definitions/mirrored-database-definition] article.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES MirroredDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -96,7 +96,7 @@ func (client *ItemsClient) createMirroredDatabaseHandleResponse(resp *http.Respo
 	return result, nil
 }
 
-// DeleteMirroredDatabase - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteMirroredDatabase - PERMISSIONS The caller must have write permissions for the mirrored database.
 // REQUIRED DELEGATED SCOPES MirroredDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -151,7 +151,7 @@ func (client *ItemsClient) deleteMirroredDatabaseCreateRequest(ctx context.Conte
 	return req, nil
 }
 
-// GetMirroredDatabase - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetMirroredDatabase - PERMISSIONS The caller must have read permissions for the mirrored database.
 // REQUIRED DELEGATED SCOPES MirroredDatabase.Read.All or MirroredDatabase.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -217,7 +217,7 @@ func (client *ItemsClient) getMirroredDatabaseHandleResponse(resp *http.Response
 }
 
 // BeginGetMirroredDatabaseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the mirrored database.
 // REQUIRED DELEGATED SCOPES MirroredDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -237,7 +237,7 @@ func (client *ItemsClient) BeginGetMirroredDatabaseDefinition(ctx context.Contex
 }
 
 // GetMirroredDatabaseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the mirrored database.
 // REQUIRED DELEGATED SCOPES MirroredDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -289,7 +289,7 @@ func (client *ItemsClient) getMirroredDatabaseDefinitionCreateRequest(ctx contex
 }
 
 // NewListMirroredDatabasesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -354,7 +354,7 @@ func (client *ItemsClient) listMirroredDatabasesHandleResponse(resp *http.Respon
 	return result, nil
 }
 
-// UpdateMirroredDatabase - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateMirroredDatabase - PERMISSIONS The caller must have read and write permissions for the mirrored database.
 // REQUIRED DELEGATED SCOPES MirroredDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -424,7 +424,7 @@ func (client *ItemsClient) updateMirroredDatabaseHandleResponse(resp *http.Respo
 }
 
 // BeginUpdateMirroredDatabaseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the mirrored database.
 // REQUIRED DELEGATED SCOPES MirroredDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -445,7 +445,7 @@ func (client *ItemsClient) BeginUpdateMirroredDatabaseDefinition(ctx context.Con
 }
 
 // UpdateMirroredDatabaseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the mirrored database.
 // REQUIRED DELEGATED SCOPES MirroredDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -504,7 +504,7 @@ func (client *ItemsClient) updateMirroredDatabaseDefinitionCreateRequest(ctx con
 // GetMirroredDatabaseDefinition - returns ItemsClientGetMirroredDatabaseDefinitionResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the mirrored database.
 //
 // # REQUIRED DELEGATED SCOPES MirroredDatabase.ReadWrite.All or Item.ReadWrite.All
 //
@@ -573,7 +573,7 @@ func (client *ItemsClient) beginGetMirroredDatabaseDefinition(ctx context.Contex
 // UpdateMirroredDatabaseDefinition - returns ItemsClientUpdateMirroredDatabaseDefinitionResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the mirrored database.
 //
 // # REQUIRED DELEGATED SCOPES MirroredDatabase.ReadWrite.All or Item.ReadWrite.All
 //
@@ -643,7 +643,7 @@ func (client *ItemsClient) beginUpdateMirroredDatabaseDefinition(ctx context.Con
 // ListMirroredDatabases - returns array of MirroredDatabase from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

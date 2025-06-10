@@ -29,7 +29,7 @@ type ItemsClient struct {
 }
 
 // NewListPaginatedReportsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -94,7 +94,7 @@ func (client *ItemsClient) listPaginatedReportsHandleResponse(resp *http.Respons
 	return result, nil
 }
 
-// UpdatePaginatedReport - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdatePaginatedReport - PERMISSIONS The caller must have read and write permissions for the paginated report.
 // REQUIRED DELEGATED SCOPES PaginatedReport.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -168,7 +168,7 @@ func (client *ItemsClient) updatePaginatedReportHandleResponse(resp *http.Respon
 // ListPaginatedReports - returns array of PaginatedReport from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

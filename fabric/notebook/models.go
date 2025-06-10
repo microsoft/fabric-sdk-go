@@ -18,6 +18,9 @@ type CreateNotebookRequest struct {
 
 	// The notebook description. Maximum length is 256 characters.
 	Description *string
+
+	// The folder ID. If not specified or null, the notebook is created with the workspace as its folder.
+	FolderID *string
 }
 
 // Definition - Notebook public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/notebook-definition]

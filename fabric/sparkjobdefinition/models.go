@@ -18,6 +18,9 @@ type CreateSparkJobDefinitionRequest struct {
 
 	// The spark job definition description. Maximum length is 256 characters.
 	Description *string
+
+	// The folder ID. If not specified or null, the spark job definition is created with the workspace as its folder.
+	FolderID *string
 }
 
 // Duration - A duration.
@@ -36,6 +39,12 @@ type ExecutionData struct {
 
 	// Command line arguments. The arguments are space separated
 	CommandLineArguments *string
+
+	// The lakehouse ID that will be used as the default lakehouse of the Spark job definition.
+	DefaultLakehouseID ItemReferenceClassification
+
+	// The environment ID that will be used for the Spark job definition. Can be used to specify Spark settings.
+	EnvironmentID ItemReferenceClassification
 
 	// Executable main file to be used. The path must be an abfs path.
 	ExecutableFile *string

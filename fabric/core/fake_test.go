@@ -1825,6 +1825,37 @@ func (testsuite *FakeTestSuite) TestGit_Connect() {
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Connect a workspace to Azure DevOps using configured connection example"},
+	})
+	exampleWorkspaceID = "1565e6a3-c020-4c0c-dda7-92bafe99eec5"
+	exampleGitConnectRequest = core.GitConnectRequest{
+		GitProviderDetails: &core.AzureDevOpsDetails{
+			BranchName:       to.Ptr("Test Branch"),
+			DirectoryName:    to.Ptr("Test Directory/Test Subdirectory"),
+			GitProviderType:  to.Ptr(core.GitProviderTypeAzureDevOps),
+			RepositoryName:   to.Ptr("Test Repo"),
+			OrganizationName: to.Ptr("Test Organization"),
+			ProjectName:      to.Ptr("Test Project"),
+		},
+		MyGitCredentials: &core.ConfiguredConnectionGitCredentials{
+			Source:       to.Ptr(core.GitCredentialsSourceConfiguredConnection),
+			ConnectionID: to.Ptr("3f2504e0-4f89-11d3-9a0c-0305e82c3301"),
+		},
+	}
+
+	testsuite.serverFactory.GitServer.Connect = func(ctx context.Context, workspaceID string, gitConnectRequest core.GitConnectRequest, options *core.GitClientConnectOptions) (resp azfake.Responder[core.GitClientConnectResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleGitConnectRequest, gitConnectRequest))
+		resp = azfake.Responder[core.GitClientConnectResponse]{}
+		resp.SetResponse(http.StatusOK, core.GitClientConnectResponse{}, nil)
+		return
+	}
+
+	_, err = client.Connect(ctx, exampleWorkspaceID, exampleGitConnectRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Connect a workspace to GitHub example"},
 	})
 	exampleWorkspaceID = "1565e6a3-c020-4c0c-dda7-92bafe99eec5"
@@ -2153,7 +2184,7 @@ func (testsuite *FakeTestSuite) TestGit_GetMyGitCredentials() {
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Get the user's Git credentials configuration for GitHub when it is configured by connection example"},
+		"example-id": {"Get the user's Git credentials configuration when it is configured by connection example"},
 	})
 	exampleWorkspaceID = "1565e6a3-c020-4c0c-dda7-92bafe99eec5"
 
@@ -2177,7 +2208,7 @@ func (testsuite *FakeTestSuite) TestGit_GetMyGitCredentials() {
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Get the user's Git credentials configuration for GitHub when it is not configured example"},
+		"example-id": {"Get the user's Git credentials configuration when it is not configured example"},
 	})
 	exampleWorkspaceID = "1565e6a3-c020-4c0c-dda7-92bafe99eec5"
 
@@ -2202,17 +2233,45 @@ func (testsuite *FakeTestSuite) TestGit_GetMyGitCredentials() {
 func (testsuite *FakeTestSuite) TestGit_UpdateMyGitCredentials() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Update user's Git credentials to ConfiguredConnection example"},
+		"example-id": {"Update user's Git credentials to Automatic example"},
 	})
 	var exampleWorkspaceID string
 	var exampleUpdateGitCredentialsRequest core.UpdateGitCredentialsRequestClassification
+	exampleWorkspaceID = "1565e6a3-c020-4c0c-dda7-92bafe99eec5"
+	exampleUpdateGitCredentialsRequest = &core.UpdateGitCredentialsToAutomaticRequest{
+		Source: to.Ptr(core.GitCredentialsSourceAutomatic),
+	}
+
+	exampleRes := core.GitClientUpdateMyGitCredentialsResponse{
+		GitCredentialsConfigurationResponseClassification: &core.AutomaticGitCredentialsResponse{
+			Source: to.Ptr(core.GitCredentialsSourceAutomatic),
+		},
+	}
+
+	testsuite.serverFactory.GitServer.UpdateMyGitCredentials = func(ctx context.Context, workspaceID string, updateGitCredentialsRequest core.UpdateGitCredentialsRequestClassification, options *core.GitClientUpdateMyGitCredentialsOptions) (resp azfake.Responder[core.GitClientUpdateMyGitCredentialsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateGitCredentialsRequest, updateGitCredentialsRequest))
+		resp = azfake.Responder[core.GitClientUpdateMyGitCredentialsResponse]{}
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGitClient()
+	res, err := client.UpdateMyGitCredentials(ctx, exampleWorkspaceID, exampleUpdateGitCredentialsRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update user's Git credentials to ConfiguredConnection example"},
+	})
 	exampleWorkspaceID = "1565e6a3-c020-4c0c-dda7-92bafe99eec5"
 	exampleUpdateGitCredentialsRequest = &core.UpdateGitCredentialsToConfiguredConnectionRequest{
 		Source:       to.Ptr(core.GitCredentialsSourceConfiguredConnection),
 		ConnectionID: to.Ptr("3f2504e0-4f89-11d3-9a0c-0305e82c3301"),
 	}
 
-	exampleRes := core.GitClientUpdateMyGitCredentialsResponse{
+	exampleRes = core.GitClientUpdateMyGitCredentialsResponse{
 		GitCredentialsConfigurationResponseClassification: &core.ConfiguredConnectionGitCredentialsResponse{
 			Source:       to.Ptr(core.GitCredentialsSourceConfiguredConnection),
 			ConnectionID: to.Ptr("3f2504e0-4f89-11d3-9a0c-0305e82c3301"),
@@ -2227,8 +2286,7 @@ func (testsuite *FakeTestSuite) TestGit_UpdateMyGitCredentials() {
 		return
 	}
 
-	client := testsuite.clientFactory.NewGitClient()
-	res, err := client.UpdateMyGitCredentials(ctx, exampleWorkspaceID, exampleUpdateGitCredentialsRequest, nil)
+	res, err = client.UpdateMyGitCredentials(ctx, exampleWorkspaceID, exampleUpdateGitCredentialsRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
 

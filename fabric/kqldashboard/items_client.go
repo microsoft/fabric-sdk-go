@@ -33,7 +33,7 @@ type ItemsClient struct {
 // BeginCreateKQLDashboard - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create a KQL dashboard with definition, refer to the KQL dashboard definition article [/rest/api/fabric/articles/item-management/definitions/kql-dashboard-definition].
 // PERMISSIONS
-// The caller must have contributor or higher workspace role.
+// The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -55,7 +55,7 @@ func (client *ItemsClient) BeginCreateKQLDashboard(ctx context.Context, workspac
 // CreateKQLDashboard - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create a KQL dashboard with definition, refer to the KQL dashboard definition article [/rest/api/fabric/articles/item-management/definitions/kql-dashboard-definition].
 // PERMISSIONS
-// The caller must have contributor or higher workspace role.
+// The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -105,7 +105,7 @@ func (client *ItemsClient) createKQLDashboardCreateRequest(ctx context.Context, 
 	return req, nil
 }
 
-// DeleteKQLDashboard - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteKQLDashboard - PERMISSIONS The caller must have write permissions for the KQL dashboard.
 // REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -160,7 +160,7 @@ func (client *ItemsClient) deleteKQLDashboardCreateRequest(ctx context.Context, 
 	return req, nil
 }
 
-// GetKQLDashboard - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetKQLDashboard - PERMISSIONS The caller must have read permissions for the KQL dashboard.
 // REQUIRED DELEGATED SCOPES KQLDashboard.Read.All or KQLDashboard.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -225,7 +225,7 @@ func (client *ItemsClient) getKQLDashboardHandleResponse(resp *http.Response) (I
 }
 
 // BeginGetKQLDashboardDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the KQL dashboard.
 // REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -245,7 +245,7 @@ func (client *ItemsClient) BeginGetKQLDashboardDefinition(ctx context.Context, w
 }
 
 // GetKQLDashboardDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the KQL dashboard.
 // REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -302,7 +302,7 @@ func (client *ItemsClient) getKQLDashboardDefinitionCreateRequest(ctx context.Co
 }
 
 // NewListKQLDashboardsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -367,7 +367,7 @@ func (client *ItemsClient) listKQLDashboardsHandleResponse(resp *http.Response) 
 	return result, nil
 }
 
-// UpdateKQLDashboard - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateKQLDashboard - PERMISSIONS The caller must have read and write permissions for the KQL dashboard.
 // REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -437,7 +437,7 @@ func (client *ItemsClient) updateKQLDashboardHandleResponse(resp *http.Response)
 }
 
 // BeginUpdateKQLDashboardDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the KQL dashboard.
 // REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -458,7 +458,7 @@ func (client *ItemsClient) BeginUpdateKQLDashboardDefinition(ctx context.Context
 }
 
 // UpdateKQLDashboardDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the KQL dashboard.
 // REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -525,7 +525,7 @@ func (client *ItemsClient) updateKQLDashboardDefinitionCreateRequest(ctx context
 // To create a KQL dashboard with definition, refer to the KQL dashboard definition article [/rest/api/fabric/articles/item-management/definitions/kql-dashboard-definition].
 //
 // PERMISSIONS
-// The caller must have contributor or higher workspace role.
+// The caller must have a contributor workspace role.
 //
 // # REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
 //
@@ -594,7 +594,7 @@ func (client *ItemsClient) beginCreateKQLDashboard(ctx context.Context, workspac
 // GetKQLDashboardDefinition - returns ItemsClientGetKQLDashboardDefinitionResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the KQL dashboard.
 //
 // # REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
 //
@@ -663,7 +663,7 @@ func (client *ItemsClient) beginGetKQLDashboardDefinition(ctx context.Context, w
 // UpdateKQLDashboardDefinition - returns ItemsClientUpdateKQLDashboardDefinitionResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the KQL dashboard.
 //
 // # REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
 //
@@ -733,7 +733,7 @@ func (client *ItemsClient) beginUpdateKQLDashboardDefinition(ctx context.Context
 // ListKQLDashboards - returns array of KQLDashboard from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

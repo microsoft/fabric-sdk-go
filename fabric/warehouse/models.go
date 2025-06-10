@@ -18,6 +18,9 @@ type CreateWarehouseRequest struct {
 
 	// The warehouse description. Maximum length is 256 characters.
 	Description *string
+
+	// The folder ID. If not specified or null, the warehouse is created with the workspace as its folder.
+	FolderID *string
 }
 
 // CreationPayload - Warehouse item payload

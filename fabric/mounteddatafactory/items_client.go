@@ -33,7 +33,7 @@ type ItemsClient struct {
 // BeginCreateMountedDataFactory - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create MountedDataFactory with a public definition, refer to MountedDataFactory [/rest/api/fabric/articles/item-management/definitions/mounted-data-factory-definition]
 // article.
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES MountedDataFactory.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a MountedDataFactory the workspace must be on a supported Fabric capacity. For more information see: Microsoft
@@ -59,7 +59,7 @@ func (client *ItemsClient) BeginCreateMountedDataFactory(ctx context.Context, wo
 // CreateMountedDataFactory - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create MountedDataFactory with a public definition, refer to MountedDataFactory [/rest/api/fabric/articles/item-management/definitions/mounted-data-factory-definition]
 // article.
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES MountedDataFactory.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a MountedDataFactory the workspace must be on a supported Fabric capacity. For more information see: Microsoft
@@ -113,7 +113,7 @@ func (client *ItemsClient) createMountedDataFactoryCreateRequest(ctx context.Con
 	return req, nil
 }
 
-// DeleteMountedDataFactory - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteMountedDataFactory - PERMISSIONS The caller must have write permissions for the mounted data factory.
 // REQUIRED DELEGATED SCOPES MountedDataFactory.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -168,7 +168,7 @@ func (client *ItemsClient) deleteMountedDataFactoryCreateRequest(ctx context.Con
 	return req, nil
 }
 
-// GetMountedDataFactory - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetMountedDataFactory - PERMISSIONS The caller must have read permissions for the mounted data factory.
 // REQUIRED DELEGATED SCOPES MountedDataFactory.Read.All or MountedDataFactory.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -235,7 +235,7 @@ func (client *ItemsClient) getMountedDataFactoryHandleResponse(resp *http.Respon
 
 // BeginGetMountedDataFactoryDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a MountedDataFactory's public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the mounted data factory.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -255,7 +255,7 @@ func (client *ItemsClient) BeginGetMountedDataFactoryDefinition(ctx context.Cont
 
 // GetMountedDataFactoryDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a MountedDataFactory's public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the mounted data factory.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -311,7 +311,7 @@ func (client *ItemsClient) getMountedDataFactoryDefinitionCreateRequest(ctx cont
 }
 
 // NewListMountedDataFactoriesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -376,7 +376,7 @@ func (client *ItemsClient) listMountedDataFactoriesHandleResponse(resp *http.Res
 	return result, nil
 }
 
-// UpdateMountedDataFactory - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateMountedDataFactory - PERMISSIONS The caller must have read and write permissions for the mounted data factory.
 // REQUIRED DELEGATED SCOPES MountedDataFactory.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -447,7 +447,7 @@ func (client *ItemsClient) updateMountedDataFactoryHandleResponse(resp *http.Res
 
 // BeginUpdateMountedDataFactoryDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the MountedDataFactory's definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the mounted data factory.
 // REQUIRED DELEGATED SCOPES MountedDataFactory.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -469,7 +469,7 @@ func (client *ItemsClient) BeginUpdateMountedDataFactoryDefinition(ctx context.C
 
 // UpdateMountedDataFactoryDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the MountedDataFactory's definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the mounted data factory.
 // REQUIRED DELEGATED SCOPES MountedDataFactory.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -535,7 +535,7 @@ func (client *ItemsClient) updateMountedDataFactoryDefinitionCreateRequest(ctx c
 //
 // To create MountedDataFactory with a public definition, refer to MountedDataFactory [/rest/api/fabric/articles/item-management/definitions/mounted-data-factory-definition] article.
 //
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES MountedDataFactory.ReadWrite.All or Item.ReadWrite.All
 //
 // LIMITATIONS
@@ -610,7 +610,7 @@ func (client *ItemsClient) beginCreateMountedDataFactory(ctx context.Context, wo
 //
 // When you get a MountedDataFactory's public definition, the sensitivity label is not a part of the definition.
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the mounted data factory.
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
@@ -679,7 +679,7 @@ func (client *ItemsClient) beginGetMountedDataFactoryDefinition(ctx context.Cont
 //
 // Updating the MountedDataFactory's definition, does not affect its sensitivity label.
 //
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the mounted data factory.
 //
 // # REQUIRED DELEGATED SCOPES MountedDataFactory.ReadWrite.All or Item.ReadWrite.All
 //
@@ -749,7 +749,7 @@ func (client *ItemsClient) beginUpdateMountedDataFactoryDefinition(ctx context.C
 // ListMountedDataFactories - returns array of MountedDataFactory from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

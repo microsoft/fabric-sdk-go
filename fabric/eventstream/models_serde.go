@@ -1340,6 +1340,7 @@ func (c CreateEventstreamRequest) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "definition", c.Definition)
 	populate(objectMap, "description", c.Description)
 	populate(objectMap, "displayName", c.DisplayName)
+	populate(objectMap, "folderId", c.FolderID)
 	return json.Marshal(objectMap)
 }
 
@@ -1360,6 +1361,9 @@ func (c *CreateEventstreamRequest) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "displayName":
 			err = unpopulate(val, "DisplayName", &c.DisplayName)
+			delete(rawMsg, key)
+		case "folderId":
+			err = unpopulate(val, "FolderID", &c.FolderID)
 			delete(rawMsg, key)
 		}
 		if err != nil {

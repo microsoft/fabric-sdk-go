@@ -30,7 +30,7 @@ type ItemsClient struct {
 }
 
 // BeginCreateWarehouseSnapshot - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES WarehouseSnapshot.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a Warehouse snapshot the workspace must be on a supported Fabric capacity. For more information see: Microsoft
@@ -54,7 +54,7 @@ func (client *ItemsClient) BeginCreateWarehouseSnapshot(ctx context.Context, wor
 }
 
 // CreateWarehouseSnapshot - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES WarehouseSnapshot.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a Warehouse snapshot the workspace must be on a supported Fabric capacity. For more information see: Microsoft
@@ -108,7 +108,7 @@ func (client *ItemsClient) createWarehouseSnapshotCreateRequest(ctx context.Cont
 	return req, nil
 }
 
-// DeleteWarehouseSnapshot - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteWarehouseSnapshot - PERMISSIONS The caller must have write permissions for the warehouse snapshot.
 // REQUIRED DELEGATED SCOPES WarehouseSnapshot.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -163,7 +163,7 @@ func (client *ItemsClient) deleteWarehouseSnapshotCreateRequest(ctx context.Cont
 	return req, nil
 }
 
-// GetWarehouseSnapshot - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetWarehouseSnapshot - PERMISSIONS The caller must have read permissions for the warehouse snapshot.
 // REQUIRED DELEGATED SCOPES WarehouseSnapshot.Read.All or WarehouseSnapshot.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -229,7 +229,7 @@ func (client *ItemsClient) getWarehouseSnapshotHandleResponse(resp *http.Respons
 }
 
 // NewListWarehouseSnapshotsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -294,7 +294,7 @@ func (client *ItemsClient) listWarehouseSnapshotsHandleResponse(resp *http.Respo
 	return result, nil
 }
 
-// UpdateWarehouseSnapshot - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateWarehouseSnapshot - PERMISSIONS The caller must have read and write permissions for the warehouse snapshot.
 // REQUIRED DELEGATED SCOPES WarehouseSnapshot.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -368,7 +368,7 @@ func (client *ItemsClient) updateWarehouseSnapshotHandleResponse(resp *http.Resp
 // CreateWarehouseSnapshot - returns ItemsClientCreateWarehouseSnapshotResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES WarehouseSnapshot.ReadWrite.All or Item.ReadWrite.All
 //
 // LIMITATIONS
@@ -441,7 +441,7 @@ func (client *ItemsClient) beginCreateWarehouseSnapshot(ctx context.Context, wor
 // ListWarehouseSnapshots - returns array of WarehouseSnapshot from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

@@ -1647,8 +1647,8 @@ type GitConnectRequest struct {
 	GitProviderDetails GitProviderDetailsClassification
 
 	// User-specific Git credentials for authentication to the GitProvider. These credentials are not shared with other workspace
-	// contributors. For AzureDevOps, the default value is AutomaticGitCredentials.
-	// For GitHub, this property is required.
+	// contributors. For GitHub, this property is required. For AzureDevOps, this
+	// property is optional. If not set, the default is AutomaticGitCredentials.
 	MyGitCredentials GitCredentialsClassification
 }
 

@@ -52,6 +52,9 @@ type CreateApacheAirflowJobRequest struct {
 
 	// The Apache Airflow job description. Maximum length is 256 characters.
 	Description *string
+
+	// The folder ID. If not specified or null, the Apache Airflow is created with the workspace as its folder.
+	FolderID *string
 }
 
 // Definition - Apache Airflow job public definition object.

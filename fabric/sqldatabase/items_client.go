@@ -31,7 +31,7 @@ type ItemsClient struct {
 
 // BeginCreateSQLDatabase - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // This API does not support create a SQL database with definition.
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a SQL database the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
@@ -55,7 +55,7 @@ func (client *ItemsClient) BeginCreateSQLDatabase(ctx context.Context, workspace
 
 // CreateSQLDatabase - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // This API does not support create a SQL database with definition.
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a SQL database the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
@@ -108,7 +108,7 @@ func (client *ItemsClient) createSQLDatabaseCreateRequest(ctx context.Context, w
 	return req, nil
 }
 
-// DeleteSQLDatabase - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteSQLDatabase - PERMISSIONS The caller must have write permissions for the SQL database.
 // REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -162,7 +162,7 @@ func (client *ItemsClient) deleteSQLDatabaseCreateRequest(ctx context.Context, w
 	return req, nil
 }
 
-// GetSQLDatabase - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetSQLDatabase - PERMISSIONS The caller must have read permissions for the SQL database.
 // REQUIRED DELEGATED SCOPES SQLDatabase.Read.All or SQLDatabase.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -227,7 +227,7 @@ func (client *ItemsClient) getSQLDatabaseHandleResponse(resp *http.Response) (It
 }
 
 // NewListSQLDatabasesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -292,7 +292,7 @@ func (client *ItemsClient) listSQLDatabasesHandleResponse(resp *http.Response) (
 	return result, nil
 }
 
-// UpdateSQLDatabase - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateSQLDatabase - PERMISSIONS The caller must have read and write permissions for the SQL database.
 // REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -367,8 +367,9 @@ func (client *ItemsClient) updateSQLDatabaseHandleResponse(resp *http.Response) 
 //
 // This API does not support create a SQL database with definition.
 //
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
-// REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
+// PERMISSIONS The caller must have a contributor workspace role.
+//
+// # REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
 //
 // LIMITATIONS
 //
@@ -439,7 +440,7 @@ func (client *ItemsClient) beginCreateSQLDatabase(ctx context.Context, workspace
 // ListSQLDatabases - returns array of SQLDatabase from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

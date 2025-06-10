@@ -32,7 +32,7 @@ type ItemsClient struct {
 
 // BeginCreateKQLQueryset - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create a KQL queryset with definition, refer to the KQL queryset definition article [/rest/api/fabric/articles/item-management/definitions/kql-queryset-definition].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -53,7 +53,7 @@ func (client *ItemsClient) BeginCreateKQLQueryset(ctx context.Context, workspace
 
 // CreateKQLQueryset - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create a KQL queryset with definition, refer to the KQL queryset definition article [/rest/api/fabric/articles/item-management/definitions/kql-queryset-definition].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -103,7 +103,7 @@ func (client *ItemsClient) createKQLQuerysetCreateRequest(ctx context.Context, w
 	return req, nil
 }
 
-// DeleteKQLQueryset - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteKQLQueryset - PERMISSIONS The caller must have write permissions for the KQL queryset.
 // REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -157,7 +157,7 @@ func (client *ItemsClient) deleteKQLQuerysetCreateRequest(ctx context.Context, w
 	return req, nil
 }
 
-// GetKQLQueryset - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetKQLQueryset - PERMISSIONS The caller must have read permissions for the KQL qeryset.
 // REQUIRED DELEGATED SCOPES KQLQueryset.Read.All or KQLQueryset.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -223,7 +223,7 @@ func (client *ItemsClient) getKQLQuerysetHandleResponse(resp *http.Response) (It
 
 // BeginGetKQLQuerysetDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS
-// The caller must have contributor or higher workspace role.
+// The caller must have read and write permissions for the KQL queryset.
 // REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -244,7 +244,7 @@ func (client *ItemsClient) BeginGetKQLQuerysetDefinition(ctx context.Context, wo
 
 // GetKQLQuerysetDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS
-// The caller must have contributor or higher workspace role.
+// The caller must have read and write permissions for the KQL queryset.
 // REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -301,7 +301,7 @@ func (client *ItemsClient) getKQLQuerysetDefinitionCreateRequest(ctx context.Con
 }
 
 // NewListKQLQuerysetsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -366,7 +366,7 @@ func (client *ItemsClient) listKQLQuerysetsHandleResponse(resp *http.Response) (
 	return result, nil
 }
 
-// UpdateKQLQueryset - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateKQLQueryset - PERMISSIONS The caller must have read and write permissions for the KQL queryset.
 // REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -435,7 +435,7 @@ func (client *ItemsClient) updateKQLQuerysetHandleResponse(resp *http.Response) 
 }
 
 // BeginUpdateKQLQuerysetDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the KQL queryset.
 // REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -456,7 +456,7 @@ func (client *ItemsClient) BeginUpdateKQLQuerysetDefinition(ctx context.Context,
 }
 
 // UpdateKQLQuerysetDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the KQL queryset.
 // REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -522,7 +522,7 @@ func (client *ItemsClient) updateKQLQuerysetDefinitionCreateRequest(ctx context.
 //
 // To create a KQL queryset with definition, refer to the KQL queryset definition article [/rest/api/fabric/articles/item-management/definitions/kql-queryset-definition].
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have a contributor workspace role.
 //
 // # REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
 //
@@ -592,7 +592,7 @@ func (client *ItemsClient) beginCreateKQLQueryset(ctx context.Context, workspace
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
 // PERMISSIONS
-// The caller must have contributor or higher workspace role.
+// The caller must have read and write permissions for the KQL queryset.
 //
 // # REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
 //
@@ -661,7 +661,7 @@ func (client *ItemsClient) beginGetKQLQuerysetDefinition(ctx context.Context, wo
 // UpdateKQLQuerysetDefinition - returns ItemsClientUpdateKQLQuerysetDefinitionResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the KQL queryset.
 //
 // # REQUIRED DELEGATED SCOPES KQLQueryset.ReadWrite.All or Item.ReadWrite.All
 //
@@ -731,7 +731,7 @@ func (client *ItemsClient) beginUpdateKQLQuerysetDefinition(ctx context.Context,
 // ListKQLQuerysets - returns array of KQLQueryset from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

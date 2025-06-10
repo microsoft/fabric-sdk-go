@@ -16,6 +16,9 @@ type CreateVariableLibraryRequest struct {
 
 	// The VariableLibrary description. Maximum length is 256 characters.
 	Description *string
+
+	// The folder ID. If not specified or null, the VariableLibrary is created with the workspace as its folder.
+	FolderID *string
 }
 
 // DefinitionResponse - VariableLibrary public definition response.

@@ -13,6 +13,9 @@ type CreateMLModelRequest struct {
 
 	// The machine learning model description. Maximum length is 256 characters.
 	Description *string
+
+	// The folder ID. If not specified or null, the machine learning model is created with the workspace as its folder.
+	FolderID *string
 }
 
 // ItemTag - Represents a tag applied on an item.

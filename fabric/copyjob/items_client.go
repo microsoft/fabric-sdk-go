@@ -32,7 +32,7 @@ type ItemsClient struct {
 
 // BeginCreateCopyJob - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create CopyJob with a public definition, refer to CopyJob [/rest/api/fabric/articles/item-management/definitions/CopyJob].
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES CopyJob.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a CopyJob the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
@@ -56,7 +56,7 @@ func (client *ItemsClient) BeginCreateCopyJob(ctx context.Context, workspaceID s
 
 // CreateCopyJob - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create CopyJob with a public definition, refer to CopyJob [/rest/api/fabric/articles/item-management/definitions/CopyJob].
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES CopyJob.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a CopyJob the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
@@ -109,7 +109,7 @@ func (client *ItemsClient) createCopyJobCreateRequest(ctx context.Context, works
 	return req, nil
 }
 
-// DeleteCopyJob - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteCopyJob - PERMISSIONS The caller must have write permissions for the copy job.
 // REQUIRED DELEGATED SCOPES CopyJob.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -163,7 +163,7 @@ func (client *ItemsClient) deleteCopyJobCreateRequest(ctx context.Context, works
 	return req, nil
 }
 
-// GetCopyJob - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetCopyJob - PERMISSIONS The caller must have read permissions for the copy job.
 // REQUIRED DELEGATED SCOPES CopyJob.Read.All or CopyJob.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -229,7 +229,7 @@ func (client *ItemsClient) getCopyJobHandleResponse(resp *http.Response) (ItemsC
 
 // BeginGetCopyJobDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a CopyJob's public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the copy job.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -249,7 +249,7 @@ func (client *ItemsClient) BeginGetCopyJobDefinition(ctx context.Context, worksp
 
 // GetCopyJobDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a CopyJob's public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the copy job.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -305,7 +305,7 @@ func (client *ItemsClient) getCopyJobDefinitionCreateRequest(ctx context.Context
 }
 
 // NewListCopyJobsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -369,7 +369,7 @@ func (client *ItemsClient) listCopyJobsHandleResponse(resp *http.Response) (Item
 	return result, nil
 }
 
-// UpdateCopyJob - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateCopyJob - PERMISSIONS The caller must have read and write permissions for the copy job.
 // REQUIRED DELEGATED SCOPES CopyJob.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -439,7 +439,7 @@ func (client *ItemsClient) updateCopyJobHandleResponse(resp *http.Response) (Ite
 
 // BeginUpdateCopyJobDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the CopyJob's definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the copy job.
 // REQUIRED DELEGATED SCOPES CopyJob.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -461,7 +461,7 @@ func (client *ItemsClient) BeginUpdateCopyJobDefinition(ctx context.Context, wor
 
 // UpdateCopyJobDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the CopyJob's definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the copy job.
 // REQUIRED DELEGATED SCOPES CopyJob.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -527,7 +527,7 @@ func (client *ItemsClient) updateCopyJobDefinitionCreateRequest(ctx context.Cont
 //
 // To create CopyJob with a public definition, refer to CopyJob [/rest/api/fabric/articles/item-management/definitions/CopyJob].
 //
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES CopyJob.ReadWrite.All or Item.ReadWrite.All
 //
 // LIMITATIONS
@@ -601,7 +601,7 @@ func (client *ItemsClient) beginCreateCopyJob(ctx context.Context, workspaceID s
 //
 // When you get a CopyJob's public definition, the sensitivity label is not a part of the definition.
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the copy job.
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
@@ -670,7 +670,7 @@ func (client *ItemsClient) beginGetCopyJobDefinition(ctx context.Context, worksp
 //
 // Updating the CopyJob's definition, does not affect its sensitivity label.
 //
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the copy job.
 //
 // # REQUIRED DELEGATED SCOPES CopyJob.ReadWrite.All or Item.ReadWrite.All
 //
@@ -740,7 +740,7 @@ func (client *ItemsClient) beginUpdateCopyJobDefinition(ctx context.Context, wor
 // ListCopyJobs - returns array of CopyJob from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

@@ -32,7 +32,7 @@ type ItemsClient struct {
 
 // BeginCreateGraphQLAPI - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create GraphQLApi item with a public definition, refer to GraphQLApi definition [/rest/api/fabric/articles/item-management/definitions/graphql-api-definition].
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a GraphQLApi the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
@@ -57,7 +57,7 @@ func (client *ItemsClient) BeginCreateGraphQLAPI(ctx context.Context, workspaceI
 
 // CreateGraphQLAPI - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create GraphQLApi item with a public definition, refer to GraphQLApi definition [/rest/api/fabric/articles/item-management/definitions/graphql-api-definition].
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a GraphQLApi the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
@@ -111,7 +111,7 @@ func (client *ItemsClient) createGraphQLAPICreateRequest(ctx context.Context, wo
 	return req, nil
 }
 
-// DeleteGraphQLAPI - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteGraphQLAPI - PERMISSIONS The caller must have write permissions for the GraphQLApi.
 // REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -165,7 +165,7 @@ func (client *ItemsClient) deleteGraphQLAPICreateRequest(ctx context.Context, wo
 	return req, nil
 }
 
-// GetGraphQLAPI - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetGraphQLAPI - PERMISSIONS The caller must have read permissions for the GraphQLApi.
 // REQUIRED DELEGATED SCOPES GraphQLApi.Read.All or GraphQLApi.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -232,7 +232,7 @@ func (client *ItemsClient) getGraphQLAPIHandleResponse(resp *http.Response) (Ite
 // BeginGetGraphQLAPIDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a GraphQLApi public definition [/rest/api/fabric/articles/item-management/definitions/graphql-api-definition],
 // the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the GraphQLApi .
 // REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS This API is blocked for a with an encrypted sensitivity label.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -255,7 +255,7 @@ func (client *ItemsClient) BeginGetGraphQLAPIDefinition(ctx context.Context, wor
 // GetGraphQLAPIDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a GraphQLApi public definition [/rest/api/fabric/articles/item-management/definitions/graphql-api-definition],
 // the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the GraphQLApi .
 // REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS This API is blocked for a with an encrypted sensitivity label.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -313,7 +313,7 @@ func (client *ItemsClient) getGraphQLAPIDefinitionCreateRequest(ctx context.Cont
 }
 
 // NewListGraphQLApisPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -378,7 +378,7 @@ func (client *ItemsClient) listGraphQLApisHandleResponse(resp *http.Response) (I
 	return result, nil
 }
 
-// UpdateGraphQLAPI - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateGraphQLAPI - PERMISSIONS The caller must have read and write permissions for the GraphQLApi.
 // REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -448,7 +448,7 @@ func (client *ItemsClient) updateGraphQLAPIHandleResponse(resp *http.Response) (
 
 // BeginUpdateGraphQLAPIDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the GraphQLApi's definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the GraphQLApi.
 // REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -471,7 +471,7 @@ func (client *ItemsClient) BeginUpdateGraphQLAPIDefinition(ctx context.Context, 
 
 // UpdateGraphQLAPIDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the GraphQLApi's definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the GraphQLApi.
 // REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -538,7 +538,7 @@ func (client *ItemsClient) updateGraphQLAPIDefinitionCreateRequest(ctx context.C
 //
 // To create GraphQLApi item with a public definition, refer to GraphQLApi definition [/rest/api/fabric/articles/item-management/definitions/graphql-api-definition].
 //
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
 //
 // LIMITATIONS
@@ -612,7 +612,7 @@ func (client *ItemsClient) beginCreateGraphQLAPI(ctx context.Context, workspaceI
 //
 // When you get a GraphQLApi public definition [/rest/api/fabric/articles/item-management/definitions/graphql-api-definition], the sensitivity label is not a part of the definition.
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the GraphQLApi .
 //
 // # REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
 //
@@ -685,7 +685,7 @@ func (client *ItemsClient) beginGetGraphQLAPIDefinition(ctx context.Context, wor
 //
 // Updating the GraphQLApi's definition, does not affect its sensitivity label.
 //
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the GraphQLApi.
 //
 // # REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
 //
@@ -755,7 +755,7 @@ func (client *ItemsClient) beginUpdateGraphQLAPIDefinition(ctx context.Context, 
 // ListGraphQLApis - returns array of GraphQLAPI from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

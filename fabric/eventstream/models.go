@@ -709,6 +709,9 @@ type CreateEventstreamRequest struct {
 
 	// The eventstream description. Maximum length is 256 characters.
 	Description *string
+
+	// The folder ID. If not specified or null, the eventstream is created with the workspace as its folder.
+	FolderID *string
 }
 
 // CustomEndpointDestinationResponse - Custom endpoint events destination response.

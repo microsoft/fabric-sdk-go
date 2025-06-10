@@ -31,7 +31,7 @@ type ItemsClient struct {
 
 // BeginCreateEnvironment - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // This API does not support create a environment with definition.
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Environment.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create an environment, the workspace must be on a supported Fabric capacity.
@@ -54,7 +54,7 @@ func (client *ItemsClient) BeginCreateEnvironment(ctx context.Context, workspace
 
 // CreateEnvironment - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // This API does not support create a environment with definition.
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Environment.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create an environment, the workspace must be on a supported Fabric capacity.
@@ -106,7 +106,7 @@ func (client *ItemsClient) createEnvironmentCreateRequest(ctx context.Context, w
 	return req, nil
 }
 
-// DeleteEnvironment - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteEnvironment - PERMISSIONS The caller must have write permissions for the environment.
 // REQUIRED DELEGATED SCOPES Environment.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -160,7 +160,8 @@ func (client *ItemsClient) deleteEnvironmentCreateRequest(ctx context.Context, w
 	return req, nil
 }
 
-// GetEnvironment - REQUIRED DELEGATED SCOPES Environment.Read.All or Item.Read.All or Environment.ReadWrite.All or Item.ReadWrite.All
+// GetEnvironment - PERMISSIONS The caller must have read permissions for the environment.
+// REQUIRED DELEGATED SCOPES Environment.Read.All or Item.Read.All or Environment.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -224,7 +225,7 @@ func (client *ItemsClient) getEnvironmentHandleResponse(resp *http.Response) (It
 }
 
 // NewListEnvironmentsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -289,7 +290,7 @@ func (client *ItemsClient) listEnvironmentsHandleResponse(resp *http.Response) (
 	return result, nil
 }
 
-// UpdateEnvironment - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateEnvironment - PERMISSIONS The caller must have read and write permissions for the environment.
 // REQUIRED DELEGATED SCOPES Environment.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -364,7 +365,7 @@ func (client *ItemsClient) updateEnvironmentHandleResponse(resp *http.Response) 
 //
 // This API does not support create a environment with definition.
 //
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Environment.ReadWrite.All or Item.ReadWrite.All
 //
 // LIMITATIONS
@@ -436,7 +437,7 @@ func (client *ItemsClient) beginCreateEnvironment(ctx context.Context, workspace
 // ListEnvironments - returns array of Environment from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

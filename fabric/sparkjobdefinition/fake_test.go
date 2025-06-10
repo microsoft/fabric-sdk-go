@@ -381,8 +381,18 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandSparkJobDefinition
 			AdditionalLibraryUris: []string{
 				"abfss://test@onelakecst180.dfs.pbidedicated.windows-int.net/dfsd.Lakehouse/Files/testfile.jar"},
 			CommandLineArguments: to.Ptr("firstarg secondarg thirdarg"),
-			ExecutableFile:       to.Ptr("abfss://test@northcentralus-onelake.dfs.fabric.microsoft.com/salesdata.Lakehouse/Files/oneplusoneapp.jar"),
-			MainClass:            to.Ptr("com.microsoft.spark.example.OneplusOneApp"),
+			DefaultLakehouseID: &sparkjobdefinition.ItemReferenceByID{
+				ReferenceType: to.Ptr(sparkjobdefinition.ItemReferenceTypeByID),
+				ItemID:        to.Ptr("01d11fd3-625b-4c89-880c-3fc0ad19e734"),
+				WorkspaceID:   to.Ptr("4b218778-e7a5-4d73-8187-f10824047715"),
+			},
+			EnvironmentID: &sparkjobdefinition.ItemReferenceByID{
+				ReferenceType: to.Ptr(sparkjobdefinition.ItemReferenceTypeByID),
+				ItemID:        to.Ptr("937e2b52-320c-4e16-b232-f9907e433a0d"),
+				WorkspaceID:   to.Ptr("4b218778-e7a5-4d73-8187-f10824047715"),
+			},
+			ExecutableFile: to.Ptr("abfss://test@northcentralus-onelake.dfs.fabric.microsoft.com/salesdata.Lakehouse/Files/oneplusoneapp.jar"),
+			MainClass:      to.Ptr("com.microsoft.spark.example.OneplusOneApp"),
 		},
 	},
 	})

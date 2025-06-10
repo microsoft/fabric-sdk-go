@@ -37,6 +37,9 @@ type CreateLakehouseRequest struct {
 
 	// The lakehouse description. Maximum length is 256 characters.
 	Description *string
+
+	// The folder ID. If not specified or null, the lakehouse is created with the workspace as its folder.
+	FolderID *string
 }
 
 // CreationPayload - (Preview) Lakehouse item payload. This property is currently required due to the schema enabled lakehouse

@@ -31,7 +31,7 @@ type ItemsClient struct {
 
 // BeginCreateWarehouse - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // This API does not support create a warehouse with definition.
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES Warehouse.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a warehouse the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
@@ -55,7 +55,7 @@ func (client *ItemsClient) BeginCreateWarehouse(ctx context.Context, workspaceID
 
 // CreateWarehouse - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // This API does not support create a warehouse with definition.
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES Warehouse.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a warehouse the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
@@ -108,7 +108,7 @@ func (client *ItemsClient) createWarehouseCreateRequest(ctx context.Context, wor
 	return req, nil
 }
 
-// DeleteWarehouse - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteWarehouse - PERMISSIONS The caller must have write permissions for the warehouse.
 // REQUIRED DELEGATED SCOPES Warehouse.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -162,7 +162,7 @@ func (client *ItemsClient) deleteWarehouseCreateRequest(ctx context.Context, wor
 	return req, nil
 }
 
-// GetWarehouse - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetWarehouse - PERMISSIONS The caller must have read permissions for the warehouse.
 // REQUIRED DELEGATED SCOPES Warehouse.Read.All or Warehouse.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -227,7 +227,7 @@ func (client *ItemsClient) getWarehouseHandleResponse(resp *http.Response) (Item
 }
 
 // NewListWarehousesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -292,7 +292,7 @@ func (client *ItemsClient) listWarehousesHandleResponse(resp *http.Response) (It
 	return result, nil
 }
 
-// UpdateWarehouse - PERMISSIONS The caller must have contributor or higher workspce role.
+// UpdateWarehouse - PERMISSIONS The caller must have read and write permissions for the warehouse.
 // REQUIRED DELEGATED SCOPES Warehouse.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -367,8 +367,9 @@ func (client *ItemsClient) updateWarehouseHandleResponse(resp *http.Response) (I
 //
 // This API does not support create a warehouse with definition.
 //
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
-// REQUIRED DELEGATED SCOPES Warehouse.ReadWrite.All or Item.ReadWrite.All
+// PERMISSIONS The caller must have a contributor workspace role.
+//
+// # REQUIRED DELEGATED SCOPES Warehouse.ReadWrite.All or Item.ReadWrite.All
 //
 // LIMITATIONS
 //
@@ -439,7 +440,7 @@ func (client *ItemsClient) beginCreateWarehouse(ctx context.Context, workspaceID
 // ListWarehouses - returns array of Warehouse from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

@@ -31,7 +31,7 @@ type ItemsClient struct {
 
 // BeginCreateMLExperiment - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // This API does not support create an machine learning experiment with definition.
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES MLExperiment.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a machine learning experiment the workspace must be on a supported Fabric capacity. For more information see:
@@ -56,7 +56,7 @@ func (client *ItemsClient) BeginCreateMLExperiment(ctx context.Context, workspac
 
 // CreateMLExperiment - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // This API does not support create an machine learning experiment with definition.
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES MLExperiment.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a machine learning experiment the workspace must be on a supported Fabric capacity. For more information see:
@@ -110,7 +110,7 @@ func (client *ItemsClient) createMLExperimentCreateRequest(ctx context.Context, 
 	return req, nil
 }
 
-// DeleteMLExperiment - PERMISSIONS The caller must have contributor or higher role on the workspace.
+// DeleteMLExperiment - PERMISSIONS The caller must have write permissions for the ML experiment.
 // REQUIRED DELEGATED SCOPES MLExperiment.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -165,7 +165,7 @@ func (client *ItemsClient) deleteMLExperimentCreateRequest(ctx context.Context, 
 	return req, nil
 }
 
-// GetMLExperiment - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetMLExperiment - PERMISSIONS The caller must have read permissions for the ML experiment.
 // REQUIRED DELEGATED SCOPES MLExperiment.Read.All or MLExperiment.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -230,7 +230,7 @@ func (client *ItemsClient) getMLExperimentHandleResponse(resp *http.Response) (I
 }
 
 // NewListMLExperimentsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -295,7 +295,7 @@ func (client *ItemsClient) listMLExperimentsHandleResponse(resp *http.Response) 
 	return result, nil
 }
 
-// UpdateMLExperiment - PERMISSIONS The caller must have contributor or higher role on the workspace.
+// UpdateMLExperiment - PERMISSIONS The caller must have read and write permissions for the ML experiment.
 // REQUIRED DELEGATED SCOPES MLExperiment.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -371,7 +371,7 @@ func (client *ItemsClient) updateMLExperimentHandleResponse(resp *http.Response)
 //
 // This API does not support create an machine learning experiment with definition.
 //
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES MLExperiment.ReadWrite.All or Item.ReadWrite.All
 //
 // LIMITATIONS
@@ -444,7 +444,7 @@ func (client *ItemsClient) beginCreateMLExperiment(ctx context.Context, workspac
 // ListMLExperiments - returns array of MLExperiment from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

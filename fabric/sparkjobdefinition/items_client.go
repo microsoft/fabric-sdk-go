@@ -33,7 +33,7 @@ type ItemsClient struct {
 // BeginCreateSparkJobDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create spark job definition with a public definition, refer to Spark job definition [/rest/api/fabric/articles/item-management/definitions/spark-job-definition]
 // article.
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES SparkJobDefinition.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a spark job definition the workspace must be on a supported Fabric capacity. For more information see: Microsoft
@@ -59,7 +59,7 @@ func (client *ItemsClient) BeginCreateSparkJobDefinition(ctx context.Context, wo
 // CreateSparkJobDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create spark job definition with a public definition, refer to Spark job definition [/rest/api/fabric/articles/item-management/definitions/spark-job-definition]
 // article.
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES SparkJobDefinition.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a spark job definition the workspace must be on a supported Fabric capacity. For more information see: Microsoft
@@ -113,7 +113,7 @@ func (client *ItemsClient) createSparkJobDefinitionCreateRequest(ctx context.Con
 	return req, nil
 }
 
-// DeleteSparkJobDefinition - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteSparkJobDefinition - PERMISSIONS The caller must have write permissions for the spark job definition.
 // REQUIRED DELEGATED SCOPES SparkJobDefinition.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -168,7 +168,7 @@ func (client *ItemsClient) deleteSparkJobDefinitionCreateRequest(ctx context.Con
 	return req, nil
 }
 
-// GetSparkJobDefinition - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetSparkJobDefinition - PERMISSIONS The caller must have read permissions for the spark job definition.
 // REQUIRED DELEGATED SCOPES SparkJobDefinition.Read.All or SparkJobDefinition.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -235,7 +235,7 @@ func (client *ItemsClient) getSparkJobDefinitionHandleResponse(resp *http.Respon
 
 // BeginGetSparkJobDefinitionDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a spark job definition's public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the spark job definition.
 // REQUIRED DELEGATED SCOPES SparkJobDefinition.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS This API is blocked for a spark job definition with an encrypted sensitivity label.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -257,7 +257,7 @@ func (client *ItemsClient) BeginGetSparkJobDefinitionDefinition(ctx context.Cont
 
 // GetSparkJobDefinitionDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a spark job definition's public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the spark job definition.
 // REQUIRED DELEGATED SCOPES SparkJobDefinition.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS This API is blocked for a spark job definition with an encrypted sensitivity label.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -315,7 +315,7 @@ func (client *ItemsClient) getSparkJobDefinitionDefinitionCreateRequest(ctx cont
 }
 
 // NewListSparkJobDefinitionsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -380,7 +380,7 @@ func (client *ItemsClient) listSparkJobDefinitionsHandleResponse(resp *http.Resp
 	return result, nil
 }
 
-// UpdateSparkJobDefinition - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateSparkJobDefinition - PERMISSIONS The caller must have read and write permissions for the spark job definition.
 // REQUIRED DELEGATED SCOPES SparkJobDefinition.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -451,7 +451,7 @@ func (client *ItemsClient) updateSparkJobDefinitionHandleResponse(resp *http.Res
 
 // BeginUpdateSparkJobDefinitionDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the spark job definition's definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the spark job definition.
 // REQUIRED DELEGATED SCOPES SparkJobDefinition.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -473,7 +473,7 @@ func (client *ItemsClient) BeginUpdateSparkJobDefinitionDefinition(ctx context.C
 
 // UpdateSparkJobDefinitionDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the spark job definition's definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the spark job definition.
 // REQUIRED DELEGATED SCOPES SparkJobDefinition.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -539,8 +539,9 @@ func (client *ItemsClient) updateSparkJobDefinitionDefinitionCreateRequest(ctx c
 //
 // To create spark job definition with a public definition, refer to Spark job definition [/rest/api/fabric/articles/item-management/definitions/spark-job-definition] article.
 //
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
-// REQUIRED DELEGATED SCOPES SparkJobDefinition.ReadWrite.All or Item.ReadWrite.All
+// PERMISSIONS The caller must have a contributor workspace role.
+//
+// # REQUIRED DELEGATED SCOPES SparkJobDefinition.ReadWrite.All or Item.ReadWrite.All
 //
 // LIMITATIONS
 //
@@ -614,7 +615,7 @@ func (client *ItemsClient) beginCreateSparkJobDefinition(ctx context.Context, wo
 //
 // When you get a spark job definition's public definition, the sensitivity label is not a part of the definition.
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the spark job definition.
 //
 // # REQUIRED DELEGATED SCOPES SparkJobDefinition.ReadWrite.All or Item.ReadWrite.All
 //
@@ -687,7 +688,7 @@ func (client *ItemsClient) beginGetSparkJobDefinitionDefinition(ctx context.Cont
 //
 // Updating the spark job definition's definition, does not affect its sensitivity label.
 //
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the spark job definition.
 //
 // # REQUIRED DELEGATED SCOPES SparkJobDefinition.ReadWrite.All or Item.ReadWrite.All
 //
@@ -757,7 +758,7 @@ func (client *ItemsClient) beginUpdateSparkJobDefinitionDefinition(ctx context.C
 // ListSparkJobDefinitions - returns array of SparkJobDefinition from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

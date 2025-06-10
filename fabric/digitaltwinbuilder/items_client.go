@@ -32,7 +32,7 @@ type ItemsClient struct {
 
 // BeginCreateDigitalTwinBuilder - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create digitaltwinbuilder with definition, refer to DigitalTwinBuilder definition [/rest/api/fabric/articles/item-management/definitions/digital-twin-builder-definition].
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES DigitalTwinBuilder.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a digitaltwinbuilder the workspace must be on a supported Fabric capacity. For more information see: Microsoft
@@ -57,7 +57,7 @@ func (client *ItemsClient) BeginCreateDigitalTwinBuilder(ctx context.Context, wo
 
 // CreateDigitalTwinBuilder - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create digitaltwinbuilder with definition, refer to DigitalTwinBuilder definition [/rest/api/fabric/articles/item-management/definitions/digital-twin-builder-definition].
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES DigitalTwinBuilder.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a digitaltwinbuilder the workspace must be on a supported Fabric capacity. For more information see: Microsoft
@@ -111,7 +111,7 @@ func (client *ItemsClient) createDigitalTwinBuilderCreateRequest(ctx context.Con
 	return req, nil
 }
 
-// DeleteDigitalTwinBuilder - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteDigitalTwinBuilder - PERMISSIONS The caller must have write permissions for the digital twin builder.
 // REQUIRED DELEGATED SCOPES DigitalTwinBuilder.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -166,7 +166,7 @@ func (client *ItemsClient) deleteDigitalTwinBuilderCreateRequest(ctx context.Con
 	return req, nil
 }
 
-// GetDigitalTwinBuilder - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetDigitalTwinBuilder - PERMISSIONS The caller must have read permissions for the digital twin builder.
 // REQUIRED DELEGATED SCOPES DigitalTwinBuilder.Read.All or DigitalTwinBuilder.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -233,7 +233,7 @@ func (client *ItemsClient) getDigitalTwinBuilderHandleResponse(resp *http.Respon
 
 // BeginGetDigitalTwinBuilderDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a digitaltwinbuilder public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the digital twin builder.
 // REQUIRED DELEGATED SCOPES DigitalTwinBuilder.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS This API is blocked for a digitaltwinbuilder with an encrypted sensitivity label.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -255,7 +255,7 @@ func (client *ItemsClient) BeginGetDigitalTwinBuilderDefinition(ctx context.Cont
 
 // GetDigitalTwinBuilderDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a digitaltwinbuilder public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the digital twin builder.
 // REQUIRED DELEGATED SCOPES DigitalTwinBuilder.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS This API is blocked for a digitaltwinbuilder with an encrypted sensitivity label.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -313,7 +313,7 @@ func (client *ItemsClient) getDigitalTwinBuilderDefinitionCreateRequest(ctx cont
 }
 
 // NewListDigitalTwinBuildersPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -378,7 +378,7 @@ func (client *ItemsClient) listDigitalTwinBuildersHandleResponse(resp *http.Resp
 	return result, nil
 }
 
-// UpdateDigitalTwinBuilder - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateDigitalTwinBuilder - PERMISSIONS The caller must have read and write permissions for the digital twin builder.
 // REQUIRED DELEGATED SCOPES DigitalTwinBuilder.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -449,7 +449,7 @@ func (client *ItemsClient) updateDigitalTwinBuilderHandleResponse(resp *http.Res
 
 // BeginUpdateDigitalTwinBuilderDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the digitaltwinbuilder definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the digital twin builder.
 // REQUIRED DELEGATED SCOPES DigitalTwinBuilder.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -471,7 +471,7 @@ func (client *ItemsClient) BeginUpdateDigitalTwinBuilderDefinition(ctx context.C
 
 // UpdateDigitalTwinBuilderDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the digitaltwinbuilder definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the digital twin builder.
 // REQUIRED DELEGATED SCOPES DigitalTwinBuilder.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -537,7 +537,7 @@ func (client *ItemsClient) updateDigitalTwinBuilderDefinitionCreateRequest(ctx c
 //
 // To create digitaltwinbuilder with definition, refer to DigitalTwinBuilder definition [/rest/api/fabric/articles/item-management/definitions/digital-twin-builder-definition].
 //
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES DigitalTwinBuilder.ReadWrite.All or Item.ReadWrite.All
 //
 // LIMITATIONS
@@ -612,7 +612,7 @@ func (client *ItemsClient) beginCreateDigitalTwinBuilder(ctx context.Context, wo
 //
 // When you get a digitaltwinbuilder public definition, the sensitivity label is not a part of the definition.
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the digital twin builder.
 //
 // # REQUIRED DELEGATED SCOPES DigitalTwinBuilder.ReadWrite.All or Item.ReadWrite.All
 //
@@ -685,7 +685,7 @@ func (client *ItemsClient) beginGetDigitalTwinBuilderDefinition(ctx context.Cont
 //
 // Updating the digitaltwinbuilder definition, does not affect its sensitivity label.
 //
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the digital twin builder.
 //
 // # REQUIRED DELEGATED SCOPES DigitalTwinBuilder.ReadWrite.All or Item.ReadWrite.All
 //
@@ -755,7 +755,7 @@ func (client *ItemsClient) beginUpdateDigitalTwinBuilderDefinition(ctx context.C
 // ListDigitalTwinBuilders - returns array of DigitalTwinBuilder from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

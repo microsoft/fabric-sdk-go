@@ -20,6 +20,9 @@ type CreateKQLDatabaseRequest struct {
 
 	// The KQL database description. Maximum length is 256 characters.
 	Description *string
+
+	// The folder ID. If not specified or null, the KQL database is created with the workspace as its folder.
+	FolderID *string
 }
 
 // CreationPayload - KQL database item payload

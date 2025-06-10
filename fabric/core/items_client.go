@@ -33,7 +33,7 @@ type ItemsClient struct {
 // [/rest/api/fabric/articles/item-management/item-management-overview]. You can use Get item
 // definition API [/rest/api/fabric/core/items/get-item-definition] to get an item definition.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES For item APIs use these scope types:
 // * Generic scope: Item.ReadWrite.All
 //
@@ -70,7 +70,7 @@ func (client *ItemsClient) BeginCreateItem(ctx context.Context, workspaceID stri
 // [/rest/api/fabric/articles/item-management/item-management-overview]. You can use Get item
 // definition API [/rest/api/fabric/core/items/get-item-definition] to get an item definition.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES For item APIs use these scope types:
 // * Generic scope: Item.ReadWrite.All
 //
@@ -138,7 +138,7 @@ func (client *ItemsClient) createItemCreateRequest(ctx context.Context, workspac
 // DeleteItem - This API is supported for a number of item types, find the supported item types and information about their
 // definition structure in Item management overview
 // [/rest/api/fabric/articles/item-management/item-management-overview].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have write permissions for the item.
 // REQUIRED DELEGATED SCOPES For item APIs use these scope types:
 // * Generic scope: Item.ReadWrite.All
 //
@@ -202,7 +202,7 @@ func (client *ItemsClient) deleteItemCreateRequest(ctx context.Context, workspac
 
 // GetItem - This API is supported for a number of item types, find the supported item types in Item management overview [/rest/api/fabric/articles/item-management/item-management-overview].
 // For retrieving additional type specific properties, refer to the get API reference page of the specific item type.
-// PERMISSIONS The caller must have viewer or higher role on the workspace.
+// PERMISSIONS The caller must have read permissions for the item.
 // REQUIRED DELEGATED SCOPES For item APIs use these scope types:
 // * Generic scope: Item.Read.All or Item.ReadWrite.All
 //
@@ -277,7 +277,7 @@ func (client *ItemsClient) getItemHandleResponse(resp *http.Response) (ItemsClie
 // [/rest/api/fabric/articles/item-management/definitions/item-definition-overview]. When you get an item's definition, the
 // sensitivity label is not a part of the definition.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the item.
 // REQUIRED DELEGATED SCOPES For item APIs use these scope types:
 // * Generic scope: Item.ReadWrite.All
 //
@@ -311,7 +311,7 @@ func (client *ItemsClient) BeginGetItemDefinition(ctx context.Context, workspace
 // [/rest/api/fabric/articles/item-management/definitions/item-definition-overview]. When you get an item's definition, the
 // sensitivity label is not a part of the definition.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the item.
 // REQUIRED DELEGATED SCOPES For item APIs use these scope types:
 // * Generic scope: Item.ReadWrite.All
 //
@@ -378,7 +378,7 @@ func (client *ItemsClient) getItemDefinitionCreateRequest(ctx context.Context, w
 }
 
 // NewListItemConnectionsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have contributor or higher role on the workspace.
+// PERMISSIONS The caller must have read and write permissions for the item.
 // REQUIRED DELEGATED SCOPES For item APIs use these scope types:
 // * Generic scope: Item.ReadWrite.All
 //
@@ -457,7 +457,7 @@ func (client *ItemsClient) listItemConnectionsHandleResponse(resp *http.Response
 }
 
 // NewListItemsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -533,7 +533,7 @@ func (client *ItemsClient) listItemsHandleResponse(resp *http.Response) (ItemsCl
 // UpdateItem - This API is supported for a number of item types, find the supported item types and information about their
 // definition structure in Item management overview
 // [/rest/api/fabric/articles/item-management/item-management-overview].
-// PERMISSIONS The caller must have contributor or higher role on the workspace.
+// PERMISSIONS The caller must have read and write permissions for the item.
 // REQUIRED DELEGATED SCOPES For item APIs use these scope types:
 // * Generic scope: Item.ReadWrite.All
 //
@@ -614,7 +614,7 @@ func (client *ItemsClient) updateItemHandleResponse(resp *http.Response) (ItemsC
 // [/rest/api/fabric/articles/item-management/definitions/item-definition-overview]. Updating the item's definition, does
 // not affect its sensitivity label.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The API caller must have item write permissions (contributor or higher workspace permissions).
+// PERMISSIONS The caller must have read and write permissions for the item.
 // REQUIRED DELEGATED SCOPES For item APIs use these scope types:
 // * Generic scope: Item.ReadWrite.All
 //
@@ -647,7 +647,7 @@ func (client *ItemsClient) BeginUpdateItemDefinition(ctx context.Context, worksp
 // [/rest/api/fabric/articles/item-management/definitions/item-definition-overview]. Updating the item's definition, does
 // not affect its sensitivity label.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The API caller must have item write permissions (contributor or higher workspace permissions).
+// PERMISSIONS The caller must have read and write permissions for the item.
 // REQUIRED DELEGATED SCOPES For item APIs use these scope types:
 // * Generic scope: Item.ReadWrite.All
 //
@@ -722,7 +722,7 @@ func (client *ItemsClient) updateItemDefinitionCreateRequest(ctx context.Context
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES For item APIs use these scope types:
 //
 //   - Generic scope: Item.ReadWrite.All
@@ -807,7 +807,7 @@ func (client *ItemsClient) beginCreateItem(ctx context.Context, workspaceID stri
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the item.
 //
 // REQUIRED DELEGATED SCOPES For item APIs use these scope types:
 //
@@ -888,7 +888,7 @@ func (client *ItemsClient) beginGetItemDefinition(ctx context.Context, workspace
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// PERMISSIONS The API caller must have item write permissions (contributor or higher workspace permissions).
+// PERMISSIONS The caller must have read and write permissions for the item.
 //
 // REQUIRED DELEGATED SCOPES For item APIs use these scope types:
 //
@@ -965,7 +965,7 @@ func (client *ItemsClient) beginUpdateItemDefinition(ctx context.Context, worksp
 // ListItemConnections - returns array of ItemConnection from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have contributor or higher role on the workspace.
+// PERMISSIONS The caller must have read and write permissions for the item.
 //
 // REQUIRED DELEGATED SCOPES For item APIs use these scope types:
 //
@@ -1006,7 +1006,7 @@ func (client *ItemsClient) ListItemConnections(ctx context.Context, workspaceID 
 // ListItems - returns array of Item from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

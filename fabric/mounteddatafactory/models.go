@@ -16,6 +16,9 @@ type CreateMountedDataFactoryRequest struct {
 
 	// The MountedDataFactory description. Maximum length is 256 characters.
 	Description *string
+
+	// The folder ID. If not specified or null, the MountedDataFactory is created with the workspace as its folder.
+	FolderID *string
 }
 
 // Definition - MountedDataFactory public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/mounted-data-factory-definition]

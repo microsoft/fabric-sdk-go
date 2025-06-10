@@ -18,6 +18,9 @@ type CreateMirroredDatabaseRequest struct {
 
 	// The mirrored database description. Maximum length is 256 characters.
 	Description *string
+
+	// The folder ID. If not specified or null, the mirrored database is created with the workspace as its folder.
+	FolderID *string
 }
 
 // Definition - Mirrored database public definition object.
