@@ -31,7 +31,7 @@ type ItemsClient struct {
 }
 
 // BeginCreateEventhouse - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Eventhouse.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create an eventhouse the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
@@ -54,7 +54,7 @@ func (client *ItemsClient) BeginCreateEventhouse(ctx context.Context, workspaceI
 }
 
 // CreateEventhouse - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Eventhouse.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create an eventhouse the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
@@ -107,7 +107,7 @@ func (client *ItemsClient) createEventhouseCreateRequest(ctx context.Context, wo
 	return req, nil
 }
 
-// DeleteEventhouse - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteEventhouse - PERMISSIONS The caller must have write permissions for the eventhouse.
 // REQUIRED DELEGATED SCOPES Eventhouse.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -161,7 +161,7 @@ func (client *ItemsClient) deleteEventhouseCreateRequest(ctx context.Context, wo
 	return req, nil
 }
 
-// GetEventhouse - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetEventhouse - PERMISSIONS The caller must have read permissions for the eventhouse.
 // REQUIRED DELEGATED SCOPES Eventhouse.Read.All or Eventhouse.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -226,7 +226,7 @@ func (client *ItemsClient) getEventhouseHandleResponse(resp *http.Response) (Ite
 }
 
 // BeginGetEventhouseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the eventhouse.
 // REQUIRED DELEGATED SCOPES Eventhouse.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -246,7 +246,7 @@ func (client *ItemsClient) BeginGetEventhouseDefinition(ctx context.Context, wor
 }
 
 // GetEventhouseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the eventhouse.
 // REQUIRED DELEGATED SCOPES Eventhouse.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -303,7 +303,7 @@ func (client *ItemsClient) getEventhouseDefinitionCreateRequest(ctx context.Cont
 }
 
 // NewListEventhousesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher role on the workspace.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -368,7 +368,7 @@ func (client *ItemsClient) listEventhousesHandleResponse(resp *http.Response) (I
 	return result, nil
 }
 
-// UpdateEventhouse - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateEventhouse - PERMISSIONS The caller must have read and write permissions for the eventhouse.
 // REQUIRED DELEGATED SCOPES Eventhouse.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -437,7 +437,7 @@ func (client *ItemsClient) updateEventhouseHandleResponse(resp *http.Response) (
 }
 
 // BeginUpdateEventhouseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the eventhouse.
 // REQUIRED DELEGATED SCOPES Eventhouse.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -458,7 +458,7 @@ func (client *ItemsClient) BeginUpdateEventhouseDefinition(ctx context.Context, 
 }
 
 // UpdateEventhouseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the eventhouse.
 // REQUIRED DELEGATED SCOPES Eventhouse.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -522,7 +522,7 @@ func (client *ItemsClient) updateEventhouseDefinitionCreateRequest(ctx context.C
 // CreateEventhouse - returns ItemsClientCreateEventhouseResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Eventhouse.ReadWrite.All or Item.ReadWrite.All
 //
 // LIMITATIONS
@@ -594,7 +594,7 @@ func (client *ItemsClient) beginCreateEventhouse(ctx context.Context, workspaceI
 // GetEventhouseDefinition - returns ItemsClientGetEventhouseDefinitionResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the eventhouse.
 //
 // # REQUIRED DELEGATED SCOPES Eventhouse.ReadWrite.All or Item.ReadWrite.All
 //
@@ -663,7 +663,7 @@ func (client *ItemsClient) beginGetEventhouseDefinition(ctx context.Context, wor
 // UpdateEventhouseDefinition - returns ItemsClientUpdateEventhouseDefinitionResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the eventhouse.
 //
 // # REQUIRED DELEGATED SCOPES Eventhouse.ReadWrite.All or Item.ReadWrite.All
 //
@@ -733,7 +733,7 @@ func (client *ItemsClient) beginUpdateEventhouseDefinition(ctx context.Context, 
 // ListEventhouses - returns array of Eventhouse from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher role on the workspace.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

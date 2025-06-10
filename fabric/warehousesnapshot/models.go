@@ -18,6 +18,9 @@ type CreateWarehouseSnapshotRequest struct {
 
 	// The Warehouse snapshot description. Maximum length is 256 characters.
 	Description *string
+
+	// The folder ID. If not specified or null, the Warehouse snapshot is created with the workspace as its folder.
+	FolderID *string
 }
 
 // CreationPayload - The Warehouse snapshot creation payload.

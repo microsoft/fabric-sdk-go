@@ -16,6 +16,9 @@ type CreateGraphQLAPIRequest struct {
 
 	// The API for GraphQL description. Maximum length is 256 characters.
 	Description *string
+
+	// The folder ID. If not specified or null, the API for GraphQL is created with the workspace as its folder.
+	FolderID *string
 }
 
 // DefinitionResponse - API for GraphQL public definition response.

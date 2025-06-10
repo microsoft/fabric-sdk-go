@@ -31,7 +31,7 @@ type ItemsClient struct {
 
 // BeginCreateMLModel - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // This API does not support create an machine learning model with definition.
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES MLModel.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a machine learning model the workspace must be on a supported Fabric capacity. For more information see: Microsoft
@@ -56,7 +56,7 @@ func (client *ItemsClient) BeginCreateMLModel(ctx context.Context, workspaceID s
 
 // CreateMLModel - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // This API does not support create an machine learning model with definition.
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES MLModel.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a machine learning model the workspace must be on a supported Fabric capacity. For more information see: Microsoft
@@ -110,7 +110,7 @@ func (client *ItemsClient) createMLModelCreateRequest(ctx context.Context, works
 	return req, nil
 }
 
-// DeleteMLModel - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteMLModel - PERMISSIONS The caller must have write permissions for the ML model.
 // REQUIRED DELEGATED SCOPES MLModel.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -164,7 +164,7 @@ func (client *ItemsClient) deleteMLModelCreateRequest(ctx context.Context, works
 	return req, nil
 }
 
-// GetMLModel - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetMLModel - PERMISSIONS The caller must have read permissions for the ML model.
 // REQUIRED DELEGATED SCOPES MLModel.Read.All or MLModel.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -229,7 +229,7 @@ func (client *ItemsClient) getMLModelHandleResponse(resp *http.Response) (ItemsC
 }
 
 // NewListMLModelsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -293,7 +293,7 @@ func (client *ItemsClient) listMLModelsHandleResponse(resp *http.Response) (Item
 	return result, nil
 }
 
-// UpdateMLModel - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateMLModel - PERMISSIONS The caller must have read and write permissions for the ML model.
 // REQUIRED DELEGATED SCOPES MLModel.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * MLModel display name cannot be changed.
@@ -370,7 +370,7 @@ func (client *ItemsClient) updateMLModelHandleResponse(resp *http.Response) (Ite
 //
 // This API does not support create an machine learning model with definition.
 //
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES MLModel.ReadWrite.All or Item.ReadWrite.All
 //
 // LIMITATIONS
@@ -443,7 +443,7 @@ func (client *ItemsClient) beginCreateMLModel(ctx context.Context, workspaceID s
 // ListMLModels - returns array of MLModel from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

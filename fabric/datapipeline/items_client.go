@@ -31,7 +31,7 @@ type ItemsClient struct {
 }
 
 // BeginCreateDataPipeline - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES DataPipeline.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a data pipeline, the workspace must be on a supported Fabric capacity.
@@ -53,7 +53,7 @@ func (client *ItemsClient) BeginCreateDataPipeline(ctx context.Context, workspac
 }
 
 // CreateDataPipeline - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES DataPipeline.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a data pipeline, the workspace must be on a supported Fabric capacity.
@@ -105,7 +105,7 @@ func (client *ItemsClient) createDataPipelineCreateRequest(ctx context.Context, 
 	return req, nil
 }
 
-// DeleteDataPipeline - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteDataPipeline - PERMISSIONS The caller must have write permissions for the data pipeline.
 // REQUIRED DELEGATED SCOPES DataPipeline.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -160,7 +160,7 @@ func (client *ItemsClient) deleteDataPipelineCreateRequest(ctx context.Context, 
 	return req, nil
 }
 
-// GetDataPipeline - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetDataPipeline - PERMISSIONS The caller must have read permissions for the data pipeline.
 // REQUIRED DELEGATED SCOPES DataPipeline.Read.All or DataPipeline.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -226,7 +226,7 @@ func (client *ItemsClient) getDataPipelineHandleResponse(resp *http.Response) (I
 
 // BeginGetDataPipelineDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a DataPipeline's public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the data pipeline.
 // REQUIRED DELEGATED SCOPES DataPipeline.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -247,7 +247,7 @@ func (client *ItemsClient) BeginGetDataPipelineDefinition(ctx context.Context, w
 
 // GetDataPipelineDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a DataPipeline's public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the data pipeline.
 // REQUIRED DELEGATED SCOPES DataPipeline.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -304,7 +304,7 @@ func (client *ItemsClient) getDataPipelineDefinitionCreateRequest(ctx context.Co
 }
 
 // NewListDataPipelinesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -369,7 +369,7 @@ func (client *ItemsClient) listDataPipelinesHandleResponse(resp *http.Response) 
 	return result, nil
 }
 
-// UpdateDataPipeline - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateDataPipeline - PERMISSIONS The caller must have read and write permissions for the data pipeline.
 // REQUIRED DELEGATED SCOPES DataPipeline.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -440,7 +440,7 @@ func (client *ItemsClient) updateDataPipelineHandleResponse(resp *http.Response)
 
 // BeginUpdateDataPipelineDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the DataPipeline's definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the data pipeline.
 // REQUIRED DELEGATED SCOPES DataPipeline.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -462,7 +462,7 @@ func (client *ItemsClient) BeginUpdateDataPipelineDefinition(ctx context.Context
 
 // UpdateDataPipelineDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the DataPipeline's definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the data pipeline.
 // REQUIRED DELEGATED SCOPES DataPipeline.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -526,7 +526,7 @@ func (client *ItemsClient) updateDataPipelineDefinitionCreateRequest(ctx context
 // CreateDataPipeline - returns ItemsClientCreateDataPipelineResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES DataPipeline.ReadWrite.All or Item.ReadWrite.All
 //
 // LIMITATIONS
@@ -600,7 +600,7 @@ func (client *ItemsClient) beginCreateDataPipeline(ctx context.Context, workspac
 //
 // When you get a DataPipeline's public definition, the sensitivity label is not a part of the definition.
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the data pipeline.
 //
 // # REQUIRED DELEGATED SCOPES DataPipeline.ReadWrite.All or Item.ReadWrite.All
 //
@@ -671,7 +671,7 @@ func (client *ItemsClient) beginGetDataPipelineDefinition(ctx context.Context, w
 //
 // Updating the DataPipeline's definition, does not affect its sensitivity label.
 //
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the data pipeline.
 //
 // # REQUIRED DELEGATED SCOPES DataPipeline.ReadWrite.All or Item.ReadWrite.All
 //
@@ -741,7 +741,7 @@ func (client *ItemsClient) beginUpdateDataPipelineDefinition(ctx context.Context
 // ListDataPipelines - returns array of DataPipeline from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

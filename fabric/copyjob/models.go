@@ -52,6 +52,9 @@ type CreateCopyJobRequest struct {
 
 	// The CopyJob description. Maximum length is 256 characters.
 	Description *string
+
+	// The folder ID. If not specified or null, the CopyJob is created with the workspace as its folder.
+	FolderID *string
 }
 
 // Definition - CopyJob public definition object. Refer to Copy job definition [/rest/api/fabric/articles/item-management/definitions/copyjob-definition]

@@ -13,6 +13,9 @@ type CreateSQLDatabaseRequest struct {
 
 	// The SQL database description. Maximum length is 256 characters.
 	Description *string
+
+	// The folder ID. If not specified or null, the SQL database is created with the workspace as its folder.
+	FolderID *string
 }
 
 // ItemTag - Represents a tag applied on an item.

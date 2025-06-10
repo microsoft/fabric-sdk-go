@@ -33,7 +33,7 @@ type ItemsClient struct {
 // BeginCreateReflex - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create notebook with definition, refer to Reflex definition [/rest/api/fabric/articles/item-management/definitions/reflex-definition]
 // article.
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Reflex.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a Reflex the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric license
@@ -57,7 +57,7 @@ func (client *ItemsClient) BeginCreateReflex(ctx context.Context, workspaceID st
 // CreateReflex - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create notebook with definition, refer to Reflex definition [/rest/api/fabric/articles/item-management/definitions/reflex-definition]
 // article.
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Reflex.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a Reflex the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric license
@@ -110,7 +110,7 @@ func (client *ItemsClient) createReflexCreateRequest(ctx context.Context, worksp
 	return req, nil
 }
 
-// DeleteReflex - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteReflex - PERMISSIONS The caller must have write permissions for the reflex.
 // REQUIRED DELEGATED SCOPES Reflex.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -164,7 +164,7 @@ func (client *ItemsClient) deleteReflexCreateRequest(ctx context.Context, worksp
 	return req, nil
 }
 
-// GetReflex - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetReflex - PERMISSIONS The caller must have read permissions for the reflex.
 // REQUIRED DELEGATED SCOPES Reflex.Read.All or Reflex.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -230,7 +230,7 @@ func (client *ItemsClient) getReflexHandleResponse(resp *http.Response) (ItemsCl
 
 // BeginGetReflexDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a Reflex's public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the reflex.
 // REQUIRED DELEGATED SCOPES Reflex.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS This API is blocked for a Reflex with an encrypted sensitivity label.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -252,7 +252,7 @@ func (client *ItemsClient) BeginGetReflexDefinition(ctx context.Context, workspa
 
 // GetReflexDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a Reflex's public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the reflex.
 // REQUIRED DELEGATED SCOPES Reflex.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS This API is blocked for a Reflex with an encrypted sensitivity label.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -310,7 +310,7 @@ func (client *ItemsClient) getReflexDefinitionCreateRequest(ctx context.Context,
 }
 
 // NewListReflexesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -374,7 +374,7 @@ func (client *ItemsClient) listReflexesHandleResponse(resp *http.Response) (Item
 	return result, nil
 }
 
-// UpdateReflex - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateReflex - PERMISSIONS The caller must have read and write permissions for the reflex.
 // REQUIRED DELEGATED SCOPES Reflex.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -444,7 +444,7 @@ func (client *ItemsClient) updateReflexHandleResponse(resp *http.Response) (Item
 
 // BeginUpdateReflexDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the Reflex's definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the reflex.
 // REQUIRED DELEGATED SCOPES Reflex.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -466,7 +466,7 @@ func (client *ItemsClient) BeginUpdateReflexDefinition(ctx context.Context, work
 
 // UpdateReflexDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the Reflex's definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the reflex.
 // REQUIRED DELEGATED SCOPES Reflex.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -532,7 +532,7 @@ func (client *ItemsClient) updateReflexDefinitionCreateRequest(ctx context.Conte
 //
 // To create notebook with definition, refer to Reflex definition [/rest/api/fabric/articles/item-management/definitions/reflex-definition] article.
 //
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Reflex.ReadWrite.All or Item.ReadWrite.All
 //
 // LIMITATIONS
@@ -606,7 +606,7 @@ func (client *ItemsClient) beginCreateReflex(ctx context.Context, workspaceID st
 //
 // When you get a Reflex's public definition, the sensitivity label is not a part of the definition.
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the reflex.
 //
 // # REQUIRED DELEGATED SCOPES Reflex.ReadWrite.All or Item.ReadWrite.All
 //
@@ -679,7 +679,7 @@ func (client *ItemsClient) beginGetReflexDefinition(ctx context.Context, workspa
 //
 // Updating the Reflex's definition, does not affect its sensitivity label.
 //
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the reflex.
 //
 // # REQUIRED DELEGATED SCOPES Reflex.ReadWrite.All or Item.ReadWrite.All
 //
@@ -749,7 +749,7 @@ func (client *ItemsClient) beginUpdateReflexDefinition(ctx context.Context, work
 // ListReflexes - returns array of Reflex from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

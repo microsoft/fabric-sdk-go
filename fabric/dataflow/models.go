@@ -36,6 +36,9 @@ type CreateDataflowRequest struct {
 
 	// The Dataflow description. Maximum length is 256 characters.
 	Description *string
+
+	// The folder ID. If not specified or null, the Dataflow is created with the workspace as its folder.
+	FolderID *string
 }
 
 type CronScheduleConfig struct {

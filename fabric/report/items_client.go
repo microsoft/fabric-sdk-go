@@ -32,7 +32,7 @@ type ItemsClient struct {
 
 // BeginCreateReport - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // This API requires a definition [/rest/api/fabric/articles/item-management/definitions/report-definition].
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES Report.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a report item, the user must have the appropriate license. For more information see: Microsoft Fabric license
@@ -55,7 +55,7 @@ func (client *ItemsClient) BeginCreateReport(ctx context.Context, workspaceID st
 
 // CreateReport - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // This API requires a definition [/rest/api/fabric/articles/item-management/definitions/report-definition].
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES Report.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a report item, the user must have the appropriate license. For more information see: Microsoft Fabric license
@@ -108,7 +108,7 @@ func (client *ItemsClient) createReportCreateRequest(ctx context.Context, worksp
 	return req, nil
 }
 
-// DeleteReport - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteReport - PERMISSIONS The caller must have write permissions for the report.
 // REQUIRED DELEGATED SCOPES Report.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -162,7 +162,7 @@ func (client *ItemsClient) deleteReportCreateRequest(ctx context.Context, worksp
 	return req, nil
 }
 
-// GetReport - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetReport - PERMISSIONS The caller must have read permissions for the report.
 // REQUIRED DELEGATED SCOPES Report.Read.All or Report.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -228,7 +228,7 @@ func (client *ItemsClient) getReportHandleResponse(resp *http.Response) (ItemsCl
 
 // BeginGetReportDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a report's public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the report.
 // REQUIRED DELEGATED SCOPES Report.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS This API is blocked for a report with an encrypted sensitivity label.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -250,7 +250,7 @@ func (client *ItemsClient) BeginGetReportDefinition(ctx context.Context, workspa
 
 // GetReportDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a report's public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the report.
 // REQUIRED DELEGATED SCOPES Report.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS This API is blocked for a report with an encrypted sensitivity label.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -308,7 +308,7 @@ func (client *ItemsClient) getReportDefinitionCreateRequest(ctx context.Context,
 }
 
 // NewListReportsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -372,7 +372,7 @@ func (client *ItemsClient) listReportsHandleResponse(resp *http.Response) (Items
 	return result, nil
 }
 
-// UpdateReport - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateReport - PERMISSIONS The caller must have read and write permissions for the report.
 // REQUIRED DELEGATED SCOPES Report.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -442,7 +442,7 @@ func (client *ItemsClient) updateReportHandleResponse(resp *http.Response) (Item
 
 // BeginUpdateReportDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the report's definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the report.
 // REQUIRED DELEGATED SCOPES Report.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -464,7 +464,7 @@ func (client *ItemsClient) BeginUpdateReportDefinition(ctx context.Context, work
 
 // UpdateReportDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the report's definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the report.
 // REQUIRED DELEGATED SCOPES Report.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -530,8 +530,9 @@ func (client *ItemsClient) updateReportDefinitionCreateRequest(ctx context.Conte
 //
 // This API requires a definition [/rest/api/fabric/articles/item-management/definitions/report-definition].
 //
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
-// REQUIRED DELEGATED SCOPES Report.ReadWrite.All or Item.ReadWrite.All
+// PERMISSIONS The caller must have a contributor workspace role.
+//
+// # REQUIRED DELEGATED SCOPES Report.ReadWrite.All or Item.ReadWrite.All
 //
 // LIMITATIONS
 //
@@ -604,7 +605,7 @@ func (client *ItemsClient) beginCreateReport(ctx context.Context, workspaceID st
 //
 // When you get a report's public definition, the sensitivity label is not a part of the definition.
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the report.
 //
 // # REQUIRED DELEGATED SCOPES Report.ReadWrite.All or Item.ReadWrite.All
 //
@@ -677,7 +678,7 @@ func (client *ItemsClient) beginGetReportDefinition(ctx context.Context, workspa
 //
 // Updating the report's definition, does not affect its sensitivity label.
 //
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the report.
 //
 // # REQUIRED DELEGATED SCOPES Report.ReadWrite.All or Item.ReadWrite.All
 //
@@ -747,7 +748,7 @@ func (client *ItemsClient) beginUpdateReportDefinition(ctx context.Context, work
 // ListReports - returns array of Report from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

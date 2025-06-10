@@ -101,6 +101,36 @@ func ExampleGitClient_Connect_connectAWorkspaceToAzureDevOpsExample() {
 }
 
 // Generated from example definition
+func ExampleGitClient_Connect_connectAWorkspaceToAzureDevOpsUsingConfiguredConnectionExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewGitClient().Connect(ctx, "1565e6a3-c020-4c0c-dda7-92bafe99eec5", core.GitConnectRequest{
+		GitProviderDetails: &core.AzureDevOpsDetails{
+			BranchName:       to.Ptr("Test Branch"),
+			DirectoryName:    to.Ptr("Test Directory/Test Subdirectory"),
+			GitProviderType:  to.Ptr(core.GitProviderTypeAzureDevOps),
+			RepositoryName:   to.Ptr("Test Repo"),
+			OrganizationName: to.Ptr("Test Organization"),
+			ProjectName:      to.Ptr("Test Project"),
+		},
+		MyGitCredentials: &core.ConfiguredConnectionGitCredentials{
+			Source:       to.Ptr(core.GitCredentialsSourceConfiguredConnection),
+			ConnectionID: to.Ptr("3f2504e0-4f89-11d3-9a0c-0305e82c3301"),
+		},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
 func ExampleGitClient_Connect_connectAWorkspaceToGitHubExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -425,7 +455,7 @@ func ExampleGitClient_GetMyGitCredentials_getTheUsersGitCredentialsConfiguration
 }
 
 // Generated from example definition
-func ExampleGitClient_GetMyGitCredentials_getTheUsersGitCredentialsConfigurationForGitHubWhenItIsConfiguredByConnectionExample() {
+func ExampleGitClient_GetMyGitCredentials_getTheUsersGitCredentialsConfigurationWhenItIsConfiguredByConnectionExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -451,7 +481,7 @@ func ExampleGitClient_GetMyGitCredentials_getTheUsersGitCredentialsConfiguration
 }
 
 // Generated from example definition
-func ExampleGitClient_GetMyGitCredentials_getTheUsersGitCredentialsConfigurationForGitHubWhenItIsNotConfiguredExample() {
+func ExampleGitClient_GetMyGitCredentials_getTheUsersGitCredentialsConfigurationWhenItIsNotConfiguredExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -471,6 +501,33 @@ func ExampleGitClient_GetMyGitCredentials_getTheUsersGitCredentialsConfiguration
 	// res = core.GitClientGetMyGitCredentialsResponse{
 	// 	                            GitCredentialsConfigurationResponseClassification: &core.NoneGitCredentialsResponse{
 	// 		Source: to.Ptr(core.GitCredentialsSourceNone),
+	// 	},
+	// 	                        }
+}
+
+// Generated from example definition
+func ExampleGitClient_UpdateMyGitCredentials_updateUsersGitCredentialsToAutomaticExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewGitClient().UpdateMyGitCredentials(ctx, "1565e6a3-c020-4c0c-dda7-92bafe99eec5", &core.UpdateGitCredentialsToAutomaticRequest{
+		Source: to.Ptr(core.GitCredentialsSourceAutomatic),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res = core.GitClientUpdateMyGitCredentialsResponse{
+	// 	                            GitCredentialsConfigurationResponseClassification: &core.AutomaticGitCredentialsResponse{
+	// 		Source: to.Ptr(core.GitCredentialsSourceAutomatic),
 	// 	},
 	// 	                        }
 }

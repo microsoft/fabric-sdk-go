@@ -20,6 +20,7 @@ func (c CreateSparkJobDefinitionRequest) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "definition", c.Definition)
 	populate(objectMap, "description", c.Description)
 	populate(objectMap, "displayName", c.DisplayName)
+	populate(objectMap, "folderId", c.FolderID)
 	return json.Marshal(objectMap)
 }
 
@@ -40,6 +41,9 @@ func (c *CreateSparkJobDefinitionRequest) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "displayName":
 			err = unpopulate(val, "DisplayName", &c.DisplayName)
+			delete(rawMsg, key)
+		case "folderId":
+			err = unpopulate(val, "FolderID", &c.FolderID)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -85,6 +89,8 @@ func (e ExecutionData) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "additionalLibraryUris", e.AdditionalLibraryUris)
 	populate(objectMap, "commandLineArguments", e.CommandLineArguments)
+	populate(objectMap, "defaultLakehouseId", e.DefaultLakehouseID)
+	populate(objectMap, "environmentId", e.EnvironmentID)
 	populate(objectMap, "executableFile", e.ExecutableFile)
 	populate(objectMap, "mainClass", e.MainClass)
 	return json.Marshal(objectMap)
@@ -104,6 +110,12 @@ func (e *ExecutionData) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "commandLineArguments":
 			err = unpopulate(val, "CommandLineArguments", &e.CommandLineArguments)
+			delete(rawMsg, key)
+		case "defaultLakehouseId":
+			e.DefaultLakehouseID, err = unmarshalItemReferenceClassification(val)
+			delete(rawMsg, key)
+		case "environmentId":
+			e.EnvironmentID, err = unmarshalItemReferenceClassification(val)
 			delete(rawMsg, key)
 		case "executableFile":
 			err = unpopulate(val, "ExecutableFile", &e.ExecutableFile)

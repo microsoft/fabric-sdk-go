@@ -32,7 +32,7 @@ type ItemsClient struct {
 
 // BeginCreateEventstream - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create eventstream with definition, refer to Eventstream definition [/rest/api/fabric/articles/item-management/definitions/eventstream-definition].
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create an eventstream the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
@@ -56,7 +56,7 @@ func (client *ItemsClient) BeginCreateEventstream(ctx context.Context, workspace
 
 // CreateEventstream - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create eventstream with definition, refer to Eventstream definition [/rest/api/fabric/articles/item-management/definitions/eventstream-definition].
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create an eventstream the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
@@ -109,7 +109,7 @@ func (client *ItemsClient) createEventstreamCreateRequest(ctx context.Context, w
 	return req, nil
 }
 
-// DeleteEventstream - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteEventstream - PERMISSIONS The caller must have write permissions for the eventstream.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -163,7 +163,7 @@ func (client *ItemsClient) deleteEventstreamCreateRequest(ctx context.Context, w
 	return req, nil
 }
 
-// GetEventstream - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetEventstream - PERMISSIONS The caller must have read permissions for the eventstream.
 // REQUIRED DELEGATED SCOPES Eventstream.Read.All or Eventstream.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -229,7 +229,7 @@ func (client *ItemsClient) getEventstreamHandleResponse(resp *http.Response) (It
 
 // BeginGetEventstreamDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get an eventstream public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the eventstream.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS This API is blocked for an eventstream with an encrypted sensitivity label.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -251,7 +251,7 @@ func (client *ItemsClient) BeginGetEventstreamDefinition(ctx context.Context, wo
 
 // GetEventstreamDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get an eventstream public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the eventstream.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS This API is blocked for an eventstream with an encrypted sensitivity label.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -309,7 +309,7 @@ func (client *ItemsClient) getEventstreamDefinitionCreateRequest(ctx context.Con
 }
 
 // NewListEventstreamsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -374,7 +374,7 @@ func (client *ItemsClient) listEventstreamsHandleResponse(resp *http.Response) (
 	return result, nil
 }
 
-// UpdateEventstream - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateEventstream - PERMISSIONS The caller must have read and write permissions for the eventstream.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -444,7 +444,7 @@ func (client *ItemsClient) updateEventstreamHandleResponse(resp *http.Response) 
 
 // BeginUpdateEventstreamDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the eventstream definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the eventstream.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -466,7 +466,7 @@ func (client *ItemsClient) BeginUpdateEventstreamDefinition(ctx context.Context,
 
 // UpdateEventstreamDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the eventstream definition, does not affect its sensitivity label.
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the eventstream.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -532,7 +532,7 @@ func (client *ItemsClient) updateEventstreamDefinitionCreateRequest(ctx context.
 //
 // To create eventstream with definition, refer to Eventstream definition [/rest/api/fabric/articles/item-management/definitions/eventstream-definition].
 //
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
 //
 // LIMITATIONS
@@ -606,7 +606,7 @@ func (client *ItemsClient) beginCreateEventstream(ctx context.Context, workspace
 //
 // When you get an eventstream public definition, the sensitivity label is not a part of the definition.
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the eventstream.
 //
 // # REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
 //
@@ -679,7 +679,7 @@ func (client *ItemsClient) beginGetEventstreamDefinition(ctx context.Context, wo
 //
 // Updating the eventstream definition, does not affect its sensitivity label.
 //
-// PERMISSIONS The API caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the eventstream.
 //
 // # REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
 //
@@ -749,7 +749,7 @@ func (client *ItemsClient) beginUpdateEventstreamDefinition(ctx context.Context,
 // ListEventstreams - returns array of Eventstream from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

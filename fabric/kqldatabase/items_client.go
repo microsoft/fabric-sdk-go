@@ -31,7 +31,7 @@ type ItemsClient struct {
 }
 
 // BeginCreateKQLDatabase - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES KQLDatabase.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a KQL database the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
@@ -54,7 +54,7 @@ func (client *ItemsClient) BeginCreateKQLDatabase(ctx context.Context, workspace
 }
 
 // CreateKQLDatabase - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES KQLDatabase.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a KQL database the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
@@ -107,7 +107,7 @@ func (client *ItemsClient) createKQLDatabaseCreateRequest(ctx context.Context, w
 	return req, nil
 }
 
-// DeleteKQLDatabase - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteKQLDatabase - PERMISSIONS The caller must have write permissions for the KQL database.
 // REQUIRED DELEGATED SCOPES KQLDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -161,7 +161,7 @@ func (client *ItemsClient) deleteKQLDatabaseCreateRequest(ctx context.Context, w
 	return req, nil
 }
 
-// GetKQLDatabase - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetKQLDatabase - PERMISSIONS The caller must have read permissions for the KQL database.
 // REQUIRED DELEGATED SCOPES KQLDatabase.Read.All or KQLDatabase.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -226,7 +226,7 @@ func (client *ItemsClient) getKQLDatabaseHandleResponse(resp *http.Response) (It
 }
 
 // BeginGetKQLDatabaseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the KQL database.
 // REQUIRED DELEGATED SCOPES KQLDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -246,7 +246,7 @@ func (client *ItemsClient) BeginGetKQLDatabaseDefinition(ctx context.Context, wo
 }
 
 // GetKQLDatabaseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the KQL database.
 // REQUIRED DELEGATED SCOPES KQLDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -303,7 +303,7 @@ func (client *ItemsClient) getKQLDatabaseDefinitionCreateRequest(ctx context.Con
 }
 
 // NewListKQLDatabasesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -368,7 +368,7 @@ func (client *ItemsClient) listKQLDatabasesHandleResponse(resp *http.Response) (
 	return result, nil
 }
 
-// UpdateKQLDatabase - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateKQLDatabase - PERMISSIONS The caller must have read and write permissions for the KQL database.
 // REQUIRED DELEGATED SCOPES KQLDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -437,7 +437,7 @@ func (client *ItemsClient) updateKQLDatabaseHandleResponse(resp *http.Response) 
 }
 
 // BeginUpdateKQLDatabaseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the KQL database.
 // REQUIRED DELEGATED SCOPES KQLDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -458,7 +458,7 @@ func (client *ItemsClient) BeginUpdateKQLDatabaseDefinition(ctx context.Context,
 }
 
 // UpdateKQLDatabaseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the KQL database.
 // REQUIRED DELEGATED SCOPES KQLDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -522,7 +522,7 @@ func (client *ItemsClient) updateKQLDatabaseDefinitionCreateRequest(ctx context.
 // CreateKQLDatabase - returns ItemsClientCreateKQLDatabaseResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// PERMISSIONS THE CALLER MUST HAVE CONTRIBUTOR OR HIGHER WORKSPACE ROLE.
+// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES KQLDatabase.ReadWrite.All or Item.ReadWrite.All
 //
 // LIMITATIONS
@@ -594,7 +594,7 @@ func (client *ItemsClient) beginCreateKQLDatabase(ctx context.Context, workspace
 // GetKQLDatabaseDefinition - returns ItemsClientGetKQLDatabaseDefinitionResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the KQL database.
 //
 // # REQUIRED DELEGATED SCOPES KQLDatabase.ReadWrite.All or Item.ReadWrite.All
 //
@@ -663,7 +663,7 @@ func (client *ItemsClient) beginGetKQLDatabaseDefinition(ctx context.Context, wo
 // UpdateKQLDatabaseDefinition - returns ItemsClientUpdateKQLDatabaseDefinitionResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have read and write permissions for the KQL database.
 //
 // # REQUIRED DELEGATED SCOPES KQLDatabase.ReadWrite.All or Item.ReadWrite.All
 //
@@ -733,7 +733,7 @@ func (client *ItemsClient) beginUpdateKQLDatabaseDefinition(ctx context.Context,
 // ListKQLDatabases - returns array of KQLDatabase from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //

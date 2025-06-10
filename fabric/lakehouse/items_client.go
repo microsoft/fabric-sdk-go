@@ -31,7 +31,7 @@ type ItemsClient struct {
 
 // BeginCreateLakehouse - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // This API does not support create a lakehouse with definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES Lakehouse.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -52,7 +52,7 @@ func (client *ItemsClient) BeginCreateLakehouse(ctx context.Context, workspaceID
 
 // CreateLakehouse - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // This API does not support create a lakehouse with definition.
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES Lakehouse.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -102,7 +102,7 @@ func (client *ItemsClient) createLakehouseCreateRequest(ctx context.Context, wor
 	return req, nil
 }
 
-// DeleteLakehouse - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteLakehouse - PERMISSIONS The caller must have write permissions for the lakehouse.
 // REQUIRED DELEGATED SCOPES Lakehouse.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -156,7 +156,7 @@ func (client *ItemsClient) deleteLakehouseCreateRequest(ctx context.Context, wor
 	return req, nil
 }
 
-// GetLakehouse - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetLakehouse - PERMISSIONS The caller must have read permissions for the lakehouse.
 // REQUIRED DELEGATED SCOPES Lakehouse.Read.All or Lakehouse.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -221,7 +221,7 @@ func (client *ItemsClient) getLakehouseHandleResponse(resp *http.Response) (Item
 }
 
 // NewListLakehousesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -286,7 +286,7 @@ func (client *ItemsClient) listLakehousesHandleResponse(resp *http.Response) (It
 	return result, nil
 }
 
-// UpdateLakehouse - PERMISSIONS The caller must have contributor or higher workspace role.
+// UpdateLakehouse - PERMISSIONS The caller must have read and write permissions for the lakehouse.
 // REQUIRED DELEGATED SCOPES Lakehouse.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -361,7 +361,7 @@ func (client *ItemsClient) updateLakehouseHandleResponse(resp *http.Response) (I
 //
 // This API does not support create a lakehouse with definition.
 //
-// PERMISSIONS The caller must have contributor or higher workspace role.
+// PERMISSIONS The caller must have a contributor workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Lakehouse.ReadWrite.All or Item.ReadWrite.All
 //
@@ -430,7 +430,7 @@ func (client *ItemsClient) beginCreateLakehouse(ctx context.Context, workspaceID
 // ListLakehouses - returns array of Lakehouse from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 //
