@@ -473,6 +473,7 @@ type errItem struct {
 	ItemNotFound                                        error
 	ItemNotActive                                       error
 	ItemDisplayNameAlreadyInUse                         error
+	ItemDisplayNameNotAvailableYet                      error
 	InvalidItemType                                     error
 	InvalidItemState                                    error
 	ItemTypeNotEnabled                                  error
@@ -493,21 +494,22 @@ type errItem struct {
 }
 
 var ErrItem = errItem{
-	ItemNotFound:                 errors.New("ItemNotFound"),
-	ItemNotActive:                errors.New("ItemNotActive"),
-	ItemDisplayNameAlreadyInUse:  errors.New("ItemDisplayNameAlreadyInUse"),
-	InvalidItemType:              errors.New("InvalidItemType"),
-	InvalidItemState:             errors.New("InvalidItemState"),
-	ItemTypeNotEnabled:           errors.New("ItemTypeNotEnabled"),
-	OperationNotSupportedForItem: errors.New("OperationNotSupportedForItem"),
-	UnsupportedPayloadType:       errors.New("UnsupportedPayloadType"),
-	InvalidPayloadSize:           errors.New("InvalidPayloadSize"),
-	MissingDefinition:            errors.New("MissingDefinition"),
-	MissingDefinitionParts:       errors.New("MissingDefinitionParts"),
-	InvalidDefinitionFormat:      errors.New("InvalidDefinitionFormat"),
-	InvalidDefinitionParts:       errors.New("InvalidDefinitionParts"),
-	ItemHasProtectedLabel:        errors.New("ItemHasProtectedLabel"),
-	InvalidConnectionInformation: errors.New("InvalidConnectionInformation"),
+	ItemNotFound:                   errors.New("ItemNotFound"),
+	ItemNotActive:                  errors.New("ItemNotActive"),
+	ItemDisplayNameAlreadyInUse:    errors.New("ItemDisplayNameAlreadyInUse"),
+	ItemDisplayNameNotAvailableYet: errors.New("ItemDisplayNameNotAvailableYet"),
+	InvalidItemType:                errors.New("InvalidItemType"),
+	InvalidItemState:               errors.New("InvalidItemState"),
+	ItemTypeNotEnabled:             errors.New("ItemTypeNotEnabled"),
+	OperationNotSupportedForItem:   errors.New("OperationNotSupportedForItem"),
+	UnsupportedPayloadType:         errors.New("UnsupportedPayloadType"),
+	InvalidPayloadSize:             errors.New("InvalidPayloadSize"),
+	MissingDefinition:              errors.New("MissingDefinition"),
+	MissingDefinitionParts:         errors.New("MissingDefinitionParts"),
+	InvalidDefinitionFormat:        errors.New("InvalidDefinitionFormat"),
+	InvalidDefinitionParts:         errors.New("InvalidDefinitionParts"),
+	ItemHasProtectedLabel:          errors.New("ItemHasProtectedLabel"),
+	InvalidConnectionInformation:   errors.New("InvalidConnectionInformation"),
 	RequestWithDefinitionAndCreationPayloadNotSupported: errors.New("RequestWithDefinitionAndCreationPayloadNotSupported"),
 	ItemTypeDoesNotSupportCreationPayload:               errors.New("ItemTypeDoesNotSupportCreationPayload"),
 	InvalidPlatformFile:                                 errors.New("InvalidPlatformFile"),
@@ -520,6 +522,7 @@ func PossibleErrItemValues() []string {
 		ErrItem.ItemNotFound.Error(),
 		ErrItem.ItemNotActive.Error(),
 		ErrItem.ItemDisplayNameAlreadyInUse.Error(),
+		ErrItem.ItemDisplayNameNotAvailableYet.Error(),
 		ErrItem.InvalidItemType.Error(),
 		ErrItem.InvalidItemState.Error(),
 		ErrItem.ItemTypeNotEnabled.Error(),
