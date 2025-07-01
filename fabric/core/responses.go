@@ -76,7 +76,8 @@ type ConnectionsClientUpdateConnectionRoleAssignmentResponse struct {
 
 // DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse contains the response from method DeploymentPipelinesClient.AddDeploymentPipelineRoleAssignment.
 type DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse struct {
-	// placeholder for future response values
+	// A Fabric principal role assignment for a deployment pipeline.
+	DeploymentPipelineRoleAssignment
 }
 
 // DeploymentPipelinesClientAssignWorkspaceToStageResponse contains the response from method DeploymentPipelinesClient.AssignWorkspaceToStage.

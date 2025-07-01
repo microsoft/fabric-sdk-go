@@ -61,7 +61,8 @@ func (client *DeploymentPipelinesClient) AddDeploymentPipelineRoleAssignment(ctx
 		err = NewResponseError(httpResp)
 		return DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse{}, err
 	}
-	return DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse{}, nil
+	resp, err := client.addDeploymentPipelineRoleAssignmentHandleResponse(httpResp)
+	return resp, err
 }
 
 // addDeploymentPipelineRoleAssignmentCreateRequest creates the AddDeploymentPipelineRoleAssignment request.
@@ -80,6 +81,15 @@ func (client *DeploymentPipelinesClient) addDeploymentPipelineRoleAssignmentCrea
 		return nil, err
 	}
 	return req, nil
+}
+
+// addDeploymentPipelineRoleAssignmentHandleResponse handles the AddDeploymentPipelineRoleAssignment response.
+func (client *DeploymentPipelinesClient) addDeploymentPipelineRoleAssignmentHandleResponse(resp *http.Response) (DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse, error) {
+	result := DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.DeploymentPipelineRoleAssignment); err != nil {
+		return DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse{}, err
+	}
+	return result, nil
 }
 
 // AssignWorkspaceToStage - This operation will fail if there's an active deployment operation.

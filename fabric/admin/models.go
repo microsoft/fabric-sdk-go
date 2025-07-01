@@ -467,6 +467,9 @@ type Item struct {
 	// READ-ONLY; The item's owner.
 	CreatorPrincipal *Principal
 
+	// READ-ONLY; The folder ID of the item.
+	FolderID *string
+
 	// READ-ONLY; The item status.
 	State *ItemState
 

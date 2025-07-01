@@ -1172,6 +1172,7 @@ func (i Item) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "capacityId", i.CapacityID)
 	populate(objectMap, "creatorPrincipal", i.CreatorPrincipal)
 	populate(objectMap, "description", i.Description)
+	populate(objectMap, "folderId", i.FolderID)
 	populate(objectMap, "id", i.ID)
 	populateDateTimeRFC3339(objectMap, "lastUpdatedDate", i.LastUpdatedDate)
 	populate(objectMap, "name", i.Name)
@@ -1198,6 +1199,9 @@ func (i *Item) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "description":
 			err = unpopulate(val, "Description", &i.Description)
+			delete(rawMsg, key)
+		case "folderId":
+			err = unpopulate(val, "FolderID", &i.FolderID)
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &i.ID)
