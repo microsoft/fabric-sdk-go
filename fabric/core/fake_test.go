@@ -3615,6 +3615,7 @@ func (testsuite *FakeTestSuite) TestDeploymentPipelines_ListDeploymentPipelineRo
 	exampleRes := core.DeploymentPipelineRoleAssignments{
 		Value: []core.DeploymentPipelineRoleAssignment{
 			{
+				ID: to.Ptr("6e335e92-a2a2-4b5a-970a-bd6a89fbb765"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeUser),
 					ID:   to.Ptr("6e335e92-a2a2-4b5a-970a-bd6a89fbb765"),
@@ -3622,6 +3623,7 @@ func (testsuite *FakeTestSuite) TestDeploymentPipelines_ListDeploymentPipelineRo
 				Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
 			},
 			{
+				ID: to.Ptr("154aef10-47b8-48c4-ab97-f0bf9d5f8fcf"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeGroup),
 					ID:   to.Ptr("154aef10-47b8-48c4-ab97-f0bf9d5f8fcf"),
@@ -3629,6 +3631,7 @@ func (testsuite *FakeTestSuite) TestDeploymentPipelines_ListDeploymentPipelineRo
 				Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
 			},
 			{
+				ID: to.Ptr("a35d842b-90d5-59a1-c56a-5f8fcff0bf9d"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeServicePrincipal),
 					ID:   to.Ptr("a35d842b-90d5-59a1-c56a-5f8fcff0bf9d"),
@@ -3666,6 +3669,7 @@ func (testsuite *FakeTestSuite) TestDeploymentPipelines_ListDeploymentPipelineRo
 		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/deploymentPipelines/8ce96c50-85a0-4db3-85c6-7ccc3ed46523/roleAssignments?continuationToken=LDEsMTAwMDAwLDA%3D"),
 		Value: []core.DeploymentPipelineRoleAssignment{
 			{
+				ID: to.Ptr("6e335e92-a2a2-4b5a-970a-bd6a89fbb765"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeUser),
 					ID:   to.Ptr("6e335e92-a2a2-4b5a-970a-bd6a89fbb765"),
@@ -3673,6 +3677,7 @@ func (testsuite *FakeTestSuite) TestDeploymentPipelines_ListDeploymentPipelineRo
 				Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
 			},
 			{
+				ID: to.Ptr("154aef10-47b8-48c4-ab97-f0bf9d5f8fcf"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeGroup),
 					ID:   to.Ptr("154aef10-47b8-48c4-ab97-f0bf9d5f8fcf"),
@@ -3680,6 +3685,7 @@ func (testsuite *FakeTestSuite) TestDeploymentPipelines_ListDeploymentPipelineRo
 				Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
 			},
 			{
+				ID: to.Ptr("a35d842b-90d5-59a1-c56a-5f8fcff0bf9d"),
 				Principal: &core.Principal{
 					Type: to.Ptr(core.PrincipalTypeServicePrincipal),
 					ID:   to.Ptr("a35d842b-90d5-59a1-c56a-5f8fcff0bf9d"),
@@ -3722,17 +3728,27 @@ func (testsuite *FakeTestSuite) TestDeploymentPipelines_AddDeploymentPipelineRol
 		Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
 	}
 
+	exampleRes := core.DeploymentPipelineRoleAssignment{
+		ID: to.Ptr("154aef10-47b8-48c4-ab97-f0bf9d5f8fcf"),
+		Principal: &core.Principal{
+			Type: to.Ptr(core.PrincipalTypeGroup),
+			ID:   to.Ptr("154aef10-47b8-48c4-ab97-f0bf9d5f8fcf"),
+		},
+		Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
+	}
+
 	testsuite.serverFactory.DeploymentPipelinesServer.AddDeploymentPipelineRoleAssignment = func(ctx context.Context, deploymentPipelineID string, deploymentPipelineRoleAssignmentRequest core.AddDeploymentPipelineRoleAssignmentRequest, options *core.DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentOptions) (resp azfake.Responder[core.DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleDeploymentPipelineID, deploymentPipelineID)
 		testsuite.Require().True(reflect.DeepEqual(exampleDeploymentPipelineRoleAssignmentRequest, deploymentPipelineRoleAssignmentRequest))
 		resp = azfake.Responder[core.DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse]{}
-		resp.SetResponse(http.StatusOK, core.DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse{}, nil)
+		resp.SetResponse(http.StatusOK, core.DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse{DeploymentPipelineRoleAssignment: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewDeploymentPipelinesClient()
-	_, err = client.AddDeploymentPipelineRoleAssignment(ctx, exampleDeploymentPipelineID, exampleDeploymentPipelineRoleAssignmentRequest, nil)
+	res, err := client.AddDeploymentPipelineRoleAssignment(ctx, exampleDeploymentPipelineID, exampleDeploymentPipelineRoleAssignmentRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DeploymentPipelineRoleAssignment))
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -3747,16 +3763,26 @@ func (testsuite *FakeTestSuite) TestDeploymentPipelines_AddDeploymentPipelineRol
 		Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
 	}
 
+	exampleRes = core.DeploymentPipelineRoleAssignment{
+		ID: to.Ptr("a35d842b-90d5-59a1-c56a-5f8fcff0bf9d"),
+		Principal: &core.Principal{
+			Type: to.Ptr(core.PrincipalTypeServicePrincipal),
+			ID:   to.Ptr("a35d842b-90d5-59a1-c56a-5f8fcff0bf9d"),
+		},
+		Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
+	}
+
 	testsuite.serverFactory.DeploymentPipelinesServer.AddDeploymentPipelineRoleAssignment = func(ctx context.Context, deploymentPipelineID string, deploymentPipelineRoleAssignmentRequest core.AddDeploymentPipelineRoleAssignmentRequest, options *core.DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentOptions) (resp azfake.Responder[core.DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleDeploymentPipelineID, deploymentPipelineID)
 		testsuite.Require().True(reflect.DeepEqual(exampleDeploymentPipelineRoleAssignmentRequest, deploymentPipelineRoleAssignmentRequest))
 		resp = azfake.Responder[core.DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse]{}
-		resp.SetResponse(http.StatusOK, core.DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse{}, nil)
+		resp.SetResponse(http.StatusOK, core.DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse{DeploymentPipelineRoleAssignment: exampleRes}, nil)
 		return
 	}
 
-	_, err = client.AddDeploymentPipelineRoleAssignment(ctx, exampleDeploymentPipelineID, exampleDeploymentPipelineRoleAssignmentRequest, nil)
+	res, err = client.AddDeploymentPipelineRoleAssignment(ctx, exampleDeploymentPipelineID, exampleDeploymentPipelineRoleAssignmentRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DeploymentPipelineRoleAssignment))
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -3771,16 +3797,26 @@ func (testsuite *FakeTestSuite) TestDeploymentPipelines_AddDeploymentPipelineRol
 		Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
 	}
 
+	exampleRes = core.DeploymentPipelineRoleAssignment{
+		ID: to.Ptr("a35d842b-90d5-59a2-c56a-5f8fcff0bf9d"),
+		Principal: &core.Principal{
+			Type: to.Ptr(core.PrincipalTypeUser),
+			ID:   to.Ptr("a35d842b-90d5-59a2-c56a-5f8fcff0bf9d"),
+		},
+		Role: to.Ptr(core.DeploymentPipelineRoleAdmin),
+	}
+
 	testsuite.serverFactory.DeploymentPipelinesServer.AddDeploymentPipelineRoleAssignment = func(ctx context.Context, deploymentPipelineID string, deploymentPipelineRoleAssignmentRequest core.AddDeploymentPipelineRoleAssignmentRequest, options *core.DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentOptions) (resp azfake.Responder[core.DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleDeploymentPipelineID, deploymentPipelineID)
 		testsuite.Require().True(reflect.DeepEqual(exampleDeploymentPipelineRoleAssignmentRequest, deploymentPipelineRoleAssignmentRequest))
 		resp = azfake.Responder[core.DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse]{}
-		resp.SetResponse(http.StatusOK, core.DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse{}, nil)
+		resp.SetResponse(http.StatusOK, core.DeploymentPipelinesClientAddDeploymentPipelineRoleAssignmentResponse{DeploymentPipelineRoleAssignment: exampleRes}, nil)
 		return
 	}
 
-	_, err = client.AddDeploymentPipelineRoleAssignment(ctx, exampleDeploymentPipelineID, exampleDeploymentPipelineRoleAssignmentRequest, nil)
+	res, err = client.AddDeploymentPipelineRoleAssignment(ctx, exampleDeploymentPipelineID, exampleDeploymentPipelineRoleAssignmentRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DeploymentPipelineRoleAssignment))
 }
 
 func (testsuite *FakeTestSuite) TestDeploymentPipelines_DeleteDeploymentPipelineRoleAssignment() {
