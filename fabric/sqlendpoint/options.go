@@ -6,6 +6,16 @@
 
 package sqlendpoint
 
+// ItemsClientBeginRefreshSQLEndpointMetadataOptions contains the optional parameters for the ItemsClient.BeginRefreshSQLEndpointMetadata
+// method.
+type ItemsClientBeginRefreshSQLEndpointMetadataOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+
+	// Refresh SQL analytics endpoint request payload.
+	SQLEndpointRefreshMetadataRequest *RefreshMetadataRequest
+}
+
 // ItemsClientListSQLEndpointsOptions contains the optional parameters for the ItemsClient.NewListSQLEndpointsPager method.
 type ItemsClientListSQLEndpointsOptions struct {
 	// A token for retrieving the next page of results.

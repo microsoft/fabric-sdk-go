@@ -6,6 +6,12 @@
 
 package lakehouse
 
+// BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsOptions contains the optional parameters for the BackgroundJobsClient.RunOnDemandRefreshMaterializedLakeViews
+// method.
+type BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsOptions struct {
+	// placeholder for future optional parameters
+}
+
 // BackgroundJobsClientRunOnDemandTableMaintenanceOptions contains the optional parameters for the BackgroundJobsClient.RunOnDemandTableMaintenance
 // method.
 type BackgroundJobsClientRunOnDemandTableMaintenanceOptions struct {

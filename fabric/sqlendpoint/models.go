@@ -6,6 +6,39 @@
 
 package sqlendpoint
 
+import "time"
+
+// Duration - A duration.
+type Duration struct {
+	// REQUIRED; The unit of time for the duration. Additional duration types may be added over time.
+	TimeUnit *TimeUnit
+
+	// REQUIRED; The number of timeUnits in the duration.
+	Value *float32
+}
+
+// ErrorRelatedResource - The error related resource details object.
+type ErrorRelatedResource struct {
+	// READ-ONLY; The resource ID that's involved in the error.
+	ResourceID *string
+
+	// READ-ONLY; The type of the resource that's involved in the error.
+	ResourceType *string
+}
+
+// ErrorResponseDetails - The error response details.
+type ErrorResponseDetails struct {
+	// READ-ONLY; A specific identifier that provides information about an error condition, allowing for standardized communication
+	// between our service and its users.
+	ErrorCode *string
+
+	// READ-ONLY; A human readable representation of the error.
+	Message *string
+
+	// READ-ONLY; The error related resource details.
+	RelatedResource *ErrorRelatedResource
+}
+
 // ItemTag - Represents a tag applied on an item.
 type ItemTag struct {
 	// REQUIRED; The name of the tag.
@@ -13,6 +46,12 @@ type ItemTag struct {
 
 	// REQUIRED; The tag ID.
 	ID *string
+}
+
+// RefreshMetadataRequest - Refresh SQL analaytics endpoint request payload.
+type RefreshMetadataRequest struct {
+	// The request duration before timing out. The default value is 15 minutes.
+	Timeout *Duration
 }
 
 // SQLEndpoint - A SQL endpoint object.
@@ -49,4 +88,31 @@ type SQLEndpoints struct {
 
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
+}
+
+// TableSyncStatus - A table synchronization status object.
+type TableSyncStatus struct {
+	// REQUIRED; The date and time when the table synchronization completed in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	EndDateTime *time.Time
+
+	// REQUIRED; The date and time when the table synchronization was successful in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	LastSuccessfulSyncDateTime *time.Time
+
+	// REQUIRED; The date and time when the table synchronization started in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	StartDateTime *time.Time
+
+	// REQUIRED; Whether the table synchronized without errors.
+	Status *SyncStatus
+
+	// REQUIRED; The name of the table that synchronized.
+	TableName *string
+
+	// The error response details
+	Error *ErrorResponseDetails
+}
+
+// TableSyncStatuses - A list of table synchronization statuses.
+type TableSyncStatuses struct {
+	// REQUIRED; A list of table synchronization statuses.
+	Value []TableSyncStatus
 }

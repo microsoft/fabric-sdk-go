@@ -29,6 +29,10 @@ type OneLakeShortcutsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated
 	CreateShortcut func(ctx context.Context, workspaceID string, itemID string, createShortcutRequest core.CreateShortcutRequest, options *core.OneLakeShortcutsClientCreateShortcutOptions) (resp azfake.Responder[core.OneLakeShortcutsClientCreateShortcutResponse], errResp azfake.ErrorResponder)
 
+	// BeginCreatesShortcutsInBulk is the fake for method OneLakeShortcutsClient.BeginCreatesShortcutsInBulk
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	BeginCreatesShortcutsInBulk func(ctx context.Context, workspaceID string, itemID string, bulkCreateShortcutsRequest core.BulkCreateShortcutsRequest, options *core.OneLakeShortcutsClientBeginCreatesShortcutsInBulkOptions) (resp azfake.PollerResponder[core.OneLakeShortcutsClientCreatesShortcutsInBulkResponse], errResp azfake.ErrorResponder)
+
 	// DeleteShortcut is the fake for method OneLakeShortcutsClient.DeleteShortcut
 	// HTTP status codes to indicate success: http.StatusOK
 	DeleteShortcut func(ctx context.Context, workspaceID string, itemID string, shortcutPath string, shortcutName string, options *core.OneLakeShortcutsClientDeleteShortcutOptions) (resp azfake.Responder[core.OneLakeShortcutsClientDeleteShortcutResponse], errResp azfake.ErrorResponder)
@@ -51,18 +55,20 @@ type OneLakeShortcutsServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewOneLakeShortcutsServerTransport(srv *OneLakeShortcutsServer) *OneLakeShortcutsServerTransport {
 	return &OneLakeShortcutsServerTransport{
-		srv:                     srv,
-		newListShortcutsPager:   newTracker[azfake.PagerResponder[core.OneLakeShortcutsClientListShortcutsResponse]](),
-		beginResetShortcutCache: newTracker[azfake.PollerResponder[core.OneLakeShortcutsClientResetShortcutCacheResponse]](),
+		srv:                         srv,
+		beginCreatesShortcutsInBulk: newTracker[azfake.PollerResponder[core.OneLakeShortcutsClientCreatesShortcutsInBulkResponse]](),
+		newListShortcutsPager:       newTracker[azfake.PagerResponder[core.OneLakeShortcutsClientListShortcutsResponse]](),
+		beginResetShortcutCache:     newTracker[azfake.PollerResponder[core.OneLakeShortcutsClientResetShortcutCacheResponse]](),
 	}
 }
 
 // OneLakeShortcutsServerTransport connects instances of core.OneLakeShortcutsClient to instances of OneLakeShortcutsServer.
 // Don't use this type directly, use NewOneLakeShortcutsServerTransport instead.
 type OneLakeShortcutsServerTransport struct {
-	srv                     *OneLakeShortcutsServer
-	newListShortcutsPager   *tracker[azfake.PagerResponder[core.OneLakeShortcutsClientListShortcutsResponse]]
-	beginResetShortcutCache *tracker[azfake.PollerResponder[core.OneLakeShortcutsClientResetShortcutCacheResponse]]
+	srv                         *OneLakeShortcutsServer
+	beginCreatesShortcutsInBulk *tracker[azfake.PollerResponder[core.OneLakeShortcutsClientCreatesShortcutsInBulkResponse]]
+	newListShortcutsPager       *tracker[azfake.PagerResponder[core.OneLakeShortcutsClientListShortcutsResponse]]
+	beginResetShortcutCache     *tracker[azfake.PollerResponder[core.OneLakeShortcutsClientResetShortcutCacheResponse]]
 }
 
 // Do implements the policy.Transporter interface for OneLakeShortcutsServerTransport.
@@ -92,6 +98,8 @@ func (o *OneLakeShortcutsServerTransport) dispatchToMethodFake(req *http.Request
 			switch method {
 			case "OneLakeShortcutsClient.CreateShortcut":
 				res.resp, res.err = o.dispatchCreateShortcut(req)
+			case "OneLakeShortcutsClient.BeginCreatesShortcutsInBulk":
+				res.resp, res.err = o.dispatchBeginCreatesShortcutsInBulk(req)
 			case "OneLakeShortcutsClient.DeleteShortcut":
 				res.resp, res.err = o.dispatchDeleteShortcut(req)
 			case "OneLakeShortcutsClient.GetShortcut":
@@ -168,6 +176,66 @@ func (o *OneLakeShortcutsServerTransport) dispatchCreateShortcut(req *http.Reque
 	if val := server.GetResponse(respr).Location; val != nil {
 		resp.Header.Set("Location", *val)
 	}
+	return resp, nil
+}
+
+func (o *OneLakeShortcutsServerTransport) dispatchBeginCreatesShortcutsInBulk(req *http.Request) (*http.Response, error) {
+	if o.srv.BeginCreatesShortcutsInBulk == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginCreatesShortcutsInBulk not implemented")}
+	}
+	beginCreatesShortcutsInBulk := o.beginCreatesShortcutsInBulk.get(req)
+	if beginCreatesShortcutsInBulk == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/items/(?P<itemId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/shortcuts/bulkCreate`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		body, err := server.UnmarshalRequestAsJSON[core.BulkCreateShortcutsRequest](req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		itemIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("itemId")])
+		if err != nil {
+			return nil, err
+		}
+		shortcutConflictPolicyUnescaped, err := url.QueryUnescape(qp.Get("shortcutConflictPolicy"))
+		if err != nil {
+			return nil, err
+		}
+		shortcutConflictPolicyParam := getOptional(core.ShortcutConflictPolicy(shortcutConflictPolicyUnescaped))
+		var options *core.OneLakeShortcutsClientBeginCreatesShortcutsInBulkOptions
+		if shortcutConflictPolicyParam != nil {
+			options = &core.OneLakeShortcutsClientBeginCreatesShortcutsInBulkOptions{
+				ShortcutConflictPolicy: shortcutConflictPolicyParam,
+			}
+		}
+		respr, errRespr := o.srv.BeginCreatesShortcutsInBulk(req.Context(), workspaceIDParam, itemIDParam, body, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginCreatesShortcutsInBulk = &respr
+		o.beginCreatesShortcutsInBulk.add(req, beginCreatesShortcutsInBulk)
+	}
+
+	resp, err := server.PollerResponderNext(beginCreatesShortcutsInBulk, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+		o.beginCreatesShortcutsInBulk.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginCreatesShortcutsInBulk) {
+		o.beginCreatesShortcutsInBulk.remove(req)
+	}
+
 	return resp, nil
 }
 

@@ -49,3 +49,55 @@ func ExampleItemsClient_NewListSQLEndpointsPager() {
 		// }
 	}
 }
+
+// Generated from example definition
+func ExampleItemsClient_BeginRefreshSQLEndpointMetadata() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := sqlendpoint.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginRefreshSQLEndpointMetadata(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", &sqlendpoint.ItemsClientBeginRefreshSQLEndpointMetadataOptions{SQLEndpointRefreshMetadataRequest: nil})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	res, err := poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.TableSyncStatuses = sqlendpoint.TableSyncStatuses{
+	// 	Value: []sqlendpoint.TableSyncStatus{
+	// 		{
+	// 			EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-02-04T22:29:12.486Z"); return t}()),
+	// 			LastSuccessfulSyncDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-07-23T14:28:23.186Z"); return t}()),
+	// 			StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-02-04T22:29:12.440Z"); return t}()),
+	// 			Status: to.Ptr(sqlendpoint.SyncStatusSuccess),
+	// 			TableName: to.Ptr("Table 1"),
+	// 		},
+	// 		{
+	// 			EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-02-04T22:29:13.486Z"); return t}()),
+	// 			Error: &sqlendpoint.ErrorResponseDetails{
+	// 				ErrorCode: to.Ptr("AdalRetryException"),
+	// 				Message: to.Ptr("Couldn't run query. There is a problem with the Microsoft Entra ID token. Have the warehouse owner log in again. If they're unavailable, use the takeover feature."),
+	// 			},
+	// 			LastSuccessfulSyncDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-07-23T14:28:23.186Z"); return t}()),
+	// 			StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-02-04T22:29:13.440Z"); return t}()),
+	// 			Status: to.Ptr(sqlendpoint.SyncStatusFailure),
+	// 			TableName: to.Ptr("Table 2"),
+	// 		},
+	// 		{
+	// 			EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-02-04T22:29:14.486Z"); return t}()),
+	// 			LastSuccessfulSyncDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-07-23T14:28:23.186Z"); return t}()),
+	// 			StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-02-04T22:29:14.440Z"); return t}()),
+	// 			Status: to.Ptr(sqlendpoint.SyncStatusNotRun),
+	// 			TableName: to.Ptr("Table 3"),
+	// 	}},
+	// }
+}

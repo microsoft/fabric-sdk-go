@@ -216,3 +216,898 @@ func (testsuite *FakeTestSuite) TestItems_DeleteMLModel() {
 	_, err = client.DeleteMLModel(ctx, exampleWorkspaceID, exampleMlModelID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
+
+func (testsuite *FakeTestSuite) TestEndpoint_GetMLModelEndpoint() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+	var exampleWorkspaceID string
+	var exampleModelID string
+	exampleWorkspaceID = "cf5fef71-f7f3-43f3-ae7f-3c427922bef1"
+	exampleModelID = "7e92a6fc-3ef5-40bf-96df-ddae3fcde313"
+
+	exampleRes := mlmodel.Endpoint{
+		DefaultVersionAssignmentBehavior: to.Ptr(mlmodel.EndpointDefaultVersionConfigurationPolicyStaticallyConfigured),
+		DefaultVersionInfo: &mlmodel.EndpointVersionInfo{
+			InputSignature: []mlmodel.DataSchema{
+				{
+					Name:     to.Ptr("age"),
+					Type:     to.Ptr("double"),
+					Required: to.Ptr(true),
+				},
+				{
+					Name:     to.Ptr("sex"),
+					Type:     to.Ptr("double"),
+					Required: to.Ptr(true),
+				},
+				{
+					Name:     to.Ptr("bmi"),
+					Type:     to.Ptr("double"),
+					Required: to.Ptr(true),
+				},
+				{
+					Name:     to.Ptr("bp"),
+					Type:     to.Ptr("double"),
+					Required: to.Ptr(true),
+				},
+				{
+					Name:     to.Ptr("s1"),
+					Type:     to.Ptr("double"),
+					Required: to.Ptr(true),
+				},
+				{
+					Name:     to.Ptr("s2"),
+					Type:     to.Ptr("double"),
+					Required: to.Ptr(true),
+				},
+				{
+					Name:     to.Ptr("s3"),
+					Type:     to.Ptr("double"),
+					Required: to.Ptr(true),
+				},
+				{
+					Name:     to.Ptr("s4"),
+					Type:     to.Ptr("double"),
+					Required: to.Ptr(true),
+				},
+				{
+					Name:     to.Ptr("s5"),
+					Type:     to.Ptr("double"),
+					Required: to.Ptr(true),
+				},
+				{
+					Name:     to.Ptr("s6"),
+					Type:     to.Ptr("double"),
+					Required: to.Ptr(true),
+				}},
+			OutputSignature: []mlmodel.DataSchema{
+				{
+					Name:     to.Ptr("target"),
+					Type:     to.Ptr("double"),
+					Required: to.Ptr(true),
+				}},
+			ScaleRule:   to.Ptr(mlmodel.ScaleRuleAlwaysOn),
+			Status:      to.Ptr(mlmodel.ModelEndpointVersionStatus("Running")),
+			VersionName: to.Ptr("1"),
+		},
+		DefaultVersionName: to.Ptr("1"),
+	}
+
+	testsuite.serverFactory.EndpointServer.GetMLModelEndpoint = func(ctx context.Context, workspaceID string, modelID string, options *mlmodel.EndpointClientGetMLModelEndpointOptions) (resp azfake.Responder[mlmodel.EndpointClientGetMLModelEndpointResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleModelID, modelID)
+		resp = azfake.Responder[mlmodel.EndpointClientGetMLModelEndpointResponse]{}
+		resp.SetResponse(http.StatusOK, mlmodel.EndpointClientGetMLModelEndpointResponse{Endpoint: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewEndpointClient()
+	res, err := client.GetMLModelEndpoint(ctx, exampleWorkspaceID, exampleModelID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Endpoint))
+}
+
+func (testsuite *FakeTestSuite) TestEndpoint_UpdateMLModelEndpoint() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+	var exampleWorkspaceID string
+	var exampleModelID string
+	var exampleUpdateMLModelEndpointRequest mlmodel.UpdateMLModelEndpointRequest
+	exampleWorkspaceID = "cf5fef71-f7f3-43f3-ae7f-3c427922bef1"
+	exampleModelID = "7e92a6fc-3ef5-40bf-96df-ddae3fcde313"
+	exampleUpdateMLModelEndpointRequest = mlmodel.UpdateMLModelEndpointRequest{
+		DefaultVersionAssignmentBehavior: to.Ptr(mlmodel.EndpointDefaultVersionConfigurationPolicyStaticallyConfigured),
+		DefaultVersionName:               to.Ptr("1"),
+	}
+
+	exampleRes := mlmodel.Endpoint{
+		DefaultVersionAssignmentBehavior: to.Ptr(mlmodel.EndpointDefaultVersionConfigurationPolicyStaticallyConfigured),
+		DefaultVersionInfo: &mlmodel.EndpointVersionInfo{
+			InputSignature: []mlmodel.DataSchema{
+				{
+					Name:     to.Ptr("age"),
+					Type:     to.Ptr("double"),
+					Required: to.Ptr(true),
+				},
+				{
+					Name:     to.Ptr("sex"),
+					Type:     to.Ptr("double"),
+					Required: to.Ptr(true),
+				},
+				{
+					Name:     to.Ptr("bmi"),
+					Type:     to.Ptr("double"),
+					Required: to.Ptr(true),
+				},
+				{
+					Name:     to.Ptr("bp"),
+					Type:     to.Ptr("double"),
+					Required: to.Ptr(true),
+				},
+				{
+					Name:     to.Ptr("s1"),
+					Type:     to.Ptr("double"),
+					Required: to.Ptr(true),
+				},
+				{
+					Name:     to.Ptr("s2"),
+					Type:     to.Ptr("double"),
+					Required: to.Ptr(true),
+				},
+				{
+					Name:     to.Ptr("s3"),
+					Type:     to.Ptr("double"),
+					Required: to.Ptr(true),
+				},
+				{
+					Name:     to.Ptr("s4"),
+					Type:     to.Ptr("double"),
+					Required: to.Ptr(true),
+				},
+				{
+					Name:     to.Ptr("s5"),
+					Type:     to.Ptr("double"),
+					Required: to.Ptr(true),
+				},
+				{
+					Name:     to.Ptr("s6"),
+					Type:     to.Ptr("double"),
+					Required: to.Ptr(true),
+				}},
+			OutputSignature: []mlmodel.DataSchema{
+				{
+					Name:     to.Ptr("target"),
+					Type:     to.Ptr("double"),
+					Required: to.Ptr(true),
+				}},
+			ScaleRule:   to.Ptr(mlmodel.ScaleRuleAlwaysOn),
+			Status:      to.Ptr(mlmodel.ModelEndpointVersionStatus("Running")),
+			VersionName: to.Ptr("1"),
+		},
+		DefaultVersionName: to.Ptr("1"),
+	}
+
+	testsuite.serverFactory.EndpointServer.UpdateMLModelEndpoint = func(ctx context.Context, workspaceID string, modelID string, updateMLModelEndpointRequest mlmodel.UpdateMLModelEndpointRequest, options *mlmodel.EndpointClientUpdateMLModelEndpointOptions) (resp azfake.Responder[mlmodel.EndpointClientUpdateMLModelEndpointResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleModelID, modelID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateMLModelEndpointRequest, updateMLModelEndpointRequest))
+		resp = azfake.Responder[mlmodel.EndpointClientUpdateMLModelEndpointResponse]{}
+		resp.SetResponse(http.StatusOK, mlmodel.EndpointClientUpdateMLModelEndpointResponse{Endpoint: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewEndpointClient()
+	res, err := client.UpdateMLModelEndpoint(ctx, exampleWorkspaceID, exampleModelID, exampleUpdateMLModelEndpointRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Endpoint))
+}
+
+func (testsuite *FakeTestSuite) TestEndpoint_DeactivateAllMLModelEndpointVersions() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+	var exampleWorkspaceID string
+	var exampleModelID string
+	exampleWorkspaceID = "cf5fef71-f7f3-43f3-ae7f-3c427922bef1"
+	exampleModelID = "7e92a6fc-3ef5-40bf-96df-ddae3fcde313"
+
+	testsuite.serverFactory.EndpointServer.BeginDeactivateAllMLModelEndpointVersions = func(ctx context.Context, workspaceID string, modelID string, options *mlmodel.EndpointClientBeginDeactivateAllMLModelEndpointVersionsOptions) (resp azfake.PollerResponder[mlmodel.EndpointClientDeactivateAllMLModelEndpointVersionsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleModelID, modelID)
+		resp = azfake.PollerResponder[mlmodel.EndpointClientDeactivateAllMLModelEndpointVersionsResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, mlmodel.EndpointClientDeactivateAllMLModelEndpointVersionsResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewEndpointClient()
+	poller, err := client.BeginDeactivateAllMLModelEndpointVersions(ctx, exampleWorkspaceID, exampleModelID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestEndpoint_ListMLModelEndpointVersions() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+	var exampleWorkspaceID string
+	var exampleModelID string
+	exampleWorkspaceID = "cf5fef71-f7f3-43f3-ae7f-3c427922bef1"
+	exampleModelID = "7e92a6fc-3ef5-40bf-96df-ddae3fcde313"
+
+	exampleRes := mlmodel.EndpointVersions{
+		Value: []mlmodel.EndpointVersionInfo{
+			{
+				InputSignature: []mlmodel.DataSchema{
+					{
+						Name:     to.Ptr("age"),
+						Type:     to.Ptr("double"),
+						Required: to.Ptr(true),
+					},
+					{
+						Name:     to.Ptr("sex"),
+						Type:     to.Ptr("double"),
+						Required: to.Ptr(true),
+					},
+					{
+						Name:     to.Ptr("bmi"),
+						Type:     to.Ptr("double"),
+						Required: to.Ptr(true),
+					},
+					{
+						Name:     to.Ptr("bp"),
+						Type:     to.Ptr("double"),
+						Required: to.Ptr(true),
+					},
+					{
+						Name:     to.Ptr("s1"),
+						Type:     to.Ptr("double"),
+						Required: to.Ptr(true),
+					},
+					{
+						Name:     to.Ptr("s2"),
+						Type:     to.Ptr("double"),
+						Required: to.Ptr(true),
+					},
+					{
+						Name:     to.Ptr("s3"),
+						Type:     to.Ptr("double"),
+						Required: to.Ptr(true),
+					},
+					{
+						Name:     to.Ptr("s4"),
+						Type:     to.Ptr("double"),
+						Required: to.Ptr(true),
+					},
+					{
+						Name:     to.Ptr("s5"),
+						Type:     to.Ptr("double"),
+						Required: to.Ptr(true),
+					},
+					{
+						Name:     to.Ptr("s6"),
+						Type:     to.Ptr("double"),
+						Required: to.Ptr(true),
+					}},
+				OutputSignature: []mlmodel.DataSchema{
+					{
+						Name:     to.Ptr("target"),
+						Type:     to.Ptr("double"),
+						Required: to.Ptr(true),
+					}},
+				ScaleRule:   to.Ptr(mlmodel.ScaleRuleAlwaysOn),
+				Status:      to.Ptr(mlmodel.ModelEndpointVersionStatusActive),
+				VersionName: to.Ptr("1"),
+			},
+			{
+				Status:      to.Ptr(mlmodel.ModelEndpointVersionStatusDeactivated),
+				VersionName: to.Ptr("2"),
+			}},
+	}
+
+	testsuite.serverFactory.EndpointServer.NewListMLModelEndpointVersionsPager = func(workspaceID string, modelID string, options *mlmodel.EndpointClientListMLModelEndpointVersionsOptions) (resp azfake.PagerResponder[mlmodel.EndpointClientListMLModelEndpointVersionsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleModelID, modelID)
+		resp = azfake.PagerResponder[mlmodel.EndpointClientListMLModelEndpointVersionsResponse]{}
+		resp.AddPage(http.StatusOK, mlmodel.EndpointClientListMLModelEndpointVersionsResponse{EndpointVersions: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewEndpointClient()
+	pager := client.NewListMLModelEndpointVersionsPager(exampleWorkspaceID, exampleModelID, &mlmodel.EndpointClientListMLModelEndpointVersionsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.EndpointVersions))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestEndpoint_GetMLModelEndpointVersion() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+	var exampleWorkspaceID string
+	var exampleModelID string
+	var exampleName string
+	exampleWorkspaceID = "cf5fef71-f7f3-43f3-ae7f-3c427922bef1"
+	exampleModelID = "7e92a6fc-3ef5-40bf-96df-ddae3fcde313"
+	exampleName = "1"
+
+	exampleRes := mlmodel.EndpointVersionInfo{
+		InputSignature: []mlmodel.DataSchema{
+			{
+				Name:     to.Ptr("age"),
+				Type:     to.Ptr("double"),
+				Required: to.Ptr(true),
+			},
+			{
+				Name:     to.Ptr("sex"),
+				Type:     to.Ptr("double"),
+				Required: to.Ptr(true),
+			},
+			{
+				Name:     to.Ptr("bmi"),
+				Type:     to.Ptr("double"),
+				Required: to.Ptr(true),
+			},
+			{
+				Name:     to.Ptr("bp"),
+				Type:     to.Ptr("double"),
+				Required: to.Ptr(true),
+			},
+			{
+				Name:     to.Ptr("s1"),
+				Type:     to.Ptr("double"),
+				Required: to.Ptr(true),
+			},
+			{
+				Name:     to.Ptr("s2"),
+				Type:     to.Ptr("double"),
+				Required: to.Ptr(true),
+			},
+			{
+				Name:     to.Ptr("s3"),
+				Type:     to.Ptr("double"),
+				Required: to.Ptr(true),
+			},
+			{
+				Name:     to.Ptr("s4"),
+				Type:     to.Ptr("double"),
+				Required: to.Ptr(true),
+			},
+			{
+				Name:     to.Ptr("s5"),
+				Type:     to.Ptr("double"),
+				Required: to.Ptr(true),
+			},
+			{
+				Name:     to.Ptr("s6"),
+				Type:     to.Ptr("double"),
+				Required: to.Ptr(true),
+			}},
+		OutputSignature: []mlmodel.DataSchema{
+			{
+				Name:     to.Ptr("target"),
+				Type:     to.Ptr("double"),
+				Required: to.Ptr(true),
+			}},
+		ScaleRule:   to.Ptr(mlmodel.ScaleRuleAlwaysOn),
+		Status:      to.Ptr(mlmodel.ModelEndpointVersionStatus("Running")),
+		VersionName: to.Ptr("1"),
+	}
+
+	testsuite.serverFactory.EndpointServer.GetMLModelEndpointVersion = func(ctx context.Context, workspaceID string, modelID string, name string, options *mlmodel.EndpointClientGetMLModelEndpointVersionOptions) (resp azfake.Responder[mlmodel.EndpointClientGetMLModelEndpointVersionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleModelID, modelID)
+		testsuite.Require().Equal(exampleName, name)
+		resp = azfake.Responder[mlmodel.EndpointClientGetMLModelEndpointVersionResponse]{}
+		resp.SetResponse(http.StatusOK, mlmodel.EndpointClientGetMLModelEndpointVersionResponse{EndpointVersionInfo: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewEndpointClient()
+	res, err := client.GetMLModelEndpointVersion(ctx, exampleWorkspaceID, exampleModelID, exampleName, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.EndpointVersionInfo))
+}
+
+func (testsuite *FakeTestSuite) TestEndpoint_UpdateMLModelEndpointVersion() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+	var exampleWorkspaceID string
+	var exampleModelID string
+	var exampleName string
+	var exampleUpdateMLModelEndpointVersionRequest mlmodel.UpdateMLModelEndpointVersionRequest
+	exampleWorkspaceID = "cf5fef71-f7f3-43f3-ae7f-3c427922bef1"
+	exampleModelID = "7e92a6fc-3ef5-40bf-96df-ddae3fcde313"
+	exampleName = "1"
+	exampleUpdateMLModelEndpointVersionRequest = mlmodel.UpdateMLModelEndpointVersionRequest{
+		ScaleRule: to.Ptr(mlmodel.ScaleRuleAllowScaleToZero),
+	}
+
+	exampleRes := mlmodel.EndpointVersionInfo{
+		InputSignature: []mlmodel.DataSchema{
+			{
+				Name:     to.Ptr("age"),
+				Type:     to.Ptr("double"),
+				Required: to.Ptr(true),
+			},
+			{
+				Name:     to.Ptr("sex"),
+				Type:     to.Ptr("double"),
+				Required: to.Ptr(true),
+			},
+			{
+				Name:     to.Ptr("bmi"),
+				Type:     to.Ptr("double"),
+				Required: to.Ptr(true),
+			},
+			{
+				Name:     to.Ptr("bp"),
+				Type:     to.Ptr("double"),
+				Required: to.Ptr(true),
+			},
+			{
+				Name:     to.Ptr("s1"),
+				Type:     to.Ptr("double"),
+				Required: to.Ptr(true),
+			},
+			{
+				Name:     to.Ptr("s2"),
+				Type:     to.Ptr("double"),
+				Required: to.Ptr(true),
+			},
+			{
+				Name:     to.Ptr("s3"),
+				Type:     to.Ptr("double"),
+				Required: to.Ptr(true),
+			},
+			{
+				Name:     to.Ptr("s4"),
+				Type:     to.Ptr("double"),
+				Required: to.Ptr(true),
+			},
+			{
+				Name:     to.Ptr("s5"),
+				Type:     to.Ptr("double"),
+				Required: to.Ptr(true),
+			},
+			{
+				Name:     to.Ptr("s6"),
+				Type:     to.Ptr("double"),
+				Required: to.Ptr(true),
+			}},
+		OutputSignature: []mlmodel.DataSchema{
+			{
+				Name:     to.Ptr("target"),
+				Type:     to.Ptr("double"),
+				Required: to.Ptr(true),
+			}},
+		ScaleRule:   to.Ptr(mlmodel.ScaleRuleAllowScaleToZero),
+		Status:      to.Ptr(mlmodel.ModelEndpointVersionStatus("Running")),
+		VersionName: to.Ptr("1"),
+	}
+
+	testsuite.serverFactory.EndpointServer.UpdateMLModelEndpointVersion = func(ctx context.Context, workspaceID string, modelID string, name string, updateMLModelEndpointVersionRequest mlmodel.UpdateMLModelEndpointVersionRequest, options *mlmodel.EndpointClientUpdateMLModelEndpointVersionOptions) (resp azfake.Responder[mlmodel.EndpointClientUpdateMLModelEndpointVersionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleModelID, modelID)
+		testsuite.Require().Equal(exampleName, name)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateMLModelEndpointVersionRequest, updateMLModelEndpointVersionRequest))
+		resp = azfake.Responder[mlmodel.EndpointClientUpdateMLModelEndpointVersionResponse]{}
+		resp.SetResponse(http.StatusOK, mlmodel.EndpointClientUpdateMLModelEndpointVersionResponse{EndpointVersionInfo: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewEndpointClient()
+	res, err := client.UpdateMLModelEndpointVersion(ctx, exampleWorkspaceID, exampleModelID, exampleName, exampleUpdateMLModelEndpointVersionRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.EndpointVersionInfo))
+}
+
+func (testsuite *FakeTestSuite) TestEndpoint_ActivateMLModelEndpointVersion() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+	var exampleWorkspaceID string
+	var exampleModelID string
+	var exampleName string
+	exampleWorkspaceID = "cf5fef71-f7f3-43f3-ae7f-3c427922bef1"
+	exampleModelID = "7e92a6fc-3ef5-40bf-96df-ddae3fcde313"
+	exampleName = "1"
+
+	testsuite.serverFactory.EndpointServer.BeginActivateMLModelEndpointVersion = func(ctx context.Context, workspaceID string, modelID string, name string, options *mlmodel.EndpointClientBeginActivateMLModelEndpointVersionOptions) (resp azfake.PollerResponder[mlmodel.EndpointClientActivateMLModelEndpointVersionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleModelID, modelID)
+		testsuite.Require().Equal(exampleName, name)
+		resp = azfake.PollerResponder[mlmodel.EndpointClientActivateMLModelEndpointVersionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, mlmodel.EndpointClientActivateMLModelEndpointVersionResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewEndpointClient()
+	poller, err := client.BeginActivateMLModelEndpointVersion(ctx, exampleWorkspaceID, exampleModelID, exampleName, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestEndpoint_DeactivateMLModelEndpointVersion() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+	var exampleWorkspaceID string
+	var exampleModelID string
+	var exampleName string
+	exampleWorkspaceID = "cf5fef71-f7f3-43f3-ae7f-3c427922bef1"
+	exampleModelID = "7e92a6fc-3ef5-40bf-96df-ddae3fcde313"
+	exampleName = "1"
+
+	testsuite.serverFactory.EndpointServer.BeginDeactivateMLModelEndpointVersion = func(ctx context.Context, workspaceID string, modelID string, name string, options *mlmodel.EndpointClientBeginDeactivateMLModelEndpointVersionOptions) (resp azfake.PollerResponder[mlmodel.EndpointClientDeactivateMLModelEndpointVersionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleModelID, modelID)
+		testsuite.Require().Equal(exampleName, name)
+		resp = azfake.PollerResponder[mlmodel.EndpointClientDeactivateMLModelEndpointVersionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, mlmodel.EndpointClientDeactivateMLModelEndpointVersionResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewEndpointClient()
+	poller, err := client.BeginDeactivateMLModelEndpointVersion(ctx, exampleWorkspaceID, exampleModelID, exampleName, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestEndpoint_ScoreMLModelEndpoint() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Score data using the default model version"},
+	})
+	var exampleWorkspaceID string
+	var exampleModelID string
+	var exampleScoreDataRequest mlmodel.ScoreDataRequest
+	exampleWorkspaceID = "cf5fef71-f7f3-43f3-ae7f-3c427922bef1"
+	exampleModelID = "7e92a6fc-3ef5-40bf-96df-ddae3fcde313"
+	exampleScoreDataRequest = mlmodel.ScoreDataRequest{
+		FormatType: to.Ptr(mlmodel.FormatTypeDataframe),
+		Inputs: [][]any{
+			[]any{
+				float64(-0.00188201652779),
+				float64(-0.04464163650698),
+				float64(-0.0514740612388),
+				float64(-0.0263275281478529),
+				float64(-0.00844872411121),
+				float64(-0.01916333974822),
+				float64(0.07441156407875721),
+				float64(-0.03949338287409329),
+				float64(-0.0683315470939731),
+				float64(-0.092204049626824)},
+			[]any{
+				float64(1),
+				float64(2),
+				float64(3),
+				float64(4),
+				float64(5),
+				float64(6),
+				float64(7),
+				float64(8),
+				float64(9),
+				float64(0)},
+			[]any{
+				float64(11),
+				float64(2),
+				float64(3),
+				float64(4),
+				float64(5),
+				float64(6),
+				float64(77),
+				float64(8),
+				float64(9),
+				float64(0)},
+			[]any{
+				float64(1),
+				float64(22),
+				float64(3),
+				float64(47),
+				float64(5),
+				float64(6),
+				float64(7),
+				float64(0),
+				float64(9),
+				float64(0)},
+			[]any{
+				float64(1),
+				float64(2),
+				float64(3),
+				float64(4),
+				float64(5),
+				float64(6),
+				float64(7),
+				float64(8),
+				float64(9),
+				float64(0)},
+			[]any{
+				float64(1),
+				float64(2),
+				float64(3),
+				float64(4),
+				float64(5),
+				float64(86),
+				float64(7),
+				float64(8),
+				float64(9),
+				float64(0)},
+			[]any{
+				float64(1),
+				float64(25),
+				float64(3),
+				float64(4),
+				float64(5),
+				float64(6),
+				float64(7),
+				float64(98),
+				float64(9),
+				float64(0)},
+			[]any{
+				float64(1),
+				float64(2),
+				float64(3),
+				float64(4),
+				float64(5),
+				float64(6),
+				float64(7),
+				float64(8),
+				float64(99),
+				float64(0)},
+			[]any{
+				float64(1),
+				float64(205),
+				float64(3),
+				float64(4),
+				float64(5),
+				float64(96),
+				float64(7),
+				float64(8),
+				float64(9),
+				float64(0)},
+			[]any{
+				float64(1),
+				float64(2),
+				float64(35),
+				float64(4),
+				float64(5),
+				float64(6),
+				float64(7),
+				float64(18),
+				float64(19),
+				float64(0)}},
+		Orientation: to.Ptr(mlmodel.OrientationValues),
+	}
+
+	exampleRes := mlmodel.ScoreDataResponse{
+		FormatType:  to.Ptr(mlmodel.FormatTypeDataframe),
+		Orientation: to.Ptr(mlmodel.OrientationValues),
+		Predictions: [][]any{
+			[]any{
+				float64(72)},
+			[]any{
+				float64(248)},
+			[]any{
+				float64(87)},
+			[]any{
+				float64(217)},
+			[]any{
+				float64(248)},
+			[]any{
+				float64(84)},
+			[]any{
+				float64(248)},
+			[]any{
+				float64(220)},
+			[]any{
+				float64(139)},
+			[]any{
+				float64(242)}},
+	}
+
+	testsuite.serverFactory.EndpointServer.BeginScoreMLModelEndpoint = func(ctx context.Context, workspaceID string, modelID string, scoreDataRequest mlmodel.ScoreDataRequest, options *mlmodel.EndpointClientBeginScoreMLModelEndpointOptions) (resp azfake.PollerResponder[mlmodel.EndpointClientScoreMLModelEndpointResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleModelID, modelID)
+		testsuite.Require().True(reflect.DeepEqual(exampleScoreDataRequest, scoreDataRequest))
+		resp = azfake.PollerResponder[mlmodel.EndpointClientScoreMLModelEndpointResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, mlmodel.EndpointClientScoreMLModelEndpointResponse{ScoreDataResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewEndpointClient()
+	poller, err := client.BeginScoreMLModelEndpoint(ctx, exampleWorkspaceID, exampleModelID, exampleScoreDataRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ScoreDataResponse))
+}
+
+func (testsuite *FakeTestSuite) TestEndpoint_ScoreMLModelEndpointVersion() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+	var exampleWorkspaceID string
+	var exampleModelID string
+	var exampleName string
+	var exampleScoreDataRequest mlmodel.ScoreDataRequest
+	exampleWorkspaceID = "cf5fef71-f7f3-43f3-ae7f-3c427922bef1"
+	exampleModelID = "7e92a6fc-3ef5-40bf-96df-ddae3fcde313"
+	exampleName = "1"
+	exampleScoreDataRequest = mlmodel.ScoreDataRequest{
+		FormatType: to.Ptr(mlmodel.FormatTypeDataframe),
+		Inputs: [][]any{
+			[]any{
+				float64(-0.00188201652779),
+				float64(-0.04464163650698),
+				float64(-0.0514740612388),
+				float64(-0.0263275281478529),
+				float64(-0.00844872411121),
+				float64(-0.01916333974822),
+				float64(0.07441156407875721),
+				float64(-0.03949338287409329),
+				float64(-0.0683315470939731),
+				float64(-0.092204049626824)},
+			[]any{
+				float64(1),
+				float64(2),
+				float64(3),
+				float64(4),
+				float64(5),
+				float64(6),
+				float64(7),
+				float64(8),
+				float64(9),
+				float64(0)},
+			[]any{
+				float64(11),
+				float64(2),
+				float64(3),
+				float64(4),
+				float64(5),
+				float64(6),
+				float64(77),
+				float64(8),
+				float64(9),
+				float64(0)},
+			[]any{
+				float64(1),
+				float64(22),
+				float64(3),
+				float64(47),
+				float64(5),
+				float64(6),
+				float64(7),
+				float64(0),
+				float64(9),
+				float64(0)},
+			[]any{
+				float64(1),
+				float64(2),
+				float64(3),
+				float64(4),
+				float64(5),
+				float64(6),
+				float64(7),
+				float64(8),
+				float64(9),
+				float64(0)},
+			[]any{
+				float64(1),
+				float64(2),
+				float64(3),
+				float64(4),
+				float64(5),
+				float64(86),
+				float64(7),
+				float64(8),
+				float64(9),
+				float64(0)},
+			[]any{
+				float64(1),
+				float64(25),
+				float64(3),
+				float64(4),
+				float64(5),
+				float64(6),
+				float64(7),
+				float64(98),
+				float64(9),
+				float64(0)},
+			[]any{
+				float64(1),
+				float64(2),
+				float64(3),
+				float64(4),
+				float64(5),
+				float64(6),
+				float64(7),
+				float64(8),
+				float64(99),
+				float64(0)},
+			[]any{
+				float64(1),
+				float64(205),
+				float64(3),
+				float64(4),
+				float64(5),
+				float64(96),
+				float64(7),
+				float64(8),
+				float64(9),
+				float64(0)},
+			[]any{
+				float64(1),
+				float64(2),
+				float64(35),
+				float64(4),
+				float64(5),
+				float64(6),
+				float64(7),
+				float64(18),
+				float64(19),
+				float64(0)}},
+		Orientation: to.Ptr(mlmodel.OrientationValues),
+	}
+
+	exampleRes := mlmodel.ScoreDataResponse{
+		FormatType:  to.Ptr(mlmodel.FormatTypeDataframe),
+		Orientation: to.Ptr(mlmodel.OrientationValues),
+		Predictions: [][]any{
+			[]any{
+				float64(72)},
+			[]any{
+				float64(248)},
+			[]any{
+				float64(87)},
+			[]any{
+				float64(217)},
+			[]any{
+				float64(248)},
+			[]any{
+				float64(84)},
+			[]any{
+				float64(248)},
+			[]any{
+				float64(220)},
+			[]any{
+				float64(139)},
+			[]any{
+				float64(242)}},
+	}
+
+	testsuite.serverFactory.EndpointServer.BeginScoreMLModelEndpointVersion = func(ctx context.Context, workspaceID string, modelID string, name string, scoreDataRequest mlmodel.ScoreDataRequest, options *mlmodel.EndpointClientBeginScoreMLModelEndpointVersionOptions) (resp azfake.PollerResponder[mlmodel.EndpointClientScoreMLModelEndpointVersionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleModelID, modelID)
+		testsuite.Require().Equal(exampleName, name)
+		testsuite.Require().True(reflect.DeepEqual(exampleScoreDataRequest, scoreDataRequest))
+		resp = azfake.PollerResponder[mlmodel.EndpointClientScoreMLModelEndpointVersionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, mlmodel.EndpointClientScoreMLModelEndpointVersionResponse{ScoreDataResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewEndpointClient()
+	poller, err := client.BeginScoreMLModelEndpointVersion(ctx, exampleWorkspaceID, exampleModelID, exampleName, exampleScoreDataRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ScoreDataResponse))
+}

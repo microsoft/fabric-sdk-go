@@ -28,7 +28,9 @@ type ItemsClient struct {
 	endpoint string
 }
 
-// GetItem - PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
+// GetItem - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only.
+// It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
 // LIMITATIONS Maximum 200 requests per hour.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -98,7 +100,9 @@ func (client *ItemsClient) getItemHandleResponse(resp *http.Response) (ItemsClie
 	return result, nil
 }
 
-// ListItemAccessDetails - PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
+// ListItemAccessDetails - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
 // LIMITATIONS Maximum 200 requests per hour.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -169,8 +173,10 @@ func (client *ItemsClient) listItemAccessDetailsHandleResponse(resp *http.Respon
 	return result, nil
 }
 
-// NewListItemsPager - This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records can
-// be returned per request. With the continuous token provided in the response, you can get the next
+// NewListItemsPager - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records can be returned per request.
+// With the continuous token provided in the response, you can get the next
 // 10,000 records.
 // Page order:
 // 1. Fabric items
@@ -255,6 +261,8 @@ func (client *ItemsClient) listItemsHandleResponse(resp *http.Response) (ItemsCl
 // Custom code starts below
 
 // ListItems - returns array of Item from all pages.
+// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
+//
 // This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records can be returned per request. With the continuous token provided in the response, you can get the next
 // 10,000 records.
 //

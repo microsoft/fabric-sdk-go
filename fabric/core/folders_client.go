@@ -28,7 +28,9 @@ type FoldersClient struct {
 	endpoint string
 }
 
-// CreateFolder - PERMISSIONS The caller must have contributor or higher workspace role.
+// CreateFolder - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must have contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -91,7 +93,9 @@ func (client *FoldersClient) createFolderHandleResponse(resp *http.Response) (Fo
 	return result, nil
 }
 
-// DeleteFolder - PERMISSIONS The caller must have contributor or higher workspace role.
+// DeleteFolder - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must have contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
 // LIMITATIONS
 // * This API is supported only for the empty folder. Deleting a folder with any items or nested folders inside is not allowed,
@@ -148,7 +152,9 @@ func (client *FoldersClient) deleteFolderCreateRequest(ctx context.Context, work
 	return req, nil
 }
 
-// GetFolder - PERMISSIONS The caller must have viewer or higher role on the workspace.
+// GetFolder - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only.
+// It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must have viewer or higher role on the workspace.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -212,7 +218,9 @@ func (client *FoldersClient) getFolderHandleResponse(resp *http.Response) (Folde
 	return result, nil
 }
 
-// NewListFoldersPager - This API supports pagination [/rest/api/fabric/articles/pagination].
+// NewListFoldersPager - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -283,7 +291,9 @@ func (client *FoldersClient) listFoldersHandleResponse(resp *http.Response) (Fol
 	return result, nil
 }
 
-// MoveFolder - PERMISSIONS The caller must have contributor or higher role on the workspace.
+// MoveFolder - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only.
+// It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must have contributor or higher role on the workspace.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -351,7 +361,9 @@ func (client *FoldersClient) moveFolderHandleResponse(resp *http.Response) (Fold
 	return result, nil
 }
 
-// UpdateFolder - PERMISSIONS The caller must have contributor or higher role on the workspace.
+// UpdateFolder - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must have contributor or higher role on the workspace.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -422,6 +434,8 @@ func (client *FoldersClient) updateFolderHandleResponse(resp *http.Response) (Fo
 // Custom code starts below
 
 // ListFolders - returns array of Folder from all pages.
+// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
+//
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
 // PERMISSIONS The caller must have viewer or higher workspace role.

@@ -19,6 +19,7 @@ import (
 
 	"github.com/microsoft/fabric-sdk-go/fabric/core"
 	"github.com/microsoft/fabric-sdk-go/internal/iruntime"
+	"github.com/microsoft/fabric-sdk-go/internal/pollers/locasync"
 )
 
 // ItemsClient contains the methods for the Items group.
@@ -94,7 +95,154 @@ func (client *ItemsClient) listSQLEndpointsHandleResponse(resp *http.Response) (
 	return result, nil
 }
 
+// BeginRefreshSQLEndpointMetadata - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - sqlEndpointID - The SQL analytics endpoint ID.
+//   - options - ItemsClientBeginRefreshSQLEndpointMetadataOptions contains the optional parameters for the ItemsClient.BeginRefreshSQLEndpointMetadata
+//     method.
+func (client *ItemsClient) BeginRefreshSQLEndpointMetadata(ctx context.Context, workspaceID string, sqlEndpointID string, options *ItemsClientBeginRefreshSQLEndpointMetadataOptions) (*runtime.Poller[ItemsClientRefreshSQLEndpointMetadataResponse], error) {
+	return client.beginRefreshSQLEndpointMetadata(ctx, workspaceID, sqlEndpointID, options)
+}
+
+// RefreshSQLEndpointMetadata - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) refreshSQLEndpointMetadata(ctx context.Context, workspaceID string, sqlEndpointID string, options *ItemsClientBeginRefreshSQLEndpointMetadataOptions) (*http.Response, error) {
+	var err error
+	const operationName = "sqlendpoint.ItemsClient.BeginRefreshSQLEndpointMetadata"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.refreshSQLEndpointMetadataCreateRequest(ctx, workspaceID, sqlEndpointID, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// refreshSQLEndpointMetadataCreateRequest creates the RefreshSQLEndpointMetadata request.
+func (client *ItemsClient) refreshSQLEndpointMetadataCreateRequest(ctx context.Context, workspaceID string, sqlEndpointID string, options *ItemsClientBeginRefreshSQLEndpointMetadataOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/sqlEndpoints/{sqlEndpointId}/refreshMetadata"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if sqlEndpointID == "" {
+		return nil, errors.New("parameter sqlEndpointID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{sqlEndpointId}", url.PathEscape(sqlEndpointID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if options != nil && options.SQLEndpointRefreshMetadataRequest != nil {
+		if err := runtime.MarshalAsJSON(req, *options.SQLEndpointRefreshMetadataRequest); err != nil {
+			return nil, err
+		}
+		return req, nil
+	}
+	return req, nil
+}
+
 // Custom code starts below
+
+// RefreshSQLEndpointMetadata - returns ItemsClientRefreshSQLEndpointMetadataResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS The caller must have contributor or higher workspace role.
+//
+// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - sqlEndpointID - The SQL analytics endpoint ID.
+//   - options - ItemsClientBeginRefreshSQLEndpointMetadataOptions contains the optional parameters for the ItemsClient.BeginRefreshSQLEndpointMetadata method.
+func (client *ItemsClient) RefreshSQLEndpointMetadata(ctx context.Context, workspaceID string, sqlEndpointID string, options *ItemsClientBeginRefreshSQLEndpointMetadataOptions) (ItemsClientRefreshSQLEndpointMetadataResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginRefreshSQLEndpointMetadata(ctx, workspaceID, sqlEndpointID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientRefreshSQLEndpointMetadataResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientRefreshSQLEndpointMetadataResponse{}, err
+	}
+	return result, err
+}
+
+// beginRefreshSQLEndpointMetadata creates the refreshSQLEndpointMetadata request.
+func (client *ItemsClient) beginRefreshSQLEndpointMetadata(ctx context.Context, workspaceID string, sqlEndpointID string, options *ItemsClientBeginRefreshSQLEndpointMetadataOptions) (*runtime.Poller[ItemsClientRefreshSQLEndpointMetadataResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.refreshSQLEndpointMetadata(ctx, workspaceID, sqlEndpointID, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientRefreshSQLEndpointMetadataResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientRefreshSQLEndpointMetadataResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientRefreshSQLEndpointMetadataResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientRefreshSQLEndpointMetadataResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
 
 // ListSQLEndpoints - returns array of SQLEndpoint from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].

@@ -29,7 +29,8 @@ type DiscoveryClient struct {
 	endpoint string
 }
 
-// NewDiscoverCatalogsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
+// NewDiscoverCatalogsPager - > [!NOTE] Mirrored Azure Databricks Catalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All or DatabricksCatalog.Read.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -100,7 +101,8 @@ func (client *DiscoveryClient) discoverCatalogsHandleResponse(resp *http.Respons
 	return result, nil
 }
 
-// NewDiscoverSchemasPager - This API supports pagination [/rest/api/fabric/articles/pagination].
+// NewDiscoverSchemasPager - > [!NOTE] Mirrored Azure Databricks Catalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All or DatabricksCatalog.Read.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -176,7 +178,8 @@ func (client *DiscoveryClient) discoverSchemasHandleResponse(resp *http.Response
 	return result, nil
 }
 
-// NewDiscoverTablesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
+// NewDiscoverTablesPager - > [!NOTE] Mirrored Azure Databricks Catalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All or DatabricksCatalog.Read.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -260,6 +263,8 @@ func (client *DiscoveryClient) discoverTablesHandleResponse(resp *http.Response)
 // Custom code starts below
 
 // DiscoverCatalogs - returns array of DatabricksCatalog from all pages.
+// >  [!NOTE] Mirrored Azure Databricks Catalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+//
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
 // PERMISSIONS The caller must have viewer or higher workspace role.
@@ -293,6 +298,8 @@ func (client *DiscoveryClient) DiscoverCatalogs(ctx context.Context, workspaceID
 }
 
 // DiscoverSchemas - returns array of DatabricksSchema from all pages.
+// >  [!NOTE] Mirrored Azure Databricks Catalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+//
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
 // PERMISSIONS The caller must have viewer or higher workspace role.
@@ -327,6 +334,8 @@ func (client *DiscoveryClient) DiscoverSchemas(ctx context.Context, workspaceID 
 }
 
 // DiscoverTables - returns array of DatabricksTable from all pages.
+// >  [!NOTE] Mirrored Azure Databricks Catalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+//
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
 // PERMISSIONS The caller must have viewer or higher workspace role.

@@ -156,7 +156,7 @@ func (client *ConnectionsClient) createConnectionCreateRequest(ctx context.Conte
 // createConnectionHandleResponse handles the CreateConnection response.
 func (client *ConnectionsClient) createConnectionHandleResponse(resp *http.Response) (ConnectionsClientCreateConnectionResponse, error) {
 	result := ConnectionsClientCreateConnectionResponse{}
-	if err := runtime.UnmarshalAsJSON(resp, &result.Connection); err != nil {
+	if err := runtime.UnmarshalAsJSON(resp, &result); err != nil {
 		return ConnectionsClientCreateConnectionResponse{}, err
 	}
 	return result, nil
@@ -325,7 +325,7 @@ func (client *ConnectionsClient) getConnectionCreateRequest(ctx context.Context,
 // getConnectionHandleResponse handles the GetConnection response.
 func (client *ConnectionsClient) getConnectionHandleResponse(resp *http.Response) (ConnectionsClientGetConnectionResponse, error) {
 	result := ConnectionsClientGetConnectionResponse{}
-	if err := runtime.UnmarshalAsJSON(resp, &result.Connection); err != nil {
+	if err := runtime.UnmarshalAsJSON(resp, &result); err != nil {
 		return ConnectionsClientGetConnectionResponse{}, err
 	}
 	return result, nil
@@ -650,7 +650,7 @@ func (client *ConnectionsClient) updateConnectionCreateRequest(ctx context.Conte
 // updateConnectionHandleResponse handles the UpdateConnection response.
 func (client *ConnectionsClient) updateConnectionHandleResponse(resp *http.Response) (ConnectionsClientUpdateConnectionResponse, error) {
 	result := ConnectionsClientUpdateConnectionResponse{}
-	if err := runtime.UnmarshalAsJSON(resp, &result.Connection); err != nil {
+	if err := runtime.UnmarshalAsJSON(resp, &result); err != nil {
 		return ConnectionsClientUpdateConnectionResponse{}, err
 	}
 	return result, nil
@@ -763,7 +763,7 @@ func (client *ConnectionsClient) ListConnectionRoleAssignments(ctx context.Conte
 	return list, nil
 }
 
-// ListConnections - returns array of Connection from all pages.
+// ListConnections - returns array of ConnectionClassification from all pages.
 // PERMISSIONS The caller must have permission for the connection.
 //
 // # REQUIRED DELEGATED SCOPES Connection.Read.All or Connection.ReadWrite.All
@@ -776,18 +776,18 @@ func (client *ConnectionsClient) ListConnectionRoleAssignments(ctx context.Conte
 // INTERFACE
 // Generated from API version v1
 //   - options - ConnectionsClientListConnectionsOptions contains the optional parameters for the ConnectionsClient.NewListConnectionsPager method.
-func (client *ConnectionsClient) ListConnections(ctx context.Context, options *ConnectionsClientListConnectionsOptions) ([]Connection, error) {
+func (client *ConnectionsClient) ListConnections(ctx context.Context, options *ConnectionsClientListConnectionsOptions) ([]ConnectionClassification, error) {
 	pager := client.NewListConnectionsPager(options)
-	mapper := func(resp ConnectionsClientListConnectionsResponse) []Connection {
+	mapper := func(resp ConnectionsClientListConnectionsResponse) []ConnectionClassification {
 		return resp.Value
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
 		var azcoreRespError *azcore.ResponseError
 		if errors.As(err, &azcoreRespError) {
-			return []Connection{}, NewResponseError(azcoreRespError.RawResponse)
+			return []ConnectionClassification{}, NewResponseError(azcoreRespError.RawResponse)
 		}
-		return []Connection{}, err
+		return []ConnectionClassification{}, err
 	}
 	return list, nil
 }

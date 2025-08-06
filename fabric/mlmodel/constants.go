@@ -6,6 +6,40 @@
 
 package mlmodel
 
+// EndpointDefaultVersionConfigurationPolicy - The default version assignment behavior of a given machine learning model endpoint.
+// Additional EndpointDefaultVersionConfigurationPolicy types may be added over time.
+type EndpointDefaultVersionConfigurationPolicy string
+
+const (
+	// EndpointDefaultVersionConfigurationPolicyNotConfigured - No default version has been configured.
+	EndpointDefaultVersionConfigurationPolicyNotConfigured EndpointDefaultVersionConfigurationPolicy = "NotConfigured"
+	// EndpointDefaultVersionConfigurationPolicyStaticallyConfigured - The default version is statically configured.
+	EndpointDefaultVersionConfigurationPolicyStaticallyConfigured EndpointDefaultVersionConfigurationPolicy = "StaticallyConfigured"
+)
+
+// PossibleEndpointDefaultVersionConfigurationPolicyValues returns the possible values for the EndpointDefaultVersionConfigurationPolicy const type.
+func PossibleEndpointDefaultVersionConfigurationPolicyValues() []EndpointDefaultVersionConfigurationPolicy {
+	return []EndpointDefaultVersionConfigurationPolicy{
+		EndpointDefaultVersionConfigurationPolicyNotConfigured,
+		EndpointDefaultVersionConfigurationPolicyStaticallyConfigured,
+	}
+}
+
+// FormatType - Format type of data. Additional Format types may be added over time.
+type FormatType string
+
+const (
+	// FormatTypeDataframe - Dataframe format type.
+	FormatTypeDataframe FormatType = "dataframe"
+)
+
+// PossibleFormatTypeValues returns the possible values for the FormatType const type.
+func PossibleFormatTypeValues() []FormatType {
+	return []FormatType{
+		FormatTypeDataframe,
+	}
+}
+
 // ItemType - The type of the item. Additional item types may be added over time.
 type ItemType string
 
@@ -114,5 +148,78 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeVariableLibrary,
 		ItemTypeWarehouse,
 		ItemTypeWarehouseSnapshot,
+	}
+}
+
+// ModelEndpointVersionStatus - The status of a given machine learning model endpoint version. Additional ModelEndpointVersionStatus
+// types may be added over time.
+type ModelEndpointVersionStatus string
+
+const (
+	// ModelEndpointVersionStatusActivating - Machine learning model endpoint activation is under progress.
+	ModelEndpointVersionStatusActivating ModelEndpointVersionStatus = "Activating"
+	// ModelEndpointVersionStatusActive - Machine learning model endpoint is available to serve score requests.
+	ModelEndpointVersionStatusActive ModelEndpointVersionStatus = "Active"
+	// ModelEndpointVersionStatusDeactivated - All resources are deactivated.
+	ModelEndpointVersionStatusDeactivated ModelEndpointVersionStatus = "Deactivated"
+	// ModelEndpointVersionStatusDeactivating - Machine learning model endpoint deactivation is in progress.
+	ModelEndpointVersionStatusDeactivating ModelEndpointVersionStatus = "Deactivating"
+	// ModelEndpointVersionStatusFailed - Machine learning model endpoint is in failed state.
+	ModelEndpointVersionStatusFailed ModelEndpointVersionStatus = "Failed"
+)
+
+// PossibleModelEndpointVersionStatusValues returns the possible values for the ModelEndpointVersionStatus const type.
+func PossibleModelEndpointVersionStatusValues() []ModelEndpointVersionStatus {
+	return []ModelEndpointVersionStatus{
+		ModelEndpointVersionStatusActivating,
+		ModelEndpointVersionStatusActive,
+		ModelEndpointVersionStatusDeactivated,
+		ModelEndpointVersionStatusDeactivating,
+		ModelEndpointVersionStatusFailed,
+	}
+}
+
+// Orientation - Orientation of data. Additional Orientation types may be added over time.
+type Orientation string
+
+const (
+	// OrientationIndex - Index orientation.
+	OrientationIndex Orientation = "index"
+	// OrientationRecord - Record orientation.
+	OrientationRecord Orientation = "record"
+	// OrientationSplit - Split orientation.
+	OrientationSplit Orientation = "split"
+	// OrientationTable - Table orientation.
+	OrientationTable Orientation = "table"
+	// OrientationValues - Values orientation.
+	OrientationValues Orientation = "values"
+)
+
+// PossibleOrientationValues returns the possible values for the Orientation const type.
+func PossibleOrientationValues() []Orientation {
+	return []Orientation{
+		OrientationIndex,
+		OrientationRecord,
+		OrientationSplit,
+		OrientationTable,
+		OrientationValues,
+	}
+}
+
+// ScaleRule - Machine learning model endpoint scale rule. Additional ScaleRule types may be added over time.
+type ScaleRule string
+
+const (
+	// ScaleRuleAllowScaleToZero - Machine learning model endpoint can be scaled to zero after a period of inactivity.
+	ScaleRuleAllowScaleToZero ScaleRule = "AllowScaleToZero"
+	// ScaleRuleAlwaysOn - Machine learning model endpoint should be AlwaysOn.
+	ScaleRuleAlwaysOn ScaleRule = "AlwaysOn"
+)
+
+// PossibleScaleRuleValues returns the possible values for the ScaleRule const type.
+func PossibleScaleRuleValues() []ScaleRule {
+	return []ScaleRule{
+		ScaleRuleAllowScaleToZero,
+		ScaleRuleAlwaysOn,
 	}
 }

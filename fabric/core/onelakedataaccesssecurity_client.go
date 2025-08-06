@@ -26,7 +26,9 @@ type OneLakeDataAccessSecurityClient struct {
 	endpoint string
 }
 
-// CreateOrUpdateDataAccessRoles - REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// CreateOrUpdateDataAccessRoles - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -107,7 +109,9 @@ func (client *OneLakeDataAccessSecurityClient) createOrUpdateDataAccessRolesHand
 	return result, nil
 }
 
-// ListDataAccessRoles - REQUIRED DELEGATED SCOPES OneLake.Read.All or OneLake.ReadWrite.All
+// ListDataAccessRoles - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// REQUIRED DELEGATED SCOPES OneLake.Read.All or OneLake.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]

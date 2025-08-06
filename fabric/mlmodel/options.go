@@ -6,6 +6,71 @@
 
 package mlmodel
 
+// EndpointClientBeginActivateMLModelEndpointVersionOptions contains the optional parameters for the EndpointClient.BeginActivateMLModelEndpointVersion
+// method.
+type EndpointClientBeginActivateMLModelEndpointVersionOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// EndpointClientBeginDeactivateAllMLModelEndpointVersionsOptions contains the optional parameters for the EndpointClient.BeginDeactivateAllMLModelEndpointVersions
+// method.
+type EndpointClientBeginDeactivateAllMLModelEndpointVersionsOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// EndpointClientBeginDeactivateMLModelEndpointVersionOptions contains the optional parameters for the EndpointClient.BeginDeactivateMLModelEndpointVersion
+// method.
+type EndpointClientBeginDeactivateMLModelEndpointVersionOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// EndpointClientBeginScoreMLModelEndpointOptions contains the optional parameters for the EndpointClient.BeginScoreMLModelEndpoint
+// method.
+type EndpointClientBeginScoreMLModelEndpointOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// EndpointClientBeginScoreMLModelEndpointVersionOptions contains the optional parameters for the EndpointClient.BeginScoreMLModelEndpointVersion
+// method.
+type EndpointClientBeginScoreMLModelEndpointVersionOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// EndpointClientGetMLModelEndpointOptions contains the optional parameters for the EndpointClient.GetMLModelEndpoint method.
+type EndpointClientGetMLModelEndpointOptions struct {
+	// placeholder for future optional parameters
+}
+
+// EndpointClientGetMLModelEndpointVersionOptions contains the optional parameters for the EndpointClient.GetMLModelEndpointVersion
+// method.
+type EndpointClientGetMLModelEndpointVersionOptions struct {
+	// placeholder for future optional parameters
+}
+
+// EndpointClientListMLModelEndpointVersionsOptions contains the optional parameters for the EndpointClient.NewListMLModelEndpointVersionsPager
+// method.
+type EndpointClientListMLModelEndpointVersionsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// EndpointClientUpdateMLModelEndpointOptions contains the optional parameters for the EndpointClient.UpdateMLModelEndpoint
+// method.
+type EndpointClientUpdateMLModelEndpointOptions struct {
+	// placeholder for future optional parameters
+}
+
+// EndpointClientUpdateMLModelEndpointVersionOptions contains the optional parameters for the EndpointClient.UpdateMLModelEndpointVersion
+// method.
+type EndpointClientUpdateMLModelEndpointVersionOptions struct {
+	// placeholder for future optional parameters
+}
+
 // ItemsClientBeginCreateMLModelOptions contains the optional parameters for the ItemsClient.BeginCreateMLModel method.
 type ItemsClientBeginCreateMLModelOptions struct {
 	// Resumes the long-running operation from the provided token.

@@ -214,7 +214,7 @@ func (c *ConnectionsServerTransport) dispatchCreateConnection(req *http.Request)
 	if !contains([]int{http.StatusCreated}, respContent.HTTPStatus) {
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated", respContent.HTTPStatus)}
 	}
-	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).Connection, req)
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).ConnectionClassification, req)
 	if err != nil {
 		return nil, err
 	}
@@ -305,7 +305,7 @@ func (c *ConnectionsServerTransport) dispatchGetConnection(req *http.Request) (*
 	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
 	}
-	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).Connection, req)
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).ConnectionClassification, req)
 	if err != nil {
 		return nil, err
 	}
@@ -517,7 +517,7 @@ func (c *ConnectionsServerTransport) dispatchUpdateConnection(req *http.Request)
 	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
 	}
-	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).Connection, req)
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).ConnectionClassification, req)
 	if err != nil {
 		return nil, err
 	}

@@ -556,7 +556,7 @@ func ExampleItemsClient_NewListItemConnectionsPager_listItemConnectionsExample()
 		// 				Type: to.Ptr("SQL"),
 		// 				Path: to.Ptr("contoso.database.windows.net;sales"),
 		// 			},
-		// 			ConnectivityType: to.Ptr(core.ConnectivityType("OnPremisesDataGateway")),
+		// 			ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGateway),
 		// 			DisplayName: to.Ptr("ContosoConnection2"),
 		// 			GatewayID: to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
 		// 			ID: to.Ptr("0b9af1bd-e974-4893-8947-d89d5a560385"),

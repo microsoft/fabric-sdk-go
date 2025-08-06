@@ -1220,27 +1220,18 @@ func PossibleScheduleTypeValues() []ScheduleType {
 type ShortcutConflictPolicy string
 
 const (
-	// ShortcutConflictPolicyAbort - When a shortcut with the same name and path already exists the shortcut creation will be
-	// cancelled.
+	// ShortcutConflictPolicyAbort - When a shortcut with the same name and path already exists the shortcut creation is cancelled.
 	ShortcutConflictPolicyAbort ShortcutConflictPolicy = "Abort"
-	// ShortcutConflictPolicyCreateOrOverwrite - When a shortcut with the same name and path already exists the shortcut creation
-	// will overwrite the existing shortcut. Create shortcut if it does not exist.
-	ShortcutConflictPolicyCreateOrOverwrite ShortcutConflictPolicy = "CreateOrOverwrite"
-	// ShortcutConflictPolicyGenerateUniqueName - When a shortcut with the same name and path already exists the shortcut creation
-	// will continue with a new unique shortcut name.
+	// ShortcutConflictPolicyGenerateUniqueName - When a shortcut with the same name and path already exists, the shortcut is
+	// created with a new unique name.
 	ShortcutConflictPolicyGenerateUniqueName ShortcutConflictPolicy = "GenerateUniqueName"
-	// ShortcutConflictPolicyOverwriteOnly - When a shortcut with the same name and path already exists the shortcut creation
-	// will overwrite the existing shortcut.
-	ShortcutConflictPolicyOverwriteOnly ShortcutConflictPolicy = "OverwriteOnly"
 )
 
 // PossibleShortcutConflictPolicyValues returns the possible values for the ShortcutConflictPolicy const type.
 func PossibleShortcutConflictPolicyValues() []ShortcutConflictPolicy {
 	return []ShortcutConflictPolicy{
 		ShortcutConflictPolicyAbort,
-		ShortcutConflictPolicyCreateOrOverwrite,
 		ShortcutConflictPolicyGenerateUniqueName,
-		ShortcutConflictPolicyOverwriteOnly,
 	}
 }
 
@@ -1272,33 +1263,36 @@ func PossibleSingleSignOnTypeValues() []SingleSignOnType {
 	}
 }
 
-// Status - The item job status. Additional statuses may be added over time.
+// Status - The status of create shortcut. Additional status may be added over time.
 type Status string
 
 const (
-	// StatusCancelled - Job cancelled
-	StatusCancelled Status = "Cancelled"
-	// StatusCompleted - Job completed
-	StatusCompleted Status = "Completed"
-	// StatusDeduped - A job instance of the same job type is already running and this job instance is skipped
-	StatusDeduped Status = "Deduped"
-	// StatusFailed - Job failed
+	// StatusFailed - The operation has failed.
 	StatusFailed Status = "Failed"
-	// StatusInProgress - Job in progress
-	StatusInProgress Status = "InProgress"
-	// StatusNotStarted - Job not started
-	StatusNotStarted Status = "NotStarted"
+	// StatusSucceeded - The operation has completed successfully.
+	StatusSucceeded Status = "Succeeded"
 )
 
 // PossibleStatusValues returns the possible values for the Status const type.
 func PossibleStatusValues() []Status {
 	return []Status{
-		StatusCancelled,
-		StatusCompleted,
-		StatusDeduped,
 		StatusFailed,
-		StatusInProgress,
-		StatusNotStarted,
+		StatusSucceeded,
+	}
+}
+
+// TransformType - The type of transform. Additional transform types may be added over time.
+type TransformType string
+
+const (
+	// TransformTypeCSVToDelta - Transform CSV files to Delta format.
+	TransformTypeCSVToDelta TransformType = "csvToDelta"
+)
+
+// PossibleTransformTypeValues returns the possible values for the TransformType const type.
+func PossibleTransformTypeValues() []TransformType {
+	return []TransformType{
+		TransformTypeCSVToDelta,
 	}
 }
 

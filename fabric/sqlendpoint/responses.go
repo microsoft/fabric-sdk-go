@@ -11,3 +11,9 @@ type ItemsClientListSQLEndpointsResponse struct {
 	// A list of SQL endpoints.
 	SQLEndpoints
 }
+
+// ItemsClientRefreshSQLEndpointMetadataResponse contains the response from method ItemsClient.BeginRefreshSQLEndpointMetadata.
+type ItemsClientRefreshSQLEndpointMetadataResponse struct {
+	// A list of table synchronization statuses.
+	TableSyncStatuses
+}

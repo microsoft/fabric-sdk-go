@@ -7,10 +7,12 @@
 package fake
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
+	"reflect"
 	"regexp"
 	"strings"
 
@@ -27,6 +29,10 @@ type ItemsServer struct {
 	// NewListSQLEndpointsPager is the fake for method ItemsClient.NewListSQLEndpointsPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListSQLEndpointsPager func(workspaceID string, options *sqlendpoint.ItemsClientListSQLEndpointsOptions) (resp azfake.PagerResponder[sqlendpoint.ItemsClientListSQLEndpointsResponse])
+
+	// BeginRefreshSQLEndpointMetadata is the fake for method ItemsClient.BeginRefreshSQLEndpointMetadata
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	BeginRefreshSQLEndpointMetadata func(ctx context.Context, workspaceID string, sqlEndpointID string, options *sqlendpoint.ItemsClientBeginRefreshSQLEndpointMetadataOptions) (resp azfake.PollerResponder[sqlendpoint.ItemsClientRefreshSQLEndpointMetadataResponse], errResp azfake.ErrorResponder)
 }
 
 // NewItemsServerTransport creates a new instance of ItemsServerTransport with the provided implementation.
@@ -34,16 +40,18 @@ type ItemsServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewItemsServerTransport(srv *ItemsServer) *ItemsServerTransport {
 	return &ItemsServerTransport{
-		srv:                      srv,
-		newListSQLEndpointsPager: newTracker[azfake.PagerResponder[sqlendpoint.ItemsClientListSQLEndpointsResponse]](),
+		srv:                             srv,
+		newListSQLEndpointsPager:        newTracker[azfake.PagerResponder[sqlendpoint.ItemsClientListSQLEndpointsResponse]](),
+		beginRefreshSQLEndpointMetadata: newTracker[azfake.PollerResponder[sqlendpoint.ItemsClientRefreshSQLEndpointMetadataResponse]](),
 	}
 }
 
 // ItemsServerTransport connects instances of sqlendpoint.ItemsClient to instances of ItemsServer.
 // Don't use this type directly, use NewItemsServerTransport instead.
 type ItemsServerTransport struct {
-	srv                      *ItemsServer
-	newListSQLEndpointsPager *tracker[azfake.PagerResponder[sqlendpoint.ItemsClientListSQLEndpointsResponse]]
+	srv                             *ItemsServer
+	newListSQLEndpointsPager        *tracker[azfake.PagerResponder[sqlendpoint.ItemsClientListSQLEndpointsResponse]]
+	beginRefreshSQLEndpointMetadata *tracker[azfake.PollerResponder[sqlendpoint.ItemsClientRefreshSQLEndpointMetadataResponse]]
 }
 
 // Do implements the policy.Transporter interface for ItemsServerTransport.
@@ -73,6 +81,8 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 			switch method {
 			case "ItemsClient.NewListSQLEndpointsPager":
 				res.resp, res.err = i.dispatchNewListSQLEndpointsPager(req)
+			case "ItemsClient.BeginRefreshSQLEndpointMetadata":
+				res.resp, res.err = i.dispatchBeginRefreshSQLEndpointMetadata(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -138,6 +148,60 @@ func (i *ItemsServerTransport) dispatchNewListSQLEndpointsPager(req *http.Reques
 	if !server.PagerResponderMore(newListSQLEndpointsPager) {
 		i.newListSQLEndpointsPager.remove(req)
 	}
+	return resp, nil
+}
+
+func (i *ItemsServerTransport) dispatchBeginRefreshSQLEndpointMetadata(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginRefreshSQLEndpointMetadata == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginRefreshSQLEndpointMetadata not implemented")}
+	}
+	beginRefreshSQLEndpointMetadata := i.beginRefreshSQLEndpointMetadata.get(req)
+	if beginRefreshSQLEndpointMetadata == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sqlEndpoints/(?P<sqlEndpointId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/refreshMetadata`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		body, err := server.UnmarshalRequestAsJSON[sqlendpoint.RefreshMetadataRequest](req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		sqlEndpointIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("sqlEndpointId")])
+		if err != nil {
+			return nil, err
+		}
+		var options *sqlendpoint.ItemsClientBeginRefreshSQLEndpointMetadataOptions
+		if !reflect.ValueOf(body).IsZero() {
+			options = &sqlendpoint.ItemsClientBeginRefreshSQLEndpointMetadataOptions{
+				SQLEndpointRefreshMetadataRequest: &body,
+			}
+		}
+		respr, errRespr := i.srv.BeginRefreshSQLEndpointMetadata(req.Context(), workspaceIDParam, sqlEndpointIDParam, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginRefreshSQLEndpointMetadata = &respr
+		i.beginRefreshSQLEndpointMetadata.add(req, beginRefreshSQLEndpointMetadata)
+	}
+
+	resp, err := server.PollerResponderNext(beginRefreshSQLEndpointMetadata, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+		i.beginRefreshSQLEndpointMetadata.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginRefreshSQLEndpointMetadata) {
+		i.beginRefreshSQLEndpointMetadata.remove(req)
+	}
+
 	return resp, nil
 }
 

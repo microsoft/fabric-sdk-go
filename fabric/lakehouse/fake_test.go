@@ -456,6 +456,32 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandTableMaintenance()
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
+func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandRefreshMaterializedLakeViews() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Run RefreshMaterializedLakeViews with no request body."},
+	})
+	var exampleWorkspaceID string
+	var exampleLakehouseID string
+	var exampleJobType string
+	exampleWorkspaceID = "4b218778-e7a5-4d73-8187-f10824047715"
+	exampleLakehouseID = "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"
+	exampleJobType = "RefreshMaterializedLakeViews"
+
+	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandRefreshMaterializedLakeViews = func(ctx context.Context, workspaceID string, lakehouseID string, jobType string, options *lakehouse.BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleLakehouseID, lakehouseID)
+		testsuite.Require().Equal(exampleJobType, jobType)
+		resp = azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse]{}
+		resp.SetResponse(http.StatusAccepted, lakehouse.BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewBackgroundJobsClient()
+	_, err = client.RunOnDemandRefreshMaterializedLakeViews(ctx, exampleWorkspaceID, exampleLakehouseID, exampleJobType, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
 func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessions() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{

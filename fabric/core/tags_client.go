@@ -27,7 +27,9 @@ type TagsClient struct {
 	endpoint string
 }
 
-// ApplyTags - PERMISSIONS The caller must have contributor or higher role on the workspace.
+// ApplyTags - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only.
+// It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must have contributor or higher role on the workspace.
 // REQUIRED DELEGATED SCOPES ItemMetadata.ReadWrite.All or these scope types:
 // * Generic scope: Item.ReadWrite.All
 //
@@ -92,7 +94,9 @@ func (client *TagsClient) applyTagsCreateRequest(ctx context.Context, workspaceI
 	return req, nil
 }
 
-// NewListTagsPager - REQUIRED DELEGATED SCOPES Tag.Read.All
+// NewListTagsPager - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// REQUIRED DELEGATED SCOPES Tag.Read.All
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -151,7 +155,9 @@ func (client *TagsClient) listTagsHandleResponse(resp *http.Response) (TagsClien
 	return result, nil
 }
 
-// UnapplyTags - PERMISSIONS The caller must have contributor or higher role on the workspace.
+// UnapplyTags - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only.
+// It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must have contributor or higher role on the workspace.
 // REQUIRED DELEGATED SCOPES ItemMetadata.ReadWrite.All or these scope types:
 // * Generic scope: Item.ReadWrite.All
 //
@@ -219,7 +225,9 @@ func (client *TagsClient) unapplyTagsCreateRequest(ctx context.Context, workspac
 // Custom code starts below
 
 // ListTags - returns array of Tag from all pages.
-// REQUIRED DELEGATED SCOPES Tag.Read.All
+// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
+//
+// # REQUIRED DELEGATED SCOPES Tag.Read.All
 //
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 //

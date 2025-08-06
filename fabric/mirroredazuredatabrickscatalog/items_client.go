@@ -29,7 +29,9 @@ type ItemsClient struct {
 	endpoint string
 }
 
-// BeginCreateMirroredAzureDatabricksCatalog - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// BeginCreateMirroredAzureDatabricksCatalog - > [!NOTE] Mirrored Azure Databricks Catalog item is currently in Preview (learn
+// more [/fabric/fundamentals/preview]).
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES MirroredAzureDatabricksCatalog.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -49,7 +51,9 @@ func (client *ItemsClient) BeginCreateMirroredAzureDatabricksCatalog(ctx context
 	return client.beginCreateMirroredAzureDatabricksCatalog(ctx, workspaceID, createMirroredAzureDatabricksCatalogRequest, options)
 }
 
-// CreateMirroredAzureDatabricksCatalog - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// CreateMirroredAzureDatabricksCatalog - > [!NOTE] Mirrored Azure Databricks Catalog item is currently in Preview (learn
+// more [/fabric/fundamentals/preview]).
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES MirroredAzureDatabricksCatalog.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -100,8 +104,9 @@ func (client *ItemsClient) createMirroredAzureDatabricksCatalogCreateRequest(ctx
 	return req, nil
 }
 
-// DeleteMirroredAzureDatabricksCatalog - PERMISSIONS The caller must have write permissions for the mirrored azure databricks
-// catalog.
+// DeleteMirroredAzureDatabricksCatalog - > [!NOTE] Mirrored Azure Databricks Catalog item is currently in Preview (learn
+// more [/fabric/fundamentals/preview]).
+// PERMISSIONS The caller must have write permissions for the mirrored azure databricks catalog.
 // REQUIRED DELEGATED SCOPES MirroredAzureDatabricksCatalog.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -156,8 +161,9 @@ func (client *ItemsClient) deleteMirroredAzureDatabricksCatalogCreateRequest(ctx
 	return req, nil
 }
 
-// GetMirroredAzureDatabricksCatalog - PERMISSIONS The caller must have read permissions for the mirrored azure databricks
-// catalog.
+// GetMirroredAzureDatabricksCatalog - > [!NOTE] Mirrored Azure Databricks Catalog item is currently in Preview (learn more
+// [/fabric/fundamentals/preview]).
+// PERMISSIONS The caller must have read permissions for the mirrored azure databricks catalog.
 // REQUIRED DELEGATED SCOPES MirroredAzureDatabricksCatalog.Read.All or MirroredAzureDatabricksCatalog.ReadWrite.All or Item.Read.All
 // or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -223,7 +229,9 @@ func (client *ItemsClient) getMirroredAzureDatabricksCatalogHandleResponse(resp 
 	return result, nil
 }
 
-// BeginGetMirroredAzureDatabricksCatalogDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// BeginGetMirroredAzureDatabricksCatalogDefinition - > [!NOTE] Mirrored Azure Databricks Catalog item is currently in Preview
+// (learn more [/fabric/fundamentals/preview]).
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must have read and write permissions for the mirrored azure databricks catalog.
 // REQUIRED DELEGATED SCOPES MirroredAzureDatabricksCatalog.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -243,7 +251,9 @@ func (client *ItemsClient) BeginGetMirroredAzureDatabricksCatalogDefinition(ctx 
 	return client.beginGetMirroredAzureDatabricksCatalogDefinition(ctx, workspaceID, mirroredAzureDatabricksCatalogID, options)
 }
 
-// GetMirroredAzureDatabricksCatalogDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// GetMirroredAzureDatabricksCatalogDefinition - > [!NOTE] Mirrored Azure Databricks Catalog item is currently in Preview
+// (learn more [/fabric/fundamentals/preview]).
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must have read and write permissions for the mirrored azure databricks catalog.
 // REQUIRED DELEGATED SCOPES MirroredAzureDatabricksCatalog.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -295,7 +305,9 @@ func (client *ItemsClient) getMirroredAzureDatabricksCatalogDefinitionCreateRequ
 	return req, nil
 }
 
-// NewListMirroredAzureDatabricksCatalogsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
+// NewListMirroredAzureDatabricksCatalogsPager - > [!NOTE] Mirrored Azure Databricks Catalog item is currently in Preview
+// (learn more [/fabric/fundamentals/preview]).
+// This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -361,8 +373,9 @@ func (client *ItemsClient) listMirroredAzureDatabricksCatalogsHandleResponse(res
 	return result, nil
 }
 
-// UpdateMirroredAzureDatabricksCatalog - PERMISSIONS The caller must have read and write permissions for the mirrored azure
-// databricks catalog.
+// UpdateMirroredAzureDatabricksCatalog - > [!NOTE] Mirrored Azure Databricks Catalog item is currently in Preview (learn
+// more [/fabric/fundamentals/preview]).
+// PERMISSIONS The caller must have read and write permissions for the mirrored azure databricks catalog.
 // REQUIRED DELEGATED SCOPES MirroredAzureDatabricksCatalog.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -431,7 +444,9 @@ func (client *ItemsClient) updateMirroredAzureDatabricksCatalogHandleResponse(re
 	return result, nil
 }
 
-// BeginUpdateMirroredAzureDatabricksCatalogDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// BeginUpdateMirroredAzureDatabricksCatalogDefinition - > [!NOTE] Mirrored Azure Databricks Catalog item is currently in
+// Preview (learn more [/fabric/fundamentals/preview]).
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must have read and write permissions for the mirrored azure databricks catalog.
 // REQUIRED DELEGATED SCOPES MirroredAzureDatabricksCatalog.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -452,7 +467,9 @@ func (client *ItemsClient) BeginUpdateMirroredAzureDatabricksCatalogDefinition(c
 	return client.beginUpdateMirroredAzureDatabricksCatalogDefinition(ctx, workspaceID, mirroredAzureDatabricksCatalogID, updateMirroredAzureDatabricksCatalogDefinitionRequest, options)
 }
 
-// UpdateMirroredAzureDatabricksCatalogDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// UpdateMirroredAzureDatabricksCatalogDefinition - > [!NOTE] Mirrored Azure Databricks Catalog item is currently in Preview
+// (learn more [/fabric/fundamentals/preview]).
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must have read and write permissions for the mirrored azure databricks catalog.
 // REQUIRED DELEGATED SCOPES MirroredAzureDatabricksCatalog.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -510,6 +527,8 @@ func (client *ItemsClient) updateMirroredAzureDatabricksCatalogDefinitionCreateR
 // Custom code starts below
 
 // CreateMirroredAzureDatabricksCatalog - returns ItemsClientCreateMirroredAzureDatabricksCatalogResponse in sync mode.
+// >  [!NOTE] Mirrored Azure Databricks Catalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+//
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
 // PERMISSIONS The caller must have a contributor workspace role.
@@ -579,6 +598,8 @@ func (client *ItemsClient) beginCreateMirroredAzureDatabricksCatalog(ctx context
 }
 
 // GetMirroredAzureDatabricksCatalogDefinition - returns ItemsClientGetMirroredAzureDatabricksCatalogDefinitionResponse in sync mode.
+// >  [!NOTE] Mirrored Azure Databricks Catalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+//
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
 // PERMISSIONS The caller must have read and write permissions for the mirrored azure databricks catalog.
@@ -648,6 +669,8 @@ func (client *ItemsClient) beginGetMirroredAzureDatabricksCatalogDefinition(ctx 
 }
 
 // UpdateMirroredAzureDatabricksCatalogDefinition - returns ItemsClientUpdateMirroredAzureDatabricksCatalogDefinitionResponse in sync mode.
+// >  [!NOTE] Mirrored Azure Databricks Catalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+//
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
 // PERMISSIONS The caller must have read and write permissions for the mirrored azure databricks catalog.
@@ -718,6 +741,8 @@ func (client *ItemsClient) beginUpdateMirroredAzureDatabricksCatalogDefinition(c
 }
 
 // ListMirroredAzureDatabricksCatalogs - returns array of MirroredAzureDatabricksCatalog from all pages.
+// >  [!NOTE] Mirrored Azure Databricks Catalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+//
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
 // PERMISSIONS The caller must have a viewer workspace role.

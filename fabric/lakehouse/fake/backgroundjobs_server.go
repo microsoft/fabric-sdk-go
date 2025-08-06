@@ -25,6 +25,10 @@ import (
 
 // BackgroundJobsServer is a fake server for instances of the lakehouse.BackgroundJobsClient type.
 type BackgroundJobsServer struct {
+	// RunOnDemandRefreshMaterializedLakeViews is the fake for method BackgroundJobsClient.RunOnDemandRefreshMaterializedLakeViews
+	// HTTP status codes to indicate success: http.StatusAccepted
+	RunOnDemandRefreshMaterializedLakeViews func(ctx context.Context, workspaceID string, lakehouseID string, jobType string, options *lakehouse.BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse], errResp azfake.ErrorResponder)
+
 	// RunOnDemandTableMaintenance is the fake for method BackgroundJobsClient.RunOnDemandTableMaintenance
 	// HTTP status codes to indicate success: http.StatusAccepted
 	RunOnDemandTableMaintenance func(ctx context.Context, workspaceID string, lakehouseID string, jobType string, runOnDemandTableMaintenanceRequest lakehouse.RunOnDemandTableMaintenanceRequest, options *lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceResponse], errResp azfake.ErrorResponder)
@@ -68,6 +72,8 @@ func (b *BackgroundJobsServerTransport) dispatchToMethodFake(req *http.Request, 
 		}
 		if !intercepted {
 			switch method {
+			case "BackgroundJobsClient.RunOnDemandRefreshMaterializedLakeViews":
+				res.resp, res.err = b.dispatchRunOnDemandRefreshMaterializedLakeViews(req)
 			case "BackgroundJobsClient.RunOnDemandTableMaintenance":
 				res.resp, res.err = b.dispatchRunOnDemandTableMaintenance(req)
 			default:
@@ -87,6 +93,50 @@ func (b *BackgroundJobsServerTransport) dispatchToMethodFake(req *http.Request, 
 	case res := <-resultChan:
 		return res.resp, res.err
 	}
+}
+
+func (b *BackgroundJobsServerTransport) dispatchRunOnDemandRefreshMaterializedLakeViews(req *http.Request) (*http.Response, error) {
+	if b.srv.RunOnDemandRefreshMaterializedLakeViews == nil {
+		return nil, &nonRetriableError{errors.New("fake for method RunOnDemandRefreshMaterializedLakeViews not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/instances`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	qp := req.URL.Query()
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	lakehouseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("lakehouseId")])
+	if err != nil {
+		return nil, err
+	}
+	jobTypeParam, err := url.QueryUnescape(qp.Get("jobType"))
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := b.srv.RunOnDemandRefreshMaterializedLakeViews(req.Context(), workspaceIDParam, lakehouseIDParam, jobTypeParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusAccepted}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusAccepted", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	if val := server.GetResponse(respr).Location; val != nil {
+		resp.Header.Set("Location", *val)
+	}
+	if val := server.GetResponse(respr).RetryAfter; val != nil {
+		resp.Header.Set("Retry-After", strconv.FormatInt(int64(*val), 10))
+	}
+	return resp, nil
 }
 
 func (b *BackgroundJobsServerTransport) dispatchRunOnDemandTableMaintenance(req *http.Request) (*http.Response, error) {

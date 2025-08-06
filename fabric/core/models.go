@@ -225,6 +225,50 @@ func (b *BasicCredentials) GetCredentials() *Credentials {
 	}
 }
 
+// BulkCreateShortcutResponse - A collection of CreateShortcutResponse that corresponds to the requested shortcut creation
+// requests.
+type BulkCreateShortcutResponse struct {
+	// REQUIRED; A list of create shortcut response.
+	Value []CreateShortcutResponse
+}
+
+// BulkCreateShortcutsRequest - A list of create shortcut requests.
+type BulkCreateShortcutsRequest struct {
+	// REQUIRED; A list of shortcut creation requests.
+	CreateShortcutRequests []CreateShortcutWithTransformRequest
+}
+
+// CSVToDeltaTransform - CSV to Delta transform.
+type CSVToDeltaTransform struct {
+	// REQUIRED; CSV to Delta transform properties.
+	Properties *CSVToDeltaTransformProperties
+
+	// REQUIRED; The type of transform. Additional transform types may be added over time.
+	Type *TransformType
+}
+
+// GetTransform implements the TransformClassification interface for type CSVToDeltaTransform.
+func (c *CSVToDeltaTransform) GetTransform() *Transform {
+	return &Transform{
+		Type: c.Type,
+	}
+}
+
+// CSVToDeltaTransformProperties - Properties for the CSV to Delta transform.
+type CSVToDeltaTransformProperties struct {
+	// Specifies the character used to separate values within a row in the CSV file and it must specify exactly one of the supported
+	// values: ,, , \t, |, &, ;. Default value is ,.
+	Delimiter *string
+
+	// Whether to skip files with errors. True - Skip files with errors, False - Do not skip files with errors. Default value
+	// is True.
+	SkipFilesWithErrors *bool
+
+	// Whether first row of the CSV file should be used as the header. True - Use first row as header. False - Do not use first
+	// row as header. Default value is True.
+	UseFirstRowAsHeader *bool
+}
+
 type Capacities struct {
 	// REQUIRED; A list of capacities.
 	Value []Capacity
@@ -305,6 +349,7 @@ func (c *ConfiguredConnectionGitCredentialsResponse) GetGitCredentialsConfigurat
 	}
 }
 
+// Connection - The base object of a connection.
 type Connection struct {
 	// REQUIRED; The connection details of the connection.
 	ConnectionDetails *ListConnectionDetails
@@ -321,12 +366,12 @@ type Connection struct {
 	// The display name of the connection.
 	DisplayName *string
 
-	// The gateway object ID of the connection.
-	GatewayID *string
-
 	// The privacy level of the connection.
 	PrivacyLevel *PrivacyLevel
 }
+
+// GetConnection implements the ConnectionClassification interface for type Connection.
+func (c *Connection) GetConnection() *Connection { return c }
 
 type ConnectionCreationMetadata struct {
 	// REQUIRED; A list of creation methods for the connection.
@@ -605,6 +650,9 @@ type CreateCloudConnectionRequest struct {
 	// REQUIRED; The display name of the connection. Maximum length is 200 characters.
 	DisplayName *string
 
+	// Allow this connection to be utilized with either on-premises data gateways or VNet data gateways.
+	AllowConnectionUsageInGateway *bool
+
 	// (Optional) The privacy level of the connection. When no value is passed, this is set to 'Organizational'.
 	PrivacyLevel *PrivacyLevel
 }
@@ -690,6 +738,9 @@ type CreateExternalDataShareRequest struct {
 	// the root folder itself (Files or Tables).
 	// For example, these paths are valid:
 	// * "Files/MyFolder1"
+	//
+	//
+	// * "Tables/MySchema"
 	//
 	//
 	// * "Tables/MyTable1"
@@ -848,6 +899,50 @@ type CreateShortcutRequest struct {
 	// OneLake, Amazon S3, ADLS Gen2, Google Cloud Storage, S3 compatible, Dataverse or Azure
 	// Blob storage.
 	Target *CreatableShortcutTarget
+}
+
+// CreateShortcutResponse - An object that contains the original shortcut request, actual shortcut creation metadata, status
+// of shortcut creation and if any associated errors.
+type CreateShortcutResponse struct {
+	// REQUIRED; An object that contains the original shortcut name and path
+	Request *CreateShortcutResponseRequest
+
+	// REQUIRED; The status of create shortcut. Additional status may be added over time.
+	Status *Status
+
+	// An object containing the shortcut properties and created shortcut name.
+	Result *Shortcut
+
+	// READ-ONLY; The error details in case the operation is in failed state
+	Error *ErrorResponse
+}
+
+// CreateShortcutResponseRequest - An object that contains the original shortcut name and path
+type CreateShortcutResponseRequest struct {
+	// REQUIRED; Name of the shortcut.
+	Name *string
+
+	// REQUIRED; A string representing the full path where the shortcut is created, including either "Files" or "Tables".
+	Path *string
+}
+
+// CreateShortcutWithTransformRequest - A shortcut creation request with an object representing a reference to another storage
+// location.
+type CreateShortcutWithTransformRequest struct {
+	// REQUIRED; Name of the shortcut.
+	Name *string
+
+	// REQUIRED; A string representing the full path where the shortcut is created, including either "Files" or "Tables".
+	Path *string
+
+	// REQUIRED; An object that contains the target datasource, and it must specify exactly one of the supported destinations:
+	// OneLake, Amazon S3, ADLS Gen2, Google Cloud Storage, S3 compatible, Dataverse or Azure
+	// Blob storage.
+	Target *CreatableShortcutTarget
+
+	// An object that contains the transform name and its corresponding properties to be applied to target data, and must specify
+	// exactly one of the supported transformations: CsvToDelta
+	Transform TransformClassification
 }
 
 type CreateVirtualNetworkGatewayConnectionRequest struct {
@@ -2034,7 +2129,7 @@ type ListConnectionDetails struct {
 
 type ListConnectionsResponse struct {
 	// REQUIRED; A list of connections returned.
-	Value []Connection
+	Value []ConnectionClassification
 
 	// The token for the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationToken *string
@@ -2215,6 +2310,42 @@ func (o *OnPremisesGateway) GetGateway() *Gateway {
 	}
 }
 
+// OnPremisesGatewayConnection - A connection that connects through on-premises data gateway.
+type OnPremisesGatewayConnection struct {
+	// REQUIRED; The connection details of the connection.
+	ConnectionDetails *ListConnectionDetails
+
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// REQUIRED; The object ID of the connection.
+	ID *string
+
+	// The credential details of the connection.
+	CredentialDetails *ListCredentialDetails
+
+	// The display name of the connection.
+	DisplayName *string
+
+	// The gateway object ID of the connection.
+	GatewayID *string
+
+	// The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+}
+
+// GetConnection implements the ConnectionClassification interface for type OnPremisesGatewayConnection.
+func (o *OnPremisesGatewayConnection) GetConnection() *Connection {
+	return &Connection{
+		ConnectionDetails: o.ConnectionDetails,
+		ConnectivityType:  o.ConnectivityType,
+		CredentialDetails: o.CredentialDetails,
+		DisplayName:       o.DisplayName,
+		ID:                o.ID,
+		PrivacyLevel:      o.PrivacyLevel,
+	}
+}
+
 // OnPremisesGatewayCredentials - Credentials for authenticating through an on-premises gateway.
 type OnPremisesGatewayCredentials struct {
 	// REQUIRED; The credential type of the connection.
@@ -2264,6 +2395,42 @@ func (o *OnPremisesGatewayPersonal) GetGateway() *Gateway {
 	}
 }
 
+// OnPremisesGatewayPersonalConnection - A connection that connects through a personal on-premises data gateway.
+type OnPremisesGatewayPersonalConnection struct {
+	// REQUIRED; The connection details of the connection.
+	ConnectionDetails *ListConnectionDetails
+
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// REQUIRED; The object ID of the connection.
+	ID *string
+
+	// The credential details of the connection.
+	CredentialDetails *ListCredentialDetails
+
+	// The display name of the connection.
+	DisplayName *string
+
+	// The gateway object ID of the connection.
+	GatewayID *string
+
+	// The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+}
+
+// GetConnection implements the ConnectionClassification interface for type OnPremisesGatewayPersonalConnection.
+func (o *OnPremisesGatewayPersonalConnection) GetConnection() *Connection {
+	return &Connection{
+		ConnectionDetails: o.ConnectionDetails,
+		ConnectivityType:  o.ConnectivityType,
+		CredentialDetails: o.CredentialDetails,
+		DisplayName:       o.DisplayName,
+		ID:                o.ID,
+		PrivacyLevel:      o.PrivacyLevel,
+	}
+}
+
 // OnPremisesGatewayPersonalCredentials - Credentials for authenticating through an on-premises gateway (personal mode).
 type OnPremisesGatewayPersonalCredentials struct {
 	// REQUIRED; The credential type of the connection.
@@ -2287,6 +2454,13 @@ type OneLake struct {
 
 	// REQUIRED; The ID of the target workspace.
 	WorkspaceID *string
+
+	// A string representing the connection that is bound with the shortcut. The connectionId is a unique identifier used to establish
+	// a connection between the shortcut and the target datasource. To find
+	// this connection ID, first create a cloud connection [/fabric/data-factory/data-source-management#add-a-data-source] to
+	// be used by the shortcut when connecting to the Amazon S3 data location. Open the
+	// cloud connection's Settings view and copy the connection ID; this is a GUID.
+	ConnectionID *string
 }
 
 // OneLakeEndpoints - The OneLake API endpoints associated with this workspace.
@@ -2335,6 +2509,42 @@ type PermissionScope struct {
 	// resource being accessed, such as "Tables/Table1". When attributeName is Action, the attributeValueIncludedIn must specify
 	// the type of access being granted, such as Read.
 	AttributeValueIncludedIn []string
+}
+
+// PersonalCloudConnection - A connection that connects through the cloud and cannot be shared.
+type PersonalCloudConnection struct {
+	// REQUIRED; The connection details of the connection.
+	ConnectionDetails *ListConnectionDetails
+
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// REQUIRED; The object ID of the connection.
+	ID *string
+
+	// Allow this connection to be utilized with either on-premises data gateways or VNet data gateways.
+	AllowConnectionUsageInGateway *bool
+
+	// The credential details of the connection.
+	CredentialDetails *ListCredentialDetails
+
+	// The display name of the connection.
+	DisplayName *string
+
+	// The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+}
+
+// GetConnection implements the ConnectionClassification interface for type PersonalCloudConnection.
+func (p *PersonalCloudConnection) GetConnection() *Connection {
+	return &Connection{
+		ConnectionDetails: p.ConnectionDetails,
+		ConnectivityType:  p.ConnectivityType,
+		CredentialDetails: p.CredentialDetails,
+		DisplayName:       p.DisplayName,
+		ID:                p.ID,
+		PrivacyLevel:      p.PrivacyLevel,
+	}
 }
 
 // PreDeploymentDiffInformation - The number of new, different and identical deployed items before deployment.
@@ -2484,6 +2694,42 @@ func (s *ServicePrincipalCredentials) GetCredentials() *Credentials {
 	}
 }
 
+// ShareableCloudConnection - A connection that connects through the cloud.
+type ShareableCloudConnection struct {
+	// REQUIRED; The connection details of the connection.
+	ConnectionDetails *ListConnectionDetails
+
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// REQUIRED; The object ID of the connection.
+	ID *string
+
+	// Allow this connection to be utilized with either on-premises data gateways or VNet data gateways.
+	AllowConnectionUsageInGateway *bool
+
+	// The credential details of the connection.
+	CredentialDetails *ListCredentialDetails
+
+	// The display name of the connection.
+	DisplayName *string
+
+	// The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+}
+
+// GetConnection implements the ConnectionClassification interface for type ShareableCloudConnection.
+func (s *ShareableCloudConnection) GetConnection() *Connection {
+	return &Connection{
+		ConnectionDetails: s.ConnectionDetails,
+		ConnectivityType:  s.ConnectivityType,
+		CredentialDetails: s.CredentialDetails,
+		DisplayName:       s.DisplayName,
+		ID:                s.ID,
+		PrivacyLevel:      s.PrivacyLevel,
+	}
+}
+
 // SharedAccessSignatureCredentials - Credentials for SharedAccessSignature CredentialType.
 type SharedAccessSignatureCredentials struct {
 	// REQUIRED; The credential type of the connection.
@@ -2512,6 +2758,10 @@ type Shortcut struct {
 
 	// REQUIRED; An object that contains the target datasource, and must specify exactly one of the supported destinations.
 	Target *Target
+
+	// An object that contains the transform name and its corresponding properties to be applied to target data, and must specify
+	// exactly one of the supported transformations.
+	Transform TransformClassification
 }
 
 // ShortcutCreationPayload - Request payload for shortcut creation
@@ -2543,9 +2793,32 @@ func (s *ShortcutCreationPayload) GetExternalDataShareAcceptRequestPayload() *Ex
 	}
 }
 
+// ShortcutTransformFlagged - An object representing a reference that points to other storage locations which can be internal
+// or external to OneLake. Shortcut is defined by name, path where the shortcut is created and target
+// specifying the target storage location.
+type ShortcutTransformFlagged struct {
+	// REQUIRED; Name of the shortcut.
+	Name *string
+
+	// REQUIRED; A string representing the full path where the shortcut is created, including either "Files" or "Tables".
+	Path *string
+
+	// REQUIRED; An object that contains the target datasource, and must specify exactly one of the supported destinations.
+	Target *Target
+
+	// Determines whether this shortcut is a transform shortcut. True - A shortcut transform, False - A regular shortcut. You
+	// can get the shortcut transform properties using Get Shortcut
+	// [rest/api/fabric/core/onelake-shortcuts/get-shortcut].
+	IsShortcutTransform *bool
+
+	// An object that contains the transform name and its corresponding properties to be applied to target data, and must specify
+	// exactly one of the supported transformations.
+	Transform TransformClassification
+}
+
 type Shortcuts struct {
 	// REQUIRED; A list of shortcuts.
-	Value []Shortcut
+	Value []ShortcutTransformFlagged
 
 	// The token for the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationToken *string
@@ -2605,6 +2878,15 @@ type Target struct {
 	// An object containing the properties of the target S3 compatible data source.
 	S3Compatible *S3Compatible
 }
+
+// Transform - An object that contains the transform name and its corresponding properties to be applied to target data.
+type Transform struct {
+	// REQUIRED; The type of transform. Additional transform types may be added over time.
+	Type *TransformType
+}
+
+// GetTransform implements the TransformClassification interface for type Transform.
+func (t *Transform) GetTransform() *Transform { return t }
 
 // UnapplyTagsRequest - The request payload for unapplying tags.
 type UnapplyTagsRequest struct {
@@ -2887,6 +3169,9 @@ type UpdatePersonalCloudConnectionRequest struct {
 	// REQUIRED; The connectivity type of the connection.
 	ConnectivityType *ConnectivityType
 
+	// Allow this connection to be utilized with either on-premises data gateways or VNet data gateways.
+	AllowConnectionUsageInGateway *bool
+
 	// The credential details of the connection.
 	CredentialDetails *UpdateCredentialDetails
 
@@ -2914,6 +3199,9 @@ type UpdateScheduleRequest struct {
 type UpdateShareableCloudConnectionRequest struct {
 	// REQUIRED; The connectivity type of the connection.
 	ConnectivityType *ConnectivityType
+
+	// Allow this connection to be utilized with either on-premises data gateways or VNet data gateways.
+	AllowConnectionUsageInGateway *bool
 
 	// The credential details of the connection.
 	CredentialDetails *UpdateCredentialDetails
@@ -3043,6 +3331,42 @@ func (v *VirtualNetworkGateway) GetGateway() *Gateway {
 	return &Gateway{
 		ID:   v.ID,
 		Type: v.Type,
+	}
+}
+
+// VirtualNetworkGatewayConnection - A connection that connects through a virtual network data gateway.
+type VirtualNetworkGatewayConnection struct {
+	// REQUIRED; The connection details of the connection.
+	ConnectionDetails *ListConnectionDetails
+
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// REQUIRED; The object ID of the connection.
+	ID *string
+
+	// The credential details of the connection.
+	CredentialDetails *ListCredentialDetails
+
+	// The display name of the connection.
+	DisplayName *string
+
+	// The gateway object ID of the connection.
+	GatewayID *string
+
+	// The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+}
+
+// GetConnection implements the ConnectionClassification interface for type VirtualNetworkGatewayConnection.
+func (v *VirtualNetworkGatewayConnection) GetConnection() *Connection {
+	return &Connection{
+		ConnectionDetails: v.ConnectionDetails,
+		ConnectivityType:  v.ConnectivityType,
+		CredentialDetails: v.CredentialDetails,
+		DisplayName:       v.DisplayName,
+		ID:                v.ID,
+		PrivacyLevel:      v.PrivacyLevel,
 	}
 }
 

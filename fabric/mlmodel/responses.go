@@ -6,6 +6,63 @@
 
 package mlmodel
 
+// EndpointClientActivateMLModelEndpointVersionResponse contains the response from method EndpointClient.BeginActivateMLModelEndpointVersion.
+type EndpointClientActivateMLModelEndpointVersionResponse struct {
+	// placeholder for future response values
+}
+
+// EndpointClientDeactivateAllMLModelEndpointVersionsResponse contains the response from method EndpointClient.BeginDeactivateAllMLModelEndpointVersions.
+type EndpointClientDeactivateAllMLModelEndpointVersionsResponse struct {
+	// placeholder for future response values
+}
+
+// EndpointClientDeactivateMLModelEndpointVersionResponse contains the response from method EndpointClient.BeginDeactivateMLModelEndpointVersion.
+type EndpointClientDeactivateMLModelEndpointVersionResponse struct {
+	// placeholder for future response values
+}
+
+// EndpointClientGetMLModelEndpointResponse contains the response from method EndpointClient.GetMLModelEndpoint.
+type EndpointClientGetMLModelEndpointResponse struct {
+	// A machine learning model endpoint object.
+	Endpoint
+}
+
+// EndpointClientGetMLModelEndpointVersionResponse contains the response from method EndpointClient.GetMLModelEndpointVersion.
+type EndpointClientGetMLModelEndpointVersionResponse struct {
+	// Machine Learning Model Endpoint version information.
+	EndpointVersionInfo
+}
+
+// EndpointClientListMLModelEndpointVersionsResponse contains the response from method EndpointClient.NewListMLModelEndpointVersionsPager.
+type EndpointClientListMLModelEndpointVersionsResponse struct {
+	// All MLModel Versions Endpoints info.
+	EndpointVersions
+}
+
+// EndpointClientScoreMLModelEndpointResponse contains the response from method EndpointClient.BeginScoreMLModelEndpoint.
+type EndpointClientScoreMLModelEndpointResponse struct {
+	// Machine learning model endpoint response to score the given input data.
+	ScoreDataResponse
+}
+
+// EndpointClientScoreMLModelEndpointVersionResponse contains the response from method EndpointClient.BeginScoreMLModelEndpointVersion.
+type EndpointClientScoreMLModelEndpointVersionResponse struct {
+	// Machine learning model endpoint response to score the given input data.
+	ScoreDataResponse
+}
+
+// EndpointClientUpdateMLModelEndpointResponse contains the response from method EndpointClient.UpdateMLModelEndpoint.
+type EndpointClientUpdateMLModelEndpointResponse struct {
+	// A machine learning model endpoint object.
+	Endpoint
+}
+
+// EndpointClientUpdateMLModelEndpointVersionResponse contains the response from method EndpointClient.UpdateMLModelEndpointVersion.
+type EndpointClientUpdateMLModelEndpointVersionResponse struct {
+	// Machine Learning Model Endpoint version information.
+	EndpointVersionInfo
+}
+
 // ItemsClientCreateMLModelResponse contains the response from method ItemsClient.BeginCreateMLModel.
 type ItemsClientCreateMLModelResponse struct {
 	// A machine learning model object.

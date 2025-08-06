@@ -30,8 +30,9 @@ type DomainsClient struct {
 	endpoint string
 }
 
-// BeginAssignDomainWorkspacesByCapacities - Preexisting domain assignments will be overridden unless bulk reassignment is
-// blocked by domain management tenant settings.
+// BeginAssignDomainWorkspacesByCapacities - > [!NOTE] This API is part of a Preview release and is provided for evaluation
+// and development purposes only. It may change based on feedback and is not recommended for production use.
+// Preexisting domain assignments will be overridden unless bulk reassignment is blocked by domain management tenant settings.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
@@ -53,8 +54,9 @@ func (client *DomainsClient) BeginAssignDomainWorkspacesByCapacities(ctx context
 	return client.beginAssignDomainWorkspacesByCapacities(ctx, domainID, assignDomainWorkspacesByCapacitiesRequest, options)
 }
 
-// AssignDomainWorkspacesByCapacities - Preexisting domain assignments will be overridden unless bulk reassignment is blocked
-// by domain management tenant settings.
+// AssignDomainWorkspacesByCapacities - > [!NOTE] This API is part of a Preview release and is provided for evaluation and
+// development purposes only. It may change based on feedback and is not recommended for production use.
+// Preexisting domain assignments will be overridden unless bulk reassignment is blocked by domain management tenant settings.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
@@ -107,8 +109,9 @@ func (client *DomainsClient) assignDomainWorkspacesByCapacitiesCreateRequest(ctx
 	return req, nil
 }
 
-// AssignDomainWorkspacesByIDs - Preexisting domain assignments will be overridden unless bulk reassignment is blocked by
-// domain management tenant settings.
+// AssignDomainWorkspacesByIDs - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// Preexisting domain assignments will be overridden unless bulk reassignment is blocked by domain management tenant settings.
 // PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 10 requests per one minute per principal.
@@ -164,8 +167,9 @@ func (client *DomainsClient) assignDomainWorkspacesByIDsCreateRequest(ctx contex
 	return req, nil
 }
 
-// BeginAssignDomainWorkspacesByPrincipals - Preexisting domain assignments will be overridden unless bulk reassignment is
-// blocked by domain management tenant settings.
+// BeginAssignDomainWorkspacesByPrincipals - > [!NOTE] This API is part of a Preview release and is provided for evaluation
+// and development purposes only. It may change based on feedback and is not recommended for production use.
+// Preexisting domain assignments will be overridden unless bulk reassignment is blocked by domain management tenant settings.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
@@ -187,8 +191,9 @@ func (client *DomainsClient) BeginAssignDomainWorkspacesByPrincipals(ctx context
 	return client.beginAssignDomainWorkspacesByPrincipals(ctx, domainID, assignDomainWorkspacesByPrincipalsRequest, options)
 }
 
-// AssignDomainWorkspacesByPrincipals - Preexisting domain assignments will be overridden unless bulk reassignment is blocked
-// by domain management tenant settings.
+// AssignDomainWorkspacesByPrincipals - > [!NOTE] This API is part of a Preview release and is provided for evaluation and
+// development purposes only. It may change based on feedback and is not recommended for production use.
+// Preexisting domain assignments will be overridden unless bulk reassignment is blocked by domain management tenant settings.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
@@ -241,7 +246,9 @@ func (client *DomainsClient) assignDomainWorkspacesByPrincipalsCreateRequest(ctx
 	return req, nil
 }
 
-// CreateDomain - PERMISSIONS The caller must be a Fabric administrator.
+// CreateDomain - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -300,7 +307,9 @@ func (client *DomainsClient) createDomainHandleResponse(resp *http.Response) (Do
 	return result, nil
 }
 
-// DeleteDomain - PERMISSIONS The caller must be a Fabric administrator.
+// DeleteDomain - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -350,7 +359,9 @@ func (client *DomainsClient) deleteDomainCreateRequest(ctx context.Context, doma
 	return req, nil
 }
 
-// GetDomain - PERMISSIONS The caller must be a Fabric administrator.
+// GetDomain - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only.
+// It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -410,7 +421,9 @@ func (client *DomainsClient) getDomainHandleResponse(resp *http.Response) (Domai
 	return result, nil
 }
 
-// NewListDomainWorkspacesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
+// NewListDomainWorkspacesPager - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
@@ -477,7 +490,9 @@ func (client *DomainsClient) listDomainWorkspacesHandleResponse(resp *http.Respo
 	return result, nil
 }
 
-// ListDomains - PERMISSIONS The caller must be a Fabric administrator.
+// ListDomains - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only.
+// It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -537,7 +552,9 @@ func (client *DomainsClient) listDomainsHandleResponse(resp *http.Response) (Dom
 	return result, nil
 }
 
-// RoleAssignmentsBulkAssign - PERMISSIONS The caller must be a Fabric administrator.
+// RoleAssignmentsBulkAssign - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -592,7 +609,9 @@ func (client *DomainsClient) roleAssignmentsBulkAssignCreateRequest(ctx context.
 	return req, nil
 }
 
-// RoleAssignmentsBulkUnassign - PERMISSIONS The caller must be a Fabric administrator.
+// RoleAssignmentsBulkUnassign - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -647,7 +666,9 @@ func (client *DomainsClient) roleAssignmentsBulkUnassignCreateRequest(ctx contex
 	return req, nil
 }
 
-// UnassignAllDomainWorkspaces - PERMISSIONS The caller must be a Fabric administrator.
+// UnassignAllDomainWorkspaces - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 10 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -698,7 +719,9 @@ func (client *DomainsClient) unassignAllDomainWorkspacesCreateRequest(ctx contex
 	return req, nil
 }
 
-// UnassignDomainWorkspacesByIDs - PERMISSIONS The caller must be a Fabric administrator.
+// UnassignDomainWorkspacesByIDs - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -755,7 +778,9 @@ func (client *DomainsClient) unassignDomainWorkspacesByIDsCreateRequest(ctx cont
 	return req, nil
 }
 
-// UpdateDomain - PERMISSIONS The caller must be a Fabric administrator.
+// UpdateDomain - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -822,6 +847,8 @@ func (client *DomainsClient) updateDomainHandleResponse(resp *http.Response) (Do
 // Custom code starts below
 
 // AssignDomainWorkspacesByCapacities - returns DomainsClientAssignDomainWorkspacesByCapacitiesResponse in sync mode.
+// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
+//
 // Preexisting domain assignments will be overridden unless bulk reassignment is blocked by domain management tenant settings.
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
@@ -895,6 +922,8 @@ func (client *DomainsClient) beginAssignDomainWorkspacesByCapacities(ctx context
 }
 
 // AssignDomainWorkspacesByPrincipals - returns DomainsClientAssignDomainWorkspacesByPrincipalsResponse in sync mode.
+// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
+//
 // Preexisting domain assignments will be overridden unless bulk reassignment is blocked by domain management tenant settings.
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
@@ -968,6 +997,8 @@ func (client *DomainsClient) beginAssignDomainWorkspacesByPrincipals(ctx context
 }
 
 // ListDomainWorkspaces - returns array of DomainWorkspace from all pages.
+// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
+//
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
 // PERMISSIONS The caller must be a Fabric administrator.

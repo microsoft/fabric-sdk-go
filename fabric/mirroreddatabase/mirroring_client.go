@@ -28,7 +28,7 @@ type MirroringClient struct {
 	endpoint string
 }
 
-// GetMirroringStatus - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetMirroringStatus - PERMISSIONS The caller must have read permissions for the mirrored database.
 // REQUIRED DELEGATED SCOPES MirroredDatabase.Read.All or MirroredDatabase.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -94,7 +94,7 @@ func (client *MirroringClient) getMirroringStatusHandleResponse(resp *http.Respo
 }
 
 // NewGetTablesMirroringStatusPager - This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have read permissions for the mirrored database.
 // REQUIRED DELEGATED SCOPES MirroredDatabase.Read.All or MirroredDatabase.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -164,7 +164,7 @@ func (client *MirroringClient) getTablesMirroringStatusHandleResponse(resp *http
 	return result, nil
 }
 
-// StartMirroring - PERMISSIONS The API caller must have contributor or higher workspace role.
+// StartMirroring - PERMISSIONS The caller must have read and write permissions for the mirrored database.
 // REQUIRED DELEGATED SCOPES MirroredDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -219,7 +219,7 @@ func (client *MirroringClient) startMirroringCreateRequest(ctx context.Context, 
 	return req, nil
 }
 
-// StopMirroring - PERMISSIONS The API caller must have contributor or higher workspace role.
+// StopMirroring - PERMISSIONS The caller must have read and write permissions for the mirrored database.
 // REQUIRED DELEGATED SCOPES MirroredDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -278,7 +278,7 @@ func (client *MirroringClient) stopMirroringCreateRequest(ctx context.Context, w
 // GetTablesMirroringStatus - returns array of TableMirroringStatusResponse from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// PERMISSIONS The caller must have read permissions for the mirrored database.
 //
 // # REQUIRED DELEGATED SCOPES MirroredDatabase.Read.All or MirroredDatabase.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 //
