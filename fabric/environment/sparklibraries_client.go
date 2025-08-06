@@ -28,7 +28,9 @@ type SparkLibrariesClient struct {
 	endpoint string
 }
 
-// CancelPublish - PERMISSIONS Write permission for the environment item.
+// CancelPublish - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// TWrite permission for the environment item.
 // REQUIRED DELEGATED SCOPES Environment.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -93,7 +95,9 @@ func (client *SparkLibrariesClient) cancelPublishHandleResponse(resp *http.Respo
 	return result, nil
 }
 
-// DeleteStagingLibrary - PERMISSIONS Write permission for the environment item.
+// DeleteStagingLibrary - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// TWrite permission for the environment item.
 // REQUIRED DELEGATED SCOPES Environment.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -152,7 +156,9 @@ func (client *SparkLibrariesClient) deleteStagingLibraryCreateRequest(ctx contex
 	return req, nil
 }
 
-// GetPublishedLibraries - PERMISSIONS Read permission for the environment item.
+// GetPublishedLibraries - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// TRead permission for the environment item.
 // REQUIRED DELEGATED SCOPES Environment.Read.All or Environment.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -217,7 +223,9 @@ func (client *SparkLibrariesClient) getPublishedLibrariesHandleResponse(resp *ht
 	return result, nil
 }
 
-// GetStagingLibraries - PERMISSIONS Read permission for the environment item.
+// GetStagingLibraries - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// TRead permission for the environment item.
 // REQUIRED DELEGATED SCOPES Environment.Read.All or Environment.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -282,7 +290,9 @@ func (client *SparkLibrariesClient) getStagingLibrariesHandleResponse(resp *http
 	return result, nil
 }
 
-// PublishEnvironment - PERMISSIONS Write permission for the environment item.
+// PublishEnvironment - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// TWrite permission for the environment item.
 // REQUIRED DELEGATED SCOPES Environment.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -358,8 +368,9 @@ func (client *SparkLibrariesClient) publishEnvironmentHandleResponse(resp *http.
 	return result, nil
 }
 
-// UploadStagingLibrary - This API allows one file upload at a time. The supported file formats are .jar, .py, .whl, .tar.gz,
-// or environment.yml.
+// UploadStagingLibrary - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// This API allows one file upload at a time. The supported file formats are .jar, .py, .whl, .tar.gz, or environment.yml.
 // LIMITATIONS The maximum request size allowed is 100MB.
 // Network issues may impact the upload size and may result in timeouts.
 // PERMISSIONS Write permission for the environment item.

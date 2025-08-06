@@ -30,7 +30,9 @@ type TablesClient struct {
 	endpoint string
 }
 
-// NewListTablesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
+// NewListTablesPager - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// This API supports pagination [/rest/api/fabric/articles/pagination].
 // REQUIRED DELEGATED SCOPES Lakehouse.Read.All or Lakehouse.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -102,7 +104,9 @@ func (client *TablesClient) listTablesHandleResponse(resp *http.Response) (Table
 	return result, nil
 }
 
-// BeginLoadTable - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// BeginLoadTable - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS Write permission to the lakehouse item.
 // REQUIRED DELEGATED SCOPES Lakehouse.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -123,7 +127,9 @@ func (client *TablesClient) BeginLoadTable(ctx context.Context, workspaceID stri
 	return client.beginLoadTable(ctx, workspaceID, lakehouseID, tableName, loadTableRequest, options)
 }
 
-// LoadTable - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// LoadTable - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only.
+// It may change based on feedback and is not recommended for production use.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS Write permission to the lakehouse item.
 // REQUIRED DELEGATED SCOPES Lakehouse.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -185,6 +191,8 @@ func (client *TablesClient) loadTableCreateRequest(ctx context.Context, workspac
 // Custom code starts below
 
 // LoadTable - returns TablesClientLoadTableResponse in sync mode.
+// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
+//
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
 // PERMISSIONS Write permission to the lakehouse item.
@@ -256,6 +264,8 @@ func (client *TablesClient) beginLoadTable(ctx context.Context, workspaceID stri
 }
 
 // ListTables - returns array of Table from all pages.
+// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
+//
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
 // # REQUIRED DELEGATED SCOPES Lakehouse.Read.All or Lakehouse.ReadWrite.All

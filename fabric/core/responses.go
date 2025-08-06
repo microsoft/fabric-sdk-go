@@ -24,7 +24,8 @@ type ConnectionsClientAddConnectionRoleAssignmentResponse struct {
 
 // ConnectionsClientCreateConnectionResponse contains the response from method ConnectionsClient.CreateConnection.
 type ConnectionsClientCreateConnectionResponse struct {
-	Connection
+	// The base object of a connection.
+	ConnectionClassification
 }
 
 // ConnectionsClientDeleteConnectionResponse contains the response from method ConnectionsClient.DeleteConnection.
@@ -39,7 +40,8 @@ type ConnectionsClientDeleteConnectionRoleAssignmentResponse struct {
 
 // ConnectionsClientGetConnectionResponse contains the response from method ConnectionsClient.GetConnection.
 type ConnectionsClientGetConnectionResponse struct {
-	Connection
+	// The base object of a connection.
+	ConnectionClassification
 }
 
 // ConnectionsClientGetConnectionRoleAssignmentResponse contains the response from method ConnectionsClient.GetConnectionRoleAssignment.
@@ -65,7 +67,8 @@ type ConnectionsClientListSupportedConnectionTypesResponse struct {
 
 // ConnectionsClientUpdateConnectionResponse contains the response from method ConnectionsClient.UpdateConnection.
 type ConnectionsClientUpdateConnectionResponse struct {
-	Connection
+	// The base object of a connection.
+	ConnectionClassification
 }
 
 // ConnectionsClientUpdateConnectionRoleAssignmentResponse contains the response from method ConnectionsClient.UpdateConnectionRoleAssignment.
@@ -546,6 +549,12 @@ type OneLakeShortcutsClientCreateShortcutResponse struct {
 
 	// Location contains the information returned from the Location header response.
 	Location *string
+}
+
+// OneLakeShortcutsClientCreatesShortcutsInBulkResponse contains the response from method OneLakeShortcutsClient.BeginCreatesShortcutsInBulk.
+type OneLakeShortcutsClientCreatesShortcutsInBulkResponse struct {
+	// A collection of CreateShortcutResponse that corresponds to the requested shortcut creation requests.
+	BulkCreateShortcutResponse
 }
 
 // OneLakeShortcutsClientDeleteShortcutResponse contains the response from method OneLakeShortcutsClient.DeleteShortcut.

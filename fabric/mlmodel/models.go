@@ -18,6 +18,62 @@ type CreateMLModelRequest struct {
 	FolderID *string
 }
 
+// DataSchema - Machine learning model data schema.
+type DataSchema struct {
+	// REQUIRED; The name of the signature.
+	Name *string
+
+	// REQUIRED; The boolean value to indicate if the signature is required or no. True - Required, False - Not Required.
+	Required *bool
+
+	// REQUIRED; The type of the signature.
+	Type *string
+}
+
+// Endpoint - A machine learning model endpoint object.
+type Endpoint struct {
+	// REQUIRED; The default version assignment behavior of a given machine learning model endpoint. Additional EndpointDefaultVersionConfigurationPolicy
+	// types may be added over time.
+	DefaultVersionAssignmentBehavior *EndpointDefaultVersionConfigurationPolicy
+
+	// REQUIRED; Machine Learning Model Endpoint version information.
+	DefaultVersionInfo *EndpointVersionInfo
+
+	// REQUIRED; Default machine learning model endpoint version name.
+	DefaultVersionName *string
+}
+
+// EndpointVersionInfo - Machine Learning Model Endpoint version information.
+type EndpointVersionInfo struct {
+	// READ-ONLY; The status of a given machine learning model endpoint version. Additional ModelEndpointVersionStatus types may
+	// be added over time.
+	Status *ModelEndpointVersionStatus
+
+	// READ-ONLY; The machine learning model version name
+	VersionName *string
+
+	// Machine learning model endpoint scale rule. Additional ScaleRule types may be added over time.
+	ScaleRule *ScaleRule
+
+	// READ-ONLY; The input signature for this version of the machine learning model.
+	InputSignature []DataSchema
+
+	// READ-ONLY; The output signature for this version of the machine learning model.
+	OutputSignature []DataSchema
+}
+
+// EndpointVersions - All MLModel Versions Endpoints info.
+type EndpointVersions struct {
+	// REQUIRED; The information about all versions available as endpoint for this MLModel.
+	Value []EndpointVersionInfo
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
 // ItemTag - Represents a tag applied on an item.
 type ItemTag struct {
 	// REQUIRED; The name of the tag.
@@ -61,6 +117,48 @@ type MLModels struct {
 
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
+}
+
+// ScoreDataRequest - Machine learning model endpoint request to score the given input data.
+type ScoreDataRequest struct {
+	// REQUIRED; Machine learning inputs to score in the form of Pandas dataset arrays that can include strings, numbers, integers
+	// and booleans.
+	Inputs [][]any
+
+	// Format type of data. Additional Format types may be added over time.
+	FormatType *FormatType
+
+	// Orientation of data. Additional Orientation types may be added over time.
+	Orientation *Orientation
+}
+
+// ScoreDataResponse - Machine learning model endpoint response to score the given input data.
+type ScoreDataResponse struct {
+	// REQUIRED; Format type of data. Additional Format types may be added over time.
+	FormatType *FormatType
+
+	// REQUIRED; Orientation of data. Additional Orientation types may be added over time.
+	Orientation *Orientation
+
+	// READ-ONLY; Machine learning predictions represented in the form of Pandas dataset arrays that can include strings, numbers,
+	// integers and booleans.
+	Predictions [][]any
+}
+
+// UpdateMLModelEndpointRequest - Machine learning model endpoint request body to update Model Endpoint properties.
+type UpdateMLModelEndpointRequest struct {
+	// The default version assignment behavior of a given machine learning model endpoint. Additional EndpointDefaultVersionConfigurationPolicy
+	// types may be added over time.
+	DefaultVersionAssignmentBehavior *EndpointDefaultVersionConfigurationPolicy
+
+	// Default machine learning model endpoint version name.
+	DefaultVersionName *string
+}
+
+// UpdateMLModelEndpointVersionRequest - Machine learning model endpoint version configuration info.
+type UpdateMLModelEndpointVersionRequest struct {
+	// Machine learning model endpoint scale rule. Additional ScaleRule types may be added over time.
+	ScaleRule *ScaleRule
 }
 
 // UpdateMLModelRequest - Update machine learning model request.

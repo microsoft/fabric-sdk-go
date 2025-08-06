@@ -6,6 +6,15 @@
 
 package lakehouse
 
+// BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse contains the response from method BackgroundJobsClient.RunOnDemandRefreshMaterializedLakeViews.
+type BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse struct {
+	// Location contains the information returned from the Location header response.
+	Location *string
+
+	// RetryAfter contains the information returned from the Retry-After header response.
+	RetryAfter *int32
+}
+
 // BackgroundJobsClientRunOnDemandTableMaintenanceResponse contains the response from method BackgroundJobsClient.RunOnDemandTableMaintenance.
 type BackgroundJobsClientRunOnDemandTableMaintenanceResponse struct {
 	// Location contains the information returned from the Location header response.

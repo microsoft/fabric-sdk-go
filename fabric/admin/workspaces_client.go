@@ -28,7 +28,9 @@ type WorkspacesClient struct {
 	endpoint string
 }
 
-// GetWorkspace - PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
+// GetWorkspace - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
 // LIMITATIONS Maximum 200 requests per hour.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -88,8 +90,10 @@ func (client *WorkspacesClient) getWorkspaceHandleResponse(resp *http.Response) 
 	return result, nil
 }
 
-// NewListGitConnectionsPager - This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 1,000 records
-// can be returned per request. With the continuous token provided in the response, you can get the next
+// NewListGitConnectionsPager - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 1,000 records can be returned per request.
+// With the continuous token provided in the response, you can get the next
 // 1,000 records.
 // PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
@@ -152,7 +156,9 @@ func (client *WorkspacesClient) listGitConnectionsHandleResponse(resp *http.Resp
 	return result, nil
 }
 
-// ListWorkspaceAccessDetails - PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
+// ListWorkspaceAccessDetails - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
 // LIMITATIONS Maximum 200 requests per hour.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -213,8 +219,10 @@ func (client *WorkspacesClient) listWorkspaceAccessDetailsHandleResponse(resp *h
 	return result, nil
 }
 
-// NewListWorkspacesPager - This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records
-// can be returned per request. With the continuous token provided in the response, you can get the next
+// NewListWorkspacesPager - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records can be returned per request.
+// With the continuous token provided in the response, you can get the next
 // 10,000 records.
 // PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
@@ -289,7 +297,9 @@ func (client *WorkspacesClient) listWorkspacesHandleResponse(resp *http.Response
 	return result, nil
 }
 
-// RestoreWorkspace - PERMISSIONS The caller must have Fabric administrator rights.
+// RestoreWorkspace - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must have Fabric administrator rights.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum ten requests per minute.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -347,6 +357,8 @@ func (client *WorkspacesClient) restoreWorkspaceCreateRequest(ctx context.Contex
 // Custom code starts below
 
 // ListGitConnections - returns array of GitConnectionDetails from all pages.
+// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
+//
 // This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 1,000 records can be returned per request. With the continuous token provided in the response, you can get the next
 // 1,000 records.
 //
@@ -381,6 +393,8 @@ func (client *WorkspacesClient) ListGitConnections(ctx context.Context, options 
 }
 
 // ListWorkspaces - returns array of Workspace from all pages.
+// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
+//
 // This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records can be returned per request. With the continuous token provided in the response, you can get the next
 // 10,000 records.
 //

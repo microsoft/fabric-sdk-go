@@ -6,6 +6,16 @@
 
 package core
 
+// ConnectionClassification provides polymorphic access to related types.
+// Call the interface's GetConnection() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *Connection, *OnPremisesGatewayConnection, *OnPremisesGatewayPersonalConnection, *PersonalCloudConnection, *ShareableCloudConnection,
+// - *VirtualNetworkGatewayConnection
+type ConnectionClassification interface {
+	// GetConnection returns the Connection content of the underlying type.
+	GetConnection() *Connection
+}
+
 // ConnectionDetailsParameterClassification provides polymorphic access to related types.
 // Call the interface's GetConnectionDetailsParameter() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
@@ -98,6 +108,15 @@ type GitProviderDetailsClassification interface {
 type ScheduleConfigClassification interface {
 	// GetScheduleConfig returns the ScheduleConfig content of the underlying type.
 	GetScheduleConfig() *ScheduleConfig
+}
+
+// TransformClassification provides polymorphic access to related types.
+// Call the interface's GetTransform() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *CSVToDeltaTransform, *Transform
+type TransformClassification interface {
+	// GetTransform returns the Transform content of the underlying type.
+	GetTransform() *Transform
 }
 
 // UpdateConnectionRequestClassification provides polymorphic access to related types.

@@ -116,3 +116,48 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeWarehouseSnapshot,
 	}
 }
+
+// SyncStatus - The status of the synchronization operation. Additional SyncStatus types may be added over time.
+type SyncStatus string
+
+const (
+	// SyncStatusFailure - Indicates a failure.
+	SyncStatusFailure SyncStatus = "Failure"
+	// SyncStatusNotRun - Indicates that the operation did not run.
+	SyncStatusNotRun SyncStatus = "NotRun"
+	// SyncStatusSuccess - Indicates a success.
+	SyncStatusSuccess SyncStatus = "Success"
+)
+
+// PossibleSyncStatusValues returns the possible values for the SyncStatus const type.
+func PossibleSyncStatusValues() []SyncStatus {
+	return []SyncStatus{
+		SyncStatusFailure,
+		SyncStatusNotRun,
+		SyncStatusSuccess,
+	}
+}
+
+// TimeUnit - The unit of time for the duration. Additional duration types may be added over time.
+type TimeUnit string
+
+const (
+	// TimeUnitDays - Duration in days.
+	TimeUnitDays TimeUnit = "Days"
+	// TimeUnitHours - Duration in hours.
+	TimeUnitHours TimeUnit = "Hours"
+	// TimeUnitMinutes - Duration in minutes.
+	TimeUnitMinutes TimeUnit = "Minutes"
+	// TimeUnitSeconds - Duration in seconds.
+	TimeUnitSeconds TimeUnit = "Seconds"
+)
+
+// PossibleTimeUnitValues returns the possible values for the TimeUnit const type.
+func PossibleTimeUnitValues() []TimeUnit {
+	return []TimeUnit{
+		TimeUnitDays,
+		TimeUnitHours,
+		TimeUnitMinutes,
+		TimeUnitSeconds,
+	}
+}

@@ -29,7 +29,8 @@ type RefreshClient struct {
 	endpoint string
 }
 
-// BeginRefreshCatalogMetadata - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// BeginRefreshCatalogMetadata - > [!NOTE] Mirrored Azure Databricks Catalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The API caller must have contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES MirroredAzureDatabricksCatalog.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -49,7 +50,8 @@ func (client *RefreshClient) BeginRefreshCatalogMetadata(ctx context.Context, wo
 	return client.beginRefreshCatalogMetadata(ctx, workspaceID, mirroredAzureDatabricksCatalogID, options)
 }
 
-// RefreshCatalogMetadata - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// RefreshCatalogMetadata - > [!NOTE] Mirrored Azure Databricks Catalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The API caller must have contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES MirroredAzureDatabricksCatalog.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -104,6 +106,8 @@ func (client *RefreshClient) refreshCatalogMetadataCreateRequest(ctx context.Con
 // Custom code starts below
 
 // RefreshCatalogMetadata - returns RefreshClientRefreshCatalogMetadataResponse in sync mode.
+// >  [!NOTE] Mirrored Azure Databricks Catalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+//
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
 // PERMISSIONS The API caller must have contributor or higher workspace role.

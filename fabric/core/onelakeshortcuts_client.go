@@ -106,6 +106,90 @@ func (client *OneLakeShortcutsClient) createShortcutHandleResponse(resp *http.Re
 	return result, nil
 }
 
+// BeginCreatesShortcutsInBulk - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The ID of the workspace.
+//   - itemID - The ID of the data item.
+//   - bulkCreateShortcutsRequest - A shortcut bulk create request includes an array of shortcut objects, each representing a
+//     reference pointing to internal or external storage locations within OneLake.
+//   - options - OneLakeShortcutsClientBeginCreatesShortcutsInBulkOptions contains the optional parameters for the OneLakeShortcutsClient.BeginCreatesShortcutsInBulk
+//     method.
+func (client *OneLakeShortcutsClient) BeginCreatesShortcutsInBulk(ctx context.Context, workspaceID string, itemID string, bulkCreateShortcutsRequest BulkCreateShortcutsRequest, options *OneLakeShortcutsClientBeginCreatesShortcutsInBulkOptions) (*runtime.Poller[OneLakeShortcutsClientCreatesShortcutsInBulkResponse], error) {
+	return client.beginCreatesShortcutsInBulk(ctx, workspaceID, itemID, bulkCreateShortcutsRequest, options)
+}
+
+// CreatesShortcutsInBulk - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *OneLakeShortcutsClient) createsShortcutsInBulk(ctx context.Context, workspaceID string, itemID string, bulkCreateShortcutsRequest BulkCreateShortcutsRequest, options *OneLakeShortcutsClientBeginCreatesShortcutsInBulkOptions) (*http.Response, error) {
+	var err error
+	const operationName = "core.OneLakeShortcutsClient.BeginCreatesShortcutsInBulk"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.createsShortcutsInBulkCreateRequest(ctx, workspaceID, itemID, bulkCreateShortcutsRequest, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// createsShortcutsInBulkCreateRequest creates the CreatesShortcutsInBulk request.
+func (client *OneLakeShortcutsClient) createsShortcutsInBulkCreateRequest(ctx context.Context, workspaceID string, itemID string, bulkCreateShortcutsRequest BulkCreateShortcutsRequest, options *OneLakeShortcutsClientBeginCreatesShortcutsInBulkOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/shortcuts/bulkCreate"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if itemID == "" {
+		return nil, errors.New("parameter itemID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{itemId}", url.PathEscape(itemID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ShortcutConflictPolicy != nil {
+		reqQP.Set("shortcutConflictPolicy", string(*options.ShortcutConflictPolicy))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, bulkCreateShortcutsRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // DeleteShortcut - REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -386,6 +470,76 @@ func (client *OneLakeShortcutsClient) resetShortcutCacheCreateRequest(ctx contex
 
 // Custom code starts below
 
+// CreatesShortcutsInBulk - returns OneLakeShortcutsClientCreatesShortcutsInBulkResponse in sync mode.
+// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
+//
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// # REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The ID of the workspace.
+//   - itemID - The ID of the data item.
+//   - bulkCreateShortcutsRequest - A shortcut bulk create request includes an array of shortcut objects, each representing a reference pointing to internal or external storage locations within OneLake.
+//   - options - OneLakeShortcutsClientBeginCreatesShortcutsInBulkOptions contains the optional parameters for the OneLakeShortcutsClient.BeginCreatesShortcutsInBulk method.
+func (client *OneLakeShortcutsClient) CreatesShortcutsInBulk(ctx context.Context, workspaceID string, itemID string, bulkCreateShortcutsRequest BulkCreateShortcutsRequest, options *OneLakeShortcutsClientBeginCreatesShortcutsInBulkOptions) (OneLakeShortcutsClientCreatesShortcutsInBulkResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginCreatesShortcutsInBulk(ctx, workspaceID, itemID, bulkCreateShortcutsRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return OneLakeShortcutsClientCreatesShortcutsInBulkResponse{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return OneLakeShortcutsClientCreatesShortcutsInBulkResponse{}, err
+	}
+	return result, err
+}
+
+// beginCreatesShortcutsInBulk creates the createsShortcutsInBulk request.
+func (client *OneLakeShortcutsClient) beginCreatesShortcutsInBulk(ctx context.Context, workspaceID string, itemID string, bulkCreateShortcutsRequest BulkCreateShortcutsRequest, options *OneLakeShortcutsClientBeginCreatesShortcutsInBulkOptions) (*runtime.Poller[OneLakeShortcutsClientCreatesShortcutsInBulkResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.createsShortcutsInBulk(ctx, workspaceID, itemID, bulkCreateShortcutsRequest, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[OneLakeShortcutsClientCreatesShortcutsInBulkResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[OneLakeShortcutsClientCreatesShortcutsInBulkResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[OneLakeShortcutsClientCreatesShortcutsInBulkResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[OneLakeShortcutsClientCreatesShortcutsInBulkResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
 // ResetShortcutCache - returns OneLakeShortcutsClientResetShortcutCacheResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
@@ -452,7 +606,7 @@ func (client *OneLakeShortcutsClient) beginResetShortcutCache(ctx context.Contex
 	}
 }
 
-// ListShortcuts - returns array of Shortcut from all pages.
+// ListShortcuts - returns array of ShortcutTransformFlagged from all pages.
 // REQUIRED DELEGATED SCOPES OneLake.Read.All or OneLake.ReadWrite.All
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
@@ -465,18 +619,18 @@ func (client *OneLakeShortcutsClient) beginResetShortcutCache(ctx context.Contex
 //   - workspaceID - The workspace ID.
 //   - itemID - The item ID.
 //   - options - OneLakeShortcutsClientListShortcutsOptions contains the optional parameters for the OneLakeShortcutsClient.NewListShortcutsPager method.
-func (client *OneLakeShortcutsClient) ListShortcuts(ctx context.Context, workspaceID string, itemID string, options *OneLakeShortcutsClientListShortcutsOptions) ([]Shortcut, error) {
+func (client *OneLakeShortcutsClient) ListShortcuts(ctx context.Context, workspaceID string, itemID string, options *OneLakeShortcutsClientListShortcutsOptions) ([]ShortcutTransformFlagged, error) {
 	pager := client.NewListShortcutsPager(workspaceID, itemID, options)
-	mapper := func(resp OneLakeShortcutsClientListShortcutsResponse) []Shortcut {
+	mapper := func(resp OneLakeShortcutsClientListShortcutsResponse) []ShortcutTransformFlagged {
 		return resp.Value
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
 	if err != nil {
 		var azcoreRespError *azcore.ResponseError
 		if errors.As(err, &azcoreRespError) {
-			return []Shortcut{}, NewResponseError(azcoreRespError.RawResponse)
+			return []ShortcutTransformFlagged{}, NewResponseError(azcoreRespError.RawResponse)
 		}
-		return []Shortcut{}, err
+		return []ShortcutTransformFlagged{}, err
 	}
 	return list, nil
 }

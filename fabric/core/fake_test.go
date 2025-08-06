@@ -1184,7 +1184,7 @@ func (testsuite *FakeTestSuite) TestItems_ListItemConnections() {
 					Type: to.Ptr("SQL"),
 					Path: to.Ptr("contoso.database.windows.net;sales"),
 				},
-				ConnectivityType: to.Ptr(core.ConnectivityType("OnPremisesDataGateway")),
+				ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGateway),
 				DisplayName:      to.Ptr("ContosoConnection2"),
 				GatewayID:        to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
 				ID:               to.Ptr("0b9af1bd-e974-4893-8947-d89d5a560385"),
@@ -1531,7 +1531,7 @@ func (testsuite *FakeTestSuite) TestJobScheduler_GetItemJobInstance() {
 		JobType:        to.Ptr("DefaultJob"),
 		RootActivityID: to.Ptr("8c2ee553-53a4-7edb-1042-0d8189a9e0ca"),
 		StartTimeUTC:   to.Ptr("2023-04-22T06:35:00.7812154"),
-		Status:         to.Ptr(core.StatusCompleted),
+		Status:         to.Ptr(core.Status("Completed")),
 	}
 
 	testsuite.serverFactory.JobSchedulerServer.GetItemJobInstance = func(ctx context.Context, workspaceID string, itemID string, jobInstanceID string, options *core.JobSchedulerClientGetItemJobInstanceOptions) (resp azfake.Responder[core.JobSchedulerClientGetItemJobInstanceResponse], errResp azfake.ErrorResponder) {
@@ -1569,7 +1569,7 @@ func (testsuite *FakeTestSuite) TestJobScheduler_ListItemJobInstances() {
 				JobType:        to.Ptr("DefaultJob"),
 				RootActivityID: to.Ptr("8c2ee553-53a4-7edb-1042-0d8189a9e0ca"),
 				StartTimeUTC:   to.Ptr("2024-06-22T06:35:00.7812154"),
-				Status:         to.Ptr(core.StatusCompleted),
+				Status:         to.Ptr(core.Status("Completed")),
 			},
 			{
 				EndTimeUTC:     to.Ptr("2024-06-22T07:35:00.8033333"),
@@ -1579,7 +1579,7 @@ func (testsuite *FakeTestSuite) TestJobScheduler_ListItemJobInstances() {
 				JobType:        to.Ptr("DefaultJob"),
 				RootActivityID: to.Ptr("c0c99aed-be56-4fe0-a6e5-6de5fe277f16"),
 				StartTimeUTC:   to.Ptr("2024-06-22T06:35:00.7812154"),
-				Status:         to.Ptr(core.StatusCompleted),
+				Status:         to.Ptr(core.Status("Completed")),
 			}},
 	}
 
@@ -1621,7 +1621,7 @@ func (testsuite *FakeTestSuite) TestJobScheduler_ListItemJobInstances() {
 				JobType:        to.Ptr("DefaultJob"),
 				RootActivityID: to.Ptr("8c2ee553-53a4-7edb-1042-0d8189a9e0ca"),
 				StartTimeUTC:   to.Ptr("2024-06-22T06:35:00.7812154"),
-				Status:         to.Ptr(core.StatusCompleted),
+				Status:         to.Ptr(core.Status("Completed")),
 			},
 			{
 				EndTimeUTC:     to.Ptr("2024-06-22T07:35:00.8033333"),
@@ -1631,7 +1631,7 @@ func (testsuite *FakeTestSuite) TestJobScheduler_ListItemJobInstances() {
 				JobType:        to.Ptr("DefaultJob"),
 				RootActivityID: to.Ptr("c0c99aed-be56-4fe0-a6e5-6de5fe277f16"),
 				StartTimeUTC:   to.Ptr("2024-06-22T06:35:00.7812154"),
-				Status:         to.Ptr(core.StatusCompleted),
+				Status:         to.Ptr(core.Status("Completed")),
 			}},
 	}
 
@@ -2487,6 +2487,87 @@ func (testsuite *FakeTestSuite) TestLongRunningOperations_GetOperationResult() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
+func (testsuite *FakeTestSuite) TestOneLakeShortcuts_CreatesShortcutsInBulk() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create bulk shortcut example"},
+	})
+	var exampleWorkspaceID string
+	var exampleItemID string
+	var exampleBulkCreateShortcutsRequest core.BulkCreateShortcutsRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff222"
+	exampleItemID = "25bac802-080d-4f73-8a42-1b406eb1fceb"
+	exampleBulkCreateShortcutsRequest = core.BulkCreateShortcutsRequest{
+		CreateShortcutRequests: []core.CreateShortcutWithTransformRequest{
+			{
+				Name: to.Ptr("OneLakeShortcut1"),
+				Path: to.Ptr("Files/blafolder/folder1"),
+				Target: &core.CreatableShortcutTarget{
+					OneLake: &core.OneLake{
+						Path:         to.Ptr("Tables/myTablesFolder/someTableSubFolder"),
+						ConnectionID: to.Ptr("4c868756-f7ce-4df1-8198-b1e5225b668f"),
+						ItemID:       to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
+						WorkspaceID:  to.Ptr("acafbeb1-8037-4d0c-896e-a46fb27ff256"),
+					},
+				},
+				Transform: &core.CSVToDeltaTransform{
+					Type: to.Ptr(core.TransformTypeCSVToDelta),
+					Properties: &core.CSVToDeltaTransformProperties{
+						Delimiter:           to.Ptr(","),
+						SkipFilesWithErrors: to.Ptr(true),
+						UseFirstRowAsHeader: to.Ptr(true),
+					},
+				},
+			},
+			{
+				Name: to.Ptr("OneLakeShortcut2"),
+				Path: to.Ptr("Files/blafolder/folder2"),
+				Target: &core.CreatableShortcutTarget{
+					OneLake: &core.OneLake{
+						Path:         to.Ptr("Tables/myTablesFolder/someTableSubFolder"),
+						ConnectionID: to.Ptr("4c868756-f7ce-4df1-8198-b1e5225b668f"),
+						ItemID:       to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
+						WorkspaceID:  to.Ptr("acafbeb1-8037-4d0c-896e-a46fb27ff256"),
+					},
+				},
+				Transform: &core.CSVToDeltaTransform{
+					Type: to.Ptr(core.TransformTypeCSVToDelta),
+					Properties: &core.CSVToDeltaTransformProperties{
+						Delimiter:           to.Ptr(","),
+						SkipFilesWithErrors: to.Ptr(true),
+						UseFirstRowAsHeader: to.Ptr(true),
+					},
+				},
+			},
+			{
+				Name: to.Ptr("OneLakeShortcut3"),
+				Path: to.Ptr("Files/blafolder/folder3"),
+				Target: &core.CreatableShortcutTarget{
+					OneLake: &core.OneLake{
+						Path:        to.Ptr("Tables/myTablesFolder/someTableSubFolder"),
+						ItemID:      to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
+						WorkspaceID: to.Ptr("acafbeb1-8037-4d0c-896e-a46fb27ff256"),
+					},
+				},
+			}},
+	}
+
+	testsuite.serverFactory.OneLakeShortcutsServer.BeginCreatesShortcutsInBulk = func(ctx context.Context, workspaceID string, itemID string, bulkCreateShortcutsRequest core.BulkCreateShortcutsRequest, options *core.OneLakeShortcutsClientBeginCreatesShortcutsInBulkOptions) (resp azfake.PollerResponder[core.OneLakeShortcutsClientCreatesShortcutsInBulkResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().True(reflect.DeepEqual(exampleBulkCreateShortcutsRequest, bulkCreateShortcutsRequest))
+		resp = azfake.PollerResponder[core.OneLakeShortcutsClientCreatesShortcutsInBulkResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, core.OneLakeShortcutsClientCreatesShortcutsInBulkResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewOneLakeShortcutsClient()
+	poller, err := client.BeginCreatesShortcutsInBulk(ctx, exampleWorkspaceID, exampleItemID, exampleBulkCreateShortcutsRequest, &core.OneLakeShortcutsClientBeginCreatesShortcutsInBulkOptions{ShortcutConflictPolicy: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
 func (testsuite *FakeTestSuite) TestOneLakeShortcuts_ListShortcuts() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -2498,7 +2579,7 @@ func (testsuite *FakeTestSuite) TestOneLakeShortcuts_ListShortcuts() {
 	exampleItemID = "56bac802-080d-4f73-8a42-1b406eb1fcac"
 
 	exampleRes := core.Shortcuts{
-		Value: []core.Shortcut{
+		Value: []core.ShortcutTransformFlagged{
 			{
 				Name: to.Ptr("MyOneLakeShortcut"),
 				Path: to.Ptr("Files/blafolder/folder3"),
@@ -2593,7 +2674,7 @@ func (testsuite *FakeTestSuite) TestOneLakeShortcuts_ListShortcuts() {
 	exampleRes = core.Shortcuts{
 		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
 		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/workspaces/cfafbeb1-8037-4d0c-896e-a46fb27ff229/items/56bac802-080d-4f73-8a42-1b406eb1fcac/shortcuts?continuationToken=LDEsMTAwMDAwLDA%3D"),
-		Value: []core.Shortcut{
+		Value: []core.ShortcutTransformFlagged{
 			{
 				Name: to.Ptr("MyOneLakeShortcut"),
 				Path: to.Ptr("Files/blafolder/folder3"),
@@ -2676,6 +2757,64 @@ func (testsuite *FakeTestSuite) TestOneLakeShortcuts_ListShortcuts() {
 			break
 		}
 	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List shortcuts with shortcut transforms example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleItemID = "56bac802-080d-4f73-8a42-1b406eb1fcac"
+
+	exampleRes = core.Shortcuts{
+		Value: []core.ShortcutTransformFlagged{
+			{
+				Name: to.Ptr("MyOneLakeShortcut"),
+				Path: to.Ptr("Files/blafolder/folder3"),
+				Target: &core.Target{
+					Type: to.Ptr(core.TypeOneLake),
+					OneLake: &core.OneLake{
+						Path:        to.Ptr("Tables/myTablesFolder/someTableSubFolder"),
+						ItemID:      to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
+						WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+					},
+				},
+				IsShortcutTransform: to.Ptr(true),
+			},
+			{
+				Name: to.Ptr("MyS3CompatibleShortcut"),
+				Path: to.Ptr("Files/blafolder/folder3"),
+				Target: &core.Target{
+					Type: to.Ptr(core.TypeS3Compatible),
+					S3Compatible: &core.S3Compatible{
+						Bucket:       to.Ptr("contosoBucket"),
+						ConnectionID: to.Ptr("3c976446-0bda-472e-8800-f1d6e4f162dc"),
+						Location:     to.Ptr("https://s3endpoint.contoso.com"),
+						Subpath:      to.Ptr("s3CompatibleDirectory"),
+					},
+				},
+				IsShortcutTransform: to.Ptr(true),
+			}},
+	}
+
+	testsuite.serverFactory.OneLakeShortcutsServer.NewListShortcutsPager = func(workspaceID string, itemID string, options *core.OneLakeShortcutsClientListShortcutsOptions) (resp azfake.PagerResponder[core.OneLakeShortcutsClientListShortcutsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		resp = azfake.PagerResponder[core.OneLakeShortcutsClientListShortcutsResponse]{}
+		resp.AddPage(http.StatusOK, core.OneLakeShortcutsClientListShortcutsResponse{Shortcuts: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListShortcutsPager(exampleWorkspaceID, exampleItemID, &core.OneLakeShortcutsClientListShortcutsOptions{ParentPath: nil,
+		ContinuationToken: nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Shortcuts))
+		if err == nil {
+			break
+		}
+	}
 }
 
 func (testsuite *FakeTestSuite) TestOneLakeShortcuts_CreateShortcut() {
@@ -2723,7 +2862,7 @@ func (testsuite *FakeTestSuite) TestOneLakeShortcuts_CreateShortcut() {
 	}
 
 	client := testsuite.clientFactory.NewOneLakeShortcutsClient()
-	res, err := client.CreateShortcut(ctx, exampleWorkspaceID, exampleItemID, exampleCreateShortcutRequest, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: to.Ptr(core.ShortcutConflictPolicyCreateOrOverwrite)})
+	res, err := client.CreateShortcut(ctx, exampleWorkspaceID, exampleItemID, exampleCreateShortcutRequest, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: to.Ptr(core.ShortcutConflictPolicy("CreateOrOverwrite"))})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Shortcut))
 
@@ -2948,7 +3087,7 @@ func (testsuite *FakeTestSuite) TestOneLakeShortcuts_CreateShortcut() {
 		return
 	}
 
-	res, err = client.CreateShortcut(ctx, exampleWorkspaceID, exampleItemID, exampleCreateShortcutRequest, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: to.Ptr(core.ShortcutConflictPolicyCreateOrOverwrite)})
+	res, err = client.CreateShortcut(ctx, exampleWorkspaceID, exampleItemID, exampleCreateShortcutRequest, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: to.Ptr(core.ShortcutConflictPolicy("CreateOrOverwrite"))})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Shortcut))
 }
@@ -3120,6 +3259,50 @@ func (testsuite *FakeTestSuite) TestOneLakeShortcuts_GetShortcut() {
 				ConnectionID: to.Ptr("3c976446-0bda-472e-8800-f1d6e4f162dc"),
 				Location:     to.Ptr("https://s3endpoint.contoso.com"),
 				Subpath:      to.Ptr("s3CompatibleDirectory"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.OneLakeShortcutsServer.GetShortcut = func(ctx context.Context, workspaceID string, itemID string, shortcutPath string, shortcutName string, options *core.OneLakeShortcutsClientGetShortcutOptions) (resp azfake.Responder[core.OneLakeShortcutsClientGetShortcutResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().Equal(exampleShortcutPath, shortcutPath)
+		testsuite.Require().Equal(exampleShortcutName, shortcutName)
+		resp = azfake.Responder[core.OneLakeShortcutsClientGetShortcutResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeShortcutsClientGetShortcutResponse{Shortcut: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.GetShortcut(ctx, exampleWorkspaceID, exampleItemID, exampleShortcutPath, exampleShortcutName, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Shortcut))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get shortcut transform with One Lake target example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff222"
+	exampleItemID = "25bac802-080d-4f73-8a42-1b406eb1fceb"
+	exampleShortcutPath = "Files/blafolder/folder3"
+	exampleShortcutName = "MyOneLakeShortcutTransform"
+
+	exampleRes = core.Shortcut{
+		Name: to.Ptr("MyOneLakeShortcutTransform"),
+		Path: to.Ptr("Files/blafolder/folder3"),
+		Target: &core.Target{
+			Type: to.Ptr(core.TypeOneLake),
+			OneLake: &core.OneLake{
+				Path:        to.Ptr("Tables/myTablesFolder/someTableSubFolder"),
+				ItemID:      to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
+				WorkspaceID: to.Ptr("acafbeb1-8037-4d0c-896e-a46fb27ff256"),
+			},
+		},
+		Transform: &core.CSVToDeltaTransform{
+			Type: to.Ptr(core.TransformTypeCSVToDelta),
+			Properties: &core.CSVToDeltaTransformProperties{
+				Delimiter:           to.Ptr(","),
+				SkipFilesWithErrors: to.Ptr(true),
+				UseFirstRowAsHeader: to.Ptr(false),
 			},
 		},
 	}
@@ -5789,8 +5972,8 @@ func (testsuite *FakeTestSuite) TestConnections_ListConnections() {
 	exampleRes := core.ListConnectionsResponse{
 		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
 		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/connections?continuationToken=LDEsMTAwMDAwLDA%3D"),
-		Value: []core.Connection{
-			{
+		Value: []core.ConnectionClassification{
+			&core.ShareableCloudConnection{
 				ConnectionDetails: &core.ListConnectionDetails{
 					Type: to.Ptr("Web"),
 					Path: to.Ptr("https://www.contoso.com"),
@@ -5806,7 +5989,7 @@ func (testsuite *FakeTestSuite) TestConnections_ListConnections() {
 				ID:           to.Ptr("6952a7b2-aea3-414f-9d85-6c0fe5d34539"),
 				PrivacyLevel: to.Ptr(core.PrivacyLevelPublic),
 			},
-			{
+			&core.OnPremisesGatewayConnection{
 				ConnectionDetails: &core.ListConnectionDetails{
 					Type: to.Ptr("SQL"),
 					Path: to.Ptr("contoso.database.windows.net;sales"),
@@ -5819,9 +6002,9 @@ func (testsuite *FakeTestSuite) TestConnections_ListConnections() {
 					CredentialType:       to.Ptr(core.CredentialTypeBasic),
 				},
 				DisplayName:  to.Ptr("ContosoConnection2"),
-				GatewayID:    to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
 				ID:           to.Ptr("f6a39b76-9816-4e4b-b93a-f42e405017b7"),
 				PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
+				GatewayID:    to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
 			}},
 	}
 
@@ -5999,35 +6182,37 @@ func (testsuite *FakeTestSuite) TestConnections_GetConnection() {
 	var exampleConnectionID string
 	exampleConnectionID = "f6a39b76-9816-4e4b-b93a-f42e405017b7"
 
-	exampleRes := core.Connection{
-		ConnectionDetails: &core.ListConnectionDetails{
-			Type: to.Ptr("SQL"),
-			Path: to.Ptr("contoso.database.windows.net;sales"),
+	exampleRes := core.ConnectionsClientGetConnectionResponse{
+		ConnectionClassification: &core.OnPremisesGatewayConnection{
+			ConnectionDetails: &core.ListConnectionDetails{
+				Type: to.Ptr("SQL"),
+				Path: to.Ptr("contoso.database.windows.net;sales"),
+			},
+			ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGateway),
+			CredentialDetails: &core.ListCredentialDetails{
+				ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+				SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+				SkipTestConnection:   to.Ptr(false),
+				CredentialType:       to.Ptr(core.CredentialTypeBasic),
+			},
+			DisplayName:  to.Ptr("ContosoConnection"),
+			ID:           to.Ptr("f6a39b76-9816-4e4b-b93a-f42e405017b7"),
+			PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
+			GatewayID:    to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
 		},
-		ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGateway),
-		CredentialDetails: &core.ListCredentialDetails{
-			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
-			SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
-			SkipTestConnection:   to.Ptr(false),
-			CredentialType:       to.Ptr(core.CredentialTypeBasic),
-		},
-		DisplayName:  to.Ptr("ContosoConnection"),
-		GatewayID:    to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
-		ID:           to.Ptr("f6a39b76-9816-4e4b-b93a-f42e405017b7"),
-		PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 	}
 
 	testsuite.serverFactory.ConnectionsServer.GetConnection = func(ctx context.Context, connectionID string, options *core.ConnectionsClientGetConnectionOptions) (resp azfake.Responder[core.ConnectionsClientGetConnectionResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleConnectionID, connectionID)
 		resp = azfake.Responder[core.ConnectionsClientGetConnectionResponse]{}
-		resp.SetResponse(http.StatusOK, core.ConnectionsClientGetConnectionResponse{Connection: exampleRes}, nil)
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewConnectionsClient()
 	res, err := client.GetConnection(ctx, exampleConnectionID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
-	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Connection))
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
 }
 
 func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
@@ -6048,35 +6233,37 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 		},
 	}
 
-	exampleRes := core.Connection{
-		ConnectionDetails: &core.ListConnectionDetails{
-			Type: to.Ptr("SQL"),
-			Path: to.Ptr("contoso.database.windows.net;reporting"),
+	exampleRes := core.ConnectionsClientUpdateConnectionResponse{
+		ConnectionClassification: &core.OnPremisesGatewayPersonalConnection{
+			ConnectionDetails: &core.ListConnectionDetails{
+				Type: to.Ptr("SQL"),
+				Path: to.Ptr("contoso.database.windows.net;reporting"),
+			},
+			ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGatewayPersonal),
+			CredentialDetails: &core.ListCredentialDetails{
+				ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+				SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+				SkipTestConnection:   to.Ptr(false),
+				CredentialType:       to.Ptr(core.CredentialTypeWindowsWithoutImpersonation),
+			},
+			ID:           to.Ptr("ef8f408d-2ab7-4a18-b662-9251febda49c"),
+			PrivacyLevel: to.Ptr(core.PrivacyLevelPrivate),
+			GatewayID:    to.Ptr("429a773e-5633-45ee-8584-a192bd79c16a"),
 		},
-		ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGatewayPersonal),
-		CredentialDetails: &core.ListCredentialDetails{
-			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
-			SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
-			SkipTestConnection:   to.Ptr(false),
-			CredentialType:       to.Ptr(core.CredentialTypeWindowsWithoutImpersonation),
-		},
-		GatewayID:    to.Ptr("429a773e-5633-45ee-8584-a192bd79c16a"),
-		ID:           to.Ptr("ef8f408d-2ab7-4a18-b662-9251febda49c"),
-		PrivacyLevel: to.Ptr(core.PrivacyLevelPrivate),
 	}
 
 	testsuite.serverFactory.ConnectionsServer.UpdateConnection = func(ctx context.Context, connectionID string, updateConnectionRequest core.UpdateConnectionRequestClassification, options *core.ConnectionsClientUpdateConnectionOptions) (resp azfake.Responder[core.ConnectionsClientUpdateConnectionResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleConnectionID, connectionID)
 		testsuite.Require().True(reflect.DeepEqual(exampleUpdateConnectionRequest, updateConnectionRequest))
 		resp = azfake.Responder[core.ConnectionsClientUpdateConnectionResponse]{}
-		resp.SetResponse(http.StatusOK, core.ConnectionsClientUpdateConnectionResponse{Connection: exampleRes}, nil)
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewConnectionsClient()
 	res, err := client.UpdateConnection(ctx, exampleConnectionID, exampleUpdateConnectionRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
-	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Connection))
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -6103,35 +6290,37 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 		DisplayName: to.Ptr("ContosoSalesOnPremisesConnection"),
 	}
 
-	exampleRes = core.Connection{
-		ConnectionDetails: &core.ListConnectionDetails{
-			Type: to.Ptr("SQL"),
-			Path: to.Ptr("contoso.database.windows.net;sales"),
+	exampleRes = core.ConnectionsClientUpdateConnectionResponse{
+		ConnectionClassification: &core.OnPremisesGatewayConnection{
+			ConnectionDetails: &core.ListConnectionDetails{
+				Type: to.Ptr("SQL"),
+				Path: to.Ptr("contoso.database.windows.net;sales"),
+			},
+			ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGateway),
+			CredentialDetails: &core.ListCredentialDetails{
+				ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+				SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+				SkipTestConnection:   to.Ptr(false),
+				CredentialType:       to.Ptr(core.CredentialTypeWindows),
+			},
+			DisplayName:  to.Ptr("ContosoSalesOnPremisesConnection"),
+			ID:           to.Ptr("70b17680-48f1-4729-9df6-02576647dc3a"),
+			PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
+			GatewayID:    to.Ptr("4f8b5d6e-8e99-4817-8b9e-6b6a613be707"),
 		},
-		ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGateway),
-		CredentialDetails: &core.ListCredentialDetails{
-			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
-			SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
-			SkipTestConnection:   to.Ptr(false),
-			CredentialType:       to.Ptr(core.CredentialTypeWindows),
-		},
-		DisplayName:  to.Ptr("ContosoSalesOnPremisesConnection"),
-		GatewayID:    to.Ptr("4f8b5d6e-8e99-4817-8b9e-6b6a613be707"),
-		ID:           to.Ptr("70b17680-48f1-4729-9df6-02576647dc3a"),
-		PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 	}
 
 	testsuite.serverFactory.ConnectionsServer.UpdateConnection = func(ctx context.Context, connectionID string, updateConnectionRequest core.UpdateConnectionRequestClassification, options *core.ConnectionsClientUpdateConnectionOptions) (resp azfake.Responder[core.ConnectionsClientUpdateConnectionResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleConnectionID, connectionID)
 		testsuite.Require().True(reflect.DeepEqual(exampleUpdateConnectionRequest, updateConnectionRequest))
 		resp = azfake.Responder[core.ConnectionsClientUpdateConnectionResponse]{}
-		resp.SetResponse(http.StatusOK, core.ConnectionsClientUpdateConnectionResponse{Connection: exampleRes}, nil)
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
 		return
 	}
 
 	res, err = client.UpdateConnection(ctx, exampleConnectionID, exampleUpdateConnectionRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
-	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Connection))
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -6143,33 +6332,35 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 		PrivacyLevel:     to.Ptr(core.PrivacyLevelOrganizational),
 	}
 
-	exampleRes = core.Connection{
-		ConnectionDetails: &core.ListConnectionDetails{
-			Type: to.Ptr("SQL"),
-			Path: to.Ptr("contoso.database.windows.net;finances"),
+	exampleRes = core.ConnectionsClientUpdateConnectionResponse{
+		ConnectionClassification: &core.PersonalCloudConnection{
+			ConnectionDetails: &core.ListConnectionDetails{
+				Type: to.Ptr("SQL"),
+				Path: to.Ptr("contoso.database.windows.net;finances"),
+			},
+			ConnectivityType: to.Ptr(core.ConnectivityTypePersonalCloud),
+			CredentialDetails: &core.ListCredentialDetails{
+				ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+				SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+				SkipTestConnection:   to.Ptr(false),
+				CredentialType:       to.Ptr(core.CredentialTypeOAuth2),
+			},
+			ID:           to.Ptr("7a0369b2-58c4-4b67-b3f3-92156a95f1cd"),
+			PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 		},
-		ConnectivityType: to.Ptr(core.ConnectivityTypePersonalCloud),
-		CredentialDetails: &core.ListCredentialDetails{
-			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
-			SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
-			SkipTestConnection:   to.Ptr(false),
-			CredentialType:       to.Ptr(core.CredentialTypeOAuth2),
-		},
-		ID:           to.Ptr("7a0369b2-58c4-4b67-b3f3-92156a95f1cd"),
-		PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 	}
 
 	testsuite.serverFactory.ConnectionsServer.UpdateConnection = func(ctx context.Context, connectionID string, updateConnectionRequest core.UpdateConnectionRequestClassification, options *core.ConnectionsClientUpdateConnectionOptions) (resp azfake.Responder[core.ConnectionsClientUpdateConnectionResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleConnectionID, connectionID)
 		testsuite.Require().True(reflect.DeepEqual(exampleUpdateConnectionRequest, updateConnectionRequest))
 		resp = azfake.Responder[core.ConnectionsClientUpdateConnectionResponse]{}
-		resp.SetResponse(http.StatusOK, core.ConnectionsClientUpdateConnectionResponse{Connection: exampleRes}, nil)
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
 		return
 	}
 
 	res, err = client.UpdateConnection(ctx, exampleConnectionID, exampleUpdateConnectionRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
-	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Connection))
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -6181,34 +6372,36 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 		DisplayName:      to.Ptr("ContosoCloudConnection"),
 	}
 
-	exampleRes = core.Connection{
-		ConnectionDetails: &core.ListConnectionDetails{
-			Type: to.Ptr("SQL"),
-			Path: to.Ptr("contoso.database.windows.net;networks"),
+	exampleRes = core.ConnectionsClientUpdateConnectionResponse{
+		ConnectionClassification: &core.ShareableCloudConnection{
+			ConnectionDetails: &core.ListConnectionDetails{
+				Type: to.Ptr("SQL"),
+				Path: to.Ptr("contoso.database.windows.net;networks"),
+			},
+			ConnectivityType: to.Ptr(core.ConnectivityTypeShareableCloud),
+			CredentialDetails: &core.ListCredentialDetails{
+				ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+				SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+				SkipTestConnection:   to.Ptr(true),
+				CredentialType:       to.Ptr(core.CredentialTypeBasic),
+			},
+			DisplayName:  to.Ptr("ContosoCloudConnection"),
+			ID:           to.Ptr("fa968eee-8075-48f6-8c6d-41260ee1396d"),
+			PrivacyLevel: to.Ptr(core.PrivacyLevelPublic),
 		},
-		ConnectivityType: to.Ptr(core.ConnectivityTypeShareableCloud),
-		CredentialDetails: &core.ListCredentialDetails{
-			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
-			SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
-			SkipTestConnection:   to.Ptr(true),
-			CredentialType:       to.Ptr(core.CredentialTypeBasic),
-		},
-		DisplayName:  to.Ptr("ContosoCloudConnection"),
-		ID:           to.Ptr("fa968eee-8075-48f6-8c6d-41260ee1396d"),
-		PrivacyLevel: to.Ptr(core.PrivacyLevelPublic),
 	}
 
 	testsuite.serverFactory.ConnectionsServer.UpdateConnection = func(ctx context.Context, connectionID string, updateConnectionRequest core.UpdateConnectionRequestClassification, options *core.ConnectionsClientUpdateConnectionOptions) (resp azfake.Responder[core.ConnectionsClientUpdateConnectionResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleConnectionID, connectionID)
 		testsuite.Require().True(reflect.DeepEqual(exampleUpdateConnectionRequest, updateConnectionRequest))
 		resp = azfake.Responder[core.ConnectionsClientUpdateConnectionResponse]{}
-		resp.SetResponse(http.StatusOK, core.ConnectionsClientUpdateConnectionResponse{Connection: exampleRes}, nil)
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
 		return
 	}
 
 	res, err = client.UpdateConnection(ctx, exampleConnectionID, exampleUpdateConnectionRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
-	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Connection))
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -6224,35 +6417,37 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 		DisplayName: to.Ptr("ContosoMarketingVirtualNetworkGatewayConnection"),
 	}
 
-	exampleRes = core.Connection{
-		ConnectionDetails: &core.ListConnectionDetails{
-			Type: to.Ptr("SQL"),
-			Path: to.Ptr("contoso.database.windows.net;marketing"),
+	exampleRes = core.ConnectionsClientUpdateConnectionResponse{
+		ConnectionClassification: &core.VirtualNetworkGatewayConnection{
+			ConnectionDetails: &core.ListConnectionDetails{
+				Type: to.Ptr("SQL"),
+				Path: to.Ptr("contoso.database.windows.net;marketing"),
+			},
+			ConnectivityType: to.Ptr(core.ConnectivityTypeVirtualNetworkGateway),
+			CredentialDetails: &core.ListCredentialDetails{
+				ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+				SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+				SkipTestConnection:   to.Ptr(false),
+				CredentialType:       to.Ptr(core.CredentialTypeBasic),
+			},
+			DisplayName:  to.Ptr("ContosoMarketingVirtualNetworkGatewayConnection"),
+			ID:           to.Ptr("6b571614-2e98-4bfd-b9ed-1cb8d3ffc396"),
+			PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
+			GatewayID:    to.Ptr("befccff4-3ee6-40d7-b8f1-a0a9fd684a85"),
 		},
-		ConnectivityType: to.Ptr(core.ConnectivityTypeVirtualNetworkGateway),
-		CredentialDetails: &core.ListCredentialDetails{
-			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
-			SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
-			SkipTestConnection:   to.Ptr(false),
-			CredentialType:       to.Ptr(core.CredentialTypeBasic),
-		},
-		DisplayName:  to.Ptr("ContosoMarketingVirtualNetworkGatewayConnection"),
-		GatewayID:    to.Ptr("befccff4-3ee6-40d7-b8f1-a0a9fd684a85"),
-		ID:           to.Ptr("6b571614-2e98-4bfd-b9ed-1cb8d3ffc396"),
-		PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 	}
 
 	testsuite.serverFactory.ConnectionsServer.UpdateConnection = func(ctx context.Context, connectionID string, updateConnectionRequest core.UpdateConnectionRequestClassification, options *core.ConnectionsClientUpdateConnectionOptions) (resp azfake.Responder[core.ConnectionsClientUpdateConnectionResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleConnectionID, connectionID)
 		testsuite.Require().True(reflect.DeepEqual(exampleUpdateConnectionRequest, updateConnectionRequest))
 		resp = azfake.Responder[core.ConnectionsClientUpdateConnectionResponse]{}
-		resp.SetResponse(http.StatusOK, core.ConnectionsClientUpdateConnectionResponse{Connection: exampleRes}, nil)
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
 		return
 	}
 
 	res, err = client.UpdateConnection(ctx, exampleConnectionID, exampleUpdateConnectionRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
-	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Connection))
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
 }
 
 func (testsuite *FakeTestSuite) TestConnections_DeleteConnection() {

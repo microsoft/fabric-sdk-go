@@ -8,6 +8,54 @@ package core
 
 import "encoding/json"
 
+func unmarshalConnectionClassification(rawMsg json.RawMessage) (ConnectionClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b ConnectionClassification
+	switch m["connectivityType"] {
+	case string(ConnectivityTypeOnPremisesGateway):
+		b = &OnPremisesGatewayConnection{}
+	case string(ConnectivityTypeOnPremisesGatewayPersonal):
+		b = &OnPremisesGatewayPersonalConnection{}
+	case string(ConnectivityTypePersonalCloud):
+		b = &PersonalCloudConnection{}
+	case string(ConnectivityTypeShareableCloud):
+		b = &ShareableCloudConnection{}
+	case string(ConnectivityTypeVirtualNetworkGateway):
+		b = &VirtualNetworkGatewayConnection{}
+	default:
+		b = &Connection{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalConnectionClassificationArray(rawMsg json.RawMessage) ([]ConnectionClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var rawMessages []json.RawMessage
+	if err := json.Unmarshal(rawMsg, &rawMessages); err != nil {
+		return nil, err
+	}
+	fArray := make([]ConnectionClassification, len(rawMessages))
+	for index, rawMessage := range rawMessages {
+		f, err := unmarshalConnectionClassification(rawMessage)
+		if err != nil {
+			return nil, err
+		}
+		fArray[index] = f
+	}
+	return fArray, nil
+}
+
 func unmarshalConnectionDetailsParameterClassification(rawMsg json.RawMessage) (ConnectionDetailsParameterClassification, error) {
 	if rawMsg == nil || string(rawMsg) == "null" {
 		return nil, nil
@@ -251,6 +299,27 @@ func unmarshalScheduleConfigClassification(rawMsg json.RawMessage) (ScheduleConf
 		b = &WeeklyScheduleConfig{}
 	default:
 		b = &ScheduleConfig{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalTransformClassification(rawMsg json.RawMessage) (TransformClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b TransformClassification
+	switch m["type"] {
+	case string(TransformTypeCSVToDelta):
+		b = &CSVToDeltaTransform{}
+	default:
+		b = &Transform{}
 	}
 	if err := json.Unmarshal(rawMsg, b); err != nil {
 		return nil, err

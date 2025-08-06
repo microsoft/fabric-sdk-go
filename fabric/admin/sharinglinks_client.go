@@ -27,7 +27,9 @@ type SharingLinksClient struct {
 	endpoint string
 }
 
-// BeginBulkRemoveSharingLinks - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// BeginBulkRemoveSharingLinks - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Use LinksSharedToWholeOrganization [https://learn.microsoft.com/en-us/rest/api/power-bi/admin] PowerBI Admin REST API to
 // get Power BI Reports shared via organizational sharing links.
 // PERMISSIONS The caller must be a Fabric administrator.
@@ -52,7 +54,9 @@ func (client *SharingLinksClient) BeginBulkRemoveSharingLinks(ctx context.Contex
 	return client.beginBulkRemoveSharingLinks(ctx, bulkRemoveSharingLinksRequest, options)
 }
 
-// BulkRemoveSharingLinks - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// BulkRemoveSharingLinks - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Use LinksSharedToWholeOrganization [https://learn.microsoft.com/en-us/rest/api/power-bi/admin] PowerBI Admin REST API to
 // get Power BI Reports shared via organizational sharing links.
 // PERMISSIONS The caller must be a Fabric administrator.
@@ -105,7 +109,9 @@ func (client *SharingLinksClient) bulkRemoveSharingLinksCreateRequest(ctx contex
 	return req, nil
 }
 
-// BeginRemoveAllSharingLinks - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// BeginRemoveAllSharingLinks - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Use LinksSharedToWholeOrganization [https://learn.microsoft.com/en-us/rest/api/power-bi/admin] PowerBI Admin REST API to
 // get Power BI Reports shared via organizational sharing links.
 // PERMISSIONS The caller must be a Fabric administrator.
@@ -129,7 +135,9 @@ func (client *SharingLinksClient) BeginRemoveAllSharingLinks(ctx context.Context
 	return client.beginRemoveAllSharingLinks(ctx, removeAllSharingLinksRequest, options)
 }
 
-// RemoveAllSharingLinks - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// RemoveAllSharingLinks - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Use LinksSharedToWholeOrganization [https://learn.microsoft.com/en-us/rest/api/power-bi/admin] PowerBI Admin REST API to
 // get Power BI Reports shared via organizational sharing links.
 // PERMISSIONS The caller must be a Fabric administrator.
@@ -184,6 +192,8 @@ func (client *SharingLinksClient) removeAllSharingLinksCreateRequest(ctx context
 // Custom code starts below
 
 // BulkRemoveSharingLinks - returns SharingLinksClientBulkRemoveSharingLinksResponse in sync mode.
+// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
+//
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
 // Use LinksSharedToWholeOrganization [https://learn.microsoft.com/en-us/rest/api/power-bi/admin] PowerBI Admin REST API to get Power BI Reports shared via organizational sharing links.
@@ -260,6 +270,8 @@ func (client *SharingLinksClient) beginBulkRemoveSharingLinks(ctx context.Contex
 }
 
 // RemoveAllSharingLinks - returns SharingLinksClientRemoveAllSharingLinksResponse in sync mode.
+// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
+//
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
 // Use LinksSharedToWholeOrganization [https://learn.microsoft.com/en-us/rest/api/power-bi/admin] PowerBI Admin REST API to get Power BI Reports shared via organizational sharing links.

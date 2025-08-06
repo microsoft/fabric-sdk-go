@@ -583,6 +583,17 @@ type OneLakeDataAccessSecurityClientListDataAccessRolesOptions struct {
 	ContinuationToken *string
 }
 
+// OneLakeShortcutsClientBeginCreatesShortcutsInBulkOptions contains the optional parameters for the OneLakeShortcutsClient.BeginCreatesShortcutsInBulk
+// method.
+type OneLakeShortcutsClientBeginCreatesShortcutsInBulkOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+
+	// When provided, it defines the action to take when a shortcut with the same name and path already exists. The default action
+	// is 'Abort'. Additional ShortcutConflictPolicy types may be added over time.
+	ShortcutConflictPolicy *ShortcutConflictPolicy
+}
+
 // OneLakeShortcutsClientBeginResetShortcutCacheOptions contains the optional parameters for the OneLakeShortcutsClient.BeginResetShortcutCache
 // method.
 type OneLakeShortcutsClientBeginResetShortcutCacheOptions struct {

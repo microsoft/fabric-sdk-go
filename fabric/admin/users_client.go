@@ -28,8 +28,10 @@ type UsersClient struct {
 	endpoint string
 }
 
-// NewListAccessEntitiesPager - This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records
-// can be returned per request. With the continuous token provided in the response, you can get the next
+// NewListAccessEntitiesPager - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records can be returned per request.
+// With the continuous token provided in the response, you can get the next
 // 10,000 records.
 // Page order:
 // 1. Fabric items
@@ -111,6 +113,8 @@ func (client *UsersClient) listAccessEntitiesHandleResponse(resp *http.Response)
 // Custom code starts below
 
 // ListAccessEntities - returns array of AccessEntity from all pages.
+// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
+//
 // This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records can be returned per request. With the continuous token provided in the response, you can get the next
 // 10,000 records.
 //

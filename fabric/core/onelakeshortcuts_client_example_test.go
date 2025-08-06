@@ -17,6 +17,80 @@ import (
 )
 
 // Generated from example definition
+func ExampleOneLakeShortcutsClient_BeginCreatesShortcutsInBulk() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewOneLakeShortcutsClient().BeginCreatesShortcutsInBulk(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff222", "25bac802-080d-4f73-8a42-1b406eb1fceb", core.BulkCreateShortcutsRequest{
+		CreateShortcutRequests: []core.CreateShortcutWithTransformRequest{
+			{
+				Name: to.Ptr("OneLakeShortcut1"),
+				Path: to.Ptr("Files/blafolder/folder1"),
+				Target: &core.CreatableShortcutTarget{
+					OneLake: &core.OneLake{
+						Path:         to.Ptr("Tables/myTablesFolder/someTableSubFolder"),
+						ConnectionID: to.Ptr("4c868756-f7ce-4df1-8198-b1e5225b668f"),
+						ItemID:       to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
+						WorkspaceID:  to.Ptr("acafbeb1-8037-4d0c-896e-a46fb27ff256"),
+					},
+				},
+				Transform: &core.CSVToDeltaTransform{
+					Type: to.Ptr(core.TransformTypeCSVToDelta),
+					Properties: &core.CSVToDeltaTransformProperties{
+						Delimiter:           to.Ptr(","),
+						SkipFilesWithErrors: to.Ptr(true),
+						UseFirstRowAsHeader: to.Ptr(true),
+					},
+				},
+			},
+			{
+				Name: to.Ptr("OneLakeShortcut2"),
+				Path: to.Ptr("Files/blafolder/folder2"),
+				Target: &core.CreatableShortcutTarget{
+					OneLake: &core.OneLake{
+						Path:         to.Ptr("Tables/myTablesFolder/someTableSubFolder"),
+						ConnectionID: to.Ptr("4c868756-f7ce-4df1-8198-b1e5225b668f"),
+						ItemID:       to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
+						WorkspaceID:  to.Ptr("acafbeb1-8037-4d0c-896e-a46fb27ff256"),
+					},
+				},
+				Transform: &core.CSVToDeltaTransform{
+					Type: to.Ptr(core.TransformTypeCSVToDelta),
+					Properties: &core.CSVToDeltaTransformProperties{
+						Delimiter:           to.Ptr(","),
+						SkipFilesWithErrors: to.Ptr(true),
+						UseFirstRowAsHeader: to.Ptr(true),
+					},
+				},
+			},
+			{
+				Name: to.Ptr("OneLakeShortcut3"),
+				Path: to.Ptr("Files/blafolder/folder3"),
+				Target: &core.CreatableShortcutTarget{
+					OneLake: &core.OneLake{
+						Path:        to.Ptr("Tables/myTablesFolder/someTableSubFolder"),
+						ItemID:      to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
+						WorkspaceID: to.Ptr("acafbeb1-8037-4d0c-896e-a46fb27ff256"),
+					},
+				},
+			}},
+	}, &core.OneLakeShortcutsClientBeginCreatesShortcutsInBulkOptions{ShortcutConflictPolicy: nil})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
 func ExampleOneLakeShortcutsClient_NewListShortcutsPager_listShortcutsExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -41,7 +115,7 @@ func ExampleOneLakeShortcutsClient_NewListShortcutsPager_listShortcutsExample() 
 		}
 		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
 		// page.Shortcuts = core.Shortcuts{
-		// 	Value: []core.Shortcut{
+		// 	Value: []core.ShortcutTransformFlagged{
 		// 		{
 		// 			Name: to.Ptr("MyOneLakeShortcut"),
 		// 			Path: to.Ptr("Files/blafolder/folder3"),
@@ -134,7 +208,7 @@ func ExampleOneLakeShortcutsClient_NewListShortcutsPager_listShortcutsWithContin
 		// page.Shortcuts = core.Shortcuts{
 		// 	ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
 		// 	ContinuationURI: to.Ptr("https://api.fabric.microsoft.com/v1/workspaces/cfafbeb1-8037-4d0c-896e-a46fb27ff229/items/56bac802-080d-4f73-8a42-1b406eb1fcac/shortcuts?continuationToken=LDEsMTAwMDAwLDA%3D"),
-		// 	Value: []core.Shortcut{
+		// 	Value: []core.ShortcutTransformFlagged{
 		// 		{
 		// 			Name: to.Ptr("MyOneLakeShortcut"),
 		// 			Path: to.Ptr("Files/blafolder/folder3"),
@@ -201,6 +275,63 @@ func ExampleOneLakeShortcutsClient_NewListShortcutsPager_listShortcutsWithContin
 }
 
 // Generated from example definition
+func ExampleOneLakeShortcutsClient_NewListShortcutsPager_listShortcutsWithShortcutTransformsExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewOneLakeShortcutsClient().NewListShortcutsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", "56bac802-080d-4f73-8a42-1b406eb1fcac", &core.OneLakeShortcutsClientListShortcutsOptions{ParentPath: nil,
+		ContinuationToken: nil,
+	})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.Shortcuts = core.Shortcuts{
+		// 	Value: []core.ShortcutTransformFlagged{
+		// 		{
+		// 			Name: to.Ptr("MyOneLakeShortcut"),
+		// 			Path: to.Ptr("Files/blafolder/folder3"),
+		// 			Target: &core.Target{
+		// 				Type: to.Ptr(core.TypeOneLake),
+		// 				OneLake: &core.OneLake{
+		// 					Path: to.Ptr("Tables/myTablesFolder/someTableSubFolder"),
+		// 					ItemID: to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
+		// 					WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+		// 				},
+		// 			},
+		// 			IsShortcutTransform: to.Ptr(true),
+		// 		},
+		// 		{
+		// 			Name: to.Ptr("MyS3CompatibleShortcut"),
+		// 			Path: to.Ptr("Files/blafolder/folder3"),
+		// 			Target: &core.Target{
+		// 				Type: to.Ptr(core.TypeS3Compatible),
+		// 				S3Compatible: &core.S3Compatible{
+		// 					Bucket: to.Ptr("contosoBucket"),
+		// 					ConnectionID: to.Ptr("3c976446-0bda-472e-8800-f1d6e4f162dc"),
+		// 					Location: to.Ptr("https://s3endpoint.contoso.com"),
+		// 					Subpath: to.Ptr("s3CompatibleDirectory"),
+		// 				},
+		// 			},
+		// 			IsShortcutTransform: to.Ptr(true),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
 func ExampleOneLakeShortcutsClient_CreateShortcut_createOrUpdateShortcutTargetToOneLake() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -221,7 +352,7 @@ func ExampleOneLakeShortcutsClient_CreateShortcut_createOrUpdateShortcutTargetTo
 				WorkspaceID: to.Ptr("acafbeb1-8037-4d0c-896e-a46fb27ff256"),
 			},
 		},
-	}, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: to.Ptr(core.ShortcutConflictPolicyCreateOrOverwrite)})
+	}, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: to.Ptr(core.ShortcutConflictPolicy("CreateOrOverwrite"))})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -426,7 +557,7 @@ func ExampleOneLakeShortcutsClient_CreateShortcut_updateShortcutTargetToOneLake(
 				WorkspaceID: to.Ptr("acafbeb1-8037-4d0c-896e-a46fb27ff256"),
 			},
 		},
-	}, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: to.Ptr(core.ShortcutConflictPolicyCreateOrOverwrite)})
+	}, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: to.Ptr(core.ShortcutConflictPolicy("CreateOrOverwrite"))})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -601,6 +732,46 @@ func ExampleOneLakeShortcutsClient_GetShortcut_getShortcutS3CompatibleTargetExam
 	// 			ConnectionID: to.Ptr("3c976446-0bda-472e-8800-f1d6e4f162dc"),
 	// 			Location: to.Ptr("https://s3endpoint.contoso.com"),
 	// 			Subpath: to.Ptr("s3CompatibleDirectory"),
+	// 		},
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleOneLakeShortcutsClient_GetShortcut_getShortcutTransformWithOneLakeTargetExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewOneLakeShortcutsClient().GetShortcut(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff222", "25bac802-080d-4f73-8a42-1b406eb1fceb", "Files/blafolder/folder3", "MyOneLakeShortcutTransform", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.Shortcut = core.Shortcut{
+	// 	Name: to.Ptr("MyOneLakeShortcutTransform"),
+	// 	Path: to.Ptr("Files/blafolder/folder3"),
+	// 	Target: &core.Target{
+	// 		Type: to.Ptr(core.TypeOneLake),
+	// 		OneLake: &core.OneLake{
+	// 			Path: to.Ptr("Tables/myTablesFolder/someTableSubFolder"),
+	// 			ItemID: to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
+	// 			WorkspaceID: to.Ptr("acafbeb1-8037-4d0c-896e-a46fb27ff256"),
+	// 		},
+	// 	},
+	// 	Transform: &core.CSVToDeltaTransform{
+	// 		Type: to.Ptr(core.TransformTypeCSVToDelta),
+	// 		Properties: &core.CSVToDeltaTransformProperties{
+	// 			Delimiter: to.Ptr(","),
+	// 			SkipFilesWithErrors: to.Ptr(true),
+	// 			UseFirstRowAsHeader: to.Ptr(false),
 	// 		},
 	// 	},
 	// }

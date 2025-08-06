@@ -6,6 +6,36 @@
 
 package core
 
+// UnmarshalJSON implements the json.Unmarshaller interface for type ConnectionsClientCreateConnectionResponse.
+func (c *ConnectionsClientCreateConnectionResponse) UnmarshalJSON(data []byte) error {
+	res, err := unmarshalConnectionClassification(data)
+	if err != nil {
+		return err
+	}
+	c.ConnectionClassification = res
+	return nil
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ConnectionsClientGetConnectionResponse.
+func (c *ConnectionsClientGetConnectionResponse) UnmarshalJSON(data []byte) error {
+	res, err := unmarshalConnectionClassification(data)
+	if err != nil {
+		return err
+	}
+	c.ConnectionClassification = res
+	return nil
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ConnectionsClientUpdateConnectionResponse.
+func (c *ConnectionsClientUpdateConnectionResponse) UnmarshalJSON(data []byte) error {
+	res, err := unmarshalConnectionClassification(data)
+	if err != nil {
+		return err
+	}
+	c.ConnectionClassification = res
+	return nil
+}
+
 // UnmarshalJSON implements the json.Unmarshaller interface for type GatewaysClientCreateGatewayResponse.
 func (g *GatewaysClientCreateGatewayResponse) UnmarshalJSON(data []byte) error {
 	res, err := unmarshalGatewayClassification(data)

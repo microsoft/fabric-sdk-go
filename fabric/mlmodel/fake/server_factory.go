@@ -18,15 +18,17 @@ import (
 
 // ServerFactory is a fake server for instances of the mlmodel.ClientFactory type.
 type ServerFactory struct {
-	ItemsServer ItemsServer
+	EndpointServer EndpointServer
+	ItemsServer    ItemsServer
 }
 
 // ServerFactoryTransport connects instances of mlmodel.ClientFactory to instances of ServerFactory.
 // Don't use this type directly, use NewServerFactoryTransport instead.
 type ServerFactoryTransport struct {
-	srv           *ServerFactory
-	trMu          sync.Mutex
-	trItemsServer *ItemsServerTransport
+	srv              *ServerFactory
+	trMu             sync.Mutex
+	trEndpointServer *EndpointServerTransport
+	trItemsServer    *ItemsServerTransport
 }
 
 // NewServerFactoryTransport creates a new instance of ServerFactoryTransport with the provided implementation.
@@ -52,6 +54,9 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	var err error
 
 	switch client {
+	case "EndpointClient":
+		initServer(s, &s.trEndpointServer, func() *EndpointServerTransport { return NewEndpointServerTransport(&s.srv.EndpointServer) })
+		resp, err = s.trEndpointServer.Do(req)
 	case "ItemsClient":
 		initServer(s, &s.trItemsServer, func() *ItemsServerTransport { return NewItemsServerTransport(&s.srv.ItemsServer) })
 		resp, err = s.trItemsServer.Do(req)

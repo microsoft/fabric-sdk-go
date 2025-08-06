@@ -28,7 +28,87 @@ type BackgroundJobsClient struct {
 	endpoint string
 }
 
-// RunOnDemandTableMaintenance - REQUIRED DELEGATED SCOPES Lakehouse.Execute.All or Item.Execute.All
+// RunOnDemandRefreshMaterializedLakeViews - > [!NOTE] This API is part of a Preview release and is provided for evaluation
+// and development purposes only. It may change based on feedback and is not recommended for production use.
+// REQUIRED DELEGATED SCOPES Lakehouse.Execute.All or Item.Execute.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - lakehouseID - The lakehouse ID.
+//   - jobType - RefreshMaterializedLakeViews job type.
+//   - options - BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsOptions contains the optional parameters for the BackgroundJobsClient.RunOnDemandRefreshMaterializedLakeViews
+//     method.
+func (client *BackgroundJobsClient) RunOnDemandRefreshMaterializedLakeViews(ctx context.Context, workspaceID string, lakehouseID string, jobType string, options *BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsOptions) (BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse, error) {
+	var err error
+	const operationName = "lakehouse.BackgroundJobsClient.RunOnDemandRefreshMaterializedLakeViews"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.runOnDemandRefreshMaterializedLakeViewsCreateRequest(ctx, workspaceID, lakehouseID, jobType, options)
+	if err != nil {
+		return BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse{}, err
+	}
+	resp, err := client.runOnDemandRefreshMaterializedLakeViewsHandleResponse(httpResp)
+	return resp, err
+}
+
+// runOnDemandRefreshMaterializedLakeViewsCreateRequest creates the RunOnDemandRefreshMaterializedLakeViews request.
+func (client *BackgroundJobsClient) runOnDemandRefreshMaterializedLakeViewsCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, jobType string, _ *BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/jobs/instances"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if lakehouseID == "" {
+		return nil, errors.New("parameter lakehouseID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{lakehouseId}", url.PathEscape(lakehouseID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("jobType", jobType)
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// runOnDemandRefreshMaterializedLakeViewsHandleResponse handles the RunOnDemandRefreshMaterializedLakeViews response.
+func (client *BackgroundJobsClient) runOnDemandRefreshMaterializedLakeViewsHandleResponse(resp *http.Response) (BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse, error) {
+	result := BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse{}
+	if val := resp.Header.Get("Location"); val != "" {
+		result.Location = &val
+	}
+	if val := resp.Header.Get("Retry-After"); val != "" {
+		retryAfter32, err := strconv.ParseInt(val, 10, 32)
+		retryAfter := int32(retryAfter32)
+		if err != nil {
+			return BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse{}, err
+		}
+		result.RetryAfter = &retryAfter
+	}
+	return result, nil
+}
+
+// RunOnDemandTableMaintenance - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// REQUIRED DELEGATED SCOPES Lakehouse.Execute.All or Item.Execute.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]

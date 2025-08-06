@@ -27,7 +27,9 @@ type SparkComputeClient struct {
 	endpoint string
 }
 
-// GetPublishedSettings - PERMISSIONS Read permission to the environment item.
+// GetPublishedSettings - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// TRead permission to the environment item.
 // REQUIRED DELEGATED SCOPES Environment.Read.All or Environment.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -92,7 +94,9 @@ func (client *SparkComputeClient) getPublishedSettingsHandleResponse(resp *http.
 	return result, nil
 }
 
-// GetStagingSettings - PERMISSIONS Read permission to the environment item.
+// GetStagingSettings - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// TRead permission to the environment item.
 // REQUIRED DELEGATED SCOPES Environment.Read.All or Environment.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -157,7 +161,9 @@ func (client *SparkComputeClient) getStagingSettingsHandleResponse(resp *http.Re
 	return result, nil
 }
 
-// UpdateStagingSettings - PERMISSIONS Write permission to the environment item.
+// UpdateStagingSettings - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// TWrite permission to the environment item.
 // REQUIRED DELEGATED SCOPES Environment.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.

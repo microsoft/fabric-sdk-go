@@ -28,7 +28,9 @@ type BackgroundJobsClient struct {
 	endpoint string
 }
 
-// RunOnDemandApplyChanges - REQUIRED DELEGATED SCOPES For dataflows APIs use these scope types:
+// RunOnDemandApplyChanges - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// REQUIRED DELEGATED SCOPES For dataflows APIs use these scope types:
 // * Specific scope: Dataflow.Execute.All
 //
 // for more information about scopes, see: scopes article [/rest/api/fabric/articles/scopes].
@@ -108,7 +110,9 @@ func (client *BackgroundJobsClient) runOnDemandApplyChangesHandleResponse(resp *
 	return result, nil
 }
 
-// RunOnDemandExecute - REQUIRED DELEGATED SCOPES For dataflows APIs use these scope types:
+// RunOnDemandExecute - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// REQUIRED DELEGATED SCOPES For dataflows APIs use these scope types:
 // * Specific scope: Dataflow.Execute.All
 //
 // for more information about scopes, see: scopes article [/rest/api/fabric/articles/scopes].
@@ -194,7 +198,9 @@ func (client *BackgroundJobsClient) runOnDemandExecuteHandleResponse(resp *http.
 	return result, nil
 }
 
-// ScheduleApplyChanges - REQUIRED DELEGATED SCOPES: Dataflow.Execute.All and Dataflow.ReadWrite.All
+// ScheduleApplyChanges - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// REQUIRED DELEGATED SCOPES: Dataflow.Execute.All and Dataflow.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -265,7 +271,9 @@ func (client *BackgroundJobsClient) scheduleApplyChangesHandleResponse(resp *htt
 	return result, nil
 }
 
-// ScheduleExecute - REQUIRED DELEGATED SCOPES: Dataflow.Execute.All and Dataflow.ReadWrite.All
+// ScheduleExecute - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// REQUIRED DELEGATED SCOPES: Dataflow.Execute.All and Dataflow.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]

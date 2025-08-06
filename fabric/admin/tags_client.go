@@ -28,7 +28,9 @@ type TagsClient struct {
 	endpoint string
 }
 
-// BulkCreateTags - PERMISSIONS The caller must have administrator rights such as Fabric administrator.
+// BulkCreateTags - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must have administrator rights such as Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -87,7 +89,9 @@ func (client *TagsClient) bulkCreateTagsHandleResponse(resp *http.Response) (Tag
 	return result, nil
 }
 
-// DeleteTag - PERMISSIONS The caller must have administrator rights such as Fabric administrator.
+// DeleteTag - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only.
+// It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must have administrator rights such as Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 10 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -137,7 +141,9 @@ func (client *TagsClient) deleteTagCreateRequest(ctx context.Context, tagID stri
 	return req, nil
 }
 
-// NewListTagsPager - REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
+// NewListTagsPager - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -196,7 +202,9 @@ func (client *TagsClient) listTagsHandleResponse(resp *http.Response) (TagsClien
 	return result, nil
 }
 
-// UpdateTag - PERMISSIONS The caller must have administrator rights such as Fabric administrator.
+// UpdateTag - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only.
+// It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must have administrator rights such as Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -263,7 +271,9 @@ func (client *TagsClient) updateTagHandleResponse(resp *http.Response) (TagsClie
 // Custom code starts below
 
 // ListTags - returns array of TagInfo from all pages.
-// REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
+// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
+//
+// # REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
 //
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 //

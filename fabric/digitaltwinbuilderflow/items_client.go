@@ -30,7 +30,8 @@ type ItemsClient struct {
 	endpoint string
 }
 
-// BeginCreateDigitalTwinBuilderFlow - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// BeginCreateDigitalTwinBuilderFlow - > [!NOTE] Digital Twin Builder Flow item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create Digital Twin Builder Flow with a public definition, refer to [/rest/api/fabric/articles/item-management/definitions/digital-twin-builder-flow-definition]
 // article.
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
@@ -56,7 +57,8 @@ func (client *ItemsClient) BeginCreateDigitalTwinBuilderFlow(ctx context.Context
 	return client.beginCreateDigitalTwinBuilderFlow(ctx, workspaceID, createDigitalTwinBuilderFlowRequest, options)
 }
 
-// CreateDigitalTwinBuilderFlow - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// CreateDigitalTwinBuilderFlow - > [!NOTE] Digital Twin Builder Flow item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create Digital Twin Builder Flow with a public definition, refer to [/rest/api/fabric/articles/item-management/definitions/digital-twin-builder-flow-definition]
 // article.
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
@@ -113,7 +115,8 @@ func (client *ItemsClient) createDigitalTwinBuilderFlowCreateRequest(ctx context
 	return req, nil
 }
 
-// DeleteDigitalTwinBuilderFlow - PERMISSIONS The caller must have write permissions for the digital twin builder flow.
+// DeleteDigitalTwinBuilderFlow - > [!NOTE] Digital Twin Builder Flow item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// PERMISSIONS The caller must have write permissions for the digital twin builder flow.
 // REQUIRED DELEGATED SCOPES DigitalTwinBuilderFlow.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -168,7 +171,8 @@ func (client *ItemsClient) deleteDigitalTwinBuilderFlowCreateRequest(ctx context
 	return req, nil
 }
 
-// GetDigitalTwinBuilderFlow - PERMISSIONS The caller must have read permissions for the digital twin builder flow.
+// GetDigitalTwinBuilderFlow - > [!NOTE] Digital Twin Builder Flow item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// PERMISSIONS The caller must have read permissions for the digital twin builder flow.
 // REQUIRED DELEGATED SCOPES DigitalTwinBuilderFlow.Read.All or DigitalTwinBuilderFlow.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -233,7 +237,9 @@ func (client *ItemsClient) getDigitalTwinBuilderFlowHandleResponse(resp *http.Re
 	return result, nil
 }
 
-// BeginGetDigitalTwinBuilderFlowDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// BeginGetDigitalTwinBuilderFlowDefinition - > [!NOTE] Digital Twin Builder Flow item is currently in Preview (learn more
+// [/fabric/fundamentals/preview]).
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a Digital Twin Builder Flow's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the digital twin builder flow.
 // REQUIRED DELEGATED SCOPES DigitalTwinBuilderFlow.ReadWrite.All or Item.ReadWrite.All
@@ -254,7 +260,8 @@ func (client *ItemsClient) BeginGetDigitalTwinBuilderFlowDefinition(ctx context.
 	return client.beginGetDigitalTwinBuilderFlowDefinition(ctx, workspaceID, digitalTwinBuilderFlowID, options)
 }
 
-// GetDigitalTwinBuilderFlowDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// GetDigitalTwinBuilderFlowDefinition - > [!NOTE] Digital Twin Builder Flow item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a Digital Twin Builder Flow's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the digital twin builder flow.
 // REQUIRED DELEGATED SCOPES DigitalTwinBuilderFlow.ReadWrite.All or Item.ReadWrite.All
@@ -307,7 +314,8 @@ func (client *ItemsClient) getDigitalTwinBuilderFlowDefinitionCreateRequest(ctx 
 	return req, nil
 }
 
-// NewListDigitalTwinBuilderFlowsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
+// NewListDigitalTwinBuilderFlowsPager - > [!NOTE] Digital Twin Builder Flow item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -373,8 +381,8 @@ func (client *ItemsClient) listDigitalTwinBuilderFlowsHandleResponse(resp *http.
 	return result, nil
 }
 
-// UpdateDigitalTwinBuilderFlow - PERMISSIONS The caller must have read and write permissions for the digital twin builder
-// flow.
+// UpdateDigitalTwinBuilderFlow - > [!NOTE] Digital Twin Builder Flow item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// PERMISSIONS The caller must have read and write permissions for the digital twin builder flow.
 // REQUIRED DELEGATED SCOPES DigitalTwinBuilderFlow.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -443,7 +451,9 @@ func (client *ItemsClient) updateDigitalTwinBuilderFlowHandleResponse(resp *http
 	return result, nil
 }
 
-// BeginUpdateDigitalTwinBuilderFlowDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// BeginUpdateDigitalTwinBuilderFlowDefinition - > [!NOTE] Digital Twin Builder Flow item is currently in Preview (learn more
+// [/fabric/fundamentals/preview]).
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the Digital Twin Builder Flow's definition, does not affect its sensitivity label.
 // PERMISSIONS The caller must have read and write permissions for the digital twin builder flow.
 // REQUIRED DELEGATED SCOPES DigitalTwinBuilderFlow.ReadWrite.All or Item.ReadWrite.All
@@ -465,7 +475,8 @@ func (client *ItemsClient) BeginUpdateDigitalTwinBuilderFlowDefinition(ctx conte
 	return client.beginUpdateDigitalTwinBuilderFlowDefinition(ctx, workspaceID, digitalTwinBuilderFlowID, updateDigitalTwinBuilderFlowDefinitionRequest, options)
 }
 
-// UpdateDigitalTwinBuilderFlowDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// UpdateDigitalTwinBuilderFlowDefinition - > [!NOTE] Digital Twin Builder Flow item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the Digital Twin Builder Flow's definition, does not affect its sensitivity label.
 // PERMISSIONS The caller must have read and write permissions for the digital twin builder flow.
 // REQUIRED DELEGATED SCOPES DigitalTwinBuilderFlow.ReadWrite.All or Item.ReadWrite.All
@@ -529,6 +540,8 @@ func (client *ItemsClient) updateDigitalTwinBuilderFlowDefinitionCreateRequest(c
 // Custom code starts below
 
 // CreateDigitalTwinBuilderFlow - returns ItemsClientCreateDigitalTwinBuilderFlowResponse in sync mode.
+// >  [!NOTE] Digital Twin Builder Flow item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+//
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
 // To create Digital Twin Builder Flow with a public definition, refer to [/rest/api/fabric/articles/item-management/definitions/digital-twin-builder-flow-definition] article.
@@ -604,6 +617,8 @@ func (client *ItemsClient) beginCreateDigitalTwinBuilderFlow(ctx context.Context
 }
 
 // GetDigitalTwinBuilderFlowDefinition - returns ItemsClientGetDigitalTwinBuilderFlowDefinitionResponse in sync mode.
+// >  [!NOTE] Digital Twin Builder Flow item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+//
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
 // When you get a Digital Twin Builder Flow's public definition, the sensitivity label is not a part of the definition.
@@ -675,6 +690,8 @@ func (client *ItemsClient) beginGetDigitalTwinBuilderFlowDefinition(ctx context.
 }
 
 // UpdateDigitalTwinBuilderFlowDefinition - returns ItemsClientUpdateDigitalTwinBuilderFlowDefinitionResponse in sync mode.
+// >  [!NOTE] Digital Twin Builder Flow item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+//
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
 // Updating the Digital Twin Builder Flow's definition, does not affect its sensitivity label.
@@ -747,6 +764,8 @@ func (client *ItemsClient) beginUpdateDigitalTwinBuilderFlowDefinition(ctx conte
 }
 
 // ListDigitalTwinBuilderFlows - returns array of DigitalTwinBuilderFlow from all pages.
+// >  [!NOTE] Digital Twin Builder Flow item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+//
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
 // PERMISSIONS The caller must have a viewer workspace role.

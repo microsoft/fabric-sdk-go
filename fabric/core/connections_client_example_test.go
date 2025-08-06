@@ -41,8 +41,8 @@ func ExampleConnectionsClient_NewListConnectionsPager() {
 		// page.ListConnectionsResponse = core.ListConnectionsResponse{
 		// 	ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
 		// 	ContinuationURI: to.Ptr("https://api.fabric.microsoft.com/v1/connections?continuationToken=LDEsMTAwMDAwLDA%3D"),
-		// 	Value: []core.Connection{
-		// 		{
+		// 	Value: []core.ConnectionClassification{
+		// 		&core.ShareableCloudConnection{
 		// 			ConnectionDetails: &core.ListConnectionDetails{
 		// 				Type: to.Ptr("Web"),
 		// 				Path: to.Ptr("https://www.contoso.com"),
@@ -58,7 +58,7 @@ func ExampleConnectionsClient_NewListConnectionsPager() {
 		// 			ID: to.Ptr("6952a7b2-aea3-414f-9d85-6c0fe5d34539"),
 		// 			PrivacyLevel: to.Ptr(core.PrivacyLevelPublic),
 		// 		},
-		// 		{
+		// 		&core.OnPremisesGatewayConnection{
 		// 			ConnectionDetails: &core.ListConnectionDetails{
 		// 				Type: to.Ptr("SQL"),
 		// 				Path: to.Ptr("contoso.database.windows.net;sales"),
@@ -71,9 +71,9 @@ func ExampleConnectionsClient_NewListConnectionsPager() {
 		// 				CredentialType: to.Ptr(core.CredentialTypeBasic),
 		// 			},
 		// 			DisplayName: to.Ptr("ContosoConnection2"),
-		// 			GatewayID: to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
 		// 			ID: to.Ptr("f6a39b76-9816-4e4b-b93a-f42e405017b7"),
 		// 			PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
+		// 			GatewayID: to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
 		// 	}},
 		// }
 	}
@@ -244,23 +244,25 @@ func ExampleConnectionsClient_GetConnection() {
 	// You could use response here. We use blank identifier for just demo purposes.
 	_ = res
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
-	// res.Connection = core.Connection{
-	// 	ConnectionDetails: &core.ListConnectionDetails{
-	// 		Type: to.Ptr("SQL"),
-	// 		Path: to.Ptr("contoso.database.windows.net;sales"),
+	// res = core.ConnectionsClientGetConnectionResponse{
+	// 	                            ConnectionClassification: &core.OnPremisesGatewayConnection{
+	// 		ConnectionDetails: &core.ListConnectionDetails{
+	// 			Type: to.Ptr("SQL"),
+	// 			Path: to.Ptr("contoso.database.windows.net;sales"),
+	// 		},
+	// 		ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGateway),
+	// 		CredentialDetails: &core.ListCredentialDetails{
+	// 			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+	// 			SingleSignOnType: to.Ptr(core.SingleSignOnTypeNone),
+	// 			SkipTestConnection: to.Ptr(false),
+	// 			CredentialType: to.Ptr(core.CredentialTypeBasic),
+	// 		},
+	// 		DisplayName: to.Ptr("ContosoConnection"),
+	// 		ID: to.Ptr("f6a39b76-9816-4e4b-b93a-f42e405017b7"),
+	// 		PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
+	// 		GatewayID: to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
 	// 	},
-	// 	ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGateway),
-	// 	CredentialDetails: &core.ListCredentialDetails{
-	// 		ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
-	// 		SingleSignOnType: to.Ptr(core.SingleSignOnTypeNone),
-	// 		SkipTestConnection: to.Ptr(false),
-	// 		CredentialType: to.Ptr(core.CredentialTypeBasic),
-	// 	},
-	// 	DisplayName: to.Ptr("ContosoConnection"),
-	// 	GatewayID: to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
-	// 	ID: to.Ptr("f6a39b76-9816-4e4b-b93a-f42e405017b7"),
-	// 	PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
-	// }
+	// 	                        }
 }
 
 // Generated from example definition
@@ -289,22 +291,24 @@ func ExampleConnectionsClient_UpdateConnection_onPremisesGatewayPersonalModeExam
 	// You could use response here. We use blank identifier for just demo purposes.
 	_ = res
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
-	// res.Connection = core.Connection{
-	// 	ConnectionDetails: &core.ListConnectionDetails{
-	// 		Type: to.Ptr("SQL"),
-	// 		Path: to.Ptr("contoso.database.windows.net;reporting"),
+	// res = core.ConnectionsClientUpdateConnectionResponse{
+	// 	                            ConnectionClassification: &core.OnPremisesGatewayPersonalConnection{
+	// 		ConnectionDetails: &core.ListConnectionDetails{
+	// 			Type: to.Ptr("SQL"),
+	// 			Path: to.Ptr("contoso.database.windows.net;reporting"),
+	// 		},
+	// 		ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGatewayPersonal),
+	// 		CredentialDetails: &core.ListCredentialDetails{
+	// 			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+	// 			SingleSignOnType: to.Ptr(core.SingleSignOnTypeNone),
+	// 			SkipTestConnection: to.Ptr(false),
+	// 			CredentialType: to.Ptr(core.CredentialTypeWindowsWithoutImpersonation),
+	// 		},
+	// 		ID: to.Ptr("ef8f408d-2ab7-4a18-b662-9251febda49c"),
+	// 		PrivacyLevel: to.Ptr(core.PrivacyLevelPrivate),
+	// 		GatewayID: to.Ptr("429a773e-5633-45ee-8584-a192bd79c16a"),
 	// 	},
-	// 	ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGatewayPersonal),
-	// 	CredentialDetails: &core.ListCredentialDetails{
-	// 		ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
-	// 		SingleSignOnType: to.Ptr(core.SingleSignOnTypeNone),
-	// 		SkipTestConnection: to.Ptr(false),
-	// 		CredentialType: to.Ptr(core.CredentialTypeWindowsWithoutImpersonation),
-	// 	},
-	// 	GatewayID: to.Ptr("429a773e-5633-45ee-8584-a192bd79c16a"),
-	// 	ID: to.Ptr("ef8f408d-2ab7-4a18-b662-9251febda49c"),
-	// 	PrivacyLevel: to.Ptr(core.PrivacyLevelPrivate),
-	// }
+	// 	                        }
 }
 
 // Generated from example definition
@@ -343,23 +347,25 @@ func ExampleConnectionsClient_UpdateConnection_onPremisesGatewayExample() {
 	// You could use response here. We use blank identifier for just demo purposes.
 	_ = res
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
-	// res.Connection = core.Connection{
-	// 	ConnectionDetails: &core.ListConnectionDetails{
-	// 		Type: to.Ptr("SQL"),
-	// 		Path: to.Ptr("contoso.database.windows.net;sales"),
+	// res = core.ConnectionsClientUpdateConnectionResponse{
+	// 	                            ConnectionClassification: &core.OnPremisesGatewayConnection{
+	// 		ConnectionDetails: &core.ListConnectionDetails{
+	// 			Type: to.Ptr("SQL"),
+	// 			Path: to.Ptr("contoso.database.windows.net;sales"),
+	// 		},
+	// 		ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGateway),
+	// 		CredentialDetails: &core.ListCredentialDetails{
+	// 			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+	// 			SingleSignOnType: to.Ptr(core.SingleSignOnTypeNone),
+	// 			SkipTestConnection: to.Ptr(false),
+	// 			CredentialType: to.Ptr(core.CredentialTypeWindows),
+	// 		},
+	// 		DisplayName: to.Ptr("ContosoSalesOnPremisesConnection"),
+	// 		ID: to.Ptr("70b17680-48f1-4729-9df6-02576647dc3a"),
+	// 		PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
+	// 		GatewayID: to.Ptr("4f8b5d6e-8e99-4817-8b9e-6b6a613be707"),
 	// 	},
-	// 	ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGateway),
-	// 	CredentialDetails: &core.ListCredentialDetails{
-	// 		ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
-	// 		SingleSignOnType: to.Ptr(core.SingleSignOnTypeNone),
-	// 		SkipTestConnection: to.Ptr(false),
-	// 		CredentialType: to.Ptr(core.CredentialTypeWindows),
-	// 	},
-	// 	DisplayName: to.Ptr("ContosoSalesOnPremisesConnection"),
-	// 	GatewayID: to.Ptr("4f8b5d6e-8e99-4817-8b9e-6b6a613be707"),
-	// 	ID: to.Ptr("70b17680-48f1-4729-9df6-02576647dc3a"),
-	// 	PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
-	// }
+	// 	                        }
 }
 
 // Generated from example definition
@@ -383,21 +389,23 @@ func ExampleConnectionsClient_UpdateConnection_personalCloudExample() {
 	// You could use response here. We use blank identifier for just demo purposes.
 	_ = res
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
-	// res.Connection = core.Connection{
-	// 	ConnectionDetails: &core.ListConnectionDetails{
-	// 		Type: to.Ptr("SQL"),
-	// 		Path: to.Ptr("contoso.database.windows.net;finances"),
+	// res = core.ConnectionsClientUpdateConnectionResponse{
+	// 	                            ConnectionClassification: &core.PersonalCloudConnection{
+	// 		ConnectionDetails: &core.ListConnectionDetails{
+	// 			Type: to.Ptr("SQL"),
+	// 			Path: to.Ptr("contoso.database.windows.net;finances"),
+	// 		},
+	// 		ConnectivityType: to.Ptr(core.ConnectivityTypePersonalCloud),
+	// 		CredentialDetails: &core.ListCredentialDetails{
+	// 			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+	// 			SingleSignOnType: to.Ptr(core.SingleSignOnTypeNone),
+	// 			SkipTestConnection: to.Ptr(false),
+	// 			CredentialType: to.Ptr(core.CredentialTypeOAuth2),
+	// 		},
+	// 		ID: to.Ptr("7a0369b2-58c4-4b67-b3f3-92156a95f1cd"),
+	// 		PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 	// 	},
-	// 	ConnectivityType: to.Ptr(core.ConnectivityTypePersonalCloud),
-	// 	CredentialDetails: &core.ListCredentialDetails{
-	// 		ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
-	// 		SingleSignOnType: to.Ptr(core.SingleSignOnTypeNone),
-	// 		SkipTestConnection: to.Ptr(false),
-	// 		CredentialType: to.Ptr(core.CredentialTypeOAuth2),
-	// 	},
-	// 	ID: to.Ptr("7a0369b2-58c4-4b67-b3f3-92156a95f1cd"),
-	// 	PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
-	// }
+	// 	                        }
 }
 
 // Generated from example definition
@@ -421,22 +429,24 @@ func ExampleConnectionsClient_UpdateConnection_shareableCloudExample() {
 	// You could use response here. We use blank identifier for just demo purposes.
 	_ = res
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
-	// res.Connection = core.Connection{
-	// 	ConnectionDetails: &core.ListConnectionDetails{
-	// 		Type: to.Ptr("SQL"),
-	// 		Path: to.Ptr("contoso.database.windows.net;networks"),
+	// res = core.ConnectionsClientUpdateConnectionResponse{
+	// 	                            ConnectionClassification: &core.ShareableCloudConnection{
+	// 		ConnectionDetails: &core.ListConnectionDetails{
+	// 			Type: to.Ptr("SQL"),
+	// 			Path: to.Ptr("contoso.database.windows.net;networks"),
+	// 		},
+	// 		ConnectivityType: to.Ptr(core.ConnectivityTypeShareableCloud),
+	// 		CredentialDetails: &core.ListCredentialDetails{
+	// 			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+	// 			SingleSignOnType: to.Ptr(core.SingleSignOnTypeNone),
+	// 			SkipTestConnection: to.Ptr(true),
+	// 			CredentialType: to.Ptr(core.CredentialTypeBasic),
+	// 		},
+	// 		DisplayName: to.Ptr("ContosoCloudConnection"),
+	// 		ID: to.Ptr("fa968eee-8075-48f6-8c6d-41260ee1396d"),
+	// 		PrivacyLevel: to.Ptr(core.PrivacyLevelPublic),
 	// 	},
-	// 	ConnectivityType: to.Ptr(core.ConnectivityTypeShareableCloud),
-	// 	CredentialDetails: &core.ListCredentialDetails{
-	// 		ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
-	// 		SingleSignOnType: to.Ptr(core.SingleSignOnTypeNone),
-	// 		SkipTestConnection: to.Ptr(true),
-	// 		CredentialType: to.Ptr(core.CredentialTypeBasic),
-	// 	},
-	// 	DisplayName: to.Ptr("ContosoCloudConnection"),
-	// 	ID: to.Ptr("fa968eee-8075-48f6-8c6d-41260ee1396d"),
-	// 	PrivacyLevel: to.Ptr(core.PrivacyLevelPublic),
-	// }
+	// 	                        }
 }
 
 // Generated from example definition
@@ -464,23 +474,25 @@ func ExampleConnectionsClient_UpdateConnection_virtualNetworkGatewayExample() {
 	// You could use response here. We use blank identifier for just demo purposes.
 	_ = res
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
-	// res.Connection = core.Connection{
-	// 	ConnectionDetails: &core.ListConnectionDetails{
-	// 		Type: to.Ptr("SQL"),
-	// 		Path: to.Ptr("contoso.database.windows.net;marketing"),
+	// res = core.ConnectionsClientUpdateConnectionResponse{
+	// 	                            ConnectionClassification: &core.VirtualNetworkGatewayConnection{
+	// 		ConnectionDetails: &core.ListConnectionDetails{
+	// 			Type: to.Ptr("SQL"),
+	// 			Path: to.Ptr("contoso.database.windows.net;marketing"),
+	// 		},
+	// 		ConnectivityType: to.Ptr(core.ConnectivityTypeVirtualNetworkGateway),
+	// 		CredentialDetails: &core.ListCredentialDetails{
+	// 			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+	// 			SingleSignOnType: to.Ptr(core.SingleSignOnTypeNone),
+	// 			SkipTestConnection: to.Ptr(false),
+	// 			CredentialType: to.Ptr(core.CredentialTypeBasic),
+	// 		},
+	// 		DisplayName: to.Ptr("ContosoMarketingVirtualNetworkGatewayConnection"),
+	// 		ID: to.Ptr("6b571614-2e98-4bfd-b9ed-1cb8d3ffc396"),
+	// 		PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
+	// 		GatewayID: to.Ptr("befccff4-3ee6-40d7-b8f1-a0a9fd684a85"),
 	// 	},
-	// 	ConnectivityType: to.Ptr(core.ConnectivityTypeVirtualNetworkGateway),
-	// 	CredentialDetails: &core.ListCredentialDetails{
-	// 		ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
-	// 		SingleSignOnType: to.Ptr(core.SingleSignOnTypeNone),
-	// 		SkipTestConnection: to.Ptr(false),
-	// 		CredentialType: to.Ptr(core.CredentialTypeBasic),
-	// 	},
-	// 	DisplayName: to.Ptr("ContosoMarketingVirtualNetworkGatewayConnection"),
-	// 	GatewayID: to.Ptr("befccff4-3ee6-40d7-b8f1-a0a9fd684a85"),
-	// 	ID: to.Ptr("6b571614-2e98-4bfd-b9ed-1cb8d3ffc396"),
-	// 	PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
-	// }
+	// 	                        }
 }
 
 // Generated from example definition
