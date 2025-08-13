@@ -134,3 +134,20 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeWarehouseSnapshot,
 	}
 }
+
+type PrivateLinkType string
+
+const (
+	// PrivateLinkTypeNone - No private link (default).
+	PrivateLinkTypeNone PrivateLinkType = "None"
+	// PrivateLinkTypeWorkspace - Workspace private Link.
+	PrivateLinkTypeWorkspace PrivateLinkType = "Workspace"
+)
+
+// PossiblePrivateLinkTypeValues returns the possible values for the PrivateLinkType const type.
+func PossiblePrivateLinkTypeValues() []PrivateLinkType {
+	return []PrivateLinkType{
+		PrivateLinkTypeNone,
+		PrivateLinkTypeWorkspace,
+	}
+}

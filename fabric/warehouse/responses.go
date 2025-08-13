@@ -17,6 +17,12 @@ type ItemsClientDeleteWarehouseResponse struct {
 	// placeholder for future response values
 }
 
+// ItemsClientGetConnectionStringResponse contains the response from method ItemsClient.GetConnectionString.
+type ItemsClientGetConnectionStringResponse struct {
+	// The SQL connection string for the workspace containing this warehouse.
+	ConnectionStringResponse
+}
+
 // ItemsClientGetWarehouseResponse contains the response from method ItemsClient.GetWarehouse.
 type ItemsClientGetWarehouseResponse struct {
 	// A warehouse object.

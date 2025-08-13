@@ -29,6 +29,80 @@ type ItemsClient struct {
 	endpoint string
 }
 
+// GetConnectionString - PERMISSIONS The caller must have read permissions for the warehouse. The caller must have viewer
+// or higher workspace role.
+// REQUIRED DELEGATED SCOPES SqlEndpoint.Read.All or SqlEndpoint.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - sqlEndpointID - The SQL endpoint ID.
+//   - options - ItemsClientGetConnectionStringOptions contains the optional parameters for the ItemsClient.GetConnectionString
+//     method.
+func (client *ItemsClient) GetConnectionString(ctx context.Context, workspaceID string, sqlEndpointID string, options *ItemsClientGetConnectionStringOptions) (ItemsClientGetConnectionStringResponse, error) {
+	var err error
+	const operationName = "sqlendpoint.ItemsClient.GetConnectionString"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getConnectionStringCreateRequest(ctx, workspaceID, sqlEndpointID, options)
+	if err != nil {
+		return ItemsClientGetConnectionStringResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return ItemsClientGetConnectionStringResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return ItemsClientGetConnectionStringResponse{}, err
+	}
+	resp, err := client.getConnectionStringHandleResponse(httpResp)
+	return resp, err
+}
+
+// getConnectionStringCreateRequest creates the GetConnectionString request.
+func (client *ItemsClient) getConnectionStringCreateRequest(ctx context.Context, workspaceID string, sqlEndpointID string, options *ItemsClientGetConnectionStringOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/sqlEndpoints/{sqlEndpointId}/connectionString"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if sqlEndpointID == "" {
+		return nil, errors.New("parameter sqlEndpointID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{sqlEndpointId}", url.PathEscape(sqlEndpointID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.GuestTenantID != nil {
+		reqQP.Set("guestTenantId", *options.GuestTenantID)
+	}
+	if options != nil && options.PrivateLinkType != nil {
+		reqQP.Set("privateLinkType", string(*options.PrivateLinkType))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getConnectionStringHandleResponse handles the GetConnectionString response.
+func (client *ItemsClient) getConnectionStringHandleResponse(resp *http.Response) (ItemsClientGetConnectionStringResponse, error) {
+	result := ItemsClientGetConnectionStringResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.ConnectionStringResponse); err != nil {
+		return ItemsClientGetConnectionStringResponse{}, err
+	}
+	return result, nil
+}
+
 // NewListSQLEndpointsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All

@@ -268,3 +268,33 @@ func (testsuite *FakeTestSuite) TestItems_DeleteWarehouse() {
 	_, err = client.DeleteWarehouse(ctx, exampleWorkspaceID, exampleWarehouseID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
+
+func (testsuite *FakeTestSuite) TestItems_GetConnectionString() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get connection string example"},
+	})
+	var exampleWorkspaceID string
+	var exampleWarehouseID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleWarehouseID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	exampleRes := warehouse.ConnectionStringResponse{
+		ConnectionString: to.Ptr("qvrmbuxie7we7glrekxgy6npqu-6xgyei3x2xiejip4iime6knh5m-jh0bi.zcf.datawarehouse.fabric.microsoft.com"),
+	}
+
+	testsuite.serverFactory.ItemsServer.GetConnectionString = func(ctx context.Context, workspaceID string, warehouseID string, options *warehouse.ItemsClientGetConnectionStringOptions) (resp azfake.Responder[warehouse.ItemsClientGetConnectionStringResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleWarehouseID, warehouseID)
+		resp = azfake.Responder[warehouse.ItemsClientGetConnectionStringResponse]{}
+		resp.SetResponse(http.StatusOK, warehouse.ItemsClientGetConnectionStringResponse{ConnectionStringResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	res, err := client.GetConnectionString(ctx, exampleWorkspaceID, exampleWarehouseID, &warehouse.ItemsClientGetConnectionStringOptions{GuestTenantID: to.Ptr("6e335e92-a2a2-4b5a-970a-bd6a89fbb765"),
+		PrivateLinkType: nil,
+	})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ConnectionStringResponse))
+}

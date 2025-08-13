@@ -47,7 +47,8 @@ func ExampleWorkspacesClient_NewListWorkspacesPager_listWorkspacesExample() {
 		log.Fatalf("failed to create client: %v", err)
 	}
 	pager := clientFactory.NewWorkspacesClient().NewListWorkspacesPager(&core.WorkspacesClientListWorkspacesOptions{Roles: nil,
-		ContinuationToken: nil,
+		ContinuationToken:                nil,
+		PreferWorkspaceSpecificEndpoints: nil,
 	})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
@@ -96,7 +97,8 @@ func ExampleWorkspacesClient_NewListWorkspacesPager_listWorkspacesWithContinuati
 		log.Fatalf("failed to create client: %v", err)
 	}
 	pager := clientFactory.NewWorkspacesClient().NewListWorkspacesPager(&core.WorkspacesClientListWorkspacesOptions{Roles: nil,
-		ContinuationToken: nil,
+		ContinuationToken:                nil,
+		PreferWorkspaceSpecificEndpoints: nil,
 	})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
@@ -136,6 +138,51 @@ func ExampleWorkspacesClient_NewListWorkspacesPager_listWorkspacesWithContinuati
 }
 
 // Generated from example definition
+func ExampleWorkspacesClient_NewListWorkspacesPager_listWorkspacesWithPreferWorkspaceSpecificEndpointsExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewWorkspacesClient().NewListWorkspacesPager(&core.WorkspacesClientListWorkspacesOptions{Roles: nil,
+		ContinuationToken:                nil,
+		PreferWorkspaceSpecificEndpoints: to.Ptr(true),
+	})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.Workspaces = core.Workspaces{
+		// 	Value: []core.Workspace{
+		// 		{
+		// 			Type: to.Ptr(core.WorkspaceTypeWorkspace),
+		// 			Description: to.Ptr("A workspace for Alice"),
+		// 			APIEndpoint: to.Ptr("https://cfafbeb180374d0c896ea46fb27ff227.zcf.w.api.fabric.microsoft.com"),
+		// 			DisplayName: to.Ptr("Alice's Workspace"),
+		// 			ID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
+		// 		},
+		// 		{
+		// 			Type: to.Ptr(core.WorkspaceTypeWorkspace),
+		// 			Description: to.Ptr("A workspace for Bob"),
+		// 			APIEndpoint: to.Ptr("https://0c02a0cd71bc410faa055a7bc98765f7.z0c.w.api.fabric.microsoft.com"),
+		// 			DisplayName: to.Ptr("Bob's Workspace"),
+		// 			ID: to.Ptr("0c02a0cd-71bc-410f-aa05-5a7bc98765f7"),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
 func ExampleWorkspacesClient_NewListWorkspacesPager_listWorkspacesWithRolesFilterExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -147,7 +194,8 @@ func ExampleWorkspacesClient_NewListWorkspacesPager_listWorkspacesWithRolesFilte
 		log.Fatalf("failed to create client: %v", err)
 	}
 	pager := clientFactory.NewWorkspacesClient().NewListWorkspacesPager(&core.WorkspacesClientListWorkspacesOptions{Roles: to.Ptr("Admin,Member,Contributor,Viewer"),
-		ContinuationToken: nil,
+		ContinuationToken:                nil,
+		PreferWorkspaceSpecificEndpoints: nil,
 	})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
@@ -190,7 +238,7 @@ func ExampleWorkspacesClient_NewListWorkspacesPager_listWorkspacesWithRolesFilte
 }
 
 // Generated from example definition
-func ExampleWorkspacesClient_GetWorkspace() {
+func ExampleWorkspacesClient_GetWorkspace_getAWorkspaceExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -200,7 +248,7 @@ func ExampleWorkspacesClient_GetWorkspace() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewWorkspacesClient().GetWorkspace(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff227", nil)
+	res, err := clientFactory.NewWorkspacesClient().GetWorkspace(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff227", &core.WorkspacesClientGetWorkspaceOptions{PreferWorkspaceSpecificEndpoints: nil})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -218,6 +266,44 @@ func ExampleWorkspacesClient_GetWorkspace() {
 	// 	OneLakeEndpoints: &core.OneLakeEndpoints{
 	// 		BlobEndpoint: to.Ptr("https://eastus-onelake.blob.fabric.microsoft.com"),
 	// 		DfsEndpoint: to.Ptr("https://eastus-onelake.dfs.fabric.microsoft.com"),
+	// 	},
+	// 	WorkspaceIdentity: &core.WorkspaceIdentity{
+	// 		ApplicationID: to.Ptr("00a4a8f9-78d3-41b3-b87a-6ae5271c8d0d"),
+	// 		ServicePrincipalID: to.Ptr("5ba4ae58-d402-45c6-a848-0253e834fd78"),
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_GetWorkspace_getAWorkspaceWithPreferWorkspaceSpecificEndpointsExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewWorkspacesClient().GetWorkspace(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff227", &core.WorkspacesClientGetWorkspaceOptions{PreferWorkspaceSpecificEndpoints: to.Ptr(true)})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.WorkspaceInfo = core.WorkspaceInfo{
+	// 	Type: to.Ptr(core.WorkspaceTypeWorkspace),
+	// 	Description: to.Ptr("New workspace description"),
+	// 	APIEndpoint: to.Ptr("https://cfafbeb180374d0c896ea46fb27ff227.zcf.w.api.fabric.microsoft.com"),
+	// 	CapacityID: to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
+	// 	DisplayName: to.Ptr("New workspace"),
+	// 	ID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
+	// 	CapacityAssignmentProgress: to.Ptr(core.CapacityAssignmentProgressCompleted),
+	// 	CapacityRegion: to.Ptr(core.CapacityRegionEastUS),
+	// 	OneLakeEndpoints: &core.OneLakeEndpoints{
+	// 		BlobEndpoint: to.Ptr("https://cfafbeb180374d0c896ea46fb27ff227.zcf.blob.fabric.microsoft.com"),
+	// 		DfsEndpoint: to.Ptr("https://cfafbeb180374d0c896ea46fb27ff227.zcf.dfs.fabric.microsoft.com"),
 	// 	},
 	// 	WorkspaceIdentity: &core.WorkspaceIdentity{
 	// 		ApplicationID: to.Ptr("00a4a8f9-78d3-41b3-b87a-6ae5271c8d0d"),
@@ -542,4 +628,64 @@ func ExampleWorkspacesClient_BeginProvisionIdentity() {
 	// 	ApplicationID: to.Ptr("00a4a8f9-78d3-41b3-b87a-6ae5271c8d0d"),
 	// 	ServicePrincipalID: to.Ptr("5ba4ae58-d402-45c6-a848-0253e834fd78"),
 	// }
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_GetNetworkCommunicationPolicy() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewWorkspacesClient().GetNetworkCommunicationPolicy(ctx, "47482db6-4583-4672-86dd-999d0f8f4d7a", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.WorkspaceNetworkingCommunicationPolicy = core.WorkspaceNetworkingCommunicationPolicy{
+	// 	Inbound: &core.InboundRules{
+	// 		PublicAccessRules: &core.NetworkRules{
+	// 			DefaultAction: to.Ptr(core.NetworkAccessRuleDeny),
+	// 		},
+	// 	},
+	// 	Outbound: &core.OutboundRules{
+	// 		PublicAccessRules: &core.NetworkRules{
+	// 			DefaultAction: to.Ptr(core.NetworkAccessRuleAllow),
+	// 		},
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_SetNetworkCommunicationPolicy() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewWorkspacesClient().SetNetworkCommunicationPolicy(ctx, "47482db6-4583-4672-86dd-999d0f8f4d7a", core.WorkspaceNetworkingCommunicationPolicy{
+		Inbound: &core.InboundRules{
+			PublicAccessRules: &core.NetworkRules{
+				DefaultAction: to.Ptr(core.NetworkAccessRuleAllow),
+			},
+		},
+		Outbound: &core.OutboundRules{
+			PublicAccessRules: &core.NetworkRules{
+				DefaultAction: to.Ptr(core.NetworkAccessRuleDeny),
+			},
+		},
+	}, &core.WorkspacesClientSetNetworkCommunicationPolicyOptions{IfMatch: nil})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
 }

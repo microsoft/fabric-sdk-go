@@ -633,6 +633,15 @@ type WorkspacesClientDeprovisionIdentityResponse struct {
 	// placeholder for future response values
 }
 
+// WorkspacesClientGetNetworkCommunicationPolicyResponse contains the response from method WorkspacesClient.GetNetworkCommunicationPolicy.
+type WorkspacesClientGetNetworkCommunicationPolicyResponse struct {
+	// The networking communication policy for a workspace.
+	WorkspaceNetworkingCommunicationPolicy
+
+	// ETag contains the information returned from the ETag header response.
+	ETag *string
+}
+
 // WorkspacesClientGetWorkspaceResponse contains the response from method WorkspacesClient.GetWorkspace.
 type WorkspacesClientGetWorkspaceResponse struct {
 	// A workspace object.
@@ -659,6 +668,12 @@ type WorkspacesClientListWorkspacesResponse struct {
 type WorkspacesClientProvisionIdentityResponse struct {
 	// A workspace identity object.
 	WorkspaceIdentity
+}
+
+// WorkspacesClientSetNetworkCommunicationPolicyResponse contains the response from method WorkspacesClient.SetNetworkCommunicationPolicy.
+type WorkspacesClientSetNetworkCommunicationPolicyResponse struct {
+	// ETag contains the information returned from the ETag header response.
+	ETag *string
 }
 
 // WorkspacesClientUnassignFromCapacityResponse contains the response from method WorkspacesClient.UnassignFromCapacity.

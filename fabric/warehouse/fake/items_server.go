@@ -33,6 +33,10 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	DeleteWarehouse func(ctx context.Context, workspaceID string, warehouseID string, options *warehouse.ItemsClientDeleteWarehouseOptions) (resp azfake.Responder[warehouse.ItemsClientDeleteWarehouseResponse], errResp azfake.ErrorResponder)
 
+	// GetConnectionString is the fake for method ItemsClient.GetConnectionString
+	// HTTP status codes to indicate success: http.StatusOK
+	GetConnectionString func(ctx context.Context, workspaceID string, warehouseID string, options *warehouse.ItemsClientGetConnectionStringOptions) (resp azfake.Responder[warehouse.ItemsClientGetConnectionStringResponse], errResp azfake.ErrorResponder)
+
 	// GetWarehouse is the fake for method ItemsClient.GetWarehouse
 	// HTTP status codes to indicate success: http.StatusOK
 	GetWarehouse func(ctx context.Context, workspaceID string, warehouseID string, options *warehouse.ItemsClientGetWarehouseOptions) (resp azfake.Responder[warehouse.ItemsClientGetWarehouseResponse], errResp azfake.ErrorResponder)
@@ -94,6 +98,8 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 				res.resp, res.err = i.dispatchBeginCreateWarehouse(req)
 			case "ItemsClient.DeleteWarehouse":
 				res.resp, res.err = i.dispatchDeleteWarehouse(req)
+			case "ItemsClient.GetConnectionString":
+				res.resp, res.err = i.dispatchGetConnectionString(req)
 			case "ItemsClient.GetWarehouse":
 				res.resp, res.err = i.dispatchGetWarehouse(req)
 			case "ItemsClient.NewListWarehousesPager":
@@ -190,6 +196,57 @@ func (i *ItemsServerTransport) dispatchDeleteWarehouse(req *http.Request) (*http
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
 	}
 	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (i *ItemsServerTransport) dispatchGetConnectionString(req *http.Request) (*http.Response, error) {
+	if i.srv.GetConnectionString == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetConnectionString not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/warehouses/(?P<warehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/connectionString`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	qp := req.URL.Query()
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	warehouseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("warehouseId")])
+	if err != nil {
+		return nil, err
+	}
+	guestTenantIDUnescaped, err := url.QueryUnescape(qp.Get("guestTenantId"))
+	if err != nil {
+		return nil, err
+	}
+	guestTenantIDParam := getOptional(guestTenantIDUnescaped)
+	privateLinkTypeUnescaped, err := url.QueryUnescape(qp.Get("privateLinkType"))
+	if err != nil {
+		return nil, err
+	}
+	privateLinkTypeParam := getOptional(warehouse.PrivateLinkType(privateLinkTypeUnescaped))
+	var options *warehouse.ItemsClientGetConnectionStringOptions
+	if guestTenantIDParam != nil || privateLinkTypeParam != nil {
+		options = &warehouse.ItemsClientGetConnectionStringOptions{
+			GuestTenantID:   guestTenantIDParam,
+			PrivateLinkType: privateLinkTypeParam,
+		}
+	}
+	respr, errRespr := i.srv.GetConnectionString(req.Context(), workspaceIDParam, warehouseIDParam, options)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).ConnectionStringResponse, req)
 	if err != nil {
 		return nil, err
 	}

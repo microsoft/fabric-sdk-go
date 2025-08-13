@@ -16,6 +16,15 @@ type ItemsClientBeginRefreshSQLEndpointMetadataOptions struct {
 	SQLEndpointRefreshMetadataRequest *RefreshMetadataRequest
 }
 
+// ItemsClientGetConnectionStringOptions contains the optional parameters for the ItemsClient.GetConnectionString method.
+type ItemsClientGetConnectionStringOptions struct {
+	// The guest tenant ID if the end user's tenant is different from the SQL endpoint's tenant.
+	GuestTenantID *string
+
+	// Indicates the type of private link this connection string uses. Additional privateLinkType types may be added over time.
+	PrivateLinkType *PrivateLinkType
+}
+
 // ItemsClientListSQLEndpointsOptions contains the optional parameters for the ItemsClient.NewListSQLEndpointsPager method.
 type ItemsClientListSQLEndpointsOptions struct {
 	// A token for retrieving the next page of results.

@@ -6,6 +6,12 @@
 
 package sqlendpoint
 
+// ItemsClientGetConnectionStringResponse contains the response from method ItemsClient.GetConnectionString.
+type ItemsClientGetConnectionStringResponse struct {
+	// The SQL connection string for the workspace containing this SQL endpoint.
+	ConnectionStringResponse
+}
+
 // ItemsClientListSQLEndpointsResponse contains the response from method ItemsClient.NewListSQLEndpointsPager.
 type ItemsClientListSQLEndpointsResponse struct {
 	// A list of SQL endpoints.

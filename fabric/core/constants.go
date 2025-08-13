@@ -1057,6 +1057,25 @@ func PossibleLongRunningOperationStatusValues() []LongRunningOperationStatus {
 	}
 }
 
+// NetworkAccessRule - The default option for a network communications policy. Additional network connection defaults may
+// be added over time.
+type NetworkAccessRule string
+
+const (
+	// NetworkAccessRuleAllow - Allow all connections.
+	NetworkAccessRuleAllow NetworkAccessRule = "Allow"
+	// NetworkAccessRuleDeny - Deny all connections.
+	NetworkAccessRuleDeny NetworkAccessRule = "Deny"
+)
+
+// PossibleNetworkAccessRuleValues returns the possible values for the NetworkAccessRule const type.
+func PossibleNetworkAccessRuleValues() []NetworkAccessRule {
+	return []NetworkAccessRule{
+		NetworkAccessRuleAllow,
+		NetworkAccessRuleDeny,
+	}
+}
+
 // ObjectType - The type of Microsoft Entra ID object. Additional objectType types may be added over time.
 type ObjectType string
 
@@ -1220,18 +1239,27 @@ func PossibleScheduleTypeValues() []ScheduleType {
 type ShortcutConflictPolicy string
 
 const (
-	// ShortcutConflictPolicyAbort - When a shortcut with the same name and path already exists the shortcut creation is cancelled.
+	// ShortcutConflictPolicyAbort - When a shortcut with the same name and path already exists the shortcut creation will be
+	// cancelled.
 	ShortcutConflictPolicyAbort ShortcutConflictPolicy = "Abort"
-	// ShortcutConflictPolicyGenerateUniqueName - When a shortcut with the same name and path already exists, the shortcut is
-	// created with a new unique name.
+	// ShortcutConflictPolicyCreateOrOverwrite - When a shortcut with the same name and path already exists the shortcut creation
+	// will overwrite the existing shortcut. Create shortcut if it does not exist.
+	ShortcutConflictPolicyCreateOrOverwrite ShortcutConflictPolicy = "CreateOrOverwrite"
+	// ShortcutConflictPolicyGenerateUniqueName - When a shortcut with the same name and path already exists the shortcut creation
+	// will continue with a new unique shortcut name.
 	ShortcutConflictPolicyGenerateUniqueName ShortcutConflictPolicy = "GenerateUniqueName"
+	// ShortcutConflictPolicyOverwriteOnly - When a shortcut with the same name and path already exists the shortcut creation
+	// will overwrite the existing shortcut.
+	ShortcutConflictPolicyOverwriteOnly ShortcutConflictPolicy = "OverwriteOnly"
 )
 
 // PossibleShortcutConflictPolicyValues returns the possible values for the ShortcutConflictPolicy const type.
 func PossibleShortcutConflictPolicyValues() []ShortcutConflictPolicy {
 	return []ShortcutConflictPolicy{
 		ShortcutConflictPolicyAbort,
+		ShortcutConflictPolicyCreateOrOverwrite,
 		ShortcutConflictPolicyGenerateUniqueName,
+		ShortcutConflictPolicyOverwriteOnly,
 	}
 }
 

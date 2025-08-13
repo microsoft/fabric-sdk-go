@@ -687,9 +687,18 @@ type WorkspacesClientDeleteWorkspaceRoleAssignmentOptions struct {
 	// placeholder for future optional parameters
 }
 
+// WorkspacesClientGetNetworkCommunicationPolicyOptions contains the optional parameters for the WorkspacesClient.GetNetworkCommunicationPolicy
+// method.
+type WorkspacesClientGetNetworkCommunicationPolicyOptions struct {
+	// placeholder for future optional parameters
+}
+
 // WorkspacesClientGetWorkspaceOptions contains the optional parameters for the WorkspacesClient.GetWorkspace method.
 type WorkspacesClientGetWorkspaceOptions struct {
-	// placeholder for future optional parameters
+	// A setting that controls whether to include workspace-specific or general public endpoints for API and OneLake access. True
+	// - Include workspace-specific endpoints for API and OneLake access, False -
+	// Include general public endpoints for OneLake access.
+	PreferWorkspaceSpecificEndpoints *bool
 }
 
 // WorkspacesClientGetWorkspaceRoleAssignmentOptions contains the optional parameters for the WorkspacesClient.GetWorkspaceRoleAssignment
@@ -711,9 +720,22 @@ type WorkspacesClientListWorkspacesOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
 
+	// A setting that controls whether to include the workspace-specific API endpoint per workspace. True - Include the workspace-specific
+	// API endpoint, False - Do not include the workspace-specific API
+	// endpoint.
+	PreferWorkspaceSpecificEndpoints *bool
+
 	// A list of roles [/power-bi/collaborate-share/service-roles-new-workspaces#workspace-roles]. Separate values using a comma.
 	// If not provided, all workspaces are returned.
 	Roles *string
+}
+
+// WorkspacesClientSetNetworkCommunicationPolicyOptions contains the optional parameters for the WorkspacesClient.SetNetworkCommunicationPolicy
+// method.
+type WorkspacesClientSetNetworkCommunicationPolicyOptions struct {
+	// An ETag value. The ETag must be specified in quotes. If provided, the call will succeed only if the resource's ETag matches
+	// the provided ETag.
+	IfMatch *string
 }
 
 // WorkspacesClientUnassignFromCapacityOptions contains the optional parameters for the WorkspacesClient.UnassignFromCapacity

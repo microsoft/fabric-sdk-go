@@ -8,6 +8,12 @@ package warehouse
 
 import "time"
 
+// ConnectionStringResponse - The SQL connection string for the workspace containing this warehouse.
+type ConnectionStringResponse struct {
+	// The SQL connection string for the workspace containing this warehouse.
+	ConnectionString *string
+}
+
 // CreateWarehouseRequest - Create warehouse request payload.
 type CreateWarehouseRequest struct {
 	// REQUIRED; The warehouse display name. The display name must follow naming rules according to item type.
