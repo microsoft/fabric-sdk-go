@@ -6,4 +6,4 @@
 
 package fabric
 
-const Version = "1.0.0-beta.42"
+const Version = "0.11.0"
