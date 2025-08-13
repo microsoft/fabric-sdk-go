@@ -352,7 +352,7 @@ func ExampleOneLakeShortcutsClient_CreateShortcut_createOrUpdateShortcutTargetTo
 				WorkspaceID: to.Ptr("acafbeb1-8037-4d0c-896e-a46fb27ff256"),
 			},
 		},
-	}, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: to.Ptr(core.ShortcutConflictPolicy("CreateOrOverwrite"))})
+	}, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: to.Ptr(core.ShortcutConflictPolicyCreateOrOverwrite)})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -557,7 +557,7 @@ func ExampleOneLakeShortcutsClient_CreateShortcut_updateShortcutTargetToOneLake(
 				WorkspaceID: to.Ptr("acafbeb1-8037-4d0c-896e-a46fb27ff256"),
 			},
 		},
-	}, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: to.Ptr(core.ShortcutConflictPolicy("CreateOrOverwrite"))})
+	}, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: to.Ptr(core.ShortcutConflictPolicyCreateOrOverwrite)})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

@@ -8,6 +8,12 @@ package sqlendpoint
 
 import "time"
 
+// ConnectionStringResponse - The SQL connection string for the workspace containing this SQL endpoint.
+type ConnectionStringResponse struct {
+	// The SQL connection string for the workspace containing this SQL endpoint.
+	ConnectionString *string
+}
+
 // Duration - A duration.
 type Duration struct {
 	// REQUIRED; The unit of time for the duration. Additional duration types may be added over time.

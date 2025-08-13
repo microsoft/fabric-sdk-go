@@ -1865,6 +1865,12 @@ type GoogleCloudStorage struct {
 	Subpath *string
 }
 
+// InboundRules - The policy for all inbound communications to a workspace.
+type InboundRules struct {
+	// The policy for inbound communications to a workspace from public networks.
+	PublicAccessRules *NetworkRules
+}
+
 // InitializeGitConnectionRequest - Contains the initialize Git connection request data.
 type InitializeGitConnectionRequest struct {
 	// The strategy required for an initialization process when content exists on both the remote side and the workspace side.
@@ -2247,6 +2253,12 @@ type MoveFolderRequest struct {
 	TargetFolderID *string
 }
 
+// NetworkRules - The policy defining access to/from a workspace to/from public networks.
+type NetworkRules struct {
+	// Default policy for workspace access from public networks.
+	DefaultAction *NetworkAccessRule
+}
+
 // NoneGitCredentialsResponse - Not configured Git credentials.
 type NoneGitCredentialsResponse struct {
 	// REQUIRED; The Git credentials source.
@@ -2465,14 +2477,15 @@ type OneLake struct {
 
 // OneLakeEndpoints - The OneLake API endpoints associated with this workspace.
 type OneLakeEndpoints struct {
-	// READ-ONLY; The OneLake API endpoint available for Blob API operations. This is a region specific endpoint, unless the tenant
-	// has Private Link enabled and public access disabled, in which case the global endpoint
-	// is provided.
+	// READ-ONLY; The OneLake API endpoint available for Blob API operations. By default, this is a region specific endpoint.
+	// If the user enables preferWorkspaceSpecificEndpoints or the workspace has public access
+	// disabled, the workspace-specific endpoint is provided to allow for access over private links.
 	BlobEndpoint *string
 
 	// READ-ONLY; The OneLake API endpoint available for Distributed File System (DFS) or ADLSgen2 filesystem API operations.
-	// This is a region specific endpoint, unless the tenant has Private Link enabled and public
-	// access disabled, in which case the global endpoint is provided.
+	// By default, this is a region specific endpoint. If the user enables
+	// preferWorkspaceSpecificEndpoints or the workspace has public access disabled, the workspace-specific endpoint is provided
+	// to allow for access over private links.
 	DfsEndpoint *string
 }
 
@@ -2492,6 +2505,12 @@ type OperationState struct {
 
 	// READ-ONLY; The error details in case the operation is in failed state
 	Error *ErrorResponse
+}
+
+// OutboundRules - The policy for all outbound communications from a workspace.
+type OutboundRules struct {
+	// The policy for outbound communications to public networks from a workspace.
+	PublicAccessRules *NetworkRules
 }
 
 // PermissionScope - Defines a set of attributes (properties) that determine the scope and level of access to a resource.
@@ -3445,6 +3464,11 @@ type Workspace struct {
 	// READ-ONLY; The workspace ID.
 	ID *string
 
+	// READ-ONLY; HTTP URL that represents the API endpoint specific to the workspace. This endpoint value is returned when the
+	// user enables preferWorkspaceSpecificEndpoints. It allows for API access over private
+	// links.
+	APIEndpoint *string
+
 	// READ-ONLY; The ID of the capacity the workspace is assigned to.
 	CapacityID *string
 
@@ -3494,6 +3518,11 @@ type WorkspaceInfo struct {
 	// READ-ONLY; The workspace ID.
 	ID *string
 
+	// READ-ONLY; HTTP URL that represents the API endpoint specific to the workspace. This endpoint value is returned when the
+	// user enables preferWorkspaceSpecificEndpoints. It allows for API access over private
+	// links.
+	APIEndpoint *string
+
 	// READ-ONLY; The status of the workspace's capacity assignment progress.
 	CapacityAssignmentProgress *CapacityAssignmentProgress
 
@@ -3511,6 +3540,15 @@ type WorkspaceInfo struct {
 
 	// READ-ONLY; The workspace identity.
 	WorkspaceIdentity *WorkspaceIdentity
+}
+
+// WorkspaceNetworkingCommunicationPolicy - The networking communication policy for a workspace.
+type WorkspaceNetworkingCommunicationPolicy struct {
+	// The inbound network communications properties for a workspace.
+	Inbound *InboundRules
+
+	// The outbound network communications properties for a workspace.
+	Outbound *OutboundRules
 }
 
 // WorkspaceRoleAssignment - A workspace role assignment object.

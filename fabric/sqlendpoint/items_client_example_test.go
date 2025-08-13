@@ -10,6 +10,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 
 	"github.com/microsoft/fabric-sdk-go/fabric/sqlendpoint"
@@ -99,5 +100,30 @@ func ExampleItemsClient_BeginRefreshSQLEndpointMetadata() {
 	// 			Status: to.Ptr(sqlendpoint.SyncStatusNotRun),
 	// 			TableName: to.Ptr("Table 3"),
 	// 	}},
+	// }
+}
+
+// Generated from example definition
+func ExampleItemsClient_GetConnectionString() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := sqlendpoint.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewItemsClient().GetConnectionString(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", &sqlendpoint.ItemsClientGetConnectionStringOptions{GuestTenantID: to.Ptr("6e335e92-a2a2-4b5a-970a-bd6a89fbb765"),
+		PrivateLinkType: to.Ptr(sqlendpoint.PrivateLinkTypeWorkspace),
+	})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.ConnectionStringResponse = sqlendpoint.ConnectionStringResponse{
+	// 	ConnectionString: to.Ptr("qvrmbuxie7we7glrekxgy6npqu-6xgyei3x2xiejip4iime6knh5m-jh0bi.zcf.datawarehouse.fabric.microsoft.com"),
 	// }
 }

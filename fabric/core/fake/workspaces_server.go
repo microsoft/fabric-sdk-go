@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
@@ -49,6 +50,10 @@ type WorkspacesServer struct {
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
 	BeginDeprovisionIdentity func(ctx context.Context, workspaceID string, options *core.WorkspacesClientBeginDeprovisionIdentityOptions) (resp azfake.PollerResponder[core.WorkspacesClientDeprovisionIdentityResponse], errResp azfake.ErrorResponder)
 
+	// GetNetworkCommunicationPolicy is the fake for method WorkspacesClient.GetNetworkCommunicationPolicy
+	// HTTP status codes to indicate success: http.StatusOK
+	GetNetworkCommunicationPolicy func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetNetworkCommunicationPolicyOptions) (resp azfake.Responder[core.WorkspacesClientGetNetworkCommunicationPolicyResponse], errResp azfake.ErrorResponder)
+
 	// GetWorkspace is the fake for method WorkspacesClient.GetWorkspace
 	// HTTP status codes to indicate success: http.StatusOK
 	GetWorkspace func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetWorkspaceOptions) (resp azfake.Responder[core.WorkspacesClientGetWorkspaceResponse], errResp azfake.ErrorResponder)
@@ -68,6 +73,10 @@ type WorkspacesServer struct {
 	// BeginProvisionIdentity is the fake for method WorkspacesClient.BeginProvisionIdentity
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
 	BeginProvisionIdentity func(ctx context.Context, workspaceID string, options *core.WorkspacesClientBeginProvisionIdentityOptions) (resp azfake.PollerResponder[core.WorkspacesClientProvisionIdentityResponse], errResp azfake.ErrorResponder)
+
+	// SetNetworkCommunicationPolicy is the fake for method WorkspacesClient.SetNetworkCommunicationPolicy
+	// HTTP status codes to indicate success: http.StatusOK
+	SetNetworkCommunicationPolicy func(ctx context.Context, workspaceID string, setWorkspaceNetworkingCommunicationPolicy core.WorkspaceNetworkingCommunicationPolicy, options *core.WorkspacesClientSetNetworkCommunicationPolicyOptions) (resp azfake.Responder[core.WorkspacesClientSetNetworkCommunicationPolicyResponse], errResp azfake.ErrorResponder)
 
 	// UnassignFromCapacity is the fake for method WorkspacesClient.UnassignFromCapacity
 	// HTTP status codes to indicate success: http.StatusAccepted
@@ -142,6 +151,8 @@ func (w *WorkspacesServerTransport) dispatchToMethodFake(req *http.Request, meth
 				res.resp, res.err = w.dispatchDeleteWorkspaceRoleAssignment(req)
 			case "WorkspacesClient.BeginDeprovisionIdentity":
 				res.resp, res.err = w.dispatchBeginDeprovisionIdentity(req)
+			case "WorkspacesClient.GetNetworkCommunicationPolicy":
+				res.resp, res.err = w.dispatchGetNetworkCommunicationPolicy(req)
 			case "WorkspacesClient.GetWorkspace":
 				res.resp, res.err = w.dispatchGetWorkspace(req)
 			case "WorkspacesClient.GetWorkspaceRoleAssignment":
@@ -152,6 +163,8 @@ func (w *WorkspacesServerTransport) dispatchToMethodFake(req *http.Request, meth
 				res.resp, res.err = w.dispatchNewListWorkspacesPager(req)
 			case "WorkspacesClient.BeginProvisionIdentity":
 				res.resp, res.err = w.dispatchBeginProvisionIdentity(req)
+			case "WorkspacesClient.SetNetworkCommunicationPolicy":
+				res.resp, res.err = w.dispatchSetNetworkCommunicationPolicy(req)
 			case "WorkspacesClient.UnassignFromCapacity":
 				res.resp, res.err = w.dispatchUnassignFromCapacity(req)
 			case "WorkspacesClient.UpdateWorkspace":
@@ -374,6 +387,38 @@ func (w *WorkspacesServerTransport) dispatchBeginDeprovisionIdentity(req *http.R
 	return resp, nil
 }
 
+func (w *WorkspacesServerTransport) dispatchGetNetworkCommunicationPolicy(req *http.Request) (*http.Response, error) {
+	if w.srv.GetNetworkCommunicationPolicy == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetNetworkCommunicationPolicy not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/networking/communicationPolicy`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 1 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := w.srv.GetNetworkCommunicationPolicy(req.Context(), workspaceIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).WorkspaceNetworkingCommunicationPolicy, req)
+	if err != nil {
+		return nil, err
+	}
+	if val := server.GetResponse(respr).ETag; val != nil {
+		resp.Header.Set("ETag", *val)
+	}
+	return resp, nil
+}
+
 func (w *WorkspacesServerTransport) dispatchGetWorkspace(req *http.Request) (*http.Response, error) {
 	if w.srv.GetWorkspace == nil {
 		return nil, &nonRetriableError{errors.New("fake for method GetWorkspace not implemented")}
@@ -384,11 +429,26 @@ func (w *WorkspacesServerTransport) dispatchGetWorkspace(req *http.Request) (*ht
 	if matches == nil || len(matches) < 1 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
+	qp := req.URL.Query()
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := w.srv.GetWorkspace(req.Context(), workspaceIDParam, nil)
+	preferWorkspaceSpecificEndpointsUnescaped, err := url.QueryUnescape(qp.Get("preferWorkspaceSpecificEndpoints"))
+	if err != nil {
+		return nil, err
+	}
+	preferWorkspaceSpecificEndpointsParam, err := parseOptional(preferWorkspaceSpecificEndpointsUnescaped, strconv.ParseBool)
+	if err != nil {
+		return nil, err
+	}
+	var options *core.WorkspacesClientGetWorkspaceOptions
+	if preferWorkspaceSpecificEndpointsParam != nil {
+		options = &core.WorkspacesClientGetWorkspaceOptions{
+			PreferWorkspaceSpecificEndpoints: preferWorkspaceSpecificEndpointsParam,
+		}
+	}
+	respr, errRespr := w.srv.GetWorkspace(req.Context(), workspaceIDParam, options)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -502,11 +562,20 @@ func (w *WorkspacesServerTransport) dispatchNewListWorkspacesPager(req *http.Req
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		preferWorkspaceSpecificEndpointsUnescaped, err := url.QueryUnescape(qp.Get("preferWorkspaceSpecificEndpoints"))
+		if err != nil {
+			return nil, err
+		}
+		preferWorkspaceSpecificEndpointsParam, err := parseOptional(preferWorkspaceSpecificEndpointsUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
 		var options *core.WorkspacesClientListWorkspacesOptions
-		if rolesParam != nil || continuationTokenParam != nil {
+		if rolesParam != nil || continuationTokenParam != nil || preferWorkspaceSpecificEndpointsParam != nil {
 			options = &core.WorkspacesClientListWorkspacesOptions{
-				Roles:             rolesParam,
-				ContinuationToken: continuationTokenParam,
+				Roles:                            rolesParam,
+				ContinuationToken:                continuationTokenParam,
+				PreferWorkspaceSpecificEndpoints: preferWorkspaceSpecificEndpointsParam,
 			}
 		}
 		resp := w.srv.NewListWorkspacesPager(options)
@@ -567,6 +636,49 @@ func (w *WorkspacesServerTransport) dispatchBeginProvisionIdentity(req *http.Req
 		w.beginProvisionIdentity.remove(req)
 	}
 
+	return resp, nil
+}
+
+func (w *WorkspacesServerTransport) dispatchSetNetworkCommunicationPolicy(req *http.Request) (*http.Response, error) {
+	if w.srv.SetNetworkCommunicationPolicy == nil {
+		return nil, &nonRetriableError{errors.New("fake for method SetNetworkCommunicationPolicy not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/networking/communicationPolicy`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 1 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.WorkspaceNetworkingCommunicationPolicy](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	ifMatchParam := getOptional(getHeaderValue(req.Header, "If-Match"))
+	var options *core.WorkspacesClientSetNetworkCommunicationPolicyOptions
+	if ifMatchParam != nil {
+		options = &core.WorkspacesClientSetNetworkCommunicationPolicyOptions{
+			IfMatch: ifMatchParam,
+		}
+	}
+	respr, errRespr := w.srv.SetNetworkCommunicationPolicy(req.Context(), workspaceIDParam, body, options)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	if val := server.GetResponse(respr).ETag; val != nil {
+		resp.Header.Set("ETag", *val)
+	}
 	return resp, nil
 }
 

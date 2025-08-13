@@ -89,3 +89,33 @@ func (testsuite *FakeTestSuite) TestItems_ListSQLEndpoints() {
 		}
 	}
 }
+
+func (testsuite *FakeTestSuite) TestItems_GetConnectionString() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get connection string example"},
+	})
+	var exampleWorkspaceID string
+	var exampleSqlEndpointID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleSqlEndpointID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	exampleRes := sqlendpoint.ConnectionStringResponse{
+		ConnectionString: to.Ptr("qvrmbuxie7we7glrekxgy6npqu-6xgyei3x2xiejip4iime6knh5m-jh0bi.zcf.datawarehouse.fabric.microsoft.com"),
+	}
+
+	testsuite.serverFactory.ItemsServer.GetConnectionString = func(ctx context.Context, workspaceID string, sqlEndpointID string, options *sqlendpoint.ItemsClientGetConnectionStringOptions) (resp azfake.Responder[sqlendpoint.ItemsClientGetConnectionStringResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleSqlEndpointID, sqlEndpointID)
+		resp = azfake.Responder[sqlendpoint.ItemsClientGetConnectionStringResponse]{}
+		resp.SetResponse(http.StatusOK, sqlendpoint.ItemsClientGetConnectionStringResponse{ConnectionStringResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	res, err := client.GetConnectionString(ctx, exampleWorkspaceID, exampleSqlEndpointID, &sqlendpoint.ItemsClientGetConnectionStringOptions{GuestTenantID: to.Ptr("6e335e92-a2a2-4b5a-970a-bd6a89fbb765"),
+		PrivateLinkType: to.Ptr(sqlendpoint.PrivateLinkTypeWorkspace),
+	})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ConnectionStringResponse))
+}

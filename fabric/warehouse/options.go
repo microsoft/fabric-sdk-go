@@ -17,6 +17,15 @@ type ItemsClientDeleteWarehouseOptions struct {
 	// placeholder for future optional parameters
 }
 
+// ItemsClientGetConnectionStringOptions contains the optional parameters for the ItemsClient.GetConnectionString method.
+type ItemsClientGetConnectionStringOptions struct {
+	// The guest tenant ID if the end user's tenant is different from the warehouse tenant.
+	GuestTenantID *string
+
+	// Indicates the type of private link this connection string uses. Additional privateLinkType types may be added over time.
+	PrivateLinkType *PrivateLinkType
+}
+
 // ItemsClientGetWarehouseOptions contains the optional parameters for the ItemsClient.GetWarehouse method.
 type ItemsClientGetWarehouseOptions struct {
 	// placeholder for future optional parameters

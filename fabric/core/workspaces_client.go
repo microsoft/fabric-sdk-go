@@ -11,6 +11,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -406,6 +407,71 @@ func (client *WorkspacesClient) deprovisionIdentityCreateRequest(ctx context.Con
 	return req, nil
 }
 
+// GetNetworkCommunicationPolicy - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must have viewer or higher workspace role.
+// REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - options - WorkspacesClientGetNetworkCommunicationPolicyOptions contains the optional parameters for the WorkspacesClient.GetNetworkCommunicationPolicy
+//     method.
+func (client *WorkspacesClient) GetNetworkCommunicationPolicy(ctx context.Context, workspaceID string, options *WorkspacesClientGetNetworkCommunicationPolicyOptions) (WorkspacesClientGetNetworkCommunicationPolicyResponse, error) {
+	var err error
+	const operationName = "core.WorkspacesClient.GetNetworkCommunicationPolicy"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getNetworkCommunicationPolicyCreateRequest(ctx, workspaceID, options)
+	if err != nil {
+		return WorkspacesClientGetNetworkCommunicationPolicyResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientGetNetworkCommunicationPolicyResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return WorkspacesClientGetNetworkCommunicationPolicyResponse{}, err
+	}
+	resp, err := client.getNetworkCommunicationPolicyHandleResponse(httpResp)
+	return resp, err
+}
+
+// getNetworkCommunicationPolicyCreateRequest creates the GetNetworkCommunicationPolicy request.
+func (client *WorkspacesClient) getNetworkCommunicationPolicyCreateRequest(ctx context.Context, workspaceID string, _ *WorkspacesClientGetNetworkCommunicationPolicyOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/networking/communicationPolicy"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getNetworkCommunicationPolicyHandleResponse handles the GetNetworkCommunicationPolicy response.
+func (client *WorkspacesClient) getNetworkCommunicationPolicyHandleResponse(resp *http.Response) (WorkspacesClientGetNetworkCommunicationPolicyResponse, error) {
+	result := WorkspacesClientGetNetworkCommunicationPolicyResponse{}
+	if val := resp.Header.Get("ETag"); val != "" {
+		result.ETag = &val
+	}
+	if err := runtime.UnmarshalAsJSON(resp, &result.WorkspaceNetworkingCommunicationPolicy); err != nil {
+		return WorkspacesClientGetNetworkCommunicationPolicyResponse{}, err
+	}
+	return result, nil
+}
+
 // GetWorkspace - PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -442,7 +508,7 @@ func (client *WorkspacesClient) GetWorkspace(ctx context.Context, workspaceID st
 }
 
 // getWorkspaceCreateRequest creates the GetWorkspace request.
-func (client *WorkspacesClient) getWorkspaceCreateRequest(ctx context.Context, workspaceID string, _ *WorkspacesClientGetWorkspaceOptions) (*policy.Request, error) {
+func (client *WorkspacesClient) getWorkspaceCreateRequest(ctx context.Context, workspaceID string, options *WorkspacesClientGetWorkspaceOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -452,6 +518,11 @@ func (client *WorkspacesClient) getWorkspaceCreateRequest(ctx context.Context, w
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.PreferWorkspaceSpecificEndpoints != nil {
+		reqQP.Set("preferWorkspaceSpecificEndpoints", strconv.FormatBool(*options.PreferWorkspaceSpecificEndpoints))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }
@@ -642,6 +713,9 @@ func (client *WorkspacesClient) listWorkspacesCreateRequest(ctx context.Context,
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
 	}
+	if options != nil && options.PreferWorkspaceSpecificEndpoints != nil {
+		reqQP.Set("preferWorkspaceSpecificEndpoints", strconv.FormatBool(*options.PreferWorkspaceSpecificEndpoints))
+	}
 	if options != nil && options.Roles != nil {
 		reqQP.Set("roles", *options.Roles)
 	}
@@ -726,6 +800,75 @@ func (client *WorkspacesClient) provisionIdentityCreateRequest(ctx context.Conte
 	}
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
+}
+
+// SetNetworkCommunicationPolicy - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must have admin workspace role.
+// REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - setWorkspaceNetworkingCommunicationPolicy - Set workspace networking communication policy request payload.
+//   - options - WorkspacesClientSetNetworkCommunicationPolicyOptions contains the optional parameters for the WorkspacesClient.SetNetworkCommunicationPolicy
+//     method.
+func (client *WorkspacesClient) SetNetworkCommunicationPolicy(ctx context.Context, workspaceID string, setWorkspaceNetworkingCommunicationPolicy WorkspaceNetworkingCommunicationPolicy, options *WorkspacesClientSetNetworkCommunicationPolicyOptions) (WorkspacesClientSetNetworkCommunicationPolicyResponse, error) {
+	var err error
+	const operationName = "core.WorkspacesClient.SetNetworkCommunicationPolicy"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.setNetworkCommunicationPolicyCreateRequest(ctx, workspaceID, setWorkspaceNetworkingCommunicationPolicy, options)
+	if err != nil {
+		return WorkspacesClientSetNetworkCommunicationPolicyResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientSetNetworkCommunicationPolicyResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return WorkspacesClientSetNetworkCommunicationPolicyResponse{}, err
+	}
+	resp, err := client.setNetworkCommunicationPolicyHandleResponse(httpResp)
+	return resp, err
+}
+
+// setNetworkCommunicationPolicyCreateRequest creates the SetNetworkCommunicationPolicy request.
+func (client *WorkspacesClient) setNetworkCommunicationPolicyCreateRequest(ctx context.Context, workspaceID string, setWorkspaceNetworkingCommunicationPolicy WorkspaceNetworkingCommunicationPolicy, options *WorkspacesClientSetNetworkCommunicationPolicyOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/networking/communicationPolicy"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPut, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if options != nil && options.IfMatch != nil {
+		req.Raw().Header["If-Match"] = []string{*options.IfMatch}
+	}
+	if err := runtime.MarshalAsJSON(req, setWorkspaceNetworkingCommunicationPolicy); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// setNetworkCommunicationPolicyHandleResponse handles the SetNetworkCommunicationPolicy response.
+func (client *WorkspacesClient) setNetworkCommunicationPolicyHandleResponse(resp *http.Response) (WorkspacesClientSetNetworkCommunicationPolicyResponse, error) {
+	result := WorkspacesClientSetNetworkCommunicationPolicyResponse{}
+	if val := resp.Header.Get("ETag"); val != "" {
+		result.ETag = &val
+	}
+	return result, nil
 }
 
 // UnassignFromCapacity - PERMISSIONS The caller must have admin role on the workspace.

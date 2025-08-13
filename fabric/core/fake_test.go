@@ -112,7 +112,8 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ListWorkspaces() {
 
 	client := testsuite.clientFactory.NewWorkspacesClient()
 	pager := client.NewListWorkspacesPager(&core.WorkspacesClientListWorkspacesOptions{Roles: nil,
-		ContinuationToken: nil,
+		ContinuationToken:                nil,
+		PreferWorkspaceSpecificEndpoints: nil,
 	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
@@ -160,7 +161,50 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ListWorkspaces() {
 	}
 
 	pager = client.NewListWorkspacesPager(&core.WorkspacesClientListWorkspacesOptions{Roles: nil,
-		ContinuationToken: nil,
+		ContinuationToken:                nil,
+		PreferWorkspaceSpecificEndpoints: nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Workspaces))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List workspaces with preferWorkspaceSpecificEndpoints example"},
+	})
+
+	exampleRes = core.Workspaces{
+		Value: []core.Workspace{
+			{
+				Type:        to.Ptr(core.WorkspaceTypeWorkspace),
+				Description: to.Ptr("A workspace for Alice"),
+				APIEndpoint: to.Ptr("https://cfafbeb180374d0c896ea46fb27ff227.zcf.w.api.fabric.microsoft.com"),
+				DisplayName: to.Ptr("Alice's Workspace"),
+				ID:          to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
+			},
+			{
+				Type:        to.Ptr(core.WorkspaceTypeWorkspace),
+				Description: to.Ptr("A workspace for Bob"),
+				APIEndpoint: to.Ptr("https://0c02a0cd71bc410faa055a7bc98765f7.z0c.w.api.fabric.microsoft.com"),
+				DisplayName: to.Ptr("Bob's Workspace"),
+				ID:          to.Ptr("0c02a0cd-71bc-410f-aa05-5a7bc98765f7"),
+			}},
+	}
+
+	testsuite.serverFactory.WorkspacesServer.NewListWorkspacesPager = func(options *core.WorkspacesClientListWorkspacesOptions) (resp azfake.PagerResponder[core.WorkspacesClientListWorkspacesResponse]) {
+		resp = azfake.PagerResponder[core.WorkspacesClientListWorkspacesResponse]{}
+		resp.AddPage(http.StatusOK, core.WorkspacesClientListWorkspacesResponse{Workspaces: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListWorkspacesPager(&core.WorkspacesClientListWorkspacesOptions{Roles: nil,
+		ContinuationToken:                nil,
+		PreferWorkspaceSpecificEndpoints: to.Ptr(true),
 	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
@@ -211,7 +255,8 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ListWorkspaces() {
 	}
 
 	pager = client.NewListWorkspacesPager(&core.WorkspacesClientListWorkspacesOptions{Roles: to.Ptr("Admin,Member,Contributor,Viewer"),
-		ContinuationToken: nil,
+		ContinuationToken:                nil,
+		PreferWorkspaceSpecificEndpoints: nil,
 	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
@@ -257,7 +302,43 @@ func (testsuite *FakeTestSuite) TestWorkspaces_GetWorkspace() {
 	}
 
 	client := testsuite.clientFactory.NewWorkspacesClient()
-	res, err := client.GetWorkspace(ctx, exampleWorkspaceID, nil)
+	res, err := client.GetWorkspace(ctx, exampleWorkspaceID, &core.WorkspacesClientGetWorkspaceOptions{PreferWorkspaceSpecificEndpoints: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.WorkspaceInfo))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a workspace with preferWorkspaceSpecificEndpoints example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
+
+	exampleRes = core.WorkspaceInfo{
+		Type:                       to.Ptr(core.WorkspaceTypeWorkspace),
+		Description:                to.Ptr("New workspace description"),
+		APIEndpoint:                to.Ptr("https://cfafbeb180374d0c896ea46fb27ff227.zcf.w.api.fabric.microsoft.com"),
+		CapacityID:                 to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
+		DisplayName:                to.Ptr("New workspace"),
+		ID:                         to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
+		CapacityAssignmentProgress: to.Ptr(core.CapacityAssignmentProgressCompleted),
+		CapacityRegion:             to.Ptr(core.CapacityRegionEastUS),
+		OneLakeEndpoints: &core.OneLakeEndpoints{
+			BlobEndpoint: to.Ptr("https://cfafbeb180374d0c896ea46fb27ff227.zcf.blob.fabric.microsoft.com"),
+			DfsEndpoint:  to.Ptr("https://cfafbeb180374d0c896ea46fb27ff227.zcf.dfs.fabric.microsoft.com"),
+		},
+		WorkspaceIdentity: &core.WorkspaceIdentity{
+			ApplicationID:      to.Ptr("00a4a8f9-78d3-41b3-b87a-6ae5271c8d0d"),
+			ServicePrincipalID: to.Ptr("5ba4ae58-d402-45c6-a848-0253e834fd78"),
+		},
+	}
+
+	testsuite.serverFactory.WorkspacesServer.GetWorkspace = func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetWorkspaceOptions) (resp azfake.Responder[core.WorkspacesClientGetWorkspaceResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.WorkspacesClientGetWorkspaceResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientGetWorkspaceResponse{WorkspaceInfo: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.GetWorkspace(ctx, exampleWorkspaceID, &core.WorkspacesClientGetWorkspaceOptions{PreferWorkspaceSpecificEndpoints: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.WorkspaceInfo))
 }
@@ -622,6 +703,74 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ProvisionIdentity() {
 	res, err := poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.WorkspaceIdentity))
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaces_GetNetworkCommunicationPolicy() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get workspace networking communication policy example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+
+	exampleRes := core.WorkspaceNetworkingCommunicationPolicy{
+		Inbound: &core.InboundRules{
+			PublicAccessRules: &core.NetworkRules{
+				DefaultAction: to.Ptr(core.NetworkAccessRuleDeny),
+			},
+		},
+		Outbound: &core.OutboundRules{
+			PublicAccessRules: &core.NetworkRules{
+				DefaultAction: to.Ptr(core.NetworkAccessRuleAllow),
+			},
+		},
+	}
+
+	testsuite.serverFactory.WorkspacesServer.GetNetworkCommunicationPolicy = func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetNetworkCommunicationPolicyOptions) (resp azfake.Responder[core.WorkspacesClientGetNetworkCommunicationPolicyResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.WorkspacesClientGetNetworkCommunicationPolicyResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientGetNetworkCommunicationPolicyResponse{WorkspaceNetworkingCommunicationPolicy: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	res, err := client.GetNetworkCommunicationPolicy(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.WorkspaceNetworkingCommunicationPolicy))
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaces_SetNetworkCommunicationPolicy() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Set workspace networking communication policy example"},
+	})
+	var exampleWorkspaceID string
+	var exampleSetWorkspaceNetworkingCommunicationPolicy core.WorkspaceNetworkingCommunicationPolicy
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+	exampleSetWorkspaceNetworkingCommunicationPolicy = core.WorkspaceNetworkingCommunicationPolicy{
+		Inbound: &core.InboundRules{
+			PublicAccessRules: &core.NetworkRules{
+				DefaultAction: to.Ptr(core.NetworkAccessRuleAllow),
+			},
+		},
+		Outbound: &core.OutboundRules{
+			PublicAccessRules: &core.NetworkRules{
+				DefaultAction: to.Ptr(core.NetworkAccessRuleDeny),
+			},
+		},
+	}
+
+	testsuite.serverFactory.WorkspacesServer.SetNetworkCommunicationPolicy = func(ctx context.Context, workspaceID string, setWorkspaceNetworkingCommunicationPolicy core.WorkspaceNetworkingCommunicationPolicy, options *core.WorkspacesClientSetNetworkCommunicationPolicyOptions) (resp azfake.Responder[core.WorkspacesClientSetNetworkCommunicationPolicyResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleSetWorkspaceNetworkingCommunicationPolicy, setWorkspaceNetworkingCommunicationPolicy))
+		resp = azfake.Responder[core.WorkspacesClientSetNetworkCommunicationPolicyResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientSetNetworkCommunicationPolicyResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	_, err = client.SetNetworkCommunicationPolicy(ctx, exampleWorkspaceID, exampleSetWorkspaceNetworkingCommunicationPolicy, &core.WorkspacesClientSetNetworkCommunicationPolicyOptions{IfMatch: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestItems_ListItems() {
@@ -2862,7 +3011,7 @@ func (testsuite *FakeTestSuite) TestOneLakeShortcuts_CreateShortcut() {
 	}
 
 	client := testsuite.clientFactory.NewOneLakeShortcutsClient()
-	res, err := client.CreateShortcut(ctx, exampleWorkspaceID, exampleItemID, exampleCreateShortcutRequest, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: to.Ptr(core.ShortcutConflictPolicy("CreateOrOverwrite"))})
+	res, err := client.CreateShortcut(ctx, exampleWorkspaceID, exampleItemID, exampleCreateShortcutRequest, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: to.Ptr(core.ShortcutConflictPolicyCreateOrOverwrite)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Shortcut))
 
@@ -3087,7 +3236,7 @@ func (testsuite *FakeTestSuite) TestOneLakeShortcuts_CreateShortcut() {
 		return
 	}
 
-	res, err = client.CreateShortcut(ctx, exampleWorkspaceID, exampleItemID, exampleCreateShortcutRequest, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: to.Ptr(core.ShortcutConflictPolicy("CreateOrOverwrite"))})
+	res, err = client.CreateShortcut(ctx, exampleWorkspaceID, exampleItemID, exampleCreateShortcutRequest, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: to.Ptr(core.ShortcutConflictPolicyCreateOrOverwrite)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Shortcut))
 }

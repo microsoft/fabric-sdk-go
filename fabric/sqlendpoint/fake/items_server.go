@@ -26,6 +26,10 @@ import (
 
 // ItemsServer is a fake server for instances of the sqlendpoint.ItemsClient type.
 type ItemsServer struct {
+	// GetConnectionString is the fake for method ItemsClient.GetConnectionString
+	// HTTP status codes to indicate success: http.StatusOK
+	GetConnectionString func(ctx context.Context, workspaceID string, sqlEndpointID string, options *sqlendpoint.ItemsClientGetConnectionStringOptions) (resp azfake.Responder[sqlendpoint.ItemsClientGetConnectionStringResponse], errResp azfake.ErrorResponder)
+
 	// NewListSQLEndpointsPager is the fake for method ItemsClient.NewListSQLEndpointsPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListSQLEndpointsPager func(workspaceID string, options *sqlendpoint.ItemsClientListSQLEndpointsOptions) (resp azfake.PagerResponder[sqlendpoint.ItemsClientListSQLEndpointsResponse])
@@ -79,6 +83,8 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 		}
 		if !intercepted {
 			switch method {
+			case "ItemsClient.GetConnectionString":
+				res.resp, res.err = i.dispatchGetConnectionString(req)
 			case "ItemsClient.NewListSQLEndpointsPager":
 				res.resp, res.err = i.dispatchNewListSQLEndpointsPager(req)
 			case "ItemsClient.BeginRefreshSQLEndpointMetadata":
@@ -100,6 +106,57 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 	case res := <-resultChan:
 		return res.resp, res.err
 	}
+}
+
+func (i *ItemsServerTransport) dispatchGetConnectionString(req *http.Request) (*http.Response, error) {
+	if i.srv.GetConnectionString == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetConnectionString not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sqlEndpoints/(?P<sqlEndpointId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/connectionString`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	qp := req.URL.Query()
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	sqlEndpointIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("sqlEndpointId")])
+	if err != nil {
+		return nil, err
+	}
+	guestTenantIDUnescaped, err := url.QueryUnescape(qp.Get("guestTenantId"))
+	if err != nil {
+		return nil, err
+	}
+	guestTenantIDParam := getOptional(guestTenantIDUnescaped)
+	privateLinkTypeUnescaped, err := url.QueryUnescape(qp.Get("privateLinkType"))
+	if err != nil {
+		return nil, err
+	}
+	privateLinkTypeParam := getOptional(sqlendpoint.PrivateLinkType(privateLinkTypeUnescaped))
+	var options *sqlendpoint.ItemsClientGetConnectionStringOptions
+	if guestTenantIDParam != nil || privateLinkTypeParam != nil {
+		options = &sqlendpoint.ItemsClientGetConnectionStringOptions{
+			GuestTenantID:   guestTenantIDParam,
+			PrivateLinkType: privateLinkTypeParam,
+		}
+	}
+	respr, errRespr := i.srv.GetConnectionString(req.Context(), workspaceIDParam, sqlEndpointIDParam, options)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).ConnectionStringResponse, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 func (i *ItemsServerTransport) dispatchNewListSQLEndpointsPager(req *http.Request) (*http.Response, error) {
