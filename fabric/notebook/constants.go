@@ -216,6 +216,8 @@ func PossiblePayloadTypeValues() []PayloadType {
 type PrincipalType string
 
 const (
+	// PrincipalTypeEntireTenant - Principal represents all tenant users.
+	PrincipalTypeEntireTenant PrincipalType = "EntireTenant"
 	// PrincipalTypeGroup - Principal is a security group.
 	PrincipalTypeGroup PrincipalType = "Group"
 	// PrincipalTypeServicePrincipal - Principal is a Microsoft Entra service principal.
@@ -229,6 +231,7 @@ const (
 // PossiblePrincipalTypeValues returns the possible values for the PrincipalType const type.
 func PossiblePrincipalTypeValues() []PrincipalType {
 	return []PrincipalType{
+		PrincipalTypeEntireTenant,
 		PrincipalTypeGroup,
 		PrincipalTypeServicePrincipal,
 		PrincipalTypeServicePrincipalProfile,

@@ -117,6 +117,71 @@ func ExampleOneLakeDataAccessSecurityClient_ListDataAccessRoles_listDataAccessRo
 }
 
 // Generated from example definition
+func ExampleOneLakeDataAccessSecurityClient_ListDataAccessRoles_listDataAccessRolesWithConstraintsExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewOneLakeDataAccessSecurityClient().ListDataAccessRoles(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff222", "25bac802-080d-4f73-8a42-1b406eb1fceb", &core.OneLakeDataAccessSecurityClientListDataAccessRolesOptions{ContinuationToken: nil})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.DataAccessRoles = core.DataAccessRoles{
+	// 	Value: []core.DataAccessRole{
+	// 		{
+	// 			Name: to.Ptr("DefaultReader"),
+	// 			DecisionRules: []core.DecisionRule{
+	// 				{
+	// 					Constraints: &core.DecisionRuleConstraints{
+	// 						Columns: []core.ColumnConstraint{
+	// 							{
+	// 								ColumnAction: []core.ColumnAction{
+	// 									core.ColumnActionRead},
+	// 									ColumnEffect: to.Ptr(core.ColumnEffectPermit),
+	// 									ColumnNames: []string{
+	// 										"Industry"},
+	// 										TablePath: to.Ptr("/Tables/industrytable"),
+	// 								}},
+	// 								Rows: []core.RowConstraint{
+	// 									{
+	// 										TablePath: to.Ptr("/Tables/industrytable"),
+	// 										Value: to.Ptr("select * from Industrytable where Industry=\"Green\""),
+	// 								}},
+	// 							},
+	// 							Effect: to.Ptr(core.EffectPermit),
+	// 							Permission: []core.PermissionScope{
+	// 								{
+	// 									AttributeName: to.Ptr(core.AttributeNamePath),
+	// 									AttributeValueIncludedIn: []string{
+	// 										"*"},
+	// 									},
+	// 									{
+	// 										AttributeName: to.Ptr(core.AttributeNameAction),
+	// 										AttributeValueIncludedIn: []string{
+	// 											"Read"},
+	// 									}},
+	// 							}},
+	// 							Members: &core.Members{
+	// 								FabricItemMembers: []core.FabricItemMember{
+	// 									{
+	// 										ItemAccess: []core.ItemAccess{
+	// 											core.ItemAccessReadAll},
+	// 											SourcePath: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff222/25bac802-080d-4f73-8a42-1b406eb1fceb"),
+	// 									}},
+	// 								},
+	// 						}},
+	// 					}
+}
+
+// Generated from example definition
 func ExampleOneLakeDataAccessSecurityClient_ListDataAccessRoles_listDefaultDataAccessRolesExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -182,6 +247,70 @@ func ExampleOneLakeDataAccessSecurityClient_CreateOrUpdateDataAccessRoles_create
 				Name: to.Ptr("default_role_1"),
 				DecisionRules: []core.DecisionRule{
 					{
+						Effect: to.Ptr(core.EffectPermit),
+						Permission: []core.PermissionScope{
+							{
+								AttributeName: to.Ptr(core.AttributeNamePath),
+								AttributeValueIncludedIn: []string{
+									"*"},
+							},
+							{
+								AttributeName: to.Ptr(core.AttributeNameAction),
+								AttributeValueIncludedIn: []string{
+									"Read"},
+							}},
+					}},
+				Members: &core.Members{
+					FabricItemMembers: []core.FabricItemMember{
+						{
+							ItemAccess: []core.ItemAccess{
+								core.ItemAccessReadAll},
+							SourcePath: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff222/25bac802-080d-4f73-8a42-1b406eb1fceb"),
+						}},
+				},
+			}},
+	}, &core.OneLakeDataAccessSecurityClientCreateOrUpdateDataAccessRolesOptions{DryRun: nil,
+		IfMatch:     nil,
+		IfNoneMatch: nil,
+	})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleOneLakeDataAccessSecurityClient_CreateOrUpdateDataAccessRoles_createOrUpdateDataAccessRolesWithConstraintsExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewOneLakeDataAccessSecurityClient().CreateOrUpdateDataAccessRoles(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff222", "25bac802-080d-4f73-8a42-1b406eb1fceb", core.CreateOrUpdateDataAccessRolesRequest{
+		Value: []core.DataAccessRole{
+			{
+				Name: to.Ptr("default_role_1"),
+				DecisionRules: []core.DecisionRule{
+					{
+						Constraints: &core.DecisionRuleConstraints{
+							Columns: []core.ColumnConstraint{
+								{
+									ColumnAction: []core.ColumnAction{
+										core.ColumnActionRead},
+									ColumnEffect: to.Ptr(core.ColumnEffectPermit),
+									ColumnNames: []string{
+										"Industry"},
+									TablePath: to.Ptr("/Tables/industrytable"),
+								}},
+							Rows: []core.RowConstraint{
+								{
+									TablePath: to.Ptr("/Tables/industrytable"),
+									Value:     to.Ptr("select * from Industrytable where Industry=\"Green\""),
+								}},
+						},
 						Effect: to.Ptr(core.EffectPermit),
 						Permission: []core.PermissionScope{
 							{

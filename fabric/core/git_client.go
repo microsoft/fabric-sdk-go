@@ -123,12 +123,13 @@ func (client *GitClient) commitToGitCreateRequest(ctx context.Context, workspace
 // PERMISSIONS The caller must have an admin role for the workspace.
 // For configured connection Git credentials, the caller must have permission for the connection.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// LIMITATIONS When using Automatic credentials source, this API is blocked for GitHub provider and for Service Principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | Not supported when the Git provider is AzureDevOps and
-// credentials are Automatic |
+// [/entra/identity/managed-identities-azure-resources/overview] | Supported only when myGitCredentials.source is ConfiguredConnection
+// |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -602,12 +603,13 @@ func (client *GitClient) updateFromGitCreateRequest(ctx context.Context, workspa
 // PERMISSIONS The caller must have a contributor or higher workspace role.
 // For configured connection Git credentials, the caller must have permission for the connection.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// LIMITATIONS When using Automatic credentials source, this API is blocked for GitHub provider and for Service Principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | Not supported when the Git provider is AzureDevOps and
-// credentials are Automatic |
+// [/entra/identity/managed-identities-azure-resources/overview] | Supported only when source is ConfiguredConnection or None
+// |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //

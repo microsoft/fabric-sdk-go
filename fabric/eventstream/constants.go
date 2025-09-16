@@ -718,27 +718,6 @@ func PossibleNodeStatusValues() []NodeStatus {
 	}
 }
 
-// OperationType - The operation type.
-type OperationType string
-
-const (
-	// OperationTypeCast - Cast operation.
-	OperationTypeCast OperationType = "Cast"
-	// OperationTypeFunctionCall - Function call operation.
-	OperationTypeFunctionCall OperationType = "FunctionCall"
-	// OperationTypeRename - Rename operation.
-	OperationTypeRename OperationType = "Rename"
-)
-
-// PossibleOperationTypeValues returns the possible values for the OperationType const type.
-func PossibleOperationTypeValues() []OperationType {
-	return []OperationType{
-		OperationTypeCast,
-		OperationTypeFunctionCall,
-		OperationTypeRename,
-	}
-}
-
 // OperatorCommonDurationUnit - The unit of the duration.
 type OperatorCommonDurationUnit string
 
@@ -949,5 +928,26 @@ func PossibleStreamTypeValues() []StreamType {
 	return []StreamType{
 		StreamTypeDefaultStream,
 		StreamTypeDerivedStream,
+	}
+}
+
+// Type - The operation type.
+type Type string
+
+const (
+	// TypeCast - Cast operation.
+	TypeCast Type = "Cast"
+	// TypeFunctionCall - Function call operation.
+	TypeFunctionCall Type = "FunctionCall"
+	// TypeRename - Rename operation.
+	TypeRename Type = "Rename"
+)
+
+// PossibleTypeValues returns the possible values for the Type const type.
+func PossibleTypeValues() []Type {
+	return []Type{
+		TypeCast,
+		TypeFunctionCall,
+		TypeRename,
 	}
 }

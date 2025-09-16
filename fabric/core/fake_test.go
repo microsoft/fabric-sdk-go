@@ -100,6 +100,7 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ListWorkspaces() {
 				Description: to.Ptr("A workspace used by the finance team"),
 				CapacityID:  to.Ptr("171018af-1531-4e61-942a-74f024b7f9fd"),
 				DisplayName: to.Ptr("Finance"),
+				DomainID:    to.Ptr("7c889f28-999b-4945-840d-54da3e3b5a29"),
 				ID:          to.Ptr("f2d70dc6-8f3e-4f2c-b00e-e2d336d7d711"),
 			}},
 	}
@@ -281,6 +282,7 @@ func (testsuite *FakeTestSuite) TestWorkspaces_GetWorkspace() {
 		Description:                to.Ptr("New workspace description"),
 		CapacityID:                 to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
 		DisplayName:                to.Ptr("New workspace"),
+		DomainID:                   to.Ptr("9ce364e0-8e9d-4605-887a-b599b3e8b123"),
 		ID:                         to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
 		CapacityAssignmentProgress: to.Ptr(core.CapacityAssignmentProgressCompleted),
 		CapacityRegion:             to.Ptr(core.CapacityRegionEastUS),
@@ -360,6 +362,7 @@ func (testsuite *FakeTestSuite) TestWorkspaces_UpdateWorkspace() {
 		Type:        to.Ptr(core.WorkspaceTypeWorkspace),
 		Description: to.Ptr("Workspace New description"),
 		DisplayName: to.Ptr("Workspace New displayName"),
+		DomainID:    to.Ptr("686177b9-ef29-45e4-a5db-1786ca6dbb9f"),
 		ID:          to.Ptr("33bae707-5fe7-4352-89bd-061a1318b60a"),
 	}
 
@@ -674,6 +677,51 @@ func (testsuite *FakeTestSuite) TestWorkspaces_UnassignFromCapacity() {
 
 	client := testsuite.clientFactory.NewWorkspacesClient()
 	_, err = client.UnassignFromCapacity(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaces_AssignToDomain() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Assign a workspace to a domain example"},
+	})
+	var exampleWorkspaceID string
+	var exampleAssignWorkspaceToDomainRequest core.AssignWorkspaceToDomainRequest
+	exampleWorkspaceID = "f97451ca-d6a0-482f-a46a-cc4b2c48ba56"
+	exampleAssignWorkspaceToDomainRequest = core.AssignWorkspaceToDomainRequest{
+		DomainID: to.Ptr("9d04ca81-bb30-4009-bd1a-a9213a4c8d75"),
+	}
+
+	testsuite.serverFactory.WorkspacesServer.AssignToDomain = func(ctx context.Context, workspaceID string, assignWorkspaceToDomainRequest core.AssignWorkspaceToDomainRequest, options *core.WorkspacesClientAssignToDomainOptions) (resp azfake.Responder[core.WorkspacesClientAssignToDomainResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleAssignWorkspaceToDomainRequest, assignWorkspaceToDomainRequest))
+		resp = azfake.Responder[core.WorkspacesClientAssignToDomainResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientAssignToDomainResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	_, err = client.AssignToDomain(ctx, exampleWorkspaceID, exampleAssignWorkspaceToDomainRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaces_UnassignFromDomain() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Unassign a workspace from a domain example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "49058730-1621-4033-95b5-4f54da51cb48"
+
+	testsuite.serverFactory.WorkspacesServer.UnassignFromDomain = func(ctx context.Context, workspaceID string, options *core.WorkspacesClientUnassignFromDomainOptions) (resp azfake.Responder[core.WorkspacesClientUnassignFromDomainResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.WorkspacesClientUnassignFromDomainResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientUnassignFromDomainResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	_, err = client.UnassignFromDomain(ctx, exampleWorkspaceID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
@@ -1393,6 +1441,212 @@ func (testsuite *FakeTestSuite) TestItems_ListItemConnections() {
 			break
 		}
 	}
+}
+
+func (testsuite *FakeTestSuite) TestItems_BulkMoveItems() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Bulk move items into folder example"},
+	})
+	var exampleWorkspaceID string
+	var exampleBulkMoveItemsRequest core.BulkMoveItemsRequest
+	exampleWorkspaceID = "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"
+	exampleBulkMoveItemsRequest = core.BulkMoveItemsRequest{
+		Items: []string{
+			"cccccccc-2222-3333-4444-dddddddddddd",
+			"dddddddd-3333-4444-5555-eeeeeeeeeeee"},
+		TargetFolderID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+	}
+
+	exampleRes := core.MovedItems{
+		Value: []core.Item{
+			{
+				Type:        to.Ptr(core.ItemTypeLakehouse),
+				Description: to.Ptr("A lakehouse used by the sales team."),
+				DisplayName: to.Ptr("MyLakehouse"),
+				FolderID:    to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+				ID:          to.Ptr("cccccccc-2222-3333-4444-dddddddddddd"),
+				WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			},
+			{
+				Type:        to.Ptr(core.ItemTypeSQLEndpoint),
+				Description: to.Ptr("A SQL endpoint who is the child of Lakehouse"),
+				DisplayName: to.Ptr("MyLakehouse"),
+				FolderID:    to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+				ID:          to.Ptr("eeeeeeee-4444-5555-6666-ffffffffffff"),
+				WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			},
+			{
+				Type:        to.Ptr(core.ItemTypeSemanticModel),
+				Description: to.Ptr("A Semantic model who is the child of SQLEndpoint"),
+				DisplayName: to.Ptr("MyLakehouse"),
+				FolderID:    to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+				ID:          to.Ptr("ffffffff-5555-6666-7777-aaaaaaaaaaaa"),
+				WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			},
+			{
+				Type:        to.Ptr(core.ItemType("SynapseNotebook")),
+				Description: to.Ptr("A notebook for refining year 2024 sales data analysis through machine learning algorithms."),
+				DisplayName: to.Ptr("Notebook"),
+				FolderID:    to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+				ID:          to.Ptr("dddddddd-3333-4444-5555-eeeeeeeeeeee"),
+				WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			}},
+	}
+
+	testsuite.serverFactory.ItemsServer.BulkMoveItems = func(ctx context.Context, workspaceID string, bulkMoveItemsRequest core.BulkMoveItemsRequest, options *core.ItemsClientBulkMoveItemsOptions) (resp azfake.Responder[core.ItemsClientBulkMoveItemsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleBulkMoveItemsRequest, bulkMoveItemsRequest))
+		resp = azfake.Responder[core.ItemsClientBulkMoveItemsResponse]{}
+		resp.SetResponse(http.StatusOK, core.ItemsClientBulkMoveItemsResponse{MovedItems: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	res, err := client.BulkMoveItems(ctx, exampleWorkspaceID, exampleBulkMoveItemsRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.MovedItems))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Bulk move items with the workspace as the destination example"},
+	})
+	exampleWorkspaceID = "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"
+	exampleBulkMoveItemsRequest = core.BulkMoveItemsRequest{
+		Items: []string{
+			"cccccccc-2222-3333-4444-dddddddddddd",
+			"dddddddd-3333-4444-5555-eeeeeeeeeeee"},
+	}
+
+	exampleRes = core.MovedItems{
+		Value: []core.Item{
+			{
+				Type:        to.Ptr(core.ItemTypeLakehouse),
+				Description: to.Ptr("A lakehouse used by the sales team."),
+				DisplayName: to.Ptr("MyLakehouse"),
+				ID:          to.Ptr("cccccccc-2222-3333-4444-dddddddddddd"),
+				WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			},
+			{
+				Type:        to.Ptr(core.ItemTypeSQLEndpoint),
+				Description: to.Ptr("A SQL endpoint who is the child of Lakehouse"),
+				DisplayName: to.Ptr("MyLakehouse"),
+				ID:          to.Ptr("eeeeeeee-4444-5555-6666-ffffffffffff"),
+				WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			},
+			{
+				Type:        to.Ptr(core.ItemTypeSemanticModel),
+				Description: to.Ptr("A Semantic model who is the child of SQLEndpoint"),
+				DisplayName: to.Ptr("MyLakehouse"),
+				ID:          to.Ptr("ffffffff-5555-6666-7777-aaaaaaaaaaaa"),
+				WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			},
+			{
+				Type:        to.Ptr(core.ItemType("SynapseNotebook")),
+				Description: to.Ptr("A notebook for refining year 2024 sales data analysis through machine learning algorithms."),
+				DisplayName: to.Ptr("Notebook"),
+				ID:          to.Ptr("dddddddd-3333-4444-5555-eeeeeeeeeeee"),
+				WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			}},
+	}
+
+	testsuite.serverFactory.ItemsServer.BulkMoveItems = func(ctx context.Context, workspaceID string, bulkMoveItemsRequest core.BulkMoveItemsRequest, options *core.ItemsClientBulkMoveItemsOptions) (resp azfake.Responder[core.ItemsClientBulkMoveItemsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleBulkMoveItemsRequest, bulkMoveItemsRequest))
+		resp = azfake.Responder[core.ItemsClientBulkMoveItemsResponse]{}
+		resp.SetResponse(http.StatusOK, core.ItemsClientBulkMoveItemsResponse{MovedItems: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.BulkMoveItems(ctx, exampleWorkspaceID, exampleBulkMoveItemsRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.MovedItems))
+}
+
+func (testsuite *FakeTestSuite) TestItems_MoveItem() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Move an item into folder example"},
+	})
+	var exampleWorkspaceID string
+	var exampleItemID string
+	var exampleMoveItemRequest core.MoveItemRequest
+	exampleWorkspaceID = "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"
+	exampleItemID = "cccccccc-2222-3333-4444-dddddddddddd"
+	exampleMoveItemRequest = core.MoveItemRequest{
+		TargetFolderID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+	}
+
+	exampleRes := core.MovedItems{
+		Value: []core.Item{
+			{
+				Type:        to.Ptr(core.ItemTypeLakehouse),
+				Description: to.Ptr("A lakehouse used by the sales team."),
+				DisplayName: to.Ptr("MyLakehouse"),
+				FolderID:    to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+				ID:          to.Ptr("cccccccc-2222-3333-4444-dddddddddddd"),
+				WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			},
+			{
+				Type:        to.Ptr(core.ItemTypeSQLEndpoint),
+				DisplayName: to.Ptr("MyLakehouse"),
+				FolderID:    to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+				ID:          to.Ptr("dddddddd-3333-4444-5555-eeeeeeeeeeee"),
+				WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			}},
+	}
+
+	testsuite.serverFactory.ItemsServer.MoveItem = func(ctx context.Context, workspaceID string, itemID string, moveItemRequest core.MoveItemRequest, options *core.ItemsClientMoveItemOptions) (resp azfake.Responder[core.ItemsClientMoveItemResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().True(reflect.DeepEqual(exampleMoveItemRequest, moveItemRequest))
+		resp = azfake.Responder[core.ItemsClientMoveItemResponse]{}
+		resp.SetResponse(http.StatusOK, core.ItemsClientMoveItemResponse{MovedItems: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	res, err := client.MoveItem(ctx, exampleWorkspaceID, exampleItemID, exampleMoveItemRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.MovedItems))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Move an item with the workspace as the destination example"},
+	})
+	exampleWorkspaceID = "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"
+	exampleItemID = "cccccccc-2222-3333-4444-dddddddddddd"
+	exampleMoveItemRequest = core.MoveItemRequest{}
+
+	exampleRes = core.MovedItems{
+		Value: []core.Item{
+			{
+				Type:        to.Ptr(core.ItemTypeLakehouse),
+				Description: to.Ptr("A lakehouse used by the sales team."),
+				DisplayName: to.Ptr("MyLakehouse"),
+				ID:          to.Ptr("cccccccc-2222-3333-4444-dddddddddddd"),
+				WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			},
+			{
+				Type:        to.Ptr(core.ItemTypeSQLEndpoint),
+				DisplayName: to.Ptr("MyLakehouse"),
+				ID:          to.Ptr("dddddddd-3333-4444-5555-eeeeeeeeeeee"),
+				WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			}},
+	}
+
+	testsuite.serverFactory.ItemsServer.MoveItem = func(ctx context.Context, workspaceID string, itemID string, moveItemRequest core.MoveItemRequest, options *core.ItemsClientMoveItemOptions) (resp azfake.Responder[core.ItemsClientMoveItemResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().True(reflect.DeepEqual(exampleMoveItemRequest, moveItemRequest))
+		resp = azfake.Responder[core.ItemsClientMoveItemResponse]{}
+		resp.SetResponse(http.StatusOK, core.ItemsClientMoveItemResponse{MovedItems: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.MoveItem(ctx, exampleWorkspaceID, exampleItemID, exampleMoveItemRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.MovedItems))
 }
 
 func (testsuite *FakeTestSuite) TestJobScheduler_ListItemSchedules() {
@@ -3533,30 +3787,54 @@ func (testsuite *FakeTestSuite) TestTags_ListTags() {
 			{
 				DisplayName: to.Ptr("Finance"),
 				ID:          to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+				Scope: &core.TenantTagScope{
+					Type: to.Ptr(core.TagScopeTypeTenant),
+				},
 			},
 			{
 				DisplayName: to.Ptr("Human resources"),
 				ID:          to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
+				Scope: &core.TenantTagScope{
+					Type: to.Ptr(core.TagScopeTypeTenant),
+				},
 			},
 			{
 				DisplayName: to.Ptr("Engineering P1"),
 				ID:          to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
+				Scope: &core.TenantTagScope{
+					Type: to.Ptr(core.TagScopeTypeTenant),
+				},
 			},
 			{
 				DisplayName: to.Ptr("Marketing Q1"),
 				ID:          to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
+				Scope: &core.TenantTagScope{
+					Type: to.Ptr(core.TagScopeTypeTenant),
+				},
 			},
 			{
 				DisplayName: to.Ptr("HR Sales Q1"),
 				ID:          to.Ptr("17df435d-9efd-48c1-a937-7d6fd70ab26a"),
+				Scope: &core.DomainTagScope{
+					Type:     to.Ptr(core.TagScopeTypeDomain),
+					DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+				},
 			},
 			{
 				DisplayName: to.Ptr("Root"),
 				ID:          to.Ptr("fb765fe3-d404-4f24-9d67-5916449c4c50"),
+				Scope: &core.DomainTagScope{
+					Type:     to.Ptr(core.TagScopeTypeDomain),
+					DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+				},
 			},
 			{
 				DisplayName: to.Ptr("Legal EMEA"),
 				ID:          to.Ptr("bda31be4-7efe-4272-8b85-e1b2ff0f0592"),
+				Scope: &core.DomainTagScope{
+					Type:     to.Ptr(core.TagScopeTypeDomain),
+					DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+				},
 			}},
 	}
 
@@ -3589,30 +3867,54 @@ func (testsuite *FakeTestSuite) TestTags_ListTags() {
 			{
 				DisplayName: to.Ptr("Finance"),
 				ID:          to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+				Scope: &core.TenantTagScope{
+					Type: to.Ptr(core.TagScopeTypeTenant),
+				},
 			},
 			{
 				DisplayName: to.Ptr("Human resources"),
 				ID:          to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
+				Scope: &core.TenantTagScope{
+					Type: to.Ptr(core.TagScopeTypeTenant),
+				},
 			},
 			{
 				DisplayName: to.Ptr("Engineering P1"),
 				ID:          to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
+				Scope: &core.TenantTagScope{
+					Type: to.Ptr(core.TagScopeTypeTenant),
+				},
 			},
 			{
 				DisplayName: to.Ptr("Marketing Q1"),
 				ID:          to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
+				Scope: &core.TenantTagScope{
+					Type: to.Ptr(core.TagScopeTypeTenant),
+				},
 			},
 			{
 				DisplayName: to.Ptr("HR Sales Q1"),
 				ID:          to.Ptr("17df435d-9efd-48c1-a937-7d6fd70ab26a"),
+				Scope: &core.DomainTagScope{
+					Type:     to.Ptr(core.TagScopeTypeDomain),
+					DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+				},
 			},
 			{
 				DisplayName: to.Ptr("Root"),
 				ID:          to.Ptr("fb765fe3-d404-4f24-9d67-5916449c4c50"),
+				Scope: &core.DomainTagScope{
+					Type:     to.Ptr(core.TagScopeTypeDomain),
+					DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+				},
 			},
 			{
 				DisplayName: to.Ptr("Legal EMEA"),
 				ID:          to.Ptr("bda31be4-7efe-4272-8b85-e1b2ff0f0592"),
+				Scope: &core.DomainTagScope{
+					Type:     to.Ptr(core.TagScopeTypeDomain),
+					DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+				},
 			}},
 	}
 
@@ -3693,6 +3995,111 @@ func (testsuite *FakeTestSuite) TestTags_UnapplyTags() {
 	client := testsuite.clientFactory.NewTagsClient()
 	_, err = client.UnapplyTags(ctx, exampleWorkspaceID, exampleItemID, exampleUnapplyTagsRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestDomains_ListDomains() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List of all tenant's domains example"},
+	})
+
+	exampleRes := core.Domains{
+		Value: []core.Domain{
+			{
+				Description:    to.Ptr("This domain is used for identifying financial data and reports."),
+				DisplayName:    to.Ptr("Finance"),
+				ID:             to.Ptr("bd3df35d-eccf-4fb2-92e0-5425849fe89e"),
+				ParentDomainID: to.Ptr("541488c9-eb1f-4ee1-8997-10bb2fe6d58c"),
+			},
+			{
+				Description: to.Ptr(""),
+				DisplayName: to.Ptr("Human resources"),
+				ID:          to.Ptr("6d632c47-a320-4aff-8286-8dde706d670f"),
+			}},
+	}
+
+	testsuite.serverFactory.DomainsServer.NewListDomainsPager = func(options *core.DomainsClientListDomainsOptions) (resp azfake.PagerResponder[core.DomainsClientListDomainsResponse]) {
+		resp = azfake.PagerResponder[core.DomainsClientListDomainsResponse]{}
+		resp.AddPage(http.StatusOK, core.DomainsClientListDomainsResponse{Domains: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewDomainsClient()
+	pager := client.NewListDomainsPager(&core.DomainsClientListDomainsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Domains))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List of all tenant's domains with continuation example"},
+	})
+
+	exampleRes = core.Domains{
+		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/domains?continuationToken=LDEsMTAwMDAwLDA%3D"),
+		Value: []core.Domain{
+			{
+				Description:    to.Ptr("This domain is used for identifying financial data and reports."),
+				DisplayName:    to.Ptr("Finance"),
+				ID:             to.Ptr("bd3df35d-eccf-4fb2-92e0-5425849fe89e"),
+				ParentDomainID: to.Ptr("541488c9-eb1f-4ee1-8997-10bb2fe6d58c"),
+			},
+			{
+				Description: to.Ptr(""),
+				DisplayName: to.Ptr("Human resources"),
+				ID:          to.Ptr("6d632c47-a320-4aff-8286-8dde706d670f"),
+			}},
+	}
+
+	testsuite.serverFactory.DomainsServer.NewListDomainsPager = func(options *core.DomainsClientListDomainsOptions) (resp azfake.PagerResponder[core.DomainsClientListDomainsResponse]) {
+		resp = azfake.PagerResponder[core.DomainsClientListDomainsResponse]{}
+		resp.AddPage(http.StatusOK, core.DomainsClientListDomainsResponse{Domains: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListDomainsPager(&core.DomainsClientListDomainsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Domains))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestDomains_GetDomain() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get domain example"},
+	})
+	var exampleDomainID string
+	exampleDomainID = "20acb9a8-d54a-4ecd-ae60-27fc226668b6"
+
+	exampleRes := core.Domain{
+		Description:    to.Ptr("This domain is used for identifying financial data and reports."),
+		DisplayName:    to.Ptr("Finance"),
+		ID:             to.Ptr("20acb9a8-d54a-4ecd-ae60-27fc226668b6"),
+		ParentDomainID: to.Ptr("541488c9-eb1f-4ee1-8997-10bb2fe6d58c"),
+	}
+
+	testsuite.serverFactory.DomainsServer.GetDomain = func(ctx context.Context, domainID string, options *core.DomainsClientGetDomainOptions) (resp azfake.Responder[core.DomainsClientGetDomainResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleDomainID, domainID)
+		resp = azfake.Responder[core.DomainsClientGetDomainResponse]{}
+		resp.SetResponse(http.StatusOK, core.DomainsClientGetDomainResponse{Domain: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewDomainsClient()
+	res, err := client.GetDomain(ctx, exampleDomainID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Domain))
 }
 
 func (testsuite *FakeTestSuite) TestDeploymentPipelines_ListDeploymentPipelines() {
@@ -4982,6 +5389,71 @@ func (testsuite *FakeTestSuite) TestOneLakeDataAccessSecurity_ListDataAccessRole
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List data access roles with constraints example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff222"
+	exampleItemID = "25bac802-080d-4f73-8a42-1b406eb1fceb"
+
+	exampleRes = core.DataAccessRoles{
+		Value: []core.DataAccessRole{
+			{
+				Name: to.Ptr("DefaultReader"),
+				DecisionRules: []core.DecisionRule{
+					{
+						Constraints: &core.DecisionRuleConstraints{
+							Columns: []core.ColumnConstraint{
+								{
+									ColumnAction: []core.ColumnAction{
+										core.ColumnActionRead},
+									ColumnEffect: to.Ptr(core.ColumnEffectPermit),
+									ColumnNames: []string{
+										"Industry"},
+									TablePath: to.Ptr("/Tables/industrytable"),
+								}},
+							Rows: []core.RowConstraint{
+								{
+									TablePath: to.Ptr("/Tables/industrytable"),
+									Value:     to.Ptr("select * from Industrytable where Industry=\"Green\""),
+								}},
+						},
+						Effect: to.Ptr(core.EffectPermit),
+						Permission: []core.PermissionScope{
+							{
+								AttributeName: to.Ptr(core.AttributeNamePath),
+								AttributeValueIncludedIn: []string{
+									"*"},
+							},
+							{
+								AttributeName: to.Ptr(core.AttributeNameAction),
+								AttributeValueIncludedIn: []string{
+									"Read"},
+							}},
+					}},
+				Members: &core.Members{
+					FabricItemMembers: []core.FabricItemMember{
+						{
+							ItemAccess: []core.ItemAccess{
+								core.ItemAccessReadAll},
+							SourcePath: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff222/25bac802-080d-4f73-8a42-1b406eb1fceb"),
+						}},
+				},
+			}},
+	}
+
+	testsuite.serverFactory.OneLakeDataAccessSecurityServer.ListDataAccessRoles = func(ctx context.Context, workspaceID string, itemID string, options *core.OneLakeDataAccessSecurityClientListDataAccessRolesOptions) (resp azfake.Responder[core.OneLakeDataAccessSecurityClientListDataAccessRolesResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		resp = azfake.Responder[core.OneLakeDataAccessSecurityClientListDataAccessRolesResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeDataAccessSecurityClientListDataAccessRolesResponse{DataAccessRoles: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.ListDataAccessRoles(ctx, exampleWorkspaceID, exampleItemID, &core.OneLakeDataAccessSecurityClientListDataAccessRolesOptions{ContinuationToken: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DataAccessRoles))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"List default data access roles example"},
 	})
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff222"
@@ -5080,6 +5552,73 @@ func (testsuite *FakeTestSuite) TestOneLakeDataAccessSecurity_CreateOrUpdateData
 	}
 
 	client := testsuite.clientFactory.NewOneLakeDataAccessSecurityClient()
+	_, err = client.CreateOrUpdateDataAccessRoles(ctx, exampleWorkspaceID, exampleItemID, exampleCreateOrUpdateDataAccessRolesRequest, &core.OneLakeDataAccessSecurityClientCreateOrUpdateDataAccessRolesOptions{DryRun: nil,
+		IfMatch:     nil,
+		IfNoneMatch: nil,
+	})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create or update data access roles with constraints example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff222"
+	exampleItemID = "25bac802-080d-4f73-8a42-1b406eb1fceb"
+	exampleCreateOrUpdateDataAccessRolesRequest = core.CreateOrUpdateDataAccessRolesRequest{
+		Value: []core.DataAccessRole{
+			{
+				Name: to.Ptr("default_role_1"),
+				DecisionRules: []core.DecisionRule{
+					{
+						Constraints: &core.DecisionRuleConstraints{
+							Columns: []core.ColumnConstraint{
+								{
+									ColumnAction: []core.ColumnAction{
+										core.ColumnActionRead},
+									ColumnEffect: to.Ptr(core.ColumnEffectPermit),
+									ColumnNames: []string{
+										"Industry"},
+									TablePath: to.Ptr("/Tables/industrytable"),
+								}},
+							Rows: []core.RowConstraint{
+								{
+									TablePath: to.Ptr("/Tables/industrytable"),
+									Value:     to.Ptr("select * from Industrytable where Industry=\"Green\""),
+								}},
+						},
+						Effect: to.Ptr(core.EffectPermit),
+						Permission: []core.PermissionScope{
+							{
+								AttributeName: to.Ptr(core.AttributeNamePath),
+								AttributeValueIncludedIn: []string{
+									"*"},
+							},
+							{
+								AttributeName: to.Ptr(core.AttributeNameAction),
+								AttributeValueIncludedIn: []string{
+									"Read"},
+							}},
+					}},
+				Members: &core.Members{
+					FabricItemMembers: []core.FabricItemMember{
+						{
+							ItemAccess: []core.ItemAccess{
+								core.ItemAccessReadAll},
+							SourcePath: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff222/25bac802-080d-4f73-8a42-1b406eb1fceb"),
+						}},
+				},
+			}},
+	}
+
+	testsuite.serverFactory.OneLakeDataAccessSecurityServer.CreateOrUpdateDataAccessRoles = func(ctx context.Context, workspaceID string, itemID string, createOrUpdateDataAccessRolesRequest core.CreateOrUpdateDataAccessRolesRequest, options *core.OneLakeDataAccessSecurityClientCreateOrUpdateDataAccessRolesOptions) (resp azfake.Responder[core.OneLakeDataAccessSecurityClientCreateOrUpdateDataAccessRolesResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateOrUpdateDataAccessRolesRequest, createOrUpdateDataAccessRolesRequest))
+		resp = azfake.Responder[core.OneLakeDataAccessSecurityClientCreateOrUpdateDataAccessRolesResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeDataAccessSecurityClientCreateOrUpdateDataAccessRolesResponse{}, nil)
+		return
+	}
+
 	_, err = client.CreateOrUpdateDataAccessRoles(ctx, exampleWorkspaceID, exampleItemID, exampleCreateOrUpdateDataAccessRolesRequest, &core.OneLakeDataAccessSecurityClientCreateOrUpdateDataAccessRolesOptions{DryRun: nil,
 		IfMatch:     nil,
 		IfNoneMatch: nil,

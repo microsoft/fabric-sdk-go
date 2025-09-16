@@ -79,6 +79,7 @@ func ExampleWorkspacesClient_NewListWorkspacesPager_listWorkspacesExample() {
 		// 			Description: to.Ptr("A workspace used by the finance team"),
 		// 			CapacityID: to.Ptr("171018af-1531-4e61-942a-74f024b7f9fd"),
 		// 			DisplayName: to.Ptr("Finance"),
+		// 			DomainID: to.Ptr("7c889f28-999b-4945-840d-54da3e3b5a29"),
 		// 			ID: to.Ptr("f2d70dc6-8f3e-4f2c-b00e-e2d336d7d711"),
 		// 	}},
 		// }
@@ -260,6 +261,7 @@ func ExampleWorkspacesClient_GetWorkspace_getAWorkspaceExample() {
 	// 	Description: to.Ptr("New workspace description"),
 	// 	CapacityID: to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
 	// 	DisplayName: to.Ptr("New workspace"),
+	// 	DomainID: to.Ptr("9ce364e0-8e9d-4605-887a-b599b3e8b123"),
 	// 	ID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
 	// 	CapacityAssignmentProgress: to.Ptr(core.CapacityAssignmentProgressCompleted),
 	// 	CapacityRegion: to.Ptr(core.CapacityRegionEastUS),
@@ -337,6 +339,7 @@ func ExampleWorkspacesClient_UpdateWorkspace() {
 	// 	Type: to.Ptr(core.WorkspaceTypeWorkspace),
 	// 	Description: to.Ptr("Workspace New description"),
 	// 	DisplayName: to.Ptr("Workspace New displayName"),
+	// 	DomainID: to.Ptr("686177b9-ef29-45e4-a5db-1786ca6dbb9f"),
 	// 	ID: to.Ptr("33bae707-5fe7-4352-89bd-061a1318b60a"),
 	// }
 }
@@ -597,6 +600,42 @@ func ExampleWorkspacesClient_UnassignFromCapacity() {
 		log.Fatalf("failed to create client: %v", err)
 	}
 	_, err = clientFactory.NewWorkspacesClient().UnassignFromCapacity(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff512", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_AssignToDomain() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewWorkspacesClient().AssignToDomain(ctx, "f97451ca-d6a0-482f-a46a-cc4b2c48ba56", core.AssignWorkspaceToDomainRequest{
+		DomainID: to.Ptr("9d04ca81-bb30-4009-bd1a-a9213a4c8d75"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_UnassignFromDomain() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewWorkspacesClient().UnassignFromDomain(ctx, "49058730-1621-4033-95b5-4f54da51cb48", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

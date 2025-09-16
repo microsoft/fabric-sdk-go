@@ -30,3 +30,26 @@ func unmarshalGitProviderDetailsClassification(rawMsg json.RawMessage) (GitProvi
 	}
 	return b, nil
 }
+
+func unmarshalTagScopeClassification(rawMsg json.RawMessage) (TagScopeClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b TagScopeClassification
+	switch m["type"] {
+	case string(TagScopeTypeDomain):
+		b = &DomainTagScope{}
+	case string(TagScopeTypeTenant):
+		b = &TenantTagScope{}
+	default:
+		b = &TagScope{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}

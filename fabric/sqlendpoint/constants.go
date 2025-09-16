@@ -6,6 +6,24 @@
 
 package sqlendpoint
 
+// AuditSettingsState - Audit settings state. Additional AuditSettingsState may be added over time.
+type AuditSettingsState string
+
+const (
+	// AuditSettingsStateDisabled - Disable the SQL audit.
+	AuditSettingsStateDisabled AuditSettingsState = "Disabled"
+	// AuditSettingsStateEnabled - Enable the SQL audit.
+	AuditSettingsStateEnabled AuditSettingsState = "Enabled"
+)
+
+// PossibleAuditSettingsStateValues returns the possible values for the AuditSettingsState const type.
+func PossibleAuditSettingsStateValues() []AuditSettingsState {
+	return []AuditSettingsState{
+		AuditSettingsStateDisabled,
+		AuditSettingsStateEnabled,
+	}
+}
+
 // ItemType - The type of the item. Additional item types may be added over time.
 type ItemType string
 

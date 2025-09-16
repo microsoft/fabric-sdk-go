@@ -21,6 +21,7 @@ type ServerFactory struct {
 	CapacitiesServer                  CapacitiesServer
 	ConnectionsServer                 ConnectionsServer
 	DeploymentPipelinesServer         DeploymentPipelinesServer
+	DomainsServer                     DomainsServer
 	ExternalDataSharesProviderServer  ExternalDataSharesProviderServer
 	ExternalDataSharesRecipientServer ExternalDataSharesRecipientServer
 	FoldersServer                     FoldersServer
@@ -44,6 +45,7 @@ type ServerFactoryTransport struct {
 	trCapacitiesServer                  *CapacitiesServerTransport
 	trConnectionsServer                 *ConnectionsServerTransport
 	trDeploymentPipelinesServer         *DeploymentPipelinesServerTransport
+	trDomainsServer                     *DomainsServerTransport
 	trExternalDataSharesProviderServer  *ExternalDataSharesProviderServerTransport
 	trExternalDataSharesRecipientServer *ExternalDataSharesRecipientServerTransport
 	trFoldersServer                     *FoldersServerTransport
@@ -93,6 +95,9 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return NewDeploymentPipelinesServerTransport(&s.srv.DeploymentPipelinesServer)
 		})
 		resp, err = s.trDeploymentPipelinesServer.Do(req)
+	case "DomainsClient":
+		initServer(s, &s.trDomainsServer, func() *DomainsServerTransport { return NewDomainsServerTransport(&s.srv.DomainsServer) })
+		resp, err = s.trDomainsServer.Do(req)
 	case "ExternalDataSharesProviderClient":
 		initServer(s, &s.trExternalDataSharesProviderServer, func() *ExternalDataSharesProviderServerTransport {
 			return NewExternalDataSharesProviderServerTransport(&s.srv.ExternalDataSharesProviderServer)

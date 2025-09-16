@@ -41,7 +41,11 @@ type DomainsServer struct {
 
 	// CreateDomain is the fake for method DomainsClient.CreateDomain
 	// HTTP status codes to indicate success: http.StatusCreated
-	CreateDomain func(ctx context.Context, createDomainRequest admin.CreateDomainRequest, options *admin.DomainsClientCreateDomainOptions) (resp azfake.Responder[admin.DomainsClientCreateDomainResponse], errResp azfake.ErrorResponder)
+	CreateDomain func(ctx context.Context, preview bool, createDomainRequest admin.CreateDomainRequest, options *admin.DomainsClientCreateDomainOptions) (resp azfake.Responder[admin.DomainsClientCreateDomainResponse], errResp azfake.ErrorResponder)
+
+	// CreateDomainPreview is the fake for method DomainsClient.CreateDomainPreview
+	// HTTP status codes to indicate success: http.StatusCreated
+	CreateDomainPreview func(ctx context.Context, preview bool, createDomainRequest admin.CreateDomainRequest, options *admin.DomainsClientCreateDomainPreviewOptions) (resp azfake.Responder[admin.DomainsClientCreateDomainPreviewResponse], errResp azfake.ErrorResponder)
 
 	// DeleteDomain is the fake for method DomainsClient.DeleteDomain
 	// HTTP status codes to indicate success: http.StatusOK
@@ -49,7 +53,11 @@ type DomainsServer struct {
 
 	// GetDomain is the fake for method DomainsClient.GetDomain
 	// HTTP status codes to indicate success: http.StatusOK
-	GetDomain func(ctx context.Context, domainID string, options *admin.DomainsClientGetDomainOptions) (resp azfake.Responder[admin.DomainsClientGetDomainResponse], errResp azfake.ErrorResponder)
+	GetDomain func(ctx context.Context, domainID string, preview bool, options *admin.DomainsClientGetDomainOptions) (resp azfake.Responder[admin.DomainsClientGetDomainResponse], errResp azfake.ErrorResponder)
+
+	// GetDomainPreview is the fake for method DomainsClient.GetDomainPreview
+	// HTTP status codes to indicate success: http.StatusOK
+	GetDomainPreview func(ctx context.Context, domainID string, preview bool, options *admin.DomainsClientGetDomainPreviewOptions) (resp azfake.Responder[admin.DomainsClientGetDomainPreviewResponse], errResp azfake.ErrorResponder)
 
 	// NewListDomainWorkspacesPager is the fake for method DomainsClient.NewListDomainWorkspacesPager
 	// HTTP status codes to indicate success: http.StatusOK
@@ -57,7 +65,15 @@ type DomainsServer struct {
 
 	// ListDomains is the fake for method DomainsClient.ListDomains
 	// HTTP status codes to indicate success: http.StatusOK
-	ListDomains func(ctx context.Context, options *admin.DomainsClientListDomainsOptions) (resp azfake.Responder[admin.DomainsClientListDomainsResponse], errResp azfake.ErrorResponder)
+	ListDomains func(ctx context.Context, preview bool, options *admin.DomainsClientListDomainsOptions) (resp azfake.Responder[admin.DomainsClientListDomainsResponse], errResp azfake.ErrorResponder)
+
+	// ListDomainsPreview is the fake for method DomainsClient.ListDomainsPreview
+	// HTTP status codes to indicate success: http.StatusOK
+	ListDomainsPreview func(ctx context.Context, preview bool, options *admin.DomainsClientListDomainsPreviewOptions) (resp azfake.Responder[admin.DomainsClientListDomainsPreviewResponse], errResp azfake.ErrorResponder)
+
+	// NewListRoleAssignmentsPager is the fake for method DomainsClient.NewListRoleAssignmentsPager
+	// HTTP status codes to indicate success: http.StatusOK
+	NewListRoleAssignmentsPager func(domainID string, options *admin.DomainsClientListRoleAssignmentsOptions) (resp azfake.PagerResponder[admin.DomainsClientListRoleAssignmentsResponse])
 
 	// RoleAssignmentsBulkAssign is the fake for method DomainsClient.RoleAssignmentsBulkAssign
 	// HTTP status codes to indicate success: http.StatusOK
@@ -66,6 +82,10 @@ type DomainsServer struct {
 	// RoleAssignmentsBulkUnassign is the fake for method DomainsClient.RoleAssignmentsBulkUnassign
 	// HTTP status codes to indicate success: http.StatusOK
 	RoleAssignmentsBulkUnassign func(ctx context.Context, domainID string, domainRoleUnassignmentRequest admin.DomainRoleUnassignmentRequest, options *admin.DomainsClientRoleAssignmentsBulkUnassignOptions) (resp azfake.Responder[admin.DomainsClientRoleAssignmentsBulkUnassignResponse], errResp azfake.ErrorResponder)
+
+	// SyncRoleAssignmentsToSubdomains is the fake for method DomainsClient.SyncRoleAssignmentsToSubdomains
+	// HTTP status codes to indicate success: http.StatusOK
+	SyncRoleAssignmentsToSubdomains func(ctx context.Context, domainID string, syncRoleAssignmentsToSubdomainsRequest admin.SyncRoleAssignmentsToSubdomainsRequest, options *admin.DomainsClientSyncRoleAssignmentsToSubdomainsOptions) (resp azfake.Responder[admin.DomainsClientSyncRoleAssignmentsToSubdomainsResponse], errResp azfake.ErrorResponder)
 
 	// UnassignAllDomainWorkspaces is the fake for method DomainsClient.UnassignAllDomainWorkspaces
 	// HTTP status codes to indicate success: http.StatusOK
@@ -77,7 +97,11 @@ type DomainsServer struct {
 
 	// UpdateDomain is the fake for method DomainsClient.UpdateDomain
 	// HTTP status codes to indicate success: http.StatusOK
-	UpdateDomain func(ctx context.Context, domainID string, updateDomainRequest admin.UpdateDomainRequest, options *admin.DomainsClientUpdateDomainOptions) (resp azfake.Responder[admin.DomainsClientUpdateDomainResponse], errResp azfake.ErrorResponder)
+	UpdateDomain func(ctx context.Context, domainID string, preview bool, updateDomainRequest admin.UpdateDomainRequest, options *admin.DomainsClientUpdateDomainOptions) (resp azfake.Responder[admin.DomainsClientUpdateDomainResponse], errResp azfake.ErrorResponder)
+
+	// UpdateDomainPreview is the fake for method DomainsClient.UpdateDomainPreview
+	// HTTP status codes to indicate success: http.StatusOK
+	UpdateDomainPreview func(ctx context.Context, domainID string, preview bool, updateDomainRequest admin.UpdateDomainRequestPreview, options *admin.DomainsClientUpdateDomainPreviewOptions) (resp azfake.Responder[admin.DomainsClientUpdateDomainPreviewResponse], errResp azfake.ErrorResponder)
 }
 
 // NewDomainsServerTransport creates a new instance of DomainsServerTransport with the provided implementation.
@@ -89,6 +113,7 @@ func NewDomainsServerTransport(srv *DomainsServer) *DomainsServerTransport {
 		beginAssignDomainWorkspacesByCapacities: newTracker[azfake.PollerResponder[admin.DomainsClientAssignDomainWorkspacesByCapacitiesResponse]](),
 		beginAssignDomainWorkspacesByPrincipals: newTracker[azfake.PollerResponder[admin.DomainsClientAssignDomainWorkspacesByPrincipalsResponse]](),
 		newListDomainWorkspacesPager:            newTracker[azfake.PagerResponder[admin.DomainsClientListDomainWorkspacesResponse]](),
+		newListRoleAssignmentsPager:             newTracker[azfake.PagerResponder[admin.DomainsClientListRoleAssignmentsResponse]](),
 	}
 }
 
@@ -99,6 +124,7 @@ type DomainsServerTransport struct {
 	beginAssignDomainWorkspacesByCapacities *tracker[azfake.PollerResponder[admin.DomainsClientAssignDomainWorkspacesByCapacitiesResponse]]
 	beginAssignDomainWorkspacesByPrincipals *tracker[azfake.PollerResponder[admin.DomainsClientAssignDomainWorkspacesByPrincipalsResponse]]
 	newListDomainWorkspacesPager            *tracker[azfake.PagerResponder[admin.DomainsClientListDomainWorkspacesResponse]]
+	newListRoleAssignmentsPager             *tracker[azfake.PagerResponder[admin.DomainsClientListRoleAssignmentsResponse]]
 }
 
 // Do implements the policy.Transporter interface for DomainsServerTransport.
@@ -134,24 +160,36 @@ func (d *DomainsServerTransport) dispatchToMethodFake(req *http.Request, method 
 				res.resp, res.err = d.dispatchBeginAssignDomainWorkspacesByPrincipals(req)
 			case "DomainsClient.CreateDomain":
 				res.resp, res.err = d.dispatchCreateDomain(req)
+			case "DomainsClient.CreateDomainPreview":
+				res.resp, res.err = d.dispatchCreateDomainPreview(req)
 			case "DomainsClient.DeleteDomain":
 				res.resp, res.err = d.dispatchDeleteDomain(req)
 			case "DomainsClient.GetDomain":
 				res.resp, res.err = d.dispatchGetDomain(req)
+			case "DomainsClient.GetDomainPreview":
+				res.resp, res.err = d.dispatchGetDomainPreview(req)
 			case "DomainsClient.NewListDomainWorkspacesPager":
 				res.resp, res.err = d.dispatchNewListDomainWorkspacesPager(req)
 			case "DomainsClient.ListDomains":
 				res.resp, res.err = d.dispatchListDomains(req)
+			case "DomainsClient.ListDomainsPreview":
+				res.resp, res.err = d.dispatchListDomainsPreview(req)
+			case "DomainsClient.NewListRoleAssignmentsPager":
+				res.resp, res.err = d.dispatchNewListRoleAssignmentsPager(req)
 			case "DomainsClient.RoleAssignmentsBulkAssign":
 				res.resp, res.err = d.dispatchRoleAssignmentsBulkAssign(req)
 			case "DomainsClient.RoleAssignmentsBulkUnassign":
 				res.resp, res.err = d.dispatchRoleAssignmentsBulkUnassign(req)
+			case "DomainsClient.SyncRoleAssignmentsToSubdomains":
+				res.resp, res.err = d.dispatchSyncRoleAssignmentsToSubdomains(req)
 			case "DomainsClient.UnassignAllDomainWorkspaces":
 				res.resp, res.err = d.dispatchUnassignAllDomainWorkspaces(req)
 			case "DomainsClient.UnassignDomainWorkspacesByIDs":
 				res.resp, res.err = d.dispatchUnassignDomainWorkspacesByIDs(req)
 			case "DomainsClient.UpdateDomain":
 				res.resp, res.err = d.dispatchUpdateDomain(req)
+			case "DomainsClient.UpdateDomainPreview":
+				res.resp, res.err = d.dispatchUpdateDomainPreview(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -296,11 +334,20 @@ func (d *DomainsServerTransport) dispatchCreateDomain(req *http.Request) (*http.
 	if d.srv.CreateDomain == nil {
 		return nil, &nonRetriableError{errors.New("fake for method CreateDomain not implemented")}
 	}
+	qp := req.URL.Query()
 	body, err := server.UnmarshalRequestAsJSON[admin.CreateDomainRequest](req)
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := d.srv.CreateDomain(req.Context(), body, nil)
+	previewUnescaped, err := url.QueryUnescape(qp.Get("preview"))
+	if err != nil {
+		return nil, err
+	}
+	previewParam, err := strconv.ParseBool(previewUnescaped)
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := d.srv.CreateDomain(req.Context(), previewParam, body, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -309,6 +356,38 @@ func (d *DomainsServerTransport) dispatchCreateDomain(req *http.Request) (*http.
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated", respContent.HTTPStatus)}
 	}
 	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).Domain, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (d *DomainsServerTransport) dispatchCreateDomainPreview(req *http.Request) (*http.Response, error) {
+	if d.srv.CreateDomainPreview == nil {
+		return nil, &nonRetriableError{errors.New("fake for method CreateDomainPreview not implemented")}
+	}
+	qp := req.URL.Query()
+	body, err := server.UnmarshalRequestAsJSON[admin.CreateDomainRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	previewUnescaped, err := url.QueryUnescape(qp.Get("preview"))
+	if err != nil {
+		return nil, err
+	}
+	previewParam, err := strconv.ParseBool(previewUnescaped)
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := d.srv.CreateDomainPreview(req.Context(), previewParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusCreated}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).DomainPreview, req)
 	if err != nil {
 		return nil, err
 	}
@@ -354,11 +433,20 @@ func (d *DomainsServerTransport) dispatchGetDomain(req *http.Request) (*http.Res
 	if matches == nil || len(matches) < 1 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
+	qp := req.URL.Query()
 	domainIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("domainId")])
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := d.srv.GetDomain(req.Context(), domainIDParam, nil)
+	previewUnescaped, err := url.QueryUnescape(qp.Get("preview"))
+	if err != nil {
+		return nil, err
+	}
+	previewParam, err := strconv.ParseBool(previewUnescaped)
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := d.srv.GetDomain(req.Context(), domainIDParam, previewParam, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -367,6 +455,44 @@ func (d *DomainsServerTransport) dispatchGetDomain(req *http.Request) (*http.Res
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
 	}
 	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).Domain, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (d *DomainsServerTransport) dispatchGetDomainPreview(req *http.Request) (*http.Response, error) {
+	if d.srv.GetDomainPreview == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetDomainPreview not implemented")}
+	}
+	const regexStr = `/v1/admin/domains/(?P<domainId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 1 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	qp := req.URL.Query()
+	domainIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("domainId")])
+	if err != nil {
+		return nil, err
+	}
+	previewUnescaped, err := url.QueryUnescape(qp.Get("preview"))
+	if err != nil {
+		return nil, err
+	}
+	previewParam, err := strconv.ParseBool(previewUnescaped)
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := d.srv.GetDomainPreview(req.Context(), domainIDParam, previewParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).DomainPreview, req)
 	if err != nil {
 		return nil, err
 	}
@@ -435,13 +561,21 @@ func (d *DomainsServerTransport) dispatchListDomains(req *http.Request) (*http.R
 	if err != nil {
 		return nil, err
 	}
+	previewUnescaped, err := url.QueryUnescape(qp.Get("preview"))
+	if err != nil {
+		return nil, err
+	}
+	previewParam, err := strconv.ParseBool(previewUnescaped)
+	if err != nil {
+		return nil, err
+	}
 	var options *admin.DomainsClientListDomainsOptions
 	if nonEmptyOnlyParam != nil {
 		options = &admin.DomainsClientListDomainsOptions{
 			NonEmptyOnly: nonEmptyOnlyParam,
 		}
 	}
-	respr, errRespr := d.srv.ListDomains(req.Context(), options)
+	respr, errRespr := d.srv.ListDomains(req.Context(), previewParam, options)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -452,6 +586,97 @@ func (d *DomainsServerTransport) dispatchListDomains(req *http.Request) (*http.R
 	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).DomainsResponse, req)
 	if err != nil {
 		return nil, err
+	}
+	return resp, nil
+}
+
+func (d *DomainsServerTransport) dispatchListDomainsPreview(req *http.Request) (*http.Response, error) {
+	if d.srv.ListDomainsPreview == nil {
+		return nil, &nonRetriableError{errors.New("fake for method ListDomainsPreview not implemented")}
+	}
+	qp := req.URL.Query()
+	nonEmptyOnlyUnescaped, err := url.QueryUnescape(qp.Get("nonEmptyOnly"))
+	if err != nil {
+		return nil, err
+	}
+	nonEmptyOnlyParam, err := parseOptional(nonEmptyOnlyUnescaped, strconv.ParseBool)
+	if err != nil {
+		return nil, err
+	}
+	previewUnescaped, err := url.QueryUnescape(qp.Get("preview"))
+	if err != nil {
+		return nil, err
+	}
+	previewParam, err := strconv.ParseBool(previewUnescaped)
+	if err != nil {
+		return nil, err
+	}
+	var options *admin.DomainsClientListDomainsPreviewOptions
+	if nonEmptyOnlyParam != nil {
+		options = &admin.DomainsClientListDomainsPreviewOptions{
+			NonEmptyOnly: nonEmptyOnlyParam,
+		}
+	}
+	respr, errRespr := d.srv.ListDomainsPreview(req.Context(), previewParam, options)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).DomainsResponsePreview, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (d *DomainsServerTransport) dispatchNewListRoleAssignmentsPager(req *http.Request) (*http.Response, error) {
+	if d.srv.NewListRoleAssignmentsPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListRoleAssignmentsPager not implemented")}
+	}
+	newListRoleAssignmentsPager := d.newListRoleAssignmentsPager.get(req)
+	if newListRoleAssignmentsPager == nil {
+		const regexStr = `/v1/admin/domains/(?P<domainId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/roleAssignments`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 1 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		domainIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("domainId")])
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *admin.DomainsClientListRoleAssignmentsOptions
+		if continuationTokenParam != nil {
+			options = &admin.DomainsClientListRoleAssignmentsOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := d.srv.NewListRoleAssignmentsPager(domainIDParam, options)
+		newListRoleAssignmentsPager = &resp
+		d.newListRoleAssignmentsPager.add(req, newListRoleAssignmentsPager)
+		server.PagerResponderInjectNextLinks(newListRoleAssignmentsPager, req, func(page *admin.DomainsClientListRoleAssignmentsResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
+	}
+	resp, err := server.PagerResponderNext(newListRoleAssignmentsPager, req)
+	if err != nil {
+		return nil, err
+	}
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		d.newListRoleAssignmentsPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
+	}
+	if !server.PagerResponderMore(newListRoleAssignmentsPager) {
+		d.newListRoleAssignmentsPager.remove(req)
 	}
 	return resp, nil
 }
@@ -508,6 +733,39 @@ func (d *DomainsServerTransport) dispatchRoleAssignmentsBulkUnassign(req *http.R
 		return nil, err
 	}
 	respr, errRespr := d.srv.RoleAssignmentsBulkUnassign(req.Context(), domainIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (d *DomainsServerTransport) dispatchSyncRoleAssignmentsToSubdomains(req *http.Request) (*http.Response, error) {
+	if d.srv.SyncRoleAssignmentsToSubdomains == nil {
+		return nil, &nonRetriableError{errors.New("fake for method SyncRoleAssignmentsToSubdomains not implemented")}
+	}
+	const regexStr = `/v1/admin/domains/(?P<domainId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/roleAssignments/syncToSubdomains`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 1 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[admin.SyncRoleAssignmentsToSubdomainsRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	domainIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("domainId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := d.srv.SyncRoleAssignmentsToSubdomains(req.Context(), domainIDParam, body, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -600,6 +858,7 @@ func (d *DomainsServerTransport) dispatchUpdateDomain(req *http.Request) (*http.
 	if matches == nil || len(matches) < 1 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
+	qp := req.URL.Query()
 	body, err := server.UnmarshalRequestAsJSON[admin.UpdateDomainRequest](req)
 	if err != nil {
 		return nil, err
@@ -608,7 +867,15 @@ func (d *DomainsServerTransport) dispatchUpdateDomain(req *http.Request) (*http.
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := d.srv.UpdateDomain(req.Context(), domainIDParam, body, nil)
+	previewUnescaped, err := url.QueryUnescape(qp.Get("preview"))
+	if err != nil {
+		return nil, err
+	}
+	previewParam, err := strconv.ParseBool(previewUnescaped)
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := d.srv.UpdateDomain(req.Context(), domainIDParam, previewParam, body, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -617,6 +884,48 @@ func (d *DomainsServerTransport) dispatchUpdateDomain(req *http.Request) (*http.
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
 	}
 	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).Domain, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (d *DomainsServerTransport) dispatchUpdateDomainPreview(req *http.Request) (*http.Response, error) {
+	if d.srv.UpdateDomainPreview == nil {
+		return nil, &nonRetriableError{errors.New("fake for method UpdateDomainPreview not implemented")}
+	}
+	const regexStr = `/v1/admin/domains/(?P<domainId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 1 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	qp := req.URL.Query()
+	body, err := server.UnmarshalRequestAsJSON[admin.UpdateDomainRequestPreview](req)
+	if err != nil {
+		return nil, err
+	}
+	domainIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("domainId")])
+	if err != nil {
+		return nil, err
+	}
+	previewUnescaped, err := url.QueryUnescape(qp.Get("preview"))
+	if err != nil {
+		return nil, err
+	}
+	previewParam, err := strconv.ParseBool(previewUnescaped)
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := d.srv.UpdateDomainPreview(req.Context(), domainIDParam, previewParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).DomainPreview, req)
 	if err != nil {
 		return nil, err
 	}

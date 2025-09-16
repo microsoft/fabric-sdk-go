@@ -41,6 +41,12 @@ type ItemsClientBeginUpdateSemanticModelDefinitionOptions struct {
 	UpdateMetadata *bool
 }
 
+// ItemsClientBindSemanticModelConnectionOptions contains the optional parameters for the ItemsClient.BindSemanticModelConnection
+// method.
+type ItemsClientBindSemanticModelConnectionOptions struct {
+	// placeholder for future optional parameters
+}
+
 // ItemsClientDeleteSemanticModelOptions contains the optional parameters for the ItemsClient.DeleteSemanticModel method.
 type ItemsClientDeleteSemanticModelOptions struct {
 	// placeholder for future optional parameters

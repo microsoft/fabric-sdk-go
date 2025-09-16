@@ -30,3 +30,53 @@ func unmarshalFileFormatOptionsClassification(rawMsg json.RawMessage) (FileForma
 	}
 	return b, nil
 }
+
+func unmarshalMonthlyOccurrenceClassification(rawMsg json.RawMessage) (MonthlyOccurrenceClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b MonthlyOccurrenceClassification
+	switch m["occurrenceType"] {
+	case string(OccurrenceTypeDayOfMonth):
+		b = &DayOfMonth{}
+	case string(OccurrenceTypeOrdinalWeekday):
+		b = &OrdinalWeekday{}
+	default:
+		b = &MonthlyOccurrence{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalScheduleConfigClassification(rawMsg json.RawMessage) (ScheduleConfigClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b ScheduleConfigClassification
+	switch m["type"] {
+	case string(ScheduleTypeCron):
+		b = &CronScheduleConfig{}
+	case string(ScheduleTypeDaily):
+		b = &DailyScheduleConfig{}
+	case string(ScheduleTypeMonthly):
+		b = &MonthlyScheduleConfig{}
+	case string(ScheduleTypeWeekly):
+		b = &WeeklyScheduleConfig{}
+	default:
+		b = &ScheduleConfig{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}

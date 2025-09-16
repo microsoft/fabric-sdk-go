@@ -1706,11 +1706,11 @@ type LiteralExpression struct {
 
 // ManageFieldsCastOperation - Represents a manage fields cast operation.
 type ManageFieldsCastOperation struct {
-	// REQUIRED; The operation type.
-	OperationType *OperationType
-
 	// REQUIRED; The properties for a manage fields cast operation.
 	Properties *CastProperties
+
+	// REQUIRED; The operation type.
+	Type *Type
 
 	// The alias of the operation.
 	Alias *string
@@ -1719,18 +1719,18 @@ type ManageFieldsCastOperation struct {
 // GetManageFieldsOperation implements the ManageFieldsOperationClassification interface for type ManageFieldsCastOperation.
 func (m *ManageFieldsCastOperation) GetManageFieldsOperation() *ManageFieldsOperation {
 	return &ManageFieldsOperation{
-		Alias:         m.Alias,
-		OperationType: m.OperationType,
+		Alias: m.Alias,
+		Type:  m.Type,
 	}
 }
 
 // ManageFieldsFunctionCallOperation - Represents a manage fields function call operation.
 type ManageFieldsFunctionCallOperation struct {
-	// REQUIRED; The operation type.
-	OperationType *OperationType
-
 	// REQUIRED; The properties for a manage fields function call operation.
 	Properties *FunctionCallProperties
+
+	// REQUIRED; The operation type.
+	Type *Type
 
 	// The alias of the operation.
 	Alias *string
@@ -1739,15 +1739,15 @@ type ManageFieldsFunctionCallOperation struct {
 // GetManageFieldsOperation implements the ManageFieldsOperationClassification interface for type ManageFieldsFunctionCallOperation.
 func (m *ManageFieldsFunctionCallOperation) GetManageFieldsOperation() *ManageFieldsOperation {
 	return &ManageFieldsOperation{
-		Alias:         m.Alias,
-		OperationType: m.OperationType,
+		Alias: m.Alias,
+		Type:  m.Type,
 	}
 }
 
 // ManageFieldsOperation - Represents an operation on a column.
 type ManageFieldsOperation struct {
 	// REQUIRED; The operation type.
-	OperationType *OperationType
+	Type *Type
 
 	// The alias of the operation.
 	Alias *string
@@ -1792,11 +1792,11 @@ type ManageFieldsOperatorProperties struct {
 
 // ManageFieldsRenameOperation - Represents a manage fields rename operation.
 type ManageFieldsRenameOperation struct {
-	// REQUIRED; The operation type.
-	OperationType *OperationType
-
 	// REQUIRED; The properties for a manage fields rename operation.
 	Properties *RenameProperties
+
+	// REQUIRED; The operation type.
+	Type *Type
 
 	// The alias of the operation.
 	Alias *string
@@ -1805,8 +1805,8 @@ type ManageFieldsRenameOperation struct {
 // GetManageFieldsOperation implements the ManageFieldsOperationClassification interface for type ManageFieldsRenameOperation.
 func (m *ManageFieldsRenameOperation) GetManageFieldsOperation() *ManageFieldsOperation {
 	return &ManageFieldsOperation{
-		Alias:         m.Alias,
-		OperationType: m.OperationType,
+		Alias: m.Alias,
+		Type:  m.Type,
 	}
 }
 

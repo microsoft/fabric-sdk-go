@@ -35,6 +35,10 @@ type WorkspacesClient struct {
 // * The caller must have member or higher workspace role.
 // * Members can add members or others with lower permissions. For more information see: workspace roles [/power-bi/collaborate-share/service-roles-new-workspaces#workspace-roles].
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// LIMITATIONS
+// * Each workspace is limited to a maximum of 1,000 users or groups in workspace roles (Admin, Member, Contributor, Viewer).
+// The number of users within a group is not limited. The limitation also
+// covers external guests.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -156,6 +160,62 @@ func (client *WorkspacesClient) assignToCapacityCreateRequest(ctx context.Contex
 	}
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	if err := runtime.MarshalAsJSON(req, assignWorkspaceToCapacityRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// AssignToDomain - PERMISSIONS
+// * The caller must have contributor permissions or be a domain Admin.
+// * The caller must have workspace admin role.
+// REQUIRED SCOPE Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - assignWorkspaceToDomainRequest - Assign to domain parameters
+//   - options - WorkspacesClientAssignToDomainOptions contains the optional parameters for the WorkspacesClient.AssignToDomain
+//     method.
+func (client *WorkspacesClient) AssignToDomain(ctx context.Context, workspaceID string, assignWorkspaceToDomainRequest AssignWorkspaceToDomainRequest, options *WorkspacesClientAssignToDomainOptions) (WorkspacesClientAssignToDomainResponse, error) {
+	var err error
+	const operationName = "core.WorkspacesClient.AssignToDomain"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.assignToDomainCreateRequest(ctx, workspaceID, assignWorkspaceToDomainRequest, options)
+	if err != nil {
+		return WorkspacesClientAssignToDomainResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientAssignToDomainResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return WorkspacesClientAssignToDomainResponse{}, err
+	}
+	return WorkspacesClientAssignToDomainResponse{}, nil
+}
+
+// assignToDomainCreateRequest creates the AssignToDomain request.
+func (client *WorkspacesClient) assignToDomainCreateRequest(ctx context.Context, workspaceID string, assignWorkspaceToDomainRequest AssignWorkspaceToDomainRequest, _ *WorkspacesClientAssignToDomainOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/assignToDomain"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, assignWorkspaceToDomainRequest); err != nil {
 		return nil, err
 	}
 	return req, nil
@@ -912,6 +972,56 @@ func (client *WorkspacesClient) UnassignFromCapacity(ctx context.Context, worksp
 // unassignFromCapacityCreateRequest creates the UnassignFromCapacity request.
 func (client *WorkspacesClient) unassignFromCapacityCreateRequest(ctx context.Context, workspaceID string, _ *WorkspacesClientUnassignFromCapacityOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/unassignFromCapacity"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// UnassignFromDomain - PERMISSIONS The caller must have workspace admin role.
+// REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - options - WorkspacesClientUnassignFromDomainOptions contains the optional parameters for the WorkspacesClient.UnassignFromDomain
+//     method.
+func (client *WorkspacesClient) UnassignFromDomain(ctx context.Context, workspaceID string, options *WorkspacesClientUnassignFromDomainOptions) (WorkspacesClientUnassignFromDomainResponse, error) {
+	var err error
+	const operationName = "core.WorkspacesClient.UnassignFromDomain"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.unassignFromDomainCreateRequest(ctx, workspaceID, options)
+	if err != nil {
+		return WorkspacesClientUnassignFromDomainResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientUnassignFromDomainResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return WorkspacesClientUnassignFromDomainResponse{}, err
+	}
+	return WorkspacesClientUnassignFromDomainResponse{}, nil
+}
+
+// unassignFromDomainCreateRequest creates the UnassignFromDomain request.
+func (client *WorkspacesClient) unassignFromDomainCreateRequest(ctx context.Context, workspaceID string, _ *WorkspacesClientUnassignFromDomainOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/unassignFromDomain"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}

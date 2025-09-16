@@ -28,6 +28,143 @@ type BackgroundJobsClient struct {
 	endpoint string
 }
 
+// CreateRefreshMaterializedLakeViewsSchedule - > [!NOTE] This API is part of a Preview release and is provided for evaluation
+// and development purposes only. It may change based on feedback and is not recommended for production use.
+// REQUIRED DELEGATED SCOPES: (Lakehouse.Execute.All or Item.Execute.All) and (Lakehouse.ReadWrite.All or Item.ReadWrite.All)
+// LIMITATIONS
+// * A lakehouse can create maximum 20 schedulers.
+// * Materialized Lake View supports only one active refresh schedule per lineage.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - lakehouseID - The lakehouse ID.
+//   - createScheduleRequest - A lakehouse refresh materialized lake views schedule create request.
+//   - options - BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleOptions contains the optional parameters for the
+//     BackgroundJobsClient.CreateRefreshMaterializedLakeViewsSchedule method.
+func (client *BackgroundJobsClient) CreateRefreshMaterializedLakeViewsSchedule(ctx context.Context, workspaceID string, lakehouseID string, createScheduleRequest CreateLakehouseRefreshMaterializedLakeViewsScheduleRequest, options *BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleOptions) (BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleResponse, error) {
+	var err error
+	const operationName = "lakehouse.BackgroundJobsClient.CreateRefreshMaterializedLakeViewsSchedule"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.createRefreshMaterializedLakeViewsScheduleCreateRequest(ctx, workspaceID, lakehouseID, createScheduleRequest, options)
+	if err != nil {
+		return BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusCreated) {
+		err = core.NewResponseError(httpResp)
+		return BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleResponse{}, err
+	}
+	resp, err := client.createRefreshMaterializedLakeViewsScheduleHandleResponse(httpResp)
+	return resp, err
+}
+
+// createRefreshMaterializedLakeViewsScheduleCreateRequest creates the CreateRefreshMaterializedLakeViewsSchedule request.
+func (client *BackgroundJobsClient) createRefreshMaterializedLakeViewsScheduleCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, createScheduleRequest CreateLakehouseRefreshMaterializedLakeViewsScheduleRequest, _ *BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/jobs/RefreshMaterializedLakeViews/schedules"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if lakehouseID == "" {
+		return nil, errors.New("parameter lakehouseID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{lakehouseId}", url.PathEscape(lakehouseID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, createScheduleRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// createRefreshMaterializedLakeViewsScheduleHandleResponse handles the CreateRefreshMaterializedLakeViewsSchedule response.
+func (client *BackgroundJobsClient) createRefreshMaterializedLakeViewsScheduleHandleResponse(resp *http.Response) (BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleResponse, error) {
+	result := BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleResponse{}
+	if val := resp.Header.Get("Location"); val != "" {
+		result.Location = &val
+	}
+	if err := runtime.UnmarshalAsJSON(resp, &result.RefreshMaterializedLakeViewsSchedule); err != nil {
+		return BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleResponse{}, err
+	}
+	return result, nil
+}
+
+// DeleteRefreshMaterializedLakeViewsSchedule - > [!NOTE] This API is part of a Preview release and is provided for evaluation
+// and development purposes only. It may change based on feedback and is not recommended for production use.
+// REQUIRED DELEGATED SCOPES Lakehouse.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - lakehouseID - The lakehouse ID.
+//   - scheduleID - The lakehouse schedule ID.
+//   - options - BackgroundJobsClientDeleteRefreshMaterializedLakeViewsScheduleOptions contains the optional parameters for the
+//     BackgroundJobsClient.DeleteRefreshMaterializedLakeViewsSchedule method.
+func (client *BackgroundJobsClient) DeleteRefreshMaterializedLakeViewsSchedule(ctx context.Context, workspaceID string, lakehouseID string, scheduleID string, options *BackgroundJobsClientDeleteRefreshMaterializedLakeViewsScheduleOptions) (BackgroundJobsClientDeleteRefreshMaterializedLakeViewsScheduleResponse, error) {
+	var err error
+	const operationName = "lakehouse.BackgroundJobsClient.DeleteRefreshMaterializedLakeViewsSchedule"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.deleteRefreshMaterializedLakeViewsScheduleCreateRequest(ctx, workspaceID, lakehouseID, scheduleID, options)
+	if err != nil {
+		return BackgroundJobsClientDeleteRefreshMaterializedLakeViewsScheduleResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return BackgroundJobsClientDeleteRefreshMaterializedLakeViewsScheduleResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return BackgroundJobsClientDeleteRefreshMaterializedLakeViewsScheduleResponse{}, err
+	}
+	return BackgroundJobsClientDeleteRefreshMaterializedLakeViewsScheduleResponse{}, nil
+}
+
+// deleteRefreshMaterializedLakeViewsScheduleCreateRequest creates the DeleteRefreshMaterializedLakeViewsSchedule request.
+func (client *BackgroundJobsClient) deleteRefreshMaterializedLakeViewsScheduleCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, scheduleID string, _ *BackgroundJobsClientDeleteRefreshMaterializedLakeViewsScheduleOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/jobs/RefreshMaterializedLakeViews/schedules/{scheduleId}"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if lakehouseID == "" {
+		return nil, errors.New("parameter lakehouseID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{lakehouseId}", url.PathEscape(lakehouseID))
+	if scheduleID == "" {
+		return nil, errors.New("parameter scheduleID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{scheduleId}", url.PathEscape(scheduleID))
+	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
 // RunOnDemandRefreshMaterializedLakeViews - > [!NOTE] This API is part of a Preview release and is provided for evaluation
 // and development purposes only. It may change based on feedback and is not recommended for production use.
 // REQUIRED DELEGATED SCOPES Lakehouse.Execute.All or Item.Execute.All
@@ -184,6 +321,81 @@ func (client *BackgroundJobsClient) runOnDemandTableMaintenanceHandleResponse(re
 			return BackgroundJobsClientRunOnDemandTableMaintenanceResponse{}, err
 		}
 		result.RetryAfter = &retryAfter
+	}
+	return result, nil
+}
+
+// UpdateRefreshMaterializedLakeViewsSchedule - > [!NOTE] This API is part of a Preview release and is provided for evaluation
+// and development purposes only. It may change based on feedback and is not recommended for production use.
+// REQUIRED DELEGATED SCOPES: (Lakehouse.Execute.All or Item.Execute.All) and (Lakehouse.ReadWrite.All or Item.ReadWrite.All)
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - lakehouseID - The lakehouse ID.
+//   - scheduleID - The lakehouse schedule ID.
+//   - updateScheduleRequest - A lakehouse refresh materialized lake views schedule update request.
+//   - options - BackgroundJobsClientUpdateRefreshMaterializedLakeViewsScheduleOptions contains the optional parameters for the
+//     BackgroundJobsClient.UpdateRefreshMaterializedLakeViewsSchedule method.
+func (client *BackgroundJobsClient) UpdateRefreshMaterializedLakeViewsSchedule(ctx context.Context, workspaceID string, lakehouseID string, scheduleID string, updateScheduleRequest UpdateLakehouseRefreshMaterializedLakeViewsScheduleRequest, options *BackgroundJobsClientUpdateRefreshMaterializedLakeViewsScheduleOptions) (BackgroundJobsClientUpdateRefreshMaterializedLakeViewsScheduleResponse, error) {
+	var err error
+	const operationName = "lakehouse.BackgroundJobsClient.UpdateRefreshMaterializedLakeViewsSchedule"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateRefreshMaterializedLakeViewsScheduleCreateRequest(ctx, workspaceID, lakehouseID, scheduleID, updateScheduleRequest, options)
+	if err != nil {
+		return BackgroundJobsClientUpdateRefreshMaterializedLakeViewsScheduleResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return BackgroundJobsClientUpdateRefreshMaterializedLakeViewsScheduleResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return BackgroundJobsClientUpdateRefreshMaterializedLakeViewsScheduleResponse{}, err
+	}
+	resp, err := client.updateRefreshMaterializedLakeViewsScheduleHandleResponse(httpResp)
+	return resp, err
+}
+
+// updateRefreshMaterializedLakeViewsScheduleCreateRequest creates the UpdateRefreshMaterializedLakeViewsSchedule request.
+func (client *BackgroundJobsClient) updateRefreshMaterializedLakeViewsScheduleCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, scheduleID string, updateScheduleRequest UpdateLakehouseRefreshMaterializedLakeViewsScheduleRequest, _ *BackgroundJobsClientUpdateRefreshMaterializedLakeViewsScheduleOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/jobs/RefreshMaterializedLakeViews/schedules/{scheduleId}"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if lakehouseID == "" {
+		return nil, errors.New("parameter lakehouseID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{lakehouseId}", url.PathEscape(lakehouseID))
+	if scheduleID == "" {
+		return nil, errors.New("parameter scheduleID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{scheduleId}", url.PathEscape(scheduleID))
+	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateScheduleRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// updateRefreshMaterializedLakeViewsScheduleHandleResponse handles the UpdateRefreshMaterializedLakeViewsSchedule response.
+func (client *BackgroundJobsClient) updateRefreshMaterializedLakeViewsScheduleHandleResponse(resp *http.Response) (BackgroundJobsClientUpdateRefreshMaterializedLakeViewsScheduleResponse, error) {
+	result := BackgroundJobsClientUpdateRefreshMaterializedLakeViewsScheduleResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.RefreshMaterializedLakeViewsSchedule); err != nil {
+		return BackgroundJobsClientUpdateRefreshMaterializedLakeViewsScheduleResponse{}, err
 	}
 	return result, nil
 }

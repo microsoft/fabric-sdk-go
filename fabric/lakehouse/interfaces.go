@@ -23,3 +23,21 @@ type ItemReferenceClassification interface {
 	// GetItemReference returns the ItemReference content of the underlying type.
 	GetItemReference() *ItemReference
 }
+
+// MonthlyOccurrenceClassification provides polymorphic access to related types.
+// Call the interface's GetMonthlyOccurrence() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *DayOfMonth, *MonthlyOccurrence, *OrdinalWeekday
+type MonthlyOccurrenceClassification interface {
+	// GetMonthlyOccurrence returns the MonthlyOccurrence content of the underlying type.
+	GetMonthlyOccurrence() *MonthlyOccurrence
+}
+
+// ScheduleConfigClassification provides polymorphic access to related types.
+// Call the interface's GetScheduleConfig() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *CronScheduleConfig, *DailyScheduleConfig, *MonthlyScheduleConfig, *ScheduleConfig, *WeeklyScheduleConfig
+type ScheduleConfigClassification interface {
+	// GetScheduleConfig returns the ScheduleConfig content of the underlying type.
+	GetScheduleConfig() *ScheduleConfig
+}

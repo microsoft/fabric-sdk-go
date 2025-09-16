@@ -27,6 +27,16 @@ func (c *CSV) GetFileFormatOptions() *FileFormatOptions {
 	}
 }
 
+// CreateLakehouseRefreshMaterializedLakeViewsScheduleRequest - Create lakehouse refresh materialized lake views schedule
+// request payload.
+type CreateLakehouseRefreshMaterializedLakeViewsScheduleRequest struct {
+	// REQUIRED; The actual data contains the time/weekdays of this schedule.
+	Configuration ScheduleConfigClassification
+
+	// REQUIRED; Whether this schedule is enabled. True - Enabled, False - Disabled.
+	Enabled *bool
+}
+
 // CreateLakehouseRequest - Create lakehouse request payload.
 type CreateLakehouseRequest struct {
 	// REQUIRED; The lakehouse display name. The display name must follow naming rules according to item type.
@@ -47,6 +57,82 @@ type CreateLakehouseRequest struct {
 type CreationPayload struct {
 	// REQUIRED; Create a schema enabled lakehouse when set to true. Only 'true' is allowed.
 	EnableSchemas *bool
+}
+
+type CronScheduleConfig struct {
+	// REQUIRED; The end time for this schedule. The end time must be later than the start time. It has to be in UTC, using the
+	// YYYY-MM-DDTHH:mm:ssZ format.
+	EndDateTime *time.Time
+
+	// REQUIRED; The time interval in minutes. A number between 1 and 5270400 (10 years).
+	Interval *int32
+
+	// REQUIRED; The time zone identifier registry on local computer for windows, see Default Time Zones [/windows-hardware/manufacture/desktop/default-time-zones]
+	LocalTimeZoneID *string
+
+	// REQUIRED; The start time for this schedule. If the start time is in the past, it will trigger a job instantly. The time
+	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	StartDateTime *time.Time
+
+	// REQUIRED; The type of schedule configuration. Additional types may be added over time.
+	Type *ScheduleType
+}
+
+// GetScheduleConfig implements the ScheduleConfigClassification interface for type CronScheduleConfig.
+func (c *CronScheduleConfig) GetScheduleConfig() *ScheduleConfig {
+	return &ScheduleConfig{
+		EndDateTime:     c.EndDateTime,
+		LocalTimeZoneID: c.LocalTimeZoneID,
+		StartDateTime:   c.StartDateTime,
+		Type:            c.Type,
+	}
+}
+
+type DailyScheduleConfig struct {
+	// REQUIRED; The end time for this schedule. The end time must be later than the start time. It has to be in UTC, using the
+	// YYYY-MM-DDTHH:mm:ssZ format.
+	EndDateTime *time.Time
+
+	// REQUIRED; The time zone identifier registry on local computer for windows, see Default Time Zones [/windows-hardware/manufacture/desktop/default-time-zones]
+	LocalTimeZoneID *string
+
+	// REQUIRED; The start time for this schedule. If the start time is in the past, it will trigger a job instantly. The time
+	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	StartDateTime *time.Time
+
+	// REQUIRED; A list of time slots in the hh:mm format. The maximum time slots you can use is 100.
+	Times []string
+
+	// REQUIRED; The type of schedule configuration. Additional types may be added over time.
+	Type *ScheduleType
+}
+
+// GetScheduleConfig implements the ScheduleConfigClassification interface for type DailyScheduleConfig.
+func (d *DailyScheduleConfig) GetScheduleConfig() *ScheduleConfig {
+	return &ScheduleConfig{
+		EndDateTime:     d.EndDateTime,
+		LocalTimeZoneID: d.LocalTimeZoneID,
+		StartDateTime:   d.StartDateTime,
+		Type:            d.Type,
+	}
+}
+
+// DayOfMonth - Specifies a date to trigger the job. The value must be a valid date. Otherwise, it will be skipped.
+type DayOfMonth struct {
+	// REQUIRED; Specifies a date to trigger the job, using a value between 1 and 31. For example, 2 means the second day of the
+	// month. The date must be valid. If an invalid date is provided, such as February 31st, it
+	// will automatically skip to the month that includes the 31st day.
+	DayOfMonth *int32
+
+	// REQUIRED; An enumerator that lists the day for triggering jobs. Additional types may be added over time.
+	OccurrenceType *OccurrenceType
+}
+
+// GetMonthlyOccurrence implements the MonthlyOccurrenceClassification interface for type DayOfMonth.
+func (d *DayOfMonth) GetMonthlyOccurrence() *MonthlyOccurrence {
+	return &MonthlyOccurrence{
+		OccurrenceType: d.OccurrenceType,
+	}
 }
 
 // Duration - A duration.
@@ -260,6 +346,50 @@ type LoadTableRequest struct {
 	Recursive *bool
 }
 
+// MonthlyOccurrence - Specifies the day for triggering jobs
+type MonthlyOccurrence struct {
+	// REQUIRED; An enumerator that lists the day for triggering jobs. Additional types may be added over time.
+	OccurrenceType *OccurrenceType
+}
+
+// GetMonthlyOccurrence implements the MonthlyOccurrenceClassification interface for type MonthlyOccurrence.
+func (m *MonthlyOccurrence) GetMonthlyOccurrence() *MonthlyOccurrence { return m }
+
+type MonthlyScheduleConfig struct {
+	// REQUIRED; The end time for this schedule. The end time must be later than the start time. It has to be in UTC, using the
+	// YYYY-MM-DDTHH:mm:ssZ format.
+	EndDateTime *time.Time
+
+	// REQUIRED; The time zone identifier registry on local computer for windows, see Default Time Zones [/windows-hardware/manufacture/desktop/default-time-zones]
+	LocalTimeZoneID *string
+
+	// REQUIRED; A date for triggering the job.
+	Occurrence MonthlyOccurrenceClassification
+
+	// REQUIRED; Specifies the monthly job repeat interval. For example, when set to 1 the job is triggered every month.
+	Recurrence *int32
+
+	// REQUIRED; The start time for this schedule. If the start time is in the past, it will trigger a job instantly. The time
+	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	StartDateTime *time.Time
+
+	// REQUIRED; A list of time slots in the hh:mm format. The maximum time slots you can use is 100.
+	Times []string
+
+	// REQUIRED; The type of schedule configuration. Additional types may be added over time.
+	Type *ScheduleType
+}
+
+// GetScheduleConfig implements the ScheduleConfigClassification interface for type MonthlyScheduleConfig.
+func (m *MonthlyScheduleConfig) GetScheduleConfig() *ScheduleConfig {
+	return &ScheduleConfig{
+		EndDateTime:     m.EndDateTime,
+		LocalTimeZoneID: m.LocalTimeZoneID,
+		StartDateTime:   m.StartDateTime,
+		Type:            m.Type,
+	}
+}
+
 // OptimizeSettings - Table maintenance optimization settings.
 type OptimizeSettings struct {
 	// The V-Order [/fabric/data-engineering/delta-optimization-and-v-order#what-is-v-order] settings. True - Enabled, False -
@@ -268,6 +398,26 @@ type OptimizeSettings struct {
 
 	// A list of column names to Z-Order the data by. If not provided, Z-Ordering isn't applied.
 	ZOrderBy []string
+}
+
+// OrdinalWeekday - Specifies the ordinal week and weekday to trigger the job. The value must be a valid date. Otherwise,
+// it will be skipped.
+type OrdinalWeekday struct {
+	// REQUIRED; An enumerator that lists the day for triggering jobs. Additional types may be added over time.
+	OccurrenceType *OccurrenceType
+
+	// REQUIRED; The week of the month.
+	WeekIndex *WeekIndex
+
+	// REQUIRED; Week day for triggering jobs.
+	Weekday *DayOfWeek
+}
+
+// GetMonthlyOccurrence implements the MonthlyOccurrenceClassification interface for type OrdinalWeekday.
+func (o *OrdinalWeekday) GetMonthlyOccurrence() *MonthlyOccurrence {
+	return &MonthlyOccurrence{
+		OccurrenceType: o.OccurrenceType,
+	}
 }
 
 // Parquet - Format options for Parquet files.
@@ -346,6 +496,24 @@ type Properties struct {
 	SQLEndpointProperties *SQLEndpointProperties
 }
 
+// RefreshMaterializedLakeViewsSchedule - Lakehouse refresh materialized lake views schedule.
+type RefreshMaterializedLakeViewsSchedule struct {
+	// REQUIRED; Whether this schedule is enabled. True - Enabled, False - Disabled.
+	Enabled *bool
+
+	// REQUIRED; The schedule ID.
+	ID *string
+
+	// The actual data contains the time/weekdays of this schedule.
+	Configuration ScheduleConfigClassification
+
+	// The created time stamp of this schedule in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	CreatedDateTime *time.Time
+
+	// The user identity that created this schedule or last modified.
+	Owner *Principal
+}
+
 // RunOnDemandTableMaintenanceRequest - Run on demand lakehouse table maintenance instance payload
 type RunOnDemandTableMaintenanceRequest struct {
 	// REQUIRED; Execution data to configure the table maintenance [/fabric/data-engineering/lakehouse-table-maintenance] job.
@@ -363,6 +531,26 @@ type SQLEndpointProperties struct {
 	// SQL endpoint ID.
 	ID *string
 }
+
+// ScheduleConfig - Item schedule plan detail settings.
+type ScheduleConfig struct {
+	// REQUIRED; The end time for this schedule. The end time must be later than the start time. It has to be in UTC, using the
+	// YYYY-MM-DDTHH:mm:ssZ format.
+	EndDateTime *time.Time
+
+	// REQUIRED; The time zone identifier registry on local computer for windows, see Default Time Zones [/windows-hardware/manufacture/desktop/default-time-zones]
+	LocalTimeZoneID *string
+
+	// REQUIRED; The start time for this schedule. If the start time is in the past, it will trigger a job instantly. The time
+	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	StartDateTime *time.Time
+
+	// REQUIRED; The type of schedule configuration. Additional types may be added over time.
+	Type *ScheduleType
+}
+
+// GetScheduleConfig implements the ScheduleConfigClassification interface for type ScheduleConfig.
+func (s *ScheduleConfig) GetScheduleConfig() *ScheduleConfig { return s }
 
 // Table information.
 type Table struct {
@@ -408,6 +596,16 @@ type Tables struct {
 	ContinuationURI *string
 }
 
+// UpdateLakehouseRefreshMaterializedLakeViewsScheduleRequest - Update lakehouse refresh materialized lake views schedule
+// request payload.
+type UpdateLakehouseRefreshMaterializedLakeViewsScheduleRequest struct {
+	// REQUIRED; The actual data contains the time/weekdays of this schedule.
+	Configuration ScheduleConfigClassification
+
+	// REQUIRED; Whether this schedule is enabled. True - Enabled, False - Disabled.
+	Enabled *bool
+}
+
 // UpdateLakehouseRequest - Update lakehouse request.
 type UpdateLakehouseRequest struct {
 	// The lakehouse description. Maximum length is 256 characters.
@@ -425,4 +623,36 @@ type VacuumSettings struct {
 	// pattern of d:hh:mm:ss where d is the number of days, hh is the number of hours between 00 and 23, mm is the number of minutes
 	// between 00 and 59, and ss is the number of seconds between 00 and 59.
 	RetentionPeriod *string
+}
+
+type WeeklyScheduleConfig struct {
+	// REQUIRED; The end time for this schedule. The end time must be later than the start time. It has to be in UTC, using the
+	// YYYY-MM-DDTHH:mm:ssZ format.
+	EndDateTime *time.Time
+
+	// REQUIRED; The time zone identifier registry on local computer for windows, see Default Time Zones [/windows-hardware/manufacture/desktop/default-time-zones]
+	LocalTimeZoneID *string
+
+	// REQUIRED; The start time for this schedule. If the start time is in the past, it will trigger a job instantly. The time
+	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	StartDateTime *time.Time
+
+	// REQUIRED; A list of time slots in the hh:mm format. The maximum time slots you can use is 100.
+	Times []string
+
+	// REQUIRED; The type of schedule configuration. Additional types may be added over time.
+	Type *ScheduleType
+
+	// REQUIRED; A list of weekdays, at most seven elements are allowed.
+	Weekdays []DayOfWeek
+}
+
+// GetScheduleConfig implements the ScheduleConfigClassification interface for type WeeklyScheduleConfig.
+func (w *WeeklyScheduleConfig) GetScheduleConfig() *ScheduleConfig {
+	return &ScheduleConfig{
+		EndDateTime:     w.EndDateTime,
+		LocalTimeZoneID: w.LocalTimeZoneID,
+		StartDateTime:   w.StartDateTime,
+		Type:            w.Type,
+	}
 }

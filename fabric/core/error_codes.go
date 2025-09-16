@@ -245,16 +245,19 @@ func PossibleErrDeploymentPipelineValues() []string {
 }
 
 type errDomain struct {
-	DomainSpecificUsersScopeCannotBeEmptyError error
+	InsufficientPermissionsToDomain error
+	DomainNotFound                  error
 }
 
 var ErrDomain = errDomain{
-	DomainSpecificUsersScopeCannotBeEmptyError: errors.New("DomainSpecificUsersScopeCannotBeEmptyError"),
+	InsufficientPermissionsToDomain: errors.New("InsufficientPermissionsToDomain"),
+	DomainNotFound:                  errors.New("DomainNotFound"),
 }
 
 func PossibleErrDomainValues() []string {
 	return []string{
-		ErrDomain.DomainSpecificUsersScopeCannotBeEmptyError.Error(),
+		ErrDomain.InsufficientPermissionsToDomain.Error(),
+		ErrDomain.DomainNotFound.Error(),
 	}
 }
 

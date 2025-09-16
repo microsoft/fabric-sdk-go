@@ -6,6 +6,23 @@
 
 package sqlendpoint
 
+// ClientGetSQLAuditSettingsResponse contains the response from method Client.GetSQLAuditSettings.
+type ClientGetSQLAuditSettingsResponse struct {
+	// The current state of audit settings for an item.
+	SQLAuditSettings
+}
+
+// ClientSetAuditActionsAndGroupsResponse contains the response from method Client.SetAuditActionsAndGroups.
+type ClientSetAuditActionsAndGroupsResponse struct {
+	// placeholder for future response values
+}
+
+// ClientUpdateSQLAuditSettingsResponse contains the response from method Client.UpdateSQLAuditSettings.
+type ClientUpdateSQLAuditSettingsResponse struct {
+	// The current state of audit settings for an item.
+	SQLAuditSettings
+}
+
 // ItemsClientGetConnectionStringResponse contains the response from method ItemsClient.GetConnectionString.
 type ItemsClientGetConnectionStringResponse struct {
 	// The SQL connection string for the workspace containing this SQL endpoint.

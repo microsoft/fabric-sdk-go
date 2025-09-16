@@ -332,3 +332,66 @@ func (testsuite *FakeTestSuite) TestItems_UpdateSemanticModelDefinition() {
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
+
+func (testsuite *FakeTestSuite) TestItems_BindSemanticModelConnection() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Bind a semantic model connection example"},
+	})
+	var exampleWorkspaceID string
+	var exampleSemanticModelID string
+	var exampleBindSemanticModelConnectionRequest semanticmodel.BindSemanticModelConnectionRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleSemanticModelID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleBindSemanticModelConnectionRequest = semanticmodel.BindSemanticModelConnectionRequest{
+		ConnectionBinding: &semanticmodel.ConnectionBinding{
+			ConnectionDetails: &semanticmodel.ListConnectionDetails{
+				Type: to.Ptr("SQL"),
+				Path: to.Ptr("contoso.database.windows.net;sales"),
+			},
+			ConnectivityType: to.Ptr(semanticmodel.ConnectivityType("OnPremisesDataGateway")),
+			ID:               to.Ptr("0b9af1bd-e974-4893-8947-d89d5a560385"),
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.BindSemanticModelConnection = func(ctx context.Context, workspaceID string, semanticModelID string, bindSemanticModelConnectionRequest semanticmodel.BindSemanticModelConnectionRequest, options *semanticmodel.ItemsClientBindSemanticModelConnectionOptions) (resp azfake.Responder[semanticmodel.ItemsClientBindSemanticModelConnectionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleSemanticModelID, semanticModelID)
+		testsuite.Require().True(reflect.DeepEqual(exampleBindSemanticModelConnectionRequest, bindSemanticModelConnectionRequest))
+		resp = azfake.Responder[semanticmodel.ItemsClientBindSemanticModelConnectionResponse]{}
+		resp.SetResponse(http.StatusOK, semanticmodel.ItemsClientBindSemanticModelConnectionResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	_, err = client.BindSemanticModelConnection(ctx, exampleWorkspaceID, exampleSemanticModelID, exampleBindSemanticModelConnectionRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Unbind a semantic model connection example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleSemanticModelID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleBindSemanticModelConnectionRequest = semanticmodel.BindSemanticModelConnectionRequest{
+		ConnectionBinding: &semanticmodel.ConnectionBinding{
+			ConnectionDetails: &semanticmodel.ListConnectionDetails{
+				Type: to.Ptr("SQL"),
+				Path: to.Ptr("contoso.database.windows.net;sales"),
+			},
+			ConnectivityType: to.Ptr(semanticmodel.ConnectivityTypeNone),
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.BindSemanticModelConnection = func(ctx context.Context, workspaceID string, semanticModelID string, bindSemanticModelConnectionRequest semanticmodel.BindSemanticModelConnectionRequest, options *semanticmodel.ItemsClientBindSemanticModelConnectionOptions) (resp azfake.Responder[semanticmodel.ItemsClientBindSemanticModelConnectionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleSemanticModelID, semanticModelID)
+		testsuite.Require().True(reflect.DeepEqual(exampleBindSemanticModelConnectionRequest, bindSemanticModelConnectionRequest))
+		resp = azfake.Responder[semanticmodel.ItemsClientBindSemanticModelConnectionResponse]{}
+		resp.SetResponse(http.StatusOK, semanticmodel.ItemsClientBindSemanticModelConnectionResponse{}, nil)
+		return
+	}
+
+	_, err = client.BindSemanticModelConnection(ctx, exampleWorkspaceID, exampleSemanticModelID, exampleBindSemanticModelConnectionRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}

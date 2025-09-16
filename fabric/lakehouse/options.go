@@ -6,6 +6,18 @@
 
 package lakehouse
 
+// BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleOptions contains the optional parameters for the BackgroundJobsClient.CreateRefreshMaterializedLakeViewsSchedule
+// method.
+type BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleOptions struct {
+	// placeholder for future optional parameters
+}
+
+// BackgroundJobsClientDeleteRefreshMaterializedLakeViewsScheduleOptions contains the optional parameters for the BackgroundJobsClient.DeleteRefreshMaterializedLakeViewsSchedule
+// method.
+type BackgroundJobsClientDeleteRefreshMaterializedLakeViewsScheduleOptions struct {
+	// placeholder for future optional parameters
+}
+
 // BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsOptions contains the optional parameters for the BackgroundJobsClient.RunOnDemandRefreshMaterializedLakeViews
 // method.
 type BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsOptions struct {
@@ -15,6 +27,12 @@ type BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsOptions struct {
 // BackgroundJobsClientRunOnDemandTableMaintenanceOptions contains the optional parameters for the BackgroundJobsClient.RunOnDemandTableMaintenance
 // method.
 type BackgroundJobsClientRunOnDemandTableMaintenanceOptions struct {
+	// placeholder for future optional parameters
+}
+
+// BackgroundJobsClientUpdateRefreshMaterializedLakeViewsScheduleOptions contains the optional parameters for the BackgroundJobsClient.UpdateRefreshMaterializedLakeViewsSchedule
+// method.
+type BackgroundJobsClientUpdateRefreshMaterializedLakeViewsScheduleOptions struct {
 	// placeholder for future optional parameters
 }
 

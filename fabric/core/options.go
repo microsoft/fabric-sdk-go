@@ -193,6 +193,17 @@ type DeploymentPipelinesClientUpdateDeploymentPipelineStageOptions struct {
 	// placeholder for future optional parameters
 }
 
+// DomainsClientGetDomainOptions contains the optional parameters for the DomainsClient.GetDomain method.
+type DomainsClientGetDomainOptions struct {
+	// placeholder for future optional parameters
+}
+
+// DomainsClientListDomainsOptions contains the optional parameters for the DomainsClient.NewListDomainsPager method.
+type DomainsClientListDomainsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
 // ExternalDataSharesProviderClientCreateExternalDataShareOptions contains the optional parameters for the ExternalDataSharesProviderClient.CreateExternalDataShare
 // method.
 type ExternalDataSharesProviderClientCreateExternalDataShareOptions struct {
@@ -427,6 +438,11 @@ type ItemsClientBeginUpdateItemDefinitionOptions struct {
 	UpdateMetadata *bool
 }
 
+// ItemsClientBulkMoveItemsOptions contains the optional parameters for the ItemsClient.BulkMoveItems method.
+type ItemsClientBulkMoveItemsOptions struct {
+	// placeholder for future optional parameters
+}
+
 // ItemsClientDeleteItemOptions contains the optional parameters for the ItemsClient.DeleteItem method.
 type ItemsClientDeleteItemOptions struct {
 	// placeholder for future optional parameters
@@ -460,6 +476,11 @@ type ItemsClientListItemsOptions struct {
 
 	// The item's type.
 	Type *string
+}
+
+// ItemsClientMoveItemOptions contains the optional parameters for the ItemsClient.MoveItem method.
+type ItemsClientMoveItemOptions struct {
+	// placeholder for future optional parameters
 }
 
 // ItemsClientUpdateItemOptions contains the optional parameters for the ItemsClient.UpdateItem method.
@@ -657,6 +678,11 @@ type WorkspacesClientAssignToCapacityOptions struct {
 	// placeholder for future optional parameters
 }
 
+// WorkspacesClientAssignToDomainOptions contains the optional parameters for the WorkspacesClient.AssignToDomain method.
+type WorkspacesClientAssignToDomainOptions struct {
+	// placeholder for future optional parameters
+}
+
 // WorkspacesClientBeginDeprovisionIdentityOptions contains the optional parameters for the WorkspacesClient.BeginDeprovisionIdentity
 // method.
 type WorkspacesClientBeginDeprovisionIdentityOptions struct {
@@ -741,6 +767,12 @@ type WorkspacesClientSetNetworkCommunicationPolicyOptions struct {
 // WorkspacesClientUnassignFromCapacityOptions contains the optional parameters for the WorkspacesClient.UnassignFromCapacity
 // method.
 type WorkspacesClientUnassignFromCapacityOptions struct {
+	// placeholder for future optional parameters
+}
+
+// WorkspacesClientUnassignFromDomainOptions contains the optional parameters for the WorkspacesClient.UnassignFromDomain
+// method.
+type WorkspacesClientUnassignFromDomainOptions struct {
 	// placeholder for future optional parameters
 }
 

@@ -6,6 +6,25 @@
 
 package semanticmodel
 
+// BindSemanticModelConnectionRequest - The payload of a bindConnection request to bind a data source reference of a semantic
+// model to a data connection.
+type BindSemanticModelConnectionRequest struct {
+	// REQUIRED; The details of the connection binding.
+	ConnectionBinding *ConnectionBinding
+}
+
+// ConnectionBinding - The details of the connection binding.
+type ConnectionBinding struct {
+	// REQUIRED; The connection details of the connection.
+	ConnectionDetails *ListConnectionDetails
+
+	// The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// The object ID of the connection.
+	ID *string
+}
+
 // CreateSemanticModelRequest - Create semantic model request payload.
 type CreateSemanticModelRequest struct {
 	// REQUIRED; The semantic model public definition.
@@ -57,6 +76,15 @@ type ItemTag struct {
 
 	// REQUIRED; The tag ID.
 	ID *string
+}
+
+// ListConnectionDetails - The connection details output for list operations.
+type ListConnectionDetails struct {
+	// REQUIRED; The path of the connection.
+	Path *string
+
+	// REQUIRED; The type of the connection.
+	Type *string
 }
 
 // SemanticModel - A semantic model object.

@@ -6,6 +6,40 @@
 
 package semanticmodel
 
+// ConnectivityType - The connectivity type of the connection. Additional connectivity types may be added over time.
+type ConnectivityType string
+
+const (
+	// ConnectivityTypeAutomatic - The connection connects through the cloud using an implicit data connection. This option is
+	// only available for specific scenarios like semantic models that use Single Sign-On (SSO).”
+	ConnectivityTypeAutomatic ConnectivityType = "Automatic"
+	// ConnectivityTypeNone - The connection is not bound
+	ConnectivityTypeNone ConnectivityType = "None"
+	// ConnectivityTypeOnPremisesGateway - The connection connects through an on-premises data gateway.
+	ConnectivityTypeOnPremisesGateway ConnectivityType = "OnPremisesGateway"
+	// ConnectivityTypeOnPremisesGatewayPersonal - The connection connects through a personal on-premises data gateway.
+	ConnectivityTypeOnPremisesGatewayPersonal ConnectivityType = "OnPremisesGatewayPersonal"
+	// ConnectivityTypePersonalCloud - The connection connects through the cloud and cannot be shared with others.
+	ConnectivityTypePersonalCloud ConnectivityType = "PersonalCloud"
+	// ConnectivityTypeShareableCloud - The connection connects through the cloud and can be shared with others.
+	ConnectivityTypeShareableCloud ConnectivityType = "ShareableCloud"
+	// ConnectivityTypeVirtualNetworkGateway - The connection connects through a virtual network data gateway.
+	ConnectivityTypeVirtualNetworkGateway ConnectivityType = "VirtualNetworkGateway"
+)
+
+// PossibleConnectivityTypeValues returns the possible values for the ConnectivityType const type.
+func PossibleConnectivityTypeValues() []ConnectivityType {
+	return []ConnectivityType{
+		ConnectivityTypeAutomatic,
+		ConnectivityTypeNone,
+		ConnectivityTypeOnPremisesGateway,
+		ConnectivityTypeOnPremisesGatewayPersonal,
+		ConnectivityTypePersonalCloud,
+		ConnectivityTypeShareableCloud,
+		ConnectivityTypeVirtualNetworkGateway,
+	}
+}
+
 // ItemType - The type of the item. Additional item types may be added over time.
 type ItemType string
 

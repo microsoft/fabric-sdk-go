@@ -49,6 +49,37 @@ func (c *CSV) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type CreateLakehouseRefreshMaterializedLakeViewsScheduleRequest.
+func (c CreateLakehouseRefreshMaterializedLakeViewsScheduleRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "configuration", c.Configuration)
+	populate(objectMap, "enabled", c.Enabled)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CreateLakehouseRefreshMaterializedLakeViewsScheduleRequest.
+func (c *CreateLakehouseRefreshMaterializedLakeViewsScheduleRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "configuration":
+			c.Configuration, err = unmarshalScheduleConfigClassification(val)
+			delete(rawMsg, key)
+		case "enabled":
+			err = unpopulate(val, "Enabled", &c.Enabled)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type CreateLakehouseRequest.
 func (c CreateLakehouseRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -110,6 +141,123 @@ func (c *CreationPayload) UnmarshalJSON(data []byte) error {
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type CronScheduleConfig.
+func (c CronScheduleConfig) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populateDateTimeRFC3339(objectMap, "endDateTime", c.EndDateTime)
+	populate(objectMap, "interval", c.Interval)
+	populate(objectMap, "localTimeZoneId", c.LocalTimeZoneID)
+	populateDateTimeRFC3339(objectMap, "startDateTime", c.StartDateTime)
+	objectMap["type"] = ScheduleTypeCron
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CronScheduleConfig.
+func (c *CronScheduleConfig) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "endDateTime":
+			err = unpopulateDateTimeRFC3339(val, "EndDateTime", &c.EndDateTime)
+			delete(rawMsg, key)
+		case "interval":
+			err = unpopulate(val, "Interval", &c.Interval)
+			delete(rawMsg, key)
+		case "localTimeZoneId":
+			err = unpopulate(val, "LocalTimeZoneID", &c.LocalTimeZoneID)
+			delete(rawMsg, key)
+		case "startDateTime":
+			err = unpopulateDateTimeRFC3339(val, "StartDateTime", &c.StartDateTime)
+			delete(rawMsg, key)
+		case "type":
+			err = unpopulate(val, "Type", &c.Type)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type DailyScheduleConfig.
+func (d DailyScheduleConfig) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populateDateTimeRFC3339(objectMap, "endDateTime", d.EndDateTime)
+	populate(objectMap, "localTimeZoneId", d.LocalTimeZoneID)
+	populateDateTimeRFC3339(objectMap, "startDateTime", d.StartDateTime)
+	populate(objectMap, "times", d.Times)
+	objectMap["type"] = ScheduleTypeDaily
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type DailyScheduleConfig.
+func (d *DailyScheduleConfig) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", d, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "endDateTime":
+			err = unpopulateDateTimeRFC3339(val, "EndDateTime", &d.EndDateTime)
+			delete(rawMsg, key)
+		case "localTimeZoneId":
+			err = unpopulate(val, "LocalTimeZoneID", &d.LocalTimeZoneID)
+			delete(rawMsg, key)
+		case "startDateTime":
+			err = unpopulateDateTimeRFC3339(val, "StartDateTime", &d.StartDateTime)
+			delete(rawMsg, key)
+		case "times":
+			err = unpopulate(val, "Times", &d.Times)
+			delete(rawMsg, key)
+		case "type":
+			err = unpopulate(val, "Type", &d.Type)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", d, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type DayOfMonth.
+func (d DayOfMonth) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "dayOfMonth", d.DayOfMonth)
+	objectMap["occurrenceType"] = OccurrenceTypeDayOfMonth
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type DayOfMonth.
+func (d *DayOfMonth) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", d, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "dayOfMonth":
+			err = unpopulate(val, "DayOfMonth", &d.DayOfMonth)
+			delete(rawMsg, key)
+		case "occurrenceType":
+			err = unpopulate(val, "OccurrenceType", &d.OccurrenceType)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", d, err)
 		}
 	}
 	return nil
@@ -569,6 +717,84 @@ func (l *LoadTableRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type MonthlyOccurrence.
+func (m MonthlyOccurrence) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["occurrenceType"] = m.OccurrenceType
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type MonthlyOccurrence.
+func (m *MonthlyOccurrence) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", m, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "occurrenceType":
+			err = unpopulate(val, "OccurrenceType", &m.OccurrenceType)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", m, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type MonthlyScheduleConfig.
+func (m MonthlyScheduleConfig) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populateDateTimeRFC3339(objectMap, "endDateTime", m.EndDateTime)
+	populate(objectMap, "localTimeZoneId", m.LocalTimeZoneID)
+	populate(objectMap, "occurrence", m.Occurrence)
+	populate(objectMap, "recurrence", m.Recurrence)
+	populateDateTimeRFC3339(objectMap, "startDateTime", m.StartDateTime)
+	populate(objectMap, "times", m.Times)
+	objectMap["type"] = ScheduleTypeMonthly
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type MonthlyScheduleConfig.
+func (m *MonthlyScheduleConfig) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", m, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "endDateTime":
+			err = unpopulateDateTimeRFC3339(val, "EndDateTime", &m.EndDateTime)
+			delete(rawMsg, key)
+		case "localTimeZoneId":
+			err = unpopulate(val, "LocalTimeZoneID", &m.LocalTimeZoneID)
+			delete(rawMsg, key)
+		case "occurrence":
+			m.Occurrence, err = unmarshalMonthlyOccurrenceClassification(val)
+			delete(rawMsg, key)
+		case "recurrence":
+			err = unpopulate(val, "Recurrence", &m.Recurrence)
+			delete(rawMsg, key)
+		case "startDateTime":
+			err = unpopulateDateTimeRFC3339(val, "StartDateTime", &m.StartDateTime)
+			delete(rawMsg, key)
+		case "times":
+			err = unpopulate(val, "Times", &m.Times)
+			delete(rawMsg, key)
+		case "type":
+			err = unpopulate(val, "Type", &m.Type)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", m, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type OptimizeSettings.
 func (o OptimizeSettings) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -591,6 +817,41 @@ func (o *OptimizeSettings) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "zOrderBy":
 			err = unpopulate(val, "ZOrderBy", &o.ZOrderBy)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", o, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type OrdinalWeekday.
+func (o OrdinalWeekday) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["occurrenceType"] = OccurrenceTypeOrdinalWeekday
+	populate(objectMap, "weekIndex", o.WeekIndex)
+	populate(objectMap, "weekday", o.Weekday)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type OrdinalWeekday.
+func (o *OrdinalWeekday) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", o, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "occurrenceType":
+			err = unpopulate(val, "OccurrenceType", &o.OccurrenceType)
+			delete(rawMsg, key)
+		case "weekIndex":
+			err = unpopulate(val, "WeekIndex", &o.WeekIndex)
+			delete(rawMsg, key)
+		case "weekday":
+			err = unpopulate(val, "Weekday", &o.Weekday)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -825,6 +1086,49 @@ func (p *Properties) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type RefreshMaterializedLakeViewsSchedule.
+func (r RefreshMaterializedLakeViewsSchedule) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "configuration", r.Configuration)
+	populateDateTimeRFC3339(objectMap, "createdDateTime", r.CreatedDateTime)
+	populate(objectMap, "enabled", r.Enabled)
+	populate(objectMap, "id", r.ID)
+	populate(objectMap, "owner", r.Owner)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type RefreshMaterializedLakeViewsSchedule.
+func (r *RefreshMaterializedLakeViewsSchedule) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", r, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "configuration":
+			r.Configuration, err = unmarshalScheduleConfigClassification(val)
+			delete(rawMsg, key)
+		case "createdDateTime":
+			err = unpopulateDateTimeRFC3339(val, "CreatedDateTime", &r.CreatedDateTime)
+			delete(rawMsg, key)
+		case "enabled":
+			err = unpopulate(val, "Enabled", &r.Enabled)
+			delete(rawMsg, key)
+		case "id":
+			err = unpopulate(val, "ID", &r.ID)
+			delete(rawMsg, key)
+		case "owner":
+			err = unpopulate(val, "Owner", &r.Owner)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", r, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type RunOnDemandTableMaintenanceRequest.
 func (r RunOnDemandTableMaintenanceRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -878,6 +1182,45 @@ func (s *SQLEndpointProperties) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "provisioningStatus":
 			err = unpopulate(val, "ProvisioningStatus", &s.ProvisioningStatus)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", s, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type ScheduleConfig.
+func (s ScheduleConfig) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populateDateTimeRFC3339(objectMap, "endDateTime", s.EndDateTime)
+	populate(objectMap, "localTimeZoneId", s.LocalTimeZoneID)
+	populateDateTimeRFC3339(objectMap, "startDateTime", s.StartDateTime)
+	objectMap["type"] = s.Type
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ScheduleConfig.
+func (s *ScheduleConfig) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", s, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "endDateTime":
+			err = unpopulateDateTimeRFC3339(val, "EndDateTime", &s.EndDateTime)
+			delete(rawMsg, key)
+		case "localTimeZoneId":
+			err = unpopulate(val, "LocalTimeZoneID", &s.LocalTimeZoneID)
+			delete(rawMsg, key)
+		case "startDateTime":
+			err = unpopulateDateTimeRFC3339(val, "StartDateTime", &s.StartDateTime)
+			delete(rawMsg, key)
+		case "type":
+			err = unpopulate(val, "Type", &s.Type)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -1000,6 +1343,37 @@ func (t *Tables) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type UpdateLakehouseRefreshMaterializedLakeViewsScheduleRequest.
+func (u UpdateLakehouseRefreshMaterializedLakeViewsScheduleRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "configuration", u.Configuration)
+	populate(objectMap, "enabled", u.Enabled)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type UpdateLakehouseRefreshMaterializedLakeViewsScheduleRequest.
+func (u *UpdateLakehouseRefreshMaterializedLakeViewsScheduleRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", u, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "configuration":
+			u.Configuration, err = unmarshalScheduleConfigClassification(val)
+			delete(rawMsg, key)
+		case "enabled":
+			err = unpopulate(val, "Enabled", &u.Enabled)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", u, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type UpdateLakehouseRequest.
 func (u UpdateLakehouseRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -1053,6 +1427,53 @@ func (v *VacuumSettings) UnmarshalJSON(data []byte) error {
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", v, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type WeeklyScheduleConfig.
+func (w WeeklyScheduleConfig) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populateDateTimeRFC3339(objectMap, "endDateTime", w.EndDateTime)
+	populate(objectMap, "localTimeZoneId", w.LocalTimeZoneID)
+	populateDateTimeRFC3339(objectMap, "startDateTime", w.StartDateTime)
+	populate(objectMap, "times", w.Times)
+	objectMap["type"] = ScheduleTypeWeekly
+	populate(objectMap, "weekdays", w.Weekdays)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type WeeklyScheduleConfig.
+func (w *WeeklyScheduleConfig) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", w, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "endDateTime":
+			err = unpopulateDateTimeRFC3339(val, "EndDateTime", &w.EndDateTime)
+			delete(rawMsg, key)
+		case "localTimeZoneId":
+			err = unpopulate(val, "LocalTimeZoneID", &w.LocalTimeZoneID)
+			delete(rawMsg, key)
+		case "startDateTime":
+			err = unpopulateDateTimeRFC3339(val, "StartDateTime", &w.StartDateTime)
+			delete(rawMsg, key)
+		case "times":
+			err = unpopulate(val, "Times", &w.Times)
+			delete(rawMsg, key)
+		case "type":
+			err = unpopulate(val, "Type", &w.Type)
+			delete(rawMsg, key)
+		case "weekdays":
+			err = unpopulate(val, "Weekdays", &w.Weekdays)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", w, err)
 		}
 	}
 	return nil

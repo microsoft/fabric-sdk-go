@@ -14,6 +14,15 @@ type ConnectionStringResponse struct {
 	ConnectionString *string
 }
 
+// CreateRestorePointRequest - Create restore point request payload.
+type CreateRestorePointRequest struct {
+	// The restore point description. Maximum length is 512 characters.
+	Description *string
+
+	// The restore point name. Maximum length is 128 characters.
+	DisplayName *string
+}
+
 // CreateWarehouseRequest - Create warehouse request payload.
 type CreateWarehouseRequest struct {
 	// REQUIRED; The warehouse display name. The display name must follow naming rules according to item type.
@@ -44,6 +53,54 @@ type ItemTag struct {
 	ID *string
 }
 
+// Principal - Represents an identity or a Microsoft Entra group.
+type Principal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// Group specific details. Applicable when the principal type is Group.
+	GroupDetails *PrincipalGroupDetails
+
+	// Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
+	ServicePrincipalProfileDetails *PrincipalServicePrincipalProfileDetails
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+
+	// READ-ONLY; Service principal specific details. Applicable when the principal type is ServicePrincipal.
+	ServicePrincipalDetails *PrincipalServicePrincipalDetails
+
+	// READ-ONLY; User principal specific details. Applicable when the principal type is User.
+	UserDetails *PrincipalUserDetails
+}
+
+// PrincipalGroupDetails - Group specific details. Applicable when the principal type is Group.
+type PrincipalGroupDetails struct {
+	// The type of the group. Additional group types may be added over time.
+	GroupType *GroupType
+}
+
+// PrincipalServicePrincipalDetails - Service principal specific details. Applicable when the principal type is ServicePrincipal.
+type PrincipalServicePrincipalDetails struct {
+	// READ-ONLY; The service principal's Microsoft Entra AppId.
+	AADAppID *string
+}
+
+// PrincipalServicePrincipalProfileDetails - Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
+type PrincipalServicePrincipalProfileDetails struct {
+	// The service principal profile's parent principal.
+	ParentPrincipal *Principal
+}
+
+// PrincipalUserDetails - User principal specific details. Applicable when the principal type is User.
+type PrincipalUserDetails struct {
+	// READ-ONLY; The user principal name.
+	UserPrincipalName *string
+}
+
 // Properties - The warehouse item properties.
 type Properties struct {
 	// REQUIRED; The SQL connection string connected to the workspace containing this warehouse.
@@ -57,6 +114,75 @@ type Properties struct {
 
 	// The collation type of the warehouse.
 	CollationType *CollationType
+}
+
+// RestorePoint - The properties of a restore point.
+type RestorePoint struct {
+	// REQUIRED; The creation metadata of the restore point.
+	CreationDetails *RestorePointEventDetails
+
+	// REQUIRED; The restore point description.
+	Description *string
+
+	// REQUIRED; The restore point name.
+	DisplayName *string
+
+	// READ-ONLY; The creation mode of the restore point. Additional creation mode types may be added over time.
+	CreationMode *CreationModeType
+
+	// READ-ONLY; The restore point ID.
+	ID *string
+}
+
+// RestorePointEventDetails - The restore point event details.
+type RestorePointEventDetails struct {
+	// The principal that initiated the restore point event.
+	EventInitiator *Principal
+
+	// READ-ONLY; The time of the restore point event in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	EventDateTime *time.Time
+}
+
+// RestorePoints - A list of restore points.
+type RestorePoints struct {
+	// READ-ONLY; A list of restore points.
+	Value []RestorePoint
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
+// SQLAuditSettings - The current state of audit settings for an item.
+type SQLAuditSettings struct {
+	// REQUIRED; Audit actions and groups.
+	AuditActionsAndGroups []string
+
+	// REQUIRED; Retention days. 0 indicates indefinite retention period.
+	RetentionDays *int32
+
+	// REQUIRED; Audit settings state type.
+	State *AuditSettingsState
+}
+
+// SQLAuditSettingsUpdate - Audit settings update request.
+type SQLAuditSettingsUpdate struct {
+	// Retention days.
+	RetentionDays *int32
+
+	// Audit settings state type.
+	State *AuditSettingsState
+}
+
+// UpdateRestorePointRequest - Update restore point request payload.
+type UpdateRestorePointRequest struct {
+	// The restore point description. Maximum length is 512 characters.
+	Description *string
+
+	// The restore point name. Maximum length is 128 characters.
+	DisplayName *string
 }
 
 // UpdateWarehouseRequest - Update warehouse request.

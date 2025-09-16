@@ -199,6 +199,9 @@ type CreateTagRequest struct {
 type CreateTagsRequest struct {
 	// REQUIRED; An array of createTagRequest
 	CreateTagsRequest []CreateTagRequest
+
+	// Represents a tag scope
+	Scope TagScopeClassification
 }
 
 // CreateTagsResponse - A response wrapper for a list of created tags.
@@ -207,22 +210,47 @@ type CreateTagsResponse struct {
 	Tags []Tag
 }
 
-// Domain - Represents a domain or subdomain.
 type Domain struct {
-	// REQUIRED; The domain contributors scope.
-	ContributorsScope *ContributorsScopeType
-
 	// REQUIRED; The name of the domain.
 	DisplayName *string
 
 	// REQUIRED; The domain object ID.
 	ID *string
 
+	// The domain default sensitivity label.
+	DefaultLabelID *string
+
 	// The description of the domain.
 	Description *string
 
 	// The domain parent object ID.
 	ParentDomainID *string
+}
+
+type DomainPreview struct {
+	// REQUIRED; The name of the domain.
+	DisplayName *string
+
+	// REQUIRED; The domain object ID.
+	ID *string
+
+	// The domain contributors scope.
+	ContributorsScope *ContributorsScopeType
+
+	// The description of the domain.
+	Description *string
+
+	// The domain parent object ID.
+	ParentDomainID *string
+}
+
+// DomainRoleAssignment - Represents a domain role assignment.
+type DomainRoleAssignment struct {
+	// REQUIRED; The principal.
+	Principal *Principal
+
+	// REQUIRED; The domain role of the principal.
+	Role *DomainRole
 }
 
 // DomainRoleAssignmentRequest - The request payload for assigning domain members for a domain by principal.
@@ -234,6 +262,18 @@ type DomainRoleAssignmentRequest struct {
 	Principals []Principal
 }
 
+// DomainRoleAssignments - A response wrapper for a list of domain role assignments with a continuation token.
+type DomainRoleAssignments struct {
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+
+	// The list of the domain role assignments.
+	Value []DomainRoleAssignment
+}
+
 // DomainRoleUnassignmentRequest - The request payload for unassigning domain members by principal.
 type DomainRoleUnassignmentRequest struct {
 	// REQUIRED; The update request type.
@@ -241,6 +281,22 @@ type DomainRoleUnassignmentRequest struct {
 
 	// The principals that will be unassigned from the domain role.
 	Principals []Principal
+}
+
+// DomainTagScope - Represents domain tag scope.
+type DomainTagScope struct {
+	// REQUIRED; Domain object ID
+	DomainID *string
+
+	// REQUIRED; Denotes tag scope. Additional tag scopes may be added over time.
+	Type *TagScopeType
+}
+
+// GetTagScope implements the TagScopeClassification interface for type DomainTagScope.
+func (d *DomainTagScope) GetTagScope() *TagScope {
+	return &TagScope{
+		Type: d.Type,
+	}
 }
 
 // DomainTenantSetting - Domain tenant setting details.
@@ -324,6 +380,12 @@ type DomainWorkspaces struct {
 type DomainsResponse struct {
 	// The list of domains.
 	Domains []Domain
+}
+
+// DomainsResponsePreview - This is a response wrapper for a list of all domains.
+type DomainsResponsePreview struct {
+	// The list of domains.
+	Domains []DomainPreview
 }
 
 // ExternalDataShare - An external data share object.
@@ -649,6 +711,12 @@ type SetLabelsRequest struct {
 	DelegatedPrincipal *Principal
 }
 
+// SyncRoleAssignmentsToSubdomainsRequest - The request payload for syncing domain members to subdomains.
+type SyncRoleAssignmentsToSubdomainsRequest struct {
+	// REQUIRED; Specifies the role of members to be synchronized with subdomains.
+	Role *DomainRole
+}
+
 // Tag - Represents a tag.
 type Tag struct {
 	// REQUIRED; The name of the tag.
@@ -656,6 +724,9 @@ type Tag struct {
 
 	// REQUIRED; The tag object ID.
 	ID *string
+
+	// REQUIRED; The scope of the tag.
+	Scope TagScopeClassification
 }
 
 // TagInfo - Represents a tag.
@@ -665,7 +736,19 @@ type TagInfo struct {
 
 	// REQUIRED; The tag object ID.
 	ID *string
+
+	// REQUIRED; Represents a tag scope
+	Scope TagScopeClassification
 }
+
+// TagScope - Represents a tag scope
+type TagScope struct {
+	// REQUIRED; Denotes tag scope. Additional tag scopes may be added over time.
+	Type *TagScopeType
+}
+
+// GetTagScope implements the TagScopeClassification interface for type TagScope.
+func (t *TagScope) GetTagScope() *TagScope { return t }
 
 // TagsInfo - A response wrapper for a list of tags.
 type TagsInfo struct {
@@ -752,6 +835,19 @@ type TenantSettings struct {
 	Value []TenantSetting
 }
 
+// TenantTagScope - Represents tenant tag scope.
+type TenantTagScope struct {
+	// REQUIRED; Denotes tag scope. Additional tag scopes may be added over time.
+	Type *TagScopeType
+}
+
+// GetTagScope implements the TagScopeClassification interface for type TenantTagScope.
+func (t *TenantTagScope) GetTagScope() *TagScope {
+	return &TagScope{
+		Type: t.Type,
+	}
+}
+
 // UnassignDomainWorkspacesByIDsRequest - The request payload for unassigning workspaces from a domain by workspace ID.
 type UnassignDomainWorkspacesByIDsRequest struct {
 	// The workspace IDs that will be unassigned from that domain.
@@ -780,8 +876,19 @@ type UpdateCapacityTenantSettingOverrideResponse struct {
 	Overrides []CapacityTenantSetting
 }
 
-// UpdateDomainRequest - The request payload for updating a domain.
 type UpdateDomainRequest struct {
+	// The domain default sensitivity label.
+	// To remove the defaultLabelId from a domain, set its value to an empty UUID in your request: "00000000-0000-0000-0000-000000000000".
+	DefaultLabelID *string
+
+	// The domain description. The description cannot contain more than 256 characters.
+	Description *string
+
+	// The domain display name. The display name cannot contain more than 40 characters.
+	DisplayName *string
+}
+
+type UpdateDomainRequestPreview struct {
 	// The domain contributors scope.
 	ContributorsScope *ContributorsScopeType
 
@@ -847,6 +954,9 @@ type Workspace struct {
 
 	// READ-ONLY; The capacity ID of the workspace.
 	CapacityID *string
+
+	// READ-ONLY; The domain ID of the workspace.
+	DomainID *string
 }
 
 // WorkspaceAccessDetail - Workspace permission details.

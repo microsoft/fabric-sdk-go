@@ -190,6 +190,24 @@ func PossibleItemTypeValues() []ItemType {
 	}
 }
 
+// OccurrenceType - An enumerator that lists the day for triggering jobs. Additional types may be added over time.
+type OccurrenceType string
+
+const (
+	// OccurrenceTypeDayOfMonth - A date.
+	OccurrenceTypeDayOfMonth OccurrenceType = "DayOfMonth"
+	// OccurrenceTypeOrdinalWeekday - A day.
+	OccurrenceTypeOrdinalWeekday OccurrenceType = "OrdinalWeekday"
+)
+
+// PossibleOccurrenceTypeValues returns the possible values for the OccurrenceType const type.
+func PossibleOccurrenceTypeValues() []OccurrenceType {
+	return []OccurrenceType{
+		OccurrenceTypeDayOfMonth,
+		OccurrenceTypeOrdinalWeekday,
+	}
+}
+
 // PayloadType - The type of the definition part payload. Additional payload types may be added over time.
 type PayloadType string
 
@@ -209,6 +227,8 @@ func PossiblePayloadTypeValues() []PayloadType {
 type PrincipalType string
 
 const (
+	// PrincipalTypeEntireTenant - Principal represents all tenant users.
+	PrincipalTypeEntireTenant PrincipalType = "EntireTenant"
 	// PrincipalTypeGroup - Principal is a security group.
 	PrincipalTypeGroup PrincipalType = "Group"
 	// PrincipalTypeServicePrincipal - Principal is a Microsoft Entra service principal.
@@ -222,6 +242,7 @@ const (
 // PossiblePrincipalTypeValues returns the possible values for the PrincipalType const type.
 func PossiblePrincipalTypeValues() []PrincipalType {
 	return []PrincipalType{
+		PrincipalTypeEntireTenant,
 		PrincipalTypeGroup,
 		PrincipalTypeServicePrincipal,
 		PrincipalTypeServicePrincipalProfile,
@@ -229,15 +250,17 @@ func PossiblePrincipalTypeValues() []PrincipalType {
 	}
 }
 
-// ScheduleType - A string represents the type of the plan. Additional planType types may be added over time.
+// ScheduleType - The type of schedule configuration. Additional types may be added over time.
 type ScheduleType string
 
 const (
-	// ScheduleTypeCron - A type of schedule triggers jobs periodically.
+	// ScheduleTypeCron - Triggers a job periodically.
 	ScheduleTypeCron ScheduleType = "Cron"
-	// ScheduleTypeDaily - A type of schedule triggers jobs daily.
+	// ScheduleTypeDaily - Triggers a job daily.
 	ScheduleTypeDaily ScheduleType = "Daily"
-	// ScheduleTypeWeekly - A type of schedule triggers jobs by the week.
+	// ScheduleTypeMonthly - Triggers a job monthly.
+	ScheduleTypeMonthly ScheduleType = "Monthly"
+	// ScheduleTypeWeekly - Triggers a job weekly.
 	ScheduleTypeWeekly ScheduleType = "Weekly"
 )
 
@@ -246,6 +269,7 @@ func PossibleScheduleTypeValues() []ScheduleType {
 	return []ScheduleType{
 		ScheduleTypeCron,
 		ScheduleTypeDaily,
+		ScheduleTypeMonthly,
 		ScheduleTypeWeekly,
 	}
 }
@@ -262,5 +286,32 @@ const (
 func PossibleTypeValues() []Type {
 	return []Type{
 		TypeAutomatic,
+	}
+}
+
+// WeekIndex - The week of the month.
+type WeekIndex string
+
+const (
+	// WeekIndexFifth - Fifth.
+	WeekIndexFifth WeekIndex = "Fifth"
+	// WeekIndexFirst - First.
+	WeekIndexFirst WeekIndex = "First"
+	// WeekIndexFourth - Fourth.
+	WeekIndexFourth WeekIndex = "Fourth"
+	// WeekIndexSecond - Second.
+	WeekIndexSecond WeekIndex = "Second"
+	// WeekIndexThird - Third.
+	WeekIndexThird WeekIndex = "Third"
+)
+
+// PossibleWeekIndexValues returns the possible values for the WeekIndex const type.
+func PossibleWeekIndexValues() []WeekIndex {
+	return []WeekIndex{
+		WeekIndexFifth,
+		WeekIndexFirst,
+		WeekIndexFourth,
+		WeekIndexSecond,
+		WeekIndexThird,
 	}
 }

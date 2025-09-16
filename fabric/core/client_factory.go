@@ -71,6 +71,14 @@ func (c *ClientFactory) NewDeploymentPipelinesClient() *DeploymentPipelinesClien
 	}
 }
 
+// NewDomainsClient creates a new instance of DomainsClient.
+func (c *ClientFactory) NewDomainsClient() *DomainsClient {
+	return &DomainsClient{
+		internal: c.internal.WithClientName("core.DomainsClient"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewExternalDataSharesProviderClient creates a new instance of ExternalDataSharesProviderClient.
 func (c *ClientFactory) NewExternalDataSharesProviderClient() *ExternalDataSharesProviderClient {
 	return &ExternalDataSharesProviderClient{

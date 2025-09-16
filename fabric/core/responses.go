@@ -174,6 +174,18 @@ type DeploymentPipelinesClientUpdateDeploymentPipelineStageResponse struct {
 	DeploymentPipelineStage
 }
 
+// DomainsClientGetDomainResponse contains the response from method DomainsClient.GetDomain.
+type DomainsClientGetDomainResponse struct {
+	// Represents a domain.
+	Domain
+}
+
+// DomainsClientListDomainsResponse contains the response from method DomainsClient.NewListDomainsPager.
+type DomainsClientListDomainsResponse struct {
+	// A response wrapper for a list of domains.
+	Domains
+}
+
 // ExternalDataSharesProviderClientCreateExternalDataShareResponse contains the response from method ExternalDataSharesProviderClient.CreateExternalDataShare.
 type ExternalDataSharesProviderClientCreateExternalDataShareResponse struct {
 	// An external data share object.
@@ -376,6 +388,11 @@ type GitClientUpdateMyGitCredentialsResponse struct {
 	GitCredentialsConfigurationResponseClassification
 }
 
+// ItemsClientBulkMoveItemsResponse contains the response from method ItemsClient.BulkMoveItems.
+type ItemsClientBulkMoveItemsResponse struct {
+	MovedItems
+}
+
 // ItemsClientCreateItemResponse contains the response from method ItemsClient.BeginCreateItem.
 type ItemsClientCreateItemResponse struct {
 	// An item object.
@@ -407,6 +424,11 @@ type ItemsClientListItemConnectionsResponse struct {
 // ItemsClientListItemsResponse contains the response from method ItemsClient.NewListItemsPager.
 type ItemsClientListItemsResponse struct {
 	Items
+}
+
+// ItemsClientMoveItemResponse contains the response from method ItemsClient.MoveItem.
+type ItemsClientMoveItemResponse struct {
+	MovedItems
 }
 
 // ItemsClientUpdateItemDefinitionResponse contains the response from method ItemsClient.BeginUpdateItemDefinition.
@@ -609,6 +631,11 @@ type WorkspacesClientAssignToCapacityResponse struct {
 	// placeholder for future response values
 }
 
+// WorkspacesClientAssignToDomainResponse contains the response from method WorkspacesClient.AssignToDomain.
+type WorkspacesClientAssignToDomainResponse struct {
+	// placeholder for future response values
+}
+
 // WorkspacesClientCreateWorkspaceResponse contains the response from method WorkspacesClient.CreateWorkspace.
 type WorkspacesClientCreateWorkspaceResponse struct {
 	// A workspace object.
@@ -678,6 +705,11 @@ type WorkspacesClientSetNetworkCommunicationPolicyResponse struct {
 
 // WorkspacesClientUnassignFromCapacityResponse contains the response from method WorkspacesClient.UnassignFromCapacity.
 type WorkspacesClientUnassignFromCapacityResponse struct {
+	// placeholder for future response values
+}
+
+// WorkspacesClientUnassignFromDomainResponse contains the response from method WorkspacesClient.UnassignFromDomain.
+type WorkspacesClientUnassignFromDomainResponse struct {
 	// placeholder for future response values
 }
 

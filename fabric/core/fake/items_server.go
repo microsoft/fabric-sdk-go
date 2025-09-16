@@ -26,6 +26,10 @@ import (
 
 // ItemsServer is a fake server for instances of the core.ItemsClient type.
 type ItemsServer struct {
+	// BulkMoveItems is the fake for method ItemsClient.BulkMoveItems
+	// HTTP status codes to indicate success: http.StatusOK
+	BulkMoveItems func(ctx context.Context, workspaceID string, bulkMoveItemsRequest core.BulkMoveItemsRequest, options *core.ItemsClientBulkMoveItemsOptions) (resp azfake.Responder[core.ItemsClientBulkMoveItemsResponse], errResp azfake.ErrorResponder)
+
 	// BeginCreateItem is the fake for method ItemsClient.BeginCreateItem
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated, http.StatusAccepted
 	BeginCreateItem func(ctx context.Context, workspaceID string, createItemRequest core.CreateItemRequest, options *core.ItemsClientBeginCreateItemOptions) (resp azfake.PollerResponder[core.ItemsClientCreateItemResponse], errResp azfake.ErrorResponder)
@@ -49,6 +53,10 @@ type ItemsServer struct {
 	// NewListItemsPager is the fake for method ItemsClient.NewListItemsPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListItemsPager func(workspaceID string, options *core.ItemsClientListItemsOptions) (resp azfake.PagerResponder[core.ItemsClientListItemsResponse])
+
+	// MoveItem is the fake for method ItemsClient.MoveItem
+	// HTTP status codes to indicate success: http.StatusOK
+	MoveItem func(ctx context.Context, workspaceID string, itemID string, moveItemRequest core.MoveItemRequest, options *core.ItemsClientMoveItemOptions) (resp azfake.Responder[core.ItemsClientMoveItemResponse], errResp azfake.ErrorResponder)
 
 	// UpdateItem is the fake for method ItemsClient.UpdateItem
 	// HTTP status codes to indicate success: http.StatusOK
@@ -109,6 +117,8 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 		}
 		if !intercepted {
 			switch method {
+			case "ItemsClient.BulkMoveItems":
+				res.resp, res.err = i.dispatchBulkMoveItems(req)
 			case "ItemsClient.BeginCreateItem":
 				res.resp, res.err = i.dispatchBeginCreateItem(req)
 			case "ItemsClient.DeleteItem":
@@ -121,6 +131,8 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 				res.resp, res.err = i.dispatchNewListItemConnectionsPager(req)
 			case "ItemsClient.NewListItemsPager":
 				res.resp, res.err = i.dispatchNewListItemsPager(req)
+			case "ItemsClient.MoveItem":
+				res.resp, res.err = i.dispatchMoveItem(req)
 			case "ItemsClient.UpdateItem":
 				res.resp, res.err = i.dispatchUpdateItem(req)
 			case "ItemsClient.BeginUpdateItemDefinition":
@@ -142,6 +154,39 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 	case res := <-resultChan:
 		return res.resp, res.err
 	}
+}
+
+func (i *ItemsServerTransport) dispatchBulkMoveItems(req *http.Request) (*http.Response, error) {
+	if i.srv.BulkMoveItems == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BulkMoveItems not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/items/bulkMove`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 1 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.BulkMoveItemsRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := i.srv.BulkMoveItems(req.Context(), workspaceIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).MovedItems, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 func (i *ItemsServerTransport) dispatchBeginCreateItem(req *http.Request) (*http.Response, error) {
@@ -429,6 +474,43 @@ func (i *ItemsServerTransport) dispatchNewListItemsPager(req *http.Request) (*ht
 	}
 	if !server.PagerResponderMore(newListItemsPager) {
 		i.newListItemsPager.remove(req)
+	}
+	return resp, nil
+}
+
+func (i *ItemsServerTransport) dispatchMoveItem(req *http.Request) (*http.Response, error) {
+	if i.srv.MoveItem == nil {
+		return nil, &nonRetriableError{errors.New("fake for method MoveItem not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/items/(?P<itemId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/move`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.MoveItemRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	itemIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("itemId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := i.srv.MoveItem(req.Context(), workspaceIDParam, itemIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).MovedItems, req)
+	if err != nil {
+		return nil, err
 	}
 	return resp, nil
 }
