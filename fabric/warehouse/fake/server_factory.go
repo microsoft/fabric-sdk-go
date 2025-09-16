@@ -18,15 +18,19 @@ import (
 
 // ServerFactory is a fake server for instances of the warehouse.ClientFactory type.
 type ServerFactory struct {
-	ItemsServer ItemsServer
+	Server              Server
+	ItemsServer         ItemsServer
+	RestorePointsServer RestorePointsServer
 }
 
 // ServerFactoryTransport connects instances of warehouse.ClientFactory to instances of ServerFactory.
 // Don't use this type directly, use NewServerFactoryTransport instead.
 type ServerFactoryTransport struct {
-	srv           *ServerFactory
-	trMu          sync.Mutex
-	trItemsServer *ItemsServerTransport
+	srv                   *ServerFactory
+	trMu                  sync.Mutex
+	trServer              *ServerTransport
+	trItemsServer         *ItemsServerTransport
+	trRestorePointsServer *RestorePointsServerTransport
 }
 
 // NewServerFactoryTransport creates a new instance of ServerFactoryTransport with the provided implementation.
@@ -52,9 +56,17 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	var err error
 
 	switch client {
+	case "Client":
+		initServer(s, &s.trServer, func() *ServerTransport { return NewServerTransport(&s.srv.Server) })
+		resp, err = s.trServer.Do(req)
 	case "ItemsClient":
 		initServer(s, &s.trItemsServer, func() *ItemsServerTransport { return NewItemsServerTransport(&s.srv.ItemsServer) })
 		resp, err = s.trItemsServer.Do(req)
+	case "RestorePointsClient":
+		initServer(s, &s.trRestorePointsServer, func() *RestorePointsServerTransport {
+			return NewRestorePointsServerTransport(&s.srv.RestorePointsServer)
+		})
+		resp, err = s.trRestorePointsServer.Do(req)
 	default:
 		err = fmt.Errorf("unhandled client %s", client)
 	}

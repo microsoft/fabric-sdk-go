@@ -30,6 +30,68 @@ type ItemsClient struct {
 	endpoint string
 }
 
+// BindSemanticModelConnection - This API can also be used to unbind data source references.
+// PERMISSIONS The caller must be the owner of the semantic model.
+// LIMITATIONS This API does not support bulk operations. To bind multiple data source references of a semantic model, the
+// user must submit multiple bindConnection requests.
+// REQUIRED DELEGATED SCOPES SemanticModel.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - semanticModelID - The semantic model ID.
+//   - bindSemanticModelConnectionRequest - Bind semantic model connection request payload.
+//   - options - ItemsClientBindSemanticModelConnectionOptions contains the optional parameters for the ItemsClient.BindSemanticModelConnection
+//     method.
+func (client *ItemsClient) BindSemanticModelConnection(ctx context.Context, workspaceID string, semanticModelID string, bindSemanticModelConnectionRequest BindSemanticModelConnectionRequest, options *ItemsClientBindSemanticModelConnectionOptions) (ItemsClientBindSemanticModelConnectionResponse, error) {
+	var err error
+	const operationName = "semanticmodel.ItemsClient.BindSemanticModelConnection"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.bindSemanticModelConnectionCreateRequest(ctx, workspaceID, semanticModelID, bindSemanticModelConnectionRequest, options)
+	if err != nil {
+		return ItemsClientBindSemanticModelConnectionResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return ItemsClientBindSemanticModelConnectionResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return ItemsClientBindSemanticModelConnectionResponse{}, err
+	}
+	return ItemsClientBindSemanticModelConnectionResponse{}, nil
+}
+
+// bindSemanticModelConnectionCreateRequest creates the BindSemanticModelConnection request.
+func (client *ItemsClient) bindSemanticModelConnectionCreateRequest(ctx context.Context, workspaceID string, semanticModelID string, bindSemanticModelConnectionRequest BindSemanticModelConnectionRequest, _ *ItemsClientBindSemanticModelConnectionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/semanticModels/{semanticModelId}/bindConnection"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if semanticModelID == "" {
+		return nil, errors.New("parameter semanticModelID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{semanticModelId}", url.PathEscape(semanticModelID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, bindSemanticModelConnectionRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // BeginCreateSemanticModel - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // This API requires a definition [/rest/api/fabric/articles/item-management/definitions/semantic-model-definition].
 // PERMISSIONS The caller must have a contributor workspace role.

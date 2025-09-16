@@ -88,17 +88,17 @@ func PossibleDelegatedFromValues() []DelegatedFrom {
 type DomainRole string
 
 const (
-	// DomainRoleAdmins - Domain admins request type.
-	DomainRoleAdmins DomainRole = "Admins"
-	// DomainRoleContributors - Domain contributors request type.
-	DomainRoleContributors DomainRole = "Contributors"
+	// DomainRoleAdmin - Domain admin.
+	DomainRoleAdmin DomainRole = "Admin"
+	// DomainRoleContributor - Domain contributor.
+	DomainRoleContributor DomainRole = "Contributor"
 )
 
 // PossibleDomainRoleValues returns the possible values for the DomainRole const type.
 func PossibleDomainRoleValues() []DomainRole {
 	return []DomainRole{
-		DomainRoleAdmins,
-		DomainRoleContributors,
+		DomainRoleAdmin,
+		DomainRoleContributor,
 	}
 }
 
@@ -323,6 +323,8 @@ func PossibleItemTypeValues() []ItemType {
 type PrincipalType string
 
 const (
+	// PrincipalTypeEntireTenant - Principal represents all tenant users.
+	PrincipalTypeEntireTenant PrincipalType = "EntireTenant"
 	// PrincipalTypeGroup - Principal is a security group.
 	PrincipalTypeGroup PrincipalType = "Group"
 	// PrincipalTypeServicePrincipal - Principal is a Microsoft Entra service principal.
@@ -336,6 +338,7 @@ const (
 // PossiblePrincipalTypeValues returns the possible values for the PrincipalType const type.
 func PossiblePrincipalTypeValues() []PrincipalType {
 	return []PrincipalType{
+		PrincipalTypeEntireTenant,
 		PrincipalTypeGroup,
 		PrincipalTypeServicePrincipal,
 		PrincipalTypeServicePrincipalProfile,
@@ -405,6 +408,24 @@ func PossibleStatusValues() []Status {
 		StatusInsufficientUsageRights,
 		StatusNotFound,
 		StatusSucceeded,
+	}
+}
+
+// TagScopeType - Denotes tag scope. Additional tag scopes may be added over time.
+type TagScopeType string
+
+const (
+	// TagScopeTypeDomain - Tag is a domain level tag.
+	TagScopeTypeDomain TagScopeType = "Domain"
+	// TagScopeTypeTenant - Tag is a tenant level tag.
+	TagScopeTypeTenant TagScopeType = "Tenant"
+)
+
+// PossibleTagScopeTypeValues returns the possible values for the TagScopeType const type.
+func PossibleTagScopeTypeValues() []TagScopeType {
+	return []TagScopeType{
+		TagScopeTypeDomain,
+		TagScopeTypeTenant,
 	}
 }
 

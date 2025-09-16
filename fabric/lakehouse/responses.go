@@ -6,6 +6,20 @@
 
 package lakehouse
 
+// BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleResponse contains the response from method BackgroundJobsClient.CreateRefreshMaterializedLakeViewsSchedule.
+type BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleResponse struct {
+	// Lakehouse refresh materialized lake views schedule.
+	RefreshMaterializedLakeViewsSchedule
+
+	// Location contains the information returned from the Location header response.
+	Location *string
+}
+
+// BackgroundJobsClientDeleteRefreshMaterializedLakeViewsScheduleResponse contains the response from method BackgroundJobsClient.DeleteRefreshMaterializedLakeViewsSchedule.
+type BackgroundJobsClientDeleteRefreshMaterializedLakeViewsScheduleResponse struct {
+	// placeholder for future response values
+}
+
 // BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse contains the response from method BackgroundJobsClient.RunOnDemandRefreshMaterializedLakeViews.
 type BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse struct {
 	// Location contains the information returned from the Location header response.
@@ -22,6 +36,12 @@ type BackgroundJobsClientRunOnDemandTableMaintenanceResponse struct {
 
 	// RetryAfter contains the information returned from the Retry-After header response.
 	RetryAfter *int32
+}
+
+// BackgroundJobsClientUpdateRefreshMaterializedLakeViewsScheduleResponse contains the response from method BackgroundJobsClient.UpdateRefreshMaterializedLakeViewsSchedule.
+type BackgroundJobsClientUpdateRefreshMaterializedLakeViewsScheduleResponse struct {
+	// Lakehouse refresh materialized lake views schedule.
+	RefreshMaterializedLakeViewsSchedule
 }
 
 // ItemsClientCreateLakehouseResponse contains the response from method ItemsClient.BeginCreateLakehouse.

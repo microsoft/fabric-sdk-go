@@ -6,6 +6,21 @@
 
 package sqlendpoint
 
+// ClientGetSQLAuditSettingsOptions contains the optional parameters for the Client.GetSQLAuditSettings method.
+type ClientGetSQLAuditSettingsOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ClientSetAuditActionsAndGroupsOptions contains the optional parameters for the Client.SetAuditActionsAndGroups method.
+type ClientSetAuditActionsAndGroupsOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ClientUpdateSQLAuditSettingsOptions contains the optional parameters for the Client.UpdateSQLAuditSettings method.
+type ClientUpdateSQLAuditSettingsOptions struct {
+	// placeholder for future optional parameters
+}
+
 // ItemsClientBeginRefreshSQLEndpointMetadataOptions contains the optional parameters for the ItemsClient.BeginRefreshSQLEndpointMetadata
 // method.
 type ItemsClientBeginRefreshSQLEndpointMetadataOptions struct {

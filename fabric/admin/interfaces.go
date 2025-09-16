@@ -14,3 +14,12 @@ type GitProviderDetailsClassification interface {
 	// GetGitProviderDetails returns the GitProviderDetails content of the underlying type.
 	GetGitProviderDetails() *GitProviderDetails
 }
+
+// TagScopeClassification provides polymorphic access to related types.
+// Call the interface's GetTagScope() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *DomainTagScope, *TagScope, *TenantTagScope
+type TagScopeClassification interface {
+	// GetTagScope returns the TagScope content of the underlying type.
+	GetTagScope() *TagScope
+}

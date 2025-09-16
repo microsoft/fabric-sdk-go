@@ -15,9 +15,6 @@ type ItemsClientBeginCreateReportOptions struct {
 // ItemsClientBeginGetReportDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetReportDefinition
 // method.
 type ItemsClientBeginGetReportDefinitionOptions struct {
-	// The format of the report public definition.
-	Format *string
-
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }

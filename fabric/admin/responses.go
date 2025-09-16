@@ -21,9 +21,13 @@ type DomainsClientAssignDomainWorkspacesByPrincipalsResponse struct {
 	// placeholder for future response values
 }
 
+// DomainsClientCreateDomainPreviewResponse contains the response from method DomainsClient.CreateDomainPreview.
+type DomainsClientCreateDomainPreviewResponse struct {
+	DomainPreview
+}
+
 // DomainsClientCreateDomainResponse contains the response from method DomainsClient.CreateDomain.
 type DomainsClientCreateDomainResponse struct {
-	// Represents a domain or subdomain.
 	Domain
 }
 
@@ -32,9 +36,13 @@ type DomainsClientDeleteDomainResponse struct {
 	// placeholder for future response values
 }
 
+// DomainsClientGetDomainPreviewResponse contains the response from method DomainsClient.GetDomainPreview.
+type DomainsClientGetDomainPreviewResponse struct {
+	DomainPreview
+}
+
 // DomainsClientGetDomainResponse contains the response from method DomainsClient.GetDomain.
 type DomainsClientGetDomainResponse struct {
-	// Represents a domain or subdomain.
 	Domain
 }
 
@@ -44,10 +52,22 @@ type DomainsClientListDomainWorkspacesResponse struct {
 	DomainWorkspaces
 }
 
+// DomainsClientListDomainsPreviewResponse contains the response from method DomainsClient.ListDomainsPreview.
+type DomainsClientListDomainsPreviewResponse struct {
+	// This is a response wrapper for a list of all domains.
+	DomainsResponsePreview
+}
+
 // DomainsClientListDomainsResponse contains the response from method DomainsClient.ListDomains.
 type DomainsClientListDomainsResponse struct {
 	// This is a response wrapper for a list of all domains.
 	DomainsResponse
+}
+
+// DomainsClientListRoleAssignmentsResponse contains the response from method DomainsClient.NewListRoleAssignmentsPager.
+type DomainsClientListRoleAssignmentsResponse struct {
+	// A response wrapper for a list of domain role assignments with a continuation token.
+	DomainRoleAssignments
 }
 
 // DomainsClientRoleAssignmentsBulkAssignResponse contains the response from method DomainsClient.RoleAssignmentsBulkAssign.
@@ -57,6 +77,11 @@ type DomainsClientRoleAssignmentsBulkAssignResponse struct {
 
 // DomainsClientRoleAssignmentsBulkUnassignResponse contains the response from method DomainsClient.RoleAssignmentsBulkUnassign.
 type DomainsClientRoleAssignmentsBulkUnassignResponse struct {
+	// placeholder for future response values
+}
+
+// DomainsClientSyncRoleAssignmentsToSubdomainsResponse contains the response from method DomainsClient.SyncRoleAssignmentsToSubdomains.
+type DomainsClientSyncRoleAssignmentsToSubdomainsResponse struct {
 	// placeholder for future response values
 }
 
@@ -70,9 +95,13 @@ type DomainsClientUnassignDomainWorkspacesByIDsResponse struct {
 	// placeholder for future response values
 }
 
+// DomainsClientUpdateDomainPreviewResponse contains the response from method DomainsClient.UpdateDomainPreview.
+type DomainsClientUpdateDomainPreviewResponse struct {
+	DomainPreview
+}
+
 // DomainsClientUpdateDomainResponse contains the response from method DomainsClient.UpdateDomain.
 type DomainsClientUpdateDomainResponse struct {
-	// Represents a domain or subdomain.
 	Domain
 }
 

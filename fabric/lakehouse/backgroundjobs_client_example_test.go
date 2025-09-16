@@ -10,6 +10,8 @@ import (
 	"context"
 	"log"
 
+	"time"
+
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 
@@ -98,6 +100,32 @@ func ExampleBackgroundJobsClient_RunOnDemandTableMaintenance_runTableMaintenance
 }
 
 // Generated from example definition
+func ExampleBackgroundJobsClient_CreateRefreshMaterializedLakeViewsSchedule() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := lakehouse.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewBackgroundJobsClient().CreateRefreshMaterializedLakeViewsSchedule(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "dddddddd-9999-0000-1111-eeeeeeeeeeee", lakehouse.CreateLakehouseRefreshMaterializedLakeViewsScheduleRequest{
+		Configuration: &lakehouse.CronScheduleConfig{
+			Type:            to.Ptr(lakehouse.ScheduleTypeCron),
+			EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-04-30T23:59:00.000Z"); return t }()),
+			LocalTimeZoneID: to.Ptr("Central Standard Time"),
+			StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-04-28T00:00:00.000Z"); return t }()),
+			Interval:        to.Ptr[int32](10),
+		},
+		Enabled: to.Ptr(true),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
 func ExampleBackgroundJobsClient_RunOnDemandRefreshMaterializedLakeViews() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -109,6 +137,68 @@ func ExampleBackgroundJobsClient_RunOnDemandRefreshMaterializedLakeViews() {
 		log.Fatalf("failed to create client: %v", err)
 	}
 	_, err = clientFactory.NewBackgroundJobsClient().RunOnDemandRefreshMaterializedLakeViews(ctx, "4b218778-e7a5-4d73-8187-f10824047715", "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7", "RefreshMaterializedLakeViews", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleBackgroundJobsClient_UpdateRefreshMaterializedLakeViewsSchedule() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := lakehouse.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewBackgroundJobsClient().UpdateRefreshMaterializedLakeViewsSchedule(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "dddddddd-9999-0000-1111-eeeeeeeeeeee", "bbbbbbbb-1111-2222-3333-cccccccccccc", lakehouse.UpdateLakehouseRefreshMaterializedLakeViewsScheduleRequest{
+		Configuration: &lakehouse.CronScheduleConfig{
+			Type:            to.Ptr(lakehouse.ScheduleTypeCron),
+			EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-05-31T23:59:00.000Z"); return t }()),
+			LocalTimeZoneID: to.Ptr("Pacific Standard Time"),
+			StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-05-01T00:00:00.000Z"); return t }()),
+			Interval:        to.Ptr[int32](15),
+		},
+		Enabled: to.Ptr(false),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.RefreshMaterializedLakeViewsSchedule = lakehouse.RefreshMaterializedLakeViewsSchedule{
+	// 	Configuration: &lakehouse.CronScheduleConfig{
+	// 		Type: to.Ptr(lakehouse.ScheduleTypeCron),
+	// 		EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-05-31T23:59:00.000Z"); return t}()),
+	// 		LocalTimeZoneID: to.Ptr("Pacific Standard Time"),
+	// 		StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-05-01T00:00:00.000Z"); return t}()),
+	// 		Interval: to.Ptr[int32](15),
+	// 	},
+	// 	CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-05-28T05:35:20.536Z"); return t}()),
+	// 	Enabled: to.Ptr(false),
+	// 	ID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+	// 	Owner: &lakehouse.Principal{
+	// 		Type: to.Ptr(lakehouse.PrincipalTypeUser),
+	// 		ID: to.Ptr("33dd33dd-ee44-ff55-aa66-77bb77bb77bb"),
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleBackgroundJobsClient_DeleteRefreshMaterializedLakeViewsSchedule() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := lakehouse.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewBackgroundJobsClient().DeleteRefreshMaterializedLakeViewsSchedule(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "dddddddd-9999-0000-1111-eeeeeeeeeeee", "bbbbbbbb-1111-2222-3333-cccccccccccc", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

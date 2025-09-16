@@ -51,6 +51,7 @@ func ExampleWorkspacesClient_NewListWorkspacesPager_getAListOfWorkspacesExample(
 		// 			Name: to.Ptr("test report"),
 		// 			Type: to.Ptr(admin.WorkspaceTypeWorkspace),
 		// 			CapacityID: to.Ptr("41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e84"),
+		// 			DomainID: to.Ptr("039bd896-b39c-4540-93e3-e9926de135f9"),
 		// 			ID: to.Ptr("41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"),
 		// 			State: to.Ptr(admin.WorkspaceStateActive),
 		// 	}},
@@ -171,6 +172,7 @@ func ExampleWorkspacesClient_GetWorkspace() {
 	// 	Name: to.Ptr("test report"),
 	// 	Type: to.Ptr(admin.WorkspaceTypeWorkspace),
 	// 	CapacityID: to.Ptr("41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e84"),
+	// 	DomainID: to.Ptr("8badadb6-9945-4e07-8134-00e0defec00b"),
 	// 	ID: to.Ptr("41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"),
 	// 	State: to.Ptr(admin.WorkspaceStateActive),
 	// }

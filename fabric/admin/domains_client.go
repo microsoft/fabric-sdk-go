@@ -30,9 +30,8 @@ type DomainsClient struct {
 	endpoint string
 }
 
-// BeginAssignDomainWorkspacesByCapacities - > [!NOTE] This API is part of a Preview release and is provided for evaluation
-// and development purposes only. It may change based on feedback and is not recommended for production use.
-// Preexisting domain assignments will be overridden unless bulk reassignment is blocked by domain management tenant settings.
+// BeginAssignDomainWorkspacesByCapacities - Preexisting domain assignments will be overridden unless bulk reassignment is
+// blocked by domain management tenant settings.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
@@ -54,9 +53,8 @@ func (client *DomainsClient) BeginAssignDomainWorkspacesByCapacities(ctx context
 	return client.beginAssignDomainWorkspacesByCapacities(ctx, domainID, assignDomainWorkspacesByCapacitiesRequest, options)
 }
 
-// AssignDomainWorkspacesByCapacities - > [!NOTE] This API is part of a Preview release and is provided for evaluation and
-// development purposes only. It may change based on feedback and is not recommended for production use.
-// Preexisting domain assignments will be overridden unless bulk reassignment is blocked by domain management tenant settings.
+// AssignDomainWorkspacesByCapacities - Preexisting domain assignments will be overridden unless bulk reassignment is blocked
+// by domain management tenant settings.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
@@ -109,9 +107,8 @@ func (client *DomainsClient) assignDomainWorkspacesByCapacitiesCreateRequest(ctx
 	return req, nil
 }
 
-// AssignDomainWorkspacesByIDs - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use.
-// Preexisting domain assignments will be overridden unless bulk reassignment is blocked by domain management tenant settings.
+// AssignDomainWorkspacesByIDs - Preexisting domain assignments will be overridden unless bulk reassignment is blocked by
+// domain management tenant settings.
 // PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 10 requests per one minute per principal.
@@ -167,9 +164,8 @@ func (client *DomainsClient) assignDomainWorkspacesByIDsCreateRequest(ctx contex
 	return req, nil
 }
 
-// BeginAssignDomainWorkspacesByPrincipals - > [!NOTE] This API is part of a Preview release and is provided for evaluation
-// and development purposes only. It may change based on feedback and is not recommended for production use.
-// Preexisting domain assignments will be overridden unless bulk reassignment is blocked by domain management tenant settings.
+// BeginAssignDomainWorkspacesByPrincipals - Preexisting domain assignments will be overridden unless bulk reassignment is
+// blocked by domain management tenant settings.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
@@ -191,9 +187,8 @@ func (client *DomainsClient) BeginAssignDomainWorkspacesByPrincipals(ctx context
 	return client.beginAssignDomainWorkspacesByPrincipals(ctx, domainID, assignDomainWorkspacesByPrincipalsRequest, options)
 }
 
-// AssignDomainWorkspacesByPrincipals - > [!NOTE] This API is part of a Preview release and is provided for evaluation and
-// development purposes only. It may change based on feedback and is not recommended for production use.
-// Preexisting domain assignments will be overridden unless bulk reassignment is blocked by domain management tenant settings.
+// AssignDomainWorkspacesByPrincipals - Preexisting domain assignments will be overridden unless bulk reassignment is blocked
+// by domain management tenant settings.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
@@ -246,8 +241,8 @@ func (client *DomainsClient) assignDomainWorkspacesByPrincipalsCreateRequest(ctx
 	return req, nil
 }
 
-// CreateDomain - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
-// only. It may change based on feedback and is not recommended for production use.
+// CreateDomain - > [!NOTE] This API is a release version of a preview version due to be deprecated on March 31, 2026. When
+// calling this API - callers must set the query parameter preview to the value false
 // PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
@@ -260,15 +255,16 @@ func (client *DomainsClient) assignDomainWorkspacesByPrincipalsCreateRequest(ctx
 // If the operation fails it returns an *core.ResponseError type.
 //
 // Generated from API version v1
+//   - preview - This parameter specifies which version of the API to use. Set to false to use the release version.
 //   - createDomainRequest - The request payload for creating the domain.
 //   - options - DomainsClientCreateDomainOptions contains the optional parameters for the DomainsClient.CreateDomain method.
-func (client *DomainsClient) CreateDomain(ctx context.Context, createDomainRequest CreateDomainRequest, options *DomainsClientCreateDomainOptions) (DomainsClientCreateDomainResponse, error) {
+func (client *DomainsClient) CreateDomain(ctx context.Context, preview bool, createDomainRequest CreateDomainRequest, options *DomainsClientCreateDomainOptions) (DomainsClientCreateDomainResponse, error) {
 	var err error
 	const operationName = "admin.DomainsClient.CreateDomain"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.createDomainCreateRequest(ctx, createDomainRequest, options)
+	req, err := client.createDomainCreateRequest(ctx, preview, createDomainRequest, options)
 	if err != nil {
 		return DomainsClientCreateDomainResponse{}, err
 	}
@@ -285,12 +281,15 @@ func (client *DomainsClient) CreateDomain(ctx context.Context, createDomainReque
 }
 
 // createDomainCreateRequest creates the CreateDomain request.
-func (client *DomainsClient) createDomainCreateRequest(ctx context.Context, createDomainRequest CreateDomainRequest, _ *DomainsClientCreateDomainOptions) (*policy.Request, error) {
+func (client *DomainsClient) createDomainCreateRequest(ctx context.Context, preview bool, createDomainRequest CreateDomainRequest, _ *DomainsClientCreateDomainOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/domains"
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("preview", strconv.FormatBool(preview))
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	if err := runtime.MarshalAsJSON(req, createDomainRequest); err != nil {
 		return nil, err
@@ -307,9 +306,86 @@ func (client *DomainsClient) createDomainHandleResponse(resp *http.Response) (Do
 	return result, nil
 }
 
-// DeleteDomain - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
-// only. It may change based on feedback and is not recommended for production use.
+// CreateDomainPreview - > [!NOTE] This preview API will be deprecated on March 31, 2026, and replaced by a stable version,
+// available here [/rest/api/fabric/admin/domains/create-domain]. The new version introduces breaking
+// changes and is not backward compatible. When calling this API, callers must specify true as the value for the query parameter
+// preview.
+// DEPRECATION NOTICE A new query parameter preview has been introduced to facilitate this transition:
+// * The preview query parameter currently defaults to true.
+// * Set the value of the preview query parameter to false to use the Release version of this API.
+// * Starting March 31, 2026, the default value for preview will change to false.
+// It is recommended to migrate your integration to use the Release version as soon as possible by specifying false for the
+// preview query parameter (the default value for the preview query parameter will
+// be set to false on API's deprecation date).
+// The following incompatible changes were introduced in the Release version:
+// * Response property contributorsScope was removed.
 // PERMISSIONS The caller must be a Fabric administrator.
+// REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All.
+// LIMITATIONS Maximum 25 requests per one minute per principal.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - preview - This parameter specifies which version of the API to use. Set to true to use the preview version described on
+//     this page, or to false to use the Release version detailed here
+//     [/rest/api/fabric/admin/domains/create-domain]. Starting March 31, 2026, the default value for preview will change to false.
+//   - createDomainRequest - The request payload for creating the domain.
+//   - options - DomainsClientCreateDomainPreviewOptions contains the optional parameters for the DomainsClient.CreateDomainPreview
+//     method.
+func (client *DomainsClient) CreateDomainPreview(ctx context.Context, preview bool, createDomainRequest CreateDomainRequest, options *DomainsClientCreateDomainPreviewOptions) (DomainsClientCreateDomainPreviewResponse, error) {
+	var err error
+	const operationName = "admin.DomainsClient.CreateDomainPreview"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.createDomainPreviewCreateRequest(ctx, preview, createDomainRequest, options)
+	if err != nil {
+		return DomainsClientCreateDomainPreviewResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return DomainsClientCreateDomainPreviewResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusCreated) {
+		err = core.NewResponseError(httpResp)
+		return DomainsClientCreateDomainPreviewResponse{}, err
+	}
+	resp, err := client.createDomainPreviewHandleResponse(httpResp)
+	return resp, err
+}
+
+// createDomainPreviewCreateRequest creates the CreateDomainPreview request.
+func (client *DomainsClient) createDomainPreviewCreateRequest(ctx context.Context, preview bool, createDomainRequest CreateDomainRequest, _ *DomainsClientCreateDomainPreviewOptions) (*policy.Request, error) {
+	urlPath := "/v1/admin/domains"
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("preview", strconv.FormatBool(preview))
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, createDomainRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// createDomainPreviewHandleResponse handles the CreateDomainPreview response.
+func (client *DomainsClient) createDomainPreviewHandleResponse(resp *http.Response) (DomainsClientCreateDomainPreviewResponse, error) {
+	result := DomainsClientCreateDomainPreviewResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.DomainPreview); err != nil {
+		return DomainsClientCreateDomainPreviewResponse{}, err
+	}
+	return result, nil
+}
+
+// DeleteDomain - PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -359,8 +435,8 @@ func (client *DomainsClient) deleteDomainCreateRequest(ctx context.Context, doma
 	return req, nil
 }
 
-// GetDomain - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only.
-// It may change based on feedback and is not recommended for production use.
+// GetDomain - > [!NOTE] This API is a release version of a preview version due to be deprecated on March 31, 2026. When calling
+// this API - callers must set the query parameter preview to the value false
 // PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
@@ -374,14 +450,15 @@ func (client *DomainsClient) deleteDomainCreateRequest(ctx context.Context, doma
 //
 // Generated from API version v1
 //   - domainID - The domain ID.
+//   - preview - This parameter specifies which version of the API to use. Set to false to use the release version.
 //   - options - DomainsClientGetDomainOptions contains the optional parameters for the DomainsClient.GetDomain method.
-func (client *DomainsClient) GetDomain(ctx context.Context, domainID string, options *DomainsClientGetDomainOptions) (DomainsClientGetDomainResponse, error) {
+func (client *DomainsClient) GetDomain(ctx context.Context, domainID string, preview bool, options *DomainsClientGetDomainOptions) (DomainsClientGetDomainResponse, error) {
 	var err error
 	const operationName = "admin.DomainsClient.GetDomain"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.getDomainCreateRequest(ctx, domainID, options)
+	req, err := client.getDomainCreateRequest(ctx, domainID, preview, options)
 	if err != nil {
 		return DomainsClientGetDomainResponse{}, err
 	}
@@ -398,7 +475,7 @@ func (client *DomainsClient) GetDomain(ctx context.Context, domainID string, opt
 }
 
 // getDomainCreateRequest creates the GetDomain request.
-func (client *DomainsClient) getDomainCreateRequest(ctx context.Context, domainID string, _ *DomainsClientGetDomainOptions) (*policy.Request, error) {
+func (client *DomainsClient) getDomainCreateRequest(ctx context.Context, domainID string, preview bool, _ *DomainsClientGetDomainOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/domains/{domainId}"
 	if domainID == "" {
 		return nil, errors.New("parameter domainID cannot be empty")
@@ -408,6 +485,9 @@ func (client *DomainsClient) getDomainCreateRequest(ctx context.Context, domainI
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("preview", strconv.FormatBool(preview))
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }
@@ -421,9 +501,87 @@ func (client *DomainsClient) getDomainHandleResponse(resp *http.Response) (Domai
 	return result, nil
 }
 
-// NewListDomainWorkspacesPager - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use.
-// This API supports pagination [/rest/api/fabric/articles/pagination].
+// GetDomainPreview - > [!NOTE] This preview API will be deprecated on March 31, 2026, and replaced by a stable version, available
+// here [/rest/api/fabric/admin/domains/get-domain]. The new version introduces breaking
+// changes and is not backward compatible. When calling this API, callers must specify true as the value for the query parameter
+// preview.
+// DEPRECATION NOTICE A new query parameter preview has been introduced to facilitate this transition:
+// * The preview query parameter currently defaults to true.
+// * Set the value of the preview query parameter to false to use the Release version of this API.
+// * Starting March 31, 2026, the default value for preview will change to false.
+// It is recommended to migrate your integration to use the Release version as soon as possible by specifying false for the
+// preview query parameter (the default value for the preview query parameter will
+// be set to false on API's deprecation date).
+// The following incompatible changes were introduced in the Release version:
+// * Response property contributorsScope was removed.
+// PERMISSIONS The caller must be a Fabric administrator.
+// REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All.
+// LIMITATIONS Maximum 25 requests per one minute per principal.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - domainID - The domain ID.
+//   - preview - This parameter specifies which version of the API to use. Set to true to use the preview version described on
+//     this page, or to false to use the Release version detailed here
+//     [/rest/api/fabric/admin/domains/get-domain]. Starting March 31, 2026, the default value for preview will change to false.
+//   - options - DomainsClientGetDomainPreviewOptions contains the optional parameters for the DomainsClient.GetDomainPreview
+//     method.
+func (client *DomainsClient) GetDomainPreview(ctx context.Context, domainID string, preview bool, options *DomainsClientGetDomainPreviewOptions) (DomainsClientGetDomainPreviewResponse, error) {
+	var err error
+	const operationName = "admin.DomainsClient.GetDomainPreview"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getDomainPreviewCreateRequest(ctx, domainID, preview, options)
+	if err != nil {
+		return DomainsClientGetDomainPreviewResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return DomainsClientGetDomainPreviewResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return DomainsClientGetDomainPreviewResponse{}, err
+	}
+	resp, err := client.getDomainPreviewHandleResponse(httpResp)
+	return resp, err
+}
+
+// getDomainPreviewCreateRequest creates the GetDomainPreview request.
+func (client *DomainsClient) getDomainPreviewCreateRequest(ctx context.Context, domainID string, preview bool, _ *DomainsClientGetDomainPreviewOptions) (*policy.Request, error) {
+	urlPath := "/v1/admin/domains/{domainId}"
+	if domainID == "" {
+		return nil, errors.New("parameter domainID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{domainId}", url.PathEscape(domainID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("preview", strconv.FormatBool(preview))
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getDomainPreviewHandleResponse handles the GetDomainPreview response.
+func (client *DomainsClient) getDomainPreviewHandleResponse(resp *http.Response) (DomainsClientGetDomainPreviewResponse, error) {
+	result := DomainsClientGetDomainPreviewResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.DomainPreview); err != nil {
+		return DomainsClientGetDomainPreviewResponse{}, err
+	}
+	return result, nil
+}
+
+// NewListDomainWorkspacesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
@@ -490,8 +648,8 @@ func (client *DomainsClient) listDomainWorkspacesHandleResponse(resp *http.Respo
 	return result, nil
 }
 
-// ListDomains - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only.
-// It may change based on feedback and is not recommended for production use.
+// ListDomains - > [!NOTE] This API is a release version of a preview version due to be deprecated on March 31, 2026. When
+// calling this API - callers must set the query parameter preview to the value false
 // PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
@@ -504,14 +662,15 @@ func (client *DomainsClient) listDomainWorkspacesHandleResponse(resp *http.Respo
 // If the operation fails it returns an *core.ResponseError type.
 //
 // Generated from API version v1
+//   - preview - This parameter specifies which version of the API to use. Set to false to use the release version.
 //   - options - DomainsClientListDomainsOptions contains the optional parameters for the DomainsClient.ListDomains method.
-func (client *DomainsClient) ListDomains(ctx context.Context, options *DomainsClientListDomainsOptions) (DomainsClientListDomainsResponse, error) {
+func (client *DomainsClient) ListDomains(ctx context.Context, preview bool, options *DomainsClientListDomainsOptions) (DomainsClientListDomainsResponse, error) {
 	var err error
 	const operationName = "admin.DomainsClient.ListDomains"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.listDomainsCreateRequest(ctx, options)
+	req, err := client.listDomainsCreateRequest(ctx, preview, options)
 	if err != nil {
 		return DomainsClientListDomainsResponse{}, err
 	}
@@ -528,7 +687,7 @@ func (client *DomainsClient) ListDomains(ctx context.Context, options *DomainsCl
 }
 
 // listDomainsCreateRequest creates the ListDomains request.
-func (client *DomainsClient) listDomainsCreateRequest(ctx context.Context, options *DomainsClientListDomainsOptions) (*policy.Request, error) {
+func (client *DomainsClient) listDomainsCreateRequest(ctx context.Context, preview bool, options *DomainsClientListDomainsOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/domains"
 	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
@@ -538,6 +697,7 @@ func (client *DomainsClient) listDomainsCreateRequest(ctx context.Context, optio
 	if options != nil && options.NonEmptyOnly != nil {
 		reqQP.Set("nonEmptyOnly", strconv.FormatBool(*options.NonEmptyOnly))
 	}
+	reqQP.Set("preview", strconv.FormatBool(preview))
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
@@ -552,9 +712,150 @@ func (client *DomainsClient) listDomainsHandleResponse(resp *http.Response) (Dom
 	return result, nil
 }
 
-// RoleAssignmentsBulkAssign - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use.
+// ListDomainsPreview - > [!NOTE] This preview API will be deprecated on March 31, 2026, and replaced by a stable version,
+// available here [/rest/api/fabric/admin/domains/list-domains]. The new version introduces breaking
+// changes and is not backward compatible. When calling this API, callers must specify true as the value for the query parameter
+// preview.
+// DEPRECATION NOTICE A new query parameter preview has been introduced to facilitate this transition:
+// * The preview query parameter currently defaults to true.
+// * Set the value of the preview query parameter to false to use the Release version of this API.
+// * Starting March 31, 2026, the default value for preview will change to false.
+// It is recommended to migrate your integration to use the Release version as soon as possible by specifying false for the
+// preview query parameter (the default value for the preview query parameter will
+// be set to false on API's deprecation date).
+// The following incompatible changes were introduced in the Release version:
+// * Response property contributorsScope was removed.
 // PERMISSIONS The caller must be a Fabric administrator.
+// REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All.
+// LIMITATIONS Maximum 25 requests per one minute per principal.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - preview - This parameter specifies which version of the API to use. Set to true to use the preview version described on
+//     this page, or to false to use the Release version detailed here
+//     [/rest/api/fabric/admin/domains/list-domains]. Starting March 31, 2026, the default value for preview will change to false.
+//   - options - DomainsClientListDomainsPreviewOptions contains the optional parameters for the DomainsClient.ListDomainsPreview
+//     method.
+func (client *DomainsClient) ListDomainsPreview(ctx context.Context, preview bool, options *DomainsClientListDomainsPreviewOptions) (DomainsClientListDomainsPreviewResponse, error) {
+	var err error
+	const operationName = "admin.DomainsClient.ListDomainsPreview"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.listDomainsPreviewCreateRequest(ctx, preview, options)
+	if err != nil {
+		return DomainsClientListDomainsPreviewResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return DomainsClientListDomainsPreviewResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return DomainsClientListDomainsPreviewResponse{}, err
+	}
+	resp, err := client.listDomainsPreviewHandleResponse(httpResp)
+	return resp, err
+}
+
+// listDomainsPreviewCreateRequest creates the ListDomainsPreview request.
+func (client *DomainsClient) listDomainsPreviewCreateRequest(ctx context.Context, preview bool, options *DomainsClientListDomainsPreviewOptions) (*policy.Request, error) {
+	urlPath := "/v1/admin/domains"
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.NonEmptyOnly != nil {
+		reqQP.Set("nonEmptyOnly", strconv.FormatBool(*options.NonEmptyOnly))
+	}
+	reqQP.Set("preview", strconv.FormatBool(preview))
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// listDomainsPreviewHandleResponse handles the ListDomainsPreview response.
+func (client *DomainsClient) listDomainsPreviewHandleResponse(resp *http.Response) (DomainsClientListDomainsPreviewResponse, error) {
+	result := DomainsClientListDomainsPreviewResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.DomainsResponsePreview); err != nil {
+		return DomainsClientListDomainsPreviewResponse{}, err
+	}
+	return result, nil
+}
+
+// NewListRoleAssignmentsPager - PERMISSIONS The caller must be a Fabric administrator.
+// REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+//
+// Generated from API version v1
+//   - domainID - The domain ID.
+//   - options - DomainsClientListRoleAssignmentsOptions contains the optional parameters for the DomainsClient.NewListRoleAssignmentsPager
+//     method.
+func (client *DomainsClient) NewListRoleAssignmentsPager(domainID string, options *DomainsClientListRoleAssignmentsOptions) *runtime.Pager[DomainsClientListRoleAssignmentsResponse] {
+	return runtime.NewPager(runtime.PagingHandler[DomainsClientListRoleAssignmentsResponse]{
+		More: func(page DomainsClientListRoleAssignmentsResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *DomainsClientListRoleAssignmentsResponse) (DomainsClientListRoleAssignmentsResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "admin.DomainsClient.NewListRoleAssignmentsPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.listRoleAssignmentsCreateRequest(ctx, domainID, options)
+			}, nil)
+			if err != nil {
+				return DomainsClientListRoleAssignmentsResponse{}, err
+			}
+			return client.listRoleAssignmentsHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
+}
+
+// listRoleAssignmentsCreateRequest creates the ListRoleAssignments request.
+func (client *DomainsClient) listRoleAssignmentsCreateRequest(ctx context.Context, domainID string, options *DomainsClientListRoleAssignmentsOptions) (*policy.Request, error) {
+	urlPath := "/v1/admin/domains/{domainId}/roleAssignments"
+	if domainID == "" {
+		return nil, errors.New("parameter domainID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{domainId}", url.PathEscape(domainID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// listRoleAssignmentsHandleResponse handles the ListRoleAssignments response.
+func (client *DomainsClient) listRoleAssignmentsHandleResponse(resp *http.Response) (DomainsClientListRoleAssignmentsResponse, error) {
+	result := DomainsClientListRoleAssignmentsResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.DomainRoleAssignments); err != nil {
+		return DomainsClientListRoleAssignmentsResponse{}, err
+	}
+	return result, nil
+}
+
+// RoleAssignmentsBulkAssign - PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -609,9 +910,7 @@ func (client *DomainsClient) roleAssignmentsBulkAssignCreateRequest(ctx context.
 	return req, nil
 }
 
-// RoleAssignmentsBulkUnassign - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use.
-// PERMISSIONS The caller must be a Fabric administrator.
+// RoleAssignmentsBulkUnassign - PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -666,9 +965,61 @@ func (client *DomainsClient) roleAssignmentsBulkUnassignCreateRequest(ctx contex
 	return req, nil
 }
 
-// UnassignAllDomainWorkspaces - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use.
-// PERMISSIONS The caller must be a Fabric administrator.
+// SyncRoleAssignmentsToSubdomains - PERMISSIONS The caller must be a Fabric administrator.
+// REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - domainID - The domain ID.
+//   - syncRoleAssignmentsToSubdomainsRequest - The request payload for syncing domain members to its subdomains.
+//   - options - DomainsClientSyncRoleAssignmentsToSubdomainsOptions contains the optional parameters for the DomainsClient.SyncRoleAssignmentsToSubdomains
+//     method.
+func (client *DomainsClient) SyncRoleAssignmentsToSubdomains(ctx context.Context, domainID string, syncRoleAssignmentsToSubdomainsRequest SyncRoleAssignmentsToSubdomainsRequest, options *DomainsClientSyncRoleAssignmentsToSubdomainsOptions) (DomainsClientSyncRoleAssignmentsToSubdomainsResponse, error) {
+	var err error
+	const operationName = "admin.DomainsClient.SyncRoleAssignmentsToSubdomains"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.syncRoleAssignmentsToSubdomainsCreateRequest(ctx, domainID, syncRoleAssignmentsToSubdomainsRequest, options)
+	if err != nil {
+		return DomainsClientSyncRoleAssignmentsToSubdomainsResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return DomainsClientSyncRoleAssignmentsToSubdomainsResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return DomainsClientSyncRoleAssignmentsToSubdomainsResponse{}, err
+	}
+	return DomainsClientSyncRoleAssignmentsToSubdomainsResponse{}, nil
+}
+
+// syncRoleAssignmentsToSubdomainsCreateRequest creates the SyncRoleAssignmentsToSubdomains request.
+func (client *DomainsClient) syncRoleAssignmentsToSubdomainsCreateRequest(ctx context.Context, domainID string, syncRoleAssignmentsToSubdomainsRequest SyncRoleAssignmentsToSubdomainsRequest, _ *DomainsClientSyncRoleAssignmentsToSubdomainsOptions) (*policy.Request, error) {
+	urlPath := "/v1/admin/domains/{domainId}/roleAssignments/syncToSubdomains"
+	if domainID == "" {
+		return nil, errors.New("parameter domainID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{domainId}", url.PathEscape(domainID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, syncRoleAssignmentsToSubdomainsRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// UnassignAllDomainWorkspaces - PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 10 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -719,9 +1070,7 @@ func (client *DomainsClient) unassignAllDomainWorkspacesCreateRequest(ctx contex
 	return req, nil
 }
 
-// UnassignDomainWorkspacesByIDs - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use.
-// PERMISSIONS The caller must be a Fabric administrator.
+// UnassignDomainWorkspacesByIDs - PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -778,8 +1127,8 @@ func (client *DomainsClient) unassignDomainWorkspacesByIDsCreateRequest(ctx cont
 	return req, nil
 }
 
-// UpdateDomain - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
-// only. It may change based on feedback and is not recommended for production use.
+// UpdateDomain - > [!NOTE] This API is a release version of a preview version due to be deprecated on March 31, 2026. When
+// calling this API - callers must set the query parameter preview to the value false
 // PERMISSIONS The caller must be a Fabric administrator.
 // REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
 // LIMITATIONS Maximum 25 requests per one minute per principal.
@@ -793,15 +1142,16 @@ func (client *DomainsClient) unassignDomainWorkspacesByIDsCreateRequest(ctx cont
 //
 // Generated from API version v1
 //   - domainID - The domain ID.
+//   - preview - This parameter specifies which version of the API to use. Set to false to use the release version.
 //   - updateDomainRequest - The request payload for updating the domain.
 //   - options - DomainsClientUpdateDomainOptions contains the optional parameters for the DomainsClient.UpdateDomain method.
-func (client *DomainsClient) UpdateDomain(ctx context.Context, domainID string, updateDomainRequest UpdateDomainRequest, options *DomainsClientUpdateDomainOptions) (DomainsClientUpdateDomainResponse, error) {
+func (client *DomainsClient) UpdateDomain(ctx context.Context, domainID string, preview bool, updateDomainRequest UpdateDomainRequest, options *DomainsClientUpdateDomainOptions) (DomainsClientUpdateDomainResponse, error) {
 	var err error
 	const operationName = "admin.DomainsClient.UpdateDomain"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.updateDomainCreateRequest(ctx, domainID, updateDomainRequest, options)
+	req, err := client.updateDomainCreateRequest(ctx, domainID, preview, updateDomainRequest, options)
 	if err != nil {
 		return DomainsClientUpdateDomainResponse{}, err
 	}
@@ -818,7 +1168,7 @@ func (client *DomainsClient) UpdateDomain(ctx context.Context, domainID string, 
 }
 
 // updateDomainCreateRequest creates the UpdateDomain request.
-func (client *DomainsClient) updateDomainCreateRequest(ctx context.Context, domainID string, updateDomainRequest UpdateDomainRequest, _ *DomainsClientUpdateDomainOptions) (*policy.Request, error) {
+func (client *DomainsClient) updateDomainCreateRequest(ctx context.Context, domainID string, preview bool, updateDomainRequest UpdateDomainRequest, _ *DomainsClientUpdateDomainOptions) (*policy.Request, error) {
 	urlPath := "/v1/admin/domains/{domainId}"
 	if domainID == "" {
 		return nil, errors.New("parameter domainID cannot be empty")
@@ -828,6 +1178,9 @@ func (client *DomainsClient) updateDomainCreateRequest(ctx context.Context, doma
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("preview", strconv.FormatBool(preview))
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	if err := runtime.MarshalAsJSON(req, updateDomainRequest); err != nil {
 		return nil, err
@@ -844,11 +1197,94 @@ func (client *DomainsClient) updateDomainHandleResponse(resp *http.Response) (Do
 	return result, nil
 }
 
+// UpdateDomainPreview - > [!NOTE] This preview API will be deprecated on March 31, 2026, and replaced by a stable version,
+// available here [/rest/api/fabric/admin/domains/update-domain]. The new version introduces breaking
+// changes and is not backward compatible. When calling this API, callers must specify true as the value for the query parameter
+// preview.
+// DEPRECATION NOTICE A new query parameter preview has been introduced to facilitate this transition:
+// * The preview query parameter currently defaults to true.
+// * Set the value of the preview query parameter to false to use the Release version of this API.
+// * Starting March 31, 2026, the default value for preview will change to false.
+// It is recommended to migrate your integration to use the Release version as soon as possible by specifying false for the
+// preview query parameter (the default value for the preview query parameter will
+// be set to false on API's deprecation date).
+// The following incompatible changes were introduced in the Release version:
+// * Request property contributorsScope was removed.
+// * Response property contributorsScope was removed.
+// PERMISSIONS The caller must be a Fabric administrator.
+// REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All.
+// LIMITATIONS Maximum 25 requests per one minute per principal.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - domainID - The domain ID.
+//   - preview - This parameter specifies which version of the API to use. Set to true to use the preview version described on
+//     this page, or to false to use the Release version detailed here
+//     [/rest/api/fabric/admin/domains/update-domain]. Starting March 31, 2026, the default value for preview will change to false.
+//   - updateDomainRequest - The request payload for updating the domain.
+//   - options - DomainsClientUpdateDomainPreviewOptions contains the optional parameters for the DomainsClient.UpdateDomainPreview
+//     method.
+func (client *DomainsClient) UpdateDomainPreview(ctx context.Context, domainID string, preview bool, updateDomainRequest UpdateDomainRequestPreview, options *DomainsClientUpdateDomainPreviewOptions) (DomainsClientUpdateDomainPreviewResponse, error) {
+	var err error
+	const operationName = "admin.DomainsClient.UpdateDomainPreview"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateDomainPreviewCreateRequest(ctx, domainID, preview, updateDomainRequest, options)
+	if err != nil {
+		return DomainsClientUpdateDomainPreviewResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return DomainsClientUpdateDomainPreviewResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return DomainsClientUpdateDomainPreviewResponse{}, err
+	}
+	resp, err := client.updateDomainPreviewHandleResponse(httpResp)
+	return resp, err
+}
+
+// updateDomainPreviewCreateRequest creates the UpdateDomainPreview request.
+func (client *DomainsClient) updateDomainPreviewCreateRequest(ctx context.Context, domainID string, preview bool, updateDomainRequest UpdateDomainRequestPreview, _ *DomainsClientUpdateDomainPreviewOptions) (*policy.Request, error) {
+	urlPath := "/v1/admin/domains/{domainId}"
+	if domainID == "" {
+		return nil, errors.New("parameter domainID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{domainId}", url.PathEscape(domainID))
+	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("preview", strconv.FormatBool(preview))
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateDomainRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// updateDomainPreviewHandleResponse handles the UpdateDomainPreview response.
+func (client *DomainsClient) updateDomainPreviewHandleResponse(resp *http.Response) (DomainsClientUpdateDomainPreviewResponse, error) {
+	result := DomainsClientUpdateDomainPreviewResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.DomainPreview); err != nil {
+		return DomainsClientUpdateDomainPreviewResponse{}, err
+	}
+	return result, nil
+}
+
 // Custom code starts below
 
 // AssignDomainWorkspacesByCapacities - returns DomainsClientAssignDomainWorkspacesByCapacitiesResponse in sync mode.
-// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
-//
 // Preexisting domain assignments will be overridden unless bulk reassignment is blocked by domain management tenant settings.
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
@@ -922,8 +1358,6 @@ func (client *DomainsClient) beginAssignDomainWorkspacesByCapacities(ctx context
 }
 
 // AssignDomainWorkspacesByPrincipals - returns DomainsClientAssignDomainWorkspacesByPrincipalsResponse in sync mode.
-// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
-//
 // Preexisting domain assignments will be overridden unless bulk reassignment is blocked by domain management tenant settings.
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
@@ -997,8 +1431,6 @@ func (client *DomainsClient) beginAssignDomainWorkspacesByPrincipals(ctx context
 }
 
 // ListDomainWorkspaces - returns array of DomainWorkspace from all pages.
-// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
-//
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
 // PERMISSIONS The caller must be a Fabric administrator.
@@ -1028,6 +1460,36 @@ func (client *DomainsClient) ListDomainWorkspaces(ctx context.Context, domainID 
 			return []DomainWorkspace{}, core.NewResponseError(azcoreRespError.RawResponse)
 		}
 		return []DomainWorkspace{}, err
+	}
+	return list, nil
+}
+
+// ListRoleAssignments - returns array of DomainRoleAssignment from all pages.
+// PERMISSIONS The caller must be a Fabric administrator.
+//
+// REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All.
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - domainID - The domain ID.
+//   - options - DomainsClientListRoleAssignmentsOptions contains the optional parameters for the DomainsClient.NewListRoleAssignmentsPager method.
+func (client *DomainsClient) ListRoleAssignments(ctx context.Context, domainID string, options *DomainsClientListRoleAssignmentsOptions) ([]DomainRoleAssignment, error) {
+	pager := client.NewListRoleAssignmentsPager(domainID, options)
+	mapper := func(resp DomainsClientListRoleAssignmentsResponse) []DomainRoleAssignment {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []DomainRoleAssignment{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []DomainRoleAssignment{}, err
 	}
 	return list, nil
 }

@@ -284,7 +284,7 @@ func (client *ItemsClient) getReportDefinition(ctx context.Context, workspaceID 
 }
 
 // getReportDefinitionCreateRequest creates the GetReportDefinition request.
-func (client *ItemsClient) getReportDefinitionCreateRequest(ctx context.Context, workspaceID string, reportID string, options *ItemsClientBeginGetReportDefinitionOptions) (*policy.Request, error) {
+func (client *ItemsClient) getReportDefinitionCreateRequest(ctx context.Context, workspaceID string, reportID string, _ *ItemsClientBeginGetReportDefinitionOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/reports/{reportId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -298,11 +298,6 @@ func (client *ItemsClient) getReportDefinitionCreateRequest(ctx context.Context,
 	if err != nil {
 		return nil, err
 	}
-	reqQP := req.Raw().URL.Query()
-	if options != nil && options.Format != nil {
-		reqQP.Set("format", *options.Format)
-	}
-	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

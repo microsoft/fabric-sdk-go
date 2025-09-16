@@ -31,6 +31,11 @@ type DomainsClientCreateDomainOptions struct {
 	// placeholder for future optional parameters
 }
 
+// DomainsClientCreateDomainPreviewOptions contains the optional parameters for the DomainsClient.CreateDomainPreview method.
+type DomainsClientCreateDomainPreviewOptions struct {
+	// placeholder for future optional parameters
+}
+
 // DomainsClientDeleteDomainOptions contains the optional parameters for the DomainsClient.DeleteDomain method.
 type DomainsClientDeleteDomainOptions struct {
 	// placeholder for future optional parameters
@@ -38,6 +43,11 @@ type DomainsClientDeleteDomainOptions struct {
 
 // DomainsClientGetDomainOptions contains the optional parameters for the DomainsClient.GetDomain method.
 type DomainsClientGetDomainOptions struct {
+	// placeholder for future optional parameters
+}
+
+// DomainsClientGetDomainPreviewOptions contains the optional parameters for the DomainsClient.GetDomainPreview method.
+type DomainsClientGetDomainPreviewOptions struct {
 	// placeholder for future optional parameters
 }
 
@@ -54,6 +64,19 @@ type DomainsClientListDomainsOptions struct {
 	NonEmptyOnly *bool
 }
 
+// DomainsClientListDomainsPreviewOptions contains the optional parameters for the DomainsClient.ListDomainsPreview method.
+type DomainsClientListDomainsPreviewOptions struct {
+	// When true, only return domains that have at least one workspace containing an item. Default: false.
+	NonEmptyOnly *bool
+}
+
+// DomainsClientListRoleAssignmentsOptions contains the optional parameters for the DomainsClient.NewListRoleAssignmentsPager
+// method.
+type DomainsClientListRoleAssignmentsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
 // DomainsClientRoleAssignmentsBulkAssignOptions contains the optional parameters for the DomainsClient.RoleAssignmentsBulkAssign
 // method.
 type DomainsClientRoleAssignmentsBulkAssignOptions struct {
@@ -63,6 +86,12 @@ type DomainsClientRoleAssignmentsBulkAssignOptions struct {
 // DomainsClientRoleAssignmentsBulkUnassignOptions contains the optional parameters for the DomainsClient.RoleAssignmentsBulkUnassign
 // method.
 type DomainsClientRoleAssignmentsBulkUnassignOptions struct {
+	// placeholder for future optional parameters
+}
+
+// DomainsClientSyncRoleAssignmentsToSubdomainsOptions contains the optional parameters for the DomainsClient.SyncRoleAssignmentsToSubdomains
+// method.
+type DomainsClientSyncRoleAssignmentsToSubdomainsOptions struct {
 	// placeholder for future optional parameters
 }
 
@@ -81,6 +110,11 @@ type DomainsClientUnassignDomainWorkspacesByIDsOptions struct {
 
 // DomainsClientUpdateDomainOptions contains the optional parameters for the DomainsClient.UpdateDomain method.
 type DomainsClientUpdateDomainOptions struct {
+	// placeholder for future optional parameters
+}
+
+// DomainsClientUpdateDomainPreviewOptions contains the optional parameters for the DomainsClient.UpdateDomainPreview method.
+type DomainsClientUpdateDomainPreviewOptions struct {
 	// placeholder for future optional parameters
 }
 

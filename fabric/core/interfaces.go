@@ -101,13 +101,31 @@ type GitProviderDetailsClassification interface {
 	GetGitProviderDetails() *GitProviderDetails
 }
 
+// MonthlyOccurrenceClassification provides polymorphic access to related types.
+// Call the interface's GetMonthlyOccurrence() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *DayOfMonth, *MonthlyOccurrence, *OrdinalWeekday
+type MonthlyOccurrenceClassification interface {
+	// GetMonthlyOccurrence returns the MonthlyOccurrence content of the underlying type.
+	GetMonthlyOccurrence() *MonthlyOccurrence
+}
+
 // ScheduleConfigClassification provides polymorphic access to related types.
 // Call the interface's GetScheduleConfig() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
-// - *CronScheduleConfig, *DailyScheduleConfig, *ScheduleConfig, *WeeklyScheduleConfig
+// - *CronScheduleConfig, *DailyScheduleConfig, *MonthlyScheduleConfig, *ScheduleConfig, *WeeklyScheduleConfig
 type ScheduleConfigClassification interface {
 	// GetScheduleConfig returns the ScheduleConfig content of the underlying type.
 	GetScheduleConfig() *ScheduleConfig
+}
+
+// TagScopeClassification provides polymorphic access to related types.
+// Call the interface's GetTagScope() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *DomainTagScope, *TagScope, *TenantTagScope
+type TagScopeClassification interface {
+	// GetTagScope returns the TagScope content of the underlying type.
+	GetTagScope() *TagScope
 }
 
 // TransformClassification provides polymorphic access to related types.

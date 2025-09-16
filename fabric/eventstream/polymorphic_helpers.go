@@ -115,12 +115,12 @@ func unmarshalManageFieldsOperationClassification(rawMsg json.RawMessage) (Manag
 		return nil, err
 	}
 	var b ManageFieldsOperationClassification
-	switch m["operationType"] {
-	case string(OperationTypeCast):
+	switch m["type"] {
+	case string(TypeCast):
 		b = &ManageFieldsCastOperation{}
-	case string(OperationTypeFunctionCall):
+	case string(TypeFunctionCall):
 		b = &ManageFieldsFunctionCallOperation{}
-	case string(OperationTypeRename):
+	case string(TypeRename):
 		b = &ManageFieldsRenameOperation{}
 	default:
 		b = &ManageFieldsOperation{}

@@ -99,6 +99,7 @@ func (client *TopologyClient) getEventstreamDestinationHandleResponse(resp *http
 
 // GetEventstreamDestinationConnection - PERMISSIONS The caller must have contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
+// LIMITATIONS Only custom endpoints destinations are supported.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -239,6 +240,7 @@ func (client *TopologyClient) getEventstreamSourceHandleResponse(resp *http.Resp
 
 // GetEventstreamSourceConnection - PERMISSIONS The caller must have contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
+// LIMITATIONS Only custom endpoints sources are supported.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]

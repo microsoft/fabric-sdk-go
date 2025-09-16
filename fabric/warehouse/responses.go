@@ -6,6 +6,23 @@
 
 package warehouse
 
+// ClientGetSQLAuditSettingsResponse contains the response from method Client.GetSQLAuditSettings.
+type ClientGetSQLAuditSettingsResponse struct {
+	// The current state of audit settings for an item.
+	SQLAuditSettings
+}
+
+// ClientSetAuditActionsAndGroupsResponse contains the response from method Client.SetAuditActionsAndGroups.
+type ClientSetAuditActionsAndGroupsResponse struct {
+	// placeholder for future response values
+}
+
+// ClientUpdateSQLAuditSettingsResponse contains the response from method Client.UpdateSQLAuditSettings.
+type ClientUpdateSQLAuditSettingsResponse struct {
+	// The current state of audit settings for an item.
+	SQLAuditSettings
+}
+
 // ItemsClientCreateWarehouseResponse contains the response from method ItemsClient.BeginCreateWarehouse.
 type ItemsClientCreateWarehouseResponse struct {
 	// A warehouse object.
@@ -39,4 +56,38 @@ type ItemsClientListWarehousesResponse struct {
 type ItemsClientUpdateWarehouseResponse struct {
 	// A warehouse object.
 	Warehouse
+}
+
+// RestorePointsClientCreateRestorePointResponse contains the response from method RestorePointsClient.BeginCreateRestorePoint.
+type RestorePointsClientCreateRestorePointResponse struct {
+	// The properties of a restore point.
+	RestorePoint
+}
+
+// RestorePointsClientDeleteRestorePointResponse contains the response from method RestorePointsClient.DeleteRestorePoint.
+type RestorePointsClientDeleteRestorePointResponse struct {
+	// placeholder for future response values
+}
+
+// RestorePointsClientGetRestorePointResponse contains the response from method RestorePointsClient.GetRestorePoint.
+type RestorePointsClientGetRestorePointResponse struct {
+	// The properties of a restore point.
+	RestorePoint
+}
+
+// RestorePointsClientListRestorePointsResponse contains the response from method RestorePointsClient.NewListRestorePointsPager.
+type RestorePointsClientListRestorePointsResponse struct {
+	// A list of restore points.
+	RestorePoints
+}
+
+// RestorePointsClientRestoreToRestorePointResponse contains the response from method RestorePointsClient.BeginRestoreToRestorePoint.
+type RestorePointsClientRestoreToRestorePointResponse struct {
+	// placeholder for future response values
+}
+
+// RestorePointsClientUpdateRestorePointResponse contains the response from method RestorePointsClient.UpdateRestorePoint.
+type RestorePointsClientUpdateRestorePointResponse struct {
+	// The properties of a restore point.
+	RestorePoint
 }

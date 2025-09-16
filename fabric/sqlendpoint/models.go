@@ -60,6 +60,27 @@ type RefreshMetadataRequest struct {
 	Timeout *Duration
 }
 
+// SQLAuditSettings - The current state of audit settings for an item.
+type SQLAuditSettings struct {
+	// REQUIRED; Audit actions and groups.
+	AuditActionsAndGroups []string
+
+	// REQUIRED; Retention days. 0 indicates indefinite retention period.
+	RetentionDays *int32
+
+	// REQUIRED; Audit settings state type.
+	State *AuditSettingsState
+}
+
+// SQLAuditSettingsUpdate - Audit settings update request.
+type SQLAuditSettingsUpdate struct {
+	// Retention days.
+	RetentionDays *int32
+
+	// Audit settings state type.
+	State *AuditSettingsState
+}
+
 // SQLEndpoint - A SQL endpoint object.
 type SQLEndpoint struct {
 	// REQUIRED; The item type.

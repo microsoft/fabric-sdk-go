@@ -260,3 +260,54 @@ func ExampleItemsClient_BeginUpdateSemanticModelDefinition() {
 		log.Fatalf("failed to pull the result: %v", err)
 	}
 }
+
+// Generated from example definition
+func ExampleItemsClient_BindSemanticModelConnection_bindASemanticModelConnectionExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := semanticmodel.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewItemsClient().BindSemanticModelConnection(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "cfafbeb1-8037-4d0c-896e-a46fb27ff229", semanticmodel.BindSemanticModelConnectionRequest{
+		ConnectionBinding: &semanticmodel.ConnectionBinding{
+			ConnectionDetails: &semanticmodel.ListConnectionDetails{
+				Type: to.Ptr("SQL"),
+				Path: to.Ptr("contoso.database.windows.net;sales"),
+			},
+			ConnectivityType: to.Ptr(semanticmodel.ConnectivityType("OnPremisesDataGateway")),
+			ID:               to.Ptr("0b9af1bd-e974-4893-8947-d89d5a560385"),
+		},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BindSemanticModelConnection_unbindASemanticModelConnectionExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := semanticmodel.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewItemsClient().BindSemanticModelConnection(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "cfafbeb1-8037-4d0c-896e-a46fb27ff229", semanticmodel.BindSemanticModelConnectionRequest{
+		ConnectionBinding: &semanticmodel.ConnectionBinding{
+			ConnectionDetails: &semanticmodel.ListConnectionDetails{
+				Type: to.Ptr("SQL"),
+				Path: to.Ptr("contoso.database.windows.net;sales"),
+			},
+			ConnectivityType: to.Ptr(semanticmodel.ConnectivityTypeNone),
+		},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}

@@ -29,6 +29,72 @@ type ItemsClient struct {
 	endpoint string
 }
 
+// BulkMoveItems - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must have contributor or higher role on the workspace.
+// REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// LIMITATIONS A single request can't contain more than 50 items.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - bulkMoveItemsRequest - Bulk move items request payload.
+//   - options - ItemsClientBulkMoveItemsOptions contains the optional parameters for the ItemsClient.BulkMoveItems method.
+func (client *ItemsClient) BulkMoveItems(ctx context.Context, workspaceID string, bulkMoveItemsRequest BulkMoveItemsRequest, options *ItemsClientBulkMoveItemsOptions) (ItemsClientBulkMoveItemsResponse, error) {
+	var err error
+	const operationName = "core.ItemsClient.BulkMoveItems"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.bulkMoveItemsCreateRequest(ctx, workspaceID, bulkMoveItemsRequest, options)
+	if err != nil {
+		return ItemsClientBulkMoveItemsResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return ItemsClientBulkMoveItemsResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return ItemsClientBulkMoveItemsResponse{}, err
+	}
+	resp, err := client.bulkMoveItemsHandleResponse(httpResp)
+	return resp, err
+}
+
+// bulkMoveItemsCreateRequest creates the BulkMoveItems request.
+func (client *ItemsClient) bulkMoveItemsCreateRequest(ctx context.Context, workspaceID string, bulkMoveItemsRequest BulkMoveItemsRequest, _ *ItemsClientBulkMoveItemsOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/items/bulkMove"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, bulkMoveItemsRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// bulkMoveItemsHandleResponse handles the BulkMoveItems response.
+func (client *ItemsClient) bulkMoveItemsHandleResponse(resp *http.Response) (ItemsClientBulkMoveItemsResponse, error) {
+	result := ItemsClientBulkMoveItemsResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.MovedItems); err != nil {
+		return ItemsClientBulkMoveItemsResponse{}, err
+	}
+	return result, nil
+}
+
 // BeginCreateItem - This API is supported for a number of item types, find the supported item types in Item management overview
 // [/rest/api/fabric/articles/item-management/item-management-overview]. You can use Get item
 // definition API [/rest/api/fabric/core/items/get-item-definition] to get an item definition.
@@ -526,6 +592,76 @@ func (client *ItemsClient) listItemsHandleResponse(resp *http.Response) (ItemsCl
 	result := ItemsClientListItemsResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.Items); err != nil {
 		return ItemsClientListItemsResponse{}, err
+	}
+	return result, nil
+}
+
+// MoveItem - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only.
+// It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must have contributor or higher role on the workspace.
+// REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - itemID - The item ID.
+//   - moveItemRequest - Move item request payload.
+//   - options - ItemsClientMoveItemOptions contains the optional parameters for the ItemsClient.MoveItem method.
+func (client *ItemsClient) MoveItem(ctx context.Context, workspaceID string, itemID string, moveItemRequest MoveItemRequest, options *ItemsClientMoveItemOptions) (ItemsClientMoveItemResponse, error) {
+	var err error
+	const operationName = "core.ItemsClient.MoveItem"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.moveItemCreateRequest(ctx, workspaceID, itemID, moveItemRequest, options)
+	if err != nil {
+		return ItemsClientMoveItemResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return ItemsClientMoveItemResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return ItemsClientMoveItemResponse{}, err
+	}
+	resp, err := client.moveItemHandleResponse(httpResp)
+	return resp, err
+}
+
+// moveItemCreateRequest creates the MoveItem request.
+func (client *ItemsClient) moveItemCreateRequest(ctx context.Context, workspaceID string, itemID string, moveItemRequest MoveItemRequest, _ *ItemsClientMoveItemOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/move"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if itemID == "" {
+		return nil, errors.New("parameter itemID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{itemId}", url.PathEscape(itemID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, moveItemRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// moveItemHandleResponse handles the MoveItem response.
+func (client *ItemsClient) moveItemHandleResponse(resp *http.Response) (ItemsClientMoveItemResponse, error) {
+	result := ItemsClientMoveItemResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.MovedItems); err != nil {
+		return ItemsClientMoveItemResponse{}, err
 	}
 	return result, nil
 }

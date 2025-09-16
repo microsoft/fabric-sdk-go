@@ -56,7 +56,7 @@ type CronScheduleConfig struct {
 	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
 	StartDateTime *time.Time
 
-	// REQUIRED; A string represents the type of the plan. Additional planType types may be added over time.
+	// REQUIRED; The type of schedule configuration. Additional types may be added over time.
 	Type *ScheduleType
 }
 
@@ -82,10 +82,10 @@ type DailyScheduleConfig struct {
 	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
 	StartDateTime *time.Time
 
-	// REQUIRED; A list of time slots in hh:mm format, at most 100 elements are allowed.
+	// REQUIRED; A list of time slots in the hh:mm format. The maximum time slots you can use is 100.
 	Times []string
 
-	// REQUIRED; A string represents the type of the plan. Additional planType types may be added over time.
+	// REQUIRED; The type of schedule configuration. Additional types may be added over time.
 	Type *ScheduleType
 }
 
@@ -133,6 +133,24 @@ type Dataflows struct {
 
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
+}
+
+// DayOfMonth - Specifies a date to trigger the job. The value must be a valid date. Otherwise, it will be skipped.
+type DayOfMonth struct {
+	// REQUIRED; Specifies a date to trigger the job, using a value between 1 and 31. For example, 2 means the second day of the
+	// month. The date must be valid. If an invalid date is provided, such as February 31st, it
+	// will automatically skip to the month that includes the 31st day.
+	DayOfMonth *int32
+
+	// REQUIRED; An enumerator that lists the day for triggering jobs. Additional types may be added over time.
+	OccurrenceType *OccurrenceType
+}
+
+// GetMonthlyOccurrence implements the MonthlyOccurrenceClassification interface for type DayOfMonth.
+func (d *DayOfMonth) GetMonthlyOccurrence() *MonthlyOccurrence {
+	return &MonthlyOccurrence{
+		OccurrenceType: d.OccurrenceType,
+	}
 }
 
 // Definition - Dataflow public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/dataflow-definition]
@@ -189,6 +207,70 @@ type ItemTag struct {
 
 	// REQUIRED; The tag ID.
 	ID *string
+}
+
+// MonthlyOccurrence - Specifies the day for triggering jobs
+type MonthlyOccurrence struct {
+	// REQUIRED; An enumerator that lists the day for triggering jobs. Additional types may be added over time.
+	OccurrenceType *OccurrenceType
+}
+
+// GetMonthlyOccurrence implements the MonthlyOccurrenceClassification interface for type MonthlyOccurrence.
+func (m *MonthlyOccurrence) GetMonthlyOccurrence() *MonthlyOccurrence { return m }
+
+type MonthlyScheduleConfig struct {
+	// REQUIRED; The end time for this schedule. The end time must be later than the start time. It has to be in UTC, using the
+	// YYYY-MM-DDTHH:mm:ssZ format.
+	EndDateTime *time.Time
+
+	// REQUIRED; The time zone identifier registry on local computer for windows, see Default Time Zones [/windows-hardware/manufacture/desktop/default-time-zones]
+	LocalTimeZoneID *string
+
+	// REQUIRED; A date for triggering the job.
+	Occurrence MonthlyOccurrenceClassification
+
+	// REQUIRED; Specifies the monthly job repeat interval. For example, when set to 1 the job is triggered every month.
+	Recurrence *int32
+
+	// REQUIRED; The start time for this schedule. If the start time is in the past, it will trigger a job instantly. The time
+	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	StartDateTime *time.Time
+
+	// REQUIRED; A list of time slots in the hh:mm format. The maximum time slots you can use is 100.
+	Times []string
+
+	// REQUIRED; The type of schedule configuration. Additional types may be added over time.
+	Type *ScheduleType
+}
+
+// GetScheduleConfig implements the ScheduleConfigClassification interface for type MonthlyScheduleConfig.
+func (m *MonthlyScheduleConfig) GetScheduleConfig() *ScheduleConfig {
+	return &ScheduleConfig{
+		EndDateTime:     m.EndDateTime,
+		LocalTimeZoneID: m.LocalTimeZoneID,
+		StartDateTime:   m.StartDateTime,
+		Type:            m.Type,
+	}
+}
+
+// OrdinalWeekday - Specifies the ordinal week and weekday to trigger the job. The value must be a valid date. Otherwise,
+// it will be skipped.
+type OrdinalWeekday struct {
+	// REQUIRED; An enumerator that lists the day for triggering jobs. Additional types may be added over time.
+	OccurrenceType *OccurrenceType
+
+	// REQUIRED; The week of the month.
+	WeekIndex *WeekIndex
+
+	// REQUIRED; Week day for triggering jobs.
+	Weekday *DayOfWeek
+}
+
+// GetMonthlyOccurrence implements the MonthlyOccurrenceClassification interface for type OrdinalWeekday.
+func (o *OrdinalWeekday) GetMonthlyOccurrence() *MonthlyOccurrence {
+	return &MonthlyOccurrence{
+		OccurrenceType: o.OccurrenceType,
+	}
 }
 
 // Principal - Represents an identity or a Microsoft Entra group.
@@ -276,7 +358,7 @@ type ScheduleConfig struct {
 	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
 	StartDateTime *time.Time
 
-	// REQUIRED; A string represents the type of the plan. Additional planType types may be added over time.
+	// REQUIRED; The type of schedule configuration. Additional types may be added over time.
 	Type *ScheduleType
 }
 
@@ -311,10 +393,10 @@ type WeeklyScheduleConfig struct {
 	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
 	StartDateTime *time.Time
 
-	// REQUIRED; A list of time slots in hh:mm format, at most 100 elements are allowed.
+	// REQUIRED; A list of time slots in the hh:mm format. The maximum time slots you can use is 100.
 	Times []string
 
-	// REQUIRED; A string represents the type of the plan. Additional planType types may be added over time.
+	// REQUIRED; The type of schedule configuration. Additional types may be added over time.
 	Type *ScheduleType
 
 	// REQUIRED; A list of weekdays, at most seven elements are allowed.

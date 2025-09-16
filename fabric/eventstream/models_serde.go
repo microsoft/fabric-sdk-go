@@ -3363,8 +3363,8 @@ func (l *LiteralExpression) UnmarshalJSON(data []byte) error {
 func (m ManageFieldsCastOperation) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "alias", m.Alias)
-	objectMap["operationType"] = OperationTypeCast
 	populate(objectMap, "properties", m.Properties)
+	objectMap["type"] = TypeCast
 	return json.Marshal(objectMap)
 }
 
@@ -3380,11 +3380,11 @@ func (m *ManageFieldsCastOperation) UnmarshalJSON(data []byte) error {
 		case "alias":
 			err = unpopulate(val, "Alias", &m.Alias)
 			delete(rawMsg, key)
-		case "operationType":
-			err = unpopulate(val, "OperationType", &m.OperationType)
-			delete(rawMsg, key)
 		case "properties":
 			err = unpopulate(val, "Properties", &m.Properties)
+			delete(rawMsg, key)
+		case "type":
+			err = unpopulate(val, "Type", &m.Type)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -3398,8 +3398,8 @@ func (m *ManageFieldsCastOperation) UnmarshalJSON(data []byte) error {
 func (m ManageFieldsFunctionCallOperation) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "alias", m.Alias)
-	objectMap["operationType"] = OperationTypeFunctionCall
 	populate(objectMap, "properties", m.Properties)
+	objectMap["type"] = TypeFunctionCall
 	return json.Marshal(objectMap)
 }
 
@@ -3415,11 +3415,11 @@ func (m *ManageFieldsFunctionCallOperation) UnmarshalJSON(data []byte) error {
 		case "alias":
 			err = unpopulate(val, "Alias", &m.Alias)
 			delete(rawMsg, key)
-		case "operationType":
-			err = unpopulate(val, "OperationType", &m.OperationType)
-			delete(rawMsg, key)
 		case "properties":
 			err = unpopulate(val, "Properties", &m.Properties)
+			delete(rawMsg, key)
+		case "type":
+			err = unpopulate(val, "Type", &m.Type)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -3433,7 +3433,7 @@ func (m *ManageFieldsFunctionCallOperation) UnmarshalJSON(data []byte) error {
 func (m ManageFieldsOperation) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "alias", m.Alias)
-	objectMap["operationType"] = m.OperationType
+	objectMap["type"] = m.Type
 	return json.Marshal(objectMap)
 }
 
@@ -3449,8 +3449,8 @@ func (m *ManageFieldsOperation) UnmarshalJSON(data []byte) error {
 		case "alias":
 			err = unpopulate(val, "Alias", &m.Alias)
 			delete(rawMsg, key)
-		case "operationType":
-			err = unpopulate(val, "OperationType", &m.OperationType)
+		case "type":
+			err = unpopulate(val, "Type", &m.Type)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -3534,8 +3534,8 @@ func (m *ManageFieldsOperatorProperties) UnmarshalJSON(data []byte) error {
 func (m ManageFieldsRenameOperation) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "alias", m.Alias)
-	objectMap["operationType"] = OperationTypeRename
 	populate(objectMap, "properties", m.Properties)
+	objectMap["type"] = TypeRename
 	return json.Marshal(objectMap)
 }
 
@@ -3551,11 +3551,11 @@ func (m *ManageFieldsRenameOperation) UnmarshalJSON(data []byte) error {
 		case "alias":
 			err = unpopulate(val, "Alias", &m.Alias)
 			delete(rawMsg, key)
-		case "operationType":
-			err = unpopulate(val, "OperationType", &m.OperationType)
-			delete(rawMsg, key)
 		case "properties":
 			err = unpopulate(val, "Properties", &m.Properties)
+			delete(rawMsg, key)
+		case "type":
+			err = unpopulate(val, "Type", &m.Type)
 			delete(rawMsg, key)
 		}
 		if err != nil {

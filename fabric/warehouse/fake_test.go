@@ -298,3 +298,341 @@ func (testsuite *FakeTestSuite) TestItems_GetConnectionString() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ConnectionStringResponse))
 }
+
+func (testsuite *FakeTestSuite) TestWarehouse_UpdateSQLAuditSettings() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update SQL Audit Settings"},
+	})
+	var exampleWorkspaceID string
+	var exampleItemID string
+	var exampleUpdateAuditSettingsRequest warehouse.SQLAuditSettingsUpdate
+	exampleWorkspaceID = "a97f3e88-9f0a-4183-b1d9-31e6eb00e778"
+	exampleItemID = "70bcc992-a346-4f21-afe5-8b9ed1596a2b"
+	exampleUpdateAuditSettingsRequest = warehouse.SQLAuditSettingsUpdate{
+		RetentionDays: to.Ptr[int32](10),
+		State:         to.Ptr(warehouse.AuditSettingsStateEnabled),
+	}
+
+	exampleRes := warehouse.SQLAuditSettings{
+		AuditActionsAndGroups: []string{
+			"SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP"},
+		RetentionDays: to.Ptr[int32](10),
+		State:         to.Ptr(warehouse.AuditSettingsStateEnabled),
+	}
+
+	testsuite.serverFactory.Server.UpdateSQLAuditSettings = func(ctx context.Context, workspaceID string, itemID string, updateAuditSettingsRequest warehouse.SQLAuditSettingsUpdate, options *warehouse.ClientUpdateSQLAuditSettingsOptions) (resp azfake.Responder[warehouse.ClientUpdateSQLAuditSettingsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateAuditSettingsRequest, updateAuditSettingsRequest))
+		resp = azfake.Responder[warehouse.ClientUpdateSQLAuditSettingsResponse]{}
+		resp.SetResponse(http.StatusOK, warehouse.ClientUpdateSQLAuditSettingsResponse{SQLAuditSettings: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewClient()
+	res, err := client.UpdateSQLAuditSettings(ctx, exampleWorkspaceID, exampleItemID, exampleUpdateAuditSettingsRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.SQLAuditSettings))
+}
+
+func (testsuite *FakeTestSuite) TestWarehouse_GetSQLAuditSettings() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get SQL Audit Settings"},
+	})
+	var exampleWorkspaceID string
+	var exampleItemID string
+	exampleWorkspaceID = "a97f3e88-9f0a-4183-b1d9-31e6eb00e778"
+	exampleItemID = "70bcc992-a346-4f21-afe5-8b9ed1596a2b"
+
+	exampleRes := warehouse.SQLAuditSettings{
+		AuditActionsAndGroups: []string{
+			"SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP"},
+		RetentionDays: to.Ptr[int32](10),
+		State:         to.Ptr(warehouse.AuditSettingsStateEnabled),
+	}
+
+	testsuite.serverFactory.Server.GetSQLAuditSettings = func(ctx context.Context, workspaceID string, itemID string, options *warehouse.ClientGetSQLAuditSettingsOptions) (resp azfake.Responder[warehouse.ClientGetSQLAuditSettingsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		resp = azfake.Responder[warehouse.ClientGetSQLAuditSettingsResponse]{}
+		resp.SetResponse(http.StatusOK, warehouse.ClientGetSQLAuditSettingsResponse{SQLAuditSettings: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewClient()
+	res, err := client.GetSQLAuditSettings(ctx, exampleWorkspaceID, exampleItemID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.SQLAuditSettings))
+}
+
+func (testsuite *FakeTestSuite) TestWarehouse_SetAuditActionsAndGroups() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Set SQL Audit Groups"},
+	})
+	var exampleWorkspaceID string
+	var exampleItemID string
+	var exampleSetAuditActionsAndGroupsRequest []string
+	exampleWorkspaceID = "a97f3e88-9f0a-4183-b1d9-31e6eb00e778"
+	exampleItemID = "70bcc992-a346-4f21-afe5-8b9ed1596a2b"
+	exampleSetAuditActionsAndGroupsRequest = []string{
+		"SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP",
+		"FAILED_DATABASE_AUTHENTICATION_GROUP",
+		"BATCH_COMPLETED_GROUP"}
+
+	testsuite.serverFactory.Server.SetAuditActionsAndGroups = func(ctx context.Context, workspaceID string, itemID string, setAuditActionsAndGroupsRequest []string, options *warehouse.ClientSetAuditActionsAndGroupsOptions) (resp azfake.Responder[warehouse.ClientSetAuditActionsAndGroupsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().Equal(exampleSetAuditActionsAndGroupsRequest, setAuditActionsAndGroupsRequest)
+		resp = azfake.Responder[warehouse.ClientSetAuditActionsAndGroupsResponse]{}
+		resp.SetResponse(http.StatusOK, warehouse.ClientSetAuditActionsAndGroupsResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewClient()
+	_, err = client.SetAuditActionsAndGroups(ctx, exampleWorkspaceID, exampleItemID, exampleSetAuditActionsAndGroupsRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestRestorePoints_ListRestorePoints() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List restore points in a warehouse example"},
+	})
+	var exampleWorkspaceID string
+	var exampleWarehouseID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleWarehouseID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	exampleRes := warehouse.RestorePoints{
+		Value: []warehouse.RestorePoint{
+			{
+				Description: to.Ptr("Restore point 1 description."),
+				CreationDetails: &warehouse.RestorePointEventDetails{
+					EventDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-10-18T22:17:09.000Z"); return t }()),
+					EventInitiator: &warehouse.Principal{
+						Type:        to.Ptr(warehouse.PrincipalTypeUser),
+						DisplayName: to.Ptr("Jacob Hancock"),
+						ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
+						UserDetails: &warehouse.PrincipalUserDetails{
+							UserPrincipalName: to.Ptr("jacob@contoso.com"),
+						},
+					},
+				},
+				CreationMode: to.Ptr(warehouse.CreationModeTypeUserDefined),
+				DisplayName:  to.Ptr("Restore point 1"),
+				ID:           to.Ptr("1726617378000"),
+			},
+			{
+				Description: to.Ptr(""),
+				CreationDetails: &warehouse.RestorePointEventDetails{
+					EventDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-10-18T22:17:09.000Z"); return t }()),
+				},
+				CreationMode: to.Ptr(warehouse.CreationModeTypeSystemCreated),
+				DisplayName:  to.Ptr("Restore point"),
+				ID:           to.Ptr("1726617379000"),
+			}},
+	}
+
+	testsuite.serverFactory.RestorePointsServer.NewListRestorePointsPager = func(workspaceID string, warehouseID string, options *warehouse.RestorePointsClientListRestorePointsOptions) (resp azfake.PagerResponder[warehouse.RestorePointsClientListRestorePointsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleWarehouseID, warehouseID)
+		resp = azfake.PagerResponder[warehouse.RestorePointsClientListRestorePointsResponse]{}
+		resp.AddPage(http.StatusOK, warehouse.RestorePointsClientListRestorePointsResponse{RestorePoints: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewRestorePointsClient()
+	pager := client.NewListRestorePointsPager(exampleWorkspaceID, exampleWarehouseID, &warehouse.RestorePointsClientListRestorePointsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.RestorePoints))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestRestorePoints_CreateRestorePoint() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a restore point example"},
+	})
+	var exampleWorkspaceID string
+	var exampleWarehouseID string
+	var exampleCreateRestorePointRequest warehouse.CreateRestorePointRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleWarehouseID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleCreateRestorePointRequest = warehouse.CreateRestorePointRequest{
+		Description: to.Ptr("Restore point 1 description."),
+		DisplayName: to.Ptr("Restore point 1"),
+	}
+
+	testsuite.serverFactory.RestorePointsServer.BeginCreateRestorePoint = func(ctx context.Context, workspaceID string, warehouseID string, createRestorePointRequest warehouse.CreateRestorePointRequest, options *warehouse.RestorePointsClientBeginCreateRestorePointOptions) (resp azfake.PollerResponder[warehouse.RestorePointsClientCreateRestorePointResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleWarehouseID, warehouseID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateRestorePointRequest, createRestorePointRequest))
+		resp = azfake.PollerResponder[warehouse.RestorePointsClientCreateRestorePointResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, warehouse.RestorePointsClientCreateRestorePointResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewRestorePointsClient()
+	poller, err := client.BeginCreateRestorePoint(ctx, exampleWorkspaceID, exampleWarehouseID, exampleCreateRestorePointRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestRestorePoints_GetRestorePoint() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a restore point example"},
+	})
+	var exampleWorkspaceID string
+	var exampleWarehouseID string
+	var exampleRestorePointID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleWarehouseID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleRestorePointID = "1726617378000"
+
+	exampleRes := warehouse.RestorePoint{
+		Description: to.Ptr("Restore point 1 description."),
+		CreationDetails: &warehouse.RestorePointEventDetails{
+			EventDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-10-18T22:17:09.000Z"); return t }()),
+			EventInitiator: &warehouse.Principal{
+				Type:        to.Ptr(warehouse.PrincipalTypeUser),
+				DisplayName: to.Ptr("Jacob Hancock"),
+				ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
+				UserDetails: &warehouse.PrincipalUserDetails{
+					UserPrincipalName: to.Ptr("jacob@contoso.com"),
+				},
+			},
+		},
+		CreationMode: to.Ptr(warehouse.CreationModeTypeUserDefined),
+		DisplayName:  to.Ptr("Restore point 1"),
+		ID:           to.Ptr("1726617378000"),
+	}
+
+	testsuite.serverFactory.RestorePointsServer.GetRestorePoint = func(ctx context.Context, workspaceID string, warehouseID string, restorePointID string, options *warehouse.RestorePointsClientGetRestorePointOptions) (resp azfake.Responder[warehouse.RestorePointsClientGetRestorePointResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleWarehouseID, warehouseID)
+		testsuite.Require().Equal(exampleRestorePointID, restorePointID)
+		resp = azfake.Responder[warehouse.RestorePointsClientGetRestorePointResponse]{}
+		resp.SetResponse(http.StatusOK, warehouse.RestorePointsClientGetRestorePointResponse{RestorePoint: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewRestorePointsClient()
+	res, err := client.GetRestorePoint(ctx, exampleWorkspaceID, exampleWarehouseID, exampleRestorePointID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.RestorePoint))
+}
+
+func (testsuite *FakeTestSuite) TestRestorePoints_DeleteRestorePoint() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete a restore point example"},
+	})
+	var exampleWorkspaceID string
+	var exampleWarehouseID string
+	var exampleRestorePointID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleWarehouseID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleRestorePointID = "1726617378000"
+
+	testsuite.serverFactory.RestorePointsServer.DeleteRestorePoint = func(ctx context.Context, workspaceID string, warehouseID string, restorePointID string, options *warehouse.RestorePointsClientDeleteRestorePointOptions) (resp azfake.Responder[warehouse.RestorePointsClientDeleteRestorePointResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleWarehouseID, warehouseID)
+		testsuite.Require().Equal(exampleRestorePointID, restorePointID)
+		resp = azfake.Responder[warehouse.RestorePointsClientDeleteRestorePointResponse]{}
+		resp.SetResponse(http.StatusOK, warehouse.RestorePointsClientDeleteRestorePointResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewRestorePointsClient()
+	_, err = client.DeleteRestorePoint(ctx, exampleWorkspaceID, exampleWarehouseID, exampleRestorePointID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestRestorePoints_UpdateRestorePoint() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update a restore point example"},
+	})
+	var exampleWorkspaceID string
+	var exampleWarehouseID string
+	var exampleRestorePointID string
+	var exampleUpdateRestorePointRequest warehouse.UpdateRestorePointRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleWarehouseID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleRestorePointID = "1726617378000"
+	exampleUpdateRestorePointRequest = warehouse.UpdateRestorePointRequest{
+		Description: to.Ptr("Restore point 3 description."),
+		DisplayName: to.Ptr("Restore point 3"),
+	}
+
+	exampleRes := warehouse.RestorePoint{
+		Description: to.Ptr("Restore point 3 description."),
+		CreationDetails: &warehouse.RestorePointEventDetails{
+			EventDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-10-18T22:17:09.000Z"); return t }()),
+			EventInitiator: &warehouse.Principal{
+				Type:        to.Ptr(warehouse.PrincipalTypeUser),
+				DisplayName: to.Ptr("Jacob Hancock"),
+				ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
+				UserDetails: &warehouse.PrincipalUserDetails{
+					UserPrincipalName: to.Ptr("jacob@contoso.com"),
+				},
+			},
+		},
+		CreationMode: to.Ptr(warehouse.CreationModeTypeUserDefined),
+		DisplayName:  to.Ptr("Restore point 3"),
+		ID:           to.Ptr("1726617378000"),
+	}
+
+	testsuite.serverFactory.RestorePointsServer.UpdateRestorePoint = func(ctx context.Context, workspaceID string, warehouseID string, restorePointID string, updateRestorePointRequest warehouse.UpdateRestorePointRequest, options *warehouse.RestorePointsClientUpdateRestorePointOptions) (resp azfake.Responder[warehouse.RestorePointsClientUpdateRestorePointResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleWarehouseID, warehouseID)
+		testsuite.Require().Equal(exampleRestorePointID, restorePointID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateRestorePointRequest, updateRestorePointRequest))
+		resp = azfake.Responder[warehouse.RestorePointsClientUpdateRestorePointResponse]{}
+		resp.SetResponse(http.StatusOK, warehouse.RestorePointsClientUpdateRestorePointResponse{RestorePoint: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewRestorePointsClient()
+	res, err := client.UpdateRestorePoint(ctx, exampleWorkspaceID, exampleWarehouseID, exampleRestorePointID, exampleUpdateRestorePointRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.RestorePoint))
+}
+
+func (testsuite *FakeTestSuite) TestRestorePoints_RestoreToRestorePoint() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a warehouse example"},
+	})
+	var exampleWorkspaceID string
+	var exampleWarehouseID string
+	var exampleRestorePointID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleWarehouseID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleRestorePointID = "1726617378000"
+
+	testsuite.serverFactory.RestorePointsServer.BeginRestoreToRestorePoint = func(ctx context.Context, workspaceID string, warehouseID string, restorePointID string, options *warehouse.RestorePointsClientBeginRestoreToRestorePointOptions) (resp azfake.PollerResponder[warehouse.RestorePointsClientRestoreToRestorePointResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleWarehouseID, warehouseID)
+		testsuite.Require().Equal(exampleRestorePointID, restorePointID)
+		resp = azfake.PollerResponder[warehouse.RestorePointsClientRestoreToRestorePointResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, warehouse.RestorePointsClientRestoreToRestorePointResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewRestorePointsClient()
+	poller, err := client.BeginRestoreToRestorePoint(ctx, exampleWorkspaceID, exampleWarehouseID, exampleRestorePointID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}

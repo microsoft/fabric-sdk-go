@@ -25,6 +25,14 @@ import (
 
 // BackgroundJobsServer is a fake server for instances of the lakehouse.BackgroundJobsClient type.
 type BackgroundJobsServer struct {
+	// CreateRefreshMaterializedLakeViewsSchedule is the fake for method BackgroundJobsClient.CreateRefreshMaterializedLakeViewsSchedule
+	// HTTP status codes to indicate success: http.StatusCreated
+	CreateRefreshMaterializedLakeViewsSchedule func(ctx context.Context, workspaceID string, lakehouseID string, createScheduleRequest lakehouse.CreateLakehouseRefreshMaterializedLakeViewsScheduleRequest, options *lakehouse.BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleResponse], errResp azfake.ErrorResponder)
+
+	// DeleteRefreshMaterializedLakeViewsSchedule is the fake for method BackgroundJobsClient.DeleteRefreshMaterializedLakeViewsSchedule
+	// HTTP status codes to indicate success: http.StatusOK
+	DeleteRefreshMaterializedLakeViewsSchedule func(ctx context.Context, workspaceID string, lakehouseID string, scheduleID string, options *lakehouse.BackgroundJobsClientDeleteRefreshMaterializedLakeViewsScheduleOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientDeleteRefreshMaterializedLakeViewsScheduleResponse], errResp azfake.ErrorResponder)
+
 	// RunOnDemandRefreshMaterializedLakeViews is the fake for method BackgroundJobsClient.RunOnDemandRefreshMaterializedLakeViews
 	// HTTP status codes to indicate success: http.StatusAccepted
 	RunOnDemandRefreshMaterializedLakeViews func(ctx context.Context, workspaceID string, lakehouseID string, jobType string, options *lakehouse.BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse], errResp azfake.ErrorResponder)
@@ -32,6 +40,10 @@ type BackgroundJobsServer struct {
 	// RunOnDemandTableMaintenance is the fake for method BackgroundJobsClient.RunOnDemandTableMaintenance
 	// HTTP status codes to indicate success: http.StatusAccepted
 	RunOnDemandTableMaintenance func(ctx context.Context, workspaceID string, lakehouseID string, jobType string, runOnDemandTableMaintenanceRequest lakehouse.RunOnDemandTableMaintenanceRequest, options *lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceResponse], errResp azfake.ErrorResponder)
+
+	// UpdateRefreshMaterializedLakeViewsSchedule is the fake for method BackgroundJobsClient.UpdateRefreshMaterializedLakeViewsSchedule
+	// HTTP status codes to indicate success: http.StatusOK
+	UpdateRefreshMaterializedLakeViewsSchedule func(ctx context.Context, workspaceID string, lakehouseID string, scheduleID string, updateScheduleRequest lakehouse.UpdateLakehouseRefreshMaterializedLakeViewsScheduleRequest, options *lakehouse.BackgroundJobsClientUpdateRefreshMaterializedLakeViewsScheduleOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientUpdateRefreshMaterializedLakeViewsScheduleResponse], errResp azfake.ErrorResponder)
 }
 
 // NewBackgroundJobsServerTransport creates a new instance of BackgroundJobsServerTransport with the provided implementation.
@@ -72,10 +84,16 @@ func (b *BackgroundJobsServerTransport) dispatchToMethodFake(req *http.Request, 
 		}
 		if !intercepted {
 			switch method {
+			case "BackgroundJobsClient.CreateRefreshMaterializedLakeViewsSchedule":
+				res.resp, res.err = b.dispatchCreateRefreshMaterializedLakeViewsSchedule(req)
+			case "BackgroundJobsClient.DeleteRefreshMaterializedLakeViewsSchedule":
+				res.resp, res.err = b.dispatchDeleteRefreshMaterializedLakeViewsSchedule(req)
 			case "BackgroundJobsClient.RunOnDemandRefreshMaterializedLakeViews":
 				res.resp, res.err = b.dispatchRunOnDemandRefreshMaterializedLakeViews(req)
 			case "BackgroundJobsClient.RunOnDemandTableMaintenance":
 				res.resp, res.err = b.dispatchRunOnDemandTableMaintenance(req)
+			case "BackgroundJobsClient.UpdateRefreshMaterializedLakeViewsSchedule":
+				res.resp, res.err = b.dispatchUpdateRefreshMaterializedLakeViewsSchedule(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -93,6 +111,83 @@ func (b *BackgroundJobsServerTransport) dispatchToMethodFake(req *http.Request, 
 	case res := <-resultChan:
 		return res.resp, res.err
 	}
+}
+
+func (b *BackgroundJobsServerTransport) dispatchCreateRefreshMaterializedLakeViewsSchedule(req *http.Request) (*http.Response, error) {
+	if b.srv.CreateRefreshMaterializedLakeViewsSchedule == nil {
+		return nil, &nonRetriableError{errors.New("fake for method CreateRefreshMaterializedLakeViewsSchedule not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/RefreshMaterializedLakeViews/schedules`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[lakehouse.CreateLakehouseRefreshMaterializedLakeViewsScheduleRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	lakehouseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("lakehouseId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := b.srv.CreateRefreshMaterializedLakeViewsSchedule(req.Context(), workspaceIDParam, lakehouseIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusCreated}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).RefreshMaterializedLakeViewsSchedule, req)
+	if err != nil {
+		return nil, err
+	}
+	if val := server.GetResponse(respr).Location; val != nil {
+		resp.Header.Set("Location", *val)
+	}
+	return resp, nil
+}
+
+func (b *BackgroundJobsServerTransport) dispatchDeleteRefreshMaterializedLakeViewsSchedule(req *http.Request) (*http.Response, error) {
+	if b.srv.DeleteRefreshMaterializedLakeViewsSchedule == nil {
+		return nil, &nonRetriableError{errors.New("fake for method DeleteRefreshMaterializedLakeViewsSchedule not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/RefreshMaterializedLakeViews/schedules/(?P<scheduleId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	lakehouseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("lakehouseId")])
+	if err != nil {
+		return nil, err
+	}
+	scheduleIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("scheduleId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := b.srv.DeleteRefreshMaterializedLakeViewsSchedule(req.Context(), workspaceIDParam, lakehouseIDParam, scheduleIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 func (b *BackgroundJobsServerTransport) dispatchRunOnDemandRefreshMaterializedLakeViews(req *http.Request) (*http.Response, error) {
@@ -183,6 +278,47 @@ func (b *BackgroundJobsServerTransport) dispatchRunOnDemandTableMaintenance(req 
 	}
 	if val := server.GetResponse(respr).RetryAfter; val != nil {
 		resp.Header.Set("Retry-After", strconv.FormatInt(int64(*val), 10))
+	}
+	return resp, nil
+}
+
+func (b *BackgroundJobsServerTransport) dispatchUpdateRefreshMaterializedLakeViewsSchedule(req *http.Request) (*http.Response, error) {
+	if b.srv.UpdateRefreshMaterializedLakeViewsSchedule == nil {
+		return nil, &nonRetriableError{errors.New("fake for method UpdateRefreshMaterializedLakeViewsSchedule not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/RefreshMaterializedLakeViews/schedules/(?P<scheduleId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[lakehouse.UpdateLakehouseRefreshMaterializedLakeViewsScheduleRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	lakehouseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("lakehouseId")])
+	if err != nil {
+		return nil, err
+	}
+	scheduleIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("scheduleId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := b.srv.UpdateRefreshMaterializedLakeViewsSchedule(req.Context(), workspaceIDParam, lakehouseIDParam, scheduleIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).RefreshMaterializedLakeViewsSchedule, req)
+	if err != nil {
+		return nil, err
 	}
 	return resp, nil
 }

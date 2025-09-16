@@ -29,10 +29,583 @@ func ExampleTopologyClient_GetEventstreamTopology() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewTopologyClient().GetEventstreamTopology(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "8c500070-073f-4a88-b478-8fabe1941c52", nil)
+	res, err := clientFactory.NewTopologyClient().GetEventstreamTopology(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "8c500070-073f-4a88-b478-8fabe1941c52", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.TopologyResponse = eventstream.TopologyResponse{
+	// 	CompatibilityLevel: to.Ptr(eventstream.CompatibilityLevelOne0),
+	// 	Destinations: []eventstream.DestinationResponseClassification{
+	// 		&eventstream.CustomEndpointDestinationResponse{
+	// 			Name: to.Ptr("CustomEndpointDestination"),
+	// 			ID: to.Ptr("4642073b-c216-4675-a17c-ed2e75756330"),
+	// 			InputNodes: []eventstream.NodeReference{
+	// 				{
+	// 					Name: to.Ptr("DerivedStreamName"),
+	// 			}},
+	// 			Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 			Type: to.Ptr(eventstream.DestinationTypeCustomEndpoint),
+	// 			Properties: map[string]any{
+	// 			},
+	// 		},
+	// 		&eventstream.LakehouseDestinationResponse{
+	// 			Name: to.Ptr("LakehouseDestination"),
+	// 			ID: to.Ptr("e1e2d0cc-87e5-46d9-977d-2a8eede7bef0"),
+	// 			InputNodes: []eventstream.NodeReference{
+	// 				{
+	// 					Name: to.Ptr("DerivedStreamName"),
+	// 			}},
+	// 			Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 			Type: to.Ptr(eventstream.DestinationTypeLakehouse),
+	// 			Properties: &eventstream.LakehouseDestinationProperties{
+	// 				Schema: to.Ptr("dbo"),
+	// 				DeltaTable: to.Ptr("deltaTable"),
+	// 				InputSerialization: &eventstream.JSONSerializationInfo{
+	// 					Type: to.Ptr(eventstream.SerializationTypeJSON),
+	// 					Properties: &eventstream.JSONSerializationProperties{
+	// 						Encoding: to.Ptr(eventstream.JSONSerializationPropertiesEncodingUTF8),
+	// 					},
+	// 				},
+	// 				ItemID: to.Ptr("ee579458-85ea-4652-bd77-5c7d7c298b2a"),
+	// 				MaximumDurationInSeconds: to.Ptr[int32](120),
+	// 				MinimumRows: to.Ptr[int32](100000),
+	// 				WorkspaceID: to.Ptr("9625b495-17b3-4d6c-aeea-a81ae76ba369"),
+	// 			},
+	// 		},
+	// 		&eventstream.EventhouseDestinationResponse{
+	// 			Name: to.Ptr("EventhouseProcessedIngestionModeDestination"),
+	// 			ID: to.Ptr("49b5d6ec-f8af-4ae9-a4d6-5e94645efe1f"),
+	// 			InputNodes: []eventstream.NodeReference{
+	// 				{
+	// 					Name: to.Ptr("EventStreamName-stream"),
+	// 			}},
+	// 			Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 			Type: to.Ptr(eventstream.DestinationTypeEventhouse),
+	// 			Properties: &eventstream.EventhouseProcessedIngestionModeDestinationProperties{
+	// 				DataIngestionMode: to.Ptr(eventstream.EventhouseDestinationPropertiesDataIngestionModeProcessedIngestion),
+	// 				ItemID: to.Ptr("4c8c3353-9652-4567-b8f3-eb585ef01ba9"),
+	// 				WorkspaceID: to.Ptr("9625b495-17b3-4d6c-aeea-a81ae76ba369"),
+	// 				DatabaseName: to.Ptr("databaseName"),
+	// 				InputSerialization: &eventstream.JSONSerializationInfo{
+	// 					Type: to.Ptr(eventstream.SerializationTypeJSON),
+	// 					Properties: &eventstream.JSONSerializationProperties{
+	// 						Encoding: to.Ptr(eventstream.JSONSerializationPropertiesEncodingUTF8),
+	// 					},
+	// 				},
+	// 				TableName: to.Ptr("tableName"),
+	// 			},
+	// 		},
+	// 		&eventstream.EventhouseDestinationResponse{
+	// 			Name: to.Ptr("EventhouseDirectIngestionModeDestination"),
+	// 			ID: to.Ptr("c0ca1c2a-b8c5-482c-98da-40088f988e9c"),
+	// 			InputNodes: []eventstream.NodeReference{
+	// 				{
+	// 					Name: to.Ptr("EventStreamName-stream"),
+	// 			}},
+	// 			Status: to.Ptr(eventstream.NodeStatusExternal),
+	// 			Type: to.Ptr(eventstream.DestinationTypeEventhouse),
+	// 			Properties: &eventstream.EventhouseDirectIngestionModeDestinationProperties{
+	// 				DataIngestionMode: to.Ptr(eventstream.EventhouseDestinationPropertiesDataIngestionModeDirectIngestion),
+	// 				ItemID: to.Ptr("4c8c3353-9652-4567-b8f3-eb585ef01ba9"),
+	// 				WorkspaceID: to.Ptr("9625b495-17b3-4d6c-aeea-a81ae76ba369"),
+	// 				ConnectionName: to.Ptr("connectionName"),
+	// 				MappingRuleName: to.Ptr("mappingRuleName"),
+	// 			},
+	// 	}},
+	// 	Operators: []eventstream.OperatorClassification{
+	// 		&eventstream.FilterOperator{
+	// 			Name: to.Ptr("FilterName"),
+	// 			Type: to.Ptr(eventstream.OperatorTypeFilter),
+	// 			InputNodes: []eventstream.NodeReference{
+	// 				{
+	// 					Name: to.Ptr("EventStreamName-stream"),
+	// 			}},
+	// 			InputSchemas: []eventstream.InputSchema{
+	// 				{
+	// 					Name: to.Ptr("EventStreamName-stream"),
+	// 					Schema: &eventstream.Schema{
+	// 						Columns: []eventstream.ColumnSchema{
+	// 							{
+	// 								Name: to.Ptr("BikepointID"),
+	// 								Type: to.Ptr(eventstream.DataTypeNvarcharMax),
+	// 							},
+	// 							{
+	// 								Name: to.Ptr("Street"),
+	// 								Type: to.Ptr(eventstream.DataTypeNvarcharMax),
+	// 							},
+	// 							{
+	// 								Name: to.Ptr("Neighbourhood"),
+	// 								Type: to.Ptr(eventstream.DataTypeNvarcharMax),
+	// 							},
+	// 							{
+	// 								Name: to.Ptr("Latitude"),
+	// 								Type: to.Ptr(eventstream.DataTypeFloat),
+	// 							},
+	// 							{
+	// 								Name: to.Ptr("Longitude"),
+	// 								Type: to.Ptr(eventstream.DataTypeFloat),
+	// 							},
+	// 							{
+	// 								Name: to.Ptr("No_Bikes"),
+	// 								Type: to.Ptr(eventstream.DataTypeBigInt),
+	// 							},
+	// 							{
+	// 								Name: to.Ptr("No_Empty_Docks"),
+	// 								Type: to.Ptr(eventstream.DataTypeBigInt),
+	// 							},
+	// 							{
+	// 								Name: to.Ptr("Record_Example"),
+	// 								Type: to.Ptr(eventstream.DataTypeRecord),
+	// 								Fields: []eventstream.ColumnSchema{
+	// 									{
+	// 										Name: to.Ptr("column1"),
+	// 										Type: to.Ptr(eventstream.DataTypeBigInt),
+	// 									},
+	// 									{
+	// 										Name: to.Ptr("column2"),
+	// 										Type: to.Ptr(eventstream.DataTypeNvarcharMax),
+	// 								}},
+	// 							},
+	// 							{
+	// 								Name: to.Ptr("Array_Example"),
+	// 								Type: to.Ptr(eventstream.DataTypeArray),
+	// 								Items: &eventstream.ColumnSchema{
+	// 									Type: to.Ptr(eventstream.DataTypeBigInt),
+	// 								},
+	// 						}},
+	// 					},
+	// 			}},
+	// 			Properties: &eventstream.FilterOperatorProperties{
+	// 				Conditions: []eventstream.FilterCondition{
+	// 					{
+	// 						Column: &eventstream.ColumnReferenceExpression{
+	// 							ColumnName: to.Ptr("columnName"),
+	// 							ColumnPathSegments: []string{
+	// 								"path",
+	// 								"to",
+	// 								"column"},
+	// 								Node: to.Ptr("nodeName"),
+	// 							},
+	// 							OperatorType: to.Ptr(eventstream.FilterConditionOperatorTypeEquals),
+	// 							Value: &eventstream.LiteralExpression{
+	// 								DataType: to.Ptr(eventstream.DataTypeNvarcharMax),
+	// 								Value: to.Ptr("stringValue"),
+	// 							},
+	// 					}},
+	// 				},
+	// 			},
+	// 			&eventstream.JoinOperator{
+	// 				Name: to.Ptr("JoinerName"),
+	// 				Type: to.Ptr(eventstream.OperatorTypeJoin),
+	// 				InputNodes: []eventstream.NodeReference{
+	// 					{
+	// 						Name: to.Ptr("FilterName"),
+	// 					},
+	// 					{
+	// 						Name: to.Ptr("DerivedStreamName"),
+	// 				}},
+	// 				Properties: &eventstream.JoinOperatorProperties{
+	// 					Duration: &eventstream.OperatorCommonDuration{
+	// 						Unit: to.Ptr(eventstream.OperatorCommonDurationUnitMinute),
+	// 						Value: to.Ptr[int32](1),
+	// 					},
+	// 					JoinOn: []eventstream.JoinOn{
+	// 						{
+	// 							Left: &eventstream.ColumnReferenceExpression{
+	// 								ColumnName: to.Ptr("leftColumnName"),
+	// 								Node: to.Ptr("leftNodeName"),
+	// 							},
+	// 							Right: &eventstream.ColumnReferenceExpression{
+	// 								ColumnName: to.Ptr("rightColumnName"),
+	// 								Node: to.Ptr("rightNodeName"),
+	// 							},
+	// 					}},
+	// 					JoinType: to.Ptr(eventstream.JoinOperatorPropertiesJoinTypeInner),
+	// 				},
+	// 			},
+	// 			&eventstream.ManageFieldsOperator{
+	// 				Name: to.Ptr("FieldsManagerName"),
+	// 				Type: to.Ptr(eventstream.OperatorTypeManageFields),
+	// 				InputNodes: []eventstream.NodeReference{
+	// 					{
+	// 						Name: to.Ptr("DerivedStreamName"),
+	// 				}},
+	// 				InputSchemas: []eventstream.InputSchema{
+	// 					{
+	// 						Name: to.Ptr("DerivedStreamName"),
+	// 						Schema: &eventstream.Schema{
+	// 							Columns: []eventstream.ColumnSchema{
+	// 								{
+	// 									Name: to.Ptr("BikepointID"),
+	// 									Type: to.Ptr(eventstream.DataTypeNvarcharMax),
+	// 								},
+	// 								{
+	// 									Name: to.Ptr("Street"),
+	// 									Type: to.Ptr(eventstream.DataTypeNvarcharMax),
+	// 								},
+	// 								{
+	// 									Name: to.Ptr("Neighbourhood"),
+	// 									Type: to.Ptr(eventstream.DataTypeNvarcharMax),
+	// 								},
+	// 								{
+	// 									Name: to.Ptr("Latitude"),
+	// 									Type: to.Ptr(eventstream.DataTypeFloat),
+	// 								},
+	// 								{
+	// 									Name: to.Ptr("Longitude"),
+	// 									Type: to.Ptr(eventstream.DataTypeFloat),
+	// 								},
+	// 								{
+	// 									Name: to.Ptr("No_Bikes"),
+	// 									Type: to.Ptr(eventstream.DataTypeBigInt),
+	// 								},
+	// 								{
+	// 									Name: to.Ptr("No_Empty_Docks"),
+	// 									Type: to.Ptr(eventstream.DataTypeBigInt),
+	// 							}},
+	// 						},
+	// 				}},
+	// 				Properties: &eventstream.ManageFieldsOperatorProperties{
+	// 					Columns: []eventstream.ManageFieldsOperationClassification{
+	// 						&eventstream.ManageFieldsRenameOperation{
+	// 							Type: to.Ptr(eventstream.TypeRename),
+	// 							Alias: to.Ptr("renameAlias"),
+	// 							Properties: &eventstream.RenameProperties{
+	// 								Column: &eventstream.ColumnReferenceExpression{
+	// 									ColumnName: to.Ptr("renameColumn"),
+	// 									Node: to.Ptr("renameNode"),
+	// 								},
+	// 							},
+	// 						},
+	// 						&eventstream.ManageFieldsCastOperation{
+	// 							Type: to.Ptr(eventstream.TypeCast),
+	// 							Alias: to.Ptr("castAlias"),
+	// 							Properties: &eventstream.CastProperties{
+	// 								Column: &eventstream.ColumnReferenceExpression{
+	// 									ColumnName: to.Ptr("castColumn"),
+	// 									Node: to.Ptr("castNode"),
+	// 								},
+	// 								TargetDataType: to.Ptr(eventstream.DataTypeBigInt),
+	// 							},
+	// 						},
+	// 						&eventstream.ManageFieldsFunctionCallOperation{
+	// 							Type: to.Ptr(eventstream.TypeFunctionCall),
+	// 							Alias: to.Ptr("indexOf"),
+	// 							Properties: &eventstream.FunctionCallProperties{
+	// 								Arguments: []any{
+	// 									"a",
+	// 									map[string]any{
+	// 										"columnName": "functionCallColumn",
+	// 										"node": "functionCallNode",
+	// 									},
+	// 									float64(1)},
+	// 									FunctionName: to.Ptr("CharIndex"),
+	// 								},
+	// 						}},
+	// 					},
+	// 				},
+	// 				&eventstream.AggregateOperator{
+	// 					Name: to.Ptr("AggregatorName"),
+	// 					Type: to.Ptr(eventstream.OperatorTypeAggregate),
+	// 					InputNodes: []eventstream.NodeReference{
+	// 						{
+	// 							Name: to.Ptr("DerivedStreamName"),
+	// 					}},
+	// 					Properties: &eventstream.AggregateOperatorProperties{
+	// 						Aggregations: []eventstream.InColumnAggregation{
+	// 							{
+	// 								AggregationFunction: to.Ptr(eventstream.AggregationFunctionAverage),
+	// 								Alias: to.Ptr("aggregatedAlias"),
+	// 								Column: &eventstream.ColumnReferenceExpression{
+	// 									ColumnName: to.Ptr("aggregationColumn"),
+	// 									Node: to.Ptr("aggregationNode"),
+	// 								},
+	// 								Duration: &eventstream.OperatorCommonDuration{
+	// 									Unit: to.Ptr(eventstream.OperatorCommonDurationUnitMinute),
+	// 									Value: to.Ptr[int32](1),
+	// 								},
+	// 								PartitionBy: []eventstream.ColumnReferenceExpression{
+	// 									{
+	// 										ColumnName: to.Ptr("partitionByColumn"),
+	// 										Node: to.Ptr("partitionByNode"),
+	// 								}},
+	// 						}},
+	// 					},
+	// 				},
+	// 				&eventstream.GroupByOperator{
+	// 					Name: to.Ptr("GroupByName"),
+	// 					Type: to.Ptr(eventstream.OperatorTypeGroupBy),
+	// 					InputNodes: []eventstream.NodeReference{
+	// 						{
+	// 							Name: to.Ptr("DerivedStreamName"),
+	// 					}},
+	// 					Properties: &eventstream.GroupByOperatorProperties{
+	// 						Aggregations: []eventstream.Aggregation{
+	// 							{
+	// 								AggregationFunction: to.Ptr(eventstream.AggregationFunctionAverage),
+	// 								Alias: to.Ptr("groupByAggregationAlias"),
+	// 								Column: &eventstream.ColumnReferenceExpression{
+	// 									ColumnName: to.Ptr("groupByAggregationColumn"),
+	// 									Node: to.Ptr("groupByAggregationNode"),
+	// 								},
+	// 						}},
+	// 						GroupBy: []eventstream.ColumnReferenceExpression{
+	// 							{
+	// 								ColumnName: to.Ptr("groupByColumn"),
+	// 								Node: to.Ptr("groupByNode"),
+	// 						}},
+	// 						Window: &eventstream.TumblingWindow{
+	// 							Type: to.Ptr(eventstream.GroupByWindowTypeTumbling),
+	// 							Properties: &eventstream.TumblingWindowProperties{
+	// 								Duration: &eventstream.OperatorCommonDuration{
+	// 									Unit: to.Ptr(eventstream.OperatorCommonDurationUnitMinute),
+	// 									Value: to.Ptr[int32](5),
+	// 								},
+	// 								Offset: &eventstream.OperatorCommonDuration{
+	// 									Unit: to.Ptr(eventstream.OperatorCommonDurationUnitMinute),
+	// 									Value: to.Ptr[int32](1),
+	// 								},
+	// 							},
+	// 						},
+	// 					},
+	// 				},
+	// 				&eventstream.UnionOperator{
+	// 					Name: to.Ptr("UnionName"),
+	// 					Type: to.Ptr(eventstream.OperatorTypeUnion),
+	// 					InputNodes: []eventstream.NodeReference{
+	// 						{
+	// 							Name: to.Ptr("FilterName"),
+	// 						},
+	// 						{
+	// 							Name: to.Ptr("GroupByName"),
+	// 					}},
+	// 					Properties: map[string]any{
+	// 					},
+	// 				},
+	// 				&eventstream.ExpandOperator{
+	// 					Name: to.Ptr("ExpansionName"),
+	// 					Type: to.Ptr(eventstream.OperatorTypeExpand),
+	// 					InputNodes: []eventstream.NodeReference{
+	// 						{
+	// 							Name: to.Ptr("MyNode"),
+	// 					}},
+	// 					Properties: &eventstream.ExpandOperatorProperties{
+	// 						Column: []eventstream.ColumnReferenceExpression{
+	// 							{
+	// 								ColumnName: to.Ptr("expansionColumn"),
+	// 								Node: to.Ptr("expansionNode"),
+	// 						}},
+	// 						IgnoreMissingOrEmpty: to.Ptr(true),
+	// 					},
+	// 			}},
+	// 			Sources: []eventstream.SourceResponseClassification{
+	// 				&eventstream.AzureEventHubSourceResponse{
+	// 					Name: to.Ptr("AzureEventHubSource"),
+	// 					ID: to.Ptr("514d0e11-cf65-44fb-a292-fc88a2a78618"),
+	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 					Type: to.Ptr(eventstream.SourceTypeAzureEventHub),
+	// 					Properties: &eventstream.AzureEventHubSourceProperties{
+	// 						ConsumerGroupName: to.Ptr("$Default"),
+	// 						DataConnectionID: to.Ptr("9c500070-073f-4a88-b478-8fabe1941c52"),
+	// 						InputSerialization: &eventstream.JSONSerializationInfo{
+	// 							Type: to.Ptr(eventstream.SerializationTypeJSON),
+	// 							Properties: &eventstream.JSONSerializationProperties{
+	// 								Encoding: to.Ptr(eventstream.JSONSerializationPropertiesEncodingUTF8),
+	// 							},
+	// 						},
+	// 					},
+	// 				},
+	// 				&eventstream.AzureIoTHubSourceResponse{
+	// 					Name: to.Ptr("AzureIoTHubSource"),
+	// 					ID: to.Ptr("e2886002-d696-4c05-969c-51361365cc24"),
+	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 					Type: to.Ptr(eventstream.SourceTypeAzureIoTHub),
+	// 					Properties: &eventstream.AzureIoTHubSourceProperties{
+	// 						ConsumerGroupName: to.Ptr("$Default"),
+	// 						DataConnectionID: to.Ptr("8c500070-073f-4a88-b478-8fabe1941c52"),
+	// 						InputSerialization: &eventstream.JSONSerializationInfo{
+	// 							Type: to.Ptr(eventstream.SerializationTypeJSON),
+	// 							Properties: &eventstream.JSONSerializationProperties{
+	// 								Encoding: to.Ptr(eventstream.JSONSerializationPropertiesEncodingUTF8),
+	// 							},
+	// 						},
+	// 					},
+	// 				},
+	// 				&eventstream.CustomEndpointSourceResponse{
+	// 					Name: to.Ptr("CustomEndpointSource"),
+	// 					ID: to.Ptr("0d9bf4db-bc7f-4854-8579-6fdf244ed503"),
+	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 					Type: to.Ptr(eventstream.SourceTypeCustomEndpoint),
+	// 					Properties: map[string]any{
+	// 					},
+	// 				},
+	// 				&eventstream.SampleDataSourceResponse{
+	// 					Name: to.Ptr("SampleDataSource"),
+	// 					ID: to.Ptr("19258e62-4de9-4c52-b45e-71502dc2ddea"),
+	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 					Type: to.Ptr(eventstream.SourceTypeSampleData),
+	// 					Properties: &eventstream.SampleDataSourceProperties{
+	// 						Type: to.Ptr(eventstream.SampleDataSourcePropertiesTypeBicycles),
+	// 					},
+	// 				},
+	// 				&eventstream.AmazonKinesisSourceResponse{
+	// 					Name: to.Ptr("AmazonKinesisSource"),
+	// 					ID: to.Ptr("7afaa265-1d67-416f-8183-e6e1b1ebb4ea"),
+	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 					Type: to.Ptr(eventstream.SourceTypeAmazonKinesis),
+	// 					Properties: &eventstream.AmazonKinesisSourceProperties{
+	// 						DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 						Region: to.Ptr(eventstream.AmazonKinesisSourcePropertiesRegionUsEast1),
+	// 					},
+	// 				},
+	// 				&eventstream.AmazonMSKKafkaSourceResponse{
+	// 					Name: to.Ptr("AmazonMSKKafkaSource"),
+	// 					ID: to.Ptr("d020dd19-e84c-42e1-b4be-87e58145e1b5"),
+	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 					Type: to.Ptr(eventstream.SourceTypeAmazonMSKKafka),
+	// 					Properties: &eventstream.AmazonMSKKafkaSourceProperties{
+	// 						AutoOffsetReset: to.Ptr(eventstream.BaseKafkaSourcePropertiesAutoOffsetResetEarliest),
+	// 						ConsumerGroupName: to.Ptr("consumerGroupName"),
+	// 						DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 						Topic: to.Ptr("topic"),
+	// 						SaslMechanism: to.Ptr(eventstream.AmazonMSKKafkaSourcePropertiesSaslMechanismPLAIN),
+	// 						SecurityProtocol: to.Ptr(eventstream.AmazonMSKKafkaSourcePropertiesSecurityProtocolSASLPLAINTEXT),
+	// 					},
+	// 				},
+	// 				&eventstream.ApacheKafkaSourceResponse{
+	// 					Name: to.Ptr("ApacheKafkaSource"),
+	// 					ID: to.Ptr("03a6dd4a-4627-422f-a287-2ccd7daf903d"),
+	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 					Type: to.Ptr(eventstream.SourceTypeApacheKafka),
+	// 					Properties: &eventstream.ApacheKafkaSourceProperties{
+	// 						AutoOffsetReset: to.Ptr(eventstream.BaseKafkaSourcePropertiesAutoOffsetResetLatest),
+	// 						ConsumerGroupName: to.Ptr("consumerGroupName"),
+	// 						DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 						Topic: to.Ptr("topic"),
+	// 						SaslMechanism: to.Ptr(eventstream.ApacheKafkaSourcePropertiesSaslMechanismSCRAMSHA512),
+	// 						SecurityProtocol: to.Ptr(eventstream.ApacheKafkaSourcePropertiesSecurityProtocolSASLSSL),
+	// 					},
+	// 				},
+	// 				&eventstream.ConfluentCloudSourceResponse{
+	// 					Name: to.Ptr("ConfluentCloudSource"),
+	// 					ID: to.Ptr("6f493321-6c12-40c6-9980-c2aa38804829"),
+	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 					Type: to.Ptr(eventstream.SourceTypeConfluentCloud),
+	// 					Properties: &eventstream.BaseKafkaSourceProperties{
+	// 						AutoOffsetReset: to.Ptr(eventstream.BaseKafkaSourcePropertiesAutoOffsetResetEarliest),
+	// 						ConsumerGroupName: to.Ptr("consumerGroupName"),
+	// 						DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 						Topic: to.Ptr("topic"),
+	// 					},
+	// 				},
+	// 				&eventstream.AzureCosmosDBCDCSourceResponse{
+	// 					Name: to.Ptr("AzureCosmosDBCDCSource"),
+	// 					ID: to.Ptr("e7f88779-0349-47e3-bead-85afc9d3c9a4"),
+	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 					Type: to.Ptr(eventstream.SourceTypeAzureCosmosDBCDC),
+	// 					Properties: &eventstream.AzureCosmosDBCDCSourceProperties{
+	// 						ContainerName: to.Ptr("containerName"),
+	// 						DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 						DatabaseName: to.Ptr("databaseName"),
+	// 						OffsetPolicy: to.Ptr(eventstream.AzureCosmosDBCDCSourcePropertiesOffsetPolicyEarliest),
+	// 					},
+	// 				},
+	// 				&eventstream.AzureSQLDBCDCSourceResponse{
+	// 					Name: to.Ptr("AzureSQLDBCDCSource"),
+	// 					ID: to.Ptr("da5ed80d-c672-4809-a7ac-6224aa2ab2c7"),
+	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 					Type: to.Ptr(eventstream.SourceTypeAzureSQLDBCDC),
+	// 					Properties: &eventstream.BaseSQLCDCSourceProperties{
+	// 						DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 						TableName: to.Ptr("tableName"),
+	// 					},
+	// 				},
+	// 				&eventstream.AzureSQLMIDBCDCSourceResponse{
+	// 					Name: to.Ptr("AzureSQLMIDBCDCSource"),
+	// 					ID: to.Ptr("745e401f-aac6-463f-b107-c336a2440abe"),
+	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 					Type: to.Ptr(eventstream.SourceTypeAzureSQLMIDBCDC),
+	// 					Properties: &eventstream.BaseSQLCDCSourceProperties{
+	// 						DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 						TableName: to.Ptr("tableName"),
+	// 					},
+	// 				},
+	// 				&eventstream.SQLServerOnVMDBCDCSourceResponse{
+	// 					Name: to.Ptr("SQLServerOnVMDBCDCSource"),
+	// 					ID: to.Ptr("759842ab-a968-498d-9f37-f46297da8b07"),
+	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 					Type: to.Ptr(eventstream.SourceTypeSQLServerOnVMDBCDC),
+	// 					Properties: &eventstream.BaseSQLCDCSourceProperties{
+	// 						DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 						TableName: to.Ptr("tableName"),
+	// 					},
+	// 				},
+	// 				&eventstream.MySQLCDCSourceResponse{
+	// 					Name: to.Ptr("MySQLCDCSource"),
+	// 					ID: to.Ptr("9791cd2a-19fb-4991-b878-2b061420a460"),
+	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 					Type: to.Ptr(eventstream.SourceTypeMySQLCDC),
+	// 					Properties: map[string]any{
+	// 						"dataConnectionId": "2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37",
+	// 						"port": float64(3306),
+	// 						"serverId": float64(9),
+	// 						"tableName": "tableName",
+	// 					},
+	// 				},
+	// 				&eventstream.PostgreSQLCDCSourceResponse{
+	// 					Name: to.Ptr("PostgreSQLCDCSource"),
+	// 					ID: to.Ptr("57b3394b-bcf3-479a-952b-22a815e1d684"),
+	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 					Type: to.Ptr(eventstream.SourceTypePostgreSQLCDC),
+	// 					Properties: &eventstream.PostgreSQLCDCSourceProperties{
+	// 						DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 						TableName: to.Ptr("tableName"),
+	// 						Port: to.Ptr[int32](5432),
+	// 						SlotName: to.Ptr("slotName"),
+	// 					},
+	// 				},
+	// 				&eventstream.GooglePubSubSourceResponse{
+	// 					Name: to.Ptr("GooglePubSubSource"),
+	// 					ID: to.Ptr("d5f702ca-8b2b-4ac5-88e7-50697cb1b207"),
+	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 					Type: to.Ptr(eventstream.SourceTypeGooglePubSub),
+	// 					Properties: &eventstream.GooglePubSubSourceProperties{
+	// 						DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 					},
+	// 			}},
+	// 			Streams: []eventstream.StreamResponseClassification{
+	// 				&eventstream.DefaultStreamResponse{
+	// 					Name: to.Ptr("Eventstream-stream"),
+	// 					Type: to.Ptr(eventstream.StreamTypeDefaultStream),
+	// 					ID: to.Ptr("8eff3cbe-f452-4d7f-bc2d-f35b4359c917"),
+	// 					InputNodes: []eventstream.NodeReference{
+	// 						{
+	// 							Name: to.Ptr("AzureEventHubSource"),
+	// 					}},
+	// 					Properties: map[string]any{
+	// 					},
+	// 				},
+	// 				&eventstream.DerivedStreamResponse{
+	// 					Name: to.Ptr("DerivedStreamName"),
+	// 					Type: to.Ptr(eventstream.StreamTypeDerivedStream),
+	// 					ID: to.Ptr("0f6f0dd8-9de2-48e2-92e7-e15b755b22a6"),
+	// 					InputNodes: []eventstream.NodeReference{
+	// 						{
+	// 							Name: to.Ptr("FilterName"),
+	// 					}},
+	// 					Properties: &eventstream.DerivedStreamProperties{
+	// 						InputSerialization: &eventstream.JSONSerializationInfo{
+	// 							Type: to.Ptr(eventstream.SerializationTypeJSON),
+	// 							Properties: &eventstream.JSONSerializationProperties{
+	// 								Encoding: to.Ptr(eventstream.JSONSerializationPropertiesEncodingUTF8),
+	// 							},
+	// 						},
+	// 					},
+	// 			}},
+	// 		}
 }
 
 // Generated from example definition
@@ -82,10 +655,31 @@ func ExampleTopologyClient_GetEventstreamSource() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewTopologyClient().GetEventstreamSource(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "8c500070-073f-4a88-b478-8fabe1941c52", "e2886002-d696-4c05-969c-51361365cc24", nil)
+	res, err := clientFactory.NewTopologyClient().GetEventstreamSource(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "8c500070-073f-4a88-b478-8fabe1941c52", "e2886002-d696-4c05-969c-51361365cc24", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res = eventstream.TopologyClientGetEventstreamSourceResponse{
+	// 	                            SourceResponseClassification: &eventstream.AzureEventHubSourceResponse{
+	// 		Name: to.Ptr("AzureEventHubSource"),
+	// 		ID: to.Ptr("e2886002-d696-4c05-969c-51361365cc24"),
+	// 		Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 		Type: to.Ptr(eventstream.SourceTypeAzureEventHub),
+	// 		Properties: &eventstream.AzureEventHubSourceProperties{
+	// 			ConsumerGroupName: to.Ptr("$Default"),
+	// 			DataConnectionID: to.Ptr("9c500070-073f-4a88-b478-8fabe1941c52"),
+	// 			InputSerialization: &eventstream.JSONSerializationInfo{
+	// 				Type: to.Ptr(eventstream.SerializationTypeJSON),
+	// 				Properties: &eventstream.JSONSerializationProperties{
+	// 					Encoding: to.Ptr(eventstream.JSONSerializationPropertiesEncodingUTF8),
+	// 				},
+	// 			},
+	// 		},
+	// 	},
+	// 	                        }
 }
 
 // Generated from example definition
@@ -99,10 +693,37 @@ func ExampleTopologyClient_GetEventstreamDestination() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewTopologyClient().GetEventstreamDestination(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "8c500070-073f-4a88-b478-8fabe1941c52", "2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37", nil)
+	res, err := clientFactory.NewTopologyClient().GetEventstreamDestination(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "8c500070-073f-4a88-b478-8fabe1941c52", "2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res = eventstream.TopologyClientGetEventstreamDestinationResponse{
+	// 	                            DestinationResponseClassification: &eventstream.LakehouseDestinationResponse{
+	// 		Name: to.Ptr("LakehouseDestination"),
+	// 		ID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 		InputNodes: []eventstream.NodeReference{
+	// 			{
+	// 				Name: to.Ptr("InputNodeName"),
+	// 		}},
+	// 		Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 		Type: to.Ptr(eventstream.DestinationTypeLakehouse),
+	// 		Properties: &eventstream.LakehouseDestinationProperties{
+	// 			Schema: to.Ptr("dbo"),
+	// 			DeltaTable: to.Ptr("deltaTable"),
+	// 			InputSerialization: &eventstream.JSONSerializationInfo{
+	// 				Type: to.Ptr(eventstream.SerializationTypeJSON),
+	// 				Properties: &eventstream.JSONSerializationProperties{
+	// 					Encoding: to.Ptr(eventstream.JSONSerializationPropertiesEncodingUTF8),
+	// 				},
+	// 			},
+	// 			ItemID: to.Ptr("ee579458-85ea-4652-bd77-5c7d7c298b2a"),
+	// 			WorkspaceID: to.Ptr("9625b495-17b3-4d6c-aeea-a81ae76ba369"),
+	// 		},
+	// 	},
+	// 	                        }
 }
 
 // Generated from example definition
@@ -116,10 +737,23 @@ func ExampleTopologyClient_GetEventstreamSourceConnection() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewTopologyClient().GetEventstreamSourceConnection(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "8c500070-073f-4a88-b478-8fabe1941c52", "f344e2e0-e846-4991-ac26-d27dfb6a73c2", nil)
+	res, err := clientFactory.NewTopologyClient().GetEventstreamSourceConnection(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "8c500070-073f-4a88-b478-8fabe1941c52", "f344e2e0-e846-4991-ac26-d27dfb6a73c2", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.SourceConnectionResponse = eventstream.SourceConnectionResponse{
+	// 	AccessKeys: &eventstream.AccessKeys{
+	// 		PrimaryConnectionString: to.Ptr("connectionString1"),
+	// 		PrimaryKey: to.Ptr("key1"),
+	// 		SecondaryConnectionString: to.Ptr("connectionString2"),
+	// 		SecondaryKey: to.Ptr("key2"),
+	// 	},
+	// 	EventHubName: to.Ptr("eventhub"),
+	// 	FullyQualifiedNamespace: to.Ptr("namespace.servicebus.windows.net"),
+	// }
 }
 
 // Generated from example definition
@@ -133,10 +767,24 @@ func ExampleTopologyClient_GetEventstreamDestinationConnection() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewTopologyClient().GetEventstreamDestinationConnection(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "8c500070-073f-4a88-b478-8fabe1941c52", "2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37", nil)
+	res, err := clientFactory.NewTopologyClient().GetEventstreamDestinationConnection(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "8c500070-073f-4a88-b478-8fabe1941c52", "2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.DestinationConnectionResponse = eventstream.DestinationConnectionResponse{
+	// 	AccessKeys: &eventstream.AccessKeys{
+	// 		PrimaryConnectionString: to.Ptr("connectionString1"),
+	// 		PrimaryKey: to.Ptr("key1"),
+	// 		SecondaryConnectionString: to.Ptr("connectionString2"),
+	// 		SecondaryKey: to.Ptr("key2"),
+	// 	},
+	// 	EventHubName: to.Ptr("eventhub"),
+	// 	FullyQualifiedNamespace: to.Ptr("namespace.servicebus.windows.net"),
+	// 	ConsumerGroupName: to.Ptr("$Default"),
+	// }
 }
 
 // Generated from example definition

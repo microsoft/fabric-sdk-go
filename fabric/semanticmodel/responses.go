@@ -6,6 +6,11 @@
 
 package semanticmodel
 
+// ItemsClientBindSemanticModelConnectionResponse contains the response from method ItemsClient.BindSemanticModelConnection.
+type ItemsClientBindSemanticModelConnectionResponse struct {
+	// placeholder for future response values
+}
+
 // ItemsClientCreateSemanticModelResponse contains the response from method ItemsClient.BeginCreateSemanticModel.
 type ItemsClientCreateSemanticModelResponse struct {
 	// A semantic model object.

@@ -47,6 +47,14 @@ func NewClientFactoryWithClient(client fabric.Client) *ClientFactory {
 	}
 }
 
+// NewClient creates a new instance of Client.
+func (c *ClientFactory) NewClient() *Client {
+	return &Client{
+		internal: c.internal.WithClientName("sqlendpoint.Client"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewItemsClient creates a new instance of ItemsClient.
 func (c *ClientFactory) NewItemsClient() *ItemsClient {
 	return &ItemsClient{

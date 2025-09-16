@@ -258,7 +258,6 @@ func (i *ItemsServerTransport) dispatchBeginGetReportDefinition(req *http.Reques
 		if matches == nil || len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
-		qp := req.URL.Query()
 		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 		if err != nil {
 			return nil, err
@@ -267,18 +266,7 @@ func (i *ItemsServerTransport) dispatchBeginGetReportDefinition(req *http.Reques
 		if err != nil {
 			return nil, err
 		}
-		formatUnescaped, err := url.QueryUnescape(qp.Get("format"))
-		if err != nil {
-			return nil, err
-		}
-		formatParam := getOptional(formatUnescaped)
-		var options *report.ItemsClientBeginGetReportDefinitionOptions
-		if formatParam != nil {
-			options = &report.ItemsClientBeginGetReportDefinitionOptions{
-				Format: formatParam,
-			}
-		}
-		respr, errRespr := i.srv.BeginGetReportDefinition(req.Context(), workspaceIDParam, reportIDParam, options)
+		respr, errRespr := i.srv.BeginGetReportDefinition(req.Context(), workspaceIDParam, reportIDParam, nil)
 		if respErr := server.GetError(errRespr, req); respErr != nil {
 			return nil, respErr
 		}

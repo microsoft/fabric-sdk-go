@@ -127,6 +127,12 @@ type AssignWorkspaceToCapacityRequest struct {
 	CapacityID *string
 }
 
+// AssignWorkspaceToDomainRequest - A domain assignment request.
+type AssignWorkspaceToDomainRequest struct {
+	// REQUIRED; The ID of the domain the workspace should be assigned to.
+	DomainID *string
+}
+
 // AutomaticGitCredentials - Automatic Git credentials.
 type AutomaticGitCredentials struct {
 	// REQUIRED; The Git credentials source.
@@ -238,6 +244,15 @@ type BulkCreateShortcutsRequest struct {
 	CreateShortcutRequests []CreateShortcutWithTransformRequest
 }
 
+// BulkMoveItemsRequest - Bulk move items request.
+type BulkMoveItemsRequest struct {
+	// REQUIRED; The IDs of requested items to move.
+	Items []string
+
+	// The destination folder ID. If not provided, the workspace is used as the destination folder.
+	TargetFolderID *string
+}
+
 // CSVToDeltaTransform - CSV to Delta transform.
 type CSVToDeltaTransform struct {
 	// REQUIRED; CSV to Delta transform properties.
@@ -296,6 +311,28 @@ type Capacity struct {
 
 	// READ-ONLY; The capacity state.
 	State *CapacityState
+}
+
+// ColumnConstraint indicates a constraint that determines the permissions and visibility a user has on columns within a table.
+type ColumnConstraint struct {
+	// REQUIRED; The array of actions applied to the columnNames. This determines which actions a user will be able to perform
+	// on columns. The allowed values are: Read. Additional columnAction types may be added over
+	// time.
+	ColumnAction []ColumnAction
+
+	// REQUIRED; The effect given to the columnNames. The only allowed value is Permit. Additional columnEffect types may be added
+	// over time.
+	ColumnEffect *ColumnEffect
+
+	// REQUIRED; An array of case sensitive column names. Each value is a column name from the table specified in tablePath. Use
+	// these columns with columnEffect and columnAction. Columns that aren't listed get the
+	// default value null. Use * to indicate all columns in the table.
+	ColumnNames []string
+
+	// REQUIRED; A relative file path specifying which table the column constraint applies to. This should be in the form of /Tables/{optionalSchema}/{tableName}.
+	// Only one value can be given here and the tableName
+	// must be a table included in the PermissionScope.
+	TablePath *string
 }
 
 // CommitToGitRequest - Contains the commit request.
@@ -1017,6 +1054,9 @@ type CreateWorkspaceRequest struct {
 	// The workspace description.
 	// The description cannot contain more than 4000 characters.
 	Description *string
+
+	// The ID of the domain to assign the workspace to.
+	DomainID *string
 }
 
 // Credentials - The base object of credentials.
@@ -1043,7 +1083,7 @@ type CronScheduleConfig struct {
 	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
 	StartDateTime *time.Time
 
-	// REQUIRED; A string represents the type of the plan. Additional planType types may be added over time.
+	// REQUIRED; The type of schedule configuration. Additional types may be added over time.
 	Type *ScheduleType
 }
 
@@ -1069,10 +1109,10 @@ type DailyScheduleConfig struct {
 	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
 	StartDateTime *time.Time
 
-	// REQUIRED; A list of time slots in hh:mm format, at most 100 elements are allowed.
+	// REQUIRED; A list of time slots in the hh:mm format. The maximum time slots you can use is 100.
 	Times []string
 
-	// REQUIRED; A string represents the type of the plan. Additional planType types may be added over time.
+	// REQUIRED; The type of schedule configuration. Additional types may be added over time.
 	Type *ScheduleType
 }
 
@@ -1144,6 +1184,24 @@ type Dataverse struct {
 	TableName *string
 }
 
+// DayOfMonth - Specifies a date to trigger the job. The value must be a valid date. Otherwise, it will be skipped.
+type DayOfMonth struct {
+	// REQUIRED; Specifies a date to trigger the job, using a value between 1 and 31. For example, 2 means the second day of the
+	// month. The date must be valid. If an invalid date is provided, such as February 31st, it
+	// will automatically skip to the month that includes the 31st day.
+	DayOfMonth *int32
+
+	// REQUIRED; An enumerator that lists the day for triggering jobs. Additional types may be added over time.
+	OccurrenceType *OccurrenceType
+}
+
+// GetMonthlyOccurrence implements the MonthlyOccurrenceClassification interface for type DayOfMonth.
+func (d *DayOfMonth) GetMonthlyOccurrence() *MonthlyOccurrence {
+	return &MonthlyOccurrence{
+		OccurrenceType: d.OccurrenceType,
+	}
+}
+
 // DecisionRule - Specifies a rule for matching the requested action. Contains effect (Permit) and Permission which determine
 // whether a user or entity is authorized to perform a specific action (e.g., read) on a
 // resource. Permission is a set of scopes, defined by attributes, that must match the requested action for the rule to apply.
@@ -1155,9 +1213,23 @@ type DecisionRule struct {
 	// level of access being granted, such as Read.
 	Permission []PermissionScope
 
+	// Any constraints such as row or column level security that are applied to tables as part of this role. If not included,
+	// no constraints apply to any tables in the role.
+	Constraints *DecisionRuleConstraints
+
 	// The effect that a role has on access to the data resource. Currently, the only supported effect type is Permit, which grants
 	// access to the resource. Additional effect types may be added over time.
 	Effect *Effect
+}
+
+// DecisionRuleConstraints - Any constraints such as row or column level security that are applied to tables as part of this
+// role. If not included, no constraints apply to any tables in the role.
+type DecisionRuleConstraints struct {
+	// The array of column constraints applied to one or more tables in the data access role.
+	Columns []ColumnConstraint
+
+	// The array of row constraints applied to one or more tables in the data access role.
+	Rows []RowConstraint
 }
 
 // DeployRequest - A request to deploy items from a deployment pipeline stage to another consecutive stage. Deploying to a
@@ -1504,6 +1576,49 @@ type DeploymentSourceAndTarget struct {
 	// READ-ONLY; The ID of the Fabric item that will be overwritten in the target stage. Only applies when overwriting a Fabric
 	// item.
 	TargetItemID *string
+}
+
+// Domain - Represents a domain.
+type Domain struct {
+	// REQUIRED; The description of the domain.
+	Description *string
+
+	// REQUIRED; The name of the domain.
+	DisplayName *string
+
+	// REQUIRED; The domain ID.
+	ID *string
+
+	// The parent domain ID, for a subdomain.
+	ParentDomainID *string
+}
+
+// DomainTagScope - Represents domain tag scope.
+type DomainTagScope struct {
+	// REQUIRED; Domain object ID
+	DomainID *string
+
+	// REQUIRED; Denotes tag scope. Additional tag scopes may be added over time.
+	Type *TagScopeType
+}
+
+// GetTagScope implements the TagScopeClassification interface for type DomainTagScope.
+func (d *DomainTagScope) GetTagScope() *TagScope {
+	return &TagScope{
+		Type: d.Type,
+	}
+}
+
+// Domains - A response wrapper for a list of domains.
+type Domains struct {
+	// REQUIRED; An array of domains
+	Value []Domain
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
 }
 
 // ErrorRelatedResource - The error related resource details object.
@@ -2247,10 +2362,65 @@ type MicrosoftEntraMember struct {
 	ObjectType *ObjectType
 }
 
+// MonthlyOccurrence - Specifies the day for triggering jobs
+type MonthlyOccurrence struct {
+	// REQUIRED; An enumerator that lists the day for triggering jobs. Additional types may be added over time.
+	OccurrenceType *OccurrenceType
+}
+
+// GetMonthlyOccurrence implements the MonthlyOccurrenceClassification interface for type MonthlyOccurrence.
+func (m *MonthlyOccurrence) GetMonthlyOccurrence() *MonthlyOccurrence { return m }
+
+type MonthlyScheduleConfig struct {
+	// REQUIRED; The end time for this schedule. The end time must be later than the start time. It has to be in UTC, using the
+	// YYYY-MM-DDTHH:mm:ssZ format.
+	EndDateTime *time.Time
+
+	// REQUIRED; The time zone identifier registry on local computer for windows, see Default Time Zones [/windows-hardware/manufacture/desktop/default-time-zones]
+	LocalTimeZoneID *string
+
+	// REQUIRED; A date for triggering the job.
+	Occurrence MonthlyOccurrenceClassification
+
+	// REQUIRED; Specifies the monthly job repeat interval. For example, when set to 1 the job is triggered every month.
+	Recurrence *int32
+
+	// REQUIRED; The start time for this schedule. If the start time is in the past, it will trigger a job instantly. The time
+	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	StartDateTime *time.Time
+
+	// REQUIRED; A list of time slots in the hh:mm format. The maximum time slots you can use is 100.
+	Times []string
+
+	// REQUIRED; The type of schedule configuration. Additional types may be added over time.
+	Type *ScheduleType
+}
+
+// GetScheduleConfig implements the ScheduleConfigClassification interface for type MonthlyScheduleConfig.
+func (m *MonthlyScheduleConfig) GetScheduleConfig() *ScheduleConfig {
+	return &ScheduleConfig{
+		EndDateTime:     m.EndDateTime,
+		LocalTimeZoneID: m.LocalTimeZoneID,
+		StartDateTime:   m.StartDateTime,
+		Type:            m.Type,
+	}
+}
+
 // MoveFolderRequest - Move folder request.
 type MoveFolderRequest struct {
 	// The destination folder ID. If not provided, the workspace is used as the destination folder.
 	TargetFolderID *string
+}
+
+// MoveItemRequest - Move item request.
+type MoveItemRequest struct {
+	// The destination folder ID. If not provided, the workspace is used as the destination folder.
+	TargetFolderID *string
+}
+
+type MovedItems struct {
+	// REQUIRED; A list of items.
+	Value []Item
 }
 
 // NetworkRules - The policy defining access to/from a workspace to/from public networks.
@@ -2507,6 +2677,26 @@ type OperationState struct {
 	Error *ErrorResponse
 }
 
+// OrdinalWeekday - Specifies the ordinal week and weekday to trigger the job. The value must be a valid date. Otherwise,
+// it will be skipped.
+type OrdinalWeekday struct {
+	// REQUIRED; An enumerator that lists the day for triggering jobs. Additional types may be added over time.
+	OccurrenceType *OccurrenceType
+
+	// REQUIRED; The week of the month.
+	WeekIndex *WeekIndex
+
+	// REQUIRED; Week day for triggering jobs.
+	Weekday *DayOfWeek
+}
+
+// GetMonthlyOccurrence implements the MonthlyOccurrenceClassification interface for type OrdinalWeekday.
+func (o *OrdinalWeekday) GetMonthlyOccurrence() *MonthlyOccurrence {
+	return &MonthlyOccurrence{
+		OccurrenceType: o.OccurrenceType,
+	}
+}
+
 // OutboundRules - The policy for all outbound communications from a workspace.
 type OutboundRules struct {
 	// The policy for outbound communications to public networks from a workspace.
@@ -2647,6 +2837,21 @@ type PublicKey struct {
 	Modulus *string
 }
 
+// RowConstraint indicates a constraint that determines the rows in a table that users can see. Roles defined with RowConstraints
+// use T-SQL to define a predicate that filters data in a table. Rows that
+// do not meet the predicate’s conditions are filtered out, leaving a subset of the original rows. RowConstraints can also
+// be used to specify dynamic and multi-table flavors of RLS using T-SQL.
+type RowConstraint struct {
+	// REQUIRED; A relative file path specifying which table the row constraint applies to. This should be in the form of /Tables/{optionalSchema}/{tableName}.
+	// Only one value can be given here and the tableName must
+	// be a table included in the PermissionScope.
+	TablePath *string
+
+	// REQUIRED; A T-SQL expression that is used to evaluate which rows the role members can see. Only a subset of T-SQL can be
+	// used as a predicate.
+	Value *string
+}
+
 // RunOnDemandItemJobRequest - Run on demand item job instance payload
 type RunOnDemandItemJobRequest struct {
 	// Payload for run on-demand job request. Needed only if the job type requires a payload.
@@ -2684,7 +2889,7 @@ type ScheduleConfig struct {
 	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
 	StartDateTime *time.Time
 
-	// REQUIRED; A string represents the type of the plan. Additional planType types may be added over time.
+	// REQUIRED; The type of schedule configuration. Additional types may be added over time.
 	Type *ScheduleType
 }
 
@@ -2853,7 +3058,19 @@ type Tag struct {
 
 	// REQUIRED; The tag object ID.
 	ID *string
+
+	// REQUIRED; The scope of the tag.
+	Scope TagScopeClassification
 }
+
+// TagScope - Represents a tag scope
+type TagScope struct {
+	// REQUIRED; Denotes tag scope. Additional tag scopes may be added over time.
+	Type *TagScopeType
+}
+
+// GetTagScope implements the TagScopeClassification interface for type TagScope.
+func (t *TagScope) GetTagScope() *TagScope { return t }
 
 // Tags - A response wrapper for a list of tags.
 type Tags struct {
@@ -2896,6 +3113,19 @@ type Target struct {
 
 	// An object containing the properties of the target S3 compatible data source.
 	S3Compatible *S3Compatible
+}
+
+// TenantTagScope - Represents tenant tag scope.
+type TenantTagScope struct {
+	// REQUIRED; Denotes tag scope. Additional tag scopes may be added over time.
+	Type *TagScopeType
+}
+
+// GetTagScope implements the TagScopeClassification interface for type TenantTagScope.
+func (t *TenantTagScope) GetTagScope() *TagScope {
+	return &TagScope{
+		Type: t.Type,
+	}
 }
 
 // Transform - An object that contains the transform name and its corresponding properties to be applied to target data.
@@ -3401,10 +3631,10 @@ type WeeklyScheduleConfig struct {
 	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
 	StartDateTime *time.Time
 
-	// REQUIRED; A list of time slots in hh:mm format, at most 100 elements are allowed.
+	// REQUIRED; A list of time slots in the hh:mm format. The maximum time slots you can use is 100.
 	Times []string
 
-	// REQUIRED; A string represents the type of the plan. Additional planType types may be added over time.
+	// REQUIRED; The type of schedule configuration. Additional types may be added over time.
 	Type *ScheduleType
 
 	// REQUIRED; A list of weekdays, at most seven elements are allowed.
@@ -3472,6 +3702,9 @@ type Workspace struct {
 	// READ-ONLY; The ID of the capacity the workspace is assigned to.
 	CapacityID *string
 
+	// READ-ONLY; The ID of the domain the workspace is assigned to.
+	DomainID *string
+
 	// READ-ONLY; The workspace type.
 	Type *WorkspaceType
 }
@@ -3531,6 +3764,9 @@ type WorkspaceInfo struct {
 
 	// READ-ONLY; The region of the capacity associated with this workspace.
 	CapacityRegion *CapacityRegion
+
+	// READ-ONLY; The ID of the domain the workspace is assigned to.
+	DomainID *string
 
 	// READ-ONLY; The OneLake API endpoints associated with this workspace.
 	OneLakeEndpoints *OneLakeEndpoints

@@ -196,6 +196,72 @@ func (r *RefreshMetadataRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type SQLAuditSettings.
+func (s SQLAuditSettings) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "auditActionsAndGroups", s.AuditActionsAndGroups)
+	populate(objectMap, "retentionDays", s.RetentionDays)
+	populate(objectMap, "state", s.State)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type SQLAuditSettings.
+func (s *SQLAuditSettings) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", s, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "auditActionsAndGroups":
+			err = unpopulate(val, "AuditActionsAndGroups", &s.AuditActionsAndGroups)
+			delete(rawMsg, key)
+		case "retentionDays":
+			err = unpopulate(val, "RetentionDays", &s.RetentionDays)
+			delete(rawMsg, key)
+		case "state":
+			err = unpopulate(val, "State", &s.State)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", s, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type SQLAuditSettingsUpdate.
+func (s SQLAuditSettingsUpdate) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "retentionDays", s.RetentionDays)
+	populate(objectMap, "state", s.State)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type SQLAuditSettingsUpdate.
+func (s *SQLAuditSettingsUpdate) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", s, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "retentionDays":
+			err = unpopulate(val, "RetentionDays", &s.RetentionDays)
+			delete(rawMsg, key)
+		case "state":
+			err = unpopulate(val, "State", &s.State)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", s, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type SQLEndpoint.
 func (s SQLEndpoint) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)

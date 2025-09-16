@@ -42,30 +42,54 @@ func ExampleTagsClient_NewListTagsPager_listOfAllTenantsTagsExample() {
 		// 		{
 		// 			DisplayName: to.Ptr("Finance"),
 		// 			ID: to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+		// 			Scope: &core.TenantTagScope{
+		// 				Type: to.Ptr(core.TagScopeTypeTenant),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("Human resources"),
 		// 			ID: to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
+		// 			Scope: &core.TenantTagScope{
+		// 				Type: to.Ptr(core.TagScopeTypeTenant),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("Engineering P1"),
 		// 			ID: to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
+		// 			Scope: &core.TenantTagScope{
+		// 				Type: to.Ptr(core.TagScopeTypeTenant),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("Marketing Q1"),
 		// 			ID: to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
+		// 			Scope: &core.TenantTagScope{
+		// 				Type: to.Ptr(core.TagScopeTypeTenant),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("HR Sales Q1"),
 		// 			ID: to.Ptr("17df435d-9efd-48c1-a937-7d6fd70ab26a"),
+		// 			Scope: &core.DomainTagScope{
+		// 				Type: to.Ptr(core.TagScopeTypeDomain),
+		// 				DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("Root"),
 		// 			ID: to.Ptr("fb765fe3-d404-4f24-9d67-5916449c4c50"),
+		// 			Scope: &core.DomainTagScope{
+		// 				Type: to.Ptr(core.TagScopeTypeDomain),
+		// 				DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("Legal EMEA"),
 		// 			ID: to.Ptr("bda31be4-7efe-4272-8b85-e1b2ff0f0592"),
+		// 			Scope: &core.DomainTagScope{
+		// 				Type: to.Ptr(core.TagScopeTypeDomain),
+		// 				DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+		// 			},
 		// 	}},
 		// }
 	}
@@ -100,30 +124,54 @@ func ExampleTagsClient_NewListTagsPager_listOfAllTenantsTagsWithContinuationExam
 		// 		{
 		// 			DisplayName: to.Ptr("Finance"),
 		// 			ID: to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+		// 			Scope: &core.TenantTagScope{
+		// 				Type: to.Ptr(core.TagScopeTypeTenant),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("Human resources"),
 		// 			ID: to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
+		// 			Scope: &core.TenantTagScope{
+		// 				Type: to.Ptr(core.TagScopeTypeTenant),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("Engineering P1"),
 		// 			ID: to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
+		// 			Scope: &core.TenantTagScope{
+		// 				Type: to.Ptr(core.TagScopeTypeTenant),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("Marketing Q1"),
 		// 			ID: to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
+		// 			Scope: &core.TenantTagScope{
+		// 				Type: to.Ptr(core.TagScopeTypeTenant),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("HR Sales Q1"),
 		// 			ID: to.Ptr("17df435d-9efd-48c1-a937-7d6fd70ab26a"),
+		// 			Scope: &core.DomainTagScope{
+		// 				Type: to.Ptr(core.TagScopeTypeDomain),
+		// 				DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("Root"),
 		// 			ID: to.Ptr("fb765fe3-d404-4f24-9d67-5916449c4c50"),
+		// 			Scope: &core.DomainTagScope{
+		// 				Type: to.Ptr(core.TagScopeTypeDomain),
+		// 				DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("Legal EMEA"),
 		// 			ID: to.Ptr("bda31be4-7efe-4272-8b85-e1b2ff0f0592"),
+		// 			Scope: &core.DomainTagScope{
+		// 				Type: to.Ptr(core.TagScopeTypeDomain),
+		// 				DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+		// 			},
 		// 	}},
 		// }
 	}

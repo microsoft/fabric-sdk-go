@@ -268,6 +268,36 @@ func PossibleChangeTypeValues() []ChangeType {
 	}
 }
 
+type ColumnAction string
+
+const (
+	// ColumnActionRead - The ColumnAction value Read
+	ColumnActionRead ColumnAction = "Read"
+)
+
+// PossibleColumnActionValues returns the possible values for the ColumnAction const type.
+func PossibleColumnActionValues() []ColumnAction {
+	return []ColumnAction{
+		ColumnActionRead,
+	}
+}
+
+// ColumnEffect - The effect given to the columnNames. The only allowed value is Permit. Additional columnEffect types may
+// be added over time.
+type ColumnEffect string
+
+const (
+	// ColumnEffectPermit - The ColumnEffect type Permit
+	ColumnEffectPermit ColumnEffect = "Permit"
+)
+
+// PossibleColumnEffectValues returns the possible values for the ColumnEffect const type.
+func PossibleColumnEffectValues() []ColumnEffect {
+	return []ColumnEffect{
+		ColumnEffectPermit,
+	}
+}
+
 // CommitMode - Modes for the commit operation. Additional modes may be added over time.
 type CommitMode string
 
@@ -1100,6 +1130,24 @@ func PossibleObjectTypeValues() []ObjectType {
 	}
 }
 
+// OccurrenceType - An enumerator that lists the day for triggering jobs. Additional types may be added over time.
+type OccurrenceType string
+
+const (
+	// OccurrenceTypeDayOfMonth - A date.
+	OccurrenceTypeDayOfMonth OccurrenceType = "DayOfMonth"
+	// OccurrenceTypeOrdinalWeekday - A day.
+	OccurrenceTypeOrdinalWeekday OccurrenceType = "OrdinalWeekday"
+)
+
+// PossibleOccurrenceTypeValues returns the possible values for the OccurrenceType const type.
+func PossibleOccurrenceTypeValues() []OccurrenceType {
+	return []OccurrenceType{
+		OccurrenceTypeDayOfMonth,
+		OccurrenceTypeOrdinalWeekday,
+	}
+}
+
 // PayloadType - The type of the definition part payload. Additional payload types may be added over time.
 type PayloadType string
 
@@ -1119,6 +1167,8 @@ func PossiblePayloadTypeValues() []PayloadType {
 type PrincipalType string
 
 const (
+	// PrincipalTypeEntireTenant - Principal represents all tenant users.
+	PrincipalTypeEntireTenant PrincipalType = "EntireTenant"
 	// PrincipalTypeGroup - Principal is a security group.
 	PrincipalTypeGroup PrincipalType = "Group"
 	// PrincipalTypeServicePrincipal - Principal is a Microsoft Entra service principal.
@@ -1132,6 +1182,7 @@ const (
 // PossiblePrincipalTypeValues returns the possible values for the PrincipalType const type.
 func PossiblePrincipalTypeValues() []PrincipalType {
 	return []PrincipalType{
+		PrincipalTypeEntireTenant,
 		PrincipalTypeGroup,
 		PrincipalTypeServicePrincipal,
 		PrincipalTypeServicePrincipalProfile,
@@ -1215,15 +1266,17 @@ func PossibleRequiredActionValues() []RequiredAction {
 	}
 }
 
-// ScheduleType - A string represents the type of the plan. Additional planType types may be added over time.
+// ScheduleType - The type of schedule configuration. Additional types may be added over time.
 type ScheduleType string
 
 const (
-	// ScheduleTypeCron - A type of schedule triggers jobs periodically.
+	// ScheduleTypeCron - Triggers a job periodically.
 	ScheduleTypeCron ScheduleType = "Cron"
-	// ScheduleTypeDaily - A type of schedule triggers jobs daily.
+	// ScheduleTypeDaily - Triggers a job daily.
 	ScheduleTypeDaily ScheduleType = "Daily"
-	// ScheduleTypeWeekly - A type of schedule triggers jobs by the week.
+	// ScheduleTypeMonthly - Triggers a job monthly.
+	ScheduleTypeMonthly ScheduleType = "Monthly"
+	// ScheduleTypeWeekly - Triggers a job weekly.
 	ScheduleTypeWeekly ScheduleType = "Weekly"
 )
 
@@ -1232,6 +1285,7 @@ func PossibleScheduleTypeValues() []ScheduleType {
 	return []ScheduleType{
 		ScheduleTypeCron,
 		ScheduleTypeDaily,
+		ScheduleTypeMonthly,
 		ScheduleTypeWeekly,
 	}
 }
@@ -1309,6 +1363,24 @@ func PossibleStatusValues() []Status {
 	}
 }
 
+// TagScopeType - Denotes tag scope. Additional tag scopes may be added over time.
+type TagScopeType string
+
+const (
+	// TagScopeTypeDomain - Tag is a domain level tag.
+	TagScopeTypeDomain TagScopeType = "Domain"
+	// TagScopeTypeTenant - Tag is a tenant level tag.
+	TagScopeTypeTenant TagScopeType = "Tenant"
+)
+
+// PossibleTagScopeTypeValues returns the possible values for the TagScopeType const type.
+func PossibleTagScopeTypeValues() []TagScopeType {
+	return []TagScopeType{
+		TagScopeTypeDomain,
+		TagScopeTypeTenant,
+	}
+}
+
 // TransformType - The type of transform. Additional transform types may be added over time.
 type TransformType string
 
@@ -1357,6 +1429,33 @@ func PossibleTypeValues() []Type {
 		TypeGoogleCloudStorage,
 		TypeOneLake,
 		TypeS3Compatible,
+	}
+}
+
+// WeekIndex - The week of the month.
+type WeekIndex string
+
+const (
+	// WeekIndexFifth - Fifth.
+	WeekIndexFifth WeekIndex = "Fifth"
+	// WeekIndexFirst - First.
+	WeekIndexFirst WeekIndex = "First"
+	// WeekIndexFourth - Fourth.
+	WeekIndexFourth WeekIndex = "Fourth"
+	// WeekIndexSecond - Second.
+	WeekIndexSecond WeekIndex = "Second"
+	// WeekIndexThird - Third.
+	WeekIndexThird WeekIndex = "Third"
+)
+
+// PossibleWeekIndexValues returns the possible values for the WeekIndex const type.
+func PossibleWeekIndexValues() []WeekIndex {
+	return []WeekIndex{
+		WeekIndexFifth,
+		WeekIndexFirst,
+		WeekIndexFourth,
+		WeekIndexSecond,
+		WeekIndexThird,
 	}
 }
 

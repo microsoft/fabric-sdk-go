@@ -76,27 +76,27 @@ func ExampleItemsClient_BeginRefreshSQLEndpointMetadata() {
 	// res.TableSyncStatuses = sqlendpoint.TableSyncStatuses{
 	// 	Value: []sqlendpoint.TableSyncStatus{
 	// 		{
-	// 			EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-02-04T22:29:12.486Z"); return t}()),
-	// 			LastSuccessfulSyncDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-07-23T14:28:23.186Z"); return t}()),
-	// 			StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-02-04T22:29:12.440Z"); return t}()),
+	// 			EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-08-08T10:36:54.965Z"); return t}()),
+	// 			LastSuccessfulSyncDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-08-08T10:36:54.965Z"); return t}()),
+	// 			StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-08-08T10:31:22.270Z"); return t}()),
 	// 			Status: to.Ptr(sqlendpoint.SyncStatusSuccess),
 	// 			TableName: to.Ptr("Table 1"),
 	// 		},
 	// 		{
-	// 			EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-02-04T22:29:13.486Z"); return t}()),
+	// 			EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-08-08T10:43:02.532Z"); return t}()),
 	// 			Error: &sqlendpoint.ErrorResponseDetails{
 	// 				ErrorCode: to.Ptr("AdalRetryException"),
 	// 				Message: to.Ptr("Couldn't run query. There is a problem with the Microsoft Entra ID token. Have the warehouse owner log in again. If they're unavailable, use the takeover feature."),
 	// 			},
-	// 			LastSuccessfulSyncDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-07-23T14:28:23.186Z"); return t}()),
-	// 			StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-02-04T22:29:13.440Z"); return t}()),
+	// 			LastSuccessfulSyncDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-08-07T10:44:27.263Z"); return t}()),
+	// 			StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-08-08T10:31:22.270Z"); return t}()),
 	// 			Status: to.Ptr(sqlendpoint.SyncStatusFailure),
 	// 			TableName: to.Ptr("Table 2"),
 	// 		},
 	// 		{
-	// 			EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-02-04T22:29:14.486Z"); return t}()),
-	// 			LastSuccessfulSyncDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-07-23T14:28:23.186Z"); return t}()),
-	// 			StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-02-04T22:29:14.440Z"); return t}()),
+	// 			EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-08-08T10:36:59.918Z"); return t}()),
+	// 			LastSuccessfulSyncDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-08-06T08:32:53.389Z"); return t}()),
+	// 			StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-08-08T10:31:22.270Z"); return t}()),
 	// 			Status: to.Ptr(sqlendpoint.SyncStatusNotRun),
 	// 			TableName: to.Ptr("Table 3"),
 	// 	}},

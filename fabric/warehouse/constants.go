@@ -6,6 +6,24 @@
 
 package warehouse
 
+// AuditSettingsState - Audit settings state. Additional AuditSettingsState may be added over time.
+type AuditSettingsState string
+
+const (
+	// AuditSettingsStateDisabled - Disable the SQL audit.
+	AuditSettingsStateDisabled AuditSettingsState = "Disabled"
+	// AuditSettingsStateEnabled - Enable the SQL audit.
+	AuditSettingsStateEnabled AuditSettingsState = "Enabled"
+)
+
+// PossibleAuditSettingsStateValues returns the possible values for the AuditSettingsState const type.
+func PossibleAuditSettingsStateValues() []AuditSettingsState {
+	return []AuditSettingsState{
+		AuditSettingsStateDisabled,
+		AuditSettingsStateEnabled,
+	}
+}
+
 // CollationType - Warehouse collation. Additional collations may be added over time.
 type CollationType string
 
@@ -21,6 +39,45 @@ func PossibleCollationTypeValues() []CollationType {
 	return []CollationType{
 		CollationTypeLatin1General100BIN2UTF8,
 		CollationTypeLatin1General100CIASKSWSSCUTF8,
+	}
+}
+
+// CreationModeType - The creation mode of the restore point. Additional creation mode types may be added over time.
+type CreationModeType string
+
+const (
+	// CreationModeTypeSystemCreated - System created restore point.
+	CreationModeTypeSystemCreated CreationModeType = "SystemCreated"
+	// CreationModeTypeUserDefined - User defined restore point.
+	CreationModeTypeUserDefined CreationModeType = "UserDefined"
+)
+
+// PossibleCreationModeTypeValues returns the possible values for the CreationModeType const type.
+func PossibleCreationModeTypeValues() []CreationModeType {
+	return []CreationModeType{
+		CreationModeTypeSystemCreated,
+		CreationModeTypeUserDefined,
+	}
+}
+
+// GroupType - The type of the group. Additional group types may be added over time.
+type GroupType string
+
+const (
+	// GroupTypeDistributionList - Principal is a distribution list.
+	GroupTypeDistributionList GroupType = "DistributionList"
+	// GroupTypeSecurityGroup - Principal is a security group.
+	GroupTypeSecurityGroup GroupType = "SecurityGroup"
+	// GroupTypeUnknown - Principal group type is unknown.
+	GroupTypeUnknown GroupType = "Unknown"
+)
+
+// PossibleGroupTypeValues returns the possible values for the GroupType const type.
+func PossibleGroupTypeValues() []GroupType {
+	return []GroupType{
+		GroupTypeDistributionList,
+		GroupTypeSecurityGroup,
+		GroupTypeUnknown,
 	}
 }
 
@@ -132,6 +189,33 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeVariableLibrary,
 		ItemTypeWarehouse,
 		ItemTypeWarehouseSnapshot,
+	}
+}
+
+// PrincipalType - The type of the principal. Additional principal types may be added over time.
+type PrincipalType string
+
+const (
+	// PrincipalTypeEntireTenant - Principal represents all tenant users.
+	PrincipalTypeEntireTenant PrincipalType = "EntireTenant"
+	// PrincipalTypeGroup - Principal is a security group.
+	PrincipalTypeGroup PrincipalType = "Group"
+	// PrincipalTypeServicePrincipal - Principal is a Microsoft Entra service principal.
+	PrincipalTypeServicePrincipal PrincipalType = "ServicePrincipal"
+	// PrincipalTypeServicePrincipalProfile - Principal is a service principal profile.
+	PrincipalTypeServicePrincipalProfile PrincipalType = "ServicePrincipalProfile"
+	// PrincipalTypeUser - Principal is a Microsoft Entra user principal.
+	PrincipalTypeUser PrincipalType = "User"
+)
+
+// PossiblePrincipalTypeValues returns the possible values for the PrincipalType const type.
+func PossiblePrincipalTypeValues() []PrincipalType {
+	return []PrincipalType{
+		PrincipalTypeEntireTenant,
+		PrincipalTypeGroup,
+		PrincipalTypeServicePrincipal,
+		PrincipalTypeServicePrincipalProfile,
+		PrincipalTypeUser,
 	}
 }
 

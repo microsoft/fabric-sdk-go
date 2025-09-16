@@ -43,30 +43,54 @@ func ExampleTagsClient_NewListTagsPager_listOfAllTenantsTagsExample() {
 		// 		{
 		// 			DisplayName: to.Ptr("Finance"),
 		// 			ID: to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+		// 			Scope: &admin.TenantTagScope{
+		// 				Type: to.Ptr(admin.TagScopeTypeTenant),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("Human resources"),
 		// 			ID: to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
+		// 			Scope: &admin.TenantTagScope{
+		// 				Type: to.Ptr(admin.TagScopeTypeTenant),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("Engineering P1"),
 		// 			ID: to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
+		// 			Scope: &admin.TenantTagScope{
+		// 				Type: to.Ptr(admin.TagScopeTypeTenant),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("Marketing Q1"),
 		// 			ID: to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
+		// 			Scope: &admin.TenantTagScope{
+		// 				Type: to.Ptr(admin.TagScopeTypeTenant),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("HR Sales Q1"),
 		// 			ID: to.Ptr("17df435d-9efd-48c1-a937-7d6fd70ab26a"),
+		// 			Scope: &admin.DomainTagScope{
+		// 				Type: to.Ptr(admin.TagScopeTypeDomain),
+		// 				DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("Root"),
 		// 			ID: to.Ptr("fb765fe3-d404-4f24-9d67-5916449c4c50"),
+		// 			Scope: &admin.DomainTagScope{
+		// 				Type: to.Ptr(admin.TagScopeTypeDomain),
+		// 				DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("Legal EMEA"),
 		// 			ID: to.Ptr("bda31be4-7efe-4272-8b85-e1b2ff0f0592"),
+		// 			Scope: &admin.DomainTagScope{
+		// 				Type: to.Ptr(admin.TagScopeTypeDomain),
+		// 				DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+		// 			},
 		// 	}},
 		// }
 	}
@@ -101,37 +125,95 @@ func ExampleTagsClient_NewListTagsPager_listOfAllTenantsTagsWithContinuationExam
 		// 		{
 		// 			DisplayName: to.Ptr("Finance"),
 		// 			ID: to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+		// 			Scope: &admin.TenantTagScope{
+		// 				Type: to.Ptr(admin.TagScopeTypeTenant),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("Human resources"),
 		// 			ID: to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
+		// 			Scope: &admin.TenantTagScope{
+		// 				Type: to.Ptr(admin.TagScopeTypeTenant),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("Engineering P1"),
 		// 			ID: to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
+		// 			Scope: &admin.TenantTagScope{
+		// 				Type: to.Ptr(admin.TagScopeTypeTenant),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("Marketing Q1"),
 		// 			ID: to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
+		// 			Scope: &admin.TenantTagScope{
+		// 				Type: to.Ptr(admin.TagScopeTypeTenant),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("HR Sales Q1"),
 		// 			ID: to.Ptr("17df435d-9efd-48c1-a937-7d6fd70ab26a"),
+		// 			Scope: &admin.DomainTagScope{
+		// 				Type: to.Ptr(admin.TagScopeTypeDomain),
+		// 				DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("Root"),
 		// 			ID: to.Ptr("fb765fe3-d404-4f24-9d67-5916449c4c50"),
+		// 			Scope: &admin.DomainTagScope{
+		// 				Type: to.Ptr(admin.TagScopeTypeDomain),
+		// 				DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+		// 			},
 		// 		},
 		// 		{
 		// 			DisplayName: to.Ptr("Legal EMEA"),
 		// 			ID: to.Ptr("bda31be4-7efe-4272-8b85-e1b2ff0f0592"),
+		// 			Scope: &admin.DomainTagScope{
+		// 				Type: to.Ptr(admin.TagScopeTypeDomain),
+		// 				DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+		// 			},
 		// 	}},
 		// }
 	}
 }
 
 // Generated from example definition
-func ExampleTagsClient_BulkCreateTags() {
+func ExampleTagsClient_BulkCreateTags_createDomainTagsInBulkExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := admin.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewTagsClient().BulkCreateTags(ctx, admin.CreateTagsRequest{}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleTagsClient_BulkCreateTags_createTenantTagsInBulkExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := admin.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewTagsClient().BulkCreateTags(ctx, admin.CreateTagsRequest{}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleTagsClient_BulkCreateTags_createTenantTagsInBulkExampleWithExplicitScope() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -187,5 +269,8 @@ func ExampleTagsClient_UpdateTag() {
 	// res.Tag = admin.Tag{
 	// 	DisplayName: to.Ptr("Tag's new name."),
 	// 	ID: to.Ptr("d889df97-7061-45f6-98b8-c53a83c2cf68"),
+	// 	Scope: &admin.TenantTagScope{
+	// 		Type: to.Ptr(admin.TagScopeTypeTenant),
+	// 	},
 	// }
 }

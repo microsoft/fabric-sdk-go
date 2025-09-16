@@ -443,6 +443,7 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ListWorkspaces() {
 				Name:       to.Ptr("test report"),
 				Type:       to.Ptr(admin.WorkspaceTypeWorkspace),
 				CapacityID: to.Ptr("41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e84"),
+				DomainID:   to.Ptr("039bd896-b39c-4540-93e3-e9926de135f9"),
 				ID:         to.Ptr("41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"),
 				State:      to.Ptr(admin.WorkspaceStateActive),
 			}},
@@ -571,6 +572,7 @@ func (testsuite *FakeTestSuite) TestWorkspaces_GetWorkspace() {
 		Name:       to.Ptr("test report"),
 		Type:       to.Ptr(admin.WorkspaceTypeWorkspace),
 		CapacityID: to.Ptr("41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e84"),
+		DomainID:   to.Ptr("8badadb6-9945-4e07-8134-00e0defec00b"),
 		ID:         to.Ptr("41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"),
 		State:      to.Ptr(admin.WorkspaceStateActive),
 	}
@@ -1193,46 +1195,188 @@ func (testsuite *FakeTestSuite) TestUsers_ListAccessEntities() {
 	}
 }
 
+func (testsuite *FakeTestSuite) TestDomains_ListDomainsPreview() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get all non-empty domains example"},
+	})
+	var examplePreview bool
+	examplePreview = true
+
+	exampleRes := admin.DomainsResponsePreview{
+		Domains: []admin.DomainPreview{
+			{
+				Description:       to.Ptr("This domain is used for identifying financial data and reports."),
+				DisplayName:       to.Ptr("Finance"),
+				ID:                to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAdminsOnly),
+			},
+			{
+				Description:       to.Ptr(""),
+				DisplayName:       to.Ptr("Human resources"),
+				ID:                to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
+				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
+			},
+			{
+				Description:       to.Ptr(""),
+				DisplayName:       to.Ptr("HR Sales"),
+				ID:                to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
+				ParentDomainID:    to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
+			},
+			{
+				DisplayName:       to.Ptr("Marketing"),
+				ID:                to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
+				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeSpecificUsersAndGroups),
+			}},
+	}
+
+	testsuite.serverFactory.DomainsServer.ListDomainsPreview = func(ctx context.Context, preview bool, options *admin.DomainsClientListDomainsPreviewOptions) (resp azfake.Responder[admin.DomainsClientListDomainsPreviewResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(examplePreview, preview)
+		resp = azfake.Responder[admin.DomainsClientListDomainsPreviewResponse]{}
+		resp.SetResponse(http.StatusOK, admin.DomainsClientListDomainsPreviewResponse{DomainsResponsePreview: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewDomainsClient()
+	res, err := client.ListDomainsPreview(ctx, examplePreview, &admin.DomainsClientListDomainsPreviewOptions{NonEmptyOnly: to.Ptr(true)})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DomainsResponsePreview))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get info for all domains example"},
+	})
+	examplePreview = true
+
+	exampleRes = admin.DomainsResponsePreview{
+		Domains: []admin.DomainPreview{
+			{
+				Description:       to.Ptr("This domain is used for identifying financial data and reports."),
+				DisplayName:       to.Ptr("Finance"),
+				ID:                to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAdminsOnly),
+			},
+			{
+				Description:       to.Ptr(""),
+				DisplayName:       to.Ptr("Human resources"),
+				ID:                to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
+				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
+			},
+			{
+				Description:       to.Ptr(""),
+				DisplayName:       to.Ptr("HR Sales"),
+				ID:                to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
+				ParentDomainID:    to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
+			},
+			{
+				DisplayName:       to.Ptr("Marketing"),
+				ID:                to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
+				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeSpecificUsersAndGroups),
+			},
+			{
+				Description:       to.Ptr("Admins only"),
+				DisplayName:       to.Ptr("AdminsOnly"),
+				ID:                to.Ptr("17df435d-9efd-48c1-a937-7d6fd70ab26a"),
+				ParentDomainID:    to.Ptr("f2f6a374-789e-4d1d-9cc7-6e0b934fc529"),
+				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
+			},
+			{
+				Description:       to.Ptr(""),
+				DisplayName:       to.Ptr("Root"),
+				ID:                to.Ptr("fb765fe3-d404-4f24-9d67-5916449c4c50"),
+				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
+			},
+			{
+				Description:       to.Ptr("This domain is used for identifying legal data and reports."),
+				DisplayName:       to.Ptr("Legal"),
+				ID:                to.Ptr("bda31be4-7efe-4272-8b85-e1b2ff0f0592"),
+				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
+			}},
+	}
+
+	testsuite.serverFactory.DomainsServer.ListDomainsPreview = func(ctx context.Context, preview bool, options *admin.DomainsClientListDomainsPreviewOptions) (resp azfake.Responder[admin.DomainsClientListDomainsPreviewResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(examplePreview, preview)
+		resp = azfake.Responder[admin.DomainsClientListDomainsPreviewResponse]{}
+		resp.SetResponse(http.StatusOK, admin.DomainsClientListDomainsPreviewResponse{DomainsResponsePreview: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.ListDomainsPreview(ctx, examplePreview, &admin.DomainsClientListDomainsPreviewOptions{NonEmptyOnly: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DomainsResponsePreview))
+}
+
+func (testsuite *FakeTestSuite) TestDomains_CreateDomainPreview() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a domain example"},
+	})
+	var examplePreview bool
+	var exampleCreateDomainRequest admin.CreateDomainRequest
+	examplePreview = true
+	exampleCreateDomainRequest = admin.CreateDomainRequest{
+		Description:    to.Ptr("This domain is used for identifying financial data and reports."),
+		DisplayName:    to.Ptr("Finance"),
+		ParentDomainID: to.Ptr("5f6552c3-816c-43e7-8289-842f8b35f9df"),
+	}
+
+	testsuite.serverFactory.DomainsServer.CreateDomainPreview = func(ctx context.Context, preview bool, createDomainRequest admin.CreateDomainRequest, options *admin.DomainsClientCreateDomainPreviewOptions) (resp azfake.Responder[admin.DomainsClientCreateDomainPreviewResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(examplePreview, preview)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateDomainRequest, createDomainRequest))
+		resp = azfake.Responder[admin.DomainsClientCreateDomainPreviewResponse]{}
+		resp.SetResponse(http.StatusCreated, admin.DomainsClientCreateDomainPreviewResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewDomainsClient()
+	_, err = client.CreateDomainPreview(ctx, examplePreview, exampleCreateDomainRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
 func (testsuite *FakeTestSuite) TestDomains_ListDomains() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Get all non-empty domains example"},
 	})
+	var examplePreview bool
+	examplePreview = false
 
 	exampleRes := admin.DomainsResponse{
 		Domains: []admin.Domain{
 			{
-				Description:       to.Ptr("This domain is used for identifying financial data and reports."),
-				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAdminsOnly),
-				DisplayName:       to.Ptr("Finance"),
-				ID:                to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+				Description:    to.Ptr("This domain is used for identifying financial data and reports."),
+				DisplayName:    to.Ptr("Finance"),
+				ID:             to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+				DefaultLabelID: to.Ptr("95c04e91-79d3-4287-b282-dbd62e11f566"),
 			},
 			{
-				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
-				DisplayName:       to.Ptr("Human resources"),
-				ID:                to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
+				Description: to.Ptr(""),
+				DisplayName: to.Ptr("Human resources"),
+				ID:          to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
 			},
 			{
-				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
-				DisplayName:       to.Ptr("HR Sales"),
-				ID:                to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
-				ParentDomainID:    to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+				Description:    to.Ptr(""),
+				DisplayName:    to.Ptr("HR Sales"),
+				ID:             to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
+				ParentDomainID: to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
 			},
 			{
-				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeSpecificUsersAndGroups),
-				DisplayName:       to.Ptr("Marketing"),
-				ID:                to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
+				DisplayName: to.Ptr("Marketing"),
+				ID:          to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
 			}},
 	}
 
-	testsuite.serverFactory.DomainsServer.ListDomains = func(ctx context.Context, options *admin.DomainsClientListDomainsOptions) (resp azfake.Responder[admin.DomainsClientListDomainsResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.DomainsServer.ListDomains = func(ctx context.Context, preview bool, options *admin.DomainsClientListDomainsOptions) (resp azfake.Responder[admin.DomainsClientListDomainsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(examplePreview, preview)
 		resp = azfake.Responder[admin.DomainsClientListDomainsResponse]{}
 		resp.SetResponse(http.StatusOK, admin.DomainsClientListDomainsResponse{DomainsResponse: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewDomainsClient()
-	res, err := client.ListDomains(ctx, &admin.DomainsClientListDomainsOptions{NonEmptyOnly: to.Ptr(true)})
+	res, err := client.ListDomains(ctx, examplePreview, &admin.DomainsClientListDomainsOptions{NonEmptyOnly: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DomainsResponse))
 
@@ -1240,58 +1384,57 @@ func (testsuite *FakeTestSuite) TestDomains_ListDomains() {
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Get info for all domains example"},
 	})
+	examplePreview = false
 
 	exampleRes = admin.DomainsResponse{
 		Domains: []admin.Domain{
 			{
-				Description:       to.Ptr("This domain is used for identifying financial data and reports."),
-				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAdminsOnly),
-				DisplayName:       to.Ptr("Finance"),
-				ID:                to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+				Description:    to.Ptr("This domain is used for identifying financial data and reports."),
+				DisplayName:    to.Ptr("Finance"),
+				ID:             to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+				DefaultLabelID: to.Ptr("e9d82d27-a651-49e6-a000-068f4c40dd30"),
 			},
 			{
-				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
-				DisplayName:       to.Ptr("Human resources"),
-				ID:                to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
+				Description: to.Ptr(""),
+				DisplayName: to.Ptr("Human resources"),
+				ID:          to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
 			},
 			{
-				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
-				DisplayName:       to.Ptr("HR Sales"),
-				ID:                to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
-				ParentDomainID:    to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+				Description:    to.Ptr(""),
+				DisplayName:    to.Ptr("HR Sales"),
+				ID:             to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
+				ParentDomainID: to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
 			},
 			{
-				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeSpecificUsersAndGroups),
-				DisplayName:       to.Ptr("Marketing"),
-				ID:                to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
+				DisplayName: to.Ptr("Marketing"),
+				ID:          to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
 			},
 			{
-				Description:       to.Ptr("Admins only"),
-				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
-				DisplayName:       to.Ptr("AdminsOnly"),
-				ID:                to.Ptr("17df435d-9efd-48c1-a937-7d6fd70ab26a"),
-				ParentDomainID:    to.Ptr("f2f6a374-789e-4d1d-9cc7-6e0b934fc529"),
+				Description:    to.Ptr("Admins only"),
+				DisplayName:    to.Ptr("AdminsOnly"),
+				ID:             to.Ptr("17df435d-9efd-48c1-a937-7d6fd70ab26a"),
+				ParentDomainID: to.Ptr("f2f6a374-789e-4d1d-9cc7-6e0b934fc529"),
 			},
 			{
-				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
-				DisplayName:       to.Ptr("Root"),
-				ID:                to.Ptr("fb765fe3-d404-4f24-9d67-5916449c4c50"),
+				Description: to.Ptr(""),
+				DisplayName: to.Ptr("Root"),
+				ID:          to.Ptr("fb765fe3-d404-4f24-9d67-5916449c4c50"),
 			},
 			{
-				Description:       to.Ptr("This domain is used for identifying legal data and reports."),
-				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
-				DisplayName:       to.Ptr("Legal"),
-				ID:                to.Ptr("bda31be4-7efe-4272-8b85-e1b2ff0f0592"),
+				Description: to.Ptr("This domain is used for identifying legal data and reports."),
+				DisplayName: to.Ptr("Legal"),
+				ID:          to.Ptr("bda31be4-7efe-4272-8b85-e1b2ff0f0592"),
 			}},
 	}
 
-	testsuite.serverFactory.DomainsServer.ListDomains = func(ctx context.Context, options *admin.DomainsClientListDomainsOptions) (resp azfake.Responder[admin.DomainsClientListDomainsResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.DomainsServer.ListDomains = func(ctx context.Context, preview bool, options *admin.DomainsClientListDomainsOptions) (resp azfake.Responder[admin.DomainsClientListDomainsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(examplePreview, preview)
 		resp = azfake.Responder[admin.DomainsClientListDomainsResponse]{}
 		resp.SetResponse(http.StatusOK, admin.DomainsClientListDomainsResponse{DomainsResponse: exampleRes}, nil)
 		return
 	}
 
-	res, err = client.ListDomains(ctx, &admin.DomainsClientListDomainsOptions{NonEmptyOnly: nil})
+	res, err = client.ListDomains(ctx, examplePreview, &admin.DomainsClientListDomainsOptions{NonEmptyOnly: nil})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DomainsResponse))
 }
@@ -1301,14 +1444,17 @@ func (testsuite *FakeTestSuite) TestDomains_CreateDomain() {
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Create a domain example"},
 	})
+	var examplePreview bool
 	var exampleCreateDomainRequest admin.CreateDomainRequest
+	examplePreview = false
 	exampleCreateDomainRequest = admin.CreateDomainRequest{
 		Description:    to.Ptr("This domain is used for identifying financial data and reports."),
 		DisplayName:    to.Ptr("Finance"),
 		ParentDomainID: to.Ptr("5f6552c3-816c-43e7-8289-842f8b35f9df"),
 	}
 
-	testsuite.serverFactory.DomainsServer.CreateDomain = func(ctx context.Context, createDomainRequest admin.CreateDomainRequest, options *admin.DomainsClientCreateDomainOptions) (resp azfake.Responder[admin.DomainsClientCreateDomainResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.DomainsServer.CreateDomain = func(ctx context.Context, preview bool, createDomainRequest admin.CreateDomainRequest, options *admin.DomainsClientCreateDomainOptions) (resp azfake.Responder[admin.DomainsClientCreateDomainResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(examplePreview, preview)
 		testsuite.Require().True(reflect.DeepEqual(exampleCreateDomainRequest, createDomainRequest))
 		resp = azfake.Responder[admin.DomainsClientCreateDomainResponse]{}
 		resp.SetResponse(http.StatusCreated, admin.DomainsClientCreateDomainResponse{}, nil)
@@ -1316,36 +1462,77 @@ func (testsuite *FakeTestSuite) TestDomains_CreateDomain() {
 	}
 
 	client := testsuite.clientFactory.NewDomainsClient()
-	_, err = client.CreateDomain(ctx, exampleCreateDomainRequest, nil)
+	_, err = client.CreateDomain(ctx, examplePreview, exampleCreateDomainRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
-func (testsuite *FakeTestSuite) TestDomains_GetDomain() {
+func (testsuite *FakeTestSuite) TestDomains_GetDomainPreview() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Get a domain example"},
 	})
 	var exampleDomainID string
+	var examplePreview bool
 	exampleDomainID = "f2f6a374-789e-4d1d-9cc7-6e0b934fc529"
+	examplePreview = true
 
-	exampleRes := admin.Domain{
+	exampleRes := admin.DomainPreview{
 		Description:       to.Ptr("This domain is used for identifying financial data and reports."),
-		ContributorsScope: to.Ptr(admin.ContributorsScopeTypeSpecificUsersAndGroups),
 		DisplayName:       to.Ptr("Finance"),
 		ID:                to.Ptr("f2f6a374-789e-4d1d-9cc7-6e0b934fc529"),
+		ContributorsScope: to.Ptr(admin.ContributorsScopeTypeSpecificUsersAndGroups),
 	}
 
-	testsuite.serverFactory.DomainsServer.GetDomain = func(ctx context.Context, domainID string, options *admin.DomainsClientGetDomainOptions) (resp azfake.Responder[admin.DomainsClientGetDomainResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.DomainsServer.GetDomainPreview = func(ctx context.Context, domainID string, preview bool, options *admin.DomainsClientGetDomainPreviewOptions) (resp azfake.Responder[admin.DomainsClientGetDomainPreviewResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleDomainID, domainID)
-		resp = azfake.Responder[admin.DomainsClientGetDomainResponse]{}
-		resp.SetResponse(http.StatusOK, admin.DomainsClientGetDomainResponse{Domain: exampleRes}, nil)
+		testsuite.Require().Equal(examplePreview, preview)
+		resp = azfake.Responder[admin.DomainsClientGetDomainPreviewResponse]{}
+		resp.SetResponse(http.StatusOK, admin.DomainsClientGetDomainPreviewResponse{DomainPreview: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewDomainsClient()
-	res, err := client.GetDomain(ctx, exampleDomainID, nil)
+	res, err := client.GetDomainPreview(ctx, exampleDomainID, examplePreview, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
-	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Domain))
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DomainPreview))
+}
+
+func (testsuite *FakeTestSuite) TestDomains_UpdateDomainPreview() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update a domain example"},
+	})
+	var exampleDomainID string
+	var examplePreview bool
+	var exampleUpdateDomainRequest admin.UpdateDomainRequestPreview
+	exampleDomainID = "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f"
+	examplePreview = true
+	exampleUpdateDomainRequest = admin.UpdateDomainRequestPreview{
+		Description:       to.Ptr("Domain's new description"),
+		DisplayName:       to.Ptr("Domain's new name"),
+		ContributorsScope: to.Ptr(admin.ContributorsScopeTypeSpecificUsersAndGroups),
+	}
+
+	exampleRes := admin.DomainPreview{
+		Description:       to.Ptr("Domain's new description"),
+		DisplayName:       to.Ptr("Domain's new name"),
+		ID:                to.Ptr("f2f6a374-789e-4d1d-9cc7-6e0b934fc529"),
+		ContributorsScope: to.Ptr(admin.ContributorsScopeTypeSpecificUsersAndGroups),
+	}
+
+	testsuite.serverFactory.DomainsServer.UpdateDomainPreview = func(ctx context.Context, domainID string, preview bool, updateDomainRequest admin.UpdateDomainRequestPreview, options *admin.DomainsClientUpdateDomainPreviewOptions) (resp azfake.Responder[admin.DomainsClientUpdateDomainPreviewResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleDomainID, domainID)
+		testsuite.Require().Equal(examplePreview, preview)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateDomainRequest, updateDomainRequest))
+		resp = azfake.Responder[admin.DomainsClientUpdateDomainPreviewResponse]{}
+		resp.SetResponse(http.StatusOK, admin.DomainsClientUpdateDomainPreviewResponse{DomainPreview: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewDomainsClient()
+	res, err := client.UpdateDomainPreview(ctx, exampleDomainID, examplePreview, exampleUpdateDomainRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DomainPreview))
 }
 
 func (testsuite *FakeTestSuite) TestDomains_DeleteDomain() {
@@ -1368,29 +1555,63 @@ func (testsuite *FakeTestSuite) TestDomains_DeleteDomain() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
+func (testsuite *FakeTestSuite) TestDomains_GetDomain() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a domain example"},
+	})
+	var exampleDomainID string
+	var examplePreview bool
+	exampleDomainID = "f2f6a374-789e-4d1d-9cc7-6e0b934fc529"
+	examplePreview = false
+
+	exampleRes := admin.Domain{
+		Description:    to.Ptr("This domain is used for identifying financial data and reports."),
+		DisplayName:    to.Ptr("Finance"),
+		ID:             to.Ptr("f2f6a374-789e-4d1d-9cc7-6e0b934fc529"),
+		DefaultLabelID: to.Ptr("b2b6fdcc-f8d9-44d9-ae14-2d1fccc0a38f"),
+	}
+
+	testsuite.serverFactory.DomainsServer.GetDomain = func(ctx context.Context, domainID string, preview bool, options *admin.DomainsClientGetDomainOptions) (resp azfake.Responder[admin.DomainsClientGetDomainResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleDomainID, domainID)
+		testsuite.Require().Equal(examplePreview, preview)
+		resp = azfake.Responder[admin.DomainsClientGetDomainResponse]{}
+		resp.SetResponse(http.StatusOK, admin.DomainsClientGetDomainResponse{Domain: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewDomainsClient()
+	res, err := client.GetDomain(ctx, exampleDomainID, examplePreview, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Domain))
+}
+
 func (testsuite *FakeTestSuite) TestDomains_UpdateDomain() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Update a domain example"},
 	})
 	var exampleDomainID string
+	var examplePreview bool
 	var exampleUpdateDomainRequest admin.UpdateDomainRequest
 	exampleDomainID = "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f"
+	examplePreview = false
 	exampleUpdateDomainRequest = admin.UpdateDomainRequest{
-		Description:       to.Ptr("Domain's new description"),
-		ContributorsScope: to.Ptr(admin.ContributorsScopeTypeSpecificUsersAndGroups),
-		DisplayName:       to.Ptr("Domain's new name"),
+		Description:    to.Ptr("Domain's new description"),
+		DisplayName:    to.Ptr("Domain's new name"),
+		DefaultLabelID: to.Ptr("d9a6c724-a08f-429d-9fa9-9659c5181b7f"),
 	}
 
 	exampleRes := admin.Domain{
-		Description:       to.Ptr("Domain's new description"),
-		ContributorsScope: to.Ptr(admin.ContributorsScopeTypeSpecificUsersAndGroups),
-		DisplayName:       to.Ptr("Domain's new name"),
-		ID:                to.Ptr("f2f6a374-789e-4d1d-9cc7-6e0b934fc529"),
+		Description:    to.Ptr("Domain's new description"),
+		DisplayName:    to.Ptr("Domain's new name"),
+		ID:             to.Ptr("f2f6a374-789e-4d1d-9cc7-6e0b934fc529"),
+		DefaultLabelID: to.Ptr("d9a6c724-a08f-429d-9fa9-9659c5181b7f"),
 	}
 
-	testsuite.serverFactory.DomainsServer.UpdateDomain = func(ctx context.Context, domainID string, updateDomainRequest admin.UpdateDomainRequest, options *admin.DomainsClientUpdateDomainOptions) (resp azfake.Responder[admin.DomainsClientUpdateDomainResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.DomainsServer.UpdateDomain = func(ctx context.Context, domainID string, preview bool, updateDomainRequest admin.UpdateDomainRequest, options *admin.DomainsClientUpdateDomainOptions) (resp azfake.Responder[admin.DomainsClientUpdateDomainResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleDomainID, domainID)
+		testsuite.Require().Equal(examplePreview, preview)
 		testsuite.Require().True(reflect.DeepEqual(exampleUpdateDomainRequest, updateDomainRequest))
 		resp = azfake.Responder[admin.DomainsClientUpdateDomainResponse]{}
 		resp.SetResponse(http.StatusOK, admin.DomainsClientUpdateDomainResponse{Domain: exampleRes}, nil)
@@ -1398,7 +1619,7 @@ func (testsuite *FakeTestSuite) TestDomains_UpdateDomain() {
 	}
 
 	client := testsuite.clientFactory.NewDomainsClient()
-	res, err := client.UpdateDomain(ctx, exampleDomainID, exampleUpdateDomainRequest, nil)
+	res, err := client.UpdateDomain(ctx, exampleDomainID, examplePreview, exampleUpdateDomainRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Domain))
 }
@@ -1466,6 +1687,59 @@ func (testsuite *FakeTestSuite) TestDomains_UnassignAllDomainWorkspaces() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
+func (testsuite *FakeTestSuite) TestDomains_ListRoleAssignments() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List domain role assignments example"},
+	})
+	var exampleDomainID string
+	exampleDomainID = "00cb3785-58b5-408e-9e5f-7a26d28f0b9b"
+
+	exampleRes := admin.DomainRoleAssignments{
+		Value: []admin.DomainRoleAssignment{
+			{
+				Principal: &admin.Principal{
+					Type:        to.Ptr(admin.PrincipalTypeUser),
+					DisplayName: to.Ptr("Eric Solomon"),
+					ID:          to.Ptr("81fac5e1-2a81-421b-a168-110b1c72fa11"),
+					UserDetails: &admin.PrincipalUserDetails{
+						UserPrincipalName: to.Ptr("eric@microsoft.com"),
+					},
+				},
+				Role: to.Ptr(admin.DomainRoleAdmin),
+			},
+			{
+				Principal: &admin.Principal{
+					Type:        to.Ptr(admin.PrincipalTypeGroup),
+					DisplayName: to.Ptr("TestSecurityGroup"),
+					GroupDetails: &admin.PrincipalGroupDetails{
+						GroupType: to.Ptr(admin.GroupTypeSecurityGroup),
+					},
+					ID: to.Ptr("f51b705f-a409-4d40-9197-c5d5f349e2f0"),
+				},
+				Role: to.Ptr(admin.DomainRoleContributor),
+			}},
+	}
+
+	testsuite.serverFactory.DomainsServer.NewListRoleAssignmentsPager = func(domainID string, options *admin.DomainsClientListRoleAssignmentsOptions) (resp azfake.PagerResponder[admin.DomainsClientListRoleAssignmentsResponse]) {
+		testsuite.Require().Equal(exampleDomainID, domainID)
+		resp = azfake.PagerResponder[admin.DomainsClientListRoleAssignmentsResponse]{}
+		resp.AddPage(http.StatusOK, admin.DomainsClientListRoleAssignmentsResponse{DomainRoleAssignments: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewDomainsClient()
+	pager := client.NewListRoleAssignmentsPager(exampleDomainID, &admin.DomainsClientListRoleAssignmentsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.DomainRoleAssignments))
+		if err == nil {
+			break
+		}
+	}
+}
+
 func (testsuite *FakeTestSuite) TestDomains_RoleAssignmentsBulkAssign() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -1475,7 +1749,7 @@ func (testsuite *FakeTestSuite) TestDomains_RoleAssignmentsBulkAssign() {
 	var exampleDomainRoleAssignmentRequest admin.DomainRoleAssignmentRequest
 	exampleDomainID = "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f"
 	exampleDomainRoleAssignmentRequest = admin.DomainRoleAssignmentRequest{
-		Type: to.Ptr(admin.DomainRoleAdmins),
+		Type: to.Ptr(admin.DomainRole("Admins")),
 		Principals: []admin.Principal{
 			{
 				Type: to.Ptr(admin.PrincipalTypeUser),
@@ -1501,7 +1775,7 @@ func (testsuite *FakeTestSuite) TestDomains_RoleAssignmentsBulkAssign() {
 	})
 	exampleDomainID = "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f"
 	exampleDomainRoleAssignmentRequest = admin.DomainRoleAssignmentRequest{
-		Type: to.Ptr(admin.DomainRoleContributors),
+		Type: to.Ptr(admin.DomainRole("Contributors")),
 		Principals: []admin.Principal{
 			{
 				Type: to.Ptr(admin.PrincipalTypeUser),
@@ -1530,7 +1804,7 @@ func (testsuite *FakeTestSuite) TestDomains_RoleAssignmentsBulkUnassign() {
 	var exampleDomainRoleUnassignmentRequest admin.DomainRoleUnassignmentRequest
 	exampleDomainID = "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f"
 	exampleDomainRoleUnassignmentRequest = admin.DomainRoleUnassignmentRequest{
-		Type: to.Ptr(admin.DomainRoleAdmins),
+		Type: to.Ptr(admin.DomainRole("Admins")),
 		Principals: []admin.Principal{
 			{
 				Type: to.Ptr(admin.PrincipalTypeUser),
@@ -1556,7 +1830,7 @@ func (testsuite *FakeTestSuite) TestDomains_RoleAssignmentsBulkUnassign() {
 	})
 	exampleDomainID = "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f"
 	exampleDomainRoleUnassignmentRequest = admin.DomainRoleUnassignmentRequest{
-		Type: to.Ptr(admin.DomainRoleContributors),
+		Type: to.Ptr(admin.DomainRole("Contributors")),
 		Principals: []admin.Principal{
 			{
 				Type: to.Ptr(admin.PrincipalTypeUser),
@@ -1576,6 +1850,31 @@ func (testsuite *FakeTestSuite) TestDomains_RoleAssignmentsBulkUnassign() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
+func (testsuite *FakeTestSuite) TestDomains_SyncRoleAssignmentsToSubdomains() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Assign domain contributors to subdomains example"},
+	})
+	var exampleDomainID string
+	var exampleSyncRoleAssignmentsToSubdomainsRequest admin.SyncRoleAssignmentsToSubdomainsRequest
+	exampleDomainID = "d27d5b23-4a7e-4185-b81e-ac2b20cdd9a8"
+	exampleSyncRoleAssignmentsToSubdomainsRequest = admin.SyncRoleAssignmentsToSubdomainsRequest{
+		Role: to.Ptr(admin.DomainRoleContributor),
+	}
+
+	testsuite.serverFactory.DomainsServer.SyncRoleAssignmentsToSubdomains = func(ctx context.Context, domainID string, syncRoleAssignmentsToSubdomainsRequest admin.SyncRoleAssignmentsToSubdomainsRequest, options *admin.DomainsClientSyncRoleAssignmentsToSubdomainsOptions) (resp azfake.Responder[admin.DomainsClientSyncRoleAssignmentsToSubdomainsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleDomainID, domainID)
+		testsuite.Require().True(reflect.DeepEqual(exampleSyncRoleAssignmentsToSubdomainsRequest, syncRoleAssignmentsToSubdomainsRequest))
+		resp = azfake.Responder[admin.DomainsClientSyncRoleAssignmentsToSubdomainsResponse]{}
+		resp.SetResponse(http.StatusOK, admin.DomainsClientSyncRoleAssignmentsToSubdomainsResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewDomainsClient()
+	_, err = client.SyncRoleAssignmentsToSubdomains(ctx, exampleDomainID, exampleSyncRoleAssignmentsToSubdomainsRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
 func (testsuite *FakeTestSuite) TestTags_ListTags() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -1587,30 +1886,54 @@ func (testsuite *FakeTestSuite) TestTags_ListTags() {
 			{
 				DisplayName: to.Ptr("Finance"),
 				ID:          to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+				Scope: &admin.TenantTagScope{
+					Type: to.Ptr(admin.TagScopeTypeTenant),
+				},
 			},
 			{
 				DisplayName: to.Ptr("Human resources"),
 				ID:          to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
+				Scope: &admin.TenantTagScope{
+					Type: to.Ptr(admin.TagScopeTypeTenant),
+				},
 			},
 			{
 				DisplayName: to.Ptr("Engineering P1"),
 				ID:          to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
+				Scope: &admin.TenantTagScope{
+					Type: to.Ptr(admin.TagScopeTypeTenant),
+				},
 			},
 			{
 				DisplayName: to.Ptr("Marketing Q1"),
 				ID:          to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
+				Scope: &admin.TenantTagScope{
+					Type: to.Ptr(admin.TagScopeTypeTenant),
+				},
 			},
 			{
 				DisplayName: to.Ptr("HR Sales Q1"),
 				ID:          to.Ptr("17df435d-9efd-48c1-a937-7d6fd70ab26a"),
+				Scope: &admin.DomainTagScope{
+					Type:     to.Ptr(admin.TagScopeTypeDomain),
+					DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+				},
 			},
 			{
 				DisplayName: to.Ptr("Root"),
 				ID:          to.Ptr("fb765fe3-d404-4f24-9d67-5916449c4c50"),
+				Scope: &admin.DomainTagScope{
+					Type:     to.Ptr(admin.TagScopeTypeDomain),
+					DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+				},
 			},
 			{
 				DisplayName: to.Ptr("Legal EMEA"),
 				ID:          to.Ptr("bda31be4-7efe-4272-8b85-e1b2ff0f0592"),
+				Scope: &admin.DomainTagScope{
+					Type:     to.Ptr(admin.TagScopeTypeDomain),
+					DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+				},
 			}},
 	}
 
@@ -1643,30 +1966,54 @@ func (testsuite *FakeTestSuite) TestTags_ListTags() {
 			{
 				DisplayName: to.Ptr("Finance"),
 				ID:          to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
+				Scope: &admin.TenantTagScope{
+					Type: to.Ptr(admin.TagScopeTypeTenant),
+				},
 			},
 			{
 				DisplayName: to.Ptr("Human resources"),
 				ID:          to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
+				Scope: &admin.TenantTagScope{
+					Type: to.Ptr(admin.TagScopeTypeTenant),
+				},
 			},
 			{
 				DisplayName: to.Ptr("Engineering P1"),
 				ID:          to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
+				Scope: &admin.TenantTagScope{
+					Type: to.Ptr(admin.TagScopeTypeTenant),
+				},
 			},
 			{
 				DisplayName: to.Ptr("Marketing Q1"),
 				ID:          to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
+				Scope: &admin.TenantTagScope{
+					Type: to.Ptr(admin.TagScopeTypeTenant),
+				},
 			},
 			{
 				DisplayName: to.Ptr("HR Sales Q1"),
 				ID:          to.Ptr("17df435d-9efd-48c1-a937-7d6fd70ab26a"),
+				Scope: &admin.DomainTagScope{
+					Type:     to.Ptr(admin.TagScopeTypeDomain),
+					DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+				},
 			},
 			{
 				DisplayName: to.Ptr("Root"),
 				ID:          to.Ptr("fb765fe3-d404-4f24-9d67-5916449c4c50"),
+				Scope: &admin.DomainTagScope{
+					Type:     to.Ptr(admin.TagScopeTypeDomain),
+					DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+				},
 			},
 			{
 				DisplayName: to.Ptr("Legal EMEA"),
 				ID:          to.Ptr("bda31be4-7efe-4272-8b85-e1b2ff0f0592"),
+				Scope: &admin.DomainTagScope{
+					Type:     to.Ptr(admin.TagScopeTypeDomain),
+					DomainID: to.Ptr("2443f5f3-b2bb-46ad-a240-1550f1938569"),
+				},
 			}},
 	}
 
@@ -1690,7 +2037,7 @@ func (testsuite *FakeTestSuite) TestTags_ListTags() {
 func (testsuite *FakeTestSuite) TestTags_BulkCreateTags() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Create tags in bulk example"},
+		"example-id": {"Create domain tags in bulk example"},
 	})
 	var exampleCreateTagsRequest admin.CreateTagsRequest
 	exampleCreateTagsRequest = admin.CreateTagsRequest{}
@@ -1703,6 +2050,38 @@ func (testsuite *FakeTestSuite) TestTags_BulkCreateTags() {
 	}
 
 	client := testsuite.clientFactory.NewTagsClient()
+	_, err = client.BulkCreateTags(ctx, exampleCreateTagsRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create tenant tags in bulk example"},
+	})
+	exampleCreateTagsRequest = admin.CreateTagsRequest{}
+
+	testsuite.serverFactory.TagsServer.BulkCreateTags = func(ctx context.Context, createTagsRequest admin.CreateTagsRequest, options *admin.TagsClientBulkCreateTagsOptions) (resp azfake.Responder[admin.TagsClientBulkCreateTagsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateTagsRequest, createTagsRequest))
+		resp = azfake.Responder[admin.TagsClientBulkCreateTagsResponse]{}
+		resp.SetResponse(http.StatusCreated, admin.TagsClientBulkCreateTagsResponse{}, nil)
+		return
+	}
+
+	_, err = client.BulkCreateTags(ctx, exampleCreateTagsRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create tenant tags in bulk example with explicit scope"},
+	})
+	exampleCreateTagsRequest = admin.CreateTagsRequest{}
+
+	testsuite.serverFactory.TagsServer.BulkCreateTags = func(ctx context.Context, createTagsRequest admin.CreateTagsRequest, options *admin.TagsClientBulkCreateTagsOptions) (resp azfake.Responder[admin.TagsClientBulkCreateTagsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateTagsRequest, createTagsRequest))
+		resp = azfake.Responder[admin.TagsClientBulkCreateTagsResponse]{}
+		resp.SetResponse(http.StatusCreated, admin.TagsClientBulkCreateTagsResponse{}, nil)
+		return
+	}
+
 	_, err = client.BulkCreateTags(ctx, exampleCreateTagsRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
@@ -1742,6 +2121,9 @@ func (testsuite *FakeTestSuite) TestTags_UpdateTag() {
 	exampleRes := admin.Tag{
 		DisplayName: to.Ptr("Tag's new name."),
 		ID:          to.Ptr("d889df97-7061-45f6-98b8-c53a83c2cf68"),
+		Scope: &admin.TenantTagScope{
+			Type: to.Ptr(admin.TagScopeTypeTenant),
+		},
 	}
 
 	testsuite.serverFactory.TagsServer.UpdateTag = func(ctx context.Context, tagID string, updateTagRequest admin.UpdateTagRequest, options *admin.TagsClientUpdateTagOptions) (resp azfake.Responder[admin.TagsClientUpdateTagResponse], errResp azfake.ErrorResponder) {

@@ -26,6 +26,10 @@ import (
 
 // ItemsServer is a fake server for instances of the semanticmodel.ItemsClient type.
 type ItemsServer struct {
+	// BindSemanticModelConnection is the fake for method ItemsClient.BindSemanticModelConnection
+	// HTTP status codes to indicate success: http.StatusOK
+	BindSemanticModelConnection func(ctx context.Context, workspaceID string, semanticModelID string, bindSemanticModelConnectionRequest semanticmodel.BindSemanticModelConnectionRequest, options *semanticmodel.ItemsClientBindSemanticModelConnectionOptions) (resp azfake.Responder[semanticmodel.ItemsClientBindSemanticModelConnectionResponse], errResp azfake.ErrorResponder)
+
 	// BeginCreateSemanticModel is the fake for method ItemsClient.BeginCreateSemanticModel
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated, http.StatusAccepted
 	BeginCreateSemanticModel func(ctx context.Context, workspaceID string, createSemanticModelRequest semanticmodel.CreateSemanticModelRequest, options *semanticmodel.ItemsClientBeginCreateSemanticModelOptions) (resp azfake.PollerResponder[semanticmodel.ItemsClientCreateSemanticModelResponse], errResp azfake.ErrorResponder)
@@ -103,6 +107,8 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 		}
 		if !intercepted {
 			switch method {
+			case "ItemsClient.BindSemanticModelConnection":
+				res.resp, res.err = i.dispatchBindSemanticModelConnection(req)
 			case "ItemsClient.BeginCreateSemanticModel":
 				res.resp, res.err = i.dispatchBeginCreateSemanticModel(req)
 			case "ItemsClient.DeleteSemanticModel":
@@ -134,6 +140,43 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 	case res := <-resultChan:
 		return res.resp, res.err
 	}
+}
+
+func (i *ItemsServerTransport) dispatchBindSemanticModelConnection(req *http.Request) (*http.Response, error) {
+	if i.srv.BindSemanticModelConnection == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BindSemanticModelConnection not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/semanticModels/(?P<semanticModelId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/bindConnection`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[semanticmodel.BindSemanticModelConnectionRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	semanticModelIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("semanticModelId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := i.srv.BindSemanticModelConnection(req.Context(), workspaceIDParam, semanticModelIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 func (i *ItemsServerTransport) dispatchBeginCreateSemanticModel(req *http.Request) (*http.Response, error) {

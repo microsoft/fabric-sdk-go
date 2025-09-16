@@ -599,3 +599,194 @@ func ExampleItemsClient_NewListItemConnectionsPager_listItemConnectionsWithConti
 		// }
 	}
 }
+
+// Generated from example definition
+func ExampleItemsClient_BulkMoveItems_bulkMoveItemsIntoFolderExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewItemsClient().BulkMoveItems(ctx, "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb", core.BulkMoveItemsRequest{
+		Items: []string{
+			"cccccccc-2222-3333-4444-dddddddddddd",
+			"dddddddd-3333-4444-5555-eeeeeeeeeeee"},
+		TargetFolderID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.MovedItems = core.MovedItems{
+	// 	Value: []core.Item{
+	// 		{
+	// 			Type: to.Ptr(core.ItemTypeLakehouse),
+	// 			Description: to.Ptr("A lakehouse used by the sales team."),
+	// 			DisplayName: to.Ptr("MyLakehouse"),
+	// 			FolderID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+	// 			ID: to.Ptr("cccccccc-2222-3333-4444-dddddddddddd"),
+	// 			WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+	// 		},
+	// 		{
+	// 			Type: to.Ptr(core.ItemTypeSQLEndpoint),
+	// 			Description: to.Ptr("A SQL endpoint who is the child of Lakehouse"),
+	// 			DisplayName: to.Ptr("MyLakehouse"),
+	// 			FolderID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+	// 			ID: to.Ptr("eeeeeeee-4444-5555-6666-ffffffffffff"),
+	// 			WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+	// 		},
+	// 		{
+	// 			Type: to.Ptr(core.ItemTypeSemanticModel),
+	// 			Description: to.Ptr("A Semantic model who is the child of SQLEndpoint"),
+	// 			DisplayName: to.Ptr("MyLakehouse"),
+	// 			FolderID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+	// 			ID: to.Ptr("ffffffff-5555-6666-7777-aaaaaaaaaaaa"),
+	// 			WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+	// 		},
+	// 		{
+	// 			Type: to.Ptr(core.ItemType("SynapseNotebook")),
+	// 			Description: to.Ptr("A notebook for refining year 2024 sales data analysis through machine learning algorithms."),
+	// 			DisplayName: to.Ptr("Notebook"),
+	// 			FolderID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+	// 			ID: to.Ptr("dddddddd-3333-4444-5555-eeeeeeeeeeee"),
+	// 			WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+	// 	}},
+	// }
+}
+
+// Generated from example definition
+func ExampleItemsClient_BulkMoveItems_bulkMoveItemsWithTheWorkspaceAsTheDestinationExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewItemsClient().BulkMoveItems(ctx, "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb", core.BulkMoveItemsRequest{
+		Items: []string{
+			"cccccccc-2222-3333-4444-dddddddddddd",
+			"dddddddd-3333-4444-5555-eeeeeeeeeeee"},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.MovedItems = core.MovedItems{
+	// 	Value: []core.Item{
+	// 		{
+	// 			Type: to.Ptr(core.ItemTypeLakehouse),
+	// 			Description: to.Ptr("A lakehouse used by the sales team."),
+	// 			DisplayName: to.Ptr("MyLakehouse"),
+	// 			ID: to.Ptr("cccccccc-2222-3333-4444-dddddddddddd"),
+	// 			WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+	// 		},
+	// 		{
+	// 			Type: to.Ptr(core.ItemTypeSQLEndpoint),
+	// 			Description: to.Ptr("A SQL endpoint who is the child of Lakehouse"),
+	// 			DisplayName: to.Ptr("MyLakehouse"),
+	// 			ID: to.Ptr("eeeeeeee-4444-5555-6666-ffffffffffff"),
+	// 			WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+	// 		},
+	// 		{
+	// 			Type: to.Ptr(core.ItemTypeSemanticModel),
+	// 			Description: to.Ptr("A Semantic model who is the child of SQLEndpoint"),
+	// 			DisplayName: to.Ptr("MyLakehouse"),
+	// 			ID: to.Ptr("ffffffff-5555-6666-7777-aaaaaaaaaaaa"),
+	// 			WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+	// 		},
+	// 		{
+	// 			Type: to.Ptr(core.ItemType("SynapseNotebook")),
+	// 			Description: to.Ptr("A notebook for refining year 2024 sales data analysis through machine learning algorithms."),
+	// 			DisplayName: to.Ptr("Notebook"),
+	// 			ID: to.Ptr("dddddddd-3333-4444-5555-eeeeeeeeeeee"),
+	// 			WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+	// 	}},
+	// }
+}
+
+// Generated from example definition
+func ExampleItemsClient_MoveItem_moveAnItemIntoFolderExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewItemsClient().MoveItem(ctx, "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb", "cccccccc-2222-3333-4444-dddddddddddd", core.MoveItemRequest{
+		TargetFolderID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.MovedItems = core.MovedItems{
+	// 	Value: []core.Item{
+	// 		{
+	// 			Type: to.Ptr(core.ItemTypeLakehouse),
+	// 			Description: to.Ptr("A lakehouse used by the sales team."),
+	// 			DisplayName: to.Ptr("MyLakehouse"),
+	// 			FolderID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+	// 			ID: to.Ptr("cccccccc-2222-3333-4444-dddddddddddd"),
+	// 			WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+	// 		},
+	// 		{
+	// 			Type: to.Ptr(core.ItemTypeSQLEndpoint),
+	// 			DisplayName: to.Ptr("MyLakehouse"),
+	// 			FolderID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+	// 			ID: to.Ptr("dddddddd-3333-4444-5555-eeeeeeeeeeee"),
+	// 			WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+	// 	}},
+	// }
+}
+
+// Generated from example definition
+func ExampleItemsClient_MoveItem_moveAnItemWithTheWorkspaceAsTheDestinationExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewItemsClient().MoveItem(ctx, "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb", "cccccccc-2222-3333-4444-dddddddddddd", core.MoveItemRequest{}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.MovedItems = core.MovedItems{
+	// 	Value: []core.Item{
+	// 		{
+	// 			Type: to.Ptr(core.ItemTypeLakehouse),
+	// 			Description: to.Ptr("A lakehouse used by the sales team."),
+	// 			DisplayName: to.Ptr("MyLakehouse"),
+	// 			ID: to.Ptr("cccccccc-2222-3333-4444-dddddddddddd"),
+	// 			WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+	// 		},
+	// 		{
+	// 			Type: to.Ptr(core.ItemTypeSQLEndpoint),
+	// 			DisplayName: to.Ptr("MyLakehouse"),
+	// 			ID: to.Ptr("dddddddd-3333-4444-5555-eeeeeeeeeeee"),
+	// 			WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+	// 	}},
+	// }
+}

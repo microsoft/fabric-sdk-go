@@ -6,6 +6,39 @@
 
 package lakehouse
 
+// DayOfWeek - Days of the week
+type DayOfWeek string
+
+const (
+	// DayOfWeekFriday - Friday
+	DayOfWeekFriday DayOfWeek = "Friday"
+	// DayOfWeekMonday - Monday
+	DayOfWeekMonday DayOfWeek = "Monday"
+	// DayOfWeekSaturday - Saturday
+	DayOfWeekSaturday DayOfWeek = "Saturday"
+	// DayOfWeekSunday - Sunday
+	DayOfWeekSunday DayOfWeek = "Sunday"
+	// DayOfWeekThursday - Thursday
+	DayOfWeekThursday DayOfWeek = "Thursday"
+	// DayOfWeekTuesday - Tuesday
+	DayOfWeekTuesday DayOfWeek = "Tuesday"
+	// DayOfWeekWednesday - Wednesday
+	DayOfWeekWednesday DayOfWeek = "Wednesday"
+)
+
+// PossibleDayOfWeekValues returns the possible values for the DayOfWeek const type.
+func PossibleDayOfWeekValues() []DayOfWeek {
+	return []DayOfWeek{
+		DayOfWeekFriday,
+		DayOfWeekMonday,
+		DayOfWeekSaturday,
+		DayOfWeekSunday,
+		DayOfWeekThursday,
+		DayOfWeekTuesday,
+		DayOfWeekWednesday,
+	}
+}
+
 // FileFormat - Data file format name. Additional file format types may be added over time.
 type FileFormat string
 
@@ -214,6 +247,24 @@ func PossibleModeTypeValues() []ModeType {
 	}
 }
 
+// OccurrenceType - An enumerator that lists the day for triggering jobs. Additional types may be added over time.
+type OccurrenceType string
+
+const (
+	// OccurrenceTypeDayOfMonth - A date.
+	OccurrenceTypeDayOfMonth OccurrenceType = "DayOfMonth"
+	// OccurrenceTypeOrdinalWeekday - A day.
+	OccurrenceTypeOrdinalWeekday OccurrenceType = "OrdinalWeekday"
+)
+
+// PossibleOccurrenceTypeValues returns the possible values for the OccurrenceType const type.
+func PossibleOccurrenceTypeValues() []OccurrenceType {
+	return []OccurrenceType{
+		OccurrenceTypeDayOfMonth,
+		OccurrenceTypeOrdinalWeekday,
+	}
+}
+
 // Origin - Origin of the job. Values are: SubmittedJob, PendingJob. Additional LivySessionOrigin types may be added over
 // time.
 type Origin string
@@ -255,6 +306,8 @@ func PossiblePathTypeValues() []PathType {
 type PrincipalType string
 
 const (
+	// PrincipalTypeEntireTenant - Principal represents all tenant users.
+	PrincipalTypeEntireTenant PrincipalType = "EntireTenant"
 	// PrincipalTypeGroup - Principal is a security group.
 	PrincipalTypeGroup PrincipalType = "Group"
 	// PrincipalTypeServicePrincipal - Principal is a Microsoft Entra service principal.
@@ -268,6 +321,7 @@ const (
 // PossiblePrincipalTypeValues returns the possible values for the PrincipalType const type.
 func PossiblePrincipalTypeValues() []PrincipalType {
 	return []PrincipalType{
+		PrincipalTypeEntireTenant,
 		PrincipalTypeGroup,
 		PrincipalTypeServicePrincipal,
 		PrincipalTypeServicePrincipalProfile,
@@ -294,6 +348,30 @@ func PossibleSQLEndpointProvisioningStatusValues() []SQLEndpointProvisioningStat
 		SQLEndpointProvisioningStatusFailed,
 		SQLEndpointProvisioningStatusInProgress,
 		SQLEndpointProvisioningStatusSuccess,
+	}
+}
+
+// ScheduleType - The type of schedule configuration. Additional types may be added over time.
+type ScheduleType string
+
+const (
+	// ScheduleTypeCron - Triggers a job periodically.
+	ScheduleTypeCron ScheduleType = "Cron"
+	// ScheduleTypeDaily - Triggers a job daily.
+	ScheduleTypeDaily ScheduleType = "Daily"
+	// ScheduleTypeMonthly - Triggers a job monthly.
+	ScheduleTypeMonthly ScheduleType = "Monthly"
+	// ScheduleTypeWeekly - Triggers a job weekly.
+	ScheduleTypeWeekly ScheduleType = "Weekly"
+)
+
+// PossibleScheduleTypeValues returns the possible values for the ScheduleType const type.
+func PossibleScheduleTypeValues() []ScheduleType {
+	return []ScheduleType{
+		ScheduleTypeCron,
+		ScheduleTypeDaily,
+		ScheduleTypeMonthly,
+		ScheduleTypeWeekly,
 	}
 }
 
@@ -367,5 +445,32 @@ func PossibleTimeUnitValues() []TimeUnit {
 		TimeUnitHours,
 		TimeUnitMinutes,
 		TimeUnitSeconds,
+	}
+}
+
+// WeekIndex - The week of the month.
+type WeekIndex string
+
+const (
+	// WeekIndexFifth - Fifth.
+	WeekIndexFifth WeekIndex = "Fifth"
+	// WeekIndexFirst - First.
+	WeekIndexFirst WeekIndex = "First"
+	// WeekIndexFourth - Fourth.
+	WeekIndexFourth WeekIndex = "Fourth"
+	// WeekIndexSecond - Second.
+	WeekIndexSecond WeekIndex = "Second"
+	// WeekIndexThird - Third.
+	WeekIndexThird WeekIndex = "Third"
+)
+
+// PossibleWeekIndexValues returns the possible values for the WeekIndex const type.
+func PossibleWeekIndexValues() []WeekIndex {
+	return []WeekIndex{
+		WeekIndexFifth,
+		WeekIndexFirst,
+		WeekIndexFourth,
+		WeekIndexSecond,
+		WeekIndexThird,
 	}
 }

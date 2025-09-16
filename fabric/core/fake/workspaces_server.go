@@ -34,6 +34,10 @@ type WorkspacesServer struct {
 	// HTTP status codes to indicate success: http.StatusAccepted
 	AssignToCapacity func(ctx context.Context, workspaceID string, assignWorkspaceToCapacityRequest core.AssignWorkspaceToCapacityRequest, options *core.WorkspacesClientAssignToCapacityOptions) (resp azfake.Responder[core.WorkspacesClientAssignToCapacityResponse], errResp azfake.ErrorResponder)
 
+	// AssignToDomain is the fake for method WorkspacesClient.AssignToDomain
+	// HTTP status codes to indicate success: http.StatusOK
+	AssignToDomain func(ctx context.Context, workspaceID string, assignWorkspaceToDomainRequest core.AssignWorkspaceToDomainRequest, options *core.WorkspacesClientAssignToDomainOptions) (resp azfake.Responder[core.WorkspacesClientAssignToDomainResponse], errResp azfake.ErrorResponder)
+
 	// CreateWorkspace is the fake for method WorkspacesClient.CreateWorkspace
 	// HTTP status codes to indicate success: http.StatusCreated
 	CreateWorkspace func(ctx context.Context, createWorkspaceRequest core.CreateWorkspaceRequest, options *core.WorkspacesClientCreateWorkspaceOptions) (resp azfake.Responder[core.WorkspacesClientCreateWorkspaceResponse], errResp azfake.ErrorResponder)
@@ -81,6 +85,10 @@ type WorkspacesServer struct {
 	// UnassignFromCapacity is the fake for method WorkspacesClient.UnassignFromCapacity
 	// HTTP status codes to indicate success: http.StatusAccepted
 	UnassignFromCapacity func(ctx context.Context, workspaceID string, options *core.WorkspacesClientUnassignFromCapacityOptions) (resp azfake.Responder[core.WorkspacesClientUnassignFromCapacityResponse], errResp azfake.ErrorResponder)
+
+	// UnassignFromDomain is the fake for method WorkspacesClient.UnassignFromDomain
+	// HTTP status codes to indicate success: http.StatusOK
+	UnassignFromDomain func(ctx context.Context, workspaceID string, options *core.WorkspacesClientUnassignFromDomainOptions) (resp azfake.Responder[core.WorkspacesClientUnassignFromDomainResponse], errResp azfake.ErrorResponder)
 
 	// UpdateWorkspace is the fake for method WorkspacesClient.UpdateWorkspace
 	// HTTP status codes to indicate success: http.StatusOK
@@ -143,6 +151,8 @@ func (w *WorkspacesServerTransport) dispatchToMethodFake(req *http.Request, meth
 				res.resp, res.err = w.dispatchAddWorkspaceRoleAssignment(req)
 			case "WorkspacesClient.AssignToCapacity":
 				res.resp, res.err = w.dispatchAssignToCapacity(req)
+			case "WorkspacesClient.AssignToDomain":
+				res.resp, res.err = w.dispatchAssignToDomain(req)
 			case "WorkspacesClient.CreateWorkspace":
 				res.resp, res.err = w.dispatchCreateWorkspace(req)
 			case "WorkspacesClient.DeleteWorkspace":
@@ -167,6 +177,8 @@ func (w *WorkspacesServerTransport) dispatchToMethodFake(req *http.Request, meth
 				res.resp, res.err = w.dispatchSetNetworkCommunicationPolicy(req)
 			case "WorkspacesClient.UnassignFromCapacity":
 				res.resp, res.err = w.dispatchUnassignFromCapacity(req)
+			case "WorkspacesClient.UnassignFromDomain":
+				res.resp, res.err = w.dispatchUnassignFromDomain(req)
 			case "WorkspacesClient.UpdateWorkspace":
 				res.resp, res.err = w.dispatchUpdateWorkspace(req)
 			case "WorkspacesClient.UpdateWorkspaceRoleAssignment":
@@ -251,6 +263,39 @@ func (w *WorkspacesServerTransport) dispatchAssignToCapacity(req *http.Request) 
 	respContent := server.GetResponseContent(respr)
 	if !contains([]int{http.StatusAccepted}, respContent.HTTPStatus) {
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusAccepted", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (w *WorkspacesServerTransport) dispatchAssignToDomain(req *http.Request) (*http.Response, error) {
+	if w.srv.AssignToDomain == nil {
+		return nil, &nonRetriableError{errors.New("fake for method AssignToDomain not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/assignToDomain`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 1 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.AssignWorkspaceToDomainRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := w.srv.AssignToDomain(req.Context(), workspaceIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
 	}
 	resp, err := server.NewResponse(respContent, req, nil)
 	if err != nil {
@@ -703,6 +748,35 @@ func (w *WorkspacesServerTransport) dispatchUnassignFromCapacity(req *http.Reque
 	respContent := server.GetResponseContent(respr)
 	if !contains([]int{http.StatusAccepted}, respContent.HTTPStatus) {
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusAccepted", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (w *WorkspacesServerTransport) dispatchUnassignFromDomain(req *http.Request) (*http.Response, error) {
+	if w.srv.UnassignFromDomain == nil {
+		return nil, &nonRetriableError{errors.New("fake for method UnassignFromDomain not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/unassignFromDomain`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 1 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := w.srv.UnassignFromDomain(req.Context(), workspaceIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
 	}
 	resp, err := server.NewResponse(respContent, req, nil)
 	if err != nil {

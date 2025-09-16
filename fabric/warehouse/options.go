@@ -6,6 +6,21 @@
 
 package warehouse
 
+// ClientGetSQLAuditSettingsOptions contains the optional parameters for the Client.GetSQLAuditSettings method.
+type ClientGetSQLAuditSettingsOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ClientSetAuditActionsAndGroupsOptions contains the optional parameters for the Client.SetAuditActionsAndGroups method.
+type ClientSetAuditActionsAndGroupsOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ClientUpdateSQLAuditSettingsOptions contains the optional parameters for the Client.UpdateSQLAuditSettings method.
+type ClientUpdateSQLAuditSettingsOptions struct {
+	// placeholder for future optional parameters
+}
+
 // ItemsClientBeginCreateWarehouseOptions contains the optional parameters for the ItemsClient.BeginCreateWarehouse method.
 type ItemsClientBeginCreateWarehouseOptions struct {
 	// Resumes the long-running operation from the provided token.
@@ -39,5 +54,44 @@ type ItemsClientListWarehousesOptions struct {
 
 // ItemsClientUpdateWarehouseOptions contains the optional parameters for the ItemsClient.UpdateWarehouse method.
 type ItemsClientUpdateWarehouseOptions struct {
+	// placeholder for future optional parameters
+}
+
+// RestorePointsClientBeginCreateRestorePointOptions contains the optional parameters for the RestorePointsClient.BeginCreateRestorePoint
+// method.
+type RestorePointsClientBeginCreateRestorePointOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// RestorePointsClientBeginRestoreToRestorePointOptions contains the optional parameters for the RestorePointsClient.BeginRestoreToRestorePoint
+// method.
+type RestorePointsClientBeginRestoreToRestorePointOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// RestorePointsClientDeleteRestorePointOptions contains the optional parameters for the RestorePointsClient.DeleteRestorePoint
+// method.
+type RestorePointsClientDeleteRestorePointOptions struct {
+	// placeholder for future optional parameters
+}
+
+// RestorePointsClientGetRestorePointOptions contains the optional parameters for the RestorePointsClient.GetRestorePoint
+// method.
+type RestorePointsClientGetRestorePointOptions struct {
+	// placeholder for future optional parameters
+}
+
+// RestorePointsClientListRestorePointsOptions contains the optional parameters for the RestorePointsClient.NewListRestorePointsPager
+// method.
+type RestorePointsClientListRestorePointsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// RestorePointsClientUpdateRestorePointOptions contains the optional parameters for the RestorePointsClient.UpdateRestorePoint
+// method.
+type RestorePointsClientUpdateRestorePointOptions struct {
 	// placeholder for future optional parameters
 }

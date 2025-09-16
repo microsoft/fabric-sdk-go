@@ -456,6 +456,41 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandTableMaintenance()
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
+func (testsuite *FakeTestSuite) TestBackgroundJobs_CreateRefreshMaterializedLakeViewsSchedule() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create lakehouse Refresh MaterializedLakeViews schedule example"},
+	})
+	var exampleWorkspaceID string
+	var exampleLakehouseID string
+	var exampleCreateScheduleRequest lakehouse.CreateLakehouseRefreshMaterializedLakeViewsScheduleRequest
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleLakehouseID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+	exampleCreateScheduleRequest = lakehouse.CreateLakehouseRefreshMaterializedLakeViewsScheduleRequest{
+		Configuration: &lakehouse.CronScheduleConfig{
+			Type:            to.Ptr(lakehouse.ScheduleTypeCron),
+			EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-04-30T23:59:00.000Z"); return t }()),
+			LocalTimeZoneID: to.Ptr("Central Standard Time"),
+			StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-04-28T00:00:00.000Z"); return t }()),
+			Interval:        to.Ptr[int32](10),
+		},
+		Enabled: to.Ptr(true),
+	}
+
+	testsuite.serverFactory.BackgroundJobsServer.CreateRefreshMaterializedLakeViewsSchedule = func(ctx context.Context, workspaceID string, lakehouseID string, createScheduleRequest lakehouse.CreateLakehouseRefreshMaterializedLakeViewsScheduleRequest, options *lakehouse.BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleLakehouseID, lakehouseID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateScheduleRequest, createScheduleRequest))
+		resp = azfake.Responder[lakehouse.BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleResponse]{}
+		resp.SetResponse(http.StatusCreated, lakehouse.BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewBackgroundJobsClient()
+	_, err = client.CreateRefreshMaterializedLakeViewsSchedule(ctx, exampleWorkspaceID, exampleLakehouseID, exampleCreateScheduleRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
 func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandRefreshMaterializedLakeViews() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -479,6 +514,88 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandRefreshMaterialize
 
 	client := testsuite.clientFactory.NewBackgroundJobsClient()
 	_, err = client.RunOnDemandRefreshMaterializedLakeViews(ctx, exampleWorkspaceID, exampleLakehouseID, exampleJobType, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestBackgroundJobs_UpdateRefreshMaterializedLakeViewsSchedule() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update lakehouse Refresh MaterializedLakeViews schedule example"},
+	})
+	var exampleWorkspaceID string
+	var exampleLakehouseID string
+	var exampleScheduleID string
+	var exampleUpdateScheduleRequest lakehouse.UpdateLakehouseRefreshMaterializedLakeViewsScheduleRequest
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleLakehouseID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+	exampleScheduleID = "bbbbbbbb-1111-2222-3333-cccccccccccc"
+	exampleUpdateScheduleRequest = lakehouse.UpdateLakehouseRefreshMaterializedLakeViewsScheduleRequest{
+		Configuration: &lakehouse.CronScheduleConfig{
+			Type:            to.Ptr(lakehouse.ScheduleTypeCron),
+			EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-05-31T23:59:00.000Z"); return t }()),
+			LocalTimeZoneID: to.Ptr("Pacific Standard Time"),
+			StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-05-01T00:00:00.000Z"); return t }()),
+			Interval:        to.Ptr[int32](15),
+		},
+		Enabled: to.Ptr(false),
+	}
+
+	exampleRes := lakehouse.RefreshMaterializedLakeViewsSchedule{
+		Configuration: &lakehouse.CronScheduleConfig{
+			Type:            to.Ptr(lakehouse.ScheduleTypeCron),
+			EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-05-31T23:59:00.000Z"); return t }()),
+			LocalTimeZoneID: to.Ptr("Pacific Standard Time"),
+			StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-05-01T00:00:00.000Z"); return t }()),
+			Interval:        to.Ptr[int32](15),
+		},
+		CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-05-28T05:35:20.536Z"); return t }()),
+		Enabled:         to.Ptr(false),
+		ID:              to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+		Owner: &lakehouse.Principal{
+			Type: to.Ptr(lakehouse.PrincipalTypeUser),
+			ID:   to.Ptr("33dd33dd-ee44-ff55-aa66-77bb77bb77bb"),
+		},
+	}
+
+	testsuite.serverFactory.BackgroundJobsServer.UpdateRefreshMaterializedLakeViewsSchedule = func(ctx context.Context, workspaceID string, lakehouseID string, scheduleID string, updateScheduleRequest lakehouse.UpdateLakehouseRefreshMaterializedLakeViewsScheduleRequest, options *lakehouse.BackgroundJobsClientUpdateRefreshMaterializedLakeViewsScheduleOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientUpdateRefreshMaterializedLakeViewsScheduleResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleLakehouseID, lakehouseID)
+		testsuite.Require().Equal(exampleScheduleID, scheduleID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateScheduleRequest, updateScheduleRequest))
+		resp = azfake.Responder[lakehouse.BackgroundJobsClientUpdateRefreshMaterializedLakeViewsScheduleResponse]{}
+		resp.SetResponse(http.StatusOK, lakehouse.BackgroundJobsClientUpdateRefreshMaterializedLakeViewsScheduleResponse{RefreshMaterializedLakeViewsSchedule: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewBackgroundJobsClient()
+	res, err := client.UpdateRefreshMaterializedLakeViewsSchedule(ctx, exampleWorkspaceID, exampleLakehouseID, exampleScheduleID, exampleUpdateScheduleRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.RefreshMaterializedLakeViewsSchedule))
+}
+
+func (testsuite *FakeTestSuite) TestBackgroundJobs_DeleteRefreshMaterializedLakeViewsSchedule() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete lakehouse Refresh MaterializedLakeViews schedule example"},
+	})
+	var exampleWorkspaceID string
+	var exampleLakehouseID string
+	var exampleScheduleID string
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleLakehouseID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+	exampleScheduleID = "bbbbbbbb-1111-2222-3333-cccccccccccc"
+
+	testsuite.serverFactory.BackgroundJobsServer.DeleteRefreshMaterializedLakeViewsSchedule = func(ctx context.Context, workspaceID string, lakehouseID string, scheduleID string, options *lakehouse.BackgroundJobsClientDeleteRefreshMaterializedLakeViewsScheduleOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientDeleteRefreshMaterializedLakeViewsScheduleResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleLakehouseID, lakehouseID)
+		testsuite.Require().Equal(exampleScheduleID, scheduleID)
+		resp = azfake.Responder[lakehouse.BackgroundJobsClientDeleteRefreshMaterializedLakeViewsScheduleResponse]{}
+		resp.SetResponse(http.StatusOK, lakehouse.BackgroundJobsClientDeleteRefreshMaterializedLakeViewsScheduleResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewBackgroundJobsClient()
+	_, err = client.DeleteRefreshMaterializedLakeViewsSchedule(ctx, exampleWorkspaceID, exampleLakehouseID, exampleScheduleID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
