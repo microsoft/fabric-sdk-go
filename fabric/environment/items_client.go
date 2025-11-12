@@ -11,6 +11,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -29,8 +30,72 @@ type ItemsClient struct {
 	endpoint string
 }
 
+// CancelPublishEnvironment - PERMISSIONS Write permission for the environment item.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All or Environment.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - environmentID - The environment ID.
+//   - options - ItemsClientCancelPublishEnvironmentOptions contains the optional parameters for the ItemsClient.CancelPublishEnvironment
+//     method.
+func (client *ItemsClient) CancelPublishEnvironment(ctx context.Context, workspaceID string, environmentID string, options *ItemsClientCancelPublishEnvironmentOptions) (ItemsClientCancelPublishEnvironmentResponse, error) {
+	var err error
+	const operationName = "environment.ItemsClient.CancelPublishEnvironment"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.cancelPublishEnvironmentCreateRequest(ctx, workspaceID, environmentID, options)
+	if err != nil {
+		return ItemsClientCancelPublishEnvironmentResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return ItemsClientCancelPublishEnvironmentResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return ItemsClientCancelPublishEnvironmentResponse{}, err
+	}
+	resp, err := client.cancelPublishEnvironmentHandleResponse(httpResp)
+	return resp, err
+}
+
+// cancelPublishEnvironmentCreateRequest creates the CancelPublishEnvironment request.
+func (client *ItemsClient) cancelPublishEnvironmentCreateRequest(ctx context.Context, workspaceID string, environmentID string, _ *ItemsClientCancelPublishEnvironmentOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/staging/cancelPublish"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if environmentID == "" {
+		return nil, errors.New("parameter environmentID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{environmentId}", url.PathEscape(environmentID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// cancelPublishEnvironmentHandleResponse handles the CancelPublishEnvironment response.
+func (client *ItemsClient) cancelPublishEnvironmentHandleResponse(resp *http.Response) (ItemsClientCancelPublishEnvironmentResponse, error) {
+	result := ItemsClientCancelPublishEnvironmentResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.Properties); err != nil {
+		return ItemsClientCancelPublishEnvironmentResponse{}, err
+	}
+	return result, nil
+}
+
 // BeginCreateEnvironment - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// This API does not support create a environment with definition.
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Environment.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
@@ -53,7 +118,6 @@ func (client *ItemsClient) BeginCreateEnvironment(ctx context.Context, workspace
 }
 
 // CreateEnvironment - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// This API does not support create a environment with definition.
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Environment.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
@@ -224,6 +288,87 @@ func (client *ItemsClient) getEnvironmentHandleResponse(resp *http.Response) (It
 	return result, nil
 }
 
+// BeginGetEnvironmentDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// When you get a environment's public definition, the sensitivity label is not a part of the definition.
+// PERMISSIONS The caller must have read and write permissions for the environment.
+// REQUIRED DELEGATED SCOPES Environment.ReadWrite.All or Item.ReadWrite.All
+// LIMITATIONS This API is blocked for a environment with an encrypted sensitivity label.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - environmentID - The environment ID.
+//   - options - ItemsClientBeginGetEnvironmentDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetEnvironmentDefinition
+//     method.
+func (client *ItemsClient) BeginGetEnvironmentDefinition(ctx context.Context, workspaceID string, environmentID string, options *ItemsClientBeginGetEnvironmentDefinitionOptions) (*runtime.Poller[ItemsClientGetEnvironmentDefinitionResponse], error) {
+	return client.beginGetEnvironmentDefinition(ctx, workspaceID, environmentID, options)
+}
+
+// GetEnvironmentDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// When you get a environment's public definition, the sensitivity label is not a part of the definition.
+// PERMISSIONS The caller must have read and write permissions for the environment.
+// REQUIRED DELEGATED SCOPES Environment.ReadWrite.All or Item.ReadWrite.All
+// LIMITATIONS This API is blocked for a environment with an encrypted sensitivity label.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) getEnvironmentDefinition(ctx context.Context, workspaceID string, environmentID string, options *ItemsClientBeginGetEnvironmentDefinitionOptions) (*http.Response, error) {
+	var err error
+	const operationName = "environment.ItemsClient.BeginGetEnvironmentDefinition"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getEnvironmentDefinitionCreateRequest(ctx, workspaceID, environmentID, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// getEnvironmentDefinitionCreateRequest creates the GetEnvironmentDefinition request.
+func (client *ItemsClient) getEnvironmentDefinitionCreateRequest(ctx context.Context, workspaceID string, environmentID string, options *ItemsClientBeginGetEnvironmentDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/getDefinition"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if environmentID == "" {
+		return nil, errors.New("parameter environmentID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{environmentId}", url.PathEscape(environmentID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.Format != nil {
+		reqQP.Set("format", *options.Format)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
 // NewListEnvironmentsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
@@ -286,6 +431,173 @@ func (client *ItemsClient) listEnvironmentsHandleResponse(resp *http.Response) (
 	result := ItemsClientListEnvironmentsResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.Environments); err != nil {
 		return ItemsClientListEnvironmentsResponse{}, err
+	}
+	return result, nil
+}
+
+// BeginPublishEnvironment - > [!NOTE] This API is a release version of a preview version due to be deprecated on March 1,
+// 2026. When calling this API - callers must set the query parameter preview to the value false
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS Write permission for the environment item.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All or Environment.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - environmentID - The environment ID.
+//   - preview - This parameter specifies which version of the API to use. Set to false to use the release version.
+//   - options - ItemsClientBeginPublishEnvironmentOptions contains the optional parameters for the ItemsClient.BeginPublishEnvironment
+//     method.
+func (client *ItemsClient) BeginPublishEnvironment(ctx context.Context, workspaceID string, environmentID string, preview bool, options *ItemsClientBeginPublishEnvironmentOptions) (*runtime.Poller[ItemsClientPublishEnvironmentResponse], error) {
+	return client.beginPublishEnvironment(ctx, workspaceID, environmentID, preview, options)
+}
+
+// PublishEnvironment - > [!NOTE] This API is a release version of a preview version due to be deprecated on March 1, 2026.
+// When calling this API - callers must set the query parameter preview to the value false
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS Write permission for the environment item.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All or Environment.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) publishEnvironment(ctx context.Context, workspaceID string, environmentID string, preview bool, options *ItemsClientBeginPublishEnvironmentOptions) (*http.Response, error) {
+	var err error
+	const operationName = "environment.ItemsClient.BeginPublishEnvironment"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.publishEnvironmentCreateRequest(ctx, workspaceID, environmentID, preview, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// publishEnvironmentCreateRequest creates the PublishEnvironment request.
+func (client *ItemsClient) publishEnvironmentCreateRequest(ctx context.Context, workspaceID string, environmentID string, preview bool, _ *ItemsClientBeginPublishEnvironmentOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/staging/publish"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if environmentID == "" {
+		return nil, errors.New("parameter environmentID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{environmentId}", url.PathEscape(environmentID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("preview", strconv.FormatBool(preview))
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// PublishEnvironmentPreview - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use. This preview API
+// will be deprecated on March 1, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/items/publish-environment].
+// The new version introduces breaking changes and is not
+// backward compatible. When calling this API, callers must specify true as the value for the query parameter preview.
+// DEPRECATION NOTICE A new query parameter preview has been introduced to facilitate this transition:
+// * The preview query parameter currently defaults to true.
+// * Set the value of the preview query parameter to false to use the stable Release version of this API.
+// * Starting March 1, 2026, the default value for preview will change to false.
+// It is recommended to migrate your integration to use the Release version as soon as possible by specifying false for the
+// preview query parameter (the default value for the preview query parameter will
+// be set to false on API's deprecation date).
+// The following incompatible changes were introduced in the Release version:
+// * Response is following long running operations (LRO) [/rest/api/fabric/articles/long-running-operation] pattern and HTTP
+// response code 202 may be returned.
+// PERMISSIONS Write permission for the environment item.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All or Environment.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - environmentID - The environment ID.
+//   - preview - This parameter specifies which version of the API to use. Set to true to use the preview version described on
+//     this page, or to false to use the Release version detailed here
+//     [/rest/api/fabric/environment/items/publish-environment]. Starting March 1, 2026, the default value for preview will change
+//     to false.
+//   - options - ItemsClientPublishEnvironmentPreviewOptions contains the optional parameters for the ItemsClient.PublishEnvironmentPreview
+//     method.
+func (client *ItemsClient) PublishEnvironmentPreview(ctx context.Context, workspaceID string, environmentID string, preview bool, options *ItemsClientPublishEnvironmentPreviewOptions) (ItemsClientPublishEnvironmentPreviewResponse, error) {
+	var err error
+	const operationName = "environment.ItemsClient.PublishEnvironmentPreview"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.publishEnvironmentPreviewCreateRequest(ctx, workspaceID, environmentID, preview, options)
+	if err != nil {
+		return ItemsClientPublishEnvironmentPreviewResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return ItemsClientPublishEnvironmentPreviewResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return ItemsClientPublishEnvironmentPreviewResponse{}, err
+	}
+	resp, err := client.publishEnvironmentPreviewHandleResponse(httpResp)
+	return resp, err
+}
+
+// publishEnvironmentPreviewCreateRequest creates the PublishEnvironmentPreview request.
+func (client *ItemsClient) publishEnvironmentPreviewCreateRequest(ctx context.Context, workspaceID string, environmentID string, preview bool, _ *ItemsClientPublishEnvironmentPreviewOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/staging/publish"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if environmentID == "" {
+		return nil, errors.New("parameter environmentID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{environmentId}", url.PathEscape(environmentID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("preview", strconv.FormatBool(preview))
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// publishEnvironmentPreviewHandleResponse handles the PublishEnvironmentPreview response.
+func (client *ItemsClient) publishEnvironmentPreviewHandleResponse(resp *http.Response) (ItemsClientPublishEnvironmentPreviewResponse, error) {
+	result := ItemsClientPublishEnvironmentPreviewResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.Properties); err != nil {
+		return ItemsClientPublishEnvironmentPreviewResponse{}, err
 	}
 	return result, nil
 }
@@ -358,12 +670,93 @@ func (client *ItemsClient) updateEnvironmentHandleResponse(resp *http.Response) 
 	return result, nil
 }
 
+// BeginUpdateEnvironmentDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Updating the environment's definition, does not affect its sensitivity label.
+// PERMISSIONS The caller must have read and write permissions for the environment.
+// REQUIRED DELEGATED SCOPES Environment.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - environmentID - The environment ID.
+//   - updateEnvironmentDefinitionRequest - Update environment definition request payload.
+//   - options - ItemsClientBeginUpdateEnvironmentDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateEnvironmentDefinition
+//     method.
+func (client *ItemsClient) BeginUpdateEnvironmentDefinition(ctx context.Context, workspaceID string, environmentID string, updateEnvironmentDefinitionRequest UpdateEnvironmentDefinitionRequest, options *ItemsClientBeginUpdateEnvironmentDefinitionOptions) (*runtime.Poller[ItemsClientUpdateEnvironmentDefinitionResponse], error) {
+	return client.beginUpdateEnvironmentDefinition(ctx, workspaceID, environmentID, updateEnvironmentDefinitionRequest, options)
+}
+
+// UpdateEnvironmentDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Updating the environment's definition, does not affect its sensitivity label.
+// PERMISSIONS The caller must have read and write permissions for the environment.
+// REQUIRED DELEGATED SCOPES Environment.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) updateEnvironmentDefinition(ctx context.Context, workspaceID string, environmentID string, updateEnvironmentDefinitionRequest UpdateEnvironmentDefinitionRequest, options *ItemsClientBeginUpdateEnvironmentDefinitionOptions) (*http.Response, error) {
+	var err error
+	const operationName = "environment.ItemsClient.BeginUpdateEnvironmentDefinition"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateEnvironmentDefinitionCreateRequest(ctx, workspaceID, environmentID, updateEnvironmentDefinitionRequest, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// updateEnvironmentDefinitionCreateRequest creates the UpdateEnvironmentDefinition request.
+func (client *ItemsClient) updateEnvironmentDefinitionCreateRequest(ctx context.Context, workspaceID string, environmentID string, updateEnvironmentDefinitionRequest UpdateEnvironmentDefinitionRequest, options *ItemsClientBeginUpdateEnvironmentDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/updateDefinition"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if environmentID == "" {
+		return nil, errors.New("parameter environmentID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{environmentId}", url.PathEscape(environmentID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.UpdateMetadata != nil {
+		reqQP.Set("updateMetadata", strconv.FormatBool(*options.UpdateMetadata))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateEnvironmentDefinitionRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // Custom code starts below
 
 // CreateEnvironment - returns ItemsClientCreateEnvironmentResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-//
-// This API does not support create a environment with definition.
 //
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Environment.ReadWrite.All or Item.ReadWrite.All
@@ -428,6 +821,223 @@ func (client *ItemsClient) beginCreateEnvironment(ctx context.Context, workspace
 			return nil, err
 		}
 		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientCreateEnvironmentResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// GetEnvironmentDefinition - returns ItemsClientGetEnvironmentDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// When you get a environment's public definition, the sensitivity label is not a part of the definition.
+//
+// PERMISSIONS The caller must have read and write permissions for the environment.
+//
+// # REQUIRED DELEGATED SCOPES Environment.ReadWrite.All or Item.ReadWrite.All
+//
+// LIMITATIONS This API is blocked for a environment with an encrypted sensitivity label.
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - environmentID - The environment ID.
+//   - options - ItemsClientBeginGetEnvironmentDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetEnvironmentDefinition method.
+func (client *ItemsClient) GetEnvironmentDefinition(ctx context.Context, workspaceID string, environmentID string, options *ItemsClientBeginGetEnvironmentDefinitionOptions) (ItemsClientGetEnvironmentDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginGetEnvironmentDefinition(ctx, workspaceID, environmentID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientGetEnvironmentDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientGetEnvironmentDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginGetEnvironmentDefinition creates the getEnvironmentDefinition request.
+func (client *ItemsClient) beginGetEnvironmentDefinition(ctx context.Context, workspaceID string, environmentID string, options *ItemsClientBeginGetEnvironmentDefinitionOptions) (*runtime.Poller[ItemsClientGetEnvironmentDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.getEnvironmentDefinition(ctx, workspaceID, environmentID, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientGetEnvironmentDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientGetEnvironmentDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientGetEnvironmentDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientGetEnvironmentDefinitionResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// PublishEnvironment - returns ItemsClientPublishEnvironmentResponse in sync mode.
+// >  [!NOTE] This API is a release version of a preview version due to be deprecated on March 1, 2026. When calling this API - callers must set the query parameter preview to the value false
+//
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS Write permission for the environment item.
+//
+// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All or Environment.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - environmentID - The environment ID.
+//   - preview - This parameter specifies which version of the API to use. Set to false to use the release version.
+//   - options - ItemsClientBeginPublishEnvironmentOptions contains the optional parameters for the ItemsClient.BeginPublishEnvironment method.
+func (client *ItemsClient) PublishEnvironment(ctx context.Context, workspaceID string, environmentID string, preview bool, options *ItemsClientBeginPublishEnvironmentOptions) (ItemsClientPublishEnvironmentResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginPublishEnvironment(ctx, workspaceID, environmentID, preview, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientPublishEnvironmentResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientPublishEnvironmentResponse{}, err
+	}
+	return result, err
+}
+
+// beginPublishEnvironment creates the publishEnvironment request.
+func (client *ItemsClient) beginPublishEnvironment(ctx context.Context, workspaceID string, environmentID string, preview bool, options *ItemsClientBeginPublishEnvironmentOptions) (*runtime.Poller[ItemsClientPublishEnvironmentResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.publishEnvironment(ctx, workspaceID, environmentID, preview, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientPublishEnvironmentResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientPublishEnvironmentResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientPublishEnvironmentResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientPublishEnvironmentResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// UpdateEnvironmentDefinition - returns ItemsClientUpdateEnvironmentDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// Updating the environment's definition, does not affect its sensitivity label.
+//
+// PERMISSIONS The caller must have read and write permissions for the environment.
+//
+// # REQUIRED DELEGATED SCOPES Environment.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - environmentID - The environment ID.
+//   - updateEnvironmentDefinitionRequest - Update environment definition request payload.
+//   - options - ItemsClientBeginUpdateEnvironmentDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateEnvironmentDefinition method.
+func (client *ItemsClient) UpdateEnvironmentDefinition(ctx context.Context, workspaceID string, environmentID string, updateEnvironmentDefinitionRequest UpdateEnvironmentDefinitionRequest, options *ItemsClientBeginUpdateEnvironmentDefinitionOptions) (ItemsClientUpdateEnvironmentDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginUpdateEnvironmentDefinition(ctx, workspaceID, environmentID, updateEnvironmentDefinitionRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientUpdateEnvironmentDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientUpdateEnvironmentDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginUpdateEnvironmentDefinition creates the updateEnvironmentDefinition request.
+func (client *ItemsClient) beginUpdateEnvironmentDefinition(ctx context.Context, workspaceID string, environmentID string, updateEnvironmentDefinitionRequest UpdateEnvironmentDefinitionRequest, options *ItemsClientBeginUpdateEnvironmentDefinitionOptions) (*runtime.Poller[ItemsClientUpdateEnvironmentDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.updateEnvironmentDefinition(ctx, workspaceID, environmentID, updateEnvironmentDefinitionRequest, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateEnvironmentDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientUpdateEnvironmentDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateEnvironmentDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientUpdateEnvironmentDefinitionResponse]{
 			Handler: handler,
 			Tracer:  client.internal.Tracer(),
 		})

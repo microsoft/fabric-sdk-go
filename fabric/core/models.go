@@ -649,6 +649,27 @@ type ConnectionRoleAssignments struct {
 	ContinuationURI *string
 }
 
+// ConnectionRuleEndpointMetadata - Represents a single endpoint-level exception rule that allows outbound communication to
+// a specific external domain or host. This object is used within the allowedEndpoints array of a connection rule
+// to explicitly authorize outbound access to trusted endpoints for a given connectionType. This is applicable only to connection
+// types that support endpoint-based filtering (e.g., SQL, MySQL, Web,
+// etc.).
+type ConnectionRuleEndpointMetadata struct {
+	// REQUIRED; A wildcard-supported pattern that defines the allowed external endpoint. Examples include *.microsoft.com, api.contoso.com,
+	// or data.partner.org.
+	HostNamePattern *string
+}
+
+// ConnectionRuleWorkspaceMetadata - Represents a workspace-level exception rule that allows outbound communication to a specific
+// workspace for a given connectionType. This object is used within the allowedWorkspaces array of a
+// connection rule to explicitly authorize cross-workspace access. This is applicable only to connection types that support
+// workspace-based filtering, such as Lakehouse, Warehouse, FabricSql, and
+// PowerPlatformDataflows.
+type ConnectionRuleWorkspaceMetadata struct {
+	// REQUIRED; The unique identifier (GUID) of the target workspace that is allowed to be connected from current workspace.
+	WorkspaceID *string
+}
+
 // CreatableShortcutTarget - An object that contains the target datasource, and must specify exactly one of the supported
 // destinations as described in the table below.
 type CreatableShortcutTarget struct {
@@ -847,11 +868,14 @@ type CreateManagedPrivateEndpointRequest struct {
 	// REQUIRED; Resource Id of data source for which private endpoint needs to be created.
 	TargetPrivateLinkResourceID *string
 
-	// REQUIRED; Sub-resource pointing to Private-link resoure [/azure/private-link/private-endpoint-overview#private-link-resource].
-	TargetSubresourceType *string
-
 	// Message to approve private endpoint request. Should not be more than 140 characters.
 	RequestMessage *string
+
+	// Fully qualified domain names (FQDNs) to be associated with the private endpoint. Should not be more than 20 FQDNs.
+	TargetFQDNs []string
+
+	// Sub-resource pointing to Private-link resoure [/azure/private-link/private-endpoint-overview#private-link-resource].
+	TargetSubresourceType *string
 }
 
 type CreateOnPremisesConnectionRequest struct {
@@ -1831,6 +1855,13 @@ type Gateway struct {
 // GetGateway implements the GatewayClassification interface for type Gateway.
 func (g *Gateway) GetGateway() *Gateway { return g }
 
+// GatewayAccessRuleMetadata - Represents a gateway that is allowed for outbound communication. This object is used within
+// the allowedGateways to explicitly authorize outbound access.
+type GatewayAccessRuleMetadata struct {
+	// REQUIRED; Gateway Id to be allowed.
+	ID *string
+}
+
 // GatewayRoleAssignment - The gateway role assignment for a principal.
 type GatewayRoleAssignment struct {
 	// REQUIRED; The object ID of the gateway role assignment.
@@ -1852,6 +1883,12 @@ type GatewayRoleAssignments struct {
 
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
+}
+
+// GetOneLakeSettingsResponse - OneLake settings response.
+type GetOneLakeSettingsResponse struct {
+	// REQUIRED; OneLake diagnostic settings object.
+	Diagnostics *OneLakeDiagnosticSettings
 }
 
 // GitConnectRequest - Contains the Git connect request data.
@@ -2143,7 +2180,7 @@ type ItemJobInstance struct {
 	StartTimeUTC *string
 
 	// The item job status. Additional statuses may be added over time.
-	Status *Status
+	Status *ItemJobStatus
 
 	// READ-ONLY; Error response when job is failed
 	FailureReason *ErrorResponse
@@ -2171,6 +2208,34 @@ type ItemMetadata struct {
 
 	// READ-ONLY; The item type.
 	ItemType *ItemType
+}
+
+// ItemReference - An item reference object.
+type ItemReference struct {
+	// REQUIRED; The item reference type.
+	ReferenceType *ItemReferenceType
+}
+
+// GetItemReference implements the ItemReferenceClassification interface for type ItemReference.
+func (i *ItemReference) GetItemReference() *ItemReference { return i }
+
+// ItemReferenceByID - An item reference by ID object.
+type ItemReferenceByID struct {
+	// REQUIRED; The ID of the item.
+	ItemID *string
+
+	// REQUIRED; The item reference type.
+	ReferenceType *ItemReferenceType
+
+	// REQUIRED; The workspace ID of the item.
+	WorkspaceID *string
+}
+
+// GetItemReference implements the ItemReferenceClassification interface for type ItemReferenceByID.
+func (i *ItemReferenceByID) GetItemReference() *ItemReference {
+	return &ItemReference{
+		ReferenceType: i.ReferenceType,
+	}
 }
 
 // ItemSchedule - Item schedule.
@@ -2236,6 +2301,23 @@ type KeyCredentials struct {
 func (k *KeyCredentials) GetCredentials() *Credentials {
 	return &Credentials{
 		CredentialType: k.CredentialType,
+	}
+}
+
+// LakehouseOneLakeDiagnosticSettingsDestination - Lakehouse destination for OneLake diagnostic logs.
+type LakehouseOneLakeDiagnosticSettingsDestination struct {
+	// REQUIRED; The item type of the destination.
+	Type *string
+
+	// Reference to the destination lakehouse.
+	Lakehouse ItemReferenceClassification
+}
+
+// GetOneLakeDiagnosticSettingsDestinationInfo implements the OneLakeDiagnosticSettingsDestinationInfoClassification interface
+// for type LakehouseOneLakeDiagnosticSettingsDestination.
+func (l *LakehouseOneLakeDiagnosticSettingsDestination) GetOneLakeDiagnosticSettingsDestinationInfo() *OneLakeDiagnosticSettingsDestinationInfo {
+	return &OneLakeDiagnosticSettingsDestinationInfo{
+		Type: l.Type,
 	}
 }
 
@@ -2645,6 +2727,27 @@ type OneLake struct {
 	ConnectionID *string
 }
 
+// OneLakeDiagnosticSettings - OneLake diagnostic settings object.
+type OneLakeDiagnosticSettings struct {
+	// REQUIRED; The status of the diagnostics settings.
+	Status *string
+
+	// The destination where OneLake diagnostic logs are stored. If disabling, this is not required.
+	Destination OneLakeDiagnosticSettingsDestinationInfoClassification
+}
+
+// OneLakeDiagnosticSettingsDestinationInfo - The destination where OneLake diagnostic logs are stored.
+type OneLakeDiagnosticSettingsDestinationInfo struct {
+	// REQUIRED; The item type of the destination.
+	Type *string
+}
+
+// GetOneLakeDiagnosticSettingsDestinationInfo implements the OneLakeDiagnosticSettingsDestinationInfoClassification interface
+// for type OneLakeDiagnosticSettingsDestinationInfo.
+func (o *OneLakeDiagnosticSettingsDestinationInfo) GetOneLakeDiagnosticSettingsDestinationInfo() *OneLakeDiagnosticSettingsDestinationInfo {
+	return o
+}
+
 // OneLakeEndpoints - The OneLake API endpoints associated with this workspace.
 type OneLakeEndpoints struct {
 	// READ-ONLY; The OneLake API endpoint available for Blob API operations. By default, this is a region specific endpoint.
@@ -2695,6 +2798,35 @@ func (o *OrdinalWeekday) GetMonthlyOccurrence() *MonthlyOccurrence {
 	return &MonthlyOccurrence{
 		OccurrenceType: o.OccurrenceType,
 	}
+}
+
+// OutboundConnectionRule - Defines an outbound access rule for a specific cloud connection.
+type OutboundConnectionRule struct {
+	// REQUIRED; Specifies the cloud connection type to which the rule applies. The behavior and applicability of other rule properties
+	// (such as allowedEndpoints or allowedWorkspaces) may vary depending on the
+	// capabilities of connection type.
+	ConnectionType *string
+
+	// Defines a list of explicitly permitted external endpoints for the connectionType. Each entry in the array represents a
+	// hostname pattern that is allowed for outbound communication from the workspace.
+	// This field is applicable only to connection types that support endpoint-based filtering (e.g., SQL, MySQL, Web, etc.).
+	// If defaultAction is set to "Deny" for the connection type, only the endpoints
+	// listed here will be allowed; all others will be blocked.
+	AllowedEndpoints []ConnectionRuleEndpointMetadata
+
+	// Specifies a list of workspace IDs that are explicitly permitted for outbound communication for the given fabric connectionType.
+	// This field is applicable only to fabric connection types that support
+	// workspace-based filtering, limited to Lakehouse, Warehouse, FabricSql, and PowerPlatformDataflows. When defaultAction is
+	// set to "Deny" for a connection type, only the workspaces listed in
+	// allowedWorkspaces will be allowed for outbound access; all others will be blocked.
+	AllowedWorkspaces []ConnectionRuleWorkspaceMetadata
+
+	// Defines the default outbound access behavior for the connectionType. This field determines whether connections of this
+	// type are permitted or blocked by default, unless further refined by
+	// allowedEndpoints or allowedWorkspaces. If set to "Allow": All connections of this type are permitted unless explicitly
+	// denied by a more specific rule. This field provides fine-grained control over
+	// each connection type and complements the global fallback behavior defined by defaultAction.
+	DefaultAction *ConnectionAccessActionType
 }
 
 // OutboundRules - The policy for all outbound communications from a workspace.
@@ -3785,6 +3917,35 @@ type WorkspaceNetworkingCommunicationPolicy struct {
 
 	// The outbound network communications properties for a workspace.
 	Outbound *OutboundRules
+}
+
+// WorkspaceOutboundConnections - Represents the complete set of outbound access protection cloud connection rules configured
+// for a workspace as part of its networking communication policy. This object defines the connection rules
+// that govern which external endpoints and workspaces are permitted or denied for outbound communication
+type WorkspaceOutboundConnections struct {
+	// Defines the default behavior for all cloud connection types that are not explicitly listed in the rules array. If set to
+	// "Allow", all unspecified connection types are permitted by default. If set to
+	// "Deny", all unspecified connection types are blocked by default unless explicitly allowed. This setting acts as a global
+	// fallback policy and is critical for enforcing a secure default posture in
+	// environments where only known and trusted connections should be permitted.
+	DefaultAction *ConnectionAccessActionType
+
+	// A list of rules that define outbound access behavior for specific cloud connection types. Each rule may include endpoint-based
+	// or workspace-based restrictions depending on supported connection types.
+	Rules []OutboundConnectionRule
+}
+
+// WorkspaceOutboundGateways - Represents the complete set of gateway outbound access protection rules configured for a workspace
+// as part of its networking communication policy. This object defines the gateway rules that govern
+// outbound communication
+type WorkspaceOutboundGateways struct {
+	// A list of rules that define outbound access behavior for gateways.
+	AllowedGateways []GatewayAccessRuleMetadata
+
+	// Defines the default behavior for all gateways that are not explicitly listed in the allowed list array. If set to "Allow",
+	// all unspecified gateways are permitted by default. If set to "Deny", all
+	// unspecified gateways are blocked.
+	DefaultAction *GatewayAccessActionType
 }
 
 // WorkspaceRoleAssignment - A workspace role assignment object.

@@ -535,6 +535,9 @@ type Item struct {
 	// READ-ONLY; The item status.
 	State *ItemState
 
+	// READ-ONLY; List of applied tags.
+	Tags []ItemTag
+
 	// READ-ONLY; The item type. Includes values such as Synapse, Notebook, Kqldatabase and SynapseWorkbook.
 	Type *ItemType
 
@@ -601,6 +604,15 @@ type ItemRemoveSharingLinksStatus struct {
 
 	// READ-ONLY; The status of sharing links removal operation. Additional property types may be added over time.
 	Status *SharingLinksRemovalStatus
+}
+
+// ItemTag - Represents a tag applied on an item.
+type ItemTag struct {
+	// REQUIRED; The name of the tag.
+	DisplayName *string
+
+	// REQUIRED; The tag ID.
+	ID *string
 }
 
 // Items - A list of items.

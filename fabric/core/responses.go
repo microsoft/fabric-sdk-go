@@ -563,6 +563,17 @@ type OneLakeDataAccessSecurityClientListDataAccessRolesResponse struct {
 	Etag *string
 }
 
+// OneLakeSettingsClientGetSettingsResponse contains the response from method OneLakeSettingsClient.GetSettings.
+type OneLakeSettingsClientGetSettingsResponse struct {
+	// OneLake settings response.
+	GetOneLakeSettingsResponse
+}
+
+// OneLakeSettingsClientModifyDiagnosticsResponse contains the response from method OneLakeSettingsClient.BeginModifyDiagnostics.
+type OneLakeSettingsClientModifyDiagnosticsResponse struct {
+	// placeholder for future response values
+}
+
 // OneLakeShortcutsClientCreateShortcutResponse contains the response from method OneLakeShortcutsClient.CreateShortcut.
 type OneLakeShortcutsClientCreateShortcutResponse struct {
 	// An object representing a reference that points to other storage locations which can be internal or external to OneLake.
@@ -660,10 +671,42 @@ type WorkspacesClientDeprovisionIdentityResponse struct {
 	// placeholder for future response values
 }
 
+// WorkspacesClientGetGitOutboundPolicyResponse contains the response from method WorkspacesClient.GetGitOutboundPolicy.
+type WorkspacesClientGetGitOutboundPolicyResponse struct {
+	// The policy defining access to/from a workspace to/from public networks.
+	NetworkRules
+
+	// ETag contains the information returned from the ETag header response.
+	ETag *string
+}
+
 // WorkspacesClientGetNetworkCommunicationPolicyResponse contains the response from method WorkspacesClient.GetNetworkCommunicationPolicy.
 type WorkspacesClientGetNetworkCommunicationPolicyResponse struct {
 	// The networking communication policy for a workspace.
 	WorkspaceNetworkingCommunicationPolicy
+
+	// ETag contains the information returned from the ETag header response.
+	ETag *string
+}
+
+// WorkspacesClientGetOutboundCloudConnectionRulesResponse contains the response from method WorkspacesClient.GetOutboundCloudConnectionRules.
+type WorkspacesClientGetOutboundCloudConnectionRulesResponse struct {
+	// Represents the complete set of outbound access protection cloud connection rules configured for a workspace as part of
+	// its networking communication policy.
+	// This object defines the connection rules that govern which external endpoints and workspaces are permitted or denied for
+	// outbound communication
+	WorkspaceOutboundConnections
+
+	// ETag contains the information returned from the ETag header response.
+	ETag *string
+}
+
+// WorkspacesClientGetOutboundGatewayRulesResponse contains the response from method WorkspacesClient.GetOutboundGatewayRules.
+type WorkspacesClientGetOutboundGatewayRulesResponse struct {
+	// Represents the complete set of gateway outbound access protection rules configured for a workspace as part of its networking
+	// communication policy.
+	// This object defines the gateway rules that govern outbound communication
+	WorkspaceOutboundGateways
 
 	// ETag contains the information returned from the ETag header response.
 	ETag *string
@@ -697,8 +740,26 @@ type WorkspacesClientProvisionIdentityResponse struct {
 	WorkspaceIdentity
 }
 
+// WorkspacesClientSetGitOutboundPolicyResponse contains the response from method WorkspacesClient.SetGitOutboundPolicy.
+type WorkspacesClientSetGitOutboundPolicyResponse struct {
+	// ETag contains the information returned from the ETag header response.
+	ETag *string
+}
+
 // WorkspacesClientSetNetworkCommunicationPolicyResponse contains the response from method WorkspacesClient.SetNetworkCommunicationPolicy.
 type WorkspacesClientSetNetworkCommunicationPolicyResponse struct {
+	// ETag contains the information returned from the ETag header response.
+	ETag *string
+}
+
+// WorkspacesClientSetOutboundCloudConnectionRulesResponse contains the response from method WorkspacesClient.SetOutboundCloudConnectionRules.
+type WorkspacesClientSetOutboundCloudConnectionRulesResponse struct {
+	// ETag contains the information returned from the ETag header response.
+	ETag *string
+}
+
+// WorkspacesClientSetOutboundGatewayRulesResponse contains the response from method WorkspacesClient.SetOutboundGatewayRules.
+type WorkspacesClientSetOutboundGatewayRulesResponse struct {
 	// ETag contains the information returned from the ETag header response.
 	ETag *string
 }

@@ -52,6 +52,9 @@ type EndpointVersionInfo struct {
 	// READ-ONLY; The machine learning model version name
 	VersionName *string
 
+	// Activation Failure details.
+	FailureDetails *EndpointVersionInfoFailureDetails
+
 	// Machine learning model endpoint scale rule. Additional ScaleRule types may be added over time.
 	ScaleRule *ScaleRule
 
@@ -60,6 +63,19 @@ type EndpointVersionInfo struct {
 
 	// READ-ONLY; The output signature for this version of the machine learning model.
 	OutputSignature []DataSchema
+}
+
+// EndpointVersionInfoFailureDetails - Activation Failure details.
+type EndpointVersionInfoFailureDetails struct {
+	// READ-ONLY; A specific identifier that provides information about an error condition, allowing for standardized communication
+	// between our service and its users.
+	ErrorCode *string
+
+	// READ-ONLY; A human readable representation of the error.
+	Message *string
+
+	// READ-ONLY; The error related resource details.
+	RelatedResource *ErrorRelatedResource
 }
 
 // EndpointVersions - All MLModel Versions Endpoints info.
@@ -72,6 +88,15 @@ type EndpointVersions struct {
 
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
+}
+
+// ErrorRelatedResource - The error related resource details object.
+type ErrorRelatedResource struct {
+	// READ-ONLY; The resource ID that's involved in the error.
+	ResourceID *string
+
+	// READ-ONLY; The type of the resource that's involved in the error.
+	ResourceType *string
 }
 
 // ItemTag - Represents a tag applied on an item.

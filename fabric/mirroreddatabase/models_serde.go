@@ -477,6 +477,7 @@ func (s *SQLEndpointProperties) UnmarshalJSON(data []byte) error {
 func (t TableMirroringMetrics) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populateDateTimeRFC3339(objectMap, "lastSyncDateTime", t.LastSyncDateTime)
+	populate(objectMap, "lastSyncLatencyInSeconds", t.LastSyncLatencyInSeconds)
 	populate(objectMap, "processedBytes", t.ProcessedBytes)
 	populate(objectMap, "processedRows", t.ProcessedRows)
 	return json.Marshal(objectMap)
@@ -493,6 +494,9 @@ func (t *TableMirroringMetrics) UnmarshalJSON(data []byte) error {
 		switch key {
 		case "lastSyncDateTime":
 			err = unpopulateDateTimeRFC3339(val, "LastSyncDateTime", &t.LastSyncDateTime)
+			delete(rawMsg, key)
+		case "lastSyncLatencyInSeconds":
+			err = unpopulate(val, "LastSyncLatencyInSeconds", &t.LastSyncLatencyInSeconds)
 			delete(rawMsg, key)
 		case "processedBytes":
 			err = unpopulate(val, "ProcessedBytes", &t.ProcessedBytes)

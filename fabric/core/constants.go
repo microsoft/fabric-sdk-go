@@ -370,6 +370,30 @@ func PossibleConflictTypeValues() []ConflictType {
 	}
 }
 
+// ConnectionAccessActionType - Defines the access control behavior for outbound connections. This enum is used for the field
+// defaultAction to specify whether outbound communication should be allowed or denied by default. This type
+// enables both global and connection-specific control over outbound access, helping enforce secure and predictable network
+// communication policies. Additional connection access action types may be added
+// over time.
+type ConnectionAccessActionType string
+
+const (
+	// ConnectionAccessActionTypeAllow - Permits outbound connections. When used as a default action, all cloud connections are
+	// allowed.
+	ConnectionAccessActionTypeAllow ConnectionAccessActionType = "Allow"
+	// ConnectionAccessActionTypeDeny - Blocks outbound connections. When used as a default action, all cloud connections are
+	// denied unless explicitly allowed.
+	ConnectionAccessActionTypeDeny ConnectionAccessActionType = "Deny"
+)
+
+// PossibleConnectionAccessActionTypeValues returns the possible values for the ConnectionAccessActionType const type.
+func PossibleConnectionAccessActionTypeValues() []ConnectionAccessActionType {
+	return []ConnectionAccessActionType{
+		ConnectionAccessActionTypeAllow,
+		ConnectionAccessActionTypeDeny,
+	}
+}
+
 // ConnectionEncryption - The connection encryption type of the connection. Additional connection encryption values may be
 // added over time.
 type ConnectionEncryption string
@@ -713,6 +737,29 @@ func PossibleExternalDataShareStatusValues() []ExternalDataShareStatus {
 	}
 }
 
+// GatewayAccessActionType - Defines the access control behavior for outbound gateways. This enum is used for the field defaultAction
+// to specify whether outbound communication should be allowed or denied by default. This type
+// enables both global and gateway-specific control over outbound access, helping enforce secure and predictable network communication
+// policies. Additional gateway access action types may be added over
+// time.
+type GatewayAccessActionType string
+
+const (
+	// GatewayAccessActionTypeAllow - Permits outbound gateways. When used as a default action, all gateways are allowed.
+	GatewayAccessActionTypeAllow GatewayAccessActionType = "Allow"
+	// GatewayAccessActionTypeDeny - Blocks outbound gateways. When used as a default action, all gateways are denied unless explicitly
+	// allowed.
+	GatewayAccessActionTypeDeny GatewayAccessActionType = "Deny"
+)
+
+// PossibleGatewayAccessActionTypeValues returns the possible values for the GatewayAccessActionType const type.
+func PossibleGatewayAccessActionTypeValues() []GatewayAccessActionType {
+	return []GatewayAccessActionType{
+		GatewayAccessActionTypeAllow,
+		GatewayAccessActionTypeDeny,
+	}
+}
+
 // GatewayRole - A Gateway role. Additional gateway roles may be added over time.
 type GatewayRole string
 
@@ -906,6 +953,36 @@ func PossibleItemAccessValues() []ItemAccess {
 	}
 }
 
+// ItemJobStatus - The item job status. Additional statuses may be added over time.
+type ItemJobStatus string
+
+const (
+	// ItemJobStatusCancelled - Job cancelled
+	ItemJobStatusCancelled ItemJobStatus = "Cancelled"
+	// ItemJobStatusCompleted - Job completed
+	ItemJobStatusCompleted ItemJobStatus = "Completed"
+	// ItemJobStatusDeduped - A job instance of the same job type is already running and this job instance is skipped
+	ItemJobStatusDeduped ItemJobStatus = "Deduped"
+	// ItemJobStatusFailed - Job failed
+	ItemJobStatusFailed ItemJobStatus = "Failed"
+	// ItemJobStatusInProgress - Job in progress
+	ItemJobStatusInProgress ItemJobStatus = "InProgress"
+	// ItemJobStatusNotStarted - Job not started
+	ItemJobStatusNotStarted ItemJobStatus = "NotStarted"
+)
+
+// PossibleItemJobStatusValues returns the possible values for the ItemJobStatus const type.
+func PossibleItemJobStatusValues() []ItemJobStatus {
+	return []ItemJobStatus{
+		ItemJobStatusCancelled,
+		ItemJobStatusCompleted,
+		ItemJobStatusDeduped,
+		ItemJobStatusFailed,
+		ItemJobStatusInProgress,
+		ItemJobStatusNotStarted,
+	}
+}
+
 // ItemPreDeploymentDiffState - Specifies if an item is new, different or identical to items in the target stage before deployment.
 // Additional states may be added over time.
 type ItemPreDeploymentDiffState string
@@ -930,10 +1007,27 @@ func PossibleItemPreDeploymentDiffStateValues() []ItemPreDeploymentDiffState {
 	}
 }
 
+// ItemReferenceType - The Item reference type. Additional ItemReferenceType types may be added over time.
+type ItemReferenceType string
+
+const (
+	// ItemReferenceTypeByID - The item is referenced by its ID.
+	ItemReferenceTypeByID ItemReferenceType = "ById"
+)
+
+// PossibleItemReferenceTypeValues returns the possible values for the ItemReferenceType const type.
+func PossibleItemReferenceTypeValues() []ItemReferenceType {
+	return []ItemReferenceType{
+		ItemReferenceTypeByID,
+	}
+}
+
 // ItemType - The type of the item. Additional item types may be added over time.
 type ItemType string
 
 const (
+	// ItemTypeAnomalyDetector - An Anomaly Detector.
+	ItemTypeAnomalyDetector ItemType = "AnomalyDetector"
 	// ItemTypeApacheAirflowJob - An ApacheAirflowJob.
 	ItemTypeApacheAirflowJob ItemType = "ApacheAirflowJob"
 	// ItemTypeCopyJob - A Copy job.
@@ -956,8 +1050,12 @@ const (
 	ItemTypeEventhouse ItemType = "Eventhouse"
 	// ItemTypeEventstream - An eventstream.
 	ItemTypeEventstream ItemType = "Eventstream"
+	// ItemTypeGraphModel - A GraphModel.
+	ItemTypeGraphModel ItemType = "GraphModel"
 	// ItemTypeGraphQLAPI - An API for GraphQL item.
 	ItemTypeGraphQLAPI ItemType = "GraphQLApi"
+	// ItemTypeGraphQuerySet - A Graph QuerySet.
+	ItemTypeGraphQuerySet ItemType = "GraphQuerySet"
 	// ItemTypeKQLDashboard - A KQL dashboard.
 	ItemTypeKQLDashboard ItemType = "KQLDashboard"
 	// ItemTypeKQLDatabase - A KQL database.
@@ -970,6 +1068,8 @@ const (
 	ItemTypeMLExperiment ItemType = "MLExperiment"
 	// ItemTypeMLModel - A machine learning model.
 	ItemTypeMLModel ItemType = "MLModel"
+	// ItemTypeMap - A Map.
+	ItemTypeMap ItemType = "Map"
 	// ItemTypeMirroredAzureDatabricksCatalog - A mirrored azure databricks catalog.
 	ItemTypeMirroredAzureDatabricksCatalog ItemType = "MirroredAzureDatabricksCatalog"
 	// ItemTypeMirroredDatabase - A mirrored database.
@@ -994,6 +1094,8 @@ const (
 	ItemTypeSemanticModel ItemType = "SemanticModel"
 	// ItemTypeSparkJobDefinition - A spark job definition.
 	ItemTypeSparkJobDefinition ItemType = "SparkJobDefinition"
+	// ItemTypeUserDataFunction - A User Data Function.
+	ItemTypeUserDataFunction ItemType = "UserDataFunction"
 	// ItemTypeVariableLibrary - A VariableLibrary.
 	ItemTypeVariableLibrary ItemType = "VariableLibrary"
 	// ItemTypeWarehouse - A warehouse.
@@ -1005,6 +1107,7 @@ const (
 // PossibleItemTypeValues returns the possible values for the ItemType const type.
 func PossibleItemTypeValues() []ItemType {
 	return []ItemType{
+		ItemTypeAnomalyDetector,
 		ItemTypeApacheAirflowJob,
 		ItemTypeCopyJob,
 		ItemTypeDashboard,
@@ -1016,13 +1119,16 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeEnvironment,
 		ItemTypeEventhouse,
 		ItemTypeEventstream,
+		ItemTypeGraphModel,
 		ItemTypeGraphQLAPI,
+		ItemTypeGraphQuerySet,
 		ItemTypeKQLDashboard,
 		ItemTypeKQLDatabase,
 		ItemTypeKQLQueryset,
 		ItemTypeLakehouse,
 		ItemTypeMLExperiment,
 		ItemTypeMLModel,
+		ItemTypeMap,
 		ItemTypeMirroredAzureDatabricksCatalog,
 		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
@@ -1035,6 +1141,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeSQLEndpoint,
 		ItemTypeSemanticModel,
 		ItemTypeSparkJobDefinition,
+		ItemTypeUserDataFunction,
 		ItemTypeVariableLibrary,
 		ItemTypeWarehouse,
 		ItemTypeWarehouseSnapshot,

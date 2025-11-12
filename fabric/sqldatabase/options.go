@@ -6,10 +6,38 @@
 
 package sqldatabase
 
+// ClientStartMirroringOptions contains the optional parameters for the Client.StartMirroring method.
+type ClientStartMirroringOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ClientStopMirroringOptions contains the optional parameters for the Client.StopMirroring method.
+type ClientStopMirroringOptions struct {
+	// placeholder for future optional parameters
+}
+
 // ItemsClientBeginCreateSQLDatabaseOptions contains the optional parameters for the ItemsClient.BeginCreateSQLDatabase method.
 type ItemsClientBeginCreateSQLDatabaseOptions struct {
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
+}
+
+// ItemsClientBeginGetSQLDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetSQLDatabaseDefinition
+// method.
+type ItemsClientBeginGetSQLDatabaseDefinitionOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// ItemsClientBeginUpdateSQLDatabasesDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateSQLDatabasesDefinition
+// method.
+type ItemsClientBeginUpdateSQLDatabasesDefinitionOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+
+	// When set to true and the SQL database.platform file is provided as part of the definition, the item's metadata is updated
+	// using the metadata in the SQL database.platform file
+	UpdateMetadata *bool
 }
 
 // ItemsClientDeleteSQLDatabaseOptions contains the optional parameters for the ItemsClient.DeleteSQLDatabase method.

@@ -31,6 +31,62 @@ func unmarshalMonthlyOccurrenceClassification(rawMsg json.RawMessage) (MonthlyOc
 	return b, nil
 }
 
+func unmarshalParameterClassification(rawMsg json.RawMessage) (ParameterClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b ParameterClassification
+	switch m["type"] {
+	case string(ParameterTypeBoolean):
+		b = &BooleanParameter{}
+	case string(ParameterTypeDate):
+		b = &DateParameter{}
+	case string(ParameterTypeDateTime):
+		b = &DateTimeParameter{}
+	case string(ParameterTypeDateTimeZone):
+		b = &DateTimeZoneParameter{}
+	case string(ParameterTypeDuration):
+		b = &DurationParameter{}
+	case string(ParameterTypeInteger):
+		b = &IntegerParameter{}
+	case string(ParameterTypeNumber):
+		b = &NumberParameter{}
+	case string(ParameterTypeString):
+		b = &StringParameter{}
+	case string(ParameterTypeTime):
+		b = &TimeParameter{}
+	default:
+		b = &Parameter{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalParameterClassificationArray(rawMsg json.RawMessage) ([]ParameterClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var rawMessages []json.RawMessage
+	if err := json.Unmarshal(rawMsg, &rawMessages); err != nil {
+		return nil, err
+	}
+	fArray := make([]ParameterClassification, len(rawMessages))
+	for index, rawMessage := range rawMessages {
+		f, err := unmarshalParameterClassification(rawMessage)
+		if err != nil {
+			return nil, err
+		}
+		fArray[index] = f
+	}
+	return fArray, nil
+}
+
 func unmarshalScheduleConfigClassification(rawMsg json.RawMessage) (ScheduleConfigClassification, error) {
 	if rawMsg == nil || string(rawMsg) == "null" {
 		return nil, nil

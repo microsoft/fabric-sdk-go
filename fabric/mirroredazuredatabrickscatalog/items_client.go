@@ -377,8 +377,7 @@ func (client *ItemsClient) listMirroredAzureDatabricksCatalogsHandleResponse(res
 // more [/fabric/fundamentals/preview]).
 // PERMISSIONS The caller must have read and write permissions for the mirrored azure databricks catalog.
 // REQUIRED DELEGATED SCOPES MirroredAzureDatabricksCatalog.ReadWrite.All or Item.ReadWrite.All
-// [!NOTE]
-// > Item.Execute.All is required if you are updating AutoSync property.
+// > [!NOTE] Item.Execute.All is required if you are updating AutoSync property.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -451,8 +450,7 @@ func (client *ItemsClient) updateMirroredAzureDatabricksCatalogHandleResponse(re
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must have read and write permissions for the mirrored azure databricks catalog.
 // REQUIRED DELEGATED SCOPES MirroredAzureDatabricksCatalog.ReadWrite.All or Item.ReadWrite.All
-// [!NOTE]
-// > Item.Execute.All is required if you are updating AutoSync property.
+// > [!NOTE] Item.Execute.All is required if you are updating AutoSync property.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -476,8 +474,7 @@ func (client *ItemsClient) BeginUpdateMirroredAzureDatabricksCatalogDefinition(c
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must have read and write permissions for the mirrored azure databricks catalog.
 // REQUIRED DELEGATED SCOPES MirroredAzureDatabricksCatalog.ReadWrite.All or Item.ReadWrite.All
-// [!NOTE]
-// > Item.Execute.All is required if you are updating AutoSync property.
+// > [!NOTE] Item.Execute.All is required if you are updating AutoSync property.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -683,9 +680,7 @@ func (client *ItemsClient) beginGetMirroredAzureDatabricksCatalogDefinition(ctx 
 //
 // # REQUIRED DELEGATED SCOPES MirroredAzureDatabricksCatalog.ReadWrite.All or Item.ReadWrite.All
 //
-// [!NOTE]
-//
-// >  Item.Execute.All is required if you are updating AutoSync property.
+// >  [!NOTE] Item.Execute.All is required if you are updating AutoSync property.
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

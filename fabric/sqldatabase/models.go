@@ -6,16 +6,86 @@
 
 package sqldatabase
 
+import "time"
+
 // CreateSQLDatabaseRequest - Create SQL database request payload.
 type CreateSQLDatabaseRequest struct {
 	// REQUIRED; The SQL database display name. The display name must follow naming rules according to item type.
 	DisplayName *string
+
+	// The SQL database creation payload.
+	CreationPayload CreationPayloadClassification
+
+	// The SQL database definition.
+	Definition *Definition
 
 	// The SQL database description. Maximum length is 256 characters.
 	Description *string
 
 	// The folder ID. If not specified or null, the SQL database is created with the workspace as its folder.
 	FolderID *string
+}
+
+// CreationPayload - SQL database item payload.
+type CreationPayload struct {
+	// REQUIRED; The creation mode of the SQL database creation.
+	CreationMode *CreationMode
+
+	// Set the backup retention period in days. The minimum is 1 days. The maximum is 35 days.
+	BackupRetentionDays *int32
+
+	// Set the time to restore the source database in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	RestorePointInTime *time.Time
+
+	// Set the reference for the source database to be restored from.
+	SourceDatabaseReference ItemReferenceClassification
+}
+
+// GetCreationPayload implements the CreationPayloadClassification interface for type CreationPayload.
+func (c *CreationPayload) GetCreationPayload() *CreationPayload { return c }
+
+// Definition - The SQL database public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/sql-database-definition]
+// for more details on how to craft a SQL database public
+// definition.
+type Definition struct {
+	// REQUIRED; A list of definition parts.
+	Parts []PublicDefinitionPart
+}
+
+// DefinitionResponse - The SQL database public definition response.
+type DefinitionResponse struct {
+	// READ-ONLY; The SQL database public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/sql-database-definition]
+	// for more details on how to craft a SQL database public
+	// definition.
+	Definition *Definition
+}
+
+// ItemReference - An item reference object.
+type ItemReference struct {
+	// REQUIRED; The item reference type.
+	ReferenceType *ItemReferenceType
+}
+
+// GetItemReference implements the ItemReferenceClassification interface for type ItemReference.
+func (i *ItemReference) GetItemReference() *ItemReference { return i }
+
+// ItemReferenceByID - An item reference by ID object.
+type ItemReferenceByID struct {
+	// REQUIRED; The ID of the item.
+	ItemID *string
+
+	// REQUIRED; The item reference type.
+	ReferenceType *ItemReferenceType
+
+	// REQUIRED; The workspace ID of the item.
+	WorkspaceID *string
+}
+
+// GetItemReference implements the ItemReferenceClassification interface for type ItemReferenceByID.
+func (i *ItemReferenceByID) GetItemReference() *ItemReference {
+	return &ItemReference{
+		ReferenceType: i.ReferenceType,
+	}
 }
 
 // ItemTag - Represents a tag applied on an item.
@@ -25,6 +95,31 @@ type ItemTag struct {
 
 	// REQUIRED; The tag ID.
 	ID *string
+}
+
+// NewSQLDatabaseCreationPayload - Create a SQL database item creation payload with supported settings
+type NewSQLDatabaseCreationPayload struct {
+	// REQUIRED; The creation mode of the SQL database creation.
+	CreationMode *CreationMode
+
+	// Set the backup retention period in days. The minimum is 1 days. The maximum is 35 days.
+	BackupRetentionDays *int32
+
+	// Set the time to restore the source database in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	RestorePointInTime *time.Time
+
+	// Set the reference for the source database to be restored from.
+	SourceDatabaseReference ItemReferenceClassification
+}
+
+// GetCreationPayload implements the CreationPayloadClassification interface for type NewSQLDatabaseCreationPayload.
+func (n *NewSQLDatabaseCreationPayload) GetCreationPayload() *CreationPayload {
+	return &CreationPayload{
+		BackupRetentionDays:     n.BackupRetentionDays,
+		CreationMode:            n.CreationMode,
+		RestorePointInTime:      n.RestorePointInTime,
+		SourceDatabaseReference: n.SourceDatabaseReference,
+	}
 }
 
 // Properties - The SQL database properties.
@@ -37,6 +132,52 @@ type Properties struct {
 
 	// REQUIRED; The server fully qualified domain name (FQDN).
 	ServerFqdn *string
+
+	// The backup retention period in days.
+	BackupRetentionDays *int32
+
+	// The earliest restore point of the database in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	EarliestRestorePoint *time.Time
+
+	// The latest restore point of the database in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	LatestRestorePoint *time.Time
+}
+
+// PublicDefinitionPart - SQL database definition part object.
+type PublicDefinitionPart struct {
+	// The SQL database public definition part path.
+	Path *string
+
+	// The SQL database public definition part payload.
+	Payload *string
+
+	// The payload type.
+	PayloadType *PayloadType
+}
+
+// RestoreSQLDatabaseCreationPayload - Create a SQL database item creation payload with restoring from a source database
+type RestoreSQLDatabaseCreationPayload struct {
+	// REQUIRED; The creation mode of the SQL database creation.
+	CreationMode *CreationMode
+
+	// Set the backup retention period in days. The minimum is 1 days. The maximum is 35 days.
+	BackupRetentionDays *int32
+
+	// Set the time to restore the source database in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	RestorePointInTime *time.Time
+
+	// Set the reference for the source database to be restored from.
+	SourceDatabaseReference ItemReferenceClassification
+}
+
+// GetCreationPayload implements the CreationPayloadClassification interface for type RestoreSQLDatabaseCreationPayload.
+func (r *RestoreSQLDatabaseCreationPayload) GetCreationPayload() *CreationPayload {
+	return &CreationPayload{
+		BackupRetentionDays:     r.BackupRetentionDays,
+		CreationMode:            r.CreationMode,
+		RestorePointInTime:      r.RestorePointInTime,
+		SourceDatabaseReference: r.SourceDatabaseReference,
+	}
 }
 
 // SQLDatabase - A SQL database object.
@@ -76,6 +217,14 @@ type SQLDatabases struct {
 
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
+}
+
+// UpdateSQLDatabaseDefinitionRequest - Update SQL database public definition request payload.
+type UpdateSQLDatabaseDefinitionRequest struct {
+	// REQUIRED; The SQL database public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/sql-database-definition]
+	// for more details on how to craft a SQL database public
+	// definition.
+	Definition *Definition
 }
 
 // UpdateSQLDatabaseRequest - Update SQL database request.

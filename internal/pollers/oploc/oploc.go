@@ -12,6 +12,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 
@@ -45,6 +46,14 @@ func NewPollerHandler[T any](pl runtime.Pipeline, resp *http.Response, finalStat
 	if !pollers.IsValidURL(locURL) {
 		return nil, fmt.Errorf("invalid polling URL %s", locURL)
 	}
+
+	// Update the host of locURL to match the original request host for workspace-level private links
+	parsedLocURL, err := url.Parse(locURL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse Location URL: %w", err)
+	}
+	parsedLocURL.Host = resp.Request.URL.Host
+	locURL = parsedLocURL.String()
 
 	curState := pollers.StatusNotStarted
 	status, err := pollers.GetStatus(resp)
@@ -108,6 +117,15 @@ func (p *PollerHandler[T]) Result(ctx context.Context, out *T) error {
 		if !pollers.IsValidURL(locURL) {
 			return fmt.Errorf("invalid result URL %s", locURL)
 		}
+
+		// Update the host of locURL to match the original request host for workspace-level private links
+		parsedLocURL, err := url.Parse(locURL)
+		if err != nil {
+			return fmt.Errorf("failed to parse Location URL: %w", err)
+		}
+		parsedLocURL.Host = p.resp.Request.URL.Host
+		locURL = parsedLocURL.String()
+
 		req, err := runtime.NewRequest(ctx, http.MethodGet, locURL)
 		if err != nil {
 			return err

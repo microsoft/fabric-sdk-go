@@ -22,6 +22,7 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
+	"github.com/microsoft/fabric-sdk-go/fabric"
 	"github.com/microsoft/fabric-sdk-go/fabric/admin"
 	"github.com/microsoft/fabric-sdk-go/fabric/admin/fake"
 )
@@ -43,8 +44,10 @@ func (testsuite *FakeTestSuite) SetupSuite() {
 	testsuite.cred = &azfake.TokenCredential{}
 
 	testsuite.serverFactory = &fake.ServerFactory{}
-	testsuite.clientFactory, err = admin.NewClientFactory(testsuite.cred, nil, &azcore.ClientOptions{
-		Transport: fake.NewServerFactoryTransport(testsuite.serverFactory),
+	testsuite.clientFactory, err = admin.NewClientFactory(testsuite.cred, nil, &fabric.ClientOptions{
+		ClientOptions: azcore.ClientOptions{
+			Transport: fake.NewServerFactoryTransport(testsuite.serverFactory),
+		},
 	})
 	testsuite.Require().NoError(err, "Failed to create client factory")
 }
@@ -709,7 +712,16 @@ func (testsuite *FakeTestSuite) TestItems_ListItems() {
 				ID:              to.Ptr("b1a7e572-2585-4650-98ae-b92356f4460b"),
 				LastUpdatedDate: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2022-06-27T16:55:04.893Z"); return t }()),
 				State:           to.Ptr(admin.ItemStateActive),
-				WorkspaceID:     to.Ptr("7f4496db-9929-47bd-89c0-d7eb2f517a98"),
+				Tags: []admin.ItemTag{
+					{
+						DisplayName: to.Ptr("Tag 1"),
+						ID:          to.Ptr("b4e54dd6-1d37-4e7a-9e9a-49a596ff4470"),
+					},
+					{
+						DisplayName: to.Ptr("Tag 2"),
+						ID:          to.Ptr("62d18d7e-3878-478a-b89b-2f38b73c18a4"),
+					}},
+				WorkspaceID: to.Ptr("7f4496db-9929-47bd-89c0-d7eb2f517a98"),
 			}},
 	}
 
@@ -760,7 +772,16 @@ func (testsuite *FakeTestSuite) TestItems_ListItems() {
 				ID:              to.Ptr("17d8929d-ab32-46d1-858b-fdea74e93bff"),
 				LastUpdatedDate: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2022-04-29T17:47:29.986Z"); return t }()),
 				State:           to.Ptr(admin.ItemStateActive),
-				WorkspaceID:     to.Ptr("7f4496db-9929-47bd-89c0-d7eb2f517a95"),
+				Tags: []admin.ItemTag{
+					{
+						DisplayName: to.Ptr("Tag 1"),
+						ID:          to.Ptr("b4e54dd6-1d37-4e7a-9e9a-49a596ff4470"),
+					},
+					{
+						DisplayName: to.Ptr("Tag 2"),
+						ID:          to.Ptr("62d18d7e-3878-478a-b89b-2f38b73c18a4"),
+					}},
+				WorkspaceID: to.Ptr("7f4496db-9929-47bd-89c0-d7eb2f517a95"),
 			},
 			{
 				Name:        to.Ptr("TestKusto"),
@@ -825,7 +846,12 @@ func (testsuite *FakeTestSuite) TestItems_ListItems() {
 				ID:              to.Ptr("b1a7e572-2585-4650-98ae-b92356f4460b"),
 				LastUpdatedDate: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2022-06-27T16:55:04.893Z"); return t }()),
 				State:           to.Ptr(admin.ItemStateActive),
-				WorkspaceID:     to.Ptr("7f4496db-9929-47bd-89c0-d7eb2f517a98"),
+				Tags: []admin.ItemTag{
+					{
+						DisplayName: to.Ptr("Tag 1"),
+						ID:          to.Ptr("b4e54dd6-1d37-4e7a-9e9a-49a596ff4470"),
+					}},
+				WorkspaceID: to.Ptr("7f4496db-9929-47bd-89c0-d7eb2f517a98"),
 			}},
 	}
 

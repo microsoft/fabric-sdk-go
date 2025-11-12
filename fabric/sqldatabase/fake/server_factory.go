@@ -18,6 +18,7 @@ import (
 
 // ServerFactory is a fake server for instances of the sqldatabase.ClientFactory type.
 type ServerFactory struct {
+	Server      Server
 	ItemsServer ItemsServer
 }
 
@@ -26,6 +27,7 @@ type ServerFactory struct {
 type ServerFactoryTransport struct {
 	srv           *ServerFactory
 	trMu          sync.Mutex
+	trServer      *ServerTransport
 	trItemsServer *ItemsServerTransport
 }
 
@@ -52,6 +54,9 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	var err error
 
 	switch client {
+	case "Client":
+		initServer(s, &s.trServer, func() *ServerTransport { return NewServerTransport(&s.srv.Server) })
+		resp, err = s.trServer.Do(req)
 	case "ItemsClient":
 		initServer(s, &s.trItemsServer, func() *ItemsServerTransport { return NewItemsServerTransport(&s.srv.ItemsServer) })
 		resp, err = s.trItemsServer.Do(req)

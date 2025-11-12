@@ -25,8 +25,8 @@ type ClientFactory struct {
 //   - credential - used to authorize requests. Usually a credential from azidentity.
 //   - endpoint - pass nil to accept the default values.
 //   - options - pass nil to accept the default values.
-func NewClientFactory(credential azcore.TokenCredential, endpoint *string, options *azcore.ClientOptions) (*ClientFactory, error) {
-	sc, err := iruntime.NewServiceClient(credential, fabric.Version, endpoint, options)
+func NewClientFactory(credential azcore.TokenCredential, endpoint *string, options *fabric.ClientOptions) (*ClientFactory, error) {
+	sc, err := iruntime.NewServiceClient(credential, fabric.Version, endpoint, (*iruntime.ClientOptions)(options))
 	if err != nil {
 		return nil, err
 	}
@@ -55,18 +55,18 @@ func (c *ClientFactory) NewItemsClient() *ItemsClient {
 	}
 }
 
-// NewSparkComputeClient creates a new instance of SparkComputeClient.
-func (c *ClientFactory) NewSparkComputeClient() *SparkComputeClient {
-	return &SparkComputeClient{
-		internal: c.internal.WithClientName("environment.SparkComputeClient"),
+// NewPublishedClient creates a new instance of PublishedClient.
+func (c *ClientFactory) NewPublishedClient() *PublishedClient {
+	return &PublishedClient{
+		internal: c.internal.WithClientName("environment.PublishedClient"),
 		endpoint: c.endpoint,
 	}
 }
 
-// NewSparkLibrariesClient creates a new instance of SparkLibrariesClient.
-func (c *ClientFactory) NewSparkLibrariesClient() *SparkLibrariesClient {
-	return &SparkLibrariesClient{
-		internal: c.internal.WithClientName("environment.SparkLibrariesClient"),
+// NewStagingClient creates a new instance of StagingClient.
+func (c *ClientFactory) NewStagingClient() *StagingClient {
+	return &StagingClient{
+		internal: c.internal.WithClientName("environment.StagingClient"),
 		endpoint: c.endpoint,
 	}
 }

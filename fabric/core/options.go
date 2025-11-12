@@ -604,6 +604,21 @@ type OneLakeDataAccessSecurityClientListDataAccessRolesOptions struct {
 	ContinuationToken *string
 }
 
+// OneLakeSettingsClientBeginModifyDiagnosticsOptions contains the optional parameters for the OneLakeSettingsClient.BeginModifyDiagnostics
+// method.
+type OneLakeSettingsClientBeginModifyDiagnosticsOptions struct {
+	// The OneLake diagnostic setting object.
+	ModifyOneLakeDiagnosticSettingRequest *OneLakeDiagnosticSettings
+
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// OneLakeSettingsClientGetSettingsOptions contains the optional parameters for the OneLakeSettingsClient.GetSettings method.
+type OneLakeSettingsClientGetSettingsOptions struct {
+	// placeholder for future optional parameters
+}
+
 // OneLakeShortcutsClientBeginCreatesShortcutsInBulkOptions contains the optional parameters for the OneLakeShortcutsClient.BeginCreatesShortcutsInBulk
 // method.
 type OneLakeShortcutsClientBeginCreatesShortcutsInBulkOptions struct {
@@ -713,9 +728,27 @@ type WorkspacesClientDeleteWorkspaceRoleAssignmentOptions struct {
 	// placeholder for future optional parameters
 }
 
+// WorkspacesClientGetGitOutboundPolicyOptions contains the optional parameters for the WorkspacesClient.GetGitOutboundPolicy
+// method.
+type WorkspacesClientGetGitOutboundPolicyOptions struct {
+	// placeholder for future optional parameters
+}
+
 // WorkspacesClientGetNetworkCommunicationPolicyOptions contains the optional parameters for the WorkspacesClient.GetNetworkCommunicationPolicy
 // method.
 type WorkspacesClientGetNetworkCommunicationPolicyOptions struct {
+	// placeholder for future optional parameters
+}
+
+// WorkspacesClientGetOutboundCloudConnectionRulesOptions contains the optional parameters for the WorkspacesClient.GetOutboundCloudConnectionRules
+// method.
+type WorkspacesClientGetOutboundCloudConnectionRulesOptions struct {
+	// placeholder for future optional parameters
+}
+
+// WorkspacesClientGetOutboundGatewayRulesOptions contains the optional parameters for the WorkspacesClient.GetOutboundGatewayRules
+// method.
+type WorkspacesClientGetOutboundGatewayRulesOptions struct {
 	// placeholder for future optional parameters
 }
 
@@ -756,12 +789,32 @@ type WorkspacesClientListWorkspacesOptions struct {
 	Roles *string
 }
 
+// WorkspacesClientSetGitOutboundPolicyOptions contains the optional parameters for the WorkspacesClient.SetGitOutboundPolicy
+// method.
+type WorkspacesClientSetGitOutboundPolicyOptions struct {
+	// An ETag value. The ETag must be specified in quotes. If provided, the call will succeed only if the resource's ETag matches
+	// the provided ETag.
+	IfMatch *string
+}
+
 // WorkspacesClientSetNetworkCommunicationPolicyOptions contains the optional parameters for the WorkspacesClient.SetNetworkCommunicationPolicy
 // method.
 type WorkspacesClientSetNetworkCommunicationPolicyOptions struct {
 	// An ETag value. The ETag must be specified in quotes. If provided, the call will succeed only if the resource's ETag matches
 	// the provided ETag.
 	IfMatch *string
+}
+
+// WorkspacesClientSetOutboundCloudConnectionRulesOptions contains the optional parameters for the WorkspacesClient.SetOutboundCloudConnectionRules
+// method.
+type WorkspacesClientSetOutboundCloudConnectionRulesOptions struct {
+	// placeholder for future optional parameters
+}
+
+// WorkspacesClientSetOutboundGatewayRulesOptions contains the optional parameters for the WorkspacesClient.SetOutboundGatewayRules
+// method.
+type WorkspacesClientSetOutboundGatewayRulesOptions struct {
+	// placeholder for future optional parameters
 }
 
 // WorkspacesClientUnassignFromCapacityOptions contains the optional parameters for the WorkspacesClient.UnassignFromCapacity

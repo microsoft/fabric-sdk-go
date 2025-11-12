@@ -251,7 +251,7 @@ func ExampleJobSchedulerClient_GetItemJobInstance() {
 	// 	JobType: to.Ptr("DefaultJob"),
 	// 	RootActivityID: to.Ptr("8c2ee553-53a4-7edb-1042-0d8189a9e0ca"),
 	// 	StartTimeUTC: to.Ptr("2023-04-22T06:35:00.7812154"),
-	// 	Status: to.Ptr(core.Status("Completed")),
+	// 	Status: to.Ptr(core.ItemJobStatusCompleted),
 	// }
 }
 
@@ -287,7 +287,7 @@ func ExampleJobSchedulerClient_NewListItemJobInstancesPager_listItemJobInstances
 		// 			JobType: to.Ptr("DefaultJob"),
 		// 			RootActivityID: to.Ptr("8c2ee553-53a4-7edb-1042-0d8189a9e0ca"),
 		// 			StartTimeUTC: to.Ptr("2024-06-22T06:35:00.7812154"),
-		// 			Status: to.Ptr(core.Status("Completed")),
+		// 			Status: to.Ptr(core.ItemJobStatusCompleted),
 		// 		},
 		// 		{
 		// 			EndTimeUTC: to.Ptr("2024-06-22T07:35:00.8033333"),
@@ -297,7 +297,7 @@ func ExampleJobSchedulerClient_NewListItemJobInstancesPager_listItemJobInstances
 		// 			JobType: to.Ptr("DefaultJob"),
 		// 			RootActivityID: to.Ptr("c0c99aed-be56-4fe0-a6e5-6de5fe277f16"),
 		// 			StartTimeUTC: to.Ptr("2024-06-22T06:35:00.7812154"),
-		// 			Status: to.Ptr(core.Status("Completed")),
+		// 			Status: to.Ptr(core.ItemJobStatusCompleted),
 		// 	}},
 		// }
 	}
@@ -337,7 +337,7 @@ func ExampleJobSchedulerClient_NewListItemJobInstancesPager_listItemJobInstances
 		// 			JobType: to.Ptr("DefaultJob"),
 		// 			RootActivityID: to.Ptr("8c2ee553-53a4-7edb-1042-0d8189a9e0ca"),
 		// 			StartTimeUTC: to.Ptr("2024-06-22T06:35:00.7812154"),
-		// 			Status: to.Ptr(core.Status("Completed")),
+		// 			Status: to.Ptr(core.ItemJobStatusCompleted),
 		// 		},
 		// 		{
 		// 			EndTimeUTC: to.Ptr("2024-06-22T07:35:00.8033333"),
@@ -347,7 +347,7 @@ func ExampleJobSchedulerClient_NewListItemJobInstancesPager_listItemJobInstances
 		// 			JobType: to.Ptr("DefaultJob"),
 		// 			RootActivityID: to.Ptr("c0c99aed-be56-4fe0-a6e5-6de5fe277f16"),
 		// 			StartTimeUTC: to.Ptr("2024-06-22T06:35:00.7812154"),
-		// 			Status: to.Ptr(core.Status("Completed")),
+		// 			Status: to.Ptr(core.ItemJobStatusCompleted),
 		// 	}},
 		// }
 	}

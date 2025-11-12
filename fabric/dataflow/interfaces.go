@@ -15,6 +15,16 @@ type MonthlyOccurrenceClassification interface {
 	GetMonthlyOccurrence() *MonthlyOccurrence
 }
 
+// ParameterClassification provides polymorphic access to related types.
+// Call the interface's GetParameter() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *BooleanParameter, *DateParameter, *DateTimeParameter, *DateTimeZoneParameter, *DurationParameter, *IntegerParameter,
+// - *NumberParameter, *Parameter, *StringParameter, *TimeParameter
+type ParameterClassification interface {
+	// GetParameter returns the Parameter content of the underlying type.
+	GetParameter() *Parameter
+}
+
 // ScheduleConfigClassification provides polymorphic access to related types.
 // Call the interface's GetScheduleConfig() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:

@@ -8,6 +8,34 @@ package dataflow
 
 import "time"
 
+// BooleanParameter - A Dataflow parameter of type Boolean.
+type BooleanParameter struct {
+	// REQUIRED; The value with which the parameter will be refreshed if none is provided when executing the dataflow.
+	DefaultValue *bool
+
+	// REQUIRED; A description of the parameter.
+	Description *string
+
+	// REQUIRED; Indicates whether the parameter is required.
+	IsRequired *bool
+
+	// REQUIRED; The name of the parameter.
+	Name *string
+
+	// REQUIRED; The type of the parameter. Additional type types may be added over time.
+	Type *ParameterType
+}
+
+// GetParameter implements the ParameterClassification interface for type BooleanParameter.
+func (b *BooleanParameter) GetParameter() *Parameter {
+	return &Parameter{
+		Description: b.Description,
+		IsRequired:  b.IsRequired,
+		Name:        b.Name,
+		Type:        b.Type,
+	}
+}
+
 // CreateDataflowApplyChangesScheduleRequest - Create dataflow apply changes schedule plan request payload.
 type CreateDataflowApplyChangesScheduleRequest struct {
 	// REQUIRED; The actual data contains the time/weekdays of this schedule.
@@ -135,6 +163,93 @@ type Dataflows struct {
 	ContinuationURI *string
 }
 
+// DateParameter - A Dataflow parameter of type Date. String in the format yyyy-MM-dd (Example: 2025-09-15 for the date Sep
+// 15, 2025). Use "Automatic" type to override this type of parameter when executing the dataflow.
+type DateParameter struct {
+	// REQUIRED; The value with which the parameter will be refreshed if none is provided when executing the dataflow.
+	DefaultValue *string
+
+	// REQUIRED; A description of the parameter.
+	Description *string
+
+	// REQUIRED; Indicates whether the parameter is required.
+	IsRequired *bool
+
+	// REQUIRED; The name of the parameter.
+	Name *string
+
+	// REQUIRED; The type of the parameter. Additional type types may be added over time.
+	Type *ParameterType
+}
+
+// GetParameter implements the ParameterClassification interface for type DateParameter.
+func (d *DateParameter) GetParameter() *Parameter {
+	return &Parameter{
+		Description: d.Description,
+		IsRequired:  d.IsRequired,
+		Name:        d.Name,
+		Type:        d.Type,
+	}
+}
+
+// DateTimeParameter - A Dataflow parameter of type DateTime. String in the format yyyy-MM-ddTHH:mm:ss.xxxZ (Example: 2025-09-15T21:45:00.000Z).
+type DateTimeParameter struct {
+	// REQUIRED; The value with which the parameter will be refreshed if none is provided when executing the dataflow.
+	DefaultValue *time.Time
+
+	// REQUIRED; A description of the parameter.
+	Description *string
+
+	// REQUIRED; Indicates whether the parameter is required.
+	IsRequired *bool
+
+	// REQUIRED; The name of the parameter.
+	Name *string
+
+	// REQUIRED; The type of the parameter. Additional type types may be added over time.
+	Type *ParameterType
+}
+
+// GetParameter implements the ParameterClassification interface for type DateTimeParameter.
+func (d *DateTimeParameter) GetParameter() *Parameter {
+	return &Parameter{
+		Description: d.Description,
+		IsRequired:  d.IsRequired,
+		Name:        d.Name,
+		Type:        d.Type,
+	}
+}
+
+// DateTimeZoneParameter - A Dataflow parameter of type DateTimeZone. String in the format yyyy-MM-ddTHH:mm:sszzz (Example:
+// 2025-09-15T21:45:00+02:00). Use "Automatic" type to override this type of parameter when executing the
+// dataflow.
+type DateTimeZoneParameter struct {
+	// REQUIRED; The value with which the parameter will be refreshed if none is provided when executing the dataflow.
+	DefaultValue *string
+
+	// REQUIRED; A description of the parameter.
+	Description *string
+
+	// REQUIRED; Indicates whether the parameter is required.
+	IsRequired *bool
+
+	// REQUIRED; The name of the parameter.
+	Name *string
+
+	// REQUIRED; The type of the parameter. Additional type types may be added over time.
+	Type *ParameterType
+}
+
+// GetParameter implements the ParameterClassification interface for type DateTimeZoneParameter.
+func (d *DateTimeZoneParameter) GetParameter() *Parameter {
+	return &Parameter{
+		Description: d.Description,
+		IsRequired:  d.IsRequired,
+		Name:        d.Name,
+		Type:        d.Type,
+	}
+}
+
 // DayOfMonth - Specifies a date to trigger the job. The value must be a valid date. Otherwise, it will be skipped.
 type DayOfMonth struct {
 	// REQUIRED; Specifies a date to trigger the job, using a value between 1 and 31. For example, 2 means the second day of the
@@ -179,6 +294,36 @@ type DefinitionResponse struct {
 	Definition *Definition
 }
 
+// DurationParameter - A Dataflow parameter of type Duration. String in the format \Pd\DTH\Hm\Ms\S (Example: P5DT14H35M30S
+// for 5 days, 14 hours, 35 minutes and 30 seconds). Use "Automatic" type to override this type of
+// parameter when executing the dataflow.
+type DurationParameter struct {
+	// REQUIRED; The value with which the parameter will be refreshed if none is provided when executing the dataflow.
+	DefaultValue *string
+
+	// REQUIRED; A description of the parameter.
+	Description *string
+
+	// REQUIRED; Indicates whether the parameter is required.
+	IsRequired *bool
+
+	// REQUIRED; The name of the parameter.
+	Name *string
+
+	// REQUIRED; The type of the parameter. Additional type types may be added over time.
+	Type *ParameterType
+}
+
+// GetParameter implements the ParameterClassification interface for type DurationParameter.
+func (d *DurationParameter) GetParameter() *Parameter {
+	return &Parameter{
+		Description: d.Description,
+		IsRequired:  d.IsRequired,
+		Name:        d.Name,
+		Type:        d.Type,
+	}
+}
+
 // ExecutionPayload - The execution data payload for Dataflow
 type ExecutionPayload struct {
 	// Options to run the execute operation. Additional executeOptions may be added over time.
@@ -186,6 +331,34 @@ type ExecutionPayload struct {
 
 	// A list of parameters to override during execution.
 	Parameters []ItemJobParameter
+}
+
+// IntegerParameter - A Dataflow parameter of type Long.
+type IntegerParameter struct {
+	// REQUIRED; The value with which the parameter will be refreshed if none is provided when executing the dataflow.
+	DefaultValue *int64
+
+	// REQUIRED; A description of the parameter.
+	Description *string
+
+	// REQUIRED; Indicates whether the parameter is required.
+	IsRequired *bool
+
+	// REQUIRED; The name of the parameter.
+	Name *string
+
+	// REQUIRED; The type of the parameter. Additional type types may be added over time.
+	Type *ParameterType
+}
+
+// GetParameter implements the ParameterClassification interface for type IntegerParameter.
+func (i *IntegerParameter) GetParameter() *Parameter {
+	return &Parameter{
+		Description: i.Description,
+		IsRequired:  i.IsRequired,
+		Name:        i.Name,
+		Type:        i.Type,
+	}
 }
 
 // ItemJobParameter - Parameter details.
@@ -253,6 +426,34 @@ func (m *MonthlyScheduleConfig) GetScheduleConfig() *ScheduleConfig {
 	}
 }
 
+// NumberParameter - A Dataflow parameter of type double.
+type NumberParameter struct {
+	// REQUIRED; The value with which the parameter will be refreshed if none is provided when executing the dataflow.
+	DefaultValue *float64
+
+	// REQUIRED; A description of the parameter.
+	Description *string
+
+	// REQUIRED; Indicates whether the parameter is required.
+	IsRequired *bool
+
+	// REQUIRED; The name of the parameter.
+	Name *string
+
+	// REQUIRED; The type of the parameter. Additional type types may be added over time.
+	Type *ParameterType
+}
+
+// GetParameter implements the ParameterClassification interface for type NumberParameter.
+func (n *NumberParameter) GetParameter() *Parameter {
+	return &Parameter{
+		Description: n.Description,
+		IsRequired:  n.IsRequired,
+		Name:        n.Name,
+		Type:        n.Type,
+	}
+}
+
 // OrdinalWeekday - Specifies the ordinal week and weekday to trigger the job. The value must be a valid date. Otherwise,
 // it will be skipped.
 type OrdinalWeekday struct {
@@ -271,6 +472,36 @@ func (o *OrdinalWeekday) GetMonthlyOccurrence() *MonthlyOccurrence {
 	return &MonthlyOccurrence{
 		OccurrenceType: o.OccurrenceType,
 	}
+}
+
+// Parameter - Base type for a Dataflow parameter that contains the corresponding properties for all parameters.
+type Parameter struct {
+	// REQUIRED; A description of the parameter.
+	Description *string
+
+	// REQUIRED; Indicates whether the parameter is required.
+	IsRequired *bool
+
+	// REQUIRED; The name of the parameter.
+	Name *string
+
+	// REQUIRED; The type of the parameter. Additional type types may be added over time.
+	Type *ParameterType
+}
+
+// GetParameter implements the ParameterClassification interface for type Parameter.
+func (p *Parameter) GetParameter() *Parameter { return p }
+
+// Parameters - A list of Dataflow parameters.
+type Parameters struct {
+	// REQUIRED; A list of parameters defined in the Dataflow.
+	Value []ParameterClassification
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
 }
 
 // Principal - Represents an identity or a Microsoft Entra group.
@@ -364,6 +595,63 @@ type ScheduleConfig struct {
 
 // GetScheduleConfig implements the ScheduleConfigClassification interface for type ScheduleConfig.
 func (s *ScheduleConfig) GetScheduleConfig() *ScheduleConfig { return s }
+
+// StringParameter - A Dataflow parameter of type String.
+type StringParameter struct {
+	// REQUIRED; The value with which the parameter will be refreshed if none is provided when executing the dataflow .
+	DefaultValue *string
+
+	// REQUIRED; A description of the parameter.
+	Description *string
+
+	// REQUIRED; Indicates whether the parameter is required.
+	IsRequired *bool
+
+	// REQUIRED; The name of the parameter.
+	Name *string
+
+	// REQUIRED; The type of the parameter. Additional type types may be added over time.
+	Type *ParameterType
+}
+
+// GetParameter implements the ParameterClassification interface for type StringParameter.
+func (s *StringParameter) GetParameter() *Parameter {
+	return &Parameter{
+		Description: s.Description,
+		IsRequired:  s.IsRequired,
+		Name:        s.Name,
+		Type:        s.Type,
+	}
+}
+
+// TimeParameter - A Dataflow parameter of type Time. String in the format HH:mm:ss (Example: 21:45:00 for 9:45 PM). Use "Automatic"
+// type to override this type of parameter when executing the dataflow.
+type TimeParameter struct {
+	// REQUIRED; The value with which the parameter will be refreshed if none is provided when executing the dataflow.
+	DefaultValue *string
+
+	// REQUIRED; A description of the parameter.
+	Description *string
+
+	// REQUIRED; Indicates whether the parameter is required.
+	IsRequired *bool
+
+	// REQUIRED; The name of the parameter.
+	Name *string
+
+	// REQUIRED; The type of the parameter. Additional type types may be added over time.
+	Type *ParameterType
+}
+
+// GetParameter implements the ParameterClassification interface for type TimeParameter.
+func (t *TimeParameter) GetParameter() *Parameter {
+	return &Parameter{
+		Description: t.Description,
+		IsRequired:  t.IsRequired,
+		Name:        t.Name,
+		Type:        t.Type,
+	}
+}
 
 // UpdateDataflowDefinitionRequest - Update Dataflow public definition request payload.
 type UpdateDataflowDefinitionRequest struct {

@@ -18,19 +18,19 @@ import (
 
 // ServerFactory is a fake server for instances of the environment.ClientFactory type.
 type ServerFactory struct {
-	ItemsServer          ItemsServer
-	SparkComputeServer   SparkComputeServer
-	SparkLibrariesServer SparkLibrariesServer
+	ItemsServer     ItemsServer
+	PublishedServer PublishedServer
+	StagingServer   StagingServer
 }
 
 // ServerFactoryTransport connects instances of environment.ClientFactory to instances of ServerFactory.
 // Don't use this type directly, use NewServerFactoryTransport instead.
 type ServerFactoryTransport struct {
-	srv                    *ServerFactory
-	trMu                   sync.Mutex
-	trItemsServer          *ItemsServerTransport
-	trSparkComputeServer   *SparkComputeServerTransport
-	trSparkLibrariesServer *SparkLibrariesServerTransport
+	srv               *ServerFactory
+	trMu              sync.Mutex
+	trItemsServer     *ItemsServerTransport
+	trPublishedServer *PublishedServerTransport
+	trStagingServer   *StagingServerTransport
 }
 
 // NewServerFactoryTransport creates a new instance of ServerFactoryTransport with the provided implementation.
@@ -59,14 +59,12 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	case "ItemsClient":
 		initServer(s, &s.trItemsServer, func() *ItemsServerTransport { return NewItemsServerTransport(&s.srv.ItemsServer) })
 		resp, err = s.trItemsServer.Do(req)
-	case "SparkComputeClient":
-		initServer(s, &s.trSparkComputeServer, func() *SparkComputeServerTransport { return NewSparkComputeServerTransport(&s.srv.SparkComputeServer) })
-		resp, err = s.trSparkComputeServer.Do(req)
-	case "SparkLibrariesClient":
-		initServer(s, &s.trSparkLibrariesServer, func() *SparkLibrariesServerTransport {
-			return NewSparkLibrariesServerTransport(&s.srv.SparkLibrariesServer)
-		})
-		resp, err = s.trSparkLibrariesServer.Do(req)
+	case "PublishedClient":
+		initServer(s, &s.trPublishedServer, func() *PublishedServerTransport { return NewPublishedServerTransport(&s.srv.PublishedServer) })
+		resp, err = s.trPublishedServer.Do(req)
+	case "StagingClient":
+		initServer(s, &s.trStagingServer, func() *StagingServerTransport { return NewStagingServerTransport(&s.srv.StagingServer) })
+		resp, err = s.trStagingServer.Do(req)
 	default:
 		err = fmt.Errorf("unhandled client %s", client)
 	}

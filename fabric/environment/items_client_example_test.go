@@ -46,7 +46,7 @@ func ExampleItemsClient_NewListEnvironmentsPager() {
 		// 			DisplayName: to.Ptr("Environment_1"),
 		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
-		// 			Properties: &environment.PublishInfo{
+		// 			Properties: &environment.Properties{
 		// 				PublishDetails: &environment.PublishDetails{
 		// 					ComponentPublishInfo: &environment.ComponentPublishInfo{
 		// 						SparkLibraries: &environment.SparkLibraries{
@@ -69,7 +69,7 @@ func ExampleItemsClient_NewListEnvironmentsPager() {
 		// 			DisplayName: to.Ptr("Environment_2"),
 		// 			ID: to.Ptr("a8a1bffa-7eea-49dc-a1d2-6281c1d031f1"),
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
-		// 			Properties: &environment.PublishInfo{
+		// 			Properties: &environment.Properties{
 		// 				PublishDetails: &environment.PublishDetails{
 		// 					ComponentPublishInfo: &environment.ComponentPublishInfo{
 		// 						SparkLibraries: &environment.SparkLibraries{
@@ -91,7 +91,7 @@ func ExampleItemsClient_NewListEnvironmentsPager() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_BeginCreateEnvironment() {
+func ExampleItemsClient_BeginCreateEnvironment_createAnEnvironmentExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -102,7 +102,69 @@ func ExampleItemsClient_BeginCreateEnvironment() {
 		log.Fatalf("failed to create client: %v", err)
 	}
 	poller, err := clientFactory.NewItemsClient().BeginCreateEnvironment(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", environment.CreateEnvironmentRequest{
-		Description: to.Ptr("An environment description"),
+		Description: to.Ptr("An environment description."),
+		DisplayName: to.Ptr("Environment_1"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginCreateEnvironment_createAnEnvironmentWithPublicDefinitionExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := environment.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginCreateEnvironment(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", environment.CreateEnvironmentRequest{
+		Description: to.Ptr("An environment description."),
+		Definition: &environment.Definition{
+			Parts: []environment.DefinitionPart{
+				{
+					Path:        to.Ptr("Libraries/CustomLibraries/samplelibrary.jar"),
+					Payload:     to.Ptr("eyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libraries/CustomLibraries/samplepython.py"),
+					Payload:     to.Ptr("FyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libraries/CustomLibraries/samplewheel-0.18.0-py2.py3-none-any.whl"),
+					Payload:     to.Ptr("LyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libraries/CustomLibraries/sampleR.tar.gz"),
+					Payload:     to.Ptr("ZyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libraries/PublicLibraries/environment.yml"),
+					Payload:     to.Ptr("IyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Setting/Sparkcompute.yml"),
+					Payload:     to.Ptr("GyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc"),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				}},
+		},
 		DisplayName: to.Ptr("Environment_1"),
 	}, nil)
 	if err != nil {
@@ -138,7 +200,7 @@ func ExampleItemsClient_GetEnvironment() {
 	// 	DisplayName: to.Ptr("Environment_1"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
-	// 	Properties: &environment.PublishInfo{
+	// 	Properties: &environment.Properties{
 	// 		PublishDetails: &environment.PublishDetails{
 	// 			ComponentPublishInfo: &environment.ComponentPublishInfo{
 	// 				SparkLibraries: &environment.SparkLibraries{
@@ -202,4 +264,238 @@ func ExampleItemsClient_DeleteEnvironment() {
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginGetEnvironmentDefinition() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := environment.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginGetEnvironmentDefinition(ctx, "6e335e92-a2a2-4b5a-970a-bd6a89fbb765", "cfafbeb1-8037-4d0c-896e-a46fb27ff229", &environment.ItemsClientBeginGetEnvironmentDefinitionOptions{Format: nil})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	res, err := poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.DefinitionResponse = environment.DefinitionResponse{
+	// 	Definition: &environment.Definition{
+	// 		Parts: []environment.DefinitionPart{
+	// 			{
+	// 				Path: to.Ptr("Libraries/CustomLibraries/samplelibrary.jar"),
+	// 				Payload: to.Ptr("eyJuYmZvcm1hdCI6N.."),
+	// 				PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+	// 			},
+	// 			{
+	// 				Path: to.Ptr("Libraries/CustomLibraries/samplepython.py"),
+	// 				Payload: to.Ptr("FyJuYmZvcm1hdCI6N.."),
+	// 				PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+	// 			},
+	// 			{
+	// 				Path: to.Ptr("Libraries/CustomLibraries/samplewheel-0.18.0-py2.py3-none-any.whl"),
+	// 				Payload: to.Ptr("LyJuYmZvcm1hdCI6N.."),
+	// 				PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+	// 			},
+	// 			{
+	// 				Path: to.Ptr("Libraries/CustomLibraries/sampleR.tar.gz"),
+	// 				Payload: to.Ptr("ZyJuYmZvcm1hdCI6N.."),
+	// 				PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+	// 			},
+	// 			{
+	// 				Path: to.Ptr("Libraries/PublicLibraries/environment.yml"),
+	// 				Payload: to.Ptr("IyJuYmZvcm1hdCI6N.."),
+	// 				PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+	// 			},
+	// 			{
+	// 				Path: to.Ptr("Setting/Sparkcompute.yml"),
+	// 				Payload: to.Ptr("GyJuYmZvcm1hdCI6N.."),
+	// 				PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+	// 			},
+	// 			{
+	// 				Path: to.Ptr(".platform"),
+	// 				Payload: to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc"),
+	// 				PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+	// 		}},
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginUpdateEnvironmentDefinition() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := environment.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginUpdateEnvironmentDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", environment.UpdateEnvironmentDefinitionRequest{
+		Definition: &environment.Definition{
+			Parts: []environment.DefinitionPart{
+				{
+					Path:        to.Ptr("Libraries/CustomLibraries/samplelibrary.jar"),
+					Payload:     to.Ptr("eyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libraries/CustomLibraries/samplepython.py"),
+					Payload:     to.Ptr("FyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libraries/CustomLibraries/samplewheel-0.18.0-py2.py3-none-any.whl"),
+					Payload:     to.Ptr("LyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libraries/CustomLibraries/sampleR.tar.gz"),
+					Payload:     to.Ptr("ZyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libraries/PublicLibraries/environment.yml"),
+					Payload:     to.Ptr("IyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Setting/Sparkcompute.yml"),
+					Payload:     to.Ptr("GyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc"),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				}},
+		},
+	}, &environment.ItemsClientBeginUpdateEnvironmentDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginPublishEnvironment() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := environment.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginPublishEnvironment(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", false, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	res, err := poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.Properties = environment.Properties{
+	// 	PublishDetails: &environment.PublishDetails{
+	// 		ComponentPublishInfo: &environment.ComponentPublishInfo{
+	// 			SparkLibraries: &environment.SparkLibraries{
+	// 				State: to.Ptr(environment.PublishStateRunning),
+	// 			},
+	// 			SparkSettings: &environment.SparkSettings{
+	// 				State: to.Ptr(environment.PublishStateRunning),
+	// 			},
+	// 		},
+	// 		StartTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-03-29T14:17:09.069Z"); return t}()),
+	// 		State: to.Ptr(environment.PublishStateRunning),
+	// 		TargetVersion: to.Ptr("46838a80-5450-4414-bea0-40fb6f3e0c0d"),
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleItemsClient_PublishEnvironmentPreview() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := environment.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewItemsClient().PublishEnvironmentPreview(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", true, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.Properties = environment.Properties{
+	// 	PublishDetails: &environment.PublishDetails{
+	// 		ComponentPublishInfo: &environment.ComponentPublishInfo{
+	// 			SparkLibraries: &environment.SparkLibraries{
+	// 				State: to.Ptr(environment.PublishStateRunning),
+	// 			},
+	// 			SparkSettings: &environment.SparkSettings{
+	// 				State: to.Ptr(environment.PublishStateRunning),
+	// 			},
+	// 		},
+	// 		StartTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-03-29T14:17:09.069Z"); return t}()),
+	// 		State: to.Ptr(environment.PublishStateRunning),
+	// 		TargetVersion: to.Ptr("46838a80-5450-4414-bea0-40fb6f3e0c0d"),
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleItemsClient_CancelPublishEnvironment() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := environment.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewItemsClient().CancelPublishEnvironment(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.Properties = environment.Properties{
+	// 	PublishDetails: &environment.PublishDetails{
+	// 		ComponentPublishInfo: &environment.ComponentPublishInfo{
+	// 			SparkLibraries: &environment.SparkLibraries{
+	// 				State: to.Ptr(environment.PublishStateCancelled),
+	// 			},
+	// 			SparkSettings: &environment.SparkSettings{
+	// 				State: to.Ptr(environment.PublishStateCancelled),
+	// 			},
+	// 		},
+	// 		EndTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-03-29T14:48:18.069Z"); return t}()),
+	// 		StartTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-03-29T14:17:09.069Z"); return t}()),
+	// 		State: to.Ptr(environment.PublishStateCancelled),
+	// 		TargetVersion: to.Ptr("d9d95b01-248f-4ef4-bd7e-9d3f1f6447be"),
+	// 	},
+	// }
 }

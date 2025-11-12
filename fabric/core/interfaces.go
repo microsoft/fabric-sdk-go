@@ -101,6 +101,15 @@ type GitProviderDetailsClassification interface {
 	GetGitProviderDetails() *GitProviderDetails
 }
 
+// ItemReferenceClassification provides polymorphic access to related types.
+// Call the interface's GetItemReference() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *ItemReference, *ItemReferenceByID
+type ItemReferenceClassification interface {
+	// GetItemReference returns the ItemReference content of the underlying type.
+	GetItemReference() *ItemReference
+}
+
 // MonthlyOccurrenceClassification provides polymorphic access to related types.
 // Call the interface's GetMonthlyOccurrence() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
@@ -108,6 +117,15 @@ type GitProviderDetailsClassification interface {
 type MonthlyOccurrenceClassification interface {
 	// GetMonthlyOccurrence returns the MonthlyOccurrence content of the underlying type.
 	GetMonthlyOccurrence() *MonthlyOccurrence
+}
+
+// OneLakeDiagnosticSettingsDestinationInfoClassification provides polymorphic access to related types.
+// Call the interface's GetOneLakeDiagnosticSettingsDestinationInfo() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *LakehouseOneLakeDiagnosticSettingsDestination, *OneLakeDiagnosticSettingsDestinationInfo
+type OneLakeDiagnosticSettingsDestinationInfoClassification interface {
+	// GetOneLakeDiagnosticSettingsDestinationInfo returns the OneLakeDiagnosticSettingsDestinationInfo content of the underlying type.
+	GetOneLakeDiagnosticSettingsDestinationInfo() *OneLakeDiagnosticSettingsDestinationInfo
 }
 
 // ScheduleConfigClassification provides polymorphic access to related types.

@@ -22,6 +22,7 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
+	"github.com/microsoft/fabric-sdk-go/fabric"
 	"github.com/microsoft/fabric-sdk-go/fabric/mirroredazuredatabrickscatalog"
 	"github.com/microsoft/fabric-sdk-go/fabric/mirroredazuredatabrickscatalog/fake"
 )
@@ -43,8 +44,10 @@ func (testsuite *FakeTestSuite) SetupSuite() {
 	testsuite.cred = &azfake.TokenCredential{}
 
 	testsuite.serverFactory = &fake.ServerFactory{}
-	testsuite.clientFactory, err = mirroredazuredatabrickscatalog.NewClientFactory(testsuite.cred, nil, &azcore.ClientOptions{
-		Transport: fake.NewServerFactoryTransport(testsuite.serverFactory),
+	testsuite.clientFactory, err = mirroredazuredatabrickscatalog.NewClientFactory(testsuite.cred, nil, &fabric.ClientOptions{
+		ClientOptions: azcore.ClientOptions{
+			Transport: fake.NewServerFactoryTransport(testsuite.serverFactory),
+		},
 	})
 	testsuite.Require().NoError(err, "Failed to create client factory")
 }
@@ -175,7 +178,7 @@ func (testsuite *FakeTestSuite) TestItems_CreateMirroredAzureDatabricksCatalog()
 		Definition: &mirroredazuredatabrickscatalog.PublicDefinition{
 			Parts: []mirroredazuredatabrickscatalog.PublicDefinitionPart{
 				{
-					Path:        to.Ptr("mirroredAzureDatabricksCatalog.json"),
+					Path:        to.Ptr("definition.json"),
 					Payload:     to.Ptr("eyAicHJvcGVydGllcy..WJsZSIgfSB9IH0gXSB9IH0"),
 					PayloadType: to.Ptr(mirroredazuredatabrickscatalog.PayloadTypeInlineBase64),
 				},
@@ -396,7 +399,7 @@ func (testsuite *FakeTestSuite) TestItems_GetMirroredAzureDatabricksCatalogDefin
 		Definition: &mirroredazuredatabrickscatalog.PublicDefinition{
 			Parts: []mirroredazuredatabrickscatalog.PublicDefinitionPart{
 				{
-					Path:        to.Ptr("mirroredAzureDatabricksCatalog.json"),
+					Path:        to.Ptr("definition.json"),
 					Payload:     to.Ptr("eyAicHJvcGVydGllcy..WJsZSIgfSB9IH0gXSB9IH0"),
 					PayloadType: to.Ptr(mirroredazuredatabrickscatalog.PayloadTypeInlineBase64),
 				},
@@ -438,7 +441,7 @@ func (testsuite *FakeTestSuite) TestItems_UpdateMirroredAzureDatabricksCatalogDe
 		Definition: &mirroredazuredatabrickscatalog.PublicDefinition{
 			Parts: []mirroredazuredatabrickscatalog.PublicDefinitionPart{
 				{
-					Path:        to.Ptr("mirroredAzureDatabricksCatalog.json"),
+					Path:        to.Ptr("definition.json"),
 					Payload:     to.Ptr("eyAicHJvcGVydGllcy..WJsZSIgfSB9IH0gXSB9IH0"),
 					PayloadType: to.Ptr(mirroredazuredatabrickscatalog.PayloadTypeInlineBase64),
 				},

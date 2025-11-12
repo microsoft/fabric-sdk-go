@@ -281,3 +281,94 @@ func ExampleItemsClient_BeginUpdateDataflowDefinition() {
 		log.Fatalf("failed to pull the result: %v", err)
 	}
 }
+
+// Generated from example definition
+func ExampleItemsClient_NewDiscoverDataflowParametersPager() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := dataflow.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewItemsClient().NewDiscoverDataflowParametersPager("a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "dddddddd-9999-0000-1111-eeeeeeeeeeee", &dataflow.ItemsClientDiscoverDataflowParametersOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.Parameters = dataflow.Parameters{
+		// 	Value: []dataflow.ParameterClassification{
+		// 		&dataflow.StringParameter{
+		// 			Name: to.Ptr("manufacturer"),
+		// 			Type: to.Ptr(dataflow.ParameterTypeString),
+		// 			Description: to.Ptr("Manufacturer of the item"),
+		// 			IsRequired: to.Ptr(true),
+		// 			DefaultValue: to.Ptr("test-value"),
+		// 		},
+		// 		&dataflow.BooleanParameter{
+		// 			Name: to.Ptr("isImported"),
+		// 			Type: to.Ptr(dataflow.ParameterTypeBoolean),
+		// 			Description: to.Ptr("Is the item imported"),
+		// 			IsRequired: to.Ptr(false),
+		// 			DefaultValue: to.Ptr(true),
+		// 		},
+		// 		&dataflow.IntegerParameter{
+		// 			Name: to.Ptr("quantity"),
+		// 			Type: to.Ptr(dataflow.ParameterTypeInteger),
+		// 			Description: to.Ptr("Quantity of item"),
+		// 			IsRequired: to.Ptr(false),
+		// 			DefaultValue: to.Ptr[int64](123456789),
+		// 		},
+		// 		&dataflow.NumberParameter{
+		// 			Name: to.Ptr("weightThreshold"),
+		// 			Type: to.Ptr(dataflow.ParameterTypeNumber),
+		// 			Description: to.Ptr("Weight threshold for item"),
+		// 			IsRequired: to.Ptr(true),
+		// 			DefaultValue: to.Ptr[float64](3.14),
+		// 		},
+		// 		&dataflow.DateTimeParameter{
+		// 			Name: to.Ptr("datetimeOfOrder"),
+		// 			Type: to.Ptr(dataflow.ParameterTypeDateTime),
+		// 			Description: to.Ptr("Datetime of order"),
+		// 			IsRequired: to.Ptr(true),
+		// 			DefaultValue: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-09-15T21:45:00.000Z"); return t}()),
+		// 		},
+		// 		&dataflow.DateTimeZoneParameter{
+		// 			Name: to.Ptr("datetimeZoneOfOrder"),
+		// 			Type: to.Ptr(dataflow.ParameterTypeDateTimeZone),
+		// 			Description: to.Ptr("DatetimeZone of order"),
+		// 			IsRequired: to.Ptr(true),
+		// 			DefaultValue: to.Ptr("2025-09-15T21:45:00+02:00"),
+		// 		},
+		// 		&dataflow.DateParameter{
+		// 			Name: to.Ptr("dateOfImport"),
+		// 			Type: to.Ptr(dataflow.ParameterTypeDate),
+		// 			Description: to.Ptr("Date of import"),
+		// 			IsRequired: to.Ptr(true),
+		// 			DefaultValue: to.Ptr("2025-09-15"),
+		// 		},
+		// 		&dataflow.TimeParameter{
+		// 			Name: to.Ptr("timeOfImport"),
+		// 			Type: to.Ptr(dataflow.ParameterTypeTime),
+		// 			Description: to.Ptr("Time of import"),
+		// 			IsRequired: to.Ptr(true),
+		// 			DefaultValue: to.Ptr("21:45:00"),
+		// 		},
+		// 		&dataflow.DurationParameter{
+		// 			Name: to.Ptr("durationOfImport"),
+		// 			Type: to.Ptr(dataflow.ParameterTypeDuration),
+		// 			Description: to.Ptr("Duration of import"),
+		// 			IsRequired: to.Ptr(true),
+		// 			DefaultValue: to.Ptr("P5DT21H35M30S"),
+		// 	}},
+		// }
+	}
+}

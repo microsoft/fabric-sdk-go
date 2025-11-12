@@ -21,6 +21,7 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
+	"github.com/microsoft/fabric-sdk-go/fabric"
 	"github.com/microsoft/fabric-sdk-go/fabric/mlmodel"
 	"github.com/microsoft/fabric-sdk-go/fabric/mlmodel/fake"
 )
@@ -42,8 +43,10 @@ func (testsuite *FakeTestSuite) SetupSuite() {
 	testsuite.cred = &azfake.TokenCredential{}
 
 	testsuite.serverFactory = &fake.ServerFactory{}
-	testsuite.clientFactory, err = mlmodel.NewClientFactory(testsuite.cred, nil, &azcore.ClientOptions{
-		Transport: fake.NewServerFactoryTransport(testsuite.serverFactory),
+	testsuite.clientFactory, err = mlmodel.NewClientFactory(testsuite.cred, nil, &fabric.ClientOptions{
+		ClientOptions: azcore.ClientOptions{
+			Transport: fake.NewServerFactoryTransport(testsuite.serverFactory),
+		},
 	})
 	testsuite.Require().NoError(err, "Failed to create client factory")
 }
@@ -220,7 +223,7 @@ func (testsuite *FakeTestSuite) TestItems_DeleteMLModel() {
 func (testsuite *FakeTestSuite) TestEndpoint_GetMLModelEndpoint() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Example"},
+		"example-id": {"Example of Get ML Model Endpoint"},
 	})
 	var exampleWorkspaceID string
 	var exampleModelID string
@@ -306,12 +309,44 @@ func (testsuite *FakeTestSuite) TestEndpoint_GetMLModelEndpoint() {
 	res, err := client.GetMLModelEndpoint(ctx, exampleWorkspaceID, exampleModelID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Endpoint))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example of Get ML Model Endpoint with an Activation Failure"},
+	})
+	exampleWorkspaceID = "cf5fef71-f7f3-43f3-ae7f-3c427922bef1"
+	exampleModelID = "7e92a6fc-3ef5-40bf-96df-ddae3fcde313"
+
+	exampleRes = mlmodel.Endpoint{
+		DefaultVersionAssignmentBehavior: to.Ptr(mlmodel.EndpointDefaultVersionConfigurationPolicyStaticallyConfigured),
+		DefaultVersionInfo: &mlmodel.EndpointVersionInfo{
+			FailureDetails: &mlmodel.EndpointVersionInfoFailureDetails{
+				ErrorCode: to.Ptr("InvalidInput"),
+				Message:   to.Ptr("Tensor-based models are not supported yet."),
+			},
+			Status:      to.Ptr(mlmodel.ModelEndpointVersionStatusFailed),
+			VersionName: to.Ptr("1"),
+		},
+		DefaultVersionName: to.Ptr("1"),
+	}
+
+	testsuite.serverFactory.EndpointServer.GetMLModelEndpoint = func(ctx context.Context, workspaceID string, modelID string, options *mlmodel.EndpointClientGetMLModelEndpointOptions) (resp azfake.Responder[mlmodel.EndpointClientGetMLModelEndpointResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleModelID, modelID)
+		resp = azfake.Responder[mlmodel.EndpointClientGetMLModelEndpointResponse]{}
+		resp.SetResponse(http.StatusOK, mlmodel.EndpointClientGetMLModelEndpointResponse{Endpoint: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.GetMLModelEndpoint(ctx, exampleWorkspaceID, exampleModelID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Endpoint))
 }
 
 func (testsuite *FakeTestSuite) TestEndpoint_UpdateMLModelEndpoint() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Example"},
+		"example-id": {"Example of Update ML Model Endpoint"},
 	})
 	var exampleWorkspaceID string
 	var exampleModelID string
@@ -401,6 +436,43 @@ func (testsuite *FakeTestSuite) TestEndpoint_UpdateMLModelEndpoint() {
 
 	client := testsuite.clientFactory.NewEndpointClient()
 	res, err := client.UpdateMLModelEndpoint(ctx, exampleWorkspaceID, exampleModelID, exampleUpdateMLModelEndpointRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Endpoint))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example of Update ML Model Endpoint with an Activation Failure"},
+	})
+	exampleWorkspaceID = "cf5fef71-f7f3-43f3-ae7f-3c427922bef1"
+	exampleModelID = "7e92a6fc-3ef5-40bf-96df-ddae3fcde313"
+	exampleUpdateMLModelEndpointRequest = mlmodel.UpdateMLModelEndpointRequest{
+		DefaultVersionAssignmentBehavior: to.Ptr(mlmodel.EndpointDefaultVersionConfigurationPolicyStaticallyConfigured),
+		DefaultVersionName:               to.Ptr("1"),
+	}
+
+	exampleRes = mlmodel.Endpoint{
+		DefaultVersionAssignmentBehavior: to.Ptr(mlmodel.EndpointDefaultVersionConfigurationPolicyStaticallyConfigured),
+		DefaultVersionInfo: &mlmodel.EndpointVersionInfo{
+			FailureDetails: &mlmodel.EndpointVersionInfoFailureDetails{
+				ErrorCode: to.Ptr("InvalidInput"),
+				Message:   to.Ptr("Tensor-based models are not supported yet."),
+			},
+			Status:      to.Ptr(mlmodel.ModelEndpointVersionStatusFailed),
+			VersionName: to.Ptr("1"),
+		},
+		DefaultVersionName: to.Ptr("1"),
+	}
+
+	testsuite.serverFactory.EndpointServer.UpdateMLModelEndpoint = func(ctx context.Context, workspaceID string, modelID string, updateMLModelEndpointRequest mlmodel.UpdateMLModelEndpointRequest, options *mlmodel.EndpointClientUpdateMLModelEndpointOptions) (resp azfake.Responder[mlmodel.EndpointClientUpdateMLModelEndpointResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleModelID, modelID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateMLModelEndpointRequest, updateMLModelEndpointRequest))
+		resp = azfake.Responder[mlmodel.EndpointClientUpdateMLModelEndpointResponse]{}
+		resp.SetResponse(http.StatusOK, mlmodel.EndpointClientUpdateMLModelEndpointResponse{Endpoint: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.UpdateMLModelEndpoint(ctx, exampleWorkspaceID, exampleModelID, exampleUpdateMLModelEndpointRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Endpoint))
 }
@@ -505,7 +577,11 @@ func (testsuite *FakeTestSuite) TestEndpoint_ListMLModelEndpointVersions() {
 				VersionName: to.Ptr("1"),
 			},
 			{
-				Status:      to.Ptr(mlmodel.ModelEndpointVersionStatusDeactivated),
+				FailureDetails: &mlmodel.EndpointVersionInfoFailureDetails{
+					ErrorCode: to.Ptr("InvalidInput"),
+					Message:   to.Ptr("Tensor-based models are not supported yet."),
+				},
+				Status:      to.Ptr(mlmodel.ModelEndpointVersionStatusFailed),
 				VersionName: to.Ptr("2"),
 			}},
 	}
@@ -533,7 +609,7 @@ func (testsuite *FakeTestSuite) TestEndpoint_ListMLModelEndpointVersions() {
 func (testsuite *FakeTestSuite) TestEndpoint_GetMLModelEndpointVersion() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Example"},
+		"example-id": {"Example of Get ML Model Endpoint Version"},
 	})
 	var exampleWorkspaceID string
 	var exampleModelID string
@@ -618,12 +694,42 @@ func (testsuite *FakeTestSuite) TestEndpoint_GetMLModelEndpointVersion() {
 	res, err := client.GetMLModelEndpointVersion(ctx, exampleWorkspaceID, exampleModelID, exampleName, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.EndpointVersionInfo))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example of Get ML Model Endpoint Version with an Activation Failure"},
+	})
+	exampleWorkspaceID = "cf5fef71-f7f3-43f3-ae7f-3c427922bef1"
+	exampleModelID = "7e92a6fc-3ef5-40bf-96df-ddae3fcde313"
+	exampleName = "1"
+
+	exampleRes = mlmodel.EndpointVersionInfo{
+		FailureDetails: &mlmodel.EndpointVersionInfoFailureDetails{
+			ErrorCode: to.Ptr("InvalidInput"),
+			Message:   to.Ptr("Tensor-based models are not supported yet."),
+		},
+		Status:      to.Ptr(mlmodel.ModelEndpointVersionStatusFailed),
+		VersionName: to.Ptr("1"),
+	}
+
+	testsuite.serverFactory.EndpointServer.GetMLModelEndpointVersion = func(ctx context.Context, workspaceID string, modelID string, name string, options *mlmodel.EndpointClientGetMLModelEndpointVersionOptions) (resp azfake.Responder[mlmodel.EndpointClientGetMLModelEndpointVersionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleModelID, modelID)
+		testsuite.Require().Equal(exampleName, name)
+		resp = azfake.Responder[mlmodel.EndpointClientGetMLModelEndpointVersionResponse]{}
+		resp.SetResponse(http.StatusOK, mlmodel.EndpointClientGetMLModelEndpointVersionResponse{EndpointVersionInfo: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.GetMLModelEndpointVersion(ctx, exampleWorkspaceID, exampleModelID, exampleName, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.EndpointVersionInfo))
 }
 
 func (testsuite *FakeTestSuite) TestEndpoint_UpdateMLModelEndpointVersion() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Example"},
+		"example-id": {"Example of Update ML Model Endpoint Version"},
 	})
 	var exampleWorkspaceID string
 	var exampleModelID string
@@ -711,6 +817,40 @@ func (testsuite *FakeTestSuite) TestEndpoint_UpdateMLModelEndpointVersion() {
 
 	client := testsuite.clientFactory.NewEndpointClient()
 	res, err := client.UpdateMLModelEndpointVersion(ctx, exampleWorkspaceID, exampleModelID, exampleName, exampleUpdateMLModelEndpointVersionRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.EndpointVersionInfo))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example of Update ML Model Endpoint Version with an Activation Failure"},
+	})
+	exampleWorkspaceID = "cf5fef71-f7f3-43f3-ae7f-3c427922bef1"
+	exampleModelID = "7e92a6fc-3ef5-40bf-96df-ddae3fcde313"
+	exampleName = "1"
+	exampleUpdateMLModelEndpointVersionRequest = mlmodel.UpdateMLModelEndpointVersionRequest{
+		ScaleRule: to.Ptr(mlmodel.ScaleRuleAllowScaleToZero),
+	}
+
+	exampleRes = mlmodel.EndpointVersionInfo{
+		FailureDetails: &mlmodel.EndpointVersionInfoFailureDetails{
+			ErrorCode: to.Ptr("InvalidInput"),
+			Message:   to.Ptr("Tensor-based models are not supported yet."),
+		},
+		Status:      to.Ptr(mlmodel.ModelEndpointVersionStatusFailed),
+		VersionName: to.Ptr("1"),
+	}
+
+	testsuite.serverFactory.EndpointServer.UpdateMLModelEndpointVersion = func(ctx context.Context, workspaceID string, modelID string, name string, updateMLModelEndpointVersionRequest mlmodel.UpdateMLModelEndpointVersionRequest, options *mlmodel.EndpointClientUpdateMLModelEndpointVersionOptions) (resp azfake.Responder[mlmodel.EndpointClientUpdateMLModelEndpointVersionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleModelID, modelID)
+		testsuite.Require().Equal(exampleName, name)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateMLModelEndpointVersionRequest, updateMLModelEndpointVersionRequest))
+		resp = azfake.Responder[mlmodel.EndpointClientUpdateMLModelEndpointVersionResponse]{}
+		resp.SetResponse(http.StatusOK, mlmodel.EndpointClientUpdateMLModelEndpointVersionResponse{EndpointVersionInfo: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.UpdateMLModelEndpointVersion(ctx, exampleWorkspaceID, exampleModelID, exampleName, exampleUpdateMLModelEndpointVersionRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.EndpointVersionInfo))
 }
