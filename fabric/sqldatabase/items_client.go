@@ -11,6 +11,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -31,7 +32,8 @@ type ItemsClient struct {
 
 // BeginCreateSQLDatabase - > [!NOTE] SQL Database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// This API does not support create a SQL database with definition.
+// To create a SQL database with a public definition, refer to SQLDatabase definition [/rest/api/fabric/articles/item-management/definitions/sql-database]
+// article.
 // PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
@@ -56,7 +58,8 @@ func (client *ItemsClient) BeginCreateSQLDatabase(ctx context.Context, workspace
 
 // CreateSQLDatabase - > [!NOTE] SQL Database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// This API does not support create a SQL database with definition.
+// To create a SQL database with a public definition, refer to SQLDatabase definition [/rest/api/fabric/articles/item-management/definitions/sql-database]
+// article.
 // PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
@@ -230,6 +233,82 @@ func (client *ItemsClient) getSQLDatabaseHandleResponse(resp *http.Response) (It
 	return result, nil
 }
 
+// BeginGetSQLDatabaseDefinition - > [!NOTE] SQL database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// When you get a SQL database's public definition, the sensitivity label is not a part of the definition.
+// PERMISSIONS The caller must have read and write permissions for the SQL database.
+// REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - sqlDatabaseID - The SQL database ID.
+//   - options - ItemsClientBeginGetSQLDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetSQLDatabaseDefinition
+//     method.
+func (client *ItemsClient) BeginGetSQLDatabaseDefinition(ctx context.Context, workspaceID string, sqlDatabaseID string, options *ItemsClientBeginGetSQLDatabaseDefinitionOptions) (*runtime.Poller[ItemsClientGetSQLDatabaseDefinitionResponse], error) {
+	return client.beginGetSQLDatabaseDefinition(ctx, workspaceID, sqlDatabaseID, options)
+}
+
+// GetSQLDatabaseDefinition - > [!NOTE] SQL database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// When you get a SQL database's public definition, the sensitivity label is not a part of the definition.
+// PERMISSIONS The caller must have read and write permissions for the SQL database.
+// REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) getSQLDatabaseDefinition(ctx context.Context, workspaceID string, sqlDatabaseID string, options *ItemsClientBeginGetSQLDatabaseDefinitionOptions) (*http.Response, error) {
+	var err error
+	const operationName = "sqldatabase.ItemsClient.BeginGetSQLDatabaseDefinition"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getSQLDatabaseDefinitionCreateRequest(ctx, workspaceID, sqlDatabaseID, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// getSQLDatabaseDefinitionCreateRequest creates the GetSQLDatabaseDefinition request.
+func (client *ItemsClient) getSQLDatabaseDefinitionCreateRequest(ctx context.Context, workspaceID string, sqlDatabaseID string, _ *ItemsClientBeginGetSQLDatabaseDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/{SQLDatabaseId}/getDefinition"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if sqlDatabaseID == "" {
+		return nil, errors.New("parameter sqlDatabaseID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{SQLDatabaseId}", url.PathEscape(sqlDatabaseID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
 // NewListSQLDatabasesPager - > [!NOTE] SQL Database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have a viewer workspace role.
@@ -366,6 +445,91 @@ func (client *ItemsClient) updateSQLDatabaseHandleResponse(resp *http.Response) 
 	return result, nil
 }
 
+// BeginUpdateSQLDatabasesDefinition - > [!NOTE] SQL database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Updating the SQL database's definition, does not affect its sensitivity label.
+// PERMISSIONS The caller must have read and write permissions for the SQL database.
+// REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - sqlDatabaseID - The SQL database ID.
+//   - updateSQLDatabaseDefinitionRequest - Update SQL database definition request payload.
+//   - options - ItemsClientBeginUpdateSQLDatabasesDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateSQLDatabasesDefinition
+//     method.
+func (client *ItemsClient) BeginUpdateSQLDatabasesDefinition(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseDefinitionRequest UpdateSQLDatabaseDefinitionRequest, options *ItemsClientBeginUpdateSQLDatabasesDefinitionOptions) (*runtime.Poller[ItemsClientUpdateSQLDatabasesDefinitionResponse], error) {
+	return client.beginUpdateSQLDatabasesDefinition(ctx, workspaceID, sqlDatabaseID, updateSQLDatabaseDefinitionRequest, options)
+}
+
+// UpdateSQLDatabasesDefinition - > [!NOTE] SQL database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Updating the SQL database's definition, does not affect its sensitivity label.
+// PERMISSIONS The caller must have read and write permissions for the SQL database.
+// REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) updateSQLDatabasesDefinition(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseDefinitionRequest UpdateSQLDatabaseDefinitionRequest, options *ItemsClientBeginUpdateSQLDatabasesDefinitionOptions) (*http.Response, error) {
+	var err error
+	const operationName = "sqldatabase.ItemsClient.BeginUpdateSQLDatabasesDefinition"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateSQLDatabasesDefinitionCreateRequest(ctx, workspaceID, sqlDatabaseID, updateSQLDatabaseDefinitionRequest, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// updateSQLDatabasesDefinitionCreateRequest creates the UpdateSQLDatabasesDefinition request.
+func (client *ItemsClient) updateSQLDatabasesDefinitionCreateRequest(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseDefinitionRequest UpdateSQLDatabaseDefinitionRequest, options *ItemsClientBeginUpdateSQLDatabasesDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/{SQLDatabaseId}/updateDefinition"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if sqlDatabaseID == "" {
+		return nil, errors.New("parameter sqlDatabaseID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{SQLDatabaseId}", url.PathEscape(sqlDatabaseID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.UpdateMetadata != nil {
+		reqQP.Set("updateMetadata", strconv.FormatBool(*options.UpdateMetadata))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateSQLDatabaseDefinitionRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // Custom code starts below
 
 // CreateSQLDatabase - returns ItemsClientCreateSQLDatabaseResponse in sync mode.
@@ -373,7 +537,7 @@ func (client *ItemsClient) updateSQLDatabaseHandleResponse(resp *http.Response) 
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// This API does not support create a SQL database with definition.
+// To create a SQL database with a public definition, refer to SQLDatabase definition [/rest/api/fabric/articles/item-management/definitions/sql-database] article.
 //
 // PERMISSIONS The caller must have a contributor workspace role.
 //
@@ -439,6 +603,153 @@ func (client *ItemsClient) beginCreateSQLDatabase(ctx context.Context, workspace
 			return nil, err
 		}
 		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientCreateSQLDatabaseResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// GetSQLDatabaseDefinition - returns ItemsClientGetSQLDatabaseDefinitionResponse in sync mode.
+// >  [!NOTE] SQL database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+//
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// When you get a SQL database's public definition, the sensitivity label is not a part of the definition.
+//
+// PERMISSIONS The caller must have read and write permissions for the SQL database.
+//
+// # REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - sqlDatabaseID - The SQL database ID.
+//   - options - ItemsClientBeginGetSQLDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetSQLDatabaseDefinition method.
+func (client *ItemsClient) GetSQLDatabaseDefinition(ctx context.Context, workspaceID string, sqlDatabaseID string, options *ItemsClientBeginGetSQLDatabaseDefinitionOptions) (ItemsClientGetSQLDatabaseDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginGetSQLDatabaseDefinition(ctx, workspaceID, sqlDatabaseID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientGetSQLDatabaseDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientGetSQLDatabaseDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginGetSQLDatabaseDefinition creates the getSQLDatabaseDefinition request.
+func (client *ItemsClient) beginGetSQLDatabaseDefinition(ctx context.Context, workspaceID string, sqlDatabaseID string, options *ItemsClientBeginGetSQLDatabaseDefinitionOptions) (*runtime.Poller[ItemsClientGetSQLDatabaseDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.getSQLDatabaseDefinition(ctx, workspaceID, sqlDatabaseID, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientGetSQLDatabaseDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientGetSQLDatabaseDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientGetSQLDatabaseDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientGetSQLDatabaseDefinitionResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// UpdateSQLDatabasesDefinition - returns ItemsClientUpdateSQLDatabasesDefinitionResponse in sync mode.
+// >  [!NOTE] SQL database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+//
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// Updating the SQL database's definition, does not affect its sensitivity label.
+//
+// PERMISSIONS The caller must have read and write permissions for the SQL database.
+//
+// # REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - sqlDatabaseID - The SQL database ID.
+//   - updateSQLDatabaseDefinitionRequest - Update SQL database definition request payload.
+//   - options - ItemsClientBeginUpdateSQLDatabasesDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateSQLDatabasesDefinition method.
+func (client *ItemsClient) UpdateSQLDatabasesDefinition(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseDefinitionRequest UpdateSQLDatabaseDefinitionRequest, options *ItemsClientBeginUpdateSQLDatabasesDefinitionOptions) (ItemsClientUpdateSQLDatabasesDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginUpdateSQLDatabasesDefinition(ctx, workspaceID, sqlDatabaseID, updateSQLDatabaseDefinitionRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientUpdateSQLDatabasesDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientUpdateSQLDatabasesDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginUpdateSQLDatabasesDefinition creates the updateSQLDatabasesDefinition request.
+func (client *ItemsClient) beginUpdateSQLDatabasesDefinition(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseDefinitionRequest UpdateSQLDatabaseDefinitionRequest, options *ItemsClientBeginUpdateSQLDatabasesDefinitionOptions) (*runtime.Poller[ItemsClientUpdateSQLDatabasesDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.updateSQLDatabasesDefinition(ctx, workspaceID, sqlDatabaseID, updateSQLDatabaseDefinitionRequest, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateSQLDatabasesDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientUpdateSQLDatabasesDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateSQLDatabasesDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientUpdateSQLDatabasesDefinitionResponse]{
 			Handler: handler,
 			Tracer:  client.internal.Tracer(),
 		})

@@ -60,28 +60,6 @@ func PossibleItemReferenceTypeValues() []ItemReferenceType {
 	}
 }
 
-// ItemType - The item type. Values are: Lakehouse, SparkJobDefinition, Notebook. Additional LivySessionItemType types may
-// be added over time.
-type ItemType string
-
-const (
-	// ItemTypeLakehouse - Item is a lakehouse item.
-	ItemTypeLakehouse ItemType = "Lakehouse"
-	// ItemTypeNotebook - Item is a notebook item.
-	ItemTypeNotebook ItemType = "Notebook"
-	// ItemTypeSparkJobDefinition - Item is a spark job definition item.
-	ItemTypeSparkJobDefinition ItemType = "SparkJobDefinition"
-)
-
-// PossibleItemTypeValues returns the possible values for the ItemType const type.
-func PossibleItemTypeValues() []ItemType {
-	return []ItemType{
-		ItemTypeLakehouse,
-		ItemTypeNotebook,
-		ItemTypeSparkJobDefinition,
-	}
-}
-
 // JobType - Type of the job. Values are: Unknown, SparkSession, SparkBatch, JupyterSession. Additional LivySessionJobType
 // types may be added over time.
 type JobType string
@@ -104,6 +82,28 @@ func PossibleJobTypeValues() []JobType {
 		JobTypeSparkBatch,
 		JobTypeSparkSession,
 		JobTypeUnknown,
+	}
+}
+
+// LivySessionItemType - The item type. Values are: Lakehouse, SparkJobDefinition, Notebook. Additional LivySessionItemType
+// types may be added over time.
+type LivySessionItemType string
+
+const (
+	// LivySessionItemTypeLakehouse - Item is a lakehouse item.
+	LivySessionItemTypeLakehouse LivySessionItemType = "Lakehouse"
+	// LivySessionItemTypeNotebook - Item is a notebook item.
+	LivySessionItemTypeNotebook LivySessionItemType = "Notebook"
+	// LivySessionItemTypeSparkJobDefinition - Item is a spark job definition item.
+	LivySessionItemTypeSparkJobDefinition LivySessionItemType = "SparkJobDefinition"
+)
+
+// PossibleLivySessionItemTypeValues returns the possible values for the LivySessionItemType const type.
+func PossibleLivySessionItemTypeValues() []LivySessionItemType {
+	return []LivySessionItemType{
+		LivySessionItemTypeLakehouse,
+		LivySessionItemTypeNotebook,
+		LivySessionItemTypeSparkJobDefinition,
 	}
 }
 

@@ -25,8 +25,8 @@ type ClientFactory struct {
 //   - credential - used to authorize requests. Usually a credential from azidentity.
 //   - endpoint - pass nil to accept the default values.
 //   - options - pass nil to accept the default values.
-func NewClientFactory(credential azcore.TokenCredential, endpoint *string, options *azcore.ClientOptions) (*ClientFactory, error) {
-	sc, err := iruntime.NewServiceClient(credential, fabric.Version, endpoint, options)
+func NewClientFactory(credential azcore.TokenCredential, endpoint *string, options *fabric.ClientOptions) (*ClientFactory, error) {
+	sc, err := iruntime.NewServiceClient(credential, fabric.Version, endpoint, (*iruntime.ClientOptions)(options))
 	if err != nil {
 		return nil, err
 	}
@@ -44,6 +44,14 @@ func NewClientFactoryWithClient(client fabric.Client) *ClientFactory {
 	return &ClientFactory{
 		internal: client.Internal,
 		endpoint: client.Endpoint,
+	}
+}
+
+// NewClient creates a new instance of Client.
+func (c *ClientFactory) NewClient() *Client {
+	return &Client{
+		internal: c.internal.WithClientName("sqldatabase.Client"),
+		endpoint: c.endpoint,
 	}
 }
 

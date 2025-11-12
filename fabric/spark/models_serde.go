@@ -469,7 +469,13 @@ func (l LivySession) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "capacityId", l.CapacityID)
 	populate(objectMap, "consumerId", l.ConsumerID)
 	populate(objectMap, "creatorItem", l.CreatorItem)
+	populate(objectMap, "driverCores", l.DriverCores)
+	populate(objectMap, "driverMemory", l.DriverMemory)
+	populate(objectMap, "dynamicAllocationMaxExecutors", l.DynamicAllocationMaxExecutors)
 	populateDateTimeRFC3339(objectMap, "endDateTime", l.EndDateTime)
+	populateAny(objectMap, "executorCores", l.ExecutorCores)
+	populate(objectMap, "executorMemory", l.ExecutorMemory)
+	populate(objectMap, "isDynamicAllocationEnabled", l.IsDynamicAllocationEnabled)
 	populate(objectMap, "isHighConcurrency", l.IsHighConcurrency)
 	populate(objectMap, "item", l.Item)
 	populate(objectMap, "itemName", l.ItemName)
@@ -480,6 +486,7 @@ func (l LivySession) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "livyName", l.LivyName)
 	populate(objectMap, "livySessionItemResourceUri", l.LivySessionItemResourceURI)
 	populate(objectMap, "maxNumberOfAttempts", l.MaxNumberOfAttempts)
+	populate(objectMap, "numExecutors", l.NumExecutors)
 	populate(objectMap, "operationName", l.OperationName)
 	populate(objectMap, "origin", l.Origin)
 	populate(objectMap, "queuedDuration", l.QueuedDuration)
@@ -518,8 +525,26 @@ func (l *LivySession) UnmarshalJSON(data []byte) error {
 		case "creatorItem":
 			err = unpopulate(val, "CreatorItem", &l.CreatorItem)
 			delete(rawMsg, key)
+		case "driverCores":
+			err = unpopulate(val, "DriverCores", &l.DriverCores)
+			delete(rawMsg, key)
+		case "driverMemory":
+			err = unpopulate(val, "DriverMemory", &l.DriverMemory)
+			delete(rawMsg, key)
+		case "dynamicAllocationMaxExecutors":
+			err = unpopulate(val, "DynamicAllocationMaxExecutors", &l.DynamicAllocationMaxExecutors)
+			delete(rawMsg, key)
 		case "endDateTime":
 			err = unpopulateDateTimeRFC3339(val, "EndDateTime", &l.EndDateTime)
+			delete(rawMsg, key)
+		case "executorCores":
+			err = unpopulate(val, "ExecutorCores", &l.ExecutorCores)
+			delete(rawMsg, key)
+		case "executorMemory":
+			err = unpopulate(val, "ExecutorMemory", &l.ExecutorMemory)
+			delete(rawMsg, key)
+		case "isDynamicAllocationEnabled":
+			err = unpopulate(val, "IsDynamicAllocationEnabled", &l.IsDynamicAllocationEnabled)
 			delete(rawMsg, key)
 		case "isHighConcurrency":
 			err = unpopulate(val, "IsHighConcurrency", &l.IsHighConcurrency)
@@ -550,6 +575,9 @@ func (l *LivySession) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "maxNumberOfAttempts":
 			err = unpopulate(val, "MaxNumberOfAttempts", &l.MaxNumberOfAttempts)
+			delete(rawMsg, key)
+		case "numExecutors":
+			err = unpopulate(val, "NumExecutors", &l.NumExecutors)
 			delete(rawMsg, key)
 		case "operationName":
 			err = unpopulate(val, "OperationName", &l.OperationName)
@@ -987,6 +1015,16 @@ func populate(m map[string]any, k string, v any) {
 	} else if azcore.IsNullValue(v) {
 		m[k] = nil
 	} else if !reflect.ValueOf(v).IsNil() {
+		m[k] = v
+	}
+}
+
+func populateAny(m map[string]any, k string, v any) {
+	if v == nil {
+		return
+	} else if azcore.IsNullValue(v) {
+		m[k] = nil
+	} else {
 		m[k] = v
 	}
 }

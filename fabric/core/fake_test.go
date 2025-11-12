@@ -22,6 +22,7 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
+	"github.com/microsoft/fabric-sdk-go/fabric"
 	"github.com/microsoft/fabric-sdk-go/fabric/core"
 	"github.com/microsoft/fabric-sdk-go/fabric/core/fake"
 )
@@ -43,8 +44,10 @@ func (testsuite *FakeTestSuite) SetupSuite() {
 	testsuite.cred = &azfake.TokenCredential{}
 
 	testsuite.serverFactory = &fake.ServerFactory{}
-	testsuite.clientFactory, err = core.NewClientFactory(testsuite.cred, nil, &azcore.ClientOptions{
-		Transport: fake.NewServerFactoryTransport(testsuite.serverFactory),
+	testsuite.clientFactory, err = core.NewClientFactory(testsuite.cred, nil, &fabric.ClientOptions{
+		ClientOptions: azcore.ClientOptions{
+			Transport: fake.NewServerFactoryTransport(testsuite.serverFactory),
+		},
 	})
 	testsuite.Require().NoError(err, "Failed to create client factory")
 }
@@ -818,6 +821,209 @@ func (testsuite *FakeTestSuite) TestWorkspaces_SetNetworkCommunicationPolicy() {
 
 	client := testsuite.clientFactory.NewWorkspacesClient()
 	_, err = client.SetNetworkCommunicationPolicy(ctx, exampleWorkspaceID, exampleSetWorkspaceNetworkingCommunicationPolicy, &core.WorkspacesClientSetNetworkCommunicationPolicyOptions{IfMatch: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaces_GetOutboundCloudConnectionRules() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get workspace outbound access protection cloud connection rule for example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+
+	exampleRes := core.WorkspaceOutboundConnections{
+		DefaultAction: to.Ptr(core.ConnectionAccessActionTypeDeny),
+		Rules: []core.OutboundConnectionRule{
+			{
+				AllowedEndpoints: []core.ConnectionRuleEndpointMetadata{
+					{
+						HostNamePattern: to.Ptr("*.microsoft.com"),
+					}},
+				ConnectionType: to.Ptr("SQL"),
+				DefaultAction:  to.Ptr(core.ConnectionAccessActionTypeDeny),
+			},
+			{
+				AllowedWorkspaces: []core.ConnectionRuleWorkspaceMetadata{
+					{
+						WorkspaceID: to.Ptr("91c5ae74-e82d-4dd3-bfeb-6b1814030123"),
+					}},
+				ConnectionType: to.Ptr("LakeHouse"),
+				DefaultAction:  to.Ptr(core.ConnectionAccessActionTypeDeny),
+			},
+			{
+				ConnectionType: to.Ptr("Web"),
+				DefaultAction:  to.Ptr(core.ConnectionAccessActionTypeAllow),
+			}},
+	}
+
+	testsuite.serverFactory.WorkspacesServer.GetOutboundCloudConnectionRules = func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetOutboundCloudConnectionRulesOptions) (resp azfake.Responder[core.WorkspacesClientGetOutboundCloudConnectionRulesResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.WorkspacesClientGetOutboundCloudConnectionRulesResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientGetOutboundCloudConnectionRulesResponse{WorkspaceOutboundConnections: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	res, err := client.GetOutboundCloudConnectionRules(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.WorkspaceOutboundConnections))
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaces_SetOutboundCloudConnectionRules() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Set workspace outbound access protection cloud connection rule for example"},
+	})
+	var exampleWorkspaceID string
+	var exampleWorkspaceOutboundConnections core.WorkspaceOutboundConnections
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+	exampleWorkspaceOutboundConnections = core.WorkspaceOutboundConnections{
+		DefaultAction: to.Ptr(core.ConnectionAccessActionTypeDeny),
+		Rules: []core.OutboundConnectionRule{
+			{
+				AllowedEndpoints: []core.ConnectionRuleEndpointMetadata{
+					{
+						HostNamePattern: to.Ptr("*.microsoft.com"),
+					}},
+				ConnectionType: to.Ptr("SQL"),
+				DefaultAction:  to.Ptr(core.ConnectionAccessActionTypeDeny),
+			},
+			{
+				AllowedWorkspaces: []core.ConnectionRuleWorkspaceMetadata{
+					{
+						WorkspaceID: to.Ptr("91c5ae74-e82d-4dd3-bfeb-6b1814030123"),
+					}},
+				ConnectionType: to.Ptr("LakeHouse"),
+				DefaultAction:  to.Ptr(core.ConnectionAccessActionTypeDeny),
+			},
+			{
+				ConnectionType: to.Ptr("Web"),
+				DefaultAction:  to.Ptr(core.ConnectionAccessActionTypeAllow),
+			}},
+	}
+
+	testsuite.serverFactory.WorkspacesServer.SetOutboundCloudConnectionRules = func(ctx context.Context, workspaceID string, workspaceOutboundConnections core.WorkspaceOutboundConnections, options *core.WorkspacesClientSetOutboundCloudConnectionRulesOptions) (resp azfake.Responder[core.WorkspacesClientSetOutboundCloudConnectionRulesResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleWorkspaceOutboundConnections, workspaceOutboundConnections))
+		resp = azfake.Responder[core.WorkspacesClientSetOutboundCloudConnectionRulesResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientSetOutboundCloudConnectionRulesResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	_, err = client.SetOutboundCloudConnectionRules(ctx, exampleWorkspaceID, exampleWorkspaceOutboundConnections, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaces_GetOutboundGatewayRules() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get workspace outbound access protection gateway rule for example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+
+	exampleRes := core.WorkspaceOutboundGateways{
+		AllowedGateways: []core.GatewayAccessRuleMetadata{
+			{
+				ID: to.Ptr("91c5ae74-e82d-4dd3-bfeb-6b1814030123"),
+			}},
+		DefaultAction: to.Ptr(core.GatewayAccessActionTypeDeny),
+	}
+
+	testsuite.serverFactory.WorkspacesServer.GetOutboundGatewayRules = func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetOutboundGatewayRulesOptions) (resp azfake.Responder[core.WorkspacesClientGetOutboundGatewayRulesResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.WorkspacesClientGetOutboundGatewayRulesResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientGetOutboundGatewayRulesResponse{WorkspaceOutboundGateways: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	res, err := client.GetOutboundGatewayRules(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.WorkspaceOutboundGateways))
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaces_SetOutboundGatewayRules() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Set workspace outbound access protection gateway rule for example"},
+	})
+	var exampleWorkspaceID string
+	var exampleWorkspaceOutboundGateways core.WorkspaceOutboundGateways
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+	exampleWorkspaceOutboundGateways = core.WorkspaceOutboundGateways{
+		AllowedGateways: []core.GatewayAccessRuleMetadata{
+			{
+				ID: to.Ptr("91c5ae74-e82d-4dd3-bfeb-6b1814030123"),
+			},
+			{
+				ID: to.Ptr("25bac802-080d-4f73-8a42-1b406eb1fceb"),
+			}},
+		DefaultAction: to.Ptr(core.GatewayAccessActionTypeDeny),
+	}
+
+	testsuite.serverFactory.WorkspacesServer.SetOutboundGatewayRules = func(ctx context.Context, workspaceID string, workspaceOutboundGateways core.WorkspaceOutboundGateways, options *core.WorkspacesClientSetOutboundGatewayRulesOptions) (resp azfake.Responder[core.WorkspacesClientSetOutboundGatewayRulesResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleWorkspaceOutboundGateways, workspaceOutboundGateways))
+		resp = azfake.Responder[core.WorkspacesClientSetOutboundGatewayRulesResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientSetOutboundGatewayRulesResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	_, err = client.SetOutboundGatewayRules(ctx, exampleWorkspaceID, exampleWorkspaceOutboundGateways, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaces_GetGitOutboundPolicy() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get workspace networking communication policy example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+
+	exampleRes := core.NetworkRules{
+		DefaultAction: to.Ptr(core.NetworkAccessRuleDeny),
+	}
+
+	testsuite.serverFactory.WorkspacesServer.GetGitOutboundPolicy = func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetGitOutboundPolicyOptions) (resp azfake.Responder[core.WorkspacesClientGetGitOutboundPolicyResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.WorkspacesClientGetGitOutboundPolicyResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientGetGitOutboundPolicyResponse{NetworkRules: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	res, err := client.GetGitOutboundPolicy(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.NetworkRules))
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaces_SetGitOutboundPolicy() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Set workspace networking communication policy example"},
+	})
+	var exampleWorkspaceID string
+	var exampleSetWorkspaceGitNetworkingCommunicationPolicy core.NetworkRules
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+	exampleSetWorkspaceGitNetworkingCommunicationPolicy = core.NetworkRules{
+		DefaultAction: to.Ptr(core.NetworkAccessRuleAllow),
+	}
+
+	testsuite.serverFactory.WorkspacesServer.SetGitOutboundPolicy = func(ctx context.Context, workspaceID string, setWorkspaceGitNetworkingCommunicationPolicy core.NetworkRules, options *core.WorkspacesClientSetGitOutboundPolicyOptions) (resp azfake.Responder[core.WorkspacesClientSetGitOutboundPolicyResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleSetWorkspaceGitNetworkingCommunicationPolicy, setWorkspaceGitNetworkingCommunicationPolicy))
+		resp = azfake.Responder[core.WorkspacesClientSetGitOutboundPolicyResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientSetGitOutboundPolicyResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	_, err = client.SetGitOutboundPolicy(ctx, exampleWorkspaceID, exampleSetWorkspaceGitNetworkingCommunicationPolicy, &core.WorkspacesClientSetGitOutboundPolicyOptions{IfMatch: nil})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
@@ -1934,7 +2140,7 @@ func (testsuite *FakeTestSuite) TestJobScheduler_GetItemJobInstance() {
 		JobType:        to.Ptr("DefaultJob"),
 		RootActivityID: to.Ptr("8c2ee553-53a4-7edb-1042-0d8189a9e0ca"),
 		StartTimeUTC:   to.Ptr("2023-04-22T06:35:00.7812154"),
-		Status:         to.Ptr(core.Status("Completed")),
+		Status:         to.Ptr(core.ItemJobStatusCompleted),
 	}
 
 	testsuite.serverFactory.JobSchedulerServer.GetItemJobInstance = func(ctx context.Context, workspaceID string, itemID string, jobInstanceID string, options *core.JobSchedulerClientGetItemJobInstanceOptions) (resp azfake.Responder[core.JobSchedulerClientGetItemJobInstanceResponse], errResp azfake.ErrorResponder) {
@@ -1972,7 +2178,7 @@ func (testsuite *FakeTestSuite) TestJobScheduler_ListItemJobInstances() {
 				JobType:        to.Ptr("DefaultJob"),
 				RootActivityID: to.Ptr("8c2ee553-53a4-7edb-1042-0d8189a9e0ca"),
 				StartTimeUTC:   to.Ptr("2024-06-22T06:35:00.7812154"),
-				Status:         to.Ptr(core.Status("Completed")),
+				Status:         to.Ptr(core.ItemJobStatusCompleted),
 			},
 			{
 				EndTimeUTC:     to.Ptr("2024-06-22T07:35:00.8033333"),
@@ -1982,7 +2188,7 @@ func (testsuite *FakeTestSuite) TestJobScheduler_ListItemJobInstances() {
 				JobType:        to.Ptr("DefaultJob"),
 				RootActivityID: to.Ptr("c0c99aed-be56-4fe0-a6e5-6de5fe277f16"),
 				StartTimeUTC:   to.Ptr("2024-06-22T06:35:00.7812154"),
-				Status:         to.Ptr(core.Status("Completed")),
+				Status:         to.Ptr(core.ItemJobStatusCompleted),
 			}},
 	}
 
@@ -2024,7 +2230,7 @@ func (testsuite *FakeTestSuite) TestJobScheduler_ListItemJobInstances() {
 				JobType:        to.Ptr("DefaultJob"),
 				RootActivityID: to.Ptr("8c2ee553-53a4-7edb-1042-0d8189a9e0ca"),
 				StartTimeUTC:   to.Ptr("2024-06-22T06:35:00.7812154"),
-				Status:         to.Ptr(core.Status("Completed")),
+				Status:         to.Ptr(core.ItemJobStatusCompleted),
 			},
 			{
 				EndTimeUTC:     to.Ptr("2024-06-22T07:35:00.8033333"),
@@ -2034,7 +2240,7 @@ func (testsuite *FakeTestSuite) TestJobScheduler_ListItemJobInstances() {
 				JobType:        to.Ptr("DefaultJob"),
 				RootActivityID: to.Ptr("c0c99aed-be56-4fe0-a6e5-6de5fe277f16"),
 				StartTimeUTC:   to.Ptr("2024-06-22T06:35:00.7812154"),
-				Status:         to.Ptr(core.Status("Completed")),
+				Status:         to.Ptr(core.ItemJobStatusCompleted),
 			}},
 	}
 
@@ -4100,6 +4306,171 @@ func (testsuite *FakeTestSuite) TestDomains_GetDomain() {
 	res, err := client.GetDomain(ctx, exampleDomainID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Domain))
+}
+
+func (testsuite *FakeTestSuite) TestOneLakeSettings_GetSettings() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get OneLake Setting for workspace with diagnostic setting example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
+
+	exampleRes := core.GetOneLakeSettingsResponse{
+		Diagnostics: &core.OneLakeDiagnosticSettings{
+			Destination: &core.LakehouseOneLakeDiagnosticSettingsDestination{
+				Type: to.Ptr("Lakehouse"),
+				Lakehouse: &core.ItemReferenceByID{
+					ReferenceType: to.Ptr(core.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("33d48b2c-5b7c-42e2-8467-87fecb105fdd"),
+					WorkspaceID:   to.Ptr("85173301-af01-49c9-b667-03edc44517da"),
+				},
+			},
+			Status: to.Ptr("Enabled"),
+		},
+	}
+
+	testsuite.serverFactory.OneLakeSettingsServer.GetSettings = func(ctx context.Context, workspaceID string, options *core.OneLakeSettingsClientGetSettingsOptions) (resp azfake.Responder[core.OneLakeSettingsClientGetSettingsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.OneLakeSettingsClientGetSettingsResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeSettingsClientGetSettingsResponse{GetOneLakeSettingsResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewOneLakeSettingsClient()
+	res, err := client.GetSettings(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.GetOneLakeSettingsResponse))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get OneLake Setting for workspace without diagnostic setting example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
+
+	exampleRes = core.GetOneLakeSettingsResponse{
+		Diagnostics: &core.OneLakeDiagnosticSettings{
+			Status: to.Ptr("Disabled"),
+		},
+	}
+
+	testsuite.serverFactory.OneLakeSettingsServer.GetSettings = func(ctx context.Context, workspaceID string, options *core.OneLakeSettingsClientGetSettingsOptions) (resp azfake.Responder[core.OneLakeSettingsClientGetSettingsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.OneLakeSettingsClientGetSettingsResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeSettingsClientGetSettingsResponse{GetOneLakeSettingsResponse: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.GetSettings(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.GetOneLakeSettingsResponse))
+}
+
+func (testsuite *FakeTestSuite) TestOneLakeSettings_ModifyDiagnostics() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create OneLake Diagnostic Setting for Workspace example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
+
+	testsuite.serverFactory.OneLakeSettingsServer.BeginModifyDiagnostics = func(ctx context.Context, workspaceID string, options *core.OneLakeSettingsClientBeginModifyDiagnosticsOptions) (resp azfake.PollerResponder[core.OneLakeSettingsClientModifyDiagnosticsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.PollerResponder[core.OneLakeSettingsClientModifyDiagnosticsResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, core.OneLakeSettingsClientModifyDiagnosticsResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewOneLakeSettingsClient()
+	poller, err := client.BeginModifyDiagnostics(ctx, exampleWorkspaceID, &core.OneLakeSettingsClientBeginModifyDiagnosticsOptions{ModifyOneLakeDiagnosticSettingRequest: &core.OneLakeDiagnosticSettings{
+		Destination: &core.LakehouseOneLakeDiagnosticSettingsDestination{
+			Type: to.Ptr("Lakehouse"),
+			Lakehouse: &core.ItemReferenceByID{
+				ReferenceType: to.Ptr(core.ItemReferenceTypeByID),
+				ItemID:        to.Ptr("eceb53c6-6227-41f1-a649-62ebe7ee9eb1"),
+				WorkspaceID:   to.Ptr("85173301-af01-49c9-b667-03edc44517da"),
+			},
+		},
+		Status: to.Ptr("Enabled"),
+	},
+	})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Disable OneLake Diagnostic Setting for Workspace example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
+
+	testsuite.serverFactory.OneLakeSettingsServer.BeginModifyDiagnostics = func(ctx context.Context, workspaceID string, options *core.OneLakeSettingsClientBeginModifyDiagnosticsOptions) (resp azfake.PollerResponder[core.OneLakeSettingsClientModifyDiagnosticsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.PollerResponder[core.OneLakeSettingsClientModifyDiagnosticsResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, core.OneLakeSettingsClientModifyDiagnosticsResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginModifyDiagnostics(ctx, exampleWorkspaceID, &core.OneLakeSettingsClientBeginModifyDiagnosticsOptions{ModifyOneLakeDiagnosticSettingRequest: &core.OneLakeDiagnosticSettings{
+		Status: to.Ptr("Disabled"),
+	},
+	})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Remove OneLake Diagnostic Setting Destination for Workspace example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
+
+	testsuite.serverFactory.OneLakeSettingsServer.BeginModifyDiagnostics = func(ctx context.Context, workspaceID string, options *core.OneLakeSettingsClientBeginModifyDiagnosticsOptions) (resp azfake.PollerResponder[core.OneLakeSettingsClientModifyDiagnosticsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.PollerResponder[core.OneLakeSettingsClientModifyDiagnosticsResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, core.OneLakeSettingsClientModifyDiagnosticsResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginModifyDiagnostics(ctx, exampleWorkspaceID, &core.OneLakeSettingsClientBeginModifyDiagnosticsOptions{ModifyOneLakeDiagnosticSettingRequest: &core.OneLakeDiagnosticSettings{
+		Destination: &core.LakehouseOneLakeDiagnosticSettingsDestination{
+			Type: to.Ptr("Lakehouse"),
+		},
+		Status: to.Ptr("Disabled"),
+	},
+	})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Replace OneLake Diagnostic Setting Destination for Workspace example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
+
+	testsuite.serverFactory.OneLakeSettingsServer.BeginModifyDiagnostics = func(ctx context.Context, workspaceID string, options *core.OneLakeSettingsClientBeginModifyDiagnosticsOptions) (resp azfake.PollerResponder[core.OneLakeSettingsClientModifyDiagnosticsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.PollerResponder[core.OneLakeSettingsClientModifyDiagnosticsResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, core.OneLakeSettingsClientModifyDiagnosticsResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginModifyDiagnostics(ctx, exampleWorkspaceID, &core.OneLakeSettingsClientBeginModifyDiagnosticsOptions{ModifyOneLakeDiagnosticSettingRequest: &core.OneLakeDiagnosticSettings{
+		Destination: &core.LakehouseOneLakeDiagnosticSettingsDestination{
+			Type: to.Ptr("Lakehouse"),
+			Lakehouse: &core.ItemReferenceByID{
+				ReferenceType: to.Ptr(core.ItemReferenceTypeByID),
+				ItemID:        to.Ptr("83b128a3-f58f-4eee-ab0b-e7e25a748f54"),
+				WorkspaceID:   to.Ptr("6eb233d7-b1c6-4248-9255-5a0d223f3456"),
+			},
+		},
+		Status: to.Ptr("Enabled"),
+	},
+	})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestDeploymentPipelines_ListDeploymentPipelines() {

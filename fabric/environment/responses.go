@@ -6,6 +6,12 @@
 
 package environment
 
+// ItemsClientCancelPublishEnvironmentResponse contains the response from method ItemsClient.CancelPublishEnvironment.
+type ItemsClientCancelPublishEnvironmentResponse struct {
+	// Environment properties.
+	Properties
+}
+
 // ItemsClientCreateEnvironmentResponse contains the response from method ItemsClient.BeginCreateEnvironment.
 type ItemsClientCreateEnvironmentResponse struct {
 	// An Environment item.
@@ -15,6 +21,12 @@ type ItemsClientCreateEnvironmentResponse struct {
 // ItemsClientDeleteEnvironmentResponse contains the response from method ItemsClient.DeleteEnvironment.
 type ItemsClientDeleteEnvironmentResponse struct {
 	// placeholder for future response values
+}
+
+// ItemsClientGetEnvironmentDefinitionResponse contains the response from method ItemsClient.BeginGetEnvironmentDefinition.
+type ItemsClientGetEnvironmentDefinitionResponse struct {
+	// Environment public definition response.
+	DefinitionResponse
 }
 
 // ItemsClientGetEnvironmentResponse contains the response from method ItemsClient.GetEnvironment.
@@ -29,63 +41,119 @@ type ItemsClientListEnvironmentsResponse struct {
 	Environments
 }
 
+// ItemsClientPublishEnvironmentPreviewResponse contains the response from method ItemsClient.PublishEnvironmentPreview.
+type ItemsClientPublishEnvironmentPreviewResponse struct {
+	// Environment properties.
+	Properties
+}
+
+// ItemsClientPublishEnvironmentResponse contains the response from method ItemsClient.BeginPublishEnvironment.
+type ItemsClientPublishEnvironmentResponse struct {
+	// Environment properties.
+	Properties
+}
+
+// ItemsClientUpdateEnvironmentDefinitionResponse contains the response from method ItemsClient.BeginUpdateEnvironmentDefinition.
+type ItemsClientUpdateEnvironmentDefinitionResponse struct {
+	// placeholder for future response values
+}
+
 // ItemsClientUpdateEnvironmentResponse contains the response from method ItemsClient.UpdateEnvironment.
 type ItemsClientUpdateEnvironmentResponse struct {
 	// An Environment item.
 	Environment
 }
 
-// SparkComputeClientGetPublishedSettingsResponse contains the response from method SparkComputeClient.GetPublishedSettings.
-type SparkComputeClientGetPublishedSettingsResponse struct {
-	SparkCompute
-}
-
-// SparkComputeClientGetStagingSettingsResponse contains the response from method SparkComputeClient.GetStagingSettings.
-type SparkComputeClientGetStagingSettingsResponse struct {
-	SparkCompute
-}
-
-// SparkComputeClientUpdateStagingSettingsResponse contains the response from method SparkComputeClient.UpdateStagingSettings.
-type SparkComputeClientUpdateStagingSettingsResponse struct {
-	SparkCompute
-}
-
-// SparkLibrariesClientCancelPublishResponse contains the response from method SparkLibrariesClient.CancelPublish.
-type SparkLibrariesClientCancelPublishResponse struct {
-	// Environment publish information.
-	PublishInfo
-}
-
-// SparkLibrariesClientDeleteStagingLibraryResponse contains the response from method SparkLibrariesClient.DeleteStagingLibrary.
-type SparkLibrariesClientDeleteStagingLibraryResponse struct {
+// PublishedClientExportExternalLibrariesResponse contains the response from method PublishedClient.ExportExternalLibraries.
+type PublishedClientExportExternalLibrariesResponse struct {
 	// placeholder for future response values
 }
 
-// SparkLibrariesClientGetPublishedLibrariesResponse contains the response from method SparkLibrariesClient.GetPublishedLibraries.
-type SparkLibrariesClientGetPublishedLibrariesResponse struct {
+// PublishedClientGetSparkComputePreviewResponse contains the response from method PublishedClient.GetSparkComputePreview.
+type PublishedClientGetSparkComputePreviewResponse struct {
+	SparkComputePreview
+}
+
+// PublishedClientGetSparkComputeResponse contains the response from method PublishedClient.GetSparkCompute.
+type PublishedClientGetSparkComputeResponse struct {
+	SparkCompute
+}
+
+// PublishedClientListLibrariesPreviewResponse contains the response from method PublishedClient.ListLibrariesPreview.
+type PublishedClientListLibrariesPreviewResponse struct {
+	// Environment libraries.
+	LibrariesPreview
+}
+
+// PublishedClientListLibrariesResponse contains the response from method PublishedClient.NewListLibrariesPager.
+type PublishedClientListLibrariesResponse struct {
 	// Environment libraries.
 	Libraries
 }
 
-// SparkLibrariesClientGetStagingLibrariesResponse contains the response from method SparkLibrariesClient.GetStagingLibraries.
-type SparkLibrariesClientGetStagingLibrariesResponse struct {
+// StagingClientDeleteCustomLibraryPreviewResponse contains the response from method StagingClient.DeleteCustomLibraryPreview.
+type StagingClientDeleteCustomLibraryPreviewResponse struct {
+	// placeholder for future response values
+}
+
+// StagingClientDeleteCustomLibraryResponse contains the response from method StagingClient.DeleteCustomLibrary.
+type StagingClientDeleteCustomLibraryResponse struct {
+	// placeholder for future response values
+}
+
+// StagingClientExportExternalLibrariesResponse contains the response from method StagingClient.ExportExternalLibraries.
+type StagingClientExportExternalLibrariesResponse struct {
+	// placeholder for future response values
+}
+
+// StagingClientGetSparkComputePreviewResponse contains the response from method StagingClient.GetSparkComputePreview.
+type StagingClientGetSparkComputePreviewResponse struct {
+	SparkComputePreview
+}
+
+// StagingClientGetSparkComputeResponse contains the response from method StagingClient.GetSparkCompute.
+type StagingClientGetSparkComputeResponse struct {
+	SparkCompute
+}
+
+// StagingClientImportExternalLibrariesResponse contains the response from method StagingClient.ImportExternalLibraries.
+type StagingClientImportExternalLibrariesResponse struct {
+	// placeholder for future response values
+}
+
+// StagingClientListLibrariesPreviewResponse contains the response from method StagingClient.ListLibrariesPreview.
+type StagingClientListLibrariesPreviewResponse struct {
+	// Environment libraries.
+	LibrariesPreview
+}
+
+// StagingClientListLibrariesResponse contains the response from method StagingClient.NewListLibrariesPager.
+type StagingClientListLibrariesResponse struct {
 	// Environment libraries.
 	Libraries
 }
 
-// SparkLibrariesClientPublishEnvironmentResponse contains the response from method SparkLibrariesClient.PublishEnvironment.
-type SparkLibrariesClientPublishEnvironmentResponse struct {
-	// Environment publish information.
-	PublishInfo
-
-	// Location contains the information returned from the Location header response.
-	Location *string
-
-	// RetryAfter contains the information returned from the Retry-After header response.
-	RetryAfter *int32
+// StagingClientRemoveExternalLibraryResponse contains the response from method StagingClient.RemoveExternalLibrary.
+type StagingClientRemoveExternalLibraryResponse struct {
+	// placeholder for future response values
 }
 
-// SparkLibrariesClientUploadStagingLibraryResponse contains the response from method SparkLibrariesClient.UploadStagingLibrary.
-type SparkLibrariesClientUploadStagingLibraryResponse struct {
+// StagingClientUpdateSparkComputePreviewResponse contains the response from method StagingClient.UpdateSparkComputePreview.
+type StagingClientUpdateSparkComputePreviewResponse struct {
+	SparkComputePreview
+}
+
+// StagingClientUpdateSparkComputeResponse contains the response from method StagingClient.UpdateSparkCompute.
+type StagingClientUpdateSparkComputeResponse struct {
+	SparkCompute
+}
+
+// StagingClientUploadCustomLibraryPreviewResponse contains the response from method StagingClient.UploadCustomLibraryPreview.
+type StagingClientUploadCustomLibraryPreviewResponse struct {
+	// placeholder for future response values
+}
+
+// StagingClientUploadCustomLibraryResponse contains the response from method StagingClient.UploadCustomLibrary.
+type StagingClientUploadCustomLibraryResponse struct {
 	// placeholder for future response values
 }

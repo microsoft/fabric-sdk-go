@@ -22,6 +22,7 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
+	"github.com/microsoft/fabric-sdk-go/fabric"
 	"github.com/microsoft/fabric-sdk-go/fabric/spark"
 	"github.com/microsoft/fabric-sdk-go/fabric/spark/fake"
 )
@@ -43,8 +44,10 @@ func (testsuite *FakeTestSuite) SetupSuite() {
 	testsuite.cred = &azfake.TokenCredential{}
 
 	testsuite.serverFactory = &fake.ServerFactory{}
-	testsuite.clientFactory, err = spark.NewClientFactory(testsuite.cred, nil, &azcore.ClientOptions{
-		Transport: fake.NewServerFactoryTransport(testsuite.serverFactory),
+	testsuite.clientFactory, err = spark.NewClientFactory(testsuite.cred, nil, &fabric.ClientOptions{
+		ClientOptions: azcore.ClientOptions{
+			Transport: fake.NewServerFactoryTransport(testsuite.serverFactory),
+		},
 	})
 	testsuite.Require().NoError(err, "Failed to create client factory")
 }
@@ -533,7 +536,7 @@ func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessions() {
 					WorkspaceID:   to.Ptr("f8113ba8-dd81-443e-811a-b385340f3f05"),
 				},
 				ItemName:                   to.Ptr("nb_itemName1"),
-				ItemType:                   to.Ptr(spark.ItemTypeNotebook),
+				ItemType:                   to.Ptr(spark.LivySessionItemTypeNotebook),
 				JobInstanceID:              to.Ptr("c2baabbd-5327-430c-87a6-ff4f98285601"),
 				JobType:                    to.Ptr(spark.JobTypeSparkBatch),
 				LivyID:                     to.Ptr("9611f500-bf44-42e0-a0de-78dacb374398"),
@@ -580,7 +583,7 @@ func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessions() {
 					WorkspaceID:   to.Ptr("f8113ba8-dd81-443e-811a-b385340f3f05"),
 				},
 				ItemName:                   to.Ptr("lh_itemName2"),
-				ItemType:                   to.Ptr(spark.ItemTypeLakehouse),
+				ItemType:                   to.Ptr(spark.LivySessionItemTypeLakehouse),
 				JobInstanceID:              to.Ptr("c2baabbd-5327-430c-87a6-ff4f98285601"),
 				JobType:                    to.Ptr(spark.JobTypeSparkBatch),
 				LivyID:                     to.Ptr("4311f500-bf44-42e0-a0de-78dacb374397"),
@@ -627,7 +630,7 @@ func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessions() {
 					WorkspaceID:   to.Ptr("f8113ba8-dd81-443e-811a-b385340f3f05"),
 				},
 				ItemName:                   to.Ptr("sjd_itemName3"),
-				ItemType:                   to.Ptr(spark.ItemTypeSparkJobDefinition),
+				ItemType:                   to.Ptr(spark.LivySessionItemTypeSparkJobDefinition),
 				JobInstanceID:              to.Ptr("c2baabbd-5327-430c-87a6-ff4f98285601"),
 				JobType:                    to.Ptr(spark.JobTypeSparkBatch),
 				LivyID:                     to.Ptr("7611f500-bf44-42e0-a0de-78dacb374395"),
@@ -669,6 +672,99 @@ func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessions() {
 
 	client := testsuite.clientFactory.NewLivySessionsClient()
 	pager := client.NewListLivySessionsPager(exampleWorkspaceID, &spark.LivySessionsClientListLivySessionsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.LivySessions))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessionsPreview() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List all livy sessions (Preview) example"},
+	})
+	var exampleWorkspaceID string
+	var examplePreview bool
+	exampleWorkspaceID = "f8113ba8-dd81-443e-811a-b385340f3f05"
+	examplePreview = true
+
+	exampleRes := spark.LivySessions{
+		Value: []spark.LivySession{
+			{
+				AttemptNumber:      to.Ptr[int32](1),
+				CancellationReason: to.Ptr("User cancelled the Spark batch"),
+				CapacityID:         to.Ptr("3c0cd366-dc28-4b6d-a525-4d415a8666e7"),
+				CreatorItem: &spark.ItemReferenceByID{
+					ReferenceType: to.Ptr(spark.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("8cee7699-2e81-4121-9a53-cc9025046193"),
+					WorkspaceID:   to.Ptr("f8113ba8-dd81-443e-811a-b385340f3f05"),
+				},
+				DriverCores:                   to.Ptr[int32](2),
+				DriverMemory:                  to.Ptr[int32](4),
+				DynamicAllocationMaxExecutors: to.Ptr[int32](20),
+				EndDateTime:                   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:37:30.000Z"); return t }()),
+				ExecutorCores:                 float64(4),
+				ExecutorMemory:                to.Ptr[int32](8),
+				IsDynamicAllocationEnabled:    to.Ptr(true),
+				Item: &spark.ItemReferenceByID{
+					ReferenceType: to.Ptr(spark.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("8cee7699-2e81-4121-9a53-cc9025046193"),
+					WorkspaceID:   to.Ptr("f8113ba8-dd81-443e-811a-b385340f3f05"),
+				},
+				ItemName:                   to.Ptr("spark_itemName"),
+				ItemType:                   to.Ptr(spark.LivySessionItemType("Spark")),
+				JobInstanceID:              to.Ptr("c2baabbd-5327-430c-87a6-ff4f98285601"),
+				JobType:                    to.Ptr(spark.JobTypeSparkBatch),
+				LivyID:                     to.Ptr("9611f500-bf44-42e0-a0de-78dacb374398"),
+				LivyName:                   to.Ptr("random_test_name_app"),
+				LivySessionItemResourceURI: to.Ptr(""),
+				MaxNumberOfAttempts:        to.Ptr[int32](1),
+				NumExecutors:               to.Ptr[int32](10),
+				OperationName:              to.Ptr("Batch Livy Run"),
+				Origin:                     to.Ptr(spark.OriginSubmittedJob),
+				QueuedDuration: &spark.Duration{
+					TimeUnit: to.Ptr(spark.TimeUnitSeconds),
+					Value:    to.Ptr[float32](1),
+				},
+				RunningDuration: &spark.Duration{
+					TimeUnit: to.Ptr(spark.TimeUnitSeconds),
+					Value:    to.Ptr[float32](180),
+				},
+				RuntimeVersion:     to.Ptr("1.3"),
+				SparkApplicationID: to.Ptr("application_1730933685452_0001"),
+				StartDateTime:      to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:34:11.000Z"); return t }()),
+				State:              to.Ptr(spark.StateCancelled),
+				SubmittedDateTime:  to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:32:03.000Z"); return t }()),
+				Submitter: &spark.Principal{
+					Type: to.Ptr(spark.PrincipalTypeUser),
+					ID:   to.Ptr("6f23a8a6-d954-4550-b91a-4df73ccd0311"),
+				},
+				TotalDuration: &spark.Duration{
+					TimeUnit: to.Ptr(spark.TimeUnitSeconds),
+					Value:    to.Ptr[float32](360),
+				},
+			}},
+	}
+
+	testsuite.serverFactory.LivySessionsServer.NewListLivySessionsPreviewPager = func(workspaceID string, preview bool, options *spark.LivySessionsClientListLivySessionsPreviewOptions) (resp azfake.PagerResponder[spark.LivySessionsClientListLivySessionsPreviewResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(examplePreview, preview)
+		resp = azfake.PagerResponder[spark.LivySessionsClientListLivySessionsPreviewResponse]{}
+		resp.AddPage(http.StatusOK, spark.LivySessionsClientListLivySessionsPreviewResponse{LivySessions: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewLivySessionsClient()
+	pager := client.NewListLivySessionsPreviewPager(exampleWorkspaceID, examplePreview, &spark.LivySessionsClientListLivySessionsPreviewOptions{SubmittedDateTime: nil,
+		EndDateTime:       nil,
+		SubmitterID:       nil,
+		State:             nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")

@@ -27,7 +27,7 @@ type TopologyClient struct {
 	endpoint string
 }
 
-// GetEventstreamDestination - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetEventstreamDestination - PERMISSIONS The caller must have read permissions for the eventstream.
 // REQUIRED DELEGATED SCOPES Eventstream.Read.All or Eventstream.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -97,7 +97,7 @@ func (client *TopologyClient) getEventstreamDestinationHandleResponse(resp *http
 	return result, nil
 }
 
-// GetEventstreamDestinationConnection - PERMISSIONS The caller must have contributor or higher workspace role.
+// GetEventstreamDestinationConnection - PERMISSIONS The caller must have read and write permissions for the eventstream.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS Only custom endpoints destinations are supported.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -168,7 +168,7 @@ func (client *TopologyClient) getEventstreamDestinationConnectionHandleResponse(
 	return result, nil
 }
 
-// GetEventstreamSource - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetEventstreamSource - PERMISSIONS The caller must have read permissions for the eventstream.
 // REQUIRED DELEGATED SCOPES Eventstream.Read.All or Eventstream.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -238,7 +238,7 @@ func (client *TopologyClient) getEventstreamSourceHandleResponse(resp *http.Resp
 	return result, nil
 }
 
-// GetEventstreamSourceConnection - PERMISSIONS The caller must have contributor or higher workspace role.
+// GetEventstreamSourceConnection - PERMISSIONS The caller must have read and write permissions for the eventstream.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS Only custom endpoints sources are supported.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -309,7 +309,7 @@ func (client *TopologyClient) getEventstreamSourceConnectionHandleResponse(resp 
 	return result, nil
 }
 
-// GetEventstreamTopology - PERMISSIONS The caller must have viewer or higher workspace role.
+// GetEventstreamTopology - PERMISSIONS The caller must have read permissions for the eventstream.
 // REQUIRED DELEGATED SCOPES Eventstream.Read.All or Eventstream.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -374,7 +374,7 @@ func (client *TopologyClient) getEventstreamTopologyHandleResponse(resp *http.Re
 	return result, nil
 }
 
-// PauseEventstream - PERMISSIONS The caller must have contributor or higher workspace role.
+// PauseEventstream - PERMISSIONS The caller must have read and write permissions for the eventstream.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -429,7 +429,7 @@ func (client *TopologyClient) pauseEventstreamCreateRequest(ctx context.Context,
 	return req, nil
 }
 
-// PauseEventstreamDestination - PERMISSIONS The caller must have contributor or higher workspace role.
+// PauseEventstreamDestination - PERMISSIONS The caller must have read and write permissions for the eventstream.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -489,7 +489,7 @@ func (client *TopologyClient) pauseEventstreamDestinationCreateRequest(ctx conte
 	return req, nil
 }
 
-// PauseEventstreamSource - PERMISSIONS The caller must have contributor or higher workspace role.
+// PauseEventstreamSource - PERMISSIONS The caller must have read and write permissions for the eventstream.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -549,7 +549,7 @@ func (client *TopologyClient) pauseEventstreamSourceCreateRequest(ctx context.Co
 	return req, nil
 }
 
-// ResumeEventstream - PERMISSIONS The caller must have contributor or higher workspace role.
+// ResumeEventstream - PERMISSIONS The caller must have read and write permissions for the eventstream.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -608,7 +608,7 @@ func (client *TopologyClient) resumeEventstreamCreateRequest(ctx context.Context
 	return req, nil
 }
 
-// ResumeEventstreamDestination - PERMISSIONS The caller must have contributor or higher workspace role.
+// ResumeEventstreamDestination - PERMISSIONS The caller must have read and write permissions for the eventstream.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -672,7 +672,7 @@ func (client *TopologyClient) resumeEventstreamDestinationCreateRequest(ctx cont
 	return req, nil
 }
 
-// ResumeEventstreamSource - PERMISSIONS The caller must have contributor or higher workspace role.
+// ResumeEventstreamSource - PERMISSIONS The caller must have read and write permissions for the eventstream.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.

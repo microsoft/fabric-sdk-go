@@ -12,6 +12,40 @@ type ItemsClientBeginCreateEnvironmentOptions struct {
 	ResumeToken string
 }
 
+// ItemsClientBeginGetEnvironmentDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetEnvironmentDefinition
+// method.
+type ItemsClientBeginGetEnvironmentDefinitionOptions struct {
+	// The format of the environment public definition.
+	Format *string
+
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// ItemsClientBeginPublishEnvironmentOptions contains the optional parameters for the ItemsClient.BeginPublishEnvironment
+// method.
+type ItemsClientBeginPublishEnvironmentOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// ItemsClientBeginUpdateEnvironmentDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateEnvironmentDefinition
+// method.
+type ItemsClientBeginUpdateEnvironmentDefinitionOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+
+	// When set to true and the .platform file is provided as part of the definition, the item's metadata is updated using the
+	// metadata in the .platform file
+	UpdateMetadata *bool
+}
+
+// ItemsClientCancelPublishEnvironmentOptions contains the optional parameters for the ItemsClient.CancelPublishEnvironment
+// method.
+type ItemsClientCancelPublishEnvironmentOptions struct {
+	// placeholder for future optional parameters
+}
+
 // ItemsClientDeleteEnvironmentOptions contains the optional parameters for the ItemsClient.DeleteEnvironment method.
 type ItemsClientDeleteEnvironmentOptions struct {
 	// placeholder for future optional parameters
@@ -28,60 +62,115 @@ type ItemsClientListEnvironmentsOptions struct {
 	ContinuationToken *string
 }
 
+// ItemsClientPublishEnvironmentPreviewOptions contains the optional parameters for the ItemsClient.PublishEnvironmentPreview
+// method.
+type ItemsClientPublishEnvironmentPreviewOptions struct {
+	// placeholder for future optional parameters
+}
+
 // ItemsClientUpdateEnvironmentOptions contains the optional parameters for the ItemsClient.UpdateEnvironment method.
 type ItemsClientUpdateEnvironmentOptions struct {
 	// placeholder for future optional parameters
 }
 
-// SparkComputeClientGetPublishedSettingsOptions contains the optional parameters for the SparkComputeClient.GetPublishedSettings
+// PublishedClientExportExternalLibrariesOptions contains the optional parameters for the PublishedClient.ExportExternalLibraries
 // method.
-type SparkComputeClientGetPublishedSettingsOptions struct {
+type PublishedClientExportExternalLibrariesOptions struct {
 	// placeholder for future optional parameters
 }
 
-// SparkComputeClientGetStagingSettingsOptions contains the optional parameters for the SparkComputeClient.GetStagingSettings
-// method.
-type SparkComputeClientGetStagingSettingsOptions struct {
+// PublishedClientGetSparkComputeOptions contains the optional parameters for the PublishedClient.GetSparkCompute method.
+type PublishedClientGetSparkComputeOptions struct {
 	// placeholder for future optional parameters
 }
 
-// SparkComputeClientUpdateStagingSettingsOptions contains the optional parameters for the SparkComputeClient.UpdateStagingSettings
+// PublishedClientGetSparkComputePreviewOptions contains the optional parameters for the PublishedClient.GetSparkComputePreview
 // method.
-type SparkComputeClientUpdateStagingSettingsOptions struct {
+type PublishedClientGetSparkComputePreviewOptions struct {
 	// placeholder for future optional parameters
 }
 
-// SparkLibrariesClientCancelPublishOptions contains the optional parameters for the SparkLibrariesClient.CancelPublish method.
-type SparkLibrariesClientCancelPublishOptions struct {
+// PublishedClientListLibrariesOptions contains the optional parameters for the PublishedClient.NewListLibrariesPager method.
+type PublishedClientListLibrariesOptions struct {
+	// Token to retrieve the next page of results, if available.
+	ContinuationToken *string
+}
+
+// PublishedClientListLibrariesPreviewOptions contains the optional parameters for the PublishedClient.ListLibrariesPreview
+// method.
+type PublishedClientListLibrariesPreviewOptions struct {
 	// placeholder for future optional parameters
 }
 
-// SparkLibrariesClientDeleteStagingLibraryOptions contains the optional parameters for the SparkLibrariesClient.DeleteStagingLibrary
-// method.
-type SparkLibrariesClientDeleteStagingLibraryOptions struct {
+// StagingClientDeleteCustomLibraryOptions contains the optional parameters for the StagingClient.DeleteCustomLibrary method.
+type StagingClientDeleteCustomLibraryOptions struct {
 	// placeholder for future optional parameters
 }
 
-// SparkLibrariesClientGetPublishedLibrariesOptions contains the optional parameters for the SparkLibrariesClient.GetPublishedLibraries
+// StagingClientDeleteCustomLibraryPreviewOptions contains the optional parameters for the StagingClient.DeleteCustomLibraryPreview
 // method.
-type SparkLibrariesClientGetPublishedLibrariesOptions struct {
+type StagingClientDeleteCustomLibraryPreviewOptions struct {
 	// placeholder for future optional parameters
 }
 
-// SparkLibrariesClientGetStagingLibrariesOptions contains the optional parameters for the SparkLibrariesClient.GetStagingLibraries
+// StagingClientExportExternalLibrariesOptions contains the optional parameters for the StagingClient.ExportExternalLibraries
 // method.
-type SparkLibrariesClientGetStagingLibrariesOptions struct {
+type StagingClientExportExternalLibrariesOptions struct {
 	// placeholder for future optional parameters
 }
 
-// SparkLibrariesClientPublishEnvironmentOptions contains the optional parameters for the SparkLibrariesClient.PublishEnvironment
-// method.
-type SparkLibrariesClientPublishEnvironmentOptions struct {
+// StagingClientGetSparkComputeOptions contains the optional parameters for the StagingClient.GetSparkCompute method.
+type StagingClientGetSparkComputeOptions struct {
 	// placeholder for future optional parameters
 }
 
-// SparkLibrariesClientUploadStagingLibraryOptions contains the optional parameters for the SparkLibrariesClient.UploadStagingLibrary
+// StagingClientGetSparkComputePreviewOptions contains the optional parameters for the StagingClient.GetSparkComputePreview
 // method.
-type SparkLibrariesClientUploadStagingLibraryOptions struct {
+type StagingClientGetSparkComputePreviewOptions struct {
+	// placeholder for future optional parameters
+}
+
+// StagingClientImportExternalLibrariesOptions contains the optional parameters for the StagingClient.ImportExternalLibraries
+// method.
+type StagingClientImportExternalLibrariesOptions struct {
+	// placeholder for future optional parameters
+}
+
+// StagingClientListLibrariesOptions contains the optional parameters for the StagingClient.NewListLibrariesPager method.
+type StagingClientListLibrariesOptions struct {
+	// Token to retrieve the next page of results, if available.
+	ContinuationToken *string
+}
+
+// StagingClientListLibrariesPreviewOptions contains the optional parameters for the StagingClient.ListLibrariesPreview method.
+type StagingClientListLibrariesPreviewOptions struct {
+	// placeholder for future optional parameters
+}
+
+// StagingClientRemoveExternalLibraryOptions contains the optional parameters for the StagingClient.RemoveExternalLibrary
+// method.
+type StagingClientRemoveExternalLibraryOptions struct {
+	// placeholder for future optional parameters
+}
+
+// StagingClientUpdateSparkComputeOptions contains the optional parameters for the StagingClient.UpdateSparkCompute method.
+type StagingClientUpdateSparkComputeOptions struct {
+	// placeholder for future optional parameters
+}
+
+// StagingClientUpdateSparkComputePreviewOptions contains the optional parameters for the StagingClient.UpdateSparkComputePreview
+// method.
+type StagingClientUpdateSparkComputePreviewOptions struct {
+	// placeholder for future optional parameters
+}
+
+// StagingClientUploadCustomLibraryOptions contains the optional parameters for the StagingClient.UploadCustomLibrary method.
+type StagingClientUploadCustomLibraryOptions struct {
+	// placeholder for future optional parameters
+}
+
+// StagingClientUploadCustomLibraryPreviewOptions contains the optional parameters for the StagingClient.UploadCustomLibraryPreview
+// method.
+type StagingClientUploadCustomLibraryPreviewOptions struct {
 	// placeholder for future optional parameters
 }

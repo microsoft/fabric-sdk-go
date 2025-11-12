@@ -18,9 +18,11 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 
 	"reflect"
+	"time"
 
 	"github.com/stretchr/testify/suite"
 
+	"github.com/microsoft/fabric-sdk-go/fabric"
 	"github.com/microsoft/fabric-sdk-go/fabric/sqldatabase"
 	"github.com/microsoft/fabric-sdk-go/fabric/sqldatabase/fake"
 )
@@ -42,8 +44,10 @@ func (testsuite *FakeTestSuite) SetupSuite() {
 	testsuite.cred = &azfake.TokenCredential{}
 
 	testsuite.serverFactory = &fake.ServerFactory{}
-	testsuite.clientFactory, err = sqldatabase.NewClientFactory(testsuite.cred, nil, &azcore.ClientOptions{
-		Transport: fake.NewServerFactoryTransport(testsuite.serverFactory),
+	testsuite.clientFactory, err = sqldatabase.NewClientFactory(testsuite.cred, nil, &fabric.ClientOptions{
+		ClientOptions: azcore.ClientOptions{
+			Transport: fake.NewServerFactoryTransport(testsuite.serverFactory),
+		},
 	})
 	testsuite.Require().NoError(err, "Failed to create client factory")
 }
@@ -133,6 +137,69 @@ func (testsuite *FakeTestSuite) TestItems_CreateSQLDatabase() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a SQLDatabase with definition example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCreateSQLDatabaseRequest = sqldatabase.CreateSQLDatabaseRequest{
+		Description: to.Ptr("A SQLDatabase description."),
+		Definition: &sqldatabase.Definition{
+			Parts: []sqldatabase.PublicDefinitionPart{
+				{
+					Path:        to.Ptr("definition.dacpac"),
+					Payload:     to.Ptr("ew0KICAibGFrZWhvdXNlSWQiOiAiYjliNWQzNmYtNDQ0NS00MDNiLWFjODctMDE2YjFjZDIwMjExIg0KfQ=="),
+					PayloadType: to.Ptr(sqldatabase.PayloadTypeInlineBase64),
+				}},
+		},
+		DisplayName: to.Ptr("SQLDatabase1"),
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginCreateSQLDatabase = func(ctx context.Context, workspaceID string, createSQLDatabaseRequest sqldatabase.CreateSQLDatabaseRequest, options *sqldatabase.ItemsClientBeginCreateSQLDatabaseOptions) (resp azfake.PollerResponder[sqldatabase.ItemsClientCreateSQLDatabaseResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateSQLDatabaseRequest, createSQLDatabaseRequest))
+		resp = azfake.PollerResponder[sqldatabase.ItemsClientCreateSQLDatabaseResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, sqldatabase.ItemsClientCreateSQLDatabaseResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateSQLDatabase(ctx, exampleWorkspaceID, exampleCreateSQLDatabaseRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a SQLDatabase with payload example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCreateSQLDatabaseRequest = sqldatabase.CreateSQLDatabaseRequest{
+		Description: to.Ptr("A SQLDatabase description."),
+		CreationPayload: &sqldatabase.RestoreSQLDatabaseCreationPayload{
+			CreationMode:       to.Ptr(sqldatabase.CreationModeRestore),
+			RestorePointInTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-12-01T00:00:00.000Z"); return t }()),
+			SourceDatabaseReference: &sqldatabase.ItemReferenceByID{
+				ReferenceType: to.Ptr(sqldatabase.ItemReferenceTypeByID),
+				ItemID:        to.Ptr("d96de2f4-7dd1-45ad-9ff6-37a2d6aa9861"),
+				WorkspaceID:   to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+			},
+		},
+		DisplayName: to.Ptr("SQLDatabase1"),
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginCreateSQLDatabase = func(ctx context.Context, workspaceID string, createSQLDatabaseRequest sqldatabase.CreateSQLDatabaseRequest, options *sqldatabase.ItemsClientBeginCreateSQLDatabaseOptions) (resp azfake.PollerResponder[sqldatabase.ItemsClientCreateSQLDatabaseResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateSQLDatabaseRequest, createSQLDatabaseRequest))
+		resp = azfake.PollerResponder[sqldatabase.ItemsClientCreateSQLDatabaseResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, sqldatabase.ItemsClientCreateSQLDatabaseResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateSQLDatabase(ctx, exampleWorkspaceID, exampleCreateSQLDatabaseRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestItems_GetSQLDatabase() {
@@ -152,9 +219,12 @@ func (testsuite *FakeTestSuite) TestItems_GetSQLDatabase() {
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		Properties: &sqldatabase.Properties{
-			ConnectionString: to.Ptr("Data Source=fvzeldvqgvce3b2hxvbg4hnjqu-nowrtjcsie2e3ny6v4ojbd3esa.database.fabric.microsoft.com,1433;Initial Catalog=SQLDatabase1-45c6e7cf-89b1-4a69-b4e1-5495271c7e45;MultipleActiveResultSets=False;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False"),
-			DatabaseName:     to.Ptr("SQLDatabase1-45c6e7cf-89b1-4a69-b4e1-5495271c7e45"),
-			ServerFqdn:       to.Ptr("fvzeldvqgvce3b2hxvbg4hnjqu-nowrtjcsie2e3ny6v4ojbd3esa.database.fabric.microsoft.com,1433"),
+			BackupRetentionDays:  to.Ptr[int32](7),
+			ConnectionString:     to.Ptr("Data Source=fvzeldvqgvce3b2hxvbg4hnjqu-nowrtjcsie2e3ny6v4ojbd3esa.database.fabric.microsoft.com,1433;Initial Catalog=SQLDatabase1-45c6e7cf-89b1-4a69-b4e1-5495271c7e45;MultipleActiveResultSets=False;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False"),
+			DatabaseName:         to.Ptr("SQLDatabase1-45c6e7cf-89b1-4a69-b4e1-5495271c7e45"),
+			EarliestRestorePoint: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-12-01T00:00:00.000Z"); return t }()),
+			LatestRestorePoint:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-12-02T00:00:00.000Z"); return t }()),
+			ServerFqdn:           to.Ptr("fvzeldvqgvce3b2hxvbg4hnjqu-nowrtjcsie2e3ny6v4ojbd3esa.database.fabric.microsoft.com,1433"),
 		},
 	}
 
@@ -229,5 +299,135 @@ func (testsuite *FakeTestSuite) TestItems_DeleteSQLDatabase() {
 
 	client := testsuite.clientFactory.NewItemsClient()
 	_, err = client.DeleteSQLDatabase(ctx, exampleWorkspaceID, exampleSqlDatabaseID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestItems_GetSQLDatabaseDefinition() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a Digital Twin Builder Flow public definition example"},
+	})
+	var exampleWorkspaceID string
+	var exampleSqlDatabaseID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleSqlDatabaseID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+
+	exampleRes := sqldatabase.DefinitionResponse{
+		Definition: &sqldatabase.Definition{
+			Parts: []sqldatabase.PublicDefinitionPart{
+				{
+					Path:        to.Ptr("definition.dacpac"),
+					Payload:     to.Ptr("ew0KICAibGFrZWhvdXNlSWQiOiAiYjliNWQzNmYtNDQ0NS00MDNiLWFjODctMDE2YjFjZDIwMjExIg0KfQ=="),
+					PayloadType: to.Ptr(sqldatabase.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(sqldatabase.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginGetSQLDatabaseDefinition = func(ctx context.Context, workspaceID string, sqlDatabaseID string, options *sqldatabase.ItemsClientBeginGetSQLDatabaseDefinitionOptions) (resp azfake.PollerResponder[sqldatabase.ItemsClientGetSQLDatabaseDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleSqlDatabaseID, sqlDatabaseID)
+		resp = azfake.PollerResponder[sqldatabase.ItemsClientGetSQLDatabaseDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, sqldatabase.ItemsClientGetSQLDatabaseDefinitionResponse{DefinitionResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	poller, err := client.BeginGetSQLDatabaseDefinition(ctx, exampleWorkspaceID, exampleSqlDatabaseID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DefinitionResponse))
+}
+
+func (testsuite *FakeTestSuite) TestItems_UpdateSQLDatabasesDefinition() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update a SQL database public definition example"},
+	})
+	var exampleWorkspaceID string
+	var exampleSqlDatabaseID string
+	var exampleUpdateSQLDatabaseDefinitionRequest sqldatabase.UpdateSQLDatabaseDefinitionRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleSqlDatabaseID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleUpdateSQLDatabaseDefinitionRequest = sqldatabase.UpdateSQLDatabaseDefinitionRequest{
+		Definition: &sqldatabase.Definition{
+			Parts: []sqldatabase.PublicDefinitionPart{
+				{
+					Path:        to.Ptr("definition.dacpac"),
+					Payload:     to.Ptr("ew0KICAibGFrZWhvdXNlSWQiOiAiYjliNWQzNmYtNDQ0NS00MDNiLWFjODctMDE2YjFjZDIwMjExIg0KfQ=="),
+					PayloadType: to.Ptr(sqldatabase.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(sqldatabase.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginUpdateSQLDatabasesDefinition = func(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseDefinitionRequest sqldatabase.UpdateSQLDatabaseDefinitionRequest, options *sqldatabase.ItemsClientBeginUpdateSQLDatabasesDefinitionOptions) (resp azfake.PollerResponder[sqldatabase.ItemsClientUpdateSQLDatabasesDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleSqlDatabaseID, sqlDatabaseID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateSQLDatabaseDefinitionRequest, updateSQLDatabaseDefinitionRequest))
+		resp = azfake.PollerResponder[sqldatabase.ItemsClientUpdateSQLDatabasesDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, sqldatabase.ItemsClientUpdateSQLDatabasesDefinitionResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	poller, err := client.BeginUpdateSQLDatabasesDefinition(ctx, exampleWorkspaceID, exampleSqlDatabaseID, exampleUpdateSQLDatabaseDefinitionRequest, &sqldatabase.ItemsClientBeginUpdateSQLDatabasesDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestSQLDatabase_StartMirroring() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Start mirroring example"},
+	})
+	var exampleWorkspaceID string
+	var exampleSqlDatabaseID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleSqlDatabaseID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+
+	testsuite.serverFactory.Server.StartMirroring = func(ctx context.Context, workspaceID string, sqlDatabaseID string, options *sqldatabase.ClientStartMirroringOptions) (resp azfake.Responder[sqldatabase.ClientStartMirroringResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleSqlDatabaseID, sqlDatabaseID)
+		resp = azfake.Responder[sqldatabase.ClientStartMirroringResponse]{}
+		resp.SetResponse(http.StatusOK, sqldatabase.ClientStartMirroringResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewClient()
+	_, err = client.StartMirroring(ctx, exampleWorkspaceID, exampleSqlDatabaseID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestSQLDatabase_StopMirroring() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Stop mirroring example"},
+	})
+	var exampleWorkspaceID string
+	var exampleSqlDatabaseID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleSqlDatabaseID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+
+	testsuite.serverFactory.Server.StopMirroring = func(ctx context.Context, workspaceID string, sqlDatabaseID string, options *sqldatabase.ClientStopMirroringOptions) (resp azfake.Responder[sqldatabase.ClientStopMirroringResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleSqlDatabaseID, sqlDatabaseID)
+		resp = azfake.Responder[sqldatabase.ClientStopMirroringResponse]{}
+		resp.SetResponse(http.StatusOK, sqldatabase.ClientStopMirroringResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewClient()
+	_, err = client.StopMirroring(ctx, exampleWorkspaceID, exampleSqlDatabaseID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }

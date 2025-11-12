@@ -22,6 +22,7 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
+	"github.com/microsoft/fabric-sdk-go/fabric"
 	"github.com/microsoft/fabric-sdk-go/fabric/mirroreddatabase"
 	"github.com/microsoft/fabric-sdk-go/fabric/mirroreddatabase/fake"
 )
@@ -43,8 +44,10 @@ func (testsuite *FakeTestSuite) SetupSuite() {
 	testsuite.cred = &azfake.TokenCredential{}
 
 	testsuite.serverFactory = &fake.ServerFactory{}
-	testsuite.clientFactory, err = mirroreddatabase.NewClientFactory(testsuite.cred, nil, &azcore.ClientOptions{
-		Transport: fake.NewServerFactoryTransport(testsuite.serverFactory),
+	testsuite.clientFactory, err = mirroreddatabase.NewClientFactory(testsuite.cred, nil, &fabric.ClientOptions{
+		ClientOptions: azcore.ClientOptions{
+			Transport: fake.NewServerFactoryTransport(testsuite.serverFactory),
+		},
 	})
 	testsuite.Require().NoError(err, "Failed to create client factory")
 }
@@ -408,9 +411,10 @@ func (testsuite *FakeTestSuite) TestMirroring_GetTablesMirroringStatus() {
 		Data: []mirroreddatabase.TableMirroringStatusResponse{
 			{
 				Metrics: &mirroreddatabase.TableMirroringMetrics{
-					LastSyncDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-10-08T05:07:11.066Z"); return t }()),
-					ProcessedBytes:   to.Ptr[int64](1247),
-					ProcessedRows:    to.Ptr[int64](6),
+					LastSyncDateTime:         to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-10-08T05:07:11.066Z"); return t }()),
+					LastSyncLatencyInSeconds: to.Ptr[int32](15),
+					ProcessedBytes:           to.Ptr[int64](1247),
+					ProcessedRows:            to.Ptr[int64](6),
 				},
 				SourceObjectType: to.Ptr(mirroreddatabase.TableSourceObjectTypeTable),
 				SourceSchemaName: to.Ptr("dbo"),

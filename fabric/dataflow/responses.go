@@ -53,6 +53,12 @@ type ItemsClientDeleteDataflowResponse struct {
 	// placeholder for future response values
 }
 
+// ItemsClientDiscoverDataflowParametersResponse contains the response from method ItemsClient.NewDiscoverDataflowParametersPager.
+type ItemsClientDiscoverDataflowParametersResponse struct {
+	// A list of Dataflow parameters.
+	Parameters
+}
+
 // ItemsClientGetDataflowDefinitionResponse contains the response from method ItemsClient.BeginGetDataflowDefinition.
 type ItemsClientGetDataflowDefinitionResponse struct {
 	// Dataflow public definition response.

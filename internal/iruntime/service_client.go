@@ -20,12 +20,23 @@ import (
 
 const defaultApiEndpoint = "https://api.fabric.microsoft.com"
 
+// ClientOptions contains optional settings for ServiceClient.
+type ClientOptions struct {
+	azcore.ClientOptions
+
+	// UseWorkspacePrivateLinks enables workspace-level private links support.
+	// When enabled, the base URL will include workspace ID for private link routing.
+	// Default: false (private links are disabled by default).
+	UseWorkspacePrivateLinks bool
+}
+
 // ServiceClient is used to create any client in this module.
 // It's a wrapper around azcore.Client and set default endpoint if not specified.
 // Don't use this type directly, use NewServiceClient instead.
 type ServiceClient struct {
-	Internal *azcore.Client
-	Endpoint string
+	Internal                 *azcore.Client
+	Endpoint                 string
+	UseWorkspacePrivateLinks bool
 }
 
 // NewServiceClient creates a new instance of ServiceClient with the specified values.
@@ -33,15 +44,19 @@ type ServiceClient struct {
 //   - credential - used to authorize requests. Usually a credential from azidentity.
 //   - endpoint - pass nil to accept the default values.
 //   - options - pass nil to accept the default values.
-func NewServiceClient(credential azcore.TokenCredential, version string, endpoint *string, options *azcore.ClientOptions) (*ServiceClient, error) {
+func NewServiceClient(credential azcore.TokenCredential, version string, endpoint *string, options *ClientOptions) (*ServiceClient, error) {
 	apiEndpoint, err := getEndpoint(endpoint)
 	if err != nil {
 		return nil, err
 	}
 
+	var useWorkspacePrivateLinks bool = false // Default: private links disabled
+
 	if options == nil {
-		options = &azcore.ClientOptions{}
+		options = &ClientOptions{}
 	}
+
+	useWorkspacePrivateLinks = options.UseWorkspacePrivateLinks
 
 	if reflect.ValueOf(options.Cloud).IsZero() {
 		options.Cloud = cloud.AzurePublic
@@ -55,14 +70,21 @@ func NewServiceClient(credential azcore.TokenCredential, version string, endpoin
 		},
 	}
 
-	client, err := azcore.NewClient("fabric", "v"+version, plOpts, options)
+	// Add private links policy if enabled
+	if useWorkspacePrivateLinks {
+		privateLinkPolicy := NewPrivateLinkPolicy()
+		plOpts.PerCall = append(plOpts.PerCall, privateLinkPolicy)
+	}
+
+	client, err := azcore.NewClient("fabric", "v"+version, plOpts, &options.ClientOptions)
 	if err != nil {
 		return nil, err
 	}
 
 	return &ServiceClient{
-		Internal: client,
-		Endpoint: apiEndpoint,
+		Internal:                 client,
+		Endpoint:                 apiEndpoint,
+		UseWorkspacePrivateLinks: useWorkspacePrivateLinks,
 	}, nil
 }
 

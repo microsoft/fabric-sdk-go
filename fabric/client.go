@@ -12,11 +12,15 @@ import (
 	"github.com/microsoft/fabric-sdk-go/internal/iruntime"
 )
 
+// ClientOptions contains the optional parameters when creating a Client.
+type ClientOptions iruntime.ClientOptions
+
 // Client is a Client factory used to create any client in this module.
 // Don't use this type directly, use NewClient instead.
 type Client struct {
-	Internal *azcore.Client
-	Endpoint string
+	Internal                 *azcore.Client
+	Endpoint                 string
+	UseWorkspacePrivateLinks bool // Default: false (private links disabled)
 }
 
 // NewClient creates a new instance of Client with the specified values.
@@ -24,14 +28,15 @@ type Client struct {
 //   - credential - used to authorize requests. Usually a credential from azidentity.
 //   - endpoint - pass nil to accept the default values.
 //   - options - pass nil to accept the default values.
-func NewClient(credential azcore.TokenCredential, endpoint *string, options *azcore.ClientOptions) (*Client, error) {
-	sc, err := iruntime.NewServiceClient(credential, Version, endpoint, options)
+func NewClient(credential azcore.TokenCredential, endpoint *string, options *ClientOptions) (*Client, error) {
+	sc, err := iruntime.NewServiceClient(credential, Version, endpoint, (*iruntime.ClientOptions)(options))
 	if err != nil {
 		return nil, err
 	}
 
 	return &Client{
-		Internal: sc.Internal,
-		Endpoint: sc.Endpoint,
+		Internal:                 sc.Internal,
+		Endpoint:                 sc.Endpoint,
+		UseWorkspacePrivateLinks: sc.UseWorkspacePrivateLinks,
 	}, nil
 }

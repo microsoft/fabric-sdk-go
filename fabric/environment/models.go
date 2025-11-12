@@ -22,6 +22,9 @@ type CreateEnvironmentRequest struct {
 	// REQUIRED; The environment display name.
 	DisplayName *string
 
+	// The environment public definition.
+	Definition *Definition
+
 	// The environment description. Maximum length is 256 characters.
 	Description *string
 
@@ -44,15 +47,65 @@ type CustomLibraries struct {
 	WheelFiles []string
 }
 
+// CustomLibrary - Custom library.
+type CustomLibrary struct {
+	// REQUIRED; A library type. Additional types may be added over time.
+	LibraryType *LibraryType
+
+	// REQUIRED; The name of library.
+	Name *string
+}
+
+// GetLibrary implements the LibraryClassification interface for type CustomLibrary.
+func (c *CustomLibrary) GetLibrary() *Library {
+	return &Library{
+		LibraryType: c.LibraryType,
+		Name:        c.Name,
+	}
+}
+
+// Definition - Environment public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/environment-definition]
+// for more details on how to craft a environment public
+// definition.
+type Definition struct {
+	// REQUIRED; A list of definition parts.
+	Parts []DefinitionPart
+
+	// The format of the Environment definition.
+	Format *string
+}
+
+// DefinitionPart - Environment definition part object.
+type DefinitionPart struct {
+	// The environment part path.
+	Path *string
+
+	// The environment part payload.
+	Payload *string
+
+	// The payload type.
+	PayloadType *PayloadType
+}
+
+// DefinitionResponse - Environment public definition response.
+type DefinitionResponse struct {
+	// READ-ONLY; Environment public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/environment-definition]
+	// for more details on how to craft a environment public
+	// definition.
+	Definition *Definition
+}
+
 // DynamicExecutorAllocationProperties - Dynamic executor allocation proerties.
 type DynamicExecutorAllocationProperties struct {
 	// REQUIRED; The status of the dynamic executor allocation. False - Disabled, true - Enabled.
 	Enabled *bool
 
-	// REQUIRED; The maximum executor number for dynamic allocation and the minimum for this property is 1
+	// REQUIRED; The maximum executor number for dynamic allocation and the minimum for this property is 1. The maximum value
+	// has to be lower than the instance pool maxNodeCount.
 	MaxExecutors *int32
 
-	// REQUIRED; The minimum executor number for dynamic allocation and the minimum for this property is 1.
+	// REQUIRED; The minimum executor number for dynamic allocation and the minimum for this property is 1. The maximum value
+	// has to be lower than maxExecutors.
 	MinExecutors *int32
 }
 
@@ -68,7 +121,7 @@ type Environment struct {
 	DisplayName *string
 
 	// The environment properties.
-	Properties *PublishInfo
+	Properties *Properties
 
 	// READ-ONLY; The folder ID.
 	FolderID *string
@@ -95,16 +148,36 @@ type Environments struct {
 	ContinuationURI *string
 }
 
-// InstancePool - An instance of a pool.
-type InstancePool struct {
-	// REQUIRED; Instance pool name.
+// ExternalLibrary - External library.
+type ExternalLibrary struct {
+	// REQUIRED; A library type. Additional types may be added over time.
+	LibraryType *LibraryType
+
+	// REQUIRED; The name of library.
 	Name *string
 
-	// REQUIRED; Instance pool type.
-	Type *CustomPoolType
+	// REQUIRED; The version of external library.
+	Version *string
+}
 
+// GetLibrary implements the LibraryClassification interface for type ExternalLibrary.
+func (e *ExternalLibrary) GetLibrary() *Library {
+	return &Library{
+		LibraryType: e.LibraryType,
+		Name:        e.Name,
+	}
+}
+
+// InstancePool - An instance of a pool.
+type InstancePool struct {
 	// Instance pool ID.
 	ID *string
+
+	// Instance pool name.
+	Name *string
+
+	// Instance pool type.
+	Type *CustomPoolType
 }
 
 // ItemTag - Represents a tag applied on an item.
@@ -118,6 +191,18 @@ type ItemTag struct {
 
 // Libraries - Environment libraries.
 type Libraries struct {
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+
+	// All custom and external libraries (.py, .whl, .jar, .tar.gz and external).
+	Libraries []LibraryClassification
+}
+
+// LibrariesPreview - Environment libraries.
+type LibrariesPreview struct {
 	// Custom libraries (.py, .whl, .jar, .tar.gz).
 	CustomLibraries *CustomLibraries
 
@@ -125,15 +210,33 @@ type Libraries struct {
 	EnvironmentYml *string
 }
 
+// Library - Custom or external library.
+type Library struct {
+	// REQUIRED; A library type. Additional types may be added over time.
+	LibraryType *LibraryType
+
+	// REQUIRED; The name of library.
+	Name *string
+}
+
+// GetLibrary implements the LibraryClassification interface for type Library.
+func (l *Library) GetLibrary() *Library { return l }
+
+// Properties - Environment properties.
+type Properties struct {
+	// REQUIRED; Environment publish operation details.
+	PublishDetails *PublishDetails
+}
+
 // PublishDetails - Details of publish operation.
 type PublishDetails struct {
 	// Environment component publish information.
 	ComponentPublishInfo *ComponentPublishInfo
 
-	// End time of publish operation.
+	// End time of publish operation in UTC, using the YYYY-MM-DDTHH:mm:ss.sssssssZ format.
 	EndTime *time.Time
 
-	// Start time of publish operation.
+	// Start time of publish operation in UTC, using the YYYY-MM-DDTHH:mm:ss.sssssssZ format.
 	StartTime *time.Time
 
 	// Publish state. Additional state types may be added over time.
@@ -143,27 +246,30 @@ type PublishDetails struct {
 	TargetVersion *string
 }
 
-// PublishInfo - Environment publish information.
-type PublishInfo struct {
-	// REQUIRED; Environment publish operation details.
-	PublishDetails *PublishDetails
+// RemoveExternalLibrariesRequest - Request to delete an external library.
+type RemoveExternalLibrariesRequest struct {
+	// REQUIRED; The name of library.
+	Name *string
+
+	// REQUIRED; The version of external library.
+	Version *string
 }
 
 type SparkCompute struct {
-	// Spark driver core.
+	// Spark driver core. Must be one of the following values: 4, 8, 16, 32, 64.
 	DriverCores *int32
 
 	// Spark driver memory.
-	DriverMemory *string
+	DriverMemory *CustomPoolMemory
 
 	// Dynamic executor allocation.
 	DynamicExecutorAllocation *DynamicExecutorAllocationProperties
 
-	// Spark executor core.
+	// Spark executor core. Must be one of the following values: 4, 8, 16, 32, 64.
 	ExecutorCores *int32
 
 	// Spark executor memory.
-	ExecutorMemory *string
+	ExecutorMemory *CustomPoolMemory
 
 	// Environment pool has to be a valid custom pool. "Starter Pool" means use starter pool.
 	InstancePool *InstancePool
@@ -172,6 +278,33 @@ type SparkCompute struct {
 	RuntimeVersion *string
 
 	// Spark properties.
+	SparkProperties []SparkProperty
+}
+
+type SparkComputePreview struct {
+	// Spark driver core. Must be one of the following values: 4, 8, 16, 32, 64.
+	DriverCores *int32
+
+	// Spark driver memory.
+	DriverMemory *string
+
+	// Dynamic executor allocation.
+	DynamicExecutorAllocation *DynamicExecutorAllocationProperties
+
+	// Spark executor core. Must be one of the following values: 4, 8, 16, 32, 64.
+	ExecutorCores *int32
+
+	// Spark executor memory.
+	ExecutorMemory *string
+
+	// Environment pool has to be a valid custom pool. "Starter Pool" means use starter pool.
+	InstancePool *InstancePool
+
+	// Runtime version, find the supported fabric runtimes [/fabric/data-engineering/runtime].
+	RuntimeVersion *string
+
+	// Spark properties. The dictionary-based contract for defining Spark properties will be deprecated on January 31, 2026. Please
+	// migrate to using a list of key-value pairs instead.
 	SparkProperties any
 }
 
@@ -181,10 +314,27 @@ type SparkLibraries struct {
 	State *PublishState
 }
 
+// SparkProperty - A Spark property key and its value.
+type SparkProperty struct {
+	// The Spark property key.
+	Key *string
+
+	// The Spark property value.
+	Value *string
+}
+
 // SparkSettings - Spark settings.
 type SparkSettings struct {
 	// Publish state. Additional state types may be added over time.
 	State *PublishState
+}
+
+// UpdateEnvironmentDefinitionRequest - Update environment public definition request payload.
+type UpdateEnvironmentDefinitionRequest struct {
+	// REQUIRED; Environment public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/environment-definition]
+	// for more details on how to craft a environment public
+	// definition.
+	Definition *Definition
 }
 
 // UpdateEnvironmentRequest - Update environment request.
@@ -197,6 +347,32 @@ type UpdateEnvironmentRequest struct {
 }
 
 type UpdateEnvironmentSparkComputeRequest struct {
+	// Spark driver core. Must be one of the following values: 4, 8, 16, 32, 64.
+	DriverCores *int32
+
+	// Spark driver memory.
+	DriverMemory *CustomPoolMemory
+
+	// Dynamic executor allocation.
+	DynamicExecutorAllocation *DynamicExecutorAllocationProperties
+
+	// Spark executor core. Must be one of the following values: 4, 8, 16, 32, 64.
+	ExecutorCores *int32
+
+	// Spark executor memory.
+	ExecutorMemory *CustomPoolMemory
+
+	// Environment pool has to be a valid custom pool. The name for a default workspace pool is Starter Pool.
+	InstancePool *InstancePool
+
+	// Runtime version, find the supported fabric runtimes [/fabric/data-engineering/runtime]. For example: 1.3
+	RuntimeVersion *string
+
+	// Spark properties.
+	SparkProperties []SparkProperty
+}
+
+type UpdateEnvironmentSparkComputeRequestPreview struct {
 	// Spark driver core.
 	DriverCores *int32
 
@@ -215,9 +391,10 @@ type UpdateEnvironmentSparkComputeRequest struct {
 	// Environment pool has to be a valid custom pool. The name for a default workspace pool is Starter Pool.
 	InstancePool *InstancePool
 
-	// Runtime version, find the supported fabric runtimes [/fabric/data-engineering/runtime]. For example: 1.3
+	// Runtime version, find the supported fabric runtimes [/fabric/data-engineering/runtime].
 	RuntimeVersion *string
 
-	// Spark properties.
+	// Spark properties. The dictionary-based contract for defining Spark properties will be deprecated on January 31, 2026. Please
+	// migrate to using a list of key-value pairs instead.
 	SparkProperties any
 }

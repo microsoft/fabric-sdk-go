@@ -10,6 +10,8 @@ import (
 	"context"
 	"log"
 
+	"time"
+
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 
@@ -69,7 +71,7 @@ func ExampleItemsClient_NewListSQLDatabasesPager() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_BeginCreateSQLDatabase() {
+func ExampleItemsClient_BeginCreateSQLDatabase_createASqlDatabaseExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -82,6 +84,71 @@ func ExampleItemsClient_BeginCreateSQLDatabase() {
 	poller, err := clientFactory.NewItemsClient().BeginCreateSQLDatabase(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", sqldatabase.CreateSQLDatabaseRequest{
 		Description: to.Ptr("A SQLDatabase description."),
 		DisplayName: to.Ptr("SQLDatabase 1"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginCreateSQLDatabase_createASqlDatabaseWithDefinitionExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := sqldatabase.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginCreateSQLDatabase(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", sqldatabase.CreateSQLDatabaseRequest{
+		Description: to.Ptr("A SQLDatabase description."),
+		Definition: &sqldatabase.Definition{
+			Parts: []sqldatabase.PublicDefinitionPart{
+				{
+					Path:        to.Ptr("definition.dacpac"),
+					Payload:     to.Ptr("ew0KICAibGFrZWhvdXNlSWQiOiAiYjliNWQzNmYtNDQ0NS00MDNiLWFjODctMDE2YjFjZDIwMjExIg0KfQ=="),
+					PayloadType: to.Ptr(sqldatabase.PayloadTypeInlineBase64),
+				}},
+		},
+		DisplayName: to.Ptr("SQLDatabase1"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginCreateSQLDatabase_createASqlDatabaseWithPayloadExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := sqldatabase.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginCreateSQLDatabase(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", sqldatabase.CreateSQLDatabaseRequest{
+		Description: to.Ptr("A SQLDatabase description."),
+		CreationPayload: &sqldatabase.RestoreSQLDatabaseCreationPayload{
+			CreationMode:       to.Ptr(sqldatabase.CreationModeRestore),
+			RestorePointInTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-12-01T00:00:00.000Z"); return t }()),
+			SourceDatabaseReference: &sqldatabase.ItemReferenceByID{
+				ReferenceType: to.Ptr(sqldatabase.ItemReferenceTypeByID),
+				ItemID:        to.Ptr("d96de2f4-7dd1-45ad-9ff6-37a2d6aa9861"),
+				WorkspaceID:   to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+			},
+		},
+		DisplayName: to.Ptr("SQLDatabase1"),
 	}, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
@@ -117,8 +184,11 @@ func ExampleItemsClient_GetSQLDatabase() {
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// 	Properties: &sqldatabase.Properties{
+	// 		BackupRetentionDays: to.Ptr[int32](7),
 	// 		ConnectionString: to.Ptr("Data Source=fvzeldvqgvce3b2hxvbg4hnjqu-nowrtjcsie2e3ny6v4ojbd3esa.database.fabric.microsoft.com,1433;Initial Catalog=SQLDatabase1-45c6e7cf-89b1-4a69-b4e1-5495271c7e45;MultipleActiveResultSets=False;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False"),
 	// 		DatabaseName: to.Ptr("SQLDatabase1-45c6e7cf-89b1-4a69-b4e1-5495271c7e45"),
+	// 		EarliestRestorePoint: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-12-01T00:00:00.000Z"); return t}()),
+	// 		LatestRestorePoint: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-12-02T00:00:00.000Z"); return t}()),
 	// 		ServerFqdn: to.Ptr("fvzeldvqgvce3b2hxvbg4hnjqu-nowrtjcsie2e3ny6v4ojbd3esa.database.fabric.microsoft.com,1433"),
 	// 	},
 	// }
@@ -167,5 +237,79 @@ func ExampleItemsClient_DeleteSQLDatabase() {
 	_, err = clientFactory.NewItemsClient().DeleteSQLDatabase(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginGetSQLDatabaseDefinition() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := sqldatabase.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginGetSQLDatabaseDefinition(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	res, err := poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.DefinitionResponse = sqldatabase.DefinitionResponse{
+	// 	Definition: &sqldatabase.Definition{
+	// 		Parts: []sqldatabase.PublicDefinitionPart{
+	// 			{
+	// 				Path: to.Ptr("definition.dacpac"),
+	// 				Payload: to.Ptr("ew0KICAibGFrZWhvdXNlSWQiOiAiYjliNWQzNmYtNDQ0NS00MDNiLWFjODctMDE2YjFjZDIwMjExIg0KfQ=="),
+	// 				PayloadType: to.Ptr(sqldatabase.PayloadTypeInlineBase64),
+	// 			},
+	// 			{
+	// 				Path: to.Ptr(".platform"),
+	// 				Payload: to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+	// 				PayloadType: to.Ptr(sqldatabase.PayloadTypeInlineBase64),
+	// 		}},
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginUpdateSQLDatabasesDefinition() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := sqldatabase.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginUpdateSQLDatabasesDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", sqldatabase.UpdateSQLDatabaseDefinitionRequest{
+		Definition: &sqldatabase.Definition{
+			Parts: []sqldatabase.PublicDefinitionPart{
+				{
+					Path:        to.Ptr("definition.dacpac"),
+					Payload:     to.Ptr("ew0KICAibGFrZWhvdXNlSWQiOiAiYjliNWQzNmYtNDQ0NS00MDNiLWFjODctMDE2YjFjZDIwMjExIg0KfQ=="),
+					PayloadType: to.Ptr(sqldatabase.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(sqldatabase.PayloadTypeInlineBase64),
+				}},
+		},
+	}, &sqldatabase.ItemsClientBeginUpdateSQLDatabasesDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
 	}
 }

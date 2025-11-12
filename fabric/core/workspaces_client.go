@@ -467,6 +467,71 @@ func (client *WorkspacesClient) deprovisionIdentityCreateRequest(ctx context.Con
 	return req, nil
 }
 
+// GetGitOutboundPolicy - In cases the workspace restricts outbound policy, a workspace admin needs to allow the use of Git
+// integration on the specified workspace.
+// PERMISSIONS The caller must have viewer or higher workspace role.
+// REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - options - WorkspacesClientGetGitOutboundPolicyOptions contains the optional parameters for the WorkspacesClient.GetGitOutboundPolicy
+//     method.
+func (client *WorkspacesClient) GetGitOutboundPolicy(ctx context.Context, workspaceID string, options *WorkspacesClientGetGitOutboundPolicyOptions) (WorkspacesClientGetGitOutboundPolicyResponse, error) {
+	var err error
+	const operationName = "core.WorkspacesClient.GetGitOutboundPolicy"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getGitOutboundPolicyCreateRequest(ctx, workspaceID, options)
+	if err != nil {
+		return WorkspacesClientGetGitOutboundPolicyResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientGetGitOutboundPolicyResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return WorkspacesClientGetGitOutboundPolicyResponse{}, err
+	}
+	resp, err := client.getGitOutboundPolicyHandleResponse(httpResp)
+	return resp, err
+}
+
+// getGitOutboundPolicyCreateRequest creates the GetGitOutboundPolicy request.
+func (client *WorkspacesClient) getGitOutboundPolicyCreateRequest(ctx context.Context, workspaceID string, _ *WorkspacesClientGetGitOutboundPolicyOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/networking/communicationPolicy/outbound/git"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getGitOutboundPolicyHandleResponse handles the GetGitOutboundPolicy response.
+func (client *WorkspacesClient) getGitOutboundPolicyHandleResponse(resp *http.Response) (WorkspacesClientGetGitOutboundPolicyResponse, error) {
+	result := WorkspacesClientGetGitOutboundPolicyResponse{}
+	if val := resp.Header.Get("ETag"); val != "" {
+		result.ETag = &val
+	}
+	if err := runtime.UnmarshalAsJSON(resp, &result.NetworkRules); err != nil {
+		return WorkspacesClientGetGitOutboundPolicyResponse{}, err
+	}
+	return result, nil
+}
+
 // GetNetworkCommunicationPolicy - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
 // purposes only. It may change based on feedback and is not recommended for production use.
 // PERMISSIONS The caller must have viewer or higher workspace role.
@@ -528,6 +593,136 @@ func (client *WorkspacesClient) getNetworkCommunicationPolicyHandleResponse(resp
 	}
 	if err := runtime.UnmarshalAsJSON(resp, &result.WorkspaceNetworkingCommunicationPolicy); err != nil {
 		return WorkspacesClientGetNetworkCommunicationPolicyResponse{}, err
+	}
+	return result, nil
+}
+
+// GetOutboundCloudConnectionRules - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must have viewer or higher workspace role.
+// REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - Unique identifier of the workspace whose outbound rules are being queried.
+//   - options - WorkspacesClientGetOutboundCloudConnectionRulesOptions contains the optional parameters for the WorkspacesClient.GetOutboundCloudConnectionRules
+//     method.
+func (client *WorkspacesClient) GetOutboundCloudConnectionRules(ctx context.Context, workspaceID string, options *WorkspacesClientGetOutboundCloudConnectionRulesOptions) (WorkspacesClientGetOutboundCloudConnectionRulesResponse, error) {
+	var err error
+	const operationName = "core.WorkspacesClient.GetOutboundCloudConnectionRules"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getOutboundCloudConnectionRulesCreateRequest(ctx, workspaceID, options)
+	if err != nil {
+		return WorkspacesClientGetOutboundCloudConnectionRulesResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientGetOutboundCloudConnectionRulesResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return WorkspacesClientGetOutboundCloudConnectionRulesResponse{}, err
+	}
+	resp, err := client.getOutboundCloudConnectionRulesHandleResponse(httpResp)
+	return resp, err
+}
+
+// getOutboundCloudConnectionRulesCreateRequest creates the GetOutboundCloudConnectionRules request.
+func (client *WorkspacesClient) getOutboundCloudConnectionRulesCreateRequest(ctx context.Context, workspaceID string, _ *WorkspacesClientGetOutboundCloudConnectionRulesOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/networking/communicationPolicy/outbound/connections"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getOutboundCloudConnectionRulesHandleResponse handles the GetOutboundCloudConnectionRules response.
+func (client *WorkspacesClient) getOutboundCloudConnectionRulesHandleResponse(resp *http.Response) (WorkspacesClientGetOutboundCloudConnectionRulesResponse, error) {
+	result := WorkspacesClientGetOutboundCloudConnectionRulesResponse{}
+	if val := resp.Header.Get("ETag"); val != "" {
+		result.ETag = &val
+	}
+	if err := runtime.UnmarshalAsJSON(resp, &result.WorkspaceOutboundConnections); err != nil {
+		return WorkspacesClientGetOutboundCloudConnectionRulesResponse{}, err
+	}
+	return result, nil
+}
+
+// GetOutboundGatewayRules - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must have viewer or higher workspace role.
+// REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - Unique identifier of the workspace whose outbound rules are being queried.
+//   - options - WorkspacesClientGetOutboundGatewayRulesOptions contains the optional parameters for the WorkspacesClient.GetOutboundGatewayRules
+//     method.
+func (client *WorkspacesClient) GetOutboundGatewayRules(ctx context.Context, workspaceID string, options *WorkspacesClientGetOutboundGatewayRulesOptions) (WorkspacesClientGetOutboundGatewayRulesResponse, error) {
+	var err error
+	const operationName = "core.WorkspacesClient.GetOutboundGatewayRules"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getOutboundGatewayRulesCreateRequest(ctx, workspaceID, options)
+	if err != nil {
+		return WorkspacesClientGetOutboundGatewayRulesResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientGetOutboundGatewayRulesResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return WorkspacesClientGetOutboundGatewayRulesResponse{}, err
+	}
+	resp, err := client.getOutboundGatewayRulesHandleResponse(httpResp)
+	return resp, err
+}
+
+// getOutboundGatewayRulesCreateRequest creates the GetOutboundGatewayRules request.
+func (client *WorkspacesClient) getOutboundGatewayRulesCreateRequest(ctx context.Context, workspaceID string, _ *WorkspacesClientGetOutboundGatewayRulesOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/networking/communicationPolicy/outbound/gateways"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getOutboundGatewayRulesHandleResponse handles the GetOutboundGatewayRules response.
+func (client *WorkspacesClient) getOutboundGatewayRulesHandleResponse(resp *http.Response) (WorkspacesClientGetOutboundGatewayRulesResponse, error) {
+	result := WorkspacesClientGetOutboundGatewayRulesResponse{}
+	if val := resp.Header.Get("ETag"); val != "" {
+		result.ETag = &val
+	}
+	if err := runtime.UnmarshalAsJSON(resp, &result.WorkspaceOutboundGateways); err != nil {
+		return WorkspacesClientGetOutboundGatewayRulesResponse{}, err
 	}
 	return result, nil
 }
@@ -862,6 +1057,78 @@ func (client *WorkspacesClient) provisionIdentityCreateRequest(ctx context.Conte
 	return req, nil
 }
 
+// SetGitOutboundPolicy - This API uses the PUT method and will overwrite all settings. In cases the workspace restrict outbound
+// policy, a workspace admin needs to allow the use of Git integration on the specified workspace.
+// When there's no outbound restriction on the workspace, changing this property will fail and it will not impact Git integration
+// setting. Always run Get Git outbound Policy first and provide full policy
+// in the request body.
+// PERMISSIONS The caller must have admin workspace role.
+// REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - setWorkspaceGitNetworkingCommunicationPolicy - Set workspace Git outbound policy request payload.
+//   - options - WorkspacesClientSetGitOutboundPolicyOptions contains the optional parameters for the WorkspacesClient.SetGitOutboundPolicy
+//     method.
+func (client *WorkspacesClient) SetGitOutboundPolicy(ctx context.Context, workspaceID string, setWorkspaceGitNetworkingCommunicationPolicy NetworkRules, options *WorkspacesClientSetGitOutboundPolicyOptions) (WorkspacesClientSetGitOutboundPolicyResponse, error) {
+	var err error
+	const operationName = "core.WorkspacesClient.SetGitOutboundPolicy"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.setGitOutboundPolicyCreateRequest(ctx, workspaceID, setWorkspaceGitNetworkingCommunicationPolicy, options)
+	if err != nil {
+		return WorkspacesClientSetGitOutboundPolicyResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientSetGitOutboundPolicyResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return WorkspacesClientSetGitOutboundPolicyResponse{}, err
+	}
+	resp, err := client.setGitOutboundPolicyHandleResponse(httpResp)
+	return resp, err
+}
+
+// setGitOutboundPolicyCreateRequest creates the SetGitOutboundPolicy request.
+func (client *WorkspacesClient) setGitOutboundPolicyCreateRequest(ctx context.Context, workspaceID string, setWorkspaceGitNetworkingCommunicationPolicy NetworkRules, options *WorkspacesClientSetGitOutboundPolicyOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/networking/communicationPolicy/outbound/git"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPut, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if options != nil && options.IfMatch != nil {
+		req.Raw().Header["If-Match"] = []string{*options.IfMatch}
+	}
+	if err := runtime.MarshalAsJSON(req, setWorkspaceGitNetworkingCommunicationPolicy); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// setGitOutboundPolicyHandleResponse handles the SetGitOutboundPolicy response.
+func (client *WorkspacesClient) setGitOutboundPolicyHandleResponse(resp *http.Response) (WorkspacesClientSetGitOutboundPolicyResponse, error) {
+	result := WorkspacesClientSetGitOutboundPolicyResponse{}
+	if val := resp.Header.Get("ETag"); val != "" {
+		result.ETag = &val
+	}
+	return result, nil
+}
+
 // SetNetworkCommunicationPolicy - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
 // purposes only. It may change based on feedback and is not recommended for production use.
 // PERMISSIONS The caller must have admin workspace role.
@@ -925,6 +1192,150 @@ func (client *WorkspacesClient) setNetworkCommunicationPolicyCreateRequest(ctx c
 // setNetworkCommunicationPolicyHandleResponse handles the SetNetworkCommunicationPolicy response.
 func (client *WorkspacesClient) setNetworkCommunicationPolicyHandleResponse(resp *http.Response) (WorkspacesClientSetNetworkCommunicationPolicyResponse, error) {
 	result := WorkspacesClientSetNetworkCommunicationPolicyResponse{}
+	if val := resp.Header.Get("ETag"); val != "" {
+		result.ETag = &val
+	}
+	return result, nil
+}
+
+// SetOutboundCloudConnectionRules - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// [!NOTE] Outbound access protection rules are only enforced if the workspace’s network communication policy has outbound.publicAccessRules.defaultAction
+// set to Deny. If OAP is not enabled on workspace,
+// API fails as outbound connections are not being restricted.
+// [!NOTE] This API uses the PUT method and will overwrite all outbound access connections for the workspace. Remaining policy
+// will be set to default value if partial policy is provided in the request
+// body. Always run Get first and provide full policy in the request body.
+// PERMISSIONS The caller must have admin workspace role.
+// REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - Unique identifier of the workspace to update.
+//   - workspaceOutboundConnections - Set outbound access protection cloud connection rules for the workspace request payload.
+//   - options - WorkspacesClientSetOutboundCloudConnectionRulesOptions contains the optional parameters for the WorkspacesClient.SetOutboundCloudConnectionRules
+//     method.
+func (client *WorkspacesClient) SetOutboundCloudConnectionRules(ctx context.Context, workspaceID string, workspaceOutboundConnections WorkspaceOutboundConnections, options *WorkspacesClientSetOutboundCloudConnectionRulesOptions) (WorkspacesClientSetOutboundCloudConnectionRulesResponse, error) {
+	var err error
+	const operationName = "core.WorkspacesClient.SetOutboundCloudConnectionRules"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.setOutboundCloudConnectionRulesCreateRequest(ctx, workspaceID, workspaceOutboundConnections, options)
+	if err != nil {
+		return WorkspacesClientSetOutboundCloudConnectionRulesResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientSetOutboundCloudConnectionRulesResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return WorkspacesClientSetOutboundCloudConnectionRulesResponse{}, err
+	}
+	resp, err := client.setOutboundCloudConnectionRulesHandleResponse(httpResp)
+	return resp, err
+}
+
+// setOutboundCloudConnectionRulesCreateRequest creates the SetOutboundCloudConnectionRules request.
+func (client *WorkspacesClient) setOutboundCloudConnectionRulesCreateRequest(ctx context.Context, workspaceID string, workspaceOutboundConnections WorkspaceOutboundConnections, _ *WorkspacesClientSetOutboundCloudConnectionRulesOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/networking/communicationPolicy/outbound/connections"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPut, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, workspaceOutboundConnections); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// setOutboundCloudConnectionRulesHandleResponse handles the SetOutboundCloudConnectionRules response.
+func (client *WorkspacesClient) setOutboundCloudConnectionRulesHandleResponse(resp *http.Response) (WorkspacesClientSetOutboundCloudConnectionRulesResponse, error) {
+	result := WorkspacesClientSetOutboundCloudConnectionRulesResponse{}
+	if val := resp.Header.Get("ETag"); val != "" {
+		result.ETag = &val
+	}
+	return result, nil
+}
+
+// SetOutboundGatewayRules - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// [!NOTE] Outbound access protection rules are only enforced if the workspace’s network communication policy has outbound.publicAccessRules.defaultAction
+// set to Deny. If OAP is not enabled on workspace,
+// API fails as outbound connections are not being restricted.
+// [!NOTE] This API uses the PUT method and will overwrite all outbound access gateways for the workspace. Remaining policy
+// will be set to default value if partial policy is provided in the request body.
+// Always run Get first and provide full policy in the request body.
+// PERMISSIONS The caller must have admin workspace role.
+// REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - Unique identifier of the workspace to update.
+//   - workspaceOutboundGateways - Set outbound access protection gateway rules for the workspace request payload.
+//   - options - WorkspacesClientSetOutboundGatewayRulesOptions contains the optional parameters for the WorkspacesClient.SetOutboundGatewayRules
+//     method.
+func (client *WorkspacesClient) SetOutboundGatewayRules(ctx context.Context, workspaceID string, workspaceOutboundGateways WorkspaceOutboundGateways, options *WorkspacesClientSetOutboundGatewayRulesOptions) (WorkspacesClientSetOutboundGatewayRulesResponse, error) {
+	var err error
+	const operationName = "core.WorkspacesClient.SetOutboundGatewayRules"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.setOutboundGatewayRulesCreateRequest(ctx, workspaceID, workspaceOutboundGateways, options)
+	if err != nil {
+		return WorkspacesClientSetOutboundGatewayRulesResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientSetOutboundGatewayRulesResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return WorkspacesClientSetOutboundGatewayRulesResponse{}, err
+	}
+	resp, err := client.setOutboundGatewayRulesHandleResponse(httpResp)
+	return resp, err
+}
+
+// setOutboundGatewayRulesCreateRequest creates the SetOutboundGatewayRules request.
+func (client *WorkspacesClient) setOutboundGatewayRulesCreateRequest(ctx context.Context, workspaceID string, workspaceOutboundGateways WorkspaceOutboundGateways, _ *WorkspacesClientSetOutboundGatewayRulesOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/networking/communicationPolicy/outbound/gateways"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPut, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, workspaceOutboundGateways); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// setOutboundGatewayRulesHandleResponse handles the SetOutboundGatewayRules response.
+func (client *WorkspacesClient) setOutboundGatewayRulesHandleResponse(resp *http.Response) (WorkspacesClientSetOutboundGatewayRulesResponse, error) {
+	result := WorkspacesClientSetOutboundGatewayRulesResponse{}
 	if val := resp.Header.Get("ETag"); val != "" {
 		result.ETag = &val
 	}

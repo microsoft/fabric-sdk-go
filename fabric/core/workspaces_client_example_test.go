@@ -728,3 +728,182 @@ func ExampleWorkspacesClient_SetNetworkCommunicationPolicy() {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
 }
+
+// Generated from example definition
+func ExampleWorkspacesClient_GetOutboundCloudConnectionRules() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewWorkspacesClient().GetOutboundCloudConnectionRules(ctx, "47482db6-4583-4672-86dd-999d0f8f4d7a", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.WorkspaceOutboundConnections = core.WorkspaceOutboundConnections{
+	// 	DefaultAction: to.Ptr(core.ConnectionAccessActionTypeDeny),
+	// 	Rules: []core.OutboundConnectionRule{
+	// 		{
+	// 			AllowedEndpoints: []core.ConnectionRuleEndpointMetadata{
+	// 				{
+	// 					HostNamePattern: to.Ptr("*.microsoft.com"),
+	// 			}},
+	// 			ConnectionType: to.Ptr("SQL"),
+	// 			DefaultAction: to.Ptr(core.ConnectionAccessActionTypeDeny),
+	// 		},
+	// 		{
+	// 			AllowedWorkspaces: []core.ConnectionRuleWorkspaceMetadata{
+	// 				{
+	// 					WorkspaceID: to.Ptr("91c5ae74-e82d-4dd3-bfeb-6b1814030123"),
+	// 			}},
+	// 			ConnectionType: to.Ptr("LakeHouse"),
+	// 			DefaultAction: to.Ptr(core.ConnectionAccessActionTypeDeny),
+	// 		},
+	// 		{
+	// 			ConnectionType: to.Ptr("Web"),
+	// 			DefaultAction: to.Ptr(core.ConnectionAccessActionTypeAllow),
+	// 	}},
+	// }
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_SetOutboundCloudConnectionRules() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewWorkspacesClient().SetOutboundCloudConnectionRules(ctx, "47482db6-4583-4672-86dd-999d0f8f4d7a", core.WorkspaceOutboundConnections{
+		DefaultAction: to.Ptr(core.ConnectionAccessActionTypeDeny),
+		Rules: []core.OutboundConnectionRule{
+			{
+				AllowedEndpoints: []core.ConnectionRuleEndpointMetadata{
+					{
+						HostNamePattern: to.Ptr("*.microsoft.com"),
+					}},
+				ConnectionType: to.Ptr("SQL"),
+				DefaultAction:  to.Ptr(core.ConnectionAccessActionTypeDeny),
+			},
+			{
+				AllowedWorkspaces: []core.ConnectionRuleWorkspaceMetadata{
+					{
+						WorkspaceID: to.Ptr("91c5ae74-e82d-4dd3-bfeb-6b1814030123"),
+					}},
+				ConnectionType: to.Ptr("LakeHouse"),
+				DefaultAction:  to.Ptr(core.ConnectionAccessActionTypeDeny),
+			},
+			{
+				ConnectionType: to.Ptr("Web"),
+				DefaultAction:  to.Ptr(core.ConnectionAccessActionTypeAllow),
+			}},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_GetOutboundGatewayRules() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewWorkspacesClient().GetOutboundGatewayRules(ctx, "47482db6-4583-4672-86dd-999d0f8f4d7a", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.WorkspaceOutboundGateways = core.WorkspaceOutboundGateways{
+	// 	AllowedGateways: []core.GatewayAccessRuleMetadata{
+	// 		{
+	// 			ID: to.Ptr("91c5ae74-e82d-4dd3-bfeb-6b1814030123"),
+	// 	}},
+	// 	DefaultAction: to.Ptr(core.GatewayAccessActionTypeDeny),
+	// }
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_SetOutboundGatewayRules() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewWorkspacesClient().SetOutboundGatewayRules(ctx, "47482db6-4583-4672-86dd-999d0f8f4d7a", core.WorkspaceOutboundGateways{
+		AllowedGateways: []core.GatewayAccessRuleMetadata{
+			{
+				ID: to.Ptr("91c5ae74-e82d-4dd3-bfeb-6b1814030123"),
+			},
+			{
+				ID: to.Ptr("25bac802-080d-4f73-8a42-1b406eb1fceb"),
+			}},
+		DefaultAction: to.Ptr(core.GatewayAccessActionTypeDeny),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_GetGitOutboundPolicy() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewWorkspacesClient().GetGitOutboundPolicy(ctx, "47482db6-4583-4672-86dd-999d0f8f4d7a", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.NetworkRules = core.NetworkRules{
+	// 	DefaultAction: to.Ptr(core.NetworkAccessRuleDeny),
+	// }
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_SetGitOutboundPolicy() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewWorkspacesClient().SetGitOutboundPolicy(ctx, "47482db6-4583-4672-86dd-999d0f8f4d7a", core.NetworkRules{
+		DefaultAction: to.Ptr(core.NetworkAccessRuleAllow),
+	}, &core.WorkspacesClientSetGitOutboundPolicyOptions{IfMatch: nil})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}

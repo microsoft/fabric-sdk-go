@@ -99,6 +99,7 @@ func ExampleMirroringClient_NewGetTablesMirroringStatusPager() {
 		// 		{
 		// 			Metrics: &mirroreddatabase.TableMirroringMetrics{
 		// 				LastSyncDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-10-08T05:07:11.066Z"); return t}()),
+		// 				LastSyncLatencyInSeconds: to.Ptr[int32](15),
 		// 				ProcessedBytes: to.Ptr[int64](1247),
 		// 				ProcessedRows: to.Ptr[int64](6),
 		// 			},

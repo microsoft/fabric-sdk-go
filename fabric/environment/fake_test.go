@@ -22,6 +22,7 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
+	"github.com/microsoft/fabric-sdk-go/fabric"
 	"github.com/microsoft/fabric-sdk-go/fabric/environment"
 	"github.com/microsoft/fabric-sdk-go/fabric/environment/fake"
 )
@@ -43,8 +44,10 @@ func (testsuite *FakeTestSuite) SetupSuite() {
 	testsuite.cred = &azfake.TokenCredential{}
 
 	testsuite.serverFactory = &fake.ServerFactory{}
-	testsuite.clientFactory, err = environment.NewClientFactory(testsuite.cred, nil, &azcore.ClientOptions{
-		Transport: fake.NewServerFactoryTransport(testsuite.serverFactory),
+	testsuite.clientFactory, err = environment.NewClientFactory(testsuite.cred, nil, &fabric.ClientOptions{
+		ClientOptions: azcore.ClientOptions{
+			Transport: fake.NewServerFactoryTransport(testsuite.serverFactory),
+		},
 	})
 	testsuite.Require().NoError(err, "Failed to create client factory")
 }
@@ -53,17 +56,19 @@ func TestFakeTest(t *testing.T) {
 	suite.Run(t, new(FakeTestSuite))
 }
 
-func (testsuite *FakeTestSuite) TestSparkCompute_GetStagingSettings() {
+func (testsuite *FakeTestSuite) TestStaging_GetSparkComputePreview() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Get environment staging spark compute example"},
 	})
 	var exampleWorkspaceID string
 	var exampleEnvironmentID string
+	var examplePreview bool
 	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
 	exampleEnvironmentID = "707cfd07-cbf1-41da-aad7-dd157ddb8c11"
+	examplePreview = true
 
-	exampleRes := environment.SparkCompute{
+	exampleRes := environment.SparkComputePreview{
 		DriverCores:  to.Ptr[int32](4),
 		DriverMemory: to.Ptr("56g"),
 		DynamicExecutorAllocation: &environment.DynamicExecutorAllocationProperties{
@@ -84,31 +89,34 @@ func (testsuite *FakeTestSuite) TestSparkCompute_GetStagingSettings() {
 		},
 	}
 
-	testsuite.serverFactory.SparkComputeServer.GetStagingSettings = func(ctx context.Context, workspaceID string, environmentID string, options *environment.SparkComputeClientGetStagingSettingsOptions) (resp azfake.Responder[environment.SparkComputeClientGetStagingSettingsResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.StagingServer.GetSparkComputePreview = func(ctx context.Context, workspaceID string, environmentID string, preview bool, options *environment.StagingClientGetSparkComputePreviewOptions) (resp azfake.Responder[environment.StagingClientGetSparkComputePreviewResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
-		resp = azfake.Responder[environment.SparkComputeClientGetStagingSettingsResponse]{}
-		resp.SetResponse(http.StatusOK, environment.SparkComputeClientGetStagingSettingsResponse{SparkCompute: exampleRes}, nil)
+		testsuite.Require().Equal(examplePreview, preview)
+		resp = azfake.Responder[environment.StagingClientGetSparkComputePreviewResponse]{}
+		resp.SetResponse(http.StatusOK, environment.StagingClientGetSparkComputePreviewResponse{SparkComputePreview: exampleRes}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewSparkComputeClient()
-	res, err := client.GetStagingSettings(ctx, exampleWorkspaceID, exampleEnvironmentID, nil)
+	client := testsuite.clientFactory.NewStagingClient()
+	res, err := client.GetSparkComputePreview(ctx, exampleWorkspaceID, exampleEnvironmentID, examplePreview, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
-	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.SparkCompute))
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.SparkComputePreview))
 }
 
-func (testsuite *FakeTestSuite) TestSparkCompute_UpdateStagingSettings() {
+func (testsuite *FakeTestSuite) TestStaging_UpdateSparkComputePreview() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Update environment staging spark compute example"},
 	})
 	var exampleWorkspaceID string
 	var exampleEnvironmentID string
-	var exampleUpdateEnvironmentSparkComputeRequest environment.UpdateEnvironmentSparkComputeRequest
+	var examplePreview bool
+	var exampleUpdateEnvironmentSparkComputeRequest environment.UpdateEnvironmentSparkComputeRequestPreview
 	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
 	exampleEnvironmentID = "707cfd07-cbf1-41da-aad7-dd157ddb8c11"
-	exampleUpdateEnvironmentSparkComputeRequest = environment.UpdateEnvironmentSparkComputeRequest{
+	examplePreview = true
+	exampleUpdateEnvironmentSparkComputeRequest = environment.UpdateEnvironmentSparkComputeRequestPreview{
 		DriverCores:  to.Ptr[int32](4),
 		DriverMemory: to.Ptr("56g"),
 		DynamicExecutorAllocation: &environment.DynamicExecutorAllocationProperties{
@@ -129,7 +137,7 @@ func (testsuite *FakeTestSuite) TestSparkCompute_UpdateStagingSettings() {
 		},
 	}
 
-	exampleRes := environment.SparkCompute{
+	exampleRes := environment.SparkComputePreview{
 		DriverCores:  to.Ptr[int32](4),
 		DriverMemory: to.Ptr("56g"),
 		DynamicExecutorAllocation: &environment.DynamicExecutorAllocationProperties{
@@ -150,32 +158,493 @@ func (testsuite *FakeTestSuite) TestSparkCompute_UpdateStagingSettings() {
 		},
 	}
 
-	testsuite.serverFactory.SparkComputeServer.UpdateStagingSettings = func(ctx context.Context, workspaceID string, environmentID string, updateEnvironmentSparkComputeRequest environment.UpdateEnvironmentSparkComputeRequest, options *environment.SparkComputeClientUpdateStagingSettingsOptions) (resp azfake.Responder[environment.SparkComputeClientUpdateStagingSettingsResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.StagingServer.UpdateSparkComputePreview = func(ctx context.Context, workspaceID string, environmentID string, preview bool, updateEnvironmentSparkComputeRequest environment.UpdateEnvironmentSparkComputeRequestPreview, options *environment.StagingClientUpdateSparkComputePreviewOptions) (resp azfake.Responder[environment.StagingClientUpdateSparkComputePreviewResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
+		testsuite.Require().Equal(examplePreview, preview)
 		testsuite.Require().True(reflect.DeepEqual(exampleUpdateEnvironmentSparkComputeRequest, updateEnvironmentSparkComputeRequest))
-		resp = azfake.Responder[environment.SparkComputeClientUpdateStagingSettingsResponse]{}
-		resp.SetResponse(http.StatusOK, environment.SparkComputeClientUpdateStagingSettingsResponse{SparkCompute: exampleRes}, nil)
+		resp = azfake.Responder[environment.StagingClientUpdateSparkComputePreviewResponse]{}
+		resp.SetResponse(http.StatusOK, environment.StagingClientUpdateSparkComputePreviewResponse{SparkComputePreview: exampleRes}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewSparkComputeClient()
-	res, err := client.UpdateStagingSettings(ctx, exampleWorkspaceID, exampleEnvironmentID, exampleUpdateEnvironmentSparkComputeRequest, nil)
+	client := testsuite.clientFactory.NewStagingClient()
+	res, err := client.UpdateSparkComputePreview(ctx, exampleWorkspaceID, exampleEnvironmentID, examplePreview, exampleUpdateEnvironmentSparkComputeRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.SparkComputePreview))
+}
+
+func (testsuite *FakeTestSuite) TestStaging_GetSparkCompute() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get environment staging spark compute example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEnvironmentID string
+	var examplePreview bool
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleEnvironmentID = "707cfd07-cbf1-41da-aad7-dd157ddb8c11"
+	examplePreview = false
+
+	exampleRes := environment.SparkCompute{
+		DriverCores:  to.Ptr[int32](4),
+		DriverMemory: to.Ptr(environment.CustomPoolMemoryFiftySixG),
+		DynamicExecutorAllocation: &environment.DynamicExecutorAllocationProperties{
+			Enabled:      to.Ptr(false),
+			MaxExecutors: to.Ptr[int32](1),
+			MinExecutors: to.Ptr[int32](1),
+		},
+		ExecutorCores:  to.Ptr[int32](4),
+		ExecutorMemory: to.Ptr(environment.CustomPoolMemoryFiftySixG),
+		InstancePool: &environment.InstancePool{
+			Name: to.Ptr("MyWorkspacePool"),
+			Type: to.Ptr(environment.CustomPoolTypeWorkspace),
+			ID:   to.Ptr("78942136-106c-4f3e-80fc-7ff4eae11603"),
+		},
+		RuntimeVersion: to.Ptr("1.2"),
+		SparkProperties: []environment.SparkProperty{
+			{
+				Key:   to.Ptr("spark.acls.enable"),
+				Value: to.Ptr("false"),
+			}},
+	}
+
+	testsuite.serverFactory.StagingServer.GetSparkCompute = func(ctx context.Context, workspaceID string, environmentID string, preview bool, options *environment.StagingClientGetSparkComputeOptions) (resp azfake.Responder[environment.StagingClientGetSparkComputeResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
+		testsuite.Require().Equal(examplePreview, preview)
+		resp = azfake.Responder[environment.StagingClientGetSparkComputeResponse]{}
+		resp.SetResponse(http.StatusOK, environment.StagingClientGetSparkComputeResponse{SparkCompute: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	res, err := client.GetSparkCompute(ctx, exampleWorkspaceID, exampleEnvironmentID, examplePreview, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.SparkCompute))
 }
 
-func (testsuite *FakeTestSuite) TestSparkCompute_GetPublishedSettings() {
+func (testsuite *FakeTestSuite) TestStaging_UpdateSparkCompute() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update environment staging spark compute example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEnvironmentID string
+	var examplePreview bool
+	var exampleUpdateEnvironmentSparkComputeRequest environment.UpdateEnvironmentSparkComputeRequest
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleEnvironmentID = "707cfd07-cbf1-41da-aad7-dd157ddb8c11"
+	examplePreview = false
+	exampleUpdateEnvironmentSparkComputeRequest = environment.UpdateEnvironmentSparkComputeRequest{
+		DriverCores:  to.Ptr[int32](4),
+		DriverMemory: to.Ptr(environment.CustomPoolMemoryFiftySixG),
+		DynamicExecutorAllocation: &environment.DynamicExecutorAllocationProperties{
+			Enabled:      to.Ptr(false),
+			MaxExecutors: to.Ptr[int32](1),
+			MinExecutors: to.Ptr[int32](1),
+		},
+		ExecutorCores:  to.Ptr[int32](4),
+		ExecutorMemory: to.Ptr(environment.CustomPoolMemoryFiftySixG),
+		InstancePool: &environment.InstancePool{
+			Name: to.Ptr("MyWorkspacePool"),
+			Type: to.Ptr(environment.CustomPoolTypeWorkspace),
+		},
+		RuntimeVersion: to.Ptr("1.2"),
+		SparkProperties: []environment.SparkProperty{
+			{
+				Key:   to.Ptr("spark.acls.enable"),
+				Value: to.Ptr("false"),
+			},
+			{
+				Key: to.Ptr("spark.admin.acls"),
+			}},
+	}
+
+	exampleRes := environment.SparkCompute{
+		DriverCores:  to.Ptr[int32](4),
+		DriverMemory: to.Ptr(environment.CustomPoolMemoryFiftySixG),
+		DynamicExecutorAllocation: &environment.DynamicExecutorAllocationProperties{
+			Enabled:      to.Ptr(false),
+			MaxExecutors: to.Ptr[int32](1),
+			MinExecutors: to.Ptr[int32](1),
+		},
+		ExecutorCores:  to.Ptr[int32](4),
+		ExecutorMemory: to.Ptr(environment.CustomPoolMemoryFiftySixG),
+		InstancePool: &environment.InstancePool{
+			Name: to.Ptr("MyWorkspacePool"),
+			Type: to.Ptr(environment.CustomPoolTypeWorkspace),
+			ID:   to.Ptr("78942136-106c-4f3e-80fc-7ff4eae11603"),
+		},
+		RuntimeVersion: to.Ptr("1.2"),
+		SparkProperties: []environment.SparkProperty{
+			{
+				Key:   to.Ptr("spark.acls.enable"),
+				Value: to.Ptr("false"),
+			}},
+	}
+
+	testsuite.serverFactory.StagingServer.UpdateSparkCompute = func(ctx context.Context, workspaceID string, environmentID string, preview bool, updateEnvironmentSparkComputeRequest environment.UpdateEnvironmentSparkComputeRequest, options *environment.StagingClientUpdateSparkComputeOptions) (resp azfake.Responder[environment.StagingClientUpdateSparkComputeResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
+		testsuite.Require().Equal(examplePreview, preview)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateEnvironmentSparkComputeRequest, updateEnvironmentSparkComputeRequest))
+		resp = azfake.Responder[environment.StagingClientUpdateSparkComputeResponse]{}
+		resp.SetResponse(http.StatusOK, environment.StagingClientUpdateSparkComputeResponse{SparkCompute: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	res, err := client.UpdateSparkCompute(ctx, exampleWorkspaceID, exampleEnvironmentID, examplePreview, exampleUpdateEnvironmentSparkComputeRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.SparkCompute))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update environment staging spark compute instance pool using pool ID example"},
+	})
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleEnvironmentID = "707cfd07-cbf1-41da-aad7-dd157ddb8c11"
+	examplePreview = false
+	exampleUpdateEnvironmentSparkComputeRequest = environment.UpdateEnvironmentSparkComputeRequest{
+		InstancePool: &environment.InstancePool{
+			ID: to.Ptr("78942136-106c-4f3e-80fc-7ff4eae11603"),
+		},
+	}
+
+	exampleRes = environment.SparkCompute{
+		DriverCores:  to.Ptr[int32](4),
+		DriverMemory: to.Ptr(environment.CustomPoolMemoryFiftySixG),
+		DynamicExecutorAllocation: &environment.DynamicExecutorAllocationProperties{
+			Enabled:      to.Ptr(false),
+			MaxExecutors: to.Ptr[int32](1),
+			MinExecutors: to.Ptr[int32](1),
+		},
+		ExecutorCores:  to.Ptr[int32](4),
+		ExecutorMemory: to.Ptr(environment.CustomPoolMemoryFiftySixG),
+		InstancePool: &environment.InstancePool{
+			Name: to.Ptr("MyWorkspacePool"),
+			Type: to.Ptr(environment.CustomPoolTypeWorkspace),
+			ID:   to.Ptr("78942136-106c-4f3e-80fc-7ff4eae11603"),
+		},
+		RuntimeVersion: to.Ptr("1.2"),
+		SparkProperties: []environment.SparkProperty{
+			{
+				Key:   to.Ptr("spark.acls.enable"),
+				Value: to.Ptr("false"),
+			}},
+	}
+
+	testsuite.serverFactory.StagingServer.UpdateSparkCompute = func(ctx context.Context, workspaceID string, environmentID string, preview bool, updateEnvironmentSparkComputeRequest environment.UpdateEnvironmentSparkComputeRequest, options *environment.StagingClientUpdateSparkComputeOptions) (resp azfake.Responder[environment.StagingClientUpdateSparkComputeResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
+		testsuite.Require().Equal(examplePreview, preview)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateEnvironmentSparkComputeRequest, updateEnvironmentSparkComputeRequest))
+		resp = azfake.Responder[environment.StagingClientUpdateSparkComputeResponse]{}
+		resp.SetResponse(http.StatusOK, environment.StagingClientUpdateSparkComputeResponse{SparkCompute: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.UpdateSparkCompute(ctx, exampleWorkspaceID, exampleEnvironmentID, examplePreview, exampleUpdateEnvironmentSparkComputeRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.SparkCompute))
+}
+
+func (testsuite *FakeTestSuite) TestStaging_ListLibraries() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get environment staging libraries example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEnvironmentID string
+	var examplePreview bool
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleEnvironmentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	examplePreview = false
+
+	exampleRes := environment.Libraries{
+		ContinuationToken: to.Ptr("null"),
+		ContinuationURI:   to.Ptr("null"),
+		Libraries: []environment.LibraryClassification{
+			&environment.CustomLibrary{
+				Name:        to.Ptr("samplewheel-0.18.0-py2.py3-none-any.whl"),
+				LibraryType: to.Ptr(environment.LibraryTypeCustom),
+			},
+			&environment.CustomLibrary{
+				Name:        to.Ptr("samplepython.py"),
+				LibraryType: to.Ptr(environment.LibraryTypeCustom),
+			},
+			&environment.CustomLibrary{
+				Name:        to.Ptr("samplejar.jar"),
+				LibraryType: to.Ptr(environment.LibraryTypeCustom),
+			},
+			&environment.CustomLibrary{
+				Name:        to.Ptr("sampleR.tar.gz"),
+				LibraryType: to.Ptr(environment.LibraryTypeCustom),
+			},
+			&environment.ExternalLibrary{
+				Name:        to.Ptr("fuzzywuzzy"),
+				LibraryType: to.Ptr(environment.LibraryTypeExternal),
+				Version:     to.Ptr("0.0.1"),
+			},
+			&environment.ExternalLibrary{
+				Name:        to.Ptr("matplotlib"),
+				LibraryType: to.Ptr(environment.LibraryTypeExternal),
+				Version:     to.Ptr("0.0.1"),
+			}},
+	}
+
+	testsuite.serverFactory.StagingServer.NewListLibrariesPager = func(workspaceID string, environmentID string, preview bool, options *environment.StagingClientListLibrariesOptions) (resp azfake.PagerResponder[environment.StagingClientListLibrariesResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
+		testsuite.Require().Equal(examplePreview, preview)
+		resp = azfake.PagerResponder[environment.StagingClientListLibrariesResponse]{}
+		resp.AddPage(http.StatusOK, environment.StagingClientListLibrariesResponse{Libraries: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	pager := client.NewListLibrariesPager(exampleWorkspaceID, exampleEnvironmentID, examplePreview, &environment.StagingClientListLibrariesOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Libraries))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestStaging_UploadCustomLibraryPreview() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Upload environment staging libraries example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEnvironmentID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleEnvironmentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+
+	testsuite.serverFactory.StagingServer.UploadCustomLibraryPreview = func(ctx context.Context, workspaceID string, environmentID string, options *environment.StagingClientUploadCustomLibraryPreviewOptions) (resp azfake.Responder[environment.StagingClientUploadCustomLibraryPreviewResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
+		resp = azfake.Responder[environment.StagingClientUploadCustomLibraryPreviewResponse]{}
+		resp.SetResponse(http.StatusOK, environment.StagingClientUploadCustomLibraryPreviewResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	_, err = client.UploadCustomLibraryPreview(ctx, exampleWorkspaceID, exampleEnvironmentID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestStaging_DeleteCustomLibraryPreview() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete environment staging libraries example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEnvironmentID string
+	var exampleLibraryToDelete string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleEnvironmentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleLibraryToDelete = "samplelibrary.jar"
+
+	testsuite.serverFactory.StagingServer.DeleteCustomLibraryPreview = func(ctx context.Context, workspaceID string, environmentID string, libraryToDelete string, options *environment.StagingClientDeleteCustomLibraryPreviewOptions) (resp azfake.Responder[environment.StagingClientDeleteCustomLibraryPreviewResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
+		testsuite.Require().Equal(exampleLibraryToDelete, libraryToDelete)
+		resp = azfake.Responder[environment.StagingClientDeleteCustomLibraryPreviewResponse]{}
+		resp.SetResponse(http.StatusOK, environment.StagingClientDeleteCustomLibraryPreviewResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	_, err = client.DeleteCustomLibraryPreview(ctx, exampleWorkspaceID, exampleEnvironmentID, exampleLibraryToDelete, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestStaging_ListLibrariesPreview() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get environment staging libraries example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEnvironmentID string
+	var examplePreview bool
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleEnvironmentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	examplePreview = true
+
+	exampleRes := environment.LibrariesPreview{
+		CustomLibraries: &environment.CustomLibraries{
+			JarFiles: []string{
+				"samplejar.jar"},
+			PyFiles: []string{
+				"samplepython.py"},
+			RTarFiles: []string{
+				"sampleR.tar.gz"},
+			WheelFiles: []string{
+				"samplewheel-0.18.0-py2.py3-none-any.whl"},
+		},
+		EnvironmentYml: to.Ptr("name: sample-environment\ndependencies:\n  - fuzzywuzzy==0.0.1\n  - matplotlib==0.0.1"),
+	}
+
+	testsuite.serverFactory.StagingServer.ListLibrariesPreview = func(ctx context.Context, workspaceID string, environmentID string, preview bool, options *environment.StagingClientListLibrariesPreviewOptions) (resp azfake.Responder[environment.StagingClientListLibrariesPreviewResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
+		testsuite.Require().Equal(examplePreview, preview)
+		resp = azfake.Responder[environment.StagingClientListLibrariesPreviewResponse]{}
+		resp.SetResponse(http.StatusOK, environment.StagingClientListLibrariesPreviewResponse{LibrariesPreview: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	res, err := client.ListLibrariesPreview(ctx, exampleWorkspaceID, exampleEnvironmentID, examplePreview, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.LibrariesPreview))
+}
+
+func (testsuite *FakeTestSuite) TestStaging_UploadCustomLibrary() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Upload environment staging libraries example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEnvironmentID string
+	var exampleLibraryName string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleEnvironmentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleLibraryName = "samplelibrary.jar"
+
+	testsuite.serverFactory.StagingServer.UploadCustomLibrary = func(ctx context.Context, workspaceID string, environmentID string, libraryName string, options *environment.StagingClientUploadCustomLibraryOptions) (resp azfake.Responder[environment.StagingClientUploadCustomLibraryResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
+		testsuite.Require().Equal(exampleLibraryName, libraryName)
+		resp = azfake.Responder[environment.StagingClientUploadCustomLibraryResponse]{}
+		resp.SetResponse(http.StatusOK, environment.StagingClientUploadCustomLibraryResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	_, err = client.UploadCustomLibrary(ctx, exampleWorkspaceID, exampleEnvironmentID, exampleLibraryName, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestStaging_DeleteCustomLibrary() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete environment staging libraries example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEnvironmentID string
+	var exampleLibraryName string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleEnvironmentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleLibraryName = "samplelibrary.jar"
+
+	testsuite.serverFactory.StagingServer.DeleteCustomLibrary = func(ctx context.Context, workspaceID string, environmentID string, libraryName string, options *environment.StagingClientDeleteCustomLibraryOptions) (resp azfake.Responder[environment.StagingClientDeleteCustomLibraryResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
+		testsuite.Require().Equal(exampleLibraryName, libraryName)
+		resp = azfake.Responder[environment.StagingClientDeleteCustomLibraryResponse]{}
+		resp.SetResponse(http.StatusOK, environment.StagingClientDeleteCustomLibraryResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	_, err = client.DeleteCustomLibrary(ctx, exampleWorkspaceID, exampleEnvironmentID, exampleLibraryName, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestStaging_RemoveExternalLibrary() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete an external library from environment example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEnvironmentID string
+	var exampleRemoveExternalLibraryRequest environment.RemoveExternalLibrariesRequest
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleEnvironmentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleRemoveExternalLibraryRequest = environment.RemoveExternalLibrariesRequest{
+		Name:    to.Ptr("fuzzywuzzy"),
+		Version: to.Ptr("0.0.1"),
+	}
+
+	testsuite.serverFactory.StagingServer.RemoveExternalLibrary = func(ctx context.Context, workspaceID string, environmentID string, removeExternalLibraryRequest environment.RemoveExternalLibrariesRequest, options *environment.StagingClientRemoveExternalLibraryOptions) (resp azfake.Responder[environment.StagingClientRemoveExternalLibraryResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
+		testsuite.Require().True(reflect.DeepEqual(exampleRemoveExternalLibraryRequest, removeExternalLibraryRequest))
+		resp = azfake.Responder[environment.StagingClientRemoveExternalLibraryResponse]{}
+		resp.SetResponse(http.StatusOK, environment.StagingClientRemoveExternalLibraryResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	_, err = client.RemoveExternalLibrary(ctx, exampleWorkspaceID, exampleEnvironmentID, exampleRemoveExternalLibraryRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestStaging_ImportExternalLibraries() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Upload environment staging external libraries example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEnvironmentID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleEnvironmentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+
+	testsuite.serverFactory.StagingServer.ImportExternalLibraries = func(ctx context.Context, workspaceID string, environmentID string, options *environment.StagingClientImportExternalLibrariesOptions) (resp azfake.Responder[environment.StagingClientImportExternalLibrariesResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
+		resp = azfake.Responder[environment.StagingClientImportExternalLibrariesResponse]{}
+		resp.SetResponse(http.StatusOK, environment.StagingClientImportExternalLibrariesResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	_, err = client.ImportExternalLibraries(ctx, exampleWorkspaceID, exampleEnvironmentID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestStaging_ExportExternalLibraries() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Export staging external libraries in environment.yml example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEnvironmentID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleEnvironmentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+
+	testsuite.serverFactory.StagingServer.ExportExternalLibraries = func(ctx context.Context, workspaceID string, environmentID string, options *environment.StagingClientExportExternalLibrariesOptions) (resp azfake.Responder[environment.StagingClientExportExternalLibrariesResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
+		resp = azfake.Responder[environment.StagingClientExportExternalLibrariesResponse]{}
+		resp.SetResponse(http.StatusOK, environment.StagingClientExportExternalLibrariesResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	_, err = client.ExportExternalLibraries(ctx, exampleWorkspaceID, exampleEnvironmentID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestPublished_GetSparkComputePreview() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Get environment Spark compute example"},
 	})
 	var exampleWorkspaceID string
 	var exampleEnvironmentID string
+	var examplePreview bool
 	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
 	exampleEnvironmentID = "707cfd07-cbf1-41da-aad7-dd157ddb8c11"
+	examplePreview = true
 
-	exampleRes := environment.SparkCompute{
+	exampleRes := environment.SparkComputePreview{
 		DriverCores:  to.Ptr[int32](4),
 		DriverMemory: to.Ptr("56g"),
 		DynamicExecutorAllocation: &environment.DynamicExecutorAllocationProperties{
@@ -196,18 +665,198 @@ func (testsuite *FakeTestSuite) TestSparkCompute_GetPublishedSettings() {
 		},
 	}
 
-	testsuite.serverFactory.SparkComputeServer.GetPublishedSettings = func(ctx context.Context, workspaceID string, environmentID string, options *environment.SparkComputeClientGetPublishedSettingsOptions) (resp azfake.Responder[environment.SparkComputeClientGetPublishedSettingsResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.PublishedServer.GetSparkComputePreview = func(ctx context.Context, workspaceID string, environmentID string, preview bool, options *environment.PublishedClientGetSparkComputePreviewOptions) (resp azfake.Responder[environment.PublishedClientGetSparkComputePreviewResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
-		resp = azfake.Responder[environment.SparkComputeClientGetPublishedSettingsResponse]{}
-		resp.SetResponse(http.StatusOK, environment.SparkComputeClientGetPublishedSettingsResponse{SparkCompute: exampleRes}, nil)
+		testsuite.Require().Equal(examplePreview, preview)
+		resp = azfake.Responder[environment.PublishedClientGetSparkComputePreviewResponse]{}
+		resp.SetResponse(http.StatusOK, environment.PublishedClientGetSparkComputePreviewResponse{SparkComputePreview: exampleRes}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewSparkComputeClient()
-	res, err := client.GetPublishedSettings(ctx, exampleWorkspaceID, exampleEnvironmentID, nil)
+	client := testsuite.clientFactory.NewPublishedClient()
+	res, err := client.GetSparkComputePreview(ctx, exampleWorkspaceID, exampleEnvironmentID, examplePreview, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.SparkComputePreview))
+}
+
+func (testsuite *FakeTestSuite) TestPublished_GetSparkCompute() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get environment Spark compute example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEnvironmentID string
+	var examplePreview bool
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleEnvironmentID = "707cfd07-cbf1-41da-aad7-dd157ddb8c11"
+	examplePreview = false
+
+	exampleRes := environment.SparkCompute{
+		DriverCores:  to.Ptr[int32](4),
+		DriverMemory: to.Ptr(environment.CustomPoolMemoryFiftySixG),
+		DynamicExecutorAllocation: &environment.DynamicExecutorAllocationProperties{
+			Enabled:      to.Ptr(false),
+			MaxExecutors: to.Ptr[int32](1),
+			MinExecutors: to.Ptr[int32](1),
+		},
+		ExecutorCores:  to.Ptr[int32](4),
+		ExecutorMemory: to.Ptr(environment.CustomPoolMemoryFiftySixG),
+		InstancePool: &environment.InstancePool{
+			Name: to.Ptr("MyWorkspacePool"),
+			Type: to.Ptr(environment.CustomPoolTypeWorkspace),
+			ID:   to.Ptr("78942136-106c-4f3e-80fc-7ff4eae11603"),
+		},
+		RuntimeVersion: to.Ptr("1.2"),
+		SparkProperties: []environment.SparkProperty{
+			{
+				Key:   to.Ptr("spark.acls.enable"),
+				Value: to.Ptr("false"),
+			}},
+	}
+
+	testsuite.serverFactory.PublishedServer.GetSparkCompute = func(ctx context.Context, workspaceID string, environmentID string, preview bool, options *environment.PublishedClientGetSparkComputeOptions) (resp azfake.Responder[environment.PublishedClientGetSparkComputeResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
+		testsuite.Require().Equal(examplePreview, preview)
+		resp = azfake.Responder[environment.PublishedClientGetSparkComputeResponse]{}
+		resp.SetResponse(http.StatusOK, environment.PublishedClientGetSparkComputeResponse{SparkCompute: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewPublishedClient()
+	res, err := client.GetSparkCompute(ctx, exampleWorkspaceID, exampleEnvironmentID, examplePreview, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.SparkCompute))
+}
+
+func (testsuite *FakeTestSuite) TestPublished_ListLibraries() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get environment published libraries example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEnvironmentID string
+	var examplePreview bool
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleEnvironmentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	examplePreview = false
+
+	exampleRes := environment.Libraries{
+		ContinuationToken: to.Ptr("null"),
+		ContinuationURI:   to.Ptr("null"),
+		Libraries: []environment.LibraryClassification{
+			&environment.CustomLibrary{
+				Name:        to.Ptr("samplewheel-0.18.0-py2.py3-none-any.whl"),
+				LibraryType: to.Ptr(environment.LibraryTypeCustom),
+			},
+			&environment.CustomLibrary{
+				Name:        to.Ptr("samplepython.py"),
+				LibraryType: to.Ptr(environment.LibraryTypeCustom),
+			},
+			&environment.CustomLibrary{
+				Name:        to.Ptr("samplejar.jar"),
+				LibraryType: to.Ptr(environment.LibraryTypeCustom),
+			},
+			&environment.CustomLibrary{
+				Name:        to.Ptr("sampleR.tar.gz"),
+				LibraryType: to.Ptr(environment.LibraryTypeCustom),
+			},
+			&environment.ExternalLibrary{
+				Name:        to.Ptr("fuzzywuzzy"),
+				LibraryType: to.Ptr(environment.LibraryTypeExternal),
+				Version:     to.Ptr("0.0.1"),
+			},
+			&environment.ExternalLibrary{
+				Name:        to.Ptr("matplotlib"),
+				LibraryType: to.Ptr(environment.LibraryTypeExternal),
+				Version:     to.Ptr("0.0.1"),
+			}},
+	}
+
+	testsuite.serverFactory.PublishedServer.NewListLibrariesPager = func(workspaceID string, environmentID string, preview bool, options *environment.PublishedClientListLibrariesOptions) (resp azfake.PagerResponder[environment.PublishedClientListLibrariesResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
+		testsuite.Require().Equal(examplePreview, preview)
+		resp = azfake.PagerResponder[environment.PublishedClientListLibrariesResponse]{}
+		resp.AddPage(http.StatusOK, environment.PublishedClientListLibrariesResponse{Libraries: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewPublishedClient()
+	pager := client.NewListLibrariesPager(exampleWorkspaceID, exampleEnvironmentID, examplePreview, &environment.PublishedClientListLibrariesOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Libraries))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestPublished_ListLibrariesPreview() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get environment published libraries example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEnvironmentID string
+	var examplePreview bool
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleEnvironmentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	examplePreview = true
+
+	exampleRes := environment.LibrariesPreview{
+		CustomLibraries: &environment.CustomLibraries{
+			JarFiles: []string{
+				"samplejar.jar"},
+			PyFiles: []string{
+				"samplepython.py"},
+			RTarFiles: []string{
+				"sampleR.tar.gz"},
+			WheelFiles: []string{
+				"samplewheel-0.18.0-py2.py3-none-any.whl"},
+		},
+		EnvironmentYml: to.Ptr("name: sample-environment\ndependencies:\n  - fuzzywuzzy==0.0.1\n  - matplotlib==0.0.1"),
+	}
+
+	testsuite.serverFactory.PublishedServer.ListLibrariesPreview = func(ctx context.Context, workspaceID string, environmentID string, preview bool, options *environment.PublishedClientListLibrariesPreviewOptions) (resp azfake.Responder[environment.PublishedClientListLibrariesPreviewResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
+		testsuite.Require().Equal(examplePreview, preview)
+		resp = azfake.Responder[environment.PublishedClientListLibrariesPreviewResponse]{}
+		resp.SetResponse(http.StatusOK, environment.PublishedClientListLibrariesPreviewResponse{LibrariesPreview: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewPublishedClient()
+	res, err := client.ListLibrariesPreview(ctx, exampleWorkspaceID, exampleEnvironmentID, examplePreview, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.LibrariesPreview))
+}
+
+func (testsuite *FakeTestSuite) TestPublished_ExportExternalLibraries() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Export published external libraries in environment.yml example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEnvironmentID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleEnvironmentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+
+	testsuite.serverFactory.PublishedServer.ExportExternalLibraries = func(ctx context.Context, workspaceID string, environmentID string, options *environment.PublishedClientExportExternalLibrariesOptions) (resp azfake.Responder[environment.PublishedClientExportExternalLibrariesResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
+		resp = azfake.Responder[environment.PublishedClientExportExternalLibrariesResponse]{}
+		resp.SetResponse(http.StatusOK, environment.PublishedClientExportExternalLibrariesResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewPublishedClient()
+	_, err = client.ExportExternalLibraries(ctx, exampleWorkspaceID, exampleEnvironmentID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestItems_ListEnvironments() {
@@ -226,7 +875,7 @@ func (testsuite *FakeTestSuite) TestItems_ListEnvironments() {
 				DisplayName: to.Ptr("Environment_1"),
 				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
-				Properties: &environment.PublishInfo{
+				Properties: &environment.Properties{
 					PublishDetails: &environment.PublishDetails{
 						ComponentPublishInfo: &environment.ComponentPublishInfo{
 							SparkLibraries: &environment.SparkLibraries{
@@ -249,7 +898,7 @@ func (testsuite *FakeTestSuite) TestItems_ListEnvironments() {
 				DisplayName: to.Ptr("Environment_2"),
 				ID:          to.Ptr("a8a1bffa-7eea-49dc-a1d2-6281c1d031f1"),
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
-				Properties: &environment.PublishInfo{
+				Properties: &environment.Properties{
 					PublishDetails: &environment.PublishDetails{
 						ComponentPublishInfo: &environment.ComponentPublishInfo{
 							SparkLibraries: &environment.SparkLibraries{
@@ -290,13 +939,13 @@ func (testsuite *FakeTestSuite) TestItems_ListEnvironments() {
 func (testsuite *FakeTestSuite) TestItems_CreateEnvironment() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Create a environment example"},
+		"example-id": {"Create an environment example"},
 	})
 	var exampleWorkspaceID string
 	var exampleCreateEnvironmentRequest environment.CreateEnvironmentRequest
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
 	exampleCreateEnvironmentRequest = environment.CreateEnvironmentRequest{
-		Description: to.Ptr("An environment description"),
+		Description: to.Ptr("An environment description."),
 		DisplayName: to.Ptr("Environment_1"),
 	}
 
@@ -310,6 +959,67 @@ func (testsuite *FakeTestSuite) TestItems_CreateEnvironment() {
 
 	client := testsuite.clientFactory.NewItemsClient()
 	poller, err := client.BeginCreateEnvironment(ctx, exampleWorkspaceID, exampleCreateEnvironmentRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create an environment with public definition example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCreateEnvironmentRequest = environment.CreateEnvironmentRequest{
+		Description: to.Ptr("An environment description."),
+		Definition: &environment.Definition{
+			Parts: []environment.DefinitionPart{
+				{
+					Path:        to.Ptr("Libraries/CustomLibraries/samplelibrary.jar"),
+					Payload:     to.Ptr("eyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libraries/CustomLibraries/samplepython.py"),
+					Payload:     to.Ptr("FyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libraries/CustomLibraries/samplewheel-0.18.0-py2.py3-none-any.whl"),
+					Payload:     to.Ptr("LyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libraries/CustomLibraries/sampleR.tar.gz"),
+					Payload:     to.Ptr("ZyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libraries/PublicLibraries/environment.yml"),
+					Payload:     to.Ptr("IyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Setting/Sparkcompute.yml"),
+					Payload:     to.Ptr("GyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc"),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				}},
+		},
+		DisplayName: to.Ptr("Environment_1"),
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginCreateEnvironment = func(ctx context.Context, workspaceID string, createEnvironmentRequest environment.CreateEnvironmentRequest, options *environment.ItemsClientBeginCreateEnvironmentOptions) (resp azfake.PollerResponder[environment.ItemsClientCreateEnvironmentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateEnvironmentRequest, createEnvironmentRequest))
+		resp = azfake.PollerResponder[environment.ItemsClientCreateEnvironmentResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, environment.ItemsClientCreateEnvironmentResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateEnvironment(ctx, exampleWorkspaceID, exampleCreateEnvironmentRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
@@ -331,7 +1041,7 @@ func (testsuite *FakeTestSuite) TestItems_GetEnvironment() {
 		DisplayName: to.Ptr("Environment_1"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
-		Properties: &environment.PublishInfo{
+		Properties: &environment.Properties{
 			PublishDetails: &environment.PublishDetails{
 				ComponentPublishInfo: &environment.ComponentPublishInfo{
 					SparkLibraries: &environment.SparkLibraries{
@@ -424,142 +1134,153 @@ func (testsuite *FakeTestSuite) TestItems_DeleteEnvironment() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
-func (testsuite *FakeTestSuite) TestSparkLibraries_GetStagingLibraries() {
+func (testsuite *FakeTestSuite) TestItems_GetEnvironmentDefinition() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Get environment staging libraries example"},
+		"example-id": {"Get a environment definition example"},
 	})
 	var exampleWorkspaceID string
 	var exampleEnvironmentID string
-	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
-	exampleEnvironmentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleWorkspaceID = "6e335e92-a2a2-4b5a-970a-bd6a89fbb765"
+	exampleEnvironmentID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
 
-	exampleRes := environment.Libraries{
-		CustomLibraries: &environment.CustomLibraries{
-			JarFiles: []string{
-				"samplejar.jar"},
-			PyFiles: []string{
-				"samplepython.py"},
-			RTarFiles: []string{
-				"sampleR.tar.gz"},
-			WheelFiles: []string{
-				"samplewheel-0.18.0-py2.py3-none-any.whl"},
+	exampleRes := environment.DefinitionResponse{
+		Definition: &environment.Definition{
+			Parts: []environment.DefinitionPart{
+				{
+					Path:        to.Ptr("Libraries/CustomLibraries/samplelibrary.jar"),
+					Payload:     to.Ptr("eyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libraries/CustomLibraries/samplepython.py"),
+					Payload:     to.Ptr("FyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libraries/CustomLibraries/samplewheel-0.18.0-py2.py3-none-any.whl"),
+					Payload:     to.Ptr("LyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libraries/CustomLibraries/sampleR.tar.gz"),
+					Payload:     to.Ptr("ZyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libraries/PublicLibraries/environment.yml"),
+					Payload:     to.Ptr("IyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Setting/Sparkcompute.yml"),
+					Payload:     to.Ptr("GyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc"),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				}},
 		},
-		EnvironmentYml: to.Ptr("dependencies:\r\n- pip:\r\n  - matplotlib==3.4.3"),
 	}
 
-	testsuite.serverFactory.SparkLibrariesServer.GetStagingLibraries = func(ctx context.Context, workspaceID string, environmentID string, options *environment.SparkLibrariesClientGetStagingLibrariesOptions) (resp azfake.Responder[environment.SparkLibrariesClientGetStagingLibrariesResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ItemsServer.BeginGetEnvironmentDefinition = func(ctx context.Context, workspaceID string, environmentID string, options *environment.ItemsClientBeginGetEnvironmentDefinitionOptions) (resp azfake.PollerResponder[environment.ItemsClientGetEnvironmentDefinitionResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
-		resp = azfake.Responder[environment.SparkLibrariesClientGetStagingLibrariesResponse]{}
-		resp.SetResponse(http.StatusOK, environment.SparkLibrariesClientGetStagingLibrariesResponse{Libraries: exampleRes}, nil)
+		resp = azfake.PollerResponder[environment.ItemsClientGetEnvironmentDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, environment.ItemsClientGetEnvironmentDefinitionResponse{DefinitionResponse: exampleRes}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewSparkLibrariesClient()
-	res, err := client.GetStagingLibraries(ctx, exampleWorkspaceID, exampleEnvironmentID, nil)
+	client := testsuite.clientFactory.NewItemsClient()
+	poller, err := client.BeginGetEnvironmentDefinition(ctx, exampleWorkspaceID, exampleEnvironmentID, &environment.ItemsClientBeginGetEnvironmentDefinitionOptions{Format: nil})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
-	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Libraries))
+	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DefinitionResponse))
 }
 
-func (testsuite *FakeTestSuite) TestSparkLibraries_UploadStagingLibrary() {
+func (testsuite *FakeTestSuite) TestItems_UpdateEnvironmentDefinition() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Upload environment staging libraries example"},
+		"example-id": {"Update a environment definition example"},
 	})
 	var exampleWorkspaceID string
 	var exampleEnvironmentID string
-	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
-	exampleEnvironmentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
-
-	testsuite.serverFactory.SparkLibrariesServer.UploadStagingLibrary = func(ctx context.Context, workspaceID string, environmentID string, options *environment.SparkLibrariesClientUploadStagingLibraryOptions) (resp azfake.Responder[environment.SparkLibrariesClientUploadStagingLibraryResponse], errResp azfake.ErrorResponder) {
-		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
-		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
-		resp = azfake.Responder[environment.SparkLibrariesClientUploadStagingLibraryResponse]{}
-		resp.SetResponse(http.StatusOK, environment.SparkLibrariesClientUploadStagingLibraryResponse{}, nil)
-		return
-	}
-
-	client := testsuite.clientFactory.NewSparkLibrariesClient()
-	_, err = client.UploadStagingLibrary(ctx, exampleWorkspaceID, exampleEnvironmentID, nil)
-	testsuite.Require().NoError(err, "Failed to get result for example ")
-}
-
-func (testsuite *FakeTestSuite) TestSparkLibraries_DeleteStagingLibrary() {
-	// From example
-	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Delete environment staging libraries example"},
-	})
-	var exampleWorkspaceID string
-	var exampleEnvironmentID string
-	var exampleLibraryToDelete string
-	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
-	exampleEnvironmentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
-	exampleLibraryToDelete = "samplelibrary.jar"
-
-	testsuite.serverFactory.SparkLibrariesServer.DeleteStagingLibrary = func(ctx context.Context, workspaceID string, environmentID string, libraryToDelete string, options *environment.SparkLibrariesClientDeleteStagingLibraryOptions) (resp azfake.Responder[environment.SparkLibrariesClientDeleteStagingLibraryResponse], errResp azfake.ErrorResponder) {
-		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
-		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
-		testsuite.Require().Equal(exampleLibraryToDelete, libraryToDelete)
-		resp = azfake.Responder[environment.SparkLibrariesClientDeleteStagingLibraryResponse]{}
-		resp.SetResponse(http.StatusOK, environment.SparkLibrariesClientDeleteStagingLibraryResponse{}, nil)
-		return
-	}
-
-	client := testsuite.clientFactory.NewSparkLibrariesClient()
-	_, err = client.DeleteStagingLibrary(ctx, exampleWorkspaceID, exampleEnvironmentID, exampleLibraryToDelete, nil)
-	testsuite.Require().NoError(err, "Failed to get result for example ")
-}
-
-func (testsuite *FakeTestSuite) TestSparkLibraries_GetPublishedLibraries() {
-	// From example
-	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Get environment published libraries example"},
-	})
-	var exampleWorkspaceID string
-	var exampleEnvironmentID string
-	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
-	exampleEnvironmentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
-
-	exampleRes := environment.Libraries{
-		CustomLibraries: &environment.CustomLibraries{
-			JarFiles: []string{
-				"samplejar.jar"},
-			PyFiles: []string{
-				"samplepython.py"},
-			RTarFiles: []string{
-				"sampleR.tar.gz"},
-			WheelFiles: []string{
-				"samplewheel-0.18.0-py2.py3-none-any.whl"},
+	var exampleUpdateEnvironmentDefinitionRequest environment.UpdateEnvironmentDefinitionRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleEnvironmentID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleUpdateEnvironmentDefinitionRequest = environment.UpdateEnvironmentDefinitionRequest{
+		Definition: &environment.Definition{
+			Parts: []environment.DefinitionPart{
+				{
+					Path:        to.Ptr("Libraries/CustomLibraries/samplelibrary.jar"),
+					Payload:     to.Ptr("eyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libraries/CustomLibraries/samplepython.py"),
+					Payload:     to.Ptr("FyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libraries/CustomLibraries/samplewheel-0.18.0-py2.py3-none-any.whl"),
+					Payload:     to.Ptr("LyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libraries/CustomLibraries/sampleR.tar.gz"),
+					Payload:     to.Ptr("ZyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libraries/PublicLibraries/environment.yml"),
+					Payload:     to.Ptr("IyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Setting/Sparkcompute.yml"),
+					Payload:     to.Ptr("GyJuYmZvcm1hdCI6N.."),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc"),
+					PayloadType: to.Ptr(environment.PayloadTypeInlineBase64),
+				}},
 		},
-		EnvironmentYml: to.Ptr("dependencies:\r\n- pip:\r\n  - matplotlib==3.4.3"),
 	}
 
-	testsuite.serverFactory.SparkLibrariesServer.GetPublishedLibraries = func(ctx context.Context, workspaceID string, environmentID string, options *environment.SparkLibrariesClientGetPublishedLibrariesOptions) (resp azfake.Responder[environment.SparkLibrariesClientGetPublishedLibrariesResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ItemsServer.BeginUpdateEnvironmentDefinition = func(ctx context.Context, workspaceID string, environmentID string, updateEnvironmentDefinitionRequest environment.UpdateEnvironmentDefinitionRequest, options *environment.ItemsClientBeginUpdateEnvironmentDefinitionOptions) (resp azfake.PollerResponder[environment.ItemsClientUpdateEnvironmentDefinitionResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
-		resp = azfake.Responder[environment.SparkLibrariesClientGetPublishedLibrariesResponse]{}
-		resp.SetResponse(http.StatusOK, environment.SparkLibrariesClientGetPublishedLibrariesResponse{Libraries: exampleRes}, nil)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateEnvironmentDefinitionRequest, updateEnvironmentDefinitionRequest))
+		resp = azfake.PollerResponder[environment.ItemsClientUpdateEnvironmentDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, environment.ItemsClientUpdateEnvironmentDefinitionResponse{}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewSparkLibrariesClient()
-	res, err := client.GetPublishedLibraries(ctx, exampleWorkspaceID, exampleEnvironmentID, nil)
+	client := testsuite.clientFactory.NewItemsClient()
+	poller, err := client.BeginUpdateEnvironmentDefinition(ctx, exampleWorkspaceID, exampleEnvironmentID, exampleUpdateEnvironmentDefinitionRequest, &environment.ItemsClientBeginUpdateEnvironmentDefinitionOptions{UpdateMetadata: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
-	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Libraries))
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
 
-func (testsuite *FakeTestSuite) TestSparkLibraries_PublishEnvironment() {
+func (testsuite *FakeTestSuite) TestItems_PublishEnvironment() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Publish environment example"},
 	})
 	var exampleWorkspaceID string
 	var exampleEnvironmentID string
+	var examplePreview bool
 	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
 	exampleEnvironmentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	examplePreview = false
 
-	exampleRes := environment.PublishInfo{
+	exampleRes := environment.Properties{
 		PublishDetails: &environment.PublishDetails{
 			ComponentPublishInfo: &environment.ComponentPublishInfo{
 				SparkLibraries: &environment.SparkLibraries{
@@ -575,21 +1296,67 @@ func (testsuite *FakeTestSuite) TestSparkLibraries_PublishEnvironment() {
 		},
 	}
 
-	testsuite.serverFactory.SparkLibrariesServer.PublishEnvironment = func(ctx context.Context, workspaceID string, environmentID string, options *environment.SparkLibrariesClientPublishEnvironmentOptions) (resp azfake.Responder[environment.SparkLibrariesClientPublishEnvironmentResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ItemsServer.BeginPublishEnvironment = func(ctx context.Context, workspaceID string, environmentID string, preview bool, options *environment.ItemsClientBeginPublishEnvironmentOptions) (resp azfake.PollerResponder[environment.ItemsClientPublishEnvironmentResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
-		resp = azfake.Responder[environment.SparkLibrariesClientPublishEnvironmentResponse]{}
-		resp.SetResponse(http.StatusOK, environment.SparkLibrariesClientPublishEnvironmentResponse{PublishInfo: exampleRes}, nil)
+		testsuite.Require().Equal(examplePreview, preview)
+		resp = azfake.PollerResponder[environment.ItemsClientPublishEnvironmentResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, environment.ItemsClientPublishEnvironmentResponse{Properties: exampleRes}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewSparkLibrariesClient()
-	res, err := client.PublishEnvironment(ctx, exampleWorkspaceID, exampleEnvironmentID, nil)
+	client := testsuite.clientFactory.NewItemsClient()
+	poller, err := client.BeginPublishEnvironment(ctx, exampleWorkspaceID, exampleEnvironmentID, examplePreview, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
-	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.PublishInfo))
+	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Properties))
 }
 
-func (testsuite *FakeTestSuite) TestSparkLibraries_CancelPublish() {
+func (testsuite *FakeTestSuite) TestItems_PublishEnvironmentPreview() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Publish environment example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEnvironmentID string
+	var examplePreview bool
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleEnvironmentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	examplePreview = true
+
+	exampleRes := environment.Properties{
+		PublishDetails: &environment.PublishDetails{
+			ComponentPublishInfo: &environment.ComponentPublishInfo{
+				SparkLibraries: &environment.SparkLibraries{
+					State: to.Ptr(environment.PublishStateRunning),
+				},
+				SparkSettings: &environment.SparkSettings{
+					State: to.Ptr(environment.PublishStateRunning),
+				},
+			},
+			StartTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-03-29T14:17:09.069Z"); return t }()),
+			State:         to.Ptr(environment.PublishStateRunning),
+			TargetVersion: to.Ptr("46838a80-5450-4414-bea0-40fb6f3e0c0d"),
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.PublishEnvironmentPreview = func(ctx context.Context, workspaceID string, environmentID string, preview bool, options *environment.ItemsClientPublishEnvironmentPreviewOptions) (resp azfake.Responder[environment.ItemsClientPublishEnvironmentPreviewResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
+		testsuite.Require().Equal(examplePreview, preview)
+		resp = azfake.Responder[environment.ItemsClientPublishEnvironmentPreviewResponse]{}
+		resp.SetResponse(http.StatusOK, environment.ItemsClientPublishEnvironmentPreviewResponse{Properties: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	res, err := client.PublishEnvironmentPreview(ctx, exampleWorkspaceID, exampleEnvironmentID, examplePreview, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Properties))
+}
+
+func (testsuite *FakeTestSuite) TestItems_CancelPublishEnvironment() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Publish environment cancellation example"},
@@ -599,7 +1366,7 @@ func (testsuite *FakeTestSuite) TestSparkLibraries_CancelPublish() {
 	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
 	exampleEnvironmentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
 
-	exampleRes := environment.PublishInfo{
+	exampleRes := environment.Properties{
 		PublishDetails: &environment.PublishDetails{
 			ComponentPublishInfo: &environment.ComponentPublishInfo{
 				SparkLibraries: &environment.SparkLibraries{
@@ -609,23 +1376,23 @@ func (testsuite *FakeTestSuite) TestSparkLibraries_CancelPublish() {
 					State: to.Ptr(environment.PublishStateCancelled),
 				},
 			},
-			EndTime:       to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-03-29T15:00:47.140Z"); return t }()),
-			StartTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-03-29T15:00:33.435Z"); return t }()),
+			EndTime:       to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-03-29T14:48:18.069Z"); return t }()),
+			StartTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-03-29T14:17:09.069Z"); return t }()),
 			State:         to.Ptr(environment.PublishStateCancelled),
 			TargetVersion: to.Ptr("d9d95b01-248f-4ef4-bd7e-9d3f1f6447be"),
 		},
 	}
 
-	testsuite.serverFactory.SparkLibrariesServer.CancelPublish = func(ctx context.Context, workspaceID string, environmentID string, options *environment.SparkLibrariesClientCancelPublishOptions) (resp azfake.Responder[environment.SparkLibrariesClientCancelPublishResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ItemsServer.CancelPublishEnvironment = func(ctx context.Context, workspaceID string, environmentID string, options *environment.ItemsClientCancelPublishEnvironmentOptions) (resp azfake.Responder[environment.ItemsClientCancelPublishEnvironmentResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
-		resp = azfake.Responder[environment.SparkLibrariesClientCancelPublishResponse]{}
-		resp.SetResponse(http.StatusOK, environment.SparkLibrariesClientCancelPublishResponse{PublishInfo: exampleRes}, nil)
+		resp = azfake.Responder[environment.ItemsClientCancelPublishEnvironmentResponse]{}
+		resp.SetResponse(http.StatusOK, environment.ItemsClientCancelPublishEnvironmentResponse{Properties: exampleRes}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewSparkLibrariesClient()
-	res, err := client.CancelPublish(ctx, exampleWorkspaceID, exampleEnvironmentID, nil)
+	client := testsuite.clientFactory.NewItemsClient()
+	res, err := client.CancelPublishEnvironment(ctx, exampleWorkspaceID, exampleEnvironmentID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
-	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.PublishInfo))
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Properties))
 }

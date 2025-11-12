@@ -44,6 +44,8 @@ func PossibleFormatTypeValues() []FormatType {
 type ItemType string
 
 const (
+	// ItemTypeAnomalyDetector - An Anomaly Detector.
+	ItemTypeAnomalyDetector ItemType = "AnomalyDetector"
 	// ItemTypeApacheAirflowJob - An ApacheAirflowJob.
 	ItemTypeApacheAirflowJob ItemType = "ApacheAirflowJob"
 	// ItemTypeCopyJob - A Copy job.
@@ -66,8 +68,12 @@ const (
 	ItemTypeEventhouse ItemType = "Eventhouse"
 	// ItemTypeEventstream - An eventstream.
 	ItemTypeEventstream ItemType = "Eventstream"
+	// ItemTypeGraphModel - A GraphModel.
+	ItemTypeGraphModel ItemType = "GraphModel"
 	// ItemTypeGraphQLAPI - An API for GraphQL item.
 	ItemTypeGraphQLAPI ItemType = "GraphQLApi"
+	// ItemTypeGraphQuerySet - A Graph QuerySet.
+	ItemTypeGraphQuerySet ItemType = "GraphQuerySet"
 	// ItemTypeKQLDashboard - A KQL dashboard.
 	ItemTypeKQLDashboard ItemType = "KQLDashboard"
 	// ItemTypeKQLDatabase - A KQL database.
@@ -80,6 +86,8 @@ const (
 	ItemTypeMLExperiment ItemType = "MLExperiment"
 	// ItemTypeMLModel - A machine learning model.
 	ItemTypeMLModel ItemType = "MLModel"
+	// ItemTypeMap - A Map.
+	ItemTypeMap ItemType = "Map"
 	// ItemTypeMirroredAzureDatabricksCatalog - A mirrored azure databricks catalog.
 	ItemTypeMirroredAzureDatabricksCatalog ItemType = "MirroredAzureDatabricksCatalog"
 	// ItemTypeMirroredDatabase - A mirrored database.
@@ -104,6 +112,8 @@ const (
 	ItemTypeSemanticModel ItemType = "SemanticModel"
 	// ItemTypeSparkJobDefinition - A spark job definition.
 	ItemTypeSparkJobDefinition ItemType = "SparkJobDefinition"
+	// ItemTypeUserDataFunction - A User Data Function.
+	ItemTypeUserDataFunction ItemType = "UserDataFunction"
 	// ItemTypeVariableLibrary - A VariableLibrary.
 	ItemTypeVariableLibrary ItemType = "VariableLibrary"
 	// ItemTypeWarehouse - A warehouse.
@@ -115,6 +125,7 @@ const (
 // PossibleItemTypeValues returns the possible values for the ItemType const type.
 func PossibleItemTypeValues() []ItemType {
 	return []ItemType{
+		ItemTypeAnomalyDetector,
 		ItemTypeApacheAirflowJob,
 		ItemTypeCopyJob,
 		ItemTypeDashboard,
@@ -126,13 +137,16 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeEnvironment,
 		ItemTypeEventhouse,
 		ItemTypeEventstream,
+		ItemTypeGraphModel,
 		ItemTypeGraphQLAPI,
+		ItemTypeGraphQuerySet,
 		ItemTypeKQLDashboard,
 		ItemTypeKQLDatabase,
 		ItemTypeKQLQueryset,
 		ItemTypeLakehouse,
 		ItemTypeMLExperiment,
 		ItemTypeMLModel,
+		ItemTypeMap,
 		ItemTypeMirroredAzureDatabricksCatalog,
 		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
@@ -145,6 +159,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeSQLEndpoint,
 		ItemTypeSemanticModel,
 		ItemTypeSparkJobDefinition,
+		ItemTypeUserDataFunction,
 		ItemTypeVariableLibrary,
 		ItemTypeWarehouse,
 		ItemTypeWarehouseSnapshot,

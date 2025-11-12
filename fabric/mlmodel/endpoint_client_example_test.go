@@ -17,7 +17,7 @@ import (
 )
 
 // Generated from example definition
-func ExampleEndpointClient_GetMLModelEndpoint() {
+func ExampleEndpointClient_GetMLModelEndpoint_exampleOfGetMlModelEndpoint() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -103,7 +103,39 @@ func ExampleEndpointClient_GetMLModelEndpoint() {
 }
 
 // Generated from example definition
-func ExampleEndpointClient_UpdateMLModelEndpoint() {
+func ExampleEndpointClient_GetMLModelEndpoint_exampleOfGetMlModelEndpointWithAnActivationFailure() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := mlmodel.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewEndpointClient().GetMLModelEndpoint(ctx, "cf5fef71-f7f3-43f3-ae7f-3c427922bef1", "7e92a6fc-3ef5-40bf-96df-ddae3fcde313", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.Endpoint = mlmodel.Endpoint{
+	// 	DefaultVersionAssignmentBehavior: to.Ptr(mlmodel.EndpointDefaultVersionConfigurationPolicyStaticallyConfigured),
+	// 	DefaultVersionInfo: &mlmodel.EndpointVersionInfo{
+	// 		FailureDetails: &mlmodel.EndpointVersionInfoFailureDetails{
+	// 			ErrorCode: to.Ptr("InvalidInput"),
+	// 			Message: to.Ptr("Tensor-based models are not supported yet."),
+	// 		},
+	// 		Status: to.Ptr(mlmodel.ModelEndpointVersionStatusFailed),
+	// 		VersionName: to.Ptr("1"),
+	// 	},
+	// 	DefaultVersionName: to.Ptr("1"),
+	// }
+}
+
+// Generated from example definition
+func ExampleEndpointClient_UpdateMLModelEndpoint_exampleOfUpdateMlModelEndpoint() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -185,6 +217,41 @@ func ExampleEndpointClient_UpdateMLModelEndpoint() {
 	// 		}},
 	// 		ScaleRule: to.Ptr(mlmodel.ScaleRuleAlwaysOn),
 	// 		Status: to.Ptr(mlmodel.ModelEndpointVersionStatus("Running")),
+	// 		VersionName: to.Ptr("1"),
+	// 	},
+	// 	DefaultVersionName: to.Ptr("1"),
+	// }
+}
+
+// Generated from example definition
+func ExampleEndpointClient_UpdateMLModelEndpoint_exampleOfUpdateMlModelEndpointWithAnActivationFailure() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := mlmodel.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewEndpointClient().UpdateMLModelEndpoint(ctx, "cf5fef71-f7f3-43f3-ae7f-3c427922bef1", "7e92a6fc-3ef5-40bf-96df-ddae3fcde313", mlmodel.UpdateMLModelEndpointRequest{
+		DefaultVersionAssignmentBehavior: to.Ptr(mlmodel.EndpointDefaultVersionConfigurationPolicyStaticallyConfigured),
+		DefaultVersionName:               to.Ptr("1"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.Endpoint = mlmodel.Endpoint{
+	// 	DefaultVersionAssignmentBehavior: to.Ptr(mlmodel.EndpointDefaultVersionConfigurationPolicyStaticallyConfigured),
+	// 	DefaultVersionInfo: &mlmodel.EndpointVersionInfo{
+	// 		FailureDetails: &mlmodel.EndpointVersionInfoFailureDetails{
+	// 			ErrorCode: to.Ptr("InvalidInput"),
+	// 			Message: to.Ptr("Tensor-based models are not supported yet."),
+	// 		},
+	// 		Status: to.Ptr(mlmodel.ModelEndpointVersionStatusFailed),
 	// 		VersionName: to.Ptr("1"),
 	// 	},
 	// 	DefaultVersionName: to.Ptr("1"),
@@ -299,7 +366,11 @@ func ExampleEndpointClient_NewListMLModelEndpointVersionsPager() {
 		// 			VersionName: to.Ptr("1"),
 		// 		},
 		// 		{
-		// 			Status: to.Ptr(mlmodel.ModelEndpointVersionStatusDeactivated),
+		// 			FailureDetails: &mlmodel.EndpointVersionInfoFailureDetails{
+		// 				ErrorCode: to.Ptr("InvalidInput"),
+		// 				Message: to.Ptr("Tensor-based models are not supported yet."),
+		// 			},
+		// 			Status: to.Ptr(mlmodel.ModelEndpointVersionStatusFailed),
 		// 			VersionName: to.Ptr("2"),
 		// 	}},
 		// }
@@ -307,7 +378,7 @@ func ExampleEndpointClient_NewListMLModelEndpointVersionsPager() {
 }
 
 // Generated from example definition
-func ExampleEndpointClient_GetMLModelEndpointVersion() {
+func ExampleEndpointClient_GetMLModelEndpointVersion_exampleOfGetMlModelEndpointVersion() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -389,7 +460,35 @@ func ExampleEndpointClient_GetMLModelEndpointVersion() {
 }
 
 // Generated from example definition
-func ExampleEndpointClient_UpdateMLModelEndpointVersion() {
+func ExampleEndpointClient_GetMLModelEndpointVersion_exampleOfGetMlModelEndpointVersionWithAnActivationFailure() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := mlmodel.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewEndpointClient().GetMLModelEndpointVersion(ctx, "cf5fef71-f7f3-43f3-ae7f-3c427922bef1", "7e92a6fc-3ef5-40bf-96df-ddae3fcde313", "1", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.EndpointVersionInfo = mlmodel.EndpointVersionInfo{
+	// 	FailureDetails: &mlmodel.EndpointVersionInfoFailureDetails{
+	// 		ErrorCode: to.Ptr("InvalidInput"),
+	// 		Message: to.Ptr("Tensor-based models are not supported yet."),
+	// 	},
+	// 	Status: to.Ptr(mlmodel.ModelEndpointVersionStatusFailed),
+	// 	VersionName: to.Ptr("1"),
+	// }
+}
+
+// Generated from example definition
+func ExampleEndpointClient_UpdateMLModelEndpointVersion_exampleOfUpdateMlModelEndpointVersion() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -468,6 +567,36 @@ func ExampleEndpointClient_UpdateMLModelEndpointVersion() {
 	// 	}},
 	// 	ScaleRule: to.Ptr(mlmodel.ScaleRuleAllowScaleToZero),
 	// 	Status: to.Ptr(mlmodel.ModelEndpointVersionStatus("Running")),
+	// 	VersionName: to.Ptr("1"),
+	// }
+}
+
+// Generated from example definition
+func ExampleEndpointClient_UpdateMLModelEndpointVersion_exampleOfUpdateMlModelEndpointVersionWithAnActivationFailure() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := mlmodel.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewEndpointClient().UpdateMLModelEndpointVersion(ctx, "cf5fef71-f7f3-43f3-ae7f-3c427922bef1", "7e92a6fc-3ef5-40bf-96df-ddae3fcde313", "1", mlmodel.UpdateMLModelEndpointVersionRequest{
+		ScaleRule: to.Ptr(mlmodel.ScaleRuleAllowScaleToZero),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.EndpointVersionInfo = mlmodel.EndpointVersionInfo{
+	// 	FailureDetails: &mlmodel.EndpointVersionInfoFailureDetails{
+	// 		ErrorCode: to.Ptr("InvalidInput"),
+	// 		Message: to.Ptr("Tensor-based models are not supported yet."),
+	// 	},
+	// 	Status: to.Ptr(mlmodel.ModelEndpointVersionStatusFailed),
 	// 	VersionName: to.Ptr("1"),
 	// }
 }

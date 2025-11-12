@@ -6,10 +6,46 @@
 
 package sqldatabase
 
+// CreationMode - The creation mode of the creation payload. Additional CreationMode types may be added over time.
+type CreationMode string
+
+const (
+	// CreationModeNew - The default creation mode. 'backupRetentionDays' object is accepted in this creation mode.
+	CreationModeNew CreationMode = "New"
+	// CreationModeRestore - The creation mode of restoring from a source database. 'sourceDatabaseReference' object and 'restorePointInTime'
+	// object are required for this creation mode. 'backupRetentionDays' object is not accepted.
+	CreationModeRestore CreationMode = "Restore"
+)
+
+// PossibleCreationModeValues returns the possible values for the CreationMode const type.
+func PossibleCreationModeValues() []CreationMode {
+	return []CreationMode{
+		CreationModeNew,
+		CreationModeRestore,
+	}
+}
+
+// ItemReferenceType - The Item reference type. Additional ItemReferenceType types may be added over time.
+type ItemReferenceType string
+
+const (
+	// ItemReferenceTypeByID - The item is referenced by its ID.
+	ItemReferenceTypeByID ItemReferenceType = "ById"
+)
+
+// PossibleItemReferenceTypeValues returns the possible values for the ItemReferenceType const type.
+func PossibleItemReferenceTypeValues() []ItemReferenceType {
+	return []ItemReferenceType{
+		ItemReferenceTypeByID,
+	}
+}
+
 // ItemType - The type of the item. Additional item types may be added over time.
 type ItemType string
 
 const (
+	// ItemTypeAnomalyDetector - An Anomaly Detector.
+	ItemTypeAnomalyDetector ItemType = "AnomalyDetector"
 	// ItemTypeApacheAirflowJob - An ApacheAirflowJob.
 	ItemTypeApacheAirflowJob ItemType = "ApacheAirflowJob"
 	// ItemTypeCopyJob - A Copy job.
@@ -32,8 +68,12 @@ const (
 	ItemTypeEventhouse ItemType = "Eventhouse"
 	// ItemTypeEventstream - An eventstream.
 	ItemTypeEventstream ItemType = "Eventstream"
+	// ItemTypeGraphModel - A GraphModel.
+	ItemTypeGraphModel ItemType = "GraphModel"
 	// ItemTypeGraphQLAPI - An API for GraphQL item.
 	ItemTypeGraphQLAPI ItemType = "GraphQLApi"
+	// ItemTypeGraphQuerySet - A Graph QuerySet.
+	ItemTypeGraphQuerySet ItemType = "GraphQuerySet"
 	// ItemTypeKQLDashboard - A KQL dashboard.
 	ItemTypeKQLDashboard ItemType = "KQLDashboard"
 	// ItemTypeKQLDatabase - A KQL database.
@@ -46,6 +86,8 @@ const (
 	ItemTypeMLExperiment ItemType = "MLExperiment"
 	// ItemTypeMLModel - A machine learning model.
 	ItemTypeMLModel ItemType = "MLModel"
+	// ItemTypeMap - A Map.
+	ItemTypeMap ItemType = "Map"
 	// ItemTypeMirroredAzureDatabricksCatalog - A mirrored azure databricks catalog.
 	ItemTypeMirroredAzureDatabricksCatalog ItemType = "MirroredAzureDatabricksCatalog"
 	// ItemTypeMirroredDatabase - A mirrored database.
@@ -70,6 +112,8 @@ const (
 	ItemTypeSemanticModel ItemType = "SemanticModel"
 	// ItemTypeSparkJobDefinition - A spark job definition.
 	ItemTypeSparkJobDefinition ItemType = "SparkJobDefinition"
+	// ItemTypeUserDataFunction - A User Data Function.
+	ItemTypeUserDataFunction ItemType = "UserDataFunction"
 	// ItemTypeVariableLibrary - A VariableLibrary.
 	ItemTypeVariableLibrary ItemType = "VariableLibrary"
 	// ItemTypeWarehouse - A warehouse.
@@ -81,6 +125,7 @@ const (
 // PossibleItemTypeValues returns the possible values for the ItemType const type.
 func PossibleItemTypeValues() []ItemType {
 	return []ItemType{
+		ItemTypeAnomalyDetector,
 		ItemTypeApacheAirflowJob,
 		ItemTypeCopyJob,
 		ItemTypeDashboard,
@@ -92,13 +137,16 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeEnvironment,
 		ItemTypeEventhouse,
 		ItemTypeEventstream,
+		ItemTypeGraphModel,
 		ItemTypeGraphQLAPI,
+		ItemTypeGraphQuerySet,
 		ItemTypeKQLDashboard,
 		ItemTypeKQLDatabase,
 		ItemTypeKQLQueryset,
 		ItemTypeLakehouse,
 		ItemTypeMLExperiment,
 		ItemTypeMLModel,
+		ItemTypeMap,
 		ItemTypeMirroredAzureDatabricksCatalog,
 		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
@@ -111,8 +159,24 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeSQLEndpoint,
 		ItemTypeSemanticModel,
 		ItemTypeSparkJobDefinition,
+		ItemTypeUserDataFunction,
 		ItemTypeVariableLibrary,
 		ItemTypeWarehouse,
 		ItemTypeWarehouseSnapshot,
+	}
+}
+
+// PayloadType - The type of the definition part payload. Additional payload types may be added over time.
+type PayloadType string
+
+const (
+	// PayloadTypeInlineBase64 - Inline Base 64.
+	PayloadTypeInlineBase64 PayloadType = "InlineBase64"
+)
+
+// PossiblePayloadTypeValues returns the possible values for the PayloadType const type.
+func PossiblePayloadTypeValues() []PayloadType {
+	return []PayloadType{
+		PayloadTypeInlineBase64,
 	}
 }

@@ -6,6 +6,16 @@
 
 package sqldatabase
 
+// ClientStartMirroringResponse contains the response from method Client.StartMirroring.
+type ClientStartMirroringResponse struct {
+	// placeholder for future response values
+}
+
+// ClientStopMirroringResponse contains the response from method Client.StopMirroring.
+type ClientStopMirroringResponse struct {
+	// placeholder for future response values
+}
+
 // ItemsClientCreateSQLDatabaseResponse contains the response from method ItemsClient.BeginCreateSQLDatabase.
 type ItemsClientCreateSQLDatabaseResponse struct {
 	// A SQL database object.
@@ -15,6 +25,12 @@ type ItemsClientCreateSQLDatabaseResponse struct {
 // ItemsClientDeleteSQLDatabaseResponse contains the response from method ItemsClient.DeleteSQLDatabase.
 type ItemsClientDeleteSQLDatabaseResponse struct {
 	// placeholder for future response values
+}
+
+// ItemsClientGetSQLDatabaseDefinitionResponse contains the response from method ItemsClient.BeginGetSQLDatabaseDefinition.
+type ItemsClientGetSQLDatabaseDefinitionResponse struct {
+	// The SQL database public definition response.
+	DefinitionResponse
 }
 
 // ItemsClientGetSQLDatabaseResponse contains the response from method ItemsClient.GetSQLDatabase.
@@ -33,4 +49,9 @@ type ItemsClientListSQLDatabasesResponse struct {
 type ItemsClientUpdateSQLDatabaseResponse struct {
 	// A SQL database object.
 	SQLDatabase
+}
+
+// ItemsClientUpdateSQLDatabasesDefinitionResponse contains the response from method ItemsClient.BeginUpdateSQLDatabasesDefinition.
+type ItemsClientUpdateSQLDatabasesDefinitionResponse struct {
+	// placeholder for future response values
 }

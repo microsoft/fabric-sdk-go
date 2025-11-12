@@ -16,6 +16,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 
 	adminfake "github.com/microsoft/fabric-sdk-go/fabric/admin/fake"
+	anomalydetectorfake "github.com/microsoft/fabric-sdk-go/fabric/anomalydetector/fake"
 	apacheairflowjobfake "github.com/microsoft/fabric-sdk-go/fabric/apacheairflowjob/fake"
 	copyjobfake "github.com/microsoft/fabric-sdk-go/fabric/copyjob/fake"
 	corefake "github.com/microsoft/fabric-sdk-go/fabric/core/fake"
@@ -28,11 +29,14 @@ import (
 	environmentfake "github.com/microsoft/fabric-sdk-go/fabric/environment/fake"
 	eventhousefake "github.com/microsoft/fabric-sdk-go/fabric/eventhouse/fake"
 	eventstreamfake "github.com/microsoft/fabric-sdk-go/fabric/eventstream/fake"
+	graphmodelfake "github.com/microsoft/fabric-sdk-go/fabric/graphmodel/fake"
 	graphqlapifake "github.com/microsoft/fabric-sdk-go/fabric/graphqlapi/fake"
+	graphquerysetfake "github.com/microsoft/fabric-sdk-go/fabric/graphqueryset/fake"
 	kqldashboardfake "github.com/microsoft/fabric-sdk-go/fabric/kqldashboard/fake"
 	kqldatabasefake "github.com/microsoft/fabric-sdk-go/fabric/kqldatabase/fake"
 	kqlquerysetfake "github.com/microsoft/fabric-sdk-go/fabric/kqlqueryset/fake"
 	lakehousefake "github.com/microsoft/fabric-sdk-go/fabric/lakehouse/fake"
+	mapsfake "github.com/microsoft/fabric-sdk-go/fabric/maps/fake"
 	mirroredazuredatabrickscatalogfake "github.com/microsoft/fabric-sdk-go/fabric/mirroredazuredatabrickscatalog/fake"
 	mirroreddatabasefake "github.com/microsoft/fabric-sdk-go/fabric/mirroreddatabase/fake"
 	mirroredwarehousefake "github.com/microsoft/fabric-sdk-go/fabric/mirroredwarehouse/fake"
@@ -48,6 +52,7 @@ import (
 	sparkjobdefinitionfake "github.com/microsoft/fabric-sdk-go/fabric/sparkjobdefinition/fake"
 	sqldatabasefake "github.com/microsoft/fabric-sdk-go/fabric/sqldatabase/fake"
 	sqlendpointfake "github.com/microsoft/fabric-sdk-go/fabric/sqlendpoint/fake"
+	userdatafunctionfake "github.com/microsoft/fabric-sdk-go/fabric/userdatafunction/fake"
 	variablelibraryfake "github.com/microsoft/fabric-sdk-go/fabric/variablelibrary/fake"
 	warehousefake "github.com/microsoft/fabric-sdk-go/fabric/warehouse/fake"
 	warehousesnapshotfake "github.com/microsoft/fabric-sdk-go/fabric/warehousesnapshot/fake"
@@ -56,6 +61,7 @@ import (
 // ServerFactory is a fake server for instance of the fabric.Client type.
 type ServerFactory struct {
 	Admin                          adminfake.ServerFactory
+	AnomalyDetector                anomalydetectorfake.ServerFactory
 	Apache                         apacheairflowjobfake.ServerFactory
 	CopyJob                        copyjobfake.ServerFactory
 	Core                           corefake.ServerFactory
@@ -68,11 +74,14 @@ type ServerFactory struct {
 	Environment                    environmentfake.ServerFactory
 	Eventhouse                     eventhousefake.ServerFactory
 	Eventstream                    eventstreamfake.ServerFactory
+	GraphModel                     graphmodelfake.ServerFactory
 	GraphQLApi                     graphqlapifake.ServerFactory
+	GraphQuerySet                  graphquerysetfake.ServerFactory
 	KQLDashboard                   kqldashboardfake.ServerFactory
 	KQLDatabase                    kqldatabasefake.ServerFactory
 	KQLQueryset                    kqlquerysetfake.ServerFactory
 	Lakehouse                      lakehousefake.ServerFactory
+	Map                            mapsfake.ServerFactory
 	MirroredAzureDatabricksCatalog mirroredazuredatabrickscatalogfake.ServerFactory
 	MirroredDatabase               mirroreddatabasefake.ServerFactory
 	MirroredWarehouse              mirroredwarehousefake.ServerFactory
@@ -88,6 +97,7 @@ type ServerFactory struct {
 	SparkJobDefinition             sparkjobdefinitionfake.ServerFactory
 	SQLDatabase                    sqldatabasefake.ServerFactory
 	SQLEndpoint                    sqlendpointfake.ServerFactory
+	UserDataFunction               userdatafunctionfake.ServerFactory
 	VariableLibrary                variablelibraryfake.ServerFactory
 	Warehouse                      warehousefake.ServerFactory
 	WarehouseSnapshot              warehousesnapshotfake.ServerFactory
@@ -99,6 +109,7 @@ type ServerFactoryTransport struct {
 	srv                              *ServerFactory
 	trMu                             sync.Mutex
 	trAdmin                          *adminfake.ServerFactoryTransport
+	trAnomalyDetector                *anomalydetectorfake.ServerFactoryTransport
 	trApache                         *apacheairflowjobfake.ServerFactoryTransport
 	trCopyJob                        *copyjobfake.ServerFactoryTransport
 	trCore                           *corefake.ServerFactoryTransport
@@ -111,11 +122,14 @@ type ServerFactoryTransport struct {
 	trEnvironment                    *environmentfake.ServerFactoryTransport
 	trEventhouse                     *eventhousefake.ServerFactoryTransport
 	trEventstream                    *eventstreamfake.ServerFactoryTransport
+	trGraphModel                     *graphmodelfake.ServerFactoryTransport
 	trGraphQLApi                     *graphqlapifake.ServerFactoryTransport
+	trGraphQuerySet                  *graphquerysetfake.ServerFactoryTransport
 	trKQLDashboard                   *kqldashboardfake.ServerFactoryTransport
 	trKQLDatabase                    *kqldatabasefake.ServerFactoryTransport
 	trKQLQueryset                    *kqlquerysetfake.ServerFactoryTransport
 	trLakehouse                      *lakehousefake.ServerFactoryTransport
+	trMap                            *mapsfake.ServerFactoryTransport
 	trMirroredAzureDatabricksCatalog *mirroredazuredatabrickscatalogfake.ServerFactoryTransport
 	trMirroredDatabase               *mirroreddatabasefake.ServerFactoryTransport
 	trMirroredWarehouse              *mirroredwarehousefake.ServerFactoryTransport
@@ -131,6 +145,7 @@ type ServerFactoryTransport struct {
 	trSparkJobDefinition             *sparkjobdefinitionfake.ServerFactoryTransport
 	trSQLDatabase                    *sqldatabasefake.ServerFactoryTransport
 	trSQLEndpoint                    *sqlendpointfake.ServerFactoryTransport
+	trUserDataFunction               *userdatafunctionfake.ServerFactoryTransport
 	trVariableLibrary                *variablelibraryfake.ServerFactoryTransport
 	trWarehouse                      *warehousefake.ServerFactoryTransport
 	trWarehouseSnapshot              *warehousesnapshotfake.ServerFactoryTransport
@@ -138,7 +153,7 @@ type ServerFactoryTransport struct {
 
 // NewServerFactoryTransport creates a new instance of ServerFactoryTransport with the provided implementation.
 // The returned ServerFactoryTransport instance is connected to an instance of fabric.Client via the
-// azcore.ClientOptions.Transporter field in the client's constructor parameters.
+// fabric.ClientOptions.Transporter field in the client's constructor parameters.
 func NewServerFactoryTransport(srv *ServerFactory) *ServerFactoryTransport {
 	return &ServerFactoryTransport{
 		srv: srv,
@@ -162,6 +177,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	case "admin":
 		initServer(s, &s.trAdmin, func() *adminfake.ServerFactoryTransport { return adminfake.NewServerFactoryTransport(&s.srv.Admin) })
 		resp, err = s.trAdmin.Do(req)
+	case "anomalydetector":
+		initServer(s, &s.trAnomalyDetector, func() *anomalydetectorfake.ServerFactoryTransport {
+			return anomalydetectorfake.NewServerFactoryTransport(&s.srv.AnomalyDetector)
+		})
+		resp, err = s.trAnomalyDetector.Do(req)
 	case "apacheairflowjob":
 		initServer(s, &s.trApache, func() *apacheairflowjobfake.ServerFactoryTransport {
 			return apacheairflowjobfake.NewServerFactoryTransport(&s.srv.Apache)
@@ -220,11 +240,21 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return eventstreamfake.NewServerFactoryTransport(&s.srv.Eventstream)
 		})
 		resp, err = s.trEventstream.Do(req)
+	case "graphmodel":
+		initServer(s, &s.trGraphModel, func() *graphmodelfake.ServerFactoryTransport {
+			return graphmodelfake.NewServerFactoryTransport(&s.srv.GraphModel)
+		})
+		resp, err = s.trGraphModel.Do(req)
 	case "graphqlapi":
 		initServer(s, &s.trGraphQLApi, func() *graphqlapifake.ServerFactoryTransport {
 			return graphqlapifake.NewServerFactoryTransport(&s.srv.GraphQLApi)
 		})
 		resp, err = s.trGraphQLApi.Do(req)
+	case "graphqueryset":
+		initServer(s, &s.trGraphQuerySet, func() *graphquerysetfake.ServerFactoryTransport {
+			return graphquerysetfake.NewServerFactoryTransport(&s.srv.GraphQuerySet)
+		})
+		resp, err = s.trGraphQuerySet.Do(req)
 	case "kqldashboard":
 		initServer(s, &s.trKQLDashboard, func() *kqldashboardfake.ServerFactoryTransport {
 			return kqldashboardfake.NewServerFactoryTransport(&s.srv.KQLDashboard)
@@ -245,6 +275,9 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return lakehousefake.NewServerFactoryTransport(&s.srv.Lakehouse)
 		})
 		resp, err = s.trLakehouse.Do(req)
+	case "maps":
+		initServer(s, &s.trMap, func() *mapsfake.ServerFactoryTransport { return mapsfake.NewServerFactoryTransport(&s.srv.Map) })
+		resp, err = s.trMap.Do(req)
 	case "mirroredazuredatabrickscatalog":
 		initServer(s, &s.trMirroredAzureDatabricksCatalog, func() *mirroredazuredatabrickscatalogfake.ServerFactoryTransport {
 			return mirroredazuredatabrickscatalogfake.NewServerFactoryTransport(&s.srv.MirroredAzureDatabricksCatalog)
@@ -314,6 +347,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return sqlendpointfake.NewServerFactoryTransport(&s.srv.SQLEndpoint)
 		})
 		resp, err = s.trSQLEndpoint.Do(req)
+	case "userdatafunction":
+		initServer(s, &s.trUserDataFunction, func() *userdatafunctionfake.ServerFactoryTransport {
+			return userdatafunctionfake.NewServerFactoryTransport(&s.srv.UserDataFunction)
+		})
+		resp, err = s.trUserDataFunction.Do(req)
 	case "variablelibrary":
 		initServer(s, &s.trVariableLibrary, func() *variablelibraryfake.ServerFactoryTransport {
 			return variablelibraryfake.NewServerFactoryTransport(&s.srv.VariableLibrary)

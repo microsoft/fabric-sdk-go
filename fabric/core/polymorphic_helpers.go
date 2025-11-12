@@ -281,6 +281,27 @@ func unmarshalGitProviderDetailsClassification(rawMsg json.RawMessage) (GitProvi
 	return b, nil
 }
 
+func unmarshalItemReferenceClassification(rawMsg json.RawMessage) (ItemReferenceClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b ItemReferenceClassification
+	switch m["referenceType"] {
+	case string(ItemReferenceTypeByID):
+		b = &ItemReferenceByID{}
+	default:
+		b = &ItemReference{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
 func unmarshalMonthlyOccurrenceClassification(rawMsg json.RawMessage) (MonthlyOccurrenceClassification, error) {
 	if rawMsg == nil || string(rawMsg) == "null" {
 		return nil, nil
@@ -297,6 +318,27 @@ func unmarshalMonthlyOccurrenceClassification(rawMsg json.RawMessage) (MonthlyOc
 		b = &OrdinalWeekday{}
 	default:
 		b = &MonthlyOccurrence{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalOneLakeDiagnosticSettingsDestinationInfoClassification(rawMsg json.RawMessage) (OneLakeDiagnosticSettingsDestinationInfoClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b OneLakeDiagnosticSettingsDestinationInfoClassification
+	switch m["type"] {
+	case "Lakehouse":
+		b = &LakehouseOneLakeDiagnosticSettingsDestination{}
+	default:
+		b = &OneLakeDiagnosticSettingsDestinationInfo{}
 	}
 	if err := json.Unmarshal(rawMsg, b); err != nil {
 		return nil, err

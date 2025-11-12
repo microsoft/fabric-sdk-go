@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
@@ -25,6 +26,10 @@ import (
 
 // ItemsServer is a fake server for instances of the environment.ItemsClient type.
 type ItemsServer struct {
+	// CancelPublishEnvironment is the fake for method ItemsClient.CancelPublishEnvironment
+	// HTTP status codes to indicate success: http.StatusOK
+	CancelPublishEnvironment func(ctx context.Context, workspaceID string, environmentID string, options *environment.ItemsClientCancelPublishEnvironmentOptions) (resp azfake.Responder[environment.ItemsClientCancelPublishEnvironmentResponse], errResp azfake.ErrorResponder)
+
 	// BeginCreateEnvironment is the fake for method ItemsClient.BeginCreateEnvironment
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated, http.StatusAccepted
 	BeginCreateEnvironment func(ctx context.Context, workspaceID string, createEnvironmentRequest environment.CreateEnvironmentRequest, options *environment.ItemsClientBeginCreateEnvironmentOptions) (resp azfake.PollerResponder[environment.ItemsClientCreateEnvironmentResponse], errResp azfake.ErrorResponder)
@@ -37,13 +42,29 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetEnvironment func(ctx context.Context, workspaceID string, environmentID string, options *environment.ItemsClientGetEnvironmentOptions) (resp azfake.Responder[environment.ItemsClientGetEnvironmentResponse], errResp azfake.ErrorResponder)
 
+	// BeginGetEnvironmentDefinition is the fake for method ItemsClient.BeginGetEnvironmentDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	BeginGetEnvironmentDefinition func(ctx context.Context, workspaceID string, environmentID string, options *environment.ItemsClientBeginGetEnvironmentDefinitionOptions) (resp azfake.PollerResponder[environment.ItemsClientGetEnvironmentDefinitionResponse], errResp azfake.ErrorResponder)
+
 	// NewListEnvironmentsPager is the fake for method ItemsClient.NewListEnvironmentsPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListEnvironmentsPager func(workspaceID string, options *environment.ItemsClientListEnvironmentsOptions) (resp azfake.PagerResponder[environment.ItemsClientListEnvironmentsResponse])
 
+	// BeginPublishEnvironment is the fake for method ItemsClient.BeginPublishEnvironment
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	BeginPublishEnvironment func(ctx context.Context, workspaceID string, environmentID string, preview bool, options *environment.ItemsClientBeginPublishEnvironmentOptions) (resp azfake.PollerResponder[environment.ItemsClientPublishEnvironmentResponse], errResp azfake.ErrorResponder)
+
+	// PublishEnvironmentPreview is the fake for method ItemsClient.PublishEnvironmentPreview
+	// HTTP status codes to indicate success: http.StatusOK
+	PublishEnvironmentPreview func(ctx context.Context, workspaceID string, environmentID string, preview bool, options *environment.ItemsClientPublishEnvironmentPreviewOptions) (resp azfake.Responder[environment.ItemsClientPublishEnvironmentPreviewResponse], errResp azfake.ErrorResponder)
+
 	// UpdateEnvironment is the fake for method ItemsClient.UpdateEnvironment
 	// HTTP status codes to indicate success: http.StatusOK
 	UpdateEnvironment func(ctx context.Context, workspaceID string, environmentID string, updateEnvironmentRequest environment.UpdateEnvironmentRequest, options *environment.ItemsClientUpdateEnvironmentOptions) (resp azfake.Responder[environment.ItemsClientUpdateEnvironmentResponse], errResp azfake.ErrorResponder)
+
+	// BeginUpdateEnvironmentDefinition is the fake for method ItemsClient.BeginUpdateEnvironmentDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
+	BeginUpdateEnvironmentDefinition func(ctx context.Context, workspaceID string, environmentID string, updateEnvironmentDefinitionRequest environment.UpdateEnvironmentDefinitionRequest, options *environment.ItemsClientBeginUpdateEnvironmentDefinitionOptions) (resp azfake.PollerResponder[environment.ItemsClientUpdateEnvironmentDefinitionResponse], errResp azfake.ErrorResponder)
 }
 
 // NewItemsServerTransport creates a new instance of ItemsServerTransport with the provided implementation.
@@ -51,18 +72,24 @@ type ItemsServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewItemsServerTransport(srv *ItemsServer) *ItemsServerTransport {
 	return &ItemsServerTransport{
-		srv:                      srv,
-		beginCreateEnvironment:   newTracker[azfake.PollerResponder[environment.ItemsClientCreateEnvironmentResponse]](),
-		newListEnvironmentsPager: newTracker[azfake.PagerResponder[environment.ItemsClientListEnvironmentsResponse]](),
+		srv:                              srv,
+		beginCreateEnvironment:           newTracker[azfake.PollerResponder[environment.ItemsClientCreateEnvironmentResponse]](),
+		beginGetEnvironmentDefinition:    newTracker[azfake.PollerResponder[environment.ItemsClientGetEnvironmentDefinitionResponse]](),
+		newListEnvironmentsPager:         newTracker[azfake.PagerResponder[environment.ItemsClientListEnvironmentsResponse]](),
+		beginPublishEnvironment:          newTracker[azfake.PollerResponder[environment.ItemsClientPublishEnvironmentResponse]](),
+		beginUpdateEnvironmentDefinition: newTracker[azfake.PollerResponder[environment.ItemsClientUpdateEnvironmentDefinitionResponse]](),
 	}
 }
 
 // ItemsServerTransport connects instances of environment.ItemsClient to instances of ItemsServer.
 // Don't use this type directly, use NewItemsServerTransport instead.
 type ItemsServerTransport struct {
-	srv                      *ItemsServer
-	beginCreateEnvironment   *tracker[azfake.PollerResponder[environment.ItemsClientCreateEnvironmentResponse]]
-	newListEnvironmentsPager *tracker[azfake.PagerResponder[environment.ItemsClientListEnvironmentsResponse]]
+	srv                              *ItemsServer
+	beginCreateEnvironment           *tracker[azfake.PollerResponder[environment.ItemsClientCreateEnvironmentResponse]]
+	beginGetEnvironmentDefinition    *tracker[azfake.PollerResponder[environment.ItemsClientGetEnvironmentDefinitionResponse]]
+	newListEnvironmentsPager         *tracker[azfake.PagerResponder[environment.ItemsClientListEnvironmentsResponse]]
+	beginPublishEnvironment          *tracker[azfake.PollerResponder[environment.ItemsClientPublishEnvironmentResponse]]
+	beginUpdateEnvironmentDefinition *tracker[azfake.PollerResponder[environment.ItemsClientUpdateEnvironmentDefinitionResponse]]
 }
 
 // Do implements the policy.Transporter interface for ItemsServerTransport.
@@ -90,16 +117,26 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 		}
 		if !intercepted {
 			switch method {
+			case "ItemsClient.CancelPublishEnvironment":
+				res.resp, res.err = i.dispatchCancelPublishEnvironment(req)
 			case "ItemsClient.BeginCreateEnvironment":
 				res.resp, res.err = i.dispatchBeginCreateEnvironment(req)
 			case "ItemsClient.DeleteEnvironment":
 				res.resp, res.err = i.dispatchDeleteEnvironment(req)
 			case "ItemsClient.GetEnvironment":
 				res.resp, res.err = i.dispatchGetEnvironment(req)
+			case "ItemsClient.BeginGetEnvironmentDefinition":
+				res.resp, res.err = i.dispatchBeginGetEnvironmentDefinition(req)
 			case "ItemsClient.NewListEnvironmentsPager":
 				res.resp, res.err = i.dispatchNewListEnvironmentsPager(req)
+			case "ItemsClient.BeginPublishEnvironment":
+				res.resp, res.err = i.dispatchBeginPublishEnvironment(req)
+			case "ItemsClient.PublishEnvironmentPreview":
+				res.resp, res.err = i.dispatchPublishEnvironmentPreview(req)
 			case "ItemsClient.UpdateEnvironment":
 				res.resp, res.err = i.dispatchUpdateEnvironment(req)
+			case "ItemsClient.BeginUpdateEnvironmentDefinition":
+				res.resp, res.err = i.dispatchBeginUpdateEnvironmentDefinition(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -117,6 +154,39 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 	case res := <-resultChan:
 		return res.resp, res.err
 	}
+}
+
+func (i *ItemsServerTransport) dispatchCancelPublishEnvironment(req *http.Request) (*http.Response, error) {
+	if i.srv.CancelPublishEnvironment == nil {
+		return nil, &nonRetriableError{errors.New("fake for method CancelPublishEnvironment not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/staging/cancelPublish`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	environmentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("environmentId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := i.srv.CancelPublishEnvironment(req.Context(), workspaceIDParam, environmentIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).Properties, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 func (i *ItemsServerTransport) dispatchBeginCreateEnvironment(req *http.Request) (*http.Response, error) {
@@ -229,6 +299,62 @@ func (i *ItemsServerTransport) dispatchGetEnvironment(req *http.Request) (*http.
 	return resp, nil
 }
 
+func (i *ItemsServerTransport) dispatchBeginGetEnvironmentDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginGetEnvironmentDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginGetEnvironmentDefinition not implemented")}
+	}
+	beginGetEnvironmentDefinition := i.beginGetEnvironmentDefinition.get(req)
+	if beginGetEnvironmentDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		environmentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("environmentId")])
+		if err != nil {
+			return nil, err
+		}
+		formatUnescaped, err := url.QueryUnescape(qp.Get("format"))
+		if err != nil {
+			return nil, err
+		}
+		formatParam := getOptional(formatUnescaped)
+		var options *environment.ItemsClientBeginGetEnvironmentDefinitionOptions
+		if formatParam != nil {
+			options = &environment.ItemsClientBeginGetEnvironmentDefinitionOptions{
+				Format: formatParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginGetEnvironmentDefinition(req.Context(), workspaceIDParam, environmentIDParam, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginGetEnvironmentDefinition = &respr
+		i.beginGetEnvironmentDefinition.add(req, beginGetEnvironmentDefinition)
+	}
+
+	resp, err := server.PollerResponderNext(beginGetEnvironmentDefinition, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+		i.beginGetEnvironmentDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginGetEnvironmentDefinition) {
+		i.beginGetEnvironmentDefinition.remove(req)
+	}
+
+	return resp, nil
+}
+
 func (i *ItemsServerTransport) dispatchNewListEnvironmentsPager(req *http.Request) (*http.Response, error) {
 	if i.srv.NewListEnvironmentsPager == nil {
 		return nil, &nonRetriableError{errors.New("fake for method NewListEnvironmentsPager not implemented")}
@@ -278,6 +404,101 @@ func (i *ItemsServerTransport) dispatchNewListEnvironmentsPager(req *http.Reques
 	return resp, nil
 }
 
+func (i *ItemsServerTransport) dispatchBeginPublishEnvironment(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginPublishEnvironment == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginPublishEnvironment not implemented")}
+	}
+	beginPublishEnvironment := i.beginPublishEnvironment.get(req)
+	if beginPublishEnvironment == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/staging/publish`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		environmentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("environmentId")])
+		if err != nil {
+			return nil, err
+		}
+		previewUnescaped, err := url.QueryUnescape(qp.Get("preview"))
+		if err != nil {
+			return nil, err
+		}
+		previewParam, err := strconv.ParseBool(previewUnescaped)
+		if err != nil {
+			return nil, err
+		}
+		respr, errRespr := i.srv.BeginPublishEnvironment(req.Context(), workspaceIDParam, environmentIDParam, previewParam, nil)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginPublishEnvironment = &respr
+		i.beginPublishEnvironment.add(req, beginPublishEnvironment)
+	}
+
+	resp, err := server.PollerResponderNext(beginPublishEnvironment, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+		i.beginPublishEnvironment.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginPublishEnvironment) {
+		i.beginPublishEnvironment.remove(req)
+	}
+
+	return resp, nil
+}
+
+func (i *ItemsServerTransport) dispatchPublishEnvironmentPreview(req *http.Request) (*http.Response, error) {
+	if i.srv.PublishEnvironmentPreview == nil {
+		return nil, &nonRetriableError{errors.New("fake for method PublishEnvironmentPreview not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/staging/publish`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	qp := req.URL.Query()
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	environmentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("environmentId")])
+	if err != nil {
+		return nil, err
+	}
+	previewUnescaped, err := url.QueryUnescape(qp.Get("preview"))
+	if err != nil {
+		return nil, err
+	}
+	previewParam, err := strconv.ParseBool(previewUnescaped)
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := i.srv.PublishEnvironmentPreview(req.Context(), workspaceIDParam, environmentIDParam, previewParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).Properties, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
 func (i *ItemsServerTransport) dispatchUpdateEnvironment(req *http.Request) (*http.Response, error) {
 	if i.srv.UpdateEnvironment == nil {
 		return nil, &nonRetriableError{errors.New("fake for method UpdateEnvironment not implemented")}
@@ -312,6 +533,69 @@ func (i *ItemsServerTransport) dispatchUpdateEnvironment(req *http.Request) (*ht
 	if err != nil {
 		return nil, err
 	}
+	return resp, nil
+}
+
+func (i *ItemsServerTransport) dispatchBeginUpdateEnvironmentDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginUpdateEnvironmentDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginUpdateEnvironmentDefinition not implemented")}
+	}
+	beginUpdateEnvironmentDefinition := i.beginUpdateEnvironmentDefinition.get(req)
+	if beginUpdateEnvironmentDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		body, err := server.UnmarshalRequestAsJSON[environment.UpdateEnvironmentDefinitionRequest](req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		environmentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("environmentId")])
+		if err != nil {
+			return nil, err
+		}
+		updateMetadataUnescaped, err := url.QueryUnescape(qp.Get("updateMetadata"))
+		if err != nil {
+			return nil, err
+		}
+		updateMetadataParam, err := parseOptional(updateMetadataUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		var options *environment.ItemsClientBeginUpdateEnvironmentDefinitionOptions
+		if updateMetadataParam != nil {
+			options = &environment.ItemsClientBeginUpdateEnvironmentDefinitionOptions{
+				UpdateMetadata: updateMetadataParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginUpdateEnvironmentDefinition(req.Context(), workspaceIDParam, environmentIDParam, body, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginUpdateEnvironmentDefinition = &respr
+		i.beginUpdateEnvironmentDefinition.add(req, beginUpdateEnvironmentDefinition)
+	}
+
+	resp, err := server.PollerResponderNext(beginUpdateEnvironmentDefinition, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
+		i.beginUpdateEnvironmentDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginUpdateEnvironmentDefinition) {
+		i.beginUpdateEnvironmentDefinition.remove(req)
+	}
+
 	return resp, nil
 }
 

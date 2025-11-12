@@ -6,6 +6,34 @@
 
 package environment
 
+// CustomPoolMemory - Custom pool memory for Spark driver or Spark executor. Additional CustomPoolMemory types may be added
+// over time.
+type CustomPoolMemory string
+
+const (
+	// CustomPoolMemoryFiftySixG - 56G memory.
+	CustomPoolMemoryFiftySixG CustomPoolMemory = "56g"
+	// CustomPoolMemoryFourHundredG - 400G memory.
+	CustomPoolMemoryFourHundredG CustomPoolMemory = "400g"
+	// CustomPoolMemoryOneHundredTwelveG - 112G memory.
+	CustomPoolMemoryOneHundredTwelveG CustomPoolMemory = "112g"
+	// CustomPoolMemoryTwentyEightG - 28GB memory.
+	CustomPoolMemoryTwentyEightG CustomPoolMemory = "28g"
+	// CustomPoolMemoryTwoHundredTwentyFourG - 224G memory.
+	CustomPoolMemoryTwoHundredTwentyFourG CustomPoolMemory = "224g"
+)
+
+// PossibleCustomPoolMemoryValues returns the possible values for the CustomPoolMemory const type.
+func PossibleCustomPoolMemoryValues() []CustomPoolMemory {
+	return []CustomPoolMemory{
+		CustomPoolMemoryFiftySixG,
+		CustomPoolMemoryFourHundredG,
+		CustomPoolMemoryOneHundredTwelveG,
+		CustomPoolMemoryTwentyEightG,
+		CustomPoolMemoryTwoHundredTwentyFourG,
+	}
+}
+
 // CustomPoolType - Custom pool type. Additional CustomPoolType types may be added over time.
 type CustomPoolType string
 
@@ -28,6 +56,8 @@ func PossibleCustomPoolTypeValues() []CustomPoolType {
 type ItemType string
 
 const (
+	// ItemTypeAnomalyDetector - An Anomaly Detector.
+	ItemTypeAnomalyDetector ItemType = "AnomalyDetector"
 	// ItemTypeApacheAirflowJob - An ApacheAirflowJob.
 	ItemTypeApacheAirflowJob ItemType = "ApacheAirflowJob"
 	// ItemTypeCopyJob - A Copy job.
@@ -50,8 +80,12 @@ const (
 	ItemTypeEventhouse ItemType = "Eventhouse"
 	// ItemTypeEventstream - An eventstream.
 	ItemTypeEventstream ItemType = "Eventstream"
+	// ItemTypeGraphModel - A GraphModel.
+	ItemTypeGraphModel ItemType = "GraphModel"
 	// ItemTypeGraphQLAPI - An API for GraphQL item.
 	ItemTypeGraphQLAPI ItemType = "GraphQLApi"
+	// ItemTypeGraphQuerySet - A Graph QuerySet.
+	ItemTypeGraphQuerySet ItemType = "GraphQuerySet"
 	// ItemTypeKQLDashboard - A KQL dashboard.
 	ItemTypeKQLDashboard ItemType = "KQLDashboard"
 	// ItemTypeKQLDatabase - A KQL database.
@@ -64,6 +98,8 @@ const (
 	ItemTypeMLExperiment ItemType = "MLExperiment"
 	// ItemTypeMLModel - A machine learning model.
 	ItemTypeMLModel ItemType = "MLModel"
+	// ItemTypeMap - A Map.
+	ItemTypeMap ItemType = "Map"
 	// ItemTypeMirroredAzureDatabricksCatalog - A mirrored azure databricks catalog.
 	ItemTypeMirroredAzureDatabricksCatalog ItemType = "MirroredAzureDatabricksCatalog"
 	// ItemTypeMirroredDatabase - A mirrored database.
@@ -88,6 +124,8 @@ const (
 	ItemTypeSemanticModel ItemType = "SemanticModel"
 	// ItemTypeSparkJobDefinition - A spark job definition.
 	ItemTypeSparkJobDefinition ItemType = "SparkJobDefinition"
+	// ItemTypeUserDataFunction - A User Data Function.
+	ItemTypeUserDataFunction ItemType = "UserDataFunction"
 	// ItemTypeVariableLibrary - A VariableLibrary.
 	ItemTypeVariableLibrary ItemType = "VariableLibrary"
 	// ItemTypeWarehouse - A warehouse.
@@ -99,6 +137,7 @@ const (
 // PossibleItemTypeValues returns the possible values for the ItemType const type.
 func PossibleItemTypeValues() []ItemType {
 	return []ItemType{
+		ItemTypeAnomalyDetector,
 		ItemTypeApacheAirflowJob,
 		ItemTypeCopyJob,
 		ItemTypeDashboard,
@@ -110,13 +149,16 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeEnvironment,
 		ItemTypeEventhouse,
 		ItemTypeEventstream,
+		ItemTypeGraphModel,
 		ItemTypeGraphQLAPI,
+		ItemTypeGraphQuerySet,
 		ItemTypeKQLDashboard,
 		ItemTypeKQLDatabase,
 		ItemTypeKQLQueryset,
 		ItemTypeLakehouse,
 		ItemTypeMLExperiment,
 		ItemTypeMLModel,
+		ItemTypeMap,
 		ItemTypeMirroredAzureDatabricksCatalog,
 		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
@@ -129,9 +171,43 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeSQLEndpoint,
 		ItemTypeSemanticModel,
 		ItemTypeSparkJobDefinition,
+		ItemTypeUserDataFunction,
 		ItemTypeVariableLibrary,
 		ItemTypeWarehouse,
 		ItemTypeWarehouseSnapshot,
+	}
+}
+
+// LibraryType - A library type. Additional types may be added over time.
+type LibraryType string
+
+const (
+	// LibraryTypeCustom - Custom libraries
+	LibraryTypeCustom LibraryType = "Custom"
+	// LibraryTypeExternal - External libraries
+	LibraryTypeExternal LibraryType = "External"
+)
+
+// PossibleLibraryTypeValues returns the possible values for the LibraryType const type.
+func PossibleLibraryTypeValues() []LibraryType {
+	return []LibraryType{
+		LibraryTypeCustom,
+		LibraryTypeExternal,
+	}
+}
+
+// PayloadType - The type of the definition part payload. Additional payload types may be added over time.
+type PayloadType string
+
+const (
+	// PayloadTypeInlineBase64 - Inline Base 64.
+	PayloadTypeInlineBase64 PayloadType = "InlineBase64"
+)
+
+// PossiblePayloadTypeValues returns the possible values for the PayloadType const type.
+func PossiblePayloadTypeValues() []PayloadType {
+	return []PayloadType{
+		PayloadTypeInlineBase64,
 	}
 }
 

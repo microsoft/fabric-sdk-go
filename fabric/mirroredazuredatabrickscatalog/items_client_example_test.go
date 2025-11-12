@@ -138,7 +138,7 @@ func ExampleItemsClient_BeginCreateMirroredAzureDatabricksCatalog_createAnMirror
 		Definition: &mirroredazuredatabrickscatalog.PublicDefinition{
 			Parts: []mirroredazuredatabrickscatalog.PublicDefinitionPart{
 				{
-					Path:        to.Ptr("mirroredAzureDatabricksCatalog.json"),
+					Path:        to.Ptr("definition.json"),
 					Payload:     to.Ptr("eyAicHJvcGVydGllcy..WJsZSIgfSB9IH0gXSB9IH0"),
 					PayloadType: to.Ptr(mirroredazuredatabrickscatalog.PayloadTypeInlineBase64),
 				},
@@ -344,7 +344,7 @@ func ExampleItemsClient_BeginGetMirroredAzureDatabricksCatalogDefinition() {
 	// 	Definition: &mirroredazuredatabrickscatalog.PublicDefinition{
 	// 		Parts: []mirroredazuredatabrickscatalog.PublicDefinitionPart{
 	// 			{
-	// 				Path: to.Ptr("mirroredAzureDatabricksCatalog.json"),
+	// 				Path: to.Ptr("definition.json"),
 	// 				Payload: to.Ptr("eyAicHJvcGVydGllcy..WJsZSIgfSB9IH0gXSB9IH0"),
 	// 				PayloadType: to.Ptr(mirroredazuredatabrickscatalog.PayloadTypeInlineBase64),
 	// 			},
@@ -372,7 +372,7 @@ func ExampleItemsClient_BeginUpdateMirroredAzureDatabricksCatalogDefinition() {
 		Definition: &mirroredazuredatabrickscatalog.PublicDefinition{
 			Parts: []mirroredazuredatabrickscatalog.PublicDefinitionPart{
 				{
-					Path:        to.Ptr("mirroredAzureDatabricksCatalog.json"),
+					Path:        to.Ptr("definition.json"),
 					Payload:     to.Ptr("eyAicHJvcGVydGllcy..WJsZSIgfSB9IH0gXSB9IH0"),
 					PayloadType: to.Ptr(mirroredazuredatabrickscatalog.PayloadTypeInlineBase64),
 				},

@@ -25,8 +25,8 @@ type ClientFactory struct {
 //   - credential - used to authorize requests. Usually a credential from azidentity.
 //   - endpoint - pass nil to accept the default values.
 //   - options - pass nil to accept the default values.
-func NewClientFactory(credential azcore.TokenCredential, endpoint *string, options *azcore.ClientOptions) (*ClientFactory, error) {
-	sc, err := iruntime.NewServiceClient(credential, fabric.Version, endpoint, options)
+func NewClientFactory(credential azcore.TokenCredential, endpoint *string, options *fabric.ClientOptions) (*ClientFactory, error) {
+	sc, err := iruntime.NewServiceClient(credential, fabric.Version, endpoint, (*iruntime.ClientOptions)(options))
 	if err != nil {
 		return nil, err
 	}
@@ -155,6 +155,14 @@ func (c *ClientFactory) NewManagedPrivateEndpointsClient() *ManagedPrivateEndpoi
 func (c *ClientFactory) NewOneLakeDataAccessSecurityClient() *OneLakeDataAccessSecurityClient {
 	return &OneLakeDataAccessSecurityClient{
 		internal: c.internal.WithClientName("core.OneLakeDataAccessSecurityClient"),
+		endpoint: c.endpoint,
+	}
+}
+
+// NewOneLakeSettingsClient creates a new instance of OneLakeSettingsClient.
+func (c *ClientFactory) NewOneLakeSettingsClient() *OneLakeSettingsClient {
+	return &OneLakeSettingsClient{
+		internal: c.internal.WithClientName("core.OneLakeSettingsClient"),
 		endpoint: c.endpoint,
 	}
 }

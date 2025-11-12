@@ -83,6 +83,8 @@ func PossibleGroupTypeValues() []GroupType {
 type ItemType string
 
 const (
+	// ItemTypeAnomalyDetector - An Anomaly Detector.
+	ItemTypeAnomalyDetector ItemType = "AnomalyDetector"
 	// ItemTypeApacheAirflowJob - An ApacheAirflowJob.
 	ItemTypeApacheAirflowJob ItemType = "ApacheAirflowJob"
 	// ItemTypeCopyJob - A Copy job.
@@ -105,8 +107,12 @@ const (
 	ItemTypeEventhouse ItemType = "Eventhouse"
 	// ItemTypeEventstream - An eventstream.
 	ItemTypeEventstream ItemType = "Eventstream"
+	// ItemTypeGraphModel - A GraphModel.
+	ItemTypeGraphModel ItemType = "GraphModel"
 	// ItemTypeGraphQLAPI - An API for GraphQL item.
 	ItemTypeGraphQLAPI ItemType = "GraphQLApi"
+	// ItemTypeGraphQuerySet - A Graph QuerySet.
+	ItemTypeGraphQuerySet ItemType = "GraphQuerySet"
 	// ItemTypeKQLDashboard - A KQL dashboard.
 	ItemTypeKQLDashboard ItemType = "KQLDashboard"
 	// ItemTypeKQLDatabase - A KQL database.
@@ -119,6 +125,8 @@ const (
 	ItemTypeMLExperiment ItemType = "MLExperiment"
 	// ItemTypeMLModel - A machine learning model.
 	ItemTypeMLModel ItemType = "MLModel"
+	// ItemTypeMap - A Map.
+	ItemTypeMap ItemType = "Map"
 	// ItemTypeMirroredAzureDatabricksCatalog - A mirrored azure databricks catalog.
 	ItemTypeMirroredAzureDatabricksCatalog ItemType = "MirroredAzureDatabricksCatalog"
 	// ItemTypeMirroredDatabase - A mirrored database.
@@ -143,6 +151,8 @@ const (
 	ItemTypeSemanticModel ItemType = "SemanticModel"
 	// ItemTypeSparkJobDefinition - A spark job definition.
 	ItemTypeSparkJobDefinition ItemType = "SparkJobDefinition"
+	// ItemTypeUserDataFunction - A User Data Function.
+	ItemTypeUserDataFunction ItemType = "UserDataFunction"
 	// ItemTypeVariableLibrary - A VariableLibrary.
 	ItemTypeVariableLibrary ItemType = "VariableLibrary"
 	// ItemTypeWarehouse - A warehouse.
@@ -154,6 +164,7 @@ const (
 // PossibleItemTypeValues returns the possible values for the ItemType const type.
 func PossibleItemTypeValues() []ItemType {
 	return []ItemType{
+		ItemTypeAnomalyDetector,
 		ItemTypeApacheAirflowJob,
 		ItemTypeCopyJob,
 		ItemTypeDashboard,
@@ -165,13 +176,16 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeEnvironment,
 		ItemTypeEventhouse,
 		ItemTypeEventstream,
+		ItemTypeGraphModel,
 		ItemTypeGraphQLAPI,
+		ItemTypeGraphQuerySet,
 		ItemTypeKQLDashboard,
 		ItemTypeKQLDatabase,
 		ItemTypeKQLQueryset,
 		ItemTypeLakehouse,
 		ItemTypeMLExperiment,
 		ItemTypeMLModel,
+		ItemTypeMap,
 		ItemTypeMirroredAzureDatabricksCatalog,
 		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
@@ -184,6 +198,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeSQLEndpoint,
 		ItemTypeSemanticModel,
 		ItemTypeSparkJobDefinition,
+		ItemTypeUserDataFunction,
 		ItemTypeVariableLibrary,
 		ItemTypeWarehouse,
 		ItemTypeWarehouseSnapshot,
@@ -205,6 +220,45 @@ func PossibleOccurrenceTypeValues() []OccurrenceType {
 	return []OccurrenceType{
 		OccurrenceTypeDayOfMonth,
 		OccurrenceTypeOrdinalWeekday,
+	}
+}
+
+// ParameterType - The type of the parameter. Additional type types may be added over time.
+type ParameterType string
+
+const (
+	// ParameterTypeBoolean - The parameter value is of type boolean.
+	ParameterTypeBoolean ParameterType = "Boolean"
+	// ParameterTypeDate - The parameter value is of type Date. String in the format `yyyy-MM-dd`.
+	ParameterTypeDate ParameterType = "Date"
+	// ParameterTypeDateTime - The parameter value is of type DateTime. The time is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	ParameterTypeDateTime ParameterType = "DateTime"
+	// ParameterTypeDateTimeZone - The parameter value is of type DateTimeZone. String in the format `yyyy-MM-ddTHH:mm:sszzz`.
+	ParameterTypeDateTimeZone ParameterType = "DateTimeZone"
+	// ParameterTypeDuration - The parameter value is of type Duration. String in the format `\Pd\DTH\Hm\Ms\S`.
+	ParameterTypeDuration ParameterType = "Duration"
+	// ParameterTypeInteger - The parameter value is of type long.
+	ParameterTypeInteger ParameterType = "Integer"
+	// ParameterTypeNumber - The parameter value is of type double.
+	ParameterTypeNumber ParameterType = "Number"
+	// ParameterTypeString - The parameter value is of type string.
+	ParameterTypeString ParameterType = "String"
+	// ParameterTypeTime - The parameter value is of type Time. String in the format `HH:mm:ss`.
+	ParameterTypeTime ParameterType = "Time"
+)
+
+// PossibleParameterTypeValues returns the possible values for the ParameterType const type.
+func PossibleParameterTypeValues() []ParameterType {
+	return []ParameterType{
+		ParameterTypeBoolean,
+		ParameterTypeDate,
+		ParameterTypeDateTime,
+		ParameterTypeDateTimeZone,
+		ParameterTypeDuration,
+		ParameterTypeInteger,
+		ParameterTypeNumber,
+		ParameterTypeString,
+		ParameterTypeTime,
 	}
 }
 

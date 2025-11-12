@@ -60,6 +60,13 @@ type ItemsClientDeleteDataflowOptions struct {
 	// placeholder for future optional parameters
 }
 
+// ItemsClientDiscoverDataflowParametersOptions contains the optional parameters for the ItemsClient.NewDiscoverDataflowParametersPager
+// method.
+type ItemsClientDiscoverDataflowParametersOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
 // ItemsClientGetDataflowOptions contains the optional parameters for the ItemsClient.GetDataflow method.
 type ItemsClientGetDataflowOptions struct {
 	// placeholder for future optional parameters

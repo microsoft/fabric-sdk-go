@@ -107,8 +107,28 @@ type LivySession struct {
 	// ID of the item creator. When isHighConcurrency is set to true this value might be different than itemId.
 	CreatorItem *ItemReferenceByID
 
+	// The number of CPU cores allocated to the Spark driver. Controls how much parallel processing the driver can handle.
+	DriverCores *int32
+
+	// The amount of memory (in GB) assigned to the Spark driver process. Affects the driver's ability to handle job coordination
+	// and metadata.
+	DriverMemory *int32
+
+	// Sets the maximum number of executors that Spark's dynamic allocation can scale up to during job execution.
+	DynamicAllocationMaxExecutors *int32
+
 	// Timestamp when the job ended in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
 	EndDateTime *time.Time
+
+	// The number of CPU cores allocated to each Spark executor. Determines how many tasks each executor can run in parallel.
+	ExecutorCores any
+
+	// The amount of memory (in GB) assigned to each Spark executor process. Impacts how much data can be processed in memory
+	// per executor.
+	ExecutorMemory *int32
+
+	// Flag indicating whether dynamic allocation is enabled for the Spark job.
+	IsDynamicAllocationEnabled *bool
 
 	// Flag indicating high concurrency.
 	IsHighConcurrency *bool
@@ -120,7 +140,7 @@ type LivySession struct {
 	ItemName *string
 
 	// The item type.
-	ItemType *ItemType
+	ItemType *LivySessionItemType
 
 	// ID of the job instance.
 	JobInstanceID *string
@@ -139,6 +159,9 @@ type LivySession struct {
 
 	// Maximum number of attempts.
 	MaxNumberOfAttempts *int32
+
+	// The total number of executors requested for the Spark job. Controls the parallelism and scalability of the job.
+	NumExecutors *int32
 
 	// Name of the operation. Possible values include: Notebook run, Notebook HC run and Notebook pipeline run.
 	OperationName *string

@@ -180,6 +180,10 @@ type TableMirroringMetrics struct {
 
 	// REQUIRED; Processed row count for this table.
 	ProcessedRows *int64
+
+	// Latency in seconds between source commit time and target commit time of last processed change. For sources whose source
+	// commit time is not available, this value is not returned.
+	LastSyncLatencyInSeconds *int32
 }
 
 // TableMirroringStatusResponse - Table mirroring status response.

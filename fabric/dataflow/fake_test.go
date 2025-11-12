@@ -22,6 +22,7 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
+	"github.com/microsoft/fabric-sdk-go/fabric"
 	"github.com/microsoft/fabric-sdk-go/fabric/dataflow"
 	"github.com/microsoft/fabric-sdk-go/fabric/dataflow/fake"
 )
@@ -43,8 +44,10 @@ func (testsuite *FakeTestSuite) SetupSuite() {
 	testsuite.cred = &azfake.TokenCredential{}
 
 	testsuite.serverFactory = &fake.ServerFactory{}
-	testsuite.clientFactory, err = dataflow.NewClientFactory(testsuite.cred, nil, &azcore.ClientOptions{
-		Transport: fake.NewServerFactoryTransport(testsuite.serverFactory),
+	testsuite.clientFactory, err = dataflow.NewClientFactory(testsuite.cred, nil, &fabric.ClientOptions{
+		ClientOptions: azcore.ClientOptions{
+			Transport: fake.NewServerFactoryTransport(testsuite.serverFactory),
+		},
 	})
 	testsuite.Require().NoError(err, "Failed to create client factory")
 }
@@ -352,6 +355,103 @@ func (testsuite *FakeTestSuite) TestItems_UpdateDataflowDefinition() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestItems_DiscoverDataflowParameters() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get Dataflow Parameters example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataflowID string
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleDataflowID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+
+	exampleRes := dataflow.Parameters{
+		Value: []dataflow.ParameterClassification{
+			&dataflow.StringParameter{
+				Name:         to.Ptr("manufacturer"),
+				Type:         to.Ptr(dataflow.ParameterTypeString),
+				Description:  to.Ptr("Manufacturer of the item"),
+				IsRequired:   to.Ptr(true),
+				DefaultValue: to.Ptr("test-value"),
+			},
+			&dataflow.BooleanParameter{
+				Name:         to.Ptr("isImported"),
+				Type:         to.Ptr(dataflow.ParameterTypeBoolean),
+				Description:  to.Ptr("Is the item imported"),
+				IsRequired:   to.Ptr(false),
+				DefaultValue: to.Ptr(true),
+			},
+			&dataflow.IntegerParameter{
+				Name:         to.Ptr("quantity"),
+				Type:         to.Ptr(dataflow.ParameterTypeInteger),
+				Description:  to.Ptr("Quantity of item"),
+				IsRequired:   to.Ptr(false),
+				DefaultValue: to.Ptr[int64](123456789),
+			},
+			&dataflow.NumberParameter{
+				Name:         to.Ptr("weightThreshold"),
+				Type:         to.Ptr(dataflow.ParameterTypeNumber),
+				Description:  to.Ptr("Weight threshold for item"),
+				IsRequired:   to.Ptr(true),
+				DefaultValue: to.Ptr[float64](3.14),
+			},
+			&dataflow.DateTimeParameter{
+				Name:         to.Ptr("datetimeOfOrder"),
+				Type:         to.Ptr(dataflow.ParameterTypeDateTime),
+				Description:  to.Ptr("Datetime of order"),
+				IsRequired:   to.Ptr(true),
+				DefaultValue: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-09-15T21:45:00.000Z"); return t }()),
+			},
+			&dataflow.DateTimeZoneParameter{
+				Name:         to.Ptr("datetimeZoneOfOrder"),
+				Type:         to.Ptr(dataflow.ParameterTypeDateTimeZone),
+				Description:  to.Ptr("DatetimeZone of order"),
+				IsRequired:   to.Ptr(true),
+				DefaultValue: to.Ptr("2025-09-15T21:45:00+02:00"),
+			},
+			&dataflow.DateParameter{
+				Name:         to.Ptr("dateOfImport"),
+				Type:         to.Ptr(dataflow.ParameterTypeDate),
+				Description:  to.Ptr("Date of import"),
+				IsRequired:   to.Ptr(true),
+				DefaultValue: to.Ptr("2025-09-15"),
+			},
+			&dataflow.TimeParameter{
+				Name:         to.Ptr("timeOfImport"),
+				Type:         to.Ptr(dataflow.ParameterTypeTime),
+				Description:  to.Ptr("Time of import"),
+				IsRequired:   to.Ptr(true),
+				DefaultValue: to.Ptr("21:45:00"),
+			},
+			&dataflow.DurationParameter{
+				Name:         to.Ptr("durationOfImport"),
+				Type:         to.Ptr(dataflow.ParameterTypeDuration),
+				Description:  to.Ptr("Duration of import"),
+				IsRequired:   to.Ptr(true),
+				DefaultValue: to.Ptr("P5DT21H35M30S"),
+			}},
+	}
+
+	testsuite.serverFactory.ItemsServer.NewDiscoverDataflowParametersPager = func(workspaceID string, dataflowID string, options *dataflow.ItemsClientDiscoverDataflowParametersOptions) (resp azfake.PagerResponder[dataflow.ItemsClientDiscoverDataflowParametersResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataflowID, dataflowID)
+		resp = azfake.PagerResponder[dataflow.ItemsClientDiscoverDataflowParametersResponse]{}
+		resp.AddPage(http.StatusOK, dataflow.ItemsClientDiscoverDataflowParametersResponse{Parameters: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	pager := client.NewDiscoverDataflowParametersPager(exampleWorkspaceID, exampleDataflowID, &dataflow.ItemsClientDiscoverDataflowParametersOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Parameters))
+		if err == nil {
+			break
+		}
+	}
 }
 
 func (testsuite *FakeTestSuite) TestBackgroundJobs_ScheduleExecute() {

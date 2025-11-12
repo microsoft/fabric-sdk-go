@@ -165,6 +165,76 @@ func (client *ItemsClient) deleteDataflowCreateRequest(ctx context.Context, work
 	return req, nil
 }
 
+// NewDiscoverDataflowParametersPager - PERMISSIONS The caller must have read permissions for the dataflow.
+// REQUIRED DELEGATED SCOPES Dataflow.Read.All or Dataflow.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataflowID - The Dataflow ID.
+//   - options - ItemsClientDiscoverDataflowParametersOptions contains the optional parameters for the ItemsClient.NewDiscoverDataflowParametersPager
+//     method.
+func (client *ItemsClient) NewDiscoverDataflowParametersPager(workspaceID string, dataflowID string, options *ItemsClientDiscoverDataflowParametersOptions) *runtime.Pager[ItemsClientDiscoverDataflowParametersResponse] {
+	return runtime.NewPager(runtime.PagingHandler[ItemsClientDiscoverDataflowParametersResponse]{
+		More: func(page ItemsClientDiscoverDataflowParametersResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *ItemsClientDiscoverDataflowParametersResponse) (ItemsClientDiscoverDataflowParametersResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "dataflow.ItemsClient.NewDiscoverDataflowParametersPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.discoverDataflowParametersCreateRequest(ctx, workspaceID, dataflowID, options)
+			}, nil)
+			if err != nil {
+				return ItemsClientDiscoverDataflowParametersResponse{}, err
+			}
+			return client.discoverDataflowParametersHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
+}
+
+// discoverDataflowParametersCreateRequest creates the DiscoverDataflowParameters request.
+func (client *ItemsClient) discoverDataflowParametersCreateRequest(ctx context.Context, workspaceID string, dataflowID string, options *ItemsClientDiscoverDataflowParametersOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/dataflows/{dataflowId}/parameters"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if dataflowID == "" {
+		return nil, errors.New("parameter dataflowID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{dataflowId}", url.PathEscape(dataflowID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// discoverDataflowParametersHandleResponse handles the DiscoverDataflowParameters response.
+func (client *ItemsClient) discoverDataflowParametersHandleResponse(resp *http.Response) (ItemsClientDiscoverDataflowParametersResponse, error) {
+	result := ItemsClientDiscoverDataflowParametersResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.Parameters); err != nil {
+		return ItemsClientDiscoverDataflowParametersResponse{}, err
+	}
+	return result, nil
+}
+
 // GetDataflow - PERMISSIONS The caller must have read permissions for the dataflow.
 // REQUIRED DELEGATED SCOPES Dataflow.Read.All or Dataflow.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -736,6 +806,37 @@ func (client *ItemsClient) beginUpdateDataflowDefinition(ctx context.Context, wo
 			Tracer:  client.internal.Tracer(),
 		})
 	}
+}
+
+// DiscoverDataflowParameters - returns array of ParameterClassification from all pages.
+// PERMISSIONS The caller must have read permissions for the dataflow.
+//
+// # REQUIRED DELEGATED SCOPES Dataflow.Read.All or Dataflow.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataflowID - The Dataflow ID.
+//   - options - ItemsClientDiscoverDataflowParametersOptions contains the optional parameters for the ItemsClient.NewDiscoverDataflowParametersPager method.
+func (client *ItemsClient) DiscoverDataflowParameters(ctx context.Context, workspaceID string, dataflowID string, options *ItemsClientDiscoverDataflowParametersOptions) ([]ParameterClassification, error) {
+	pager := client.NewDiscoverDataflowParametersPager(workspaceID, dataflowID, options)
+	mapper := func(resp ItemsClientDiscoverDataflowParametersResponse) []ParameterClassification {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []ParameterClassification{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []ParameterClassification{}, err
+	}
+	return list, nil
 }
 
 // ListDataflows - returns array of Dataflow from all pages.

@@ -54,9 +54,21 @@ type WorkspacesServer struct {
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
 	BeginDeprovisionIdentity func(ctx context.Context, workspaceID string, options *core.WorkspacesClientBeginDeprovisionIdentityOptions) (resp azfake.PollerResponder[core.WorkspacesClientDeprovisionIdentityResponse], errResp azfake.ErrorResponder)
 
+	// GetGitOutboundPolicy is the fake for method WorkspacesClient.GetGitOutboundPolicy
+	// HTTP status codes to indicate success: http.StatusOK
+	GetGitOutboundPolicy func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetGitOutboundPolicyOptions) (resp azfake.Responder[core.WorkspacesClientGetGitOutboundPolicyResponse], errResp azfake.ErrorResponder)
+
 	// GetNetworkCommunicationPolicy is the fake for method WorkspacesClient.GetNetworkCommunicationPolicy
 	// HTTP status codes to indicate success: http.StatusOK
 	GetNetworkCommunicationPolicy func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetNetworkCommunicationPolicyOptions) (resp azfake.Responder[core.WorkspacesClientGetNetworkCommunicationPolicyResponse], errResp azfake.ErrorResponder)
+
+	// GetOutboundCloudConnectionRules is the fake for method WorkspacesClient.GetOutboundCloudConnectionRules
+	// HTTP status codes to indicate success: http.StatusOK
+	GetOutboundCloudConnectionRules func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetOutboundCloudConnectionRulesOptions) (resp azfake.Responder[core.WorkspacesClientGetOutboundCloudConnectionRulesResponse], errResp azfake.ErrorResponder)
+
+	// GetOutboundGatewayRules is the fake for method WorkspacesClient.GetOutboundGatewayRules
+	// HTTP status codes to indicate success: http.StatusOK
+	GetOutboundGatewayRules func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetOutboundGatewayRulesOptions) (resp azfake.Responder[core.WorkspacesClientGetOutboundGatewayRulesResponse], errResp azfake.ErrorResponder)
 
 	// GetWorkspace is the fake for method WorkspacesClient.GetWorkspace
 	// HTTP status codes to indicate success: http.StatusOK
@@ -78,9 +90,21 @@ type WorkspacesServer struct {
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
 	BeginProvisionIdentity func(ctx context.Context, workspaceID string, options *core.WorkspacesClientBeginProvisionIdentityOptions) (resp azfake.PollerResponder[core.WorkspacesClientProvisionIdentityResponse], errResp azfake.ErrorResponder)
 
+	// SetGitOutboundPolicy is the fake for method WorkspacesClient.SetGitOutboundPolicy
+	// HTTP status codes to indicate success: http.StatusOK
+	SetGitOutboundPolicy func(ctx context.Context, workspaceID string, setWorkspaceGitNetworkingCommunicationPolicy core.NetworkRules, options *core.WorkspacesClientSetGitOutboundPolicyOptions) (resp azfake.Responder[core.WorkspacesClientSetGitOutboundPolicyResponse], errResp azfake.ErrorResponder)
+
 	// SetNetworkCommunicationPolicy is the fake for method WorkspacesClient.SetNetworkCommunicationPolicy
 	// HTTP status codes to indicate success: http.StatusOK
 	SetNetworkCommunicationPolicy func(ctx context.Context, workspaceID string, setWorkspaceNetworkingCommunicationPolicy core.WorkspaceNetworkingCommunicationPolicy, options *core.WorkspacesClientSetNetworkCommunicationPolicyOptions) (resp azfake.Responder[core.WorkspacesClientSetNetworkCommunicationPolicyResponse], errResp azfake.ErrorResponder)
+
+	// SetOutboundCloudConnectionRules is the fake for method WorkspacesClient.SetOutboundCloudConnectionRules
+	// HTTP status codes to indicate success: http.StatusOK
+	SetOutboundCloudConnectionRules func(ctx context.Context, workspaceID string, workspaceOutboundConnections core.WorkspaceOutboundConnections, options *core.WorkspacesClientSetOutboundCloudConnectionRulesOptions) (resp azfake.Responder[core.WorkspacesClientSetOutboundCloudConnectionRulesResponse], errResp azfake.ErrorResponder)
+
+	// SetOutboundGatewayRules is the fake for method WorkspacesClient.SetOutboundGatewayRules
+	// HTTP status codes to indicate success: http.StatusOK
+	SetOutboundGatewayRules func(ctx context.Context, workspaceID string, workspaceOutboundGateways core.WorkspaceOutboundGateways, options *core.WorkspacesClientSetOutboundGatewayRulesOptions) (resp azfake.Responder[core.WorkspacesClientSetOutboundGatewayRulesResponse], errResp azfake.ErrorResponder)
 
 	// UnassignFromCapacity is the fake for method WorkspacesClient.UnassignFromCapacity
 	// HTTP status codes to indicate success: http.StatusAccepted
@@ -161,8 +185,14 @@ func (w *WorkspacesServerTransport) dispatchToMethodFake(req *http.Request, meth
 				res.resp, res.err = w.dispatchDeleteWorkspaceRoleAssignment(req)
 			case "WorkspacesClient.BeginDeprovisionIdentity":
 				res.resp, res.err = w.dispatchBeginDeprovisionIdentity(req)
+			case "WorkspacesClient.GetGitOutboundPolicy":
+				res.resp, res.err = w.dispatchGetGitOutboundPolicy(req)
 			case "WorkspacesClient.GetNetworkCommunicationPolicy":
 				res.resp, res.err = w.dispatchGetNetworkCommunicationPolicy(req)
+			case "WorkspacesClient.GetOutboundCloudConnectionRules":
+				res.resp, res.err = w.dispatchGetOutboundCloudConnectionRules(req)
+			case "WorkspacesClient.GetOutboundGatewayRules":
+				res.resp, res.err = w.dispatchGetOutboundGatewayRules(req)
 			case "WorkspacesClient.GetWorkspace":
 				res.resp, res.err = w.dispatchGetWorkspace(req)
 			case "WorkspacesClient.GetWorkspaceRoleAssignment":
@@ -173,8 +203,14 @@ func (w *WorkspacesServerTransport) dispatchToMethodFake(req *http.Request, meth
 				res.resp, res.err = w.dispatchNewListWorkspacesPager(req)
 			case "WorkspacesClient.BeginProvisionIdentity":
 				res.resp, res.err = w.dispatchBeginProvisionIdentity(req)
+			case "WorkspacesClient.SetGitOutboundPolicy":
+				res.resp, res.err = w.dispatchSetGitOutboundPolicy(req)
 			case "WorkspacesClient.SetNetworkCommunicationPolicy":
 				res.resp, res.err = w.dispatchSetNetworkCommunicationPolicy(req)
+			case "WorkspacesClient.SetOutboundCloudConnectionRules":
+				res.resp, res.err = w.dispatchSetOutboundCloudConnectionRules(req)
+			case "WorkspacesClient.SetOutboundGatewayRules":
+				res.resp, res.err = w.dispatchSetOutboundGatewayRules(req)
 			case "WorkspacesClient.UnassignFromCapacity":
 				res.resp, res.err = w.dispatchUnassignFromCapacity(req)
 			case "WorkspacesClient.UnassignFromDomain":
@@ -432,6 +468,38 @@ func (w *WorkspacesServerTransport) dispatchBeginDeprovisionIdentity(req *http.R
 	return resp, nil
 }
 
+func (w *WorkspacesServerTransport) dispatchGetGitOutboundPolicy(req *http.Request) (*http.Response, error) {
+	if w.srv.GetGitOutboundPolicy == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetGitOutboundPolicy not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/networking/communicationPolicy/outbound/git`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 1 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := w.srv.GetGitOutboundPolicy(req.Context(), workspaceIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).NetworkRules, req)
+	if err != nil {
+		return nil, err
+	}
+	if val := server.GetResponse(respr).ETag; val != nil {
+		resp.Header.Set("ETag", *val)
+	}
+	return resp, nil
+}
+
 func (w *WorkspacesServerTransport) dispatchGetNetworkCommunicationPolicy(req *http.Request) (*http.Response, error) {
 	if w.srv.GetNetworkCommunicationPolicy == nil {
 		return nil, &nonRetriableError{errors.New("fake for method GetNetworkCommunicationPolicy not implemented")}
@@ -455,6 +523,70 @@ func (w *WorkspacesServerTransport) dispatchGetNetworkCommunicationPolicy(req *h
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
 	}
 	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).WorkspaceNetworkingCommunicationPolicy, req)
+	if err != nil {
+		return nil, err
+	}
+	if val := server.GetResponse(respr).ETag; val != nil {
+		resp.Header.Set("ETag", *val)
+	}
+	return resp, nil
+}
+
+func (w *WorkspacesServerTransport) dispatchGetOutboundCloudConnectionRules(req *http.Request) (*http.Response, error) {
+	if w.srv.GetOutboundCloudConnectionRules == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetOutboundCloudConnectionRules not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/networking/communicationPolicy/outbound/connections`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 1 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := w.srv.GetOutboundCloudConnectionRules(req.Context(), workspaceIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).WorkspaceOutboundConnections, req)
+	if err != nil {
+		return nil, err
+	}
+	if val := server.GetResponse(respr).ETag; val != nil {
+		resp.Header.Set("ETag", *val)
+	}
+	return resp, nil
+}
+
+func (w *WorkspacesServerTransport) dispatchGetOutboundGatewayRules(req *http.Request) (*http.Response, error) {
+	if w.srv.GetOutboundGatewayRules == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetOutboundGatewayRules not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/networking/communicationPolicy/outbound/gateways`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 1 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := w.srv.GetOutboundGatewayRules(req.Context(), workspaceIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).WorkspaceOutboundGateways, req)
 	if err != nil {
 		return nil, err
 	}
@@ -684,6 +816,49 @@ func (w *WorkspacesServerTransport) dispatchBeginProvisionIdentity(req *http.Req
 	return resp, nil
 }
 
+func (w *WorkspacesServerTransport) dispatchSetGitOutboundPolicy(req *http.Request) (*http.Response, error) {
+	if w.srv.SetGitOutboundPolicy == nil {
+		return nil, &nonRetriableError{errors.New("fake for method SetGitOutboundPolicy not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/networking/communicationPolicy/outbound/git`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 1 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.NetworkRules](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	ifMatchParam := getOptional(getHeaderValue(req.Header, "If-Match"))
+	var options *core.WorkspacesClientSetGitOutboundPolicyOptions
+	if ifMatchParam != nil {
+		options = &core.WorkspacesClientSetGitOutboundPolicyOptions{
+			IfMatch: ifMatchParam,
+		}
+	}
+	respr, errRespr := w.srv.SetGitOutboundPolicy(req.Context(), workspaceIDParam, body, options)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	if val := server.GetResponse(respr).ETag; val != nil {
+		resp.Header.Set("ETag", *val)
+	}
+	return resp, nil
+}
+
 func (w *WorkspacesServerTransport) dispatchSetNetworkCommunicationPolicy(req *http.Request) (*http.Response, error) {
 	if w.srv.SetNetworkCommunicationPolicy == nil {
 		return nil, &nonRetriableError{errors.New("fake for method SetNetworkCommunicationPolicy not implemented")}
@@ -710,6 +885,78 @@ func (w *WorkspacesServerTransport) dispatchSetNetworkCommunicationPolicy(req *h
 		}
 	}
 	respr, errRespr := w.srv.SetNetworkCommunicationPolicy(req.Context(), workspaceIDParam, body, options)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	if val := server.GetResponse(respr).ETag; val != nil {
+		resp.Header.Set("ETag", *val)
+	}
+	return resp, nil
+}
+
+func (w *WorkspacesServerTransport) dispatchSetOutboundCloudConnectionRules(req *http.Request) (*http.Response, error) {
+	if w.srv.SetOutboundCloudConnectionRules == nil {
+		return nil, &nonRetriableError{errors.New("fake for method SetOutboundCloudConnectionRules not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/networking/communicationPolicy/outbound/connections`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 1 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.WorkspaceOutboundConnections](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := w.srv.SetOutboundCloudConnectionRules(req.Context(), workspaceIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	if val := server.GetResponse(respr).ETag; val != nil {
+		resp.Header.Set("ETag", *val)
+	}
+	return resp, nil
+}
+
+func (w *WorkspacesServerTransport) dispatchSetOutboundGatewayRules(req *http.Request) (*http.Response, error) {
+	if w.srv.SetOutboundGatewayRules == nil {
+		return nil, &nonRetriableError{errors.New("fake for method SetOutboundGatewayRules not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/networking/communicationPolicy/outbound/gateways`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if matches == nil || len(matches) < 1 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.WorkspaceOutboundGateways](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := w.srv.SetOutboundGatewayRules(req.Context(), workspaceIDParam, body, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}

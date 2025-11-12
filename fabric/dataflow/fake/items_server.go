@@ -34,6 +34,10 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	DeleteDataflow func(ctx context.Context, workspaceID string, dataflowID string, options *dataflow.ItemsClientDeleteDataflowOptions) (resp azfake.Responder[dataflow.ItemsClientDeleteDataflowResponse], errResp azfake.ErrorResponder)
 
+	// NewDiscoverDataflowParametersPager is the fake for method ItemsClient.NewDiscoverDataflowParametersPager
+	// HTTP status codes to indicate success: http.StatusOK
+	NewDiscoverDataflowParametersPager func(workspaceID string, dataflowID string, options *dataflow.ItemsClientDiscoverDataflowParametersOptions) (resp azfake.PagerResponder[dataflow.ItemsClientDiscoverDataflowParametersResponse])
+
 	// GetDataflow is the fake for method ItemsClient.GetDataflow
 	// HTTP status codes to indicate success: http.StatusOK
 	GetDataflow func(ctx context.Context, workspaceID string, dataflowID string, options *dataflow.ItemsClientGetDataflowOptions) (resp azfake.Responder[dataflow.ItemsClientGetDataflowResponse], errResp azfake.ErrorResponder)
@@ -60,22 +64,24 @@ type ItemsServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewItemsServerTransport(srv *ItemsServer) *ItemsServerTransport {
 	return &ItemsServerTransport{
-		srv:                           srv,
-		beginCreateDataflow:           newTracker[azfake.PollerResponder[dataflow.ItemsClientCreateDataflowResponse]](),
-		beginGetDataflowDefinition:    newTracker[azfake.PollerResponder[dataflow.ItemsClientGetDataflowDefinitionResponse]](),
-		newListDataflowsPager:         newTracker[azfake.PagerResponder[dataflow.ItemsClientListDataflowsResponse]](),
-		beginUpdateDataflowDefinition: newTracker[azfake.PollerResponder[dataflow.ItemsClientUpdateDataflowDefinitionResponse]](),
+		srv:                                srv,
+		beginCreateDataflow:                newTracker[azfake.PollerResponder[dataflow.ItemsClientCreateDataflowResponse]](),
+		newDiscoverDataflowParametersPager: newTracker[azfake.PagerResponder[dataflow.ItemsClientDiscoverDataflowParametersResponse]](),
+		beginGetDataflowDefinition:         newTracker[azfake.PollerResponder[dataflow.ItemsClientGetDataflowDefinitionResponse]](),
+		newListDataflowsPager:              newTracker[azfake.PagerResponder[dataflow.ItemsClientListDataflowsResponse]](),
+		beginUpdateDataflowDefinition:      newTracker[azfake.PollerResponder[dataflow.ItemsClientUpdateDataflowDefinitionResponse]](),
 	}
 }
 
 // ItemsServerTransport connects instances of dataflow.ItemsClient to instances of ItemsServer.
 // Don't use this type directly, use NewItemsServerTransport instead.
 type ItemsServerTransport struct {
-	srv                           *ItemsServer
-	beginCreateDataflow           *tracker[azfake.PollerResponder[dataflow.ItemsClientCreateDataflowResponse]]
-	beginGetDataflowDefinition    *tracker[azfake.PollerResponder[dataflow.ItemsClientGetDataflowDefinitionResponse]]
-	newListDataflowsPager         *tracker[azfake.PagerResponder[dataflow.ItemsClientListDataflowsResponse]]
-	beginUpdateDataflowDefinition *tracker[azfake.PollerResponder[dataflow.ItemsClientUpdateDataflowDefinitionResponse]]
+	srv                                *ItemsServer
+	beginCreateDataflow                *tracker[azfake.PollerResponder[dataflow.ItemsClientCreateDataflowResponse]]
+	newDiscoverDataflowParametersPager *tracker[azfake.PagerResponder[dataflow.ItemsClientDiscoverDataflowParametersResponse]]
+	beginGetDataflowDefinition         *tracker[azfake.PollerResponder[dataflow.ItemsClientGetDataflowDefinitionResponse]]
+	newListDataflowsPager              *tracker[azfake.PagerResponder[dataflow.ItemsClientListDataflowsResponse]]
+	beginUpdateDataflowDefinition      *tracker[azfake.PollerResponder[dataflow.ItemsClientUpdateDataflowDefinitionResponse]]
 }
 
 // Do implements the policy.Transporter interface for ItemsServerTransport.
@@ -107,6 +113,8 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 				res.resp, res.err = i.dispatchBeginCreateDataflow(req)
 			case "ItemsClient.DeleteDataflow":
 				res.resp, res.err = i.dispatchDeleteDataflow(req)
+			case "ItemsClient.NewDiscoverDataflowParametersPager":
+				res.resp, res.err = i.dispatchNewDiscoverDataflowParametersPager(req)
 			case "ItemsClient.GetDataflow":
 				res.resp, res.err = i.dispatchGetDataflow(req)
 			case "ItemsClient.BeginGetDataflowDefinition":
@@ -209,6 +217,59 @@ func (i *ItemsServerTransport) dispatchDeleteDataflow(req *http.Request) (*http.
 	resp, err := server.NewResponse(respContent, req, nil)
 	if err != nil {
 		return nil, err
+	}
+	return resp, nil
+}
+
+func (i *ItemsServerTransport) dispatchNewDiscoverDataflowParametersPager(req *http.Request) (*http.Response, error) {
+	if i.srv.NewDiscoverDataflowParametersPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewDiscoverDataflowParametersPager not implemented")}
+	}
+	newDiscoverDataflowParametersPager := i.newDiscoverDataflowParametersPager.get(req)
+	if newDiscoverDataflowParametersPager == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataflows/(?P<dataflowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/parameters`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if matches == nil || len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		dataflowIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("dataflowId")])
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *dataflow.ItemsClientDiscoverDataflowParametersOptions
+		if continuationTokenParam != nil {
+			options = &dataflow.ItemsClientDiscoverDataflowParametersOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := i.srv.NewDiscoverDataflowParametersPager(workspaceIDParam, dataflowIDParam, options)
+		newDiscoverDataflowParametersPager = &resp
+		i.newDiscoverDataflowParametersPager.add(req, newDiscoverDataflowParametersPager)
+		server.PagerResponderInjectNextLinks(newDiscoverDataflowParametersPager, req, func(page *dataflow.ItemsClientDiscoverDataflowParametersResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
+	}
+	resp, err := server.PagerResponderNext(newDiscoverDataflowParametersPager, req)
+	if err != nil {
+		return nil, err
+	}
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		i.newDiscoverDataflowParametersPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
+	}
+	if !server.PagerResponderMore(newDiscoverDataflowParametersPager) {
+		i.newDiscoverDataflowParametersPager.remove(req)
 	}
 	return resp, nil
 }
