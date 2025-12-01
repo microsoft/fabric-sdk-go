@@ -3627,6 +3627,36 @@ func (testsuite *FakeTestSuite) TestOneLakeShortcuts_CreateShortcut() {
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create shortcut OneDriveSharePoint or OneDrive for Business or SharePoint Online target example"},
+	})
+	exampleWorkspaceID = "bf94607f-3ba1-4a95-8259-27649ccd7755"
+	exampleItemID = "884e71cd-f5b4-45f9-8e00-b71355f7ea5d"
+	exampleCreateShortcutRequest = core.CreateShortcutRequest{
+		Name: to.Ptr("MyOneDriveSharePoint"),
+		Path: to.Ptr("Files"),
+		Target: &core.CreatableShortcutTarget{
+			OneDriveSharePoint: &core.OneDriveSharePoint{
+				ConnectionID: to.Ptr("97e33458-1353-4911-96b1-6f4f4bbfd335"),
+				Location:     to.Ptr("https://microsoft.sharepoint.com"),
+				Subpath:      to.Ptr("/Shared Documents/Test Folder"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.OneLakeShortcutsServer.CreateShortcut = func(ctx context.Context, workspaceID string, itemID string, createShortcutRequest core.CreateShortcutRequest, options *core.OneLakeShortcutsClientCreateShortcutOptions) (resp azfake.Responder[core.OneLakeShortcutsClientCreateShortcutResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateShortcutRequest, createShortcutRequest))
+		resp = azfake.Responder[core.OneLakeShortcutsClientCreateShortcutResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeShortcutsClientCreateShortcutResponse{}, nil)
+		return
+	}
+
+	_, err = client.CreateShortcut(ctx, exampleWorkspaceID, exampleItemID, exampleCreateShortcutRequest, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Create shortcut S3 Compatible target example"},
 	})
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff222"
@@ -3831,6 +3861,42 @@ func (testsuite *FakeTestSuite) TestOneLakeShortcuts_GetShortcut() {
 				Path:        to.Ptr("Tables/myTablesFolder/someTableSubFolder"),
 				ItemID:      to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
 				WorkspaceID: to.Ptr("acafbeb1-8037-4d0c-896e-a46fb27ff256"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.OneLakeShortcutsServer.GetShortcut = func(ctx context.Context, workspaceID string, itemID string, shortcutPath string, shortcutName string, options *core.OneLakeShortcutsClientGetShortcutOptions) (resp azfake.Responder[core.OneLakeShortcutsClientGetShortcutResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().Equal(exampleShortcutPath, shortcutPath)
+		testsuite.Require().Equal(exampleShortcutName, shortcutName)
+		resp = azfake.Responder[core.OneLakeShortcutsClientGetShortcutResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeShortcutsClientGetShortcutResponse{Shortcut: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.GetShortcut(ctx, exampleWorkspaceID, exampleItemID, exampleShortcutPath, exampleShortcutName, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Shortcut))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get shortcut OneDriveSharePoint or OneDrive for Business or SharePoint Online target example"},
+	})
+	exampleWorkspaceID = "bf94607f-3ba1-4a95-8259-27649ccd7755"
+	exampleItemID = "884e71cd-f5b4-45f9-8e00-b71355f7ea5d"
+	exampleShortcutPath = "Files"
+	exampleShortcutName = "MyOneDriveSharePoint"
+
+	exampleRes = core.Shortcut{
+		Name: to.Ptr("MyOneDriveSharePoint"),
+		Path: to.Ptr("Files"),
+		Target: &core.Target{
+			Type: to.Ptr(core.TypeOneDriveSharePoint),
+			OneDriveSharePoint: &core.OneDriveSharePoint{
+				ConnectionID: to.Ptr("97e33458-1353-4911-96b1-6f4f4bbfd335"),
+				Location:     to.Ptr("https://microsoft.sharepoint.com"),
+				Subpath:      to.Ptr("/Shared Documents/Test Folder"),
 			},
 		},
 	}

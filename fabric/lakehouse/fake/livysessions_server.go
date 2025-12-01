@@ -13,9 +13,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
-	"strconv"
 	"strings"
-	"time"
 
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/fake/server"
@@ -34,10 +32,6 @@ type LivySessionsServer struct {
 	// NewListLivySessionsPager is the fake for method LivySessionsClient.NewListLivySessionsPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListLivySessionsPager func(workspaceID string, lakehouseID string, options *lakehouse.LivySessionsClientListLivySessionsOptions) (resp azfake.PagerResponder[lakehouse.LivySessionsClientListLivySessionsResponse])
-
-	// NewListLivySessionsPreviewPager is the fake for method LivySessionsClient.NewListLivySessionsPreviewPager
-	// HTTP status codes to indicate success: http.StatusOK
-	NewListLivySessionsPreviewPager func(workspaceID string, lakehouseID string, preview bool, options *lakehouse.LivySessionsClientListLivySessionsPreviewOptions) (resp azfake.PagerResponder[lakehouse.LivySessionsClientListLivySessionsPreviewResponse])
 }
 
 // NewLivySessionsServerTransport creates a new instance of LivySessionsServerTransport with the provided implementation.
@@ -45,18 +39,16 @@ type LivySessionsServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewLivySessionsServerTransport(srv *LivySessionsServer) *LivySessionsServerTransport {
 	return &LivySessionsServerTransport{
-		srv:                             srv,
-		newListLivySessionsPager:        newTracker[azfake.PagerResponder[lakehouse.LivySessionsClientListLivySessionsResponse]](),
-		newListLivySessionsPreviewPager: newTracker[azfake.PagerResponder[lakehouse.LivySessionsClientListLivySessionsPreviewResponse]](),
+		srv:                      srv,
+		newListLivySessionsPager: newTracker[azfake.PagerResponder[lakehouse.LivySessionsClientListLivySessionsResponse]](),
 	}
 }
 
 // LivySessionsServerTransport connects instances of lakehouse.LivySessionsClient to instances of LivySessionsServer.
 // Don't use this type directly, use NewLivySessionsServerTransport instead.
 type LivySessionsServerTransport struct {
-	srv                             *LivySessionsServer
-	newListLivySessionsPager        *tracker[azfake.PagerResponder[lakehouse.LivySessionsClientListLivySessionsResponse]]
-	newListLivySessionsPreviewPager *tracker[azfake.PagerResponder[lakehouse.LivySessionsClientListLivySessionsPreviewResponse]]
+	srv                      *LivySessionsServer
+	newListLivySessionsPager *tracker[azfake.PagerResponder[lakehouse.LivySessionsClientListLivySessionsResponse]]
 }
 
 // Do implements the policy.Transporter interface for LivySessionsServerTransport.
@@ -88,8 +80,6 @@ func (l *LivySessionsServerTransport) dispatchToMethodFake(req *http.Request, me
 				res.resp, res.err = l.dispatchGetLivySession(req)
 			case "LivySessionsClient.NewListLivySessionsPager":
 				res.resp, res.err = l.dispatchNewListLivySessionsPager(req)
-			case "LivySessionsClient.NewListLivySessionsPreviewPager":
-				res.resp, res.err = l.dispatchNewListLivySessionsPreviewPager(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -195,97 +185,6 @@ func (l *LivySessionsServerTransport) dispatchNewListLivySessionsPager(req *http
 	}
 	if !server.PagerResponderMore(newListLivySessionsPager) {
 		l.newListLivySessionsPager.remove(req)
-	}
-	return resp, nil
-}
-
-func (l *LivySessionsServerTransport) dispatchNewListLivySessionsPreviewPager(req *http.Request) (*http.Response, error) {
-	if l.srv.NewListLivySessionsPreviewPager == nil {
-		return nil, &nonRetriableError{errors.New("fake for method NewListLivySessionsPreviewPager not implemented")}
-	}
-	newListLivySessionsPreviewPager := l.newListLivySessionsPreviewPager.get(req)
-	if newListLivySessionsPreviewPager == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/livySessions`
-		regex := regexp.MustCompile(regexStr)
-		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 2 {
-			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
-		}
-		qp := req.URL.Query()
-		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
-		if err != nil {
-			return nil, err
-		}
-		lakehouseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("lakehouseId")])
-		if err != nil {
-			return nil, err
-		}
-		previewUnescaped, err := url.QueryUnescape(qp.Get("preview"))
-		if err != nil {
-			return nil, err
-		}
-		previewParam, err := strconv.ParseBool(previewUnescaped)
-		if err != nil {
-			return nil, err
-		}
-		submittedDateTimeUnescaped, err := url.QueryUnescape(qp.Get("submittedDateTime"))
-		if err != nil {
-			return nil, err
-		}
-		submittedDateTimeParam, err := parseOptional(submittedDateTimeUnescaped, func(v string) (time.Time, error) { return time.Parse(time.RFC3339Nano, v) })
-		if err != nil {
-			return nil, err
-		}
-		endDateTimeUnescaped, err := url.QueryUnescape(qp.Get("endDateTime"))
-		if err != nil {
-			return nil, err
-		}
-		endDateTimeParam, err := parseOptional(endDateTimeUnescaped, func(v string) (time.Time, error) { return time.Parse(time.RFC3339Nano, v) })
-		if err != nil {
-			return nil, err
-		}
-		submitterIDUnescaped, err := url.QueryUnescape(qp.Get("submitter.Id"))
-		if err != nil {
-			return nil, err
-		}
-		submitterIDParam := getOptional(submitterIDUnescaped)
-		stateUnescaped, err := url.QueryUnescape(qp.Get("state"))
-		if err != nil {
-			return nil, err
-		}
-		stateParam := getOptional(stateUnescaped)
-		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
-		if err != nil {
-			return nil, err
-		}
-		continuationTokenParam := getOptional(continuationTokenUnescaped)
-		var options *lakehouse.LivySessionsClientListLivySessionsPreviewOptions
-		if submittedDateTimeParam != nil || endDateTimeParam != nil || submitterIDParam != nil || stateParam != nil || continuationTokenParam != nil {
-			options = &lakehouse.LivySessionsClientListLivySessionsPreviewOptions{
-				SubmittedDateTime: submittedDateTimeParam,
-				EndDateTime:       endDateTimeParam,
-				SubmitterID:       submitterIDParam,
-				State:             stateParam,
-				ContinuationToken: continuationTokenParam,
-			}
-		}
-		resp := l.srv.NewListLivySessionsPreviewPager(workspaceIDParam, lakehouseIDParam, previewParam, options)
-		newListLivySessionsPreviewPager = &resp
-		l.newListLivySessionsPreviewPager.add(req, newListLivySessionsPreviewPager)
-		server.PagerResponderInjectNextLinks(newListLivySessionsPreviewPager, req, func(page *lakehouse.LivySessionsClientListLivySessionsPreviewResponse, createLink func() string) {
-			page.ContinuationURI = to.Ptr(createLink())
-		})
-	}
-	resp, err := server.PagerResponderNext(newListLivySessionsPreviewPager, req)
-	if err != nil {
-		return nil, err
-	}
-	if !contains([]int{http.StatusOK}, resp.StatusCode) {
-		l.newListLivySessionsPreviewPager.remove(req)
-		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
-	}
-	if !server.PagerResponderMore(newListLivySessionsPreviewPager) {
-		l.newListLivySessionsPreviewPager.remove(req)
 	}
 	return resp, nil
 }

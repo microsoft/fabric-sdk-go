@@ -64,6 +64,8 @@ const (
 	ItemTypeMountedDataFactory ItemType = "MountedDataFactory"
 	// ItemTypeNotebook - A notebook.
 	ItemTypeNotebook ItemType = "Notebook"
+	// ItemTypeOperationsAgent - A OperationsAgent.
+	ItemTypeOperationsAgent ItemType = "OperationsAgent"
 	// ItemTypePaginatedReport - PowerBI paginated report.
 	ItemTypePaginatedReport ItemType = "PaginatedReport"
 	// ItemTypeReflex - A Reflex.
@@ -76,6 +78,8 @@ const (
 	ItemTypeSQLEndpoint ItemType = "SQLEndpoint"
 	// ItemTypeSemanticModel - PowerBI semantic model.
 	ItemTypeSemanticModel ItemType = "SemanticModel"
+	// ItemTypeSnowflakeDatabase - A Snowflake Database to store Iceberg tables created from Snowflake account.
+	ItemTypeSnowflakeDatabase ItemType = "SnowflakeDatabase"
 	// ItemTypeSparkJobDefinition - A spark job definition.
 	ItemTypeSparkJobDefinition ItemType = "SparkJobDefinition"
 	// ItemTypeUserDataFunction - A User Data Function.
@@ -118,12 +122,14 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeMirroredWarehouse,
 		ItemTypeMountedDataFactory,
 		ItemTypeNotebook,
+		ItemTypeOperationsAgent,
 		ItemTypePaginatedReport,
 		ItemTypeReflex,
 		ItemTypeReport,
 		ItemTypeSQLDatabase,
 		ItemTypeSQLEndpoint,
 		ItemTypeSemanticModel,
+		ItemTypeSnowflakeDatabase,
 		ItemTypeSparkJobDefinition,
 		ItemTypeUserDataFunction,
 		ItemTypeVariableLibrary,

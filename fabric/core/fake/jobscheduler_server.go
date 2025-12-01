@@ -465,13 +465,12 @@ func (j *JobSchedulerServerTransport) dispatchRunOnDemandItemJob(req *http.Reque
 	if j.srv.RunOnDemandItemJob == nil {
 		return nil, &nonRetriableError{errors.New("fake for method RunOnDemandItemJob not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/items/(?P<itemId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/instances`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/items/(?P<itemId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/(?P<jobType>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/instances`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if matches == nil || len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
-	qp := req.URL.Query()
 	body, err := server.UnmarshalRequestAsJSON[core.RunOnDemandItemJobRequest](req)
 	if err != nil {
 		return nil, err
@@ -484,7 +483,7 @@ func (j *JobSchedulerServerTransport) dispatchRunOnDemandItemJob(req *http.Reque
 	if err != nil {
 		return nil, err
 	}
-	jobTypeParam, err := url.QueryUnescape(qp.Get("jobType"))
+	jobTypeParam, err := url.PathUnescape(matches[regex.SubexpIndex("jobType")])
 	if err != nil {
 		return nil, err
 	}

@@ -344,22 +344,19 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandSparkJobDefinition
 	})
 	var exampleWorkspaceID string
 	var exampleSparkJobDefinitionID string
-	var exampleJobType string
 	exampleWorkspaceID = "4b218778-e7a5-4d73-8187-f10824047715"
 	exampleSparkJobDefinitionID = "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"
-	exampleJobType = "sparkjob"
 
-	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandSparkJobDefinition = func(ctx context.Context, workspaceID string, sparkJobDefinitionID string, jobType string, options *sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions) (resp azfake.Responder[sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandSparkJobDefinition = func(ctx context.Context, workspaceID string, sparkJobDefinitionID string, options *sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions) (resp azfake.Responder[sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleSparkJobDefinitionID, sparkJobDefinitionID)
-		testsuite.Require().Equal(exampleJobType, jobType)
 		resp = azfake.Responder[sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse]{}
 		resp.SetResponse(http.StatusAccepted, sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse{}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewBackgroundJobsClient()
-	_, err = client.RunOnDemandSparkJobDefinition(ctx, exampleWorkspaceID, exampleSparkJobDefinitionID, exampleJobType, &sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions{RunSparkJobDefinitionRequest: nil})
+	_, err = client.RunOnDemandSparkJobDefinition(ctx, exampleWorkspaceID, exampleSparkJobDefinitionID, &sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions{RunSparkJobDefinitionRequest: nil})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 
 	// From example
@@ -368,18 +365,16 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandSparkJobDefinition
 	})
 	exampleWorkspaceID = "4b218778-e7a5-4d73-8187-f10824047715"
 	exampleSparkJobDefinitionID = "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"
-	exampleJobType = "sparkjob"
 
-	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandSparkJobDefinition = func(ctx context.Context, workspaceID string, sparkJobDefinitionID string, jobType string, options *sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions) (resp azfake.Responder[sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandSparkJobDefinition = func(ctx context.Context, workspaceID string, sparkJobDefinitionID string, options *sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions) (resp azfake.Responder[sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleSparkJobDefinitionID, sparkJobDefinitionID)
-		testsuite.Require().Equal(exampleJobType, jobType)
 		resp = azfake.Responder[sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse]{}
 		resp.SetResponse(http.StatusAccepted, sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse{}, nil)
 		return
 	}
 
-	_, err = client.RunOnDemandSparkJobDefinition(ctx, exampleWorkspaceID, exampleSparkJobDefinitionID, exampleJobType, &sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions{RunSparkJobDefinitionRequest: &sparkjobdefinition.RunSparkJobDefinitionRequest{
+	_, err = client.RunOnDemandSparkJobDefinition(ctx, exampleWorkspaceID, exampleSparkJobDefinitionID, &sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions{RunSparkJobDefinitionRequest: &sparkjobdefinition.RunSparkJobDefinitionRequest{
 		ExecutionData: &sparkjobdefinition.ExecutionData{
 			AdditionalLibraryUris: []string{
 				"abfss://test@onelakecst180.dfs.pbidedicated.windows-int.net/dfsd.Lakehouse/Files/testfile.jar"},
@@ -423,13 +418,7 @@ func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessions() {
 					ItemID:        to.Ptr("8cee7699-2e81-4121-9a53-cc9025046193"),
 					WorkspaceID:   to.Ptr("f8113ba8-dd81-443e-811a-b385340f3f05"),
 				},
-				DriverCores:                   to.Ptr[int32](2),
-				DriverMemory:                  to.Ptr[int32](4),
-				DynamicAllocationMaxExecutors: to.Ptr[int32](20),
-				EndDateTime:                   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:37:30.000Z"); return t }()),
-				ExecutorCores:                 float64(4),
-				ExecutorMemory:                to.Ptr[int32](8),
-				IsDynamicAllocationEnabled:    to.Ptr(true),
+				EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:37:30.000Z"); return t }()),
 				Item: &sparkjobdefinition.ItemReferenceByID{
 					ReferenceType: to.Ptr(sparkjobdefinition.ItemReferenceTypeByID),
 					ItemID:        to.Ptr("8cee7699-2e81-4121-9a53-cc9025046193"),
@@ -443,7 +432,6 @@ func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessions() {
 				LivyName:                   to.Ptr("random_test_name_app"),
 				LivySessionItemResourceURI: to.Ptr(""),
 				MaxNumberOfAttempts:        to.Ptr[int32](1),
-				NumExecutors:               to.Ptr[int32](10),
 				OperationName:              to.Ptr("Batch Livy Run"),
 				Origin:                     to.Ptr(sparkjobdefinition.OriginSubmittedJob),
 				QueuedDuration: &sparkjobdefinition.Duration{
@@ -490,102 +478,6 @@ func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessions() {
 	}
 }
 
-func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessionsPreview() {
-	// From example
-	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"List all livy sessions (Preview) example"},
-	})
-	var exampleWorkspaceID string
-	var exampleSparkJobDefinitionID string
-	var examplePreview bool
-	exampleWorkspaceID = "f8113ba8-dd81-443e-811a-b385340f3f05"
-	exampleSparkJobDefinitionID = "8cee7699-2e81-4121-9a53-cc9025046193"
-	examplePreview = true
-
-	exampleRes := sparkjobdefinition.LivySessions{
-		Value: []sparkjobdefinition.LivySession{
-			{
-				AttemptNumber:      to.Ptr[int32](1),
-				CancellationReason: to.Ptr("User cancelled the Spark batch"),
-				CapacityID:         to.Ptr("3c0cd366-dc28-4b6d-a525-4d415a8666e7"),
-				CreatorItem: &sparkjobdefinition.ItemReferenceByID{
-					ReferenceType: to.Ptr(sparkjobdefinition.ItemReferenceTypeByID),
-					ItemID:        to.Ptr("8cee7699-2e81-4121-9a53-cc9025046193"),
-					WorkspaceID:   to.Ptr("f8113ba8-dd81-443e-811a-b385340f3f05"),
-				},
-				DriverCores:                   to.Ptr[int32](2),
-				DriverMemory:                  to.Ptr[int32](4),
-				DynamicAllocationMaxExecutors: to.Ptr[int32](20),
-				EndDateTime:                   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:37:30.000Z"); return t }()),
-				ExecutorCores:                 float64(4),
-				ExecutorMemory:                to.Ptr[int32](8),
-				IsDynamicAllocationEnabled:    to.Ptr(true),
-				Item: &sparkjobdefinition.ItemReferenceByID{
-					ReferenceType: to.Ptr(sparkjobdefinition.ItemReferenceTypeByID),
-					ItemID:        to.Ptr("8cee7699-2e81-4121-9a53-cc9025046193"),
-					WorkspaceID:   to.Ptr("f8113ba8-dd81-443e-811a-b385340f3f05"),
-				},
-				ItemName:                   to.Ptr("lh_itemName"),
-				ItemType:                   to.Ptr(sparkjobdefinition.LivySessionItemTypeSparkJobDefinition),
-				JobInstanceID:              to.Ptr("c2baabbd-5327-430c-87a6-ff4f98285601"),
-				JobType:                    to.Ptr(sparkjobdefinition.JobTypeSparkBatch),
-				LivyID:                     to.Ptr("9611f500-bf44-42e0-a0de-78dacb374398"),
-				LivyName:                   to.Ptr("random_test_name_app"),
-				LivySessionItemResourceURI: to.Ptr(""),
-				MaxNumberOfAttempts:        to.Ptr[int32](1),
-				NumExecutors:               to.Ptr[int32](10),
-				OperationName:              to.Ptr("Batch Livy Run"),
-				Origin:                     to.Ptr(sparkjobdefinition.OriginSubmittedJob),
-				QueuedDuration: &sparkjobdefinition.Duration{
-					TimeUnit: to.Ptr(sparkjobdefinition.TimeUnitSeconds),
-					Value:    to.Ptr[float32](1),
-				},
-				RunningDuration: &sparkjobdefinition.Duration{
-					TimeUnit: to.Ptr(sparkjobdefinition.TimeUnitSeconds),
-					Value:    to.Ptr[float32](180),
-				},
-				RuntimeVersion:     to.Ptr("1.3"),
-				SparkApplicationID: to.Ptr("application_1730933685452_0001"),
-				StartDateTime:      to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:34:11.000Z"); return t }()),
-				State:              to.Ptr(sparkjobdefinition.StateCancelled),
-				SubmittedDateTime:  to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:32:03.000Z"); return t }()),
-				Submitter: &sparkjobdefinition.Principal{
-					Type: to.Ptr(sparkjobdefinition.PrincipalTypeUser),
-					ID:   to.Ptr("6f23a8a6-d954-4550-b91a-4df73ccd0311"),
-				},
-				TotalDuration: &sparkjobdefinition.Duration{
-					TimeUnit: to.Ptr(sparkjobdefinition.TimeUnitSeconds),
-					Value:    to.Ptr[float32](360),
-				},
-			}},
-	}
-
-	testsuite.serverFactory.LivySessionsServer.NewListLivySessionsPreviewPager = func(workspaceID string, sparkJobDefinitionID string, preview bool, options *sparkjobdefinition.LivySessionsClientListLivySessionsPreviewOptions) (resp azfake.PagerResponder[sparkjobdefinition.LivySessionsClientListLivySessionsPreviewResponse]) {
-		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
-		testsuite.Require().Equal(exampleSparkJobDefinitionID, sparkJobDefinitionID)
-		testsuite.Require().Equal(examplePreview, preview)
-		resp = azfake.PagerResponder[sparkjobdefinition.LivySessionsClientListLivySessionsPreviewResponse]{}
-		resp.AddPage(http.StatusOK, sparkjobdefinition.LivySessionsClientListLivySessionsPreviewResponse{LivySessions: exampleRes}, nil)
-		return
-	}
-
-	client := testsuite.clientFactory.NewLivySessionsClient()
-	pager := client.NewListLivySessionsPreviewPager(exampleWorkspaceID, exampleSparkJobDefinitionID, examplePreview, &sparkjobdefinition.LivySessionsClientListLivySessionsPreviewOptions{SubmittedDateTime: nil,
-		EndDateTime:       nil,
-		SubmitterID:       to.Ptr("6f23a8a6-d954-4550-b91a-4df73ccd0311"),
-		State:             nil,
-		ContinuationToken: nil,
-	})
-	for pager.More() {
-		nextResult, err := pager.NextPage(ctx)
-		testsuite.Require().NoError(err, "Failed to advance page for example ")
-		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.LivySessions))
-		if err == nil {
-			break
-		}
-	}
-}
-
 func (testsuite *FakeTestSuite) TestLivySessions_GetLivySession() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -607,13 +499,7 @@ func (testsuite *FakeTestSuite) TestLivySessions_GetLivySession() {
 			ItemID:        to.Ptr("8cee7699-2e81-4121-9a53-cc9025046193"),
 			WorkspaceID:   to.Ptr("f8113ba8-dd81-443e-811a-b385340f3f05"),
 		},
-		DriverCores:                   to.Ptr[int32](2),
-		DriverMemory:                  to.Ptr[int32](4),
-		DynamicAllocationMaxExecutors: to.Ptr[int32](20),
-		EndDateTime:                   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:37:30.000Z"); return t }()),
-		ExecutorCores:                 float64(4),
-		ExecutorMemory:                to.Ptr[int32](8),
-		IsDynamicAllocationEnabled:    to.Ptr(true),
+		EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:37:30.000Z"); return t }()),
 		Item: &sparkjobdefinition.ItemReferenceByID{
 			ReferenceType: to.Ptr(sparkjobdefinition.ItemReferenceTypeByID),
 			ItemID:        to.Ptr("8cee7699-2e81-4121-9a53-cc9025046193"),
@@ -627,7 +513,6 @@ func (testsuite *FakeTestSuite) TestLivySessions_GetLivySession() {
 		LivyName:                   to.Ptr("random_test_name_app"),
 		LivySessionItemResourceURI: to.Ptr(""),
 		MaxNumberOfAttempts:        to.Ptr[int32](1),
-		NumExecutors:               to.Ptr[int32](10),
 		OperationName:              to.Ptr("Batch Livy Run"),
 		Origin:                     to.Ptr(sparkjobdefinition.OriginSubmittedJob),
 		QueuedDuration: &sparkjobdefinition.Duration{

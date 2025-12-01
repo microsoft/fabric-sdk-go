@@ -28,7 +28,7 @@ import (
 type BackgroundJobsServer struct {
 	// RunOnDemandSparkJobDefinition is the fake for method BackgroundJobsClient.RunOnDemandSparkJobDefinition
 	// HTTP status codes to indicate success: http.StatusAccepted
-	RunOnDemandSparkJobDefinition func(ctx context.Context, workspaceID string, sparkJobDefinitionID string, jobType string, options *sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions) (resp azfake.Responder[sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse], errResp azfake.ErrorResponder)
+	RunOnDemandSparkJobDefinition func(ctx context.Context, workspaceID string, sparkJobDefinitionID string, options *sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions) (resp azfake.Responder[sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse], errResp azfake.ErrorResponder)
 }
 
 // NewBackgroundJobsServerTransport creates a new instance of BackgroundJobsServerTransport with the provided implementation.
@@ -94,13 +94,12 @@ func (b *BackgroundJobsServerTransport) dispatchRunOnDemandSparkJobDefinition(re
 	if b.srv.RunOnDemandSparkJobDefinition == nil {
 		return nil, &nonRetriableError{errors.New("fake for method RunOnDemandSparkJobDefinition not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sparkJobDefinitions/(?P<sparkJobDefinitionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/instances`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sparkJobDefinitions/(?P<sparkJobDefinitionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/sparkjob/instances`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if matches == nil || len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
-	qp := req.URL.Query()
 	body, err := server.UnmarshalRequestAsJSON[sparkjobdefinition.RunSparkJobDefinitionRequest](req)
 	if err != nil {
 		return nil, err
@@ -113,17 +112,13 @@ func (b *BackgroundJobsServerTransport) dispatchRunOnDemandSparkJobDefinition(re
 	if err != nil {
 		return nil, err
 	}
-	jobTypeParam, err := url.QueryUnescape(qp.Get("jobType"))
-	if err != nil {
-		return nil, err
-	}
 	var options *sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions
 	if !reflect.ValueOf(body).IsZero() {
 		options = &sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions{
 			RunSparkJobDefinitionRequest: &body,
 		}
 	}
-	respr, errRespr := b.srv.RunOnDemandSparkJobDefinition(req.Context(), workspaceIDParam, sparkJobDefinitionIDParam, jobTypeParam, options)
+	respr, errRespr := b.srv.RunOnDemandSparkJobDefinition(req.Context(), workspaceIDParam, sparkJobDefinitionIDParam, options)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}

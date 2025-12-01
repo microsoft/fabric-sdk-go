@@ -531,22 +531,19 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandExecute() {
 	})
 	var exampleWorkspaceID string
 	var exampleDataflowID string
-	var exampleJobType string
 	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
 	exampleDataflowID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
-	exampleJobType = "Execute"
 
-	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandExecute = func(ctx context.Context, workspaceID string, dataflowID string, jobType string, options *dataflow.BackgroundJobsClientRunOnDemandExecuteOptions) (resp azfake.Responder[dataflow.BackgroundJobsClientRunOnDemandExecuteResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandExecute = func(ctx context.Context, workspaceID string, dataflowID string, options *dataflow.BackgroundJobsClientRunOnDemandExecuteOptions) (resp azfake.Responder[dataflow.BackgroundJobsClientRunOnDemandExecuteResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleDataflowID, dataflowID)
-		testsuite.Require().Equal(exampleJobType, jobType)
 		resp = azfake.Responder[dataflow.BackgroundJobsClientRunOnDemandExecuteResponse]{}
 		resp.SetResponse(http.StatusAccepted, dataflow.BackgroundJobsClientRunOnDemandExecuteResponse{}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewBackgroundJobsClient()
-	_, err = client.RunOnDemandExecute(ctx, exampleWorkspaceID, exampleDataflowID, exampleJobType, &dataflow.BackgroundJobsClientRunOnDemandExecuteOptions{RunOnDemandItemJobRequest: nil})
+	_, err = client.RunOnDemandExecute(ctx, exampleWorkspaceID, exampleDataflowID, &dataflow.BackgroundJobsClientRunOnDemandExecuteOptions{RunOnDemandItemJobRequest: nil})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 
 	// From example
@@ -555,18 +552,16 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandExecute() {
 	})
 	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
 	exampleDataflowID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
-	exampleJobType = "Execute"
 
-	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandExecute = func(ctx context.Context, workspaceID string, dataflowID string, jobType string, options *dataflow.BackgroundJobsClientRunOnDemandExecuteOptions) (resp azfake.Responder[dataflow.BackgroundJobsClientRunOnDemandExecuteResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandExecute = func(ctx context.Context, workspaceID string, dataflowID string, options *dataflow.BackgroundJobsClientRunOnDemandExecuteOptions) (resp azfake.Responder[dataflow.BackgroundJobsClientRunOnDemandExecuteResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleDataflowID, dataflowID)
-		testsuite.Require().Equal(exampleJobType, jobType)
 		resp = azfake.Responder[dataflow.BackgroundJobsClientRunOnDemandExecuteResponse]{}
 		resp.SetResponse(http.StatusAccepted, dataflow.BackgroundJobsClientRunOnDemandExecuteResponse{}, nil)
 		return
 	}
 
-	_, err = client.RunOnDemandExecute(ctx, exampleWorkspaceID, exampleDataflowID, exampleJobType, &dataflow.BackgroundJobsClientRunOnDemandExecuteOptions{RunOnDemandItemJobRequest: &dataflow.RunOnDemandDataflowExecuteJobRequest{
+	_, err = client.RunOnDemandExecute(ctx, exampleWorkspaceID, exampleDataflowID, &dataflow.BackgroundJobsClientRunOnDemandExecuteOptions{RunOnDemandItemJobRequest: &dataflow.RunOnDemandDataflowExecuteJobRequest{
 		ExecutionData: &dataflow.ExecutionPayload{
 			ExecuteOption: to.Ptr(dataflow.ExecuteOptionApplyChangesIfNeeded),
 			Parameters: []dataflow.ItemJobParameter{
@@ -593,21 +588,18 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandApplyChanges() {
 	})
 	var exampleWorkspaceID string
 	var exampleDataflowID string
-	var exampleJobType string
 	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
 	exampleDataflowID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
-	exampleJobType = "ApplyChanges"
 
-	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandApplyChanges = func(ctx context.Context, workspaceID string, dataflowID string, jobType string, options *dataflow.BackgroundJobsClientRunOnDemandApplyChangesOptions) (resp azfake.Responder[dataflow.BackgroundJobsClientRunOnDemandApplyChangesResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandApplyChanges = func(ctx context.Context, workspaceID string, dataflowID string, options *dataflow.BackgroundJobsClientRunOnDemandApplyChangesOptions) (resp azfake.Responder[dataflow.BackgroundJobsClientRunOnDemandApplyChangesResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleDataflowID, dataflowID)
-		testsuite.Require().Equal(exampleJobType, jobType)
 		resp = azfake.Responder[dataflow.BackgroundJobsClientRunOnDemandApplyChangesResponse]{}
 		resp.SetResponse(http.StatusAccepted, dataflow.BackgroundJobsClientRunOnDemandApplyChangesResponse{}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewBackgroundJobsClient()
-	_, err = client.RunOnDemandApplyChanges(ctx, exampleWorkspaceID, exampleDataflowID, exampleJobType, nil)
+	_, err = client.RunOnDemandApplyChanges(ctx, exampleWorkspaceID, exampleDataflowID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }

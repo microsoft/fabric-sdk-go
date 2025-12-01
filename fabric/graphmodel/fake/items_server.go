@@ -36,7 +36,7 @@ type ItemsServer struct {
 
 	// ExecuteQueryPreview is the fake for method ItemsClient.ExecuteQueryPreview
 	// HTTP status codes to indicate success: http.StatusOK
-	ExecuteQueryPreview func(ctx context.Context, workspaceID string, graphModelID string, preview bool, createQueryResultRequest graphmodel.ExecuteQueryRequest, options *graphmodel.ItemsClientExecuteQueryPreviewOptions) (resp azfake.Responder[graphmodel.ItemsClientExecuteQueryPreviewResponse], errResp azfake.ErrorResponder)
+	ExecuteQueryPreview func(ctx context.Context, workspaceID string, graphModelID string, beta bool, createQueryResultRequest graphmodel.ExecuteQueryRequest, options *graphmodel.ItemsClientExecuteQueryPreviewOptions) (resp azfake.Responder[graphmodel.ItemsClientExecuteQueryPreviewResponse], errResp azfake.ErrorResponder)
 
 	// GetGraphModel is the fake for method ItemsClient.GetGraphModel
 	// HTTP status codes to indicate success: http.StatusOK
@@ -48,7 +48,7 @@ type ItemsServer struct {
 
 	// GetQueryableGraphTypePreview is the fake for method ItemsClient.GetQueryableGraphTypePreview
 	// HTTP status codes to indicate success: http.StatusOK
-	GetQueryableGraphTypePreview func(ctx context.Context, workspaceID string, graphModelID string, preview bool, options *graphmodel.ItemsClientGetQueryableGraphTypePreviewOptions) (resp azfake.Responder[graphmodel.ItemsClientGetQueryableGraphTypePreviewResponse], errResp azfake.ErrorResponder)
+	GetQueryableGraphTypePreview func(ctx context.Context, workspaceID string, graphModelID string, beta bool, options *graphmodel.ItemsClientGetQueryableGraphTypePreviewOptions) (resp azfake.Responder[graphmodel.ItemsClientGetQueryableGraphTypePreviewResponse], errResp azfake.ErrorResponder)
 
 	// NewListGraphModelsPager is the fake for method ItemsClient.NewListGraphModelsPager
 	// HTTP status codes to indicate success: http.StatusOK
@@ -248,15 +248,15 @@ func (i *ItemsServerTransport) dispatchExecuteQueryPreview(req *http.Request) (*
 	if err != nil {
 		return nil, err
 	}
-	previewUnescaped, err := url.QueryUnescape(qp.Get("preview"))
+	betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
 	if err != nil {
 		return nil, err
 	}
-	previewParam, err := strconv.ParseBool(previewUnescaped)
+	betaParam, err := strconv.ParseBool(betaUnescaped)
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := i.srv.ExecuteQueryPreview(req.Context(), workspaceIDParam, graphModelIDParam, previewParam, body, nil)
+	respr, errRespr := i.srv.ExecuteQueryPreview(req.Context(), workspaceIDParam, graphModelIDParam, betaParam, body, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -382,15 +382,15 @@ func (i *ItemsServerTransport) dispatchGetQueryableGraphTypePreview(req *http.Re
 	if err != nil {
 		return nil, err
 	}
-	previewUnescaped, err := url.QueryUnescape(qp.Get("preview"))
+	betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
 	if err != nil {
 		return nil, err
 	}
-	previewParam, err := strconv.ParseBool(previewUnescaped)
+	betaParam, err := strconv.ParseBool(betaUnescaped)
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := i.srv.GetQueryableGraphTypePreview(req.Context(), workspaceIDParam, graphModelIDParam, previewParam, nil)
+	respr, errRespr := i.srv.GetQueryableGraphTypePreview(req.Context(), workspaceIDParam, graphModelIDParam, betaParam, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}

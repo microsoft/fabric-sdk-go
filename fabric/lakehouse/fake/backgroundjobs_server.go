@@ -35,11 +35,11 @@ type BackgroundJobsServer struct {
 
 	// RunOnDemandRefreshMaterializedLakeViews is the fake for method BackgroundJobsClient.RunOnDemandRefreshMaterializedLakeViews
 	// HTTP status codes to indicate success: http.StatusAccepted
-	RunOnDemandRefreshMaterializedLakeViews func(ctx context.Context, workspaceID string, lakehouseID string, jobType string, options *lakehouse.BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse], errResp azfake.ErrorResponder)
+	RunOnDemandRefreshMaterializedLakeViews func(ctx context.Context, workspaceID string, lakehouseID string, options *lakehouse.BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse], errResp azfake.ErrorResponder)
 
 	// RunOnDemandTableMaintenance is the fake for method BackgroundJobsClient.RunOnDemandTableMaintenance
 	// HTTP status codes to indicate success: http.StatusAccepted
-	RunOnDemandTableMaintenance func(ctx context.Context, workspaceID string, lakehouseID string, jobType string, runOnDemandTableMaintenanceRequest lakehouse.RunOnDemandTableMaintenanceRequest, options *lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceResponse], errResp azfake.ErrorResponder)
+	RunOnDemandTableMaintenance func(ctx context.Context, workspaceID string, lakehouseID string, runOnDemandTableMaintenanceRequest lakehouse.RunOnDemandTableMaintenanceRequest, options *lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceResponse], errResp azfake.ErrorResponder)
 
 	// UpdateRefreshMaterializedLakeViewsSchedule is the fake for method BackgroundJobsClient.UpdateRefreshMaterializedLakeViewsSchedule
 	// HTTP status codes to indicate success: http.StatusOK
@@ -194,13 +194,12 @@ func (b *BackgroundJobsServerTransport) dispatchRunOnDemandRefreshMaterializedLa
 	if b.srv.RunOnDemandRefreshMaterializedLakeViews == nil {
 		return nil, &nonRetriableError{errors.New("fake for method RunOnDemandRefreshMaterializedLakeViews not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/instances`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/RefreshMaterializedLakeViews/instances`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if matches == nil || len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
-	qp := req.URL.Query()
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 	if err != nil {
 		return nil, err
@@ -209,11 +208,7 @@ func (b *BackgroundJobsServerTransport) dispatchRunOnDemandRefreshMaterializedLa
 	if err != nil {
 		return nil, err
 	}
-	jobTypeParam, err := url.QueryUnescape(qp.Get("jobType"))
-	if err != nil {
-		return nil, err
-	}
-	respr, errRespr := b.srv.RunOnDemandRefreshMaterializedLakeViews(req.Context(), workspaceIDParam, lakehouseIDParam, jobTypeParam, nil)
+	respr, errRespr := b.srv.RunOnDemandRefreshMaterializedLakeViews(req.Context(), workspaceIDParam, lakehouseIDParam, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -238,13 +233,12 @@ func (b *BackgroundJobsServerTransport) dispatchRunOnDemandTableMaintenance(req 
 	if b.srv.RunOnDemandTableMaintenance == nil {
 		return nil, &nonRetriableError{errors.New("fake for method RunOnDemandTableMaintenance not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/instances`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/TableMaintenance/instances`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if matches == nil || len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
-	qp := req.URL.Query()
 	body, err := server.UnmarshalRequestAsJSON[lakehouse.RunOnDemandTableMaintenanceRequest](req)
 	if err != nil {
 		return nil, err
@@ -257,11 +251,7 @@ func (b *BackgroundJobsServerTransport) dispatchRunOnDemandTableMaintenance(req 
 	if err != nil {
 		return nil, err
 	}
-	jobTypeParam, err := url.QueryUnescape(qp.Get("jobType"))
-	if err != nil {
-		return nil, err
-	}
-	respr, errRespr := b.srv.RunOnDemandTableMaintenance(req.Context(), workspaceIDParam, lakehouseIDParam, jobTypeParam, body, nil)
+	respr, errRespr := b.srv.RunOnDemandTableMaintenance(req.Context(), workspaceIDParam, lakehouseIDParam, body, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}

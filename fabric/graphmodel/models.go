@@ -23,8 +23,9 @@ type CreateGraphModelRequest struct {
 
 // DefinitionResponse - GraphModel public definition response.
 type DefinitionResponse struct {
-	// READ-ONLY; GraphModel public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/graph-model]
-	// for more details on how to craft a GraphModel public definition.
+	// READ-ONLY; GraphModel public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/graph-model-definition]
+	// for more details on how to craft a GraphModel public
+	// definition.
 	Definition *PublicDefinition
 }
 
@@ -62,9 +63,6 @@ type GraphModel struct {
 
 	// The item display name.
 	DisplayName *string
-
-	// The GraphModel properties.
-	Properties *Properties
 
 	// READ-ONLY; The folder ID.
 	FolderID *string
@@ -130,12 +128,6 @@ type NodeTypeReference struct {
 	Alias *string
 }
 
-// Properties - The GraphModel properties.
-type Properties struct {
-	// REQUIRED; OneLake path to the GraphModel root directory.
-	OneLakeRootPath *string
-}
-
 // Property - A graph element property.
 type Property struct {
 	// REQUIRED; The property name.
@@ -145,8 +137,9 @@ type Property struct {
 	Type *string
 }
 
-// PublicDefinition - GraphModel public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/graph-model]
-// for more details on how to craft a GraphModel public definition.
+// PublicDefinition - GraphModel public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/graph-model-definition]
+// for more details on how to craft a GraphModel public
+// definition.
 type PublicDefinition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []PublicDefinitionPart
@@ -169,8 +162,9 @@ type PublicDefinitionPart struct {
 
 // UpdateGraphModelDefinitionRequest - Update GraphModel public definition request payload.
 type UpdateGraphModelDefinitionRequest struct {
-	// REQUIRED; GraphModel public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/graph-model]
-	// for more details on how to craft a GraphModel public definition.
+	// REQUIRED; GraphModel public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/graph-model-definition]
+	// for more details on how to craft a GraphModel public
+	// definition.
 	Definition *PublicDefinition
 }
 

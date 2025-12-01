@@ -28,11 +28,11 @@ import (
 type BackgroundJobsServer struct {
 	// RunOnDemandApplyChanges is the fake for method BackgroundJobsClient.RunOnDemandApplyChanges
 	// HTTP status codes to indicate success: http.StatusAccepted
-	RunOnDemandApplyChanges func(ctx context.Context, workspaceID string, dataflowID string, jobType string, options *dataflow.BackgroundJobsClientRunOnDemandApplyChangesOptions) (resp azfake.Responder[dataflow.BackgroundJobsClientRunOnDemandApplyChangesResponse], errResp azfake.ErrorResponder)
+	RunOnDemandApplyChanges func(ctx context.Context, workspaceID string, dataflowID string, options *dataflow.BackgroundJobsClientRunOnDemandApplyChangesOptions) (resp azfake.Responder[dataflow.BackgroundJobsClientRunOnDemandApplyChangesResponse], errResp azfake.ErrorResponder)
 
 	// RunOnDemandExecute is the fake for method BackgroundJobsClient.RunOnDemandExecute
 	// HTTP status codes to indicate success: http.StatusAccepted
-	RunOnDemandExecute func(ctx context.Context, workspaceID string, dataflowID string, jobType string, options *dataflow.BackgroundJobsClientRunOnDemandExecuteOptions) (resp azfake.Responder[dataflow.BackgroundJobsClientRunOnDemandExecuteResponse], errResp azfake.ErrorResponder)
+	RunOnDemandExecute func(ctx context.Context, workspaceID string, dataflowID string, options *dataflow.BackgroundJobsClientRunOnDemandExecuteOptions) (resp azfake.Responder[dataflow.BackgroundJobsClientRunOnDemandExecuteResponse], errResp azfake.ErrorResponder)
 
 	// ScheduleApplyChanges is the fake for method BackgroundJobsClient.ScheduleApplyChanges
 	// HTTP status codes to indicate success: http.StatusCreated
@@ -112,13 +112,12 @@ func (b *BackgroundJobsServerTransport) dispatchRunOnDemandApplyChanges(req *htt
 	if b.srv.RunOnDemandApplyChanges == nil {
 		return nil, &nonRetriableError{errors.New("fake for method RunOnDemandApplyChanges not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataflows/(?P<dataflowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/instances`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataflows/(?P<dataflowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/ApplyChanges/instances`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if matches == nil || len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
-	qp := req.URL.Query()
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 	if err != nil {
 		return nil, err
@@ -127,11 +126,7 @@ func (b *BackgroundJobsServerTransport) dispatchRunOnDemandApplyChanges(req *htt
 	if err != nil {
 		return nil, err
 	}
-	jobTypeParam, err := url.QueryUnescape(qp.Get("jobType"))
-	if err != nil {
-		return nil, err
-	}
-	respr, errRespr := b.srv.RunOnDemandApplyChanges(req.Context(), workspaceIDParam, dataflowIDParam, jobTypeParam, nil)
+	respr, errRespr := b.srv.RunOnDemandApplyChanges(req.Context(), workspaceIDParam, dataflowIDParam, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -156,13 +151,12 @@ func (b *BackgroundJobsServerTransport) dispatchRunOnDemandExecute(req *http.Req
 	if b.srv.RunOnDemandExecute == nil {
 		return nil, &nonRetriableError{errors.New("fake for method RunOnDemandExecute not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataflows/(?P<dataflowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/instances`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataflows/(?P<dataflowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/Execute/instances`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if matches == nil || len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
-	qp := req.URL.Query()
 	body, err := server.UnmarshalRequestAsJSON[dataflow.RunOnDemandDataflowExecuteJobRequest](req)
 	if err != nil {
 		return nil, err
@@ -175,17 +169,13 @@ func (b *BackgroundJobsServerTransport) dispatchRunOnDemandExecute(req *http.Req
 	if err != nil {
 		return nil, err
 	}
-	jobTypeParam, err := url.QueryUnescape(qp.Get("jobType"))
-	if err != nil {
-		return nil, err
-	}
 	var options *dataflow.BackgroundJobsClientRunOnDemandExecuteOptions
 	if !reflect.ValueOf(body).IsZero() {
 		options = &dataflow.BackgroundJobsClientRunOnDemandExecuteOptions{
 			RunOnDemandItemJobRequest: &body,
 		}
 	}
-	respr, errRespr := b.srv.RunOnDemandExecute(req.Context(), workspaceIDParam, dataflowIDParam, jobTypeParam, options)
+	respr, errRespr := b.srv.RunOnDemandExecute(req.Context(), workspaceIDParam, dataflowIDParam, options)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
