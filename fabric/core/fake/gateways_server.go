@@ -174,7 +174,7 @@ func (g *GatewaysServerTransport) dispatchAddGatewayRoleAssignment(req *http.Req
 	const regexStr = `/v1/gateways/(?P<gatewayId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/roleAssignments`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	body, err := server.UnmarshalRequestAsJSON[core.AddGatewayRoleAssignmentRequest](req)
@@ -237,7 +237,7 @@ func (g *GatewaysServerTransport) dispatchDeleteGateway(req *http.Request) (*htt
 	const regexStr = `/v1/gateways/(?P<gatewayId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	gatewayIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("gatewayId")])
@@ -266,7 +266,7 @@ func (g *GatewaysServerTransport) dispatchDeleteGatewayMember(req *http.Request)
 	const regexStr = `/v1/gateways/(?P<gatewayId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/members/(?P<gatewayMemberId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	gatewayIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("gatewayId")])
@@ -299,7 +299,7 @@ func (g *GatewaysServerTransport) dispatchDeleteGatewayRoleAssignment(req *http.
 	const regexStr = `/v1/gateways/(?P<gatewayId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/roleAssignments/(?P<gatewayRoleAssignmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	gatewayIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("gatewayId")])
@@ -332,7 +332,7 @@ func (g *GatewaysServerTransport) dispatchGetGateway(req *http.Request) (*http.R
 	const regexStr = `/v1/gateways/(?P<gatewayId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	gatewayIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("gatewayId")])
@@ -361,7 +361,7 @@ func (g *GatewaysServerTransport) dispatchGetGatewayRoleAssignment(req *http.Req
 	const regexStr = `/v1/gateways/(?P<gatewayId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/roleAssignments/(?P<gatewayRoleAssignmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	gatewayIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("gatewayId")])
@@ -394,7 +394,7 @@ func (g *GatewaysServerTransport) dispatchListGatewayMembers(req *http.Request) 
 	const regexStr = `/v1/gateways/(?P<gatewayId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/members`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	gatewayIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("gatewayId")])
@@ -425,7 +425,7 @@ func (g *GatewaysServerTransport) dispatchNewListGatewayRoleAssignmentsPager(req
 		const regexStr = `/v1/gateways/(?P<gatewayId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/roleAssignments`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 1 {
+		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		qp := req.URL.Query()
@@ -511,7 +511,7 @@ func (g *GatewaysServerTransport) dispatchUpdateGateway(req *http.Request) (*htt
 	const regexStr = `/v1/gateways/(?P<gatewayId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	raw, err := readRequestBody(req)
@@ -548,7 +548,7 @@ func (g *GatewaysServerTransport) dispatchUpdateGatewayMember(req *http.Request)
 	const regexStr = `/v1/gateways/(?P<gatewayId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/members/(?P<gatewayMemberId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	body, err := server.UnmarshalRequestAsJSON[core.UpdateGatewayMemberRequest](req)
@@ -585,7 +585,7 @@ func (g *GatewaysServerTransport) dispatchUpdateGatewayRoleAssignment(req *http.
 	const regexStr = `/v1/gateways/(?P<gatewayId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/roleAssignments/(?P<gatewayRoleAssignmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	body, err := server.UnmarshalRequestAsJSON[core.UpdateGatewayRoleAssignmentRequest](req)

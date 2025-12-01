@@ -35,12 +35,6 @@ type ItemTag struct {
 	ID *string
 }
 
-// Properties - The UserDataFunction properties.
-type Properties struct {
-	// REQUIRED; OneLake path to the UserDataFunction root directory.
-	OneLakeRootPath *string
-}
-
 // PublicDefinition - UserDataFunction public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/user-data-function]
 // for more details on how to craft a UserDataFunction public
 // definition.
@@ -91,9 +85,6 @@ type UserDataFunction struct {
 
 	// The item display name.
 	DisplayName *string
-
-	// The UserDataFunction properties.
-	Properties *Properties
 
 	// READ-ONLY; The folder ID.
 	FolderID *string

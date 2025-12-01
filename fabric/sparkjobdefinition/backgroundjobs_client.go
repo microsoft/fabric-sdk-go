@@ -28,7 +28,10 @@ type BackgroundJobsClient struct {
 	endpoint string
 }
 
-// RunOnDemandSparkJobDefinition - REQUIRED DELEGATED SCOPES SparkJobDefinition.Execute.All or Item.Execute.All
+// RunOnDemandSparkJobDefinition - > [!NOTE] The URL for this API has been updated to include the job type as part of the
+// path, replacing the previous use of a query parameter. For backward compatibility, invocations using the query
+// parameter are still supported.
+// REQUIRED DELEGATED SCOPES SparkJobDefinition.Execute.All or Item.Execute.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -40,16 +43,15 @@ type BackgroundJobsClient struct {
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - sparkJobDefinitionID - The Spark job definition item ID.
-//   - jobType - The supported job type for Spark job definition is sparkjob.
 //   - options - BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions contains the optional parameters for the BackgroundJobsClient.RunOnDemandSparkJobDefinition
 //     method.
-func (client *BackgroundJobsClient) RunOnDemandSparkJobDefinition(ctx context.Context, workspaceID string, sparkJobDefinitionID string, jobType string, options *BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions) (BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse, error) {
+func (client *BackgroundJobsClient) RunOnDemandSparkJobDefinition(ctx context.Context, workspaceID string, sparkJobDefinitionID string, options *BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions) (BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse, error) {
 	var err error
 	const operationName = "sparkjobdefinition.BackgroundJobsClient.RunOnDemandSparkJobDefinition"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.runOnDemandSparkJobDefinitionCreateRequest(ctx, workspaceID, sparkJobDefinitionID, jobType, options)
+	req, err := client.runOnDemandSparkJobDefinitionCreateRequest(ctx, workspaceID, sparkJobDefinitionID, options)
 	if err != nil {
 		return BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse{}, err
 	}
@@ -66,8 +68,8 @@ func (client *BackgroundJobsClient) RunOnDemandSparkJobDefinition(ctx context.Co
 }
 
 // runOnDemandSparkJobDefinitionCreateRequest creates the RunOnDemandSparkJobDefinition request.
-func (client *BackgroundJobsClient) runOnDemandSparkJobDefinitionCreateRequest(ctx context.Context, workspaceID string, sparkJobDefinitionID string, jobType string, options *BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/sparkJobDefinitions/{sparkJobDefinitionId}/jobs/instances"
+func (client *BackgroundJobsClient) runOnDemandSparkJobDefinitionCreateRequest(ctx context.Context, workspaceID string, sparkJobDefinitionID string, options *BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/sparkJobDefinitions/{sparkJobDefinitionId}/jobs/sparkjob/instances"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -80,9 +82,6 @@ func (client *BackgroundJobsClient) runOnDemandSparkJobDefinitionCreateRequest(c
 	if err != nil {
 		return nil, err
 	}
-	reqQP := req.Raw().URL.Query()
-	reqQP.Set("jobType", jobType)
-	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	if options != nil && options.RunSparkJobDefinitionRequest != nil {
 		if err := runtime.MarshalAsJSON(req, *options.RunSparkJobDefinitionRequest); err != nil {

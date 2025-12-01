@@ -6,8 +6,6 @@
 
 package lakehouse
 
-import "time"
-
 // BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleOptions contains the optional parameters for the BackgroundJobsClient.CreateRefreshMaterializedLakeViewsSchedule
 // method.
 type BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleOptions struct {
@@ -75,27 +73,6 @@ type LivySessionsClientGetLivySessionOptions struct {
 type LivySessionsClientListLivySessionsOptions struct {
 	// Token to retrieve the next page of results, if available.
 	ContinuationToken *string
-}
-
-// LivySessionsClientListLivySessionsPreviewOptions contains the optional parameters for the LivySessionsClient.NewListLivySessionsPreviewPager
-// method.
-type LivySessionsClientListLivySessionsPreviewOptions struct {
-	// Token to retrieve the next page of results, if available.
-	ContinuationToken *string
-
-	// Ended date time filter. Filter the sessions based on the ended date time in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
-	EndDateTime *time.Time
-
-	// The state of the session. Possible values are: NotStarted, InProgress, Cancelled, Failed, Succeeded, Unknown. This value
-	// maps to the state field in the response.
-	State *string
-
-	// Submitted date time filter. Filter the sessions based on the submitted date time in UTC, using the YYYY-MM-DDTHH:mm:ssZ
-	// format.
-	SubmittedDateTime *time.Time
-
-	// The GUID value of the user who submitted the session.
-	SubmitterID *string
 }
 
 // TablesClientBeginLoadTableOptions contains the optional parameters for the TablesClient.BeginLoadTable method.

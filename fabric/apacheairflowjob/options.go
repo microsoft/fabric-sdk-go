@@ -6,6 +6,34 @@
 
 package apacheairflowjob
 
+// FilesClientCreateOrUpdateApacheAirflowJobFileWithBinaryOptions contains the optional parameters for the FilesClient.CreateOrUpdateApacheAirflowJobFileWithBinary
+// method.
+type FilesClientCreateOrUpdateApacheAirflowJobFileWithBinaryOptions struct {
+	// placeholder for future optional parameters
+}
+
+// FilesClientDeleteApacheAirflowJobFileOptions contains the optional parameters for the FilesClient.DeleteApacheAirflowJobFile
+// method.
+type FilesClientDeleteApacheAirflowJobFileOptions struct {
+	// placeholder for future optional parameters
+}
+
+// FilesClientGetApacheAirflowJobFileOptions contains the optional parameters for the FilesClient.GetApacheAirflowJobFile
+// method.
+type FilesClientGetApacheAirflowJobFileOptions struct {
+	// placeholder for future optional parameters
+}
+
+// FilesClientListApacheAirflowJobFilesOptions contains the optional parameters for the FilesClient.NewListApacheAirflowJobFilesPager
+// method.
+type FilesClientListApacheAirflowJobFilesOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+
+	// The folder path to list. If not provided, the root directory is used.
+	RootPath *string
+}
+
 // ItemsClientBeginCreateApacheAirflowJobOptions contains the optional parameters for the ItemsClient.BeginCreateApacheAirflowJob
 // method.
 type ItemsClientBeginCreateApacheAirflowJobOptions struct {

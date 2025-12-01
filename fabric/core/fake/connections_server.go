@@ -165,7 +165,7 @@ func (c *ConnectionsServerTransport) dispatchAddConnectionRoleAssignment(req *ht
 	const regexStr = `/v1/connections/(?P<connectionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/roleAssignments`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	body, err := server.UnmarshalRequestAsJSON[core.AddConnectionRoleAssignmentRequest](req)
@@ -228,7 +228,7 @@ func (c *ConnectionsServerTransport) dispatchDeleteConnection(req *http.Request)
 	const regexStr = `/v1/connections/(?P<connectionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	connectionIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("connectionId")])
@@ -257,7 +257,7 @@ func (c *ConnectionsServerTransport) dispatchDeleteConnectionRoleAssignment(req 
 	const regexStr = `/v1/connections/(?P<connectionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/roleAssignments/(?P<connectionRoleAssignmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	connectionIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("connectionId")])
@@ -290,7 +290,7 @@ func (c *ConnectionsServerTransport) dispatchGetConnection(req *http.Request) (*
 	const regexStr = `/v1/connections/(?P<connectionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	connectionIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("connectionId")])
@@ -319,7 +319,7 @@ func (c *ConnectionsServerTransport) dispatchGetConnectionRoleAssignment(req *ht
 	const regexStr = `/v1/connections/(?P<connectionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/roleAssignments/(?P<connectionRoleAssignmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	connectionIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("connectionId")])
@@ -354,7 +354,7 @@ func (c *ConnectionsServerTransport) dispatchNewListConnectionRoleAssignmentsPag
 		const regexStr = `/v1/connections/(?P<connectionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/roleAssignments`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 1 {
+		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		qp := req.URL.Query()
@@ -494,7 +494,7 @@ func (c *ConnectionsServerTransport) dispatchUpdateConnection(req *http.Request)
 	const regexStr = `/v1/connections/(?P<connectionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	raw, err := readRequestBody(req)
@@ -531,7 +531,7 @@ func (c *ConnectionsServerTransport) dispatchUpdateConnectionRoleAssignment(req 
 	const regexStr = `/v1/connections/(?P<connectionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/roleAssignments/(?P<connectionRoleAssignmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	body, err := server.UnmarshalRequestAsJSON[core.UpdateConnectionRoleAssignmentRequest](req)

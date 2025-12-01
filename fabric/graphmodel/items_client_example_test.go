@@ -46,9 +46,6 @@ func ExampleItemsClient_NewListGraphModelsPager() {
 		// 			DisplayName: to.Ptr("GraphModel Name 1"),
 		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
-		// 			Properties: &graphmodel.Properties{
-		// 				OneLakeRootPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/f089354e-8366-4e18-aea3-4cb4a3a50b48/41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"),
-		// 			},
 		// 		},
 		// 		{
 		// 			Type: to.Ptr(graphmodel.ItemTypeGraphModel),
@@ -56,9 +53,6 @@ func ExampleItemsClient_NewListGraphModelsPager() {
 		// 			DisplayName: to.Ptr("GraphModel Name 2"),
 		// 			ID: to.Ptr("f697fb63-abd4-4399-9548-be7e3c3c0dac"),
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
-		// 			Properties: &graphmodel.Properties{
-		// 				OneLakeRootPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/f089354e-8366-4e18-aea3-4cb4a3a50b48/d8f6cf16-3aac-4440-9d76-a03d86b7ae3e"),
-		// 			},
 		// 	}},
 		// }
 	}
@@ -165,9 +159,6 @@ func ExampleItemsClient_GetGraphModel() {
 	// 	DisplayName: to.Ptr("GraphModel 1"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
-	// 	Properties: &graphmodel.Properties{
-	// 		OneLakeRootPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/f089354e-8366-4e18-aea3-4cb4a3a50b48/41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"),
-	// 	},
 	// }
 }
 

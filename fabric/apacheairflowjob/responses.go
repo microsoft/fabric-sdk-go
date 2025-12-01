@@ -6,6 +6,30 @@
 
 package apacheairflowjob
 
+import "io"
+
+// FilesClientCreateOrUpdateApacheAirflowJobFileWithBinaryResponse contains the response from method FilesClient.CreateOrUpdateApacheAirflowJobFileWithBinary.
+type FilesClientCreateOrUpdateApacheAirflowJobFileWithBinaryResponse struct {
+	// placeholder for future response values
+}
+
+// FilesClientDeleteApacheAirflowJobFileResponse contains the response from method FilesClient.DeleteApacheAirflowJobFile.
+type FilesClientDeleteApacheAirflowJobFileResponse struct {
+	// placeholder for future response values
+}
+
+// FilesClientGetApacheAirflowJobFileResponse contains the response from method FilesClient.GetApacheAirflowJobFile.
+type FilesClientGetApacheAirflowJobFileResponse struct {
+	// Body contains the streaming response.
+	Body io.ReadCloser
+}
+
+// FilesClientListApacheAirflowJobFilesResponse contains the response from method FilesClient.NewListApacheAirflowJobFilesPager.
+type FilesClientListApacheAirflowJobFilesResponse struct {
+	// A list of Apache Airflow job files.
+	Files
+}
+
 // ItemsClientCreateApacheAirflowJobResponse contains the response from method ItemsClient.BeginCreateApacheAirflowJob.
 type ItemsClientCreateApacheAirflowJobResponse struct {
 	// An Apache Airflow job object.

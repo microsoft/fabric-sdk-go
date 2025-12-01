@@ -32,7 +32,7 @@ type ItemsClient struct {
 
 // BeginCreateGraphModel - > [!NOTE] GraphModel item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create GraphModel with a public definition, refer to GraphModel [/rest/api/fabric/articles/item-management/definitions/graph-model]
+// To create GraphModel with a public definition, refer to GraphModel [/rest/api/fabric/articles/item-management/definitions/graph-model-definition]
 // article.
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
@@ -58,7 +58,7 @@ func (client *ItemsClient) BeginCreateGraphModel(ctx context.Context, workspaceI
 
 // CreateGraphModel - > [!NOTE] GraphModel item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create GraphModel with a public definition, refer to GraphModel [/rest/api/fabric/articles/item-management/definitions/graph-model]
+// To create GraphModel with a public definition, refer to GraphModel [/rest/api/fabric/articles/item-management/definitions/graph-model-definition]
 // article.
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
@@ -169,9 +169,10 @@ func (client *ItemsClient) deleteGraphModelCreateRequest(ctx context.Context, wo
 }
 
 // ExecuteQueryPreview - > [!NOTE] GraphModel item is currently in Preview (learn more [/fabric/fundamentals/preview]). This
-// API is part of a Preview release and is provided for evaluation and development purposes only. It may
+// API is part of a Beta release and is provided for evaluation and development purposes only. It may
 // change based on feedback and is not recommended for production use. When calling this API, callers must specify true as
-// the value for the query parameter preview.
+// the value for the query parameter beta (preview query parameter has been
+// replaced by beta. For backward compatibility, preview is still supported and behaves the same as beta).
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
@@ -186,17 +187,17 @@ func (client *ItemsClient) deleteGraphModelCreateRequest(ctx context.Context, wo
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - graphModelID - The GraphModel ID.
-//   - preview - This required parameter must be set to true to access this API, which is currently in preview.
+//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
 //   - createQueryResultRequest - Execute query request payload.
 //   - options - ItemsClientExecuteQueryPreviewOptions contains the optional parameters for the ItemsClient.ExecuteQueryPreview
 //     method.
-func (client *ItemsClient) ExecuteQueryPreview(ctx context.Context, workspaceID string, graphModelID string, preview bool, createQueryResultRequest ExecuteQueryRequest, options *ItemsClientExecuteQueryPreviewOptions) (ItemsClientExecuteQueryPreviewResponse, error) {
+func (client *ItemsClient) ExecuteQueryPreview(ctx context.Context, workspaceID string, graphModelID string, beta bool, createQueryResultRequest ExecuteQueryRequest, options *ItemsClientExecuteQueryPreviewOptions) (ItemsClientExecuteQueryPreviewResponse, error) {
 	var err error
 	const operationName = "graphmodel.ItemsClient.ExecuteQueryPreview"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.executeQueryPreviewCreateRequest(ctx, workspaceID, graphModelID, preview, createQueryResultRequest, options)
+	req, err := client.executeQueryPreviewCreateRequest(ctx, workspaceID, graphModelID, beta, createQueryResultRequest, options)
 	if err != nil {
 		return ItemsClientExecuteQueryPreviewResponse{}, err
 	}
@@ -212,7 +213,7 @@ func (client *ItemsClient) ExecuteQueryPreview(ctx context.Context, workspaceID 
 }
 
 // executeQueryPreviewCreateRequest creates the ExecuteQueryPreview request.
-func (client *ItemsClient) executeQueryPreviewCreateRequest(ctx context.Context, workspaceID string, graphModelID string, preview bool, createQueryResultRequest ExecuteQueryRequest, _ *ItemsClientExecuteQueryPreviewOptions) (*policy.Request, error) {
+func (client *ItemsClient) executeQueryPreviewCreateRequest(ctx context.Context, workspaceID string, graphModelID string, beta bool, createQueryResultRequest ExecuteQueryRequest, _ *ItemsClientExecuteQueryPreviewOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/GraphModels/{GraphModelId}/executeQuery"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -227,7 +228,7 @@ func (client *ItemsClient) executeQueryPreviewCreateRequest(ctx context.Context,
 		return nil, err
 	}
 	reqQP := req.Raw().URL.Query()
-	reqQP.Set("preview", strconv.FormatBool(preview))
+	reqQP.Set("beta", strconv.FormatBool(beta))
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	runtime.SkipBodyDownload(req)
 	req.Raw().Header["Accept"] = []string{"application/json"}
@@ -384,9 +385,10 @@ func (client *ItemsClient) getGraphModelDefinitionCreateRequest(ctx context.Cont
 }
 
 // GetQueryableGraphTypePreview - > [!NOTE] GraphModel item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API is part of a Preview release and is provided for evaluation and development purposes only. It may
+// This API is part of a Beta release and is provided for evaluation and development purposes only. It may
 // change based on feedback and is not recommended for production use. When calling this API, callers must specify true as
-// the value for the query parameter preview.
+// the value for the query parameter beta (preview query parameter has been
+// replaced by beta. For backward compatibility, preview is still supported and behaves the same as beta).
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have a viewer workspace role. The caller must have read permissions for the graph model.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
@@ -401,16 +403,16 @@ func (client *ItemsClient) getGraphModelDefinitionCreateRequest(ctx context.Cont
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - graphModelID - The GraphModel ID.
-//   - preview - This required parameter must be set to true to access this API, which is currently in preview.
+//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
 //   - options - ItemsClientGetQueryableGraphTypePreviewOptions contains the optional parameters for the ItemsClient.GetQueryableGraphTypePreview
 //     method.
-func (client *ItemsClient) GetQueryableGraphTypePreview(ctx context.Context, workspaceID string, graphModelID string, preview bool, options *ItemsClientGetQueryableGraphTypePreviewOptions) (ItemsClientGetQueryableGraphTypePreviewResponse, error) {
+func (client *ItemsClient) GetQueryableGraphTypePreview(ctx context.Context, workspaceID string, graphModelID string, beta bool, options *ItemsClientGetQueryableGraphTypePreviewOptions) (ItemsClientGetQueryableGraphTypePreviewResponse, error) {
 	var err error
 	const operationName = "graphmodel.ItemsClient.GetQueryableGraphTypePreview"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.getQueryableGraphTypePreviewCreateRequest(ctx, workspaceID, graphModelID, preview, options)
+	req, err := client.getQueryableGraphTypePreviewCreateRequest(ctx, workspaceID, graphModelID, beta, options)
 	if err != nil {
 		return ItemsClientGetQueryableGraphTypePreviewResponse{}, err
 	}
@@ -427,7 +429,7 @@ func (client *ItemsClient) GetQueryableGraphTypePreview(ctx context.Context, wor
 }
 
 // getQueryableGraphTypePreviewCreateRequest creates the GetQueryableGraphTypePreview request.
-func (client *ItemsClient) getQueryableGraphTypePreviewCreateRequest(ctx context.Context, workspaceID string, graphModelID string, preview bool, _ *ItemsClientGetQueryableGraphTypePreviewOptions) (*policy.Request, error) {
+func (client *ItemsClient) getQueryableGraphTypePreviewCreateRequest(ctx context.Context, workspaceID string, graphModelID string, beta bool, _ *ItemsClientGetQueryableGraphTypePreviewOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/GraphModels/{GraphModelId}/getQueryableGraphType"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -442,7 +444,7 @@ func (client *ItemsClient) getQueryableGraphTypePreviewCreateRequest(ctx context
 		return nil, err
 	}
 	reqQP := req.Raw().URL.Query()
-	reqQP.Set("preview", strconv.FormatBool(preview))
+	reqQP.Set("beta", strconv.FormatBool(beta))
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
@@ -685,7 +687,7 @@ func (client *ItemsClient) updateGraphModelDefinitionCreateRequest(ctx context.C
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// To create GraphModel with a public definition, refer to GraphModel [/rest/api/fabric/articles/item-management/definitions/graph-model] article.
+// To create GraphModel with a public definition, refer to GraphModel [/rest/api/fabric/articles/item-management/definitions/graph-model-definition] article.
 //
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All

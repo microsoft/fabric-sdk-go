@@ -101,7 +101,7 @@ func (u *UsersServerTransport) dispatchNewListAccessEntitiesPager(req *http.Requ
 		const regexStr = `/v1/admin/users/(?P<userId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/access`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 1 {
+		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		qp := req.URL.Query()

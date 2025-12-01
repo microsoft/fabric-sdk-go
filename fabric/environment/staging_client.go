@@ -90,11 +90,11 @@ func (client *StagingClient) deleteCustomLibraryCreateRequest(ctx context.Contex
 	return req, nil
 }
 
-// DeleteCustomLibraryPreview - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use. This preview API
-// will be deprecated on March 1, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/staging/delete-custom-library].
-// The new version introduces breaking changes and is
-// not backward compatible.**
+// DeleteCustomLibraryPreview - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use. This beta API will
+// be deprecated on March 1, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/staging/delete-custom-library].
+// The new version introduces breaking changes and is not
+// backward compatible.**
 // DEPRECATION NOTICE It is recommended to migrate your integration to use the Release version.
 // The following incompatible changes were introduced in the Release version:
 // * The request URL structure has changed: the library name to be removed is now specified directly in the URL path, rather
@@ -212,8 +212,8 @@ func (client *StagingClient) exportExternalLibrariesCreateRequest(ctx context.Co
 	return req, nil
 }
 
-// GetSparkCompute - > [!NOTE] This API is a release version of a preview version due to be deprecated on March 1, 2026. When
-// calling this API - callers must set the query parameter preview to the value false.
+// GetSparkCompute - > [!NOTE] This API is a release version of a beta version due to be deprecated on March 1, 2026. When
+// calling this API - callers must set the query parameter beta to the value false.
 // PERMISSIONS Read permission for the environment item.
 // REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All or Environment.Read.All or Environment.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -227,15 +227,15 @@ func (client *StagingClient) exportExternalLibrariesCreateRequest(ctx context.Co
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - environmentID - The environment ID.
-//   - preview - This parameter specifies which version of the API to use. Set to false to use the release version.
+//   - beta - This parameter specifies which version of the API to use. Set to false to use the release version.
 //   - options - StagingClientGetSparkComputeOptions contains the optional parameters for the StagingClient.GetSparkCompute method.
-func (client *StagingClient) GetSparkCompute(ctx context.Context, workspaceID string, environmentID string, preview bool, options *StagingClientGetSparkComputeOptions) (StagingClientGetSparkComputeResponse, error) {
+func (client *StagingClient) GetSparkCompute(ctx context.Context, workspaceID string, environmentID string, beta bool, options *StagingClientGetSparkComputeOptions) (StagingClientGetSparkComputeResponse, error) {
 	var err error
 	const operationName = "environment.StagingClient.GetSparkCompute"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.getSparkComputeCreateRequest(ctx, workspaceID, environmentID, preview, options)
+	req, err := client.getSparkComputeCreateRequest(ctx, workspaceID, environmentID, beta, options)
 	if err != nil {
 		return StagingClientGetSparkComputeResponse{}, err
 	}
@@ -252,7 +252,7 @@ func (client *StagingClient) GetSparkCompute(ctx context.Context, workspaceID st
 }
 
 // getSparkComputeCreateRequest creates the GetSparkCompute request.
-func (client *StagingClient) getSparkComputeCreateRequest(ctx context.Context, workspaceID string, environmentID string, preview bool, _ *StagingClientGetSparkComputeOptions) (*policy.Request, error) {
+func (client *StagingClient) getSparkComputeCreateRequest(ctx context.Context, workspaceID string, environmentID string, beta bool, _ *StagingClientGetSparkComputeOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/staging/sparkcompute"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -267,7 +267,7 @@ func (client *StagingClient) getSparkComputeCreateRequest(ctx context.Context, w
 		return nil, err
 	}
 	reqQP := req.Raw().URL.Query()
-	reqQP.Set("preview", strconv.FormatBool(preview))
+	reqQP.Set("beta", strconv.FormatBool(beta))
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
@@ -282,19 +282,21 @@ func (client *StagingClient) getSparkComputeHandleResponse(resp *http.Response) 
 	return result, nil
 }
 
-// GetSparkComputePreview - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use. This preview API
-// will be deprecated on March 1, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/staging/get-spark-compute].
+// GetSparkComputePreview - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use. This beta API will
+// be deprecated on March 1, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/staging/get-spark-compute].
 // The new version introduces breaking changes and is not
-// backward compatible. When calling this API, callers must specify true as the value for the query parameter preview.
-// DEPRECATION NOTICE A new query parameter preview has been introduced to facilitate this transition:
-// * The preview query parameter currently defaults to true.
-// * Set the value of the preview query parameter to false to use the stable Release version of this API.
-// * Starting March 1, 2026, the default value for preview will change to false.
-// To ensure compatibility, explicitly set the preview parameter to your desired value (true or false).
+// backward compatible. When calling this API, callers must specify true as the value for the query parameter beta (preview
+// query parameter has been replaced by beta. For backward compatibility, beta is
+// still supported and behaves the same as beta).
+// DEPRECATION NOTICE A new query parameter beta has been introduced to facilitate this transition:
+// * The beta query parameter currently defaults to true.
+// * Set the value of the beta query parameter to false to use the stable Release version of this API.
+// * Starting March 1, 2026, the default value for beta will change to false.
+// To ensure compatibility, explicitly set the beta parameter to your desired value (true or false).
 // It is recommended to migrate your integration to use the Release version as soon as possible by specifying false for the
-// preview query parameter (the default value for the preview query parameter will
-// be set to false on API's deprecation date).
+// beta query parameter (the default value for the beta query parameter will be
+// set to false on API's deprecation date).
 // The following incompatible changes were introduced in the Release version:
 // * Response property sparkProperties's type was changed from object to the list of SparkProperty.
 // PERMISSIONS Read permission for the environment item.
@@ -310,19 +312,19 @@ func (client *StagingClient) getSparkComputeHandleResponse(resp *http.Response) 
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - environmentID - The environment ID.
-//   - preview - This parameter specifies which version of the API to use. Set to true to use the preview version described on
-//     this page, or to false to use the Release version detailed here
-//     [/rest/api/fabric/environment/staging/get-spark-compute]. Starting March 1, 2026, the default value for preview will change
+//   - beta - This parameter specifies which version of the API to use. Set to true to use the beta version described on this
+//     page, or to false to use the Release version detailed here
+//     [/rest/api/fabric/environment/staging/get-spark-compute]. Starting March 1, 2026, the default value for beta will change
 //     to false.
 //   - options - StagingClientGetSparkComputePreviewOptions contains the optional parameters for the StagingClient.GetSparkComputePreview
 //     method.
-func (client *StagingClient) GetSparkComputePreview(ctx context.Context, workspaceID string, environmentID string, preview bool, options *StagingClientGetSparkComputePreviewOptions) (StagingClientGetSparkComputePreviewResponse, error) {
+func (client *StagingClient) GetSparkComputePreview(ctx context.Context, workspaceID string, environmentID string, beta bool, options *StagingClientGetSparkComputePreviewOptions) (StagingClientGetSparkComputePreviewResponse, error) {
 	var err error
 	const operationName = "environment.StagingClient.GetSparkComputePreview"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.getSparkComputePreviewCreateRequest(ctx, workspaceID, environmentID, preview, options)
+	req, err := client.getSparkComputePreviewCreateRequest(ctx, workspaceID, environmentID, beta, options)
 	if err != nil {
 		return StagingClientGetSparkComputePreviewResponse{}, err
 	}
@@ -339,7 +341,7 @@ func (client *StagingClient) GetSparkComputePreview(ctx context.Context, workspa
 }
 
 // getSparkComputePreviewCreateRequest creates the GetSparkComputePreview request.
-func (client *StagingClient) getSparkComputePreviewCreateRequest(ctx context.Context, workspaceID string, environmentID string, preview bool, _ *StagingClientGetSparkComputePreviewOptions) (*policy.Request, error) {
+func (client *StagingClient) getSparkComputePreviewCreateRequest(ctx context.Context, workspaceID string, environmentID string, beta bool, _ *StagingClientGetSparkComputePreviewOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/staging/sparkcompute"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -354,7 +356,7 @@ func (client *StagingClient) getSparkComputePreviewCreateRequest(ctx context.Con
 		return nil, err
 	}
 	reqQP := req.Raw().URL.Query()
-	reqQP.Set("preview", strconv.FormatBool(preview))
+	reqQP.Set("beta", strconv.FormatBool(beta))
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
@@ -425,8 +427,8 @@ func (client *StagingClient) importExternalLibrariesCreateRequest(ctx context.Co
 	return req, nil
 }
 
-// NewListLibrariesPager - > [!NOTE] This API is a release version of a preview version due to be deprecated on March 1, 2026.
-// When calling this API - callers must set the query parameter preview to the value false
+// NewListLibrariesPager - > [!NOTE] This API is a release version of a beta version due to be deprecated on March 1, 2026.
+// When calling this API - callers must set the query parameter beta to the value false
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS Read permission for the environment item.
 // REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All or Environment.Read.All or Environment.ReadWrite.All
@@ -440,10 +442,10 @@ func (client *StagingClient) importExternalLibrariesCreateRequest(ctx context.Co
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - environmentID - The environment ID.
-//   - preview - This parameter specifies which version of the API to use. Set to false to use the release version.
+//   - beta - This parameter specifies which version of the API to use. Set to false to use the release version.
 //   - options - StagingClientListLibrariesOptions contains the optional parameters for the StagingClient.NewListLibrariesPager
 //     method.
-func (client *StagingClient) NewListLibrariesPager(workspaceID string, environmentID string, preview bool, options *StagingClientListLibrariesOptions) *runtime.Pager[StagingClientListLibrariesResponse] {
+func (client *StagingClient) NewListLibrariesPager(workspaceID string, environmentID string, beta bool, options *StagingClientListLibrariesOptions) *runtime.Pager[StagingClientListLibrariesResponse] {
 	return runtime.NewPager(runtime.PagingHandler[StagingClientListLibrariesResponse]{
 		More: func(page StagingClientListLibrariesResponse) bool {
 			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
@@ -455,7 +457,7 @@ func (client *StagingClient) NewListLibrariesPager(workspaceID string, environme
 				nextLink = *page.ContinuationURI
 			}
 			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
-				return client.listLibrariesCreateRequest(ctx, workspaceID, environmentID, preview, options)
+				return client.listLibrariesCreateRequest(ctx, workspaceID, environmentID, beta, options)
 			}, nil)
 			if err != nil {
 				return StagingClientListLibrariesResponse{}, err
@@ -467,7 +469,7 @@ func (client *StagingClient) NewListLibrariesPager(workspaceID string, environme
 }
 
 // listLibrariesCreateRequest creates the ListLibraries request.
-func (client *StagingClient) listLibrariesCreateRequest(ctx context.Context, workspaceID string, environmentID string, preview bool, options *StagingClientListLibrariesOptions) (*policy.Request, error) {
+func (client *StagingClient) listLibrariesCreateRequest(ctx context.Context, workspaceID string, environmentID string, beta bool, options *StagingClientListLibrariesOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/staging/libraries"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -482,10 +484,10 @@ func (client *StagingClient) listLibrariesCreateRequest(ctx context.Context, wor
 		return nil, err
 	}
 	reqQP := req.Raw().URL.Query()
+	reqQP.Set("beta", strconv.FormatBool(beta))
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
 	}
-	reqQP.Set("preview", strconv.FormatBool(preview))
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
@@ -500,18 +502,20 @@ func (client *StagingClient) listLibrariesHandleResponse(resp *http.Response) (S
 	return result, nil
 }
 
-// ListLibrariesPreview - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
-// only. It may change based on feedback and is not recommended for production use. This preview API
-// will be deprecated on March 1, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/staging/list-libraries].
-// The new version introduces breaking changes and is not
-// backward compatible. When calling this API, callers must specify true as the value for the query parameter preview.
-// DEPRECATION NOTICE A new query parameter preview has been introduced to facilitate this transition:
-// * The preview query parameter currently defaults to true.
-// * Set the value of the preview query parameter to false to use the stable Release version of this API.
-// * Starting March 1, 2026, the default value for preview will change to false.
+// ListLibrariesPreview - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use. This beta API will
+// be deprecated on March 1, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/staging/list-libraries].
+// The new version introduces breaking changes and is not backward
+// compatible. When calling this API, callers must specify true as the value for the query parameter beta (preview query parameter
+// has been replaced by beta. For backward compatibility, preview is still
+// supported and behaves the same as beta).
+// DEPRECATION NOTICE A new query parameter beta has been introduced to facilitate this transition:
+// * The beta query parameter currently defaults to true.
+// * Set the value of the beta query parameter to false to use the stable Release version of this API.
+// * Starting March 1, 2026, the default value for beta will change to false.
 // It is recommended to migrate your integration to use the Release version as soon as possible by specifying false for the
-// preview query parameter (the default value for the preview query parameter will
-// be set to false on API's deprecation date).
+// beta query parameter (the default value for the beta query parameter will be
+// set to false on API's deprecation date).
 // The following incompatible changes were introduced in the Release version:
 // * Different response format and schema structure
 // * Enhanced library properties in the response
@@ -531,19 +535,19 @@ func (client *StagingClient) listLibrariesHandleResponse(resp *http.Response) (S
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - environmentID - The environment ID.
-//   - preview - This parameter specifies which version of the API to use. Set to true to use the preview version described on
-//     this page, or to false to use the Release version detailed here
-//     [/rest/api/fabric/environment/staging/list-libraries]. Starting March 1, 2026, the default value for preview will change
-//     to false.
+//   - beta - This parameter specifies which version of the API to use. Set to true to use the beta version described on this
+//     page, or to false to use the Release version detailed here
+//     [/rest/api/fabric/environment/staging/list-libraries]. Starting March 1, 2026, the default value for beta will change to
+//     false.
 //   - options - StagingClientListLibrariesPreviewOptions contains the optional parameters for the StagingClient.ListLibrariesPreview
 //     method.
-func (client *StagingClient) ListLibrariesPreview(ctx context.Context, workspaceID string, environmentID string, preview bool, options *StagingClientListLibrariesPreviewOptions) (StagingClientListLibrariesPreviewResponse, error) {
+func (client *StagingClient) ListLibrariesPreview(ctx context.Context, workspaceID string, environmentID string, beta bool, options *StagingClientListLibrariesPreviewOptions) (StagingClientListLibrariesPreviewResponse, error) {
 	var err error
 	const operationName = "environment.StagingClient.ListLibrariesPreview"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.listLibrariesPreviewCreateRequest(ctx, workspaceID, environmentID, preview, options)
+	req, err := client.listLibrariesPreviewCreateRequest(ctx, workspaceID, environmentID, beta, options)
 	if err != nil {
 		return StagingClientListLibrariesPreviewResponse{}, err
 	}
@@ -560,7 +564,7 @@ func (client *StagingClient) ListLibrariesPreview(ctx context.Context, workspace
 }
 
 // listLibrariesPreviewCreateRequest creates the ListLibrariesPreview request.
-func (client *StagingClient) listLibrariesPreviewCreateRequest(ctx context.Context, workspaceID string, environmentID string, preview bool, _ *StagingClientListLibrariesPreviewOptions) (*policy.Request, error) {
+func (client *StagingClient) listLibrariesPreviewCreateRequest(ctx context.Context, workspaceID string, environmentID string, beta bool, _ *StagingClientListLibrariesPreviewOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/staging/libraries"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -575,7 +579,7 @@ func (client *StagingClient) listLibrariesPreviewCreateRequest(ctx context.Conte
 		return nil, err
 	}
 	reqQP := req.Raw().URL.Query()
-	reqQP.Set("preview", strconv.FormatBool(preview))
+	reqQP.Set("beta", strconv.FormatBool(beta))
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
@@ -650,8 +654,8 @@ func (client *StagingClient) removeExternalLibraryCreateRequest(ctx context.Cont
 	return req, nil
 }
 
-// UpdateSparkCompute - > [!NOTE] This API is a release version of a preview version due to be deprecated on March 1, 2026.
-// When calling this API - callers must set the query parameter preview to the value false
+// UpdateSparkCompute - > [!NOTE] This API is a release version of a beta version due to be deprecated on March 1, 2026. When
+// calling this API - callers must set the query parameter beta to the value false
 // PERMISSIONS Write permission for the environment item.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All or Environment.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -665,17 +669,17 @@ func (client *StagingClient) removeExternalLibraryCreateRequest(ctx context.Cont
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - environmentID - The environment ID.
-//   - preview - This parameter specifies which version of the API to use. Set to false to use the release version.
+//   - beta - This parameter specifies which version of the API to use. Set to false to use the release version.
 //   - updateEnvironmentSparkComputeRequest - Update environment spark compute request payload.
 //   - options - StagingClientUpdateSparkComputeOptions contains the optional parameters for the StagingClient.UpdateSparkCompute
 //     method.
-func (client *StagingClient) UpdateSparkCompute(ctx context.Context, workspaceID string, environmentID string, preview bool, updateEnvironmentSparkComputeRequest UpdateEnvironmentSparkComputeRequest, options *StagingClientUpdateSparkComputeOptions) (StagingClientUpdateSparkComputeResponse, error) {
+func (client *StagingClient) UpdateSparkCompute(ctx context.Context, workspaceID string, environmentID string, beta bool, updateEnvironmentSparkComputeRequest UpdateEnvironmentSparkComputeRequest, options *StagingClientUpdateSparkComputeOptions) (StagingClientUpdateSparkComputeResponse, error) {
 	var err error
 	const operationName = "environment.StagingClient.UpdateSparkCompute"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.updateSparkComputeCreateRequest(ctx, workspaceID, environmentID, preview, updateEnvironmentSparkComputeRequest, options)
+	req, err := client.updateSparkComputeCreateRequest(ctx, workspaceID, environmentID, beta, updateEnvironmentSparkComputeRequest, options)
 	if err != nil {
 		return StagingClientUpdateSparkComputeResponse{}, err
 	}
@@ -692,7 +696,7 @@ func (client *StagingClient) UpdateSparkCompute(ctx context.Context, workspaceID
 }
 
 // updateSparkComputeCreateRequest creates the UpdateSparkCompute request.
-func (client *StagingClient) updateSparkComputeCreateRequest(ctx context.Context, workspaceID string, environmentID string, preview bool, updateEnvironmentSparkComputeRequest UpdateEnvironmentSparkComputeRequest, _ *StagingClientUpdateSparkComputeOptions) (*policy.Request, error) {
+func (client *StagingClient) updateSparkComputeCreateRequest(ctx context.Context, workspaceID string, environmentID string, beta bool, updateEnvironmentSparkComputeRequest UpdateEnvironmentSparkComputeRequest, _ *StagingClientUpdateSparkComputeOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/staging/sparkcompute"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -707,7 +711,7 @@ func (client *StagingClient) updateSparkComputeCreateRequest(ctx context.Context
 		return nil, err
 	}
 	reqQP := req.Raw().URL.Query()
-	reqQP.Set("preview", strconv.FormatBool(preview))
+	reqQP.Set("beta", strconv.FormatBool(beta))
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	if err := runtime.MarshalAsJSON(req, updateEnvironmentSparkComputeRequest); err != nil {
@@ -725,19 +729,21 @@ func (client *StagingClient) updateSparkComputeHandleResponse(resp *http.Respons
 	return result, nil
 }
 
-// UpdateSparkComputePreview - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use. This preview API
-// will be deprecated on March 1, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/staging/update-spark-compute].
-// The new version introduces breaking changes and is
-// not backward compatible. When calling this API, callers must specify true as the value for the query parameter preview.
-// DEPRECATION NOTICE A new query parameter preview has been introduced to facilitate this transition:
-// * The preview query parameter currently defaults to true.
-// * Set the value of the preview query parameter to false to use the stable Release version of this API.
-// * Starting March 1, 2026, the default value for preview will change to false.
-// To ensure compatibility, explicitly set the preview parameter to your desired value (true or false).
+// UpdateSparkComputePreview - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use. This beta API will
+// be deprecated on March 1, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/staging/update-spark-compute].
+// The new version introduces breaking changes and is not
+// backward compatible. When calling this API, callers must specify true as the value for the query parameter beta (preview
+// query parameter has been replaced by beta. For backward compatibility, preview
+// is still supported and behaves the same as beta).
+// DEPRECATION NOTICE A new query parameter beta has been introduced to facilitate this transition:
+// * The beta query parameter currently defaults to true.
+// * Set the value of the beta query parameter to false to use the stable Release version of this API.
+// * Starting March 1, 2026, the default value for beta will change to false.
+// To ensure compatibility, explicitly set the beta parameter to your desired value (true or false).
 // It is recommended to migrate your integration to use the Release version as soon as possible by specifying false for the
-// preview query parameter (the default value for the preview query parameter will
-// be set to false on API's deprecation date).
+// beta query parameter (the default value for the beta query parameter will be
+// set to false on API's deprecation date).
 // The following incompatible changes were introduced in the Release version:
 // * Request and response property sparkProperties's type was changed from object to the list of SparkProperty.
 // PERMISSIONS Write permission for the environment item.
@@ -753,20 +759,20 @@ func (client *StagingClient) updateSparkComputeHandleResponse(resp *http.Respons
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - environmentID - The environment ID.
-//   - preview - This parameter specifies which version of the API to use. Set to true to use the preview version described on
-//     this page, or to false to use the Release version detailed here
-//     [/rest/api/fabric/environment/staging/update-spark-compute]. Starting March 1, 2026, the default value for preview will
-//     change to false.
+//   - beta - This parameter specifies which version of the API to use. Set to true to use the beta version described on this
+//     page, or to false to use the Release version detailed here
+//     [/rest/api/fabric/environment/staging/update-spark-compute]. Starting March 1, 2026, the default value for beta will change
+//     to false.
 //   - updateEnvironmentSparkComputeRequest - Update environment spark compute request payload.
 //   - options - StagingClientUpdateSparkComputePreviewOptions contains the optional parameters for the StagingClient.UpdateSparkComputePreview
 //     method.
-func (client *StagingClient) UpdateSparkComputePreview(ctx context.Context, workspaceID string, environmentID string, preview bool, updateEnvironmentSparkComputeRequest UpdateEnvironmentSparkComputeRequestPreview, options *StagingClientUpdateSparkComputePreviewOptions) (StagingClientUpdateSparkComputePreviewResponse, error) {
+func (client *StagingClient) UpdateSparkComputePreview(ctx context.Context, workspaceID string, environmentID string, beta bool, updateEnvironmentSparkComputeRequest UpdateEnvironmentSparkComputeRequestPreview, options *StagingClientUpdateSparkComputePreviewOptions) (StagingClientUpdateSparkComputePreviewResponse, error) {
 	var err error
 	const operationName = "environment.StagingClient.UpdateSparkComputePreview"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.updateSparkComputePreviewCreateRequest(ctx, workspaceID, environmentID, preview, updateEnvironmentSparkComputeRequest, options)
+	req, err := client.updateSparkComputePreviewCreateRequest(ctx, workspaceID, environmentID, beta, updateEnvironmentSparkComputeRequest, options)
 	if err != nil {
 		return StagingClientUpdateSparkComputePreviewResponse{}, err
 	}
@@ -783,7 +789,7 @@ func (client *StagingClient) UpdateSparkComputePreview(ctx context.Context, work
 }
 
 // updateSparkComputePreviewCreateRequest creates the UpdateSparkComputePreview request.
-func (client *StagingClient) updateSparkComputePreviewCreateRequest(ctx context.Context, workspaceID string, environmentID string, preview bool, updateEnvironmentSparkComputeRequest UpdateEnvironmentSparkComputeRequestPreview, _ *StagingClientUpdateSparkComputePreviewOptions) (*policy.Request, error) {
+func (client *StagingClient) updateSparkComputePreviewCreateRequest(ctx context.Context, workspaceID string, environmentID string, beta bool, updateEnvironmentSparkComputeRequest UpdateEnvironmentSparkComputeRequestPreview, _ *StagingClientUpdateSparkComputePreviewOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/staging/sparkcompute"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -798,7 +804,7 @@ func (client *StagingClient) updateSparkComputePreviewCreateRequest(ctx context.
 		return nil, err
 	}
 	reqQP := req.Raw().URL.Query()
-	reqQP.Set("preview", strconv.FormatBool(preview))
+	reqQP.Set("beta", strconv.FormatBool(beta))
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	if err := runtime.MarshalAsJSON(req, updateEnvironmentSparkComputeRequest); err != nil {
@@ -880,11 +886,11 @@ func (client *StagingClient) uploadCustomLibraryCreateRequest(ctx context.Contex
 	return req, nil
 }
 
-// UploadCustomLibraryPreview - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use. This preview API
-// will be deprecated on March 1, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/staging/upload-custom-library].
-// The new version introduces breaking changes and is
-// not backward compatible.**
+// UploadCustomLibraryPreview - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use. This beta API will
+// be deprecated on March 1, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/staging/upload-custom-library].
+// The new version introduces breaking changes and is not
+// backward compatible.**
 // DEPRECATION NOTICE It is recommended to migrate your integration to use the Release version.
 // The following incompatible changes were introduced in the Release version:
 // * The request URL structure has changed: the library name to be added is now specified directly in the URL path.
@@ -951,7 +957,7 @@ func (client *StagingClient) uploadCustomLibraryPreviewCreateRequest(ctx context
 // Custom code starts below
 
 // ListLibraries - returns array of LibraryClassification from all pages.
-// >  [!NOTE] This API is a release version of a preview version due to be deprecated on March 1, 2026. When calling this API - callers must set the query parameter preview to the value false
+// >  [!NOTE] This API is a release version of a beta version due to be deprecated on March 1, 2026. When calling this API - callers must set the query parameter beta to the value false
 //
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
@@ -968,10 +974,10 @@ func (client *StagingClient) uploadCustomLibraryPreviewCreateRequest(ctx context
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - environmentID - The environment ID.
-//   - preview - This parameter specifies which version of the API to use. Set to false to use the release version.
+//   - beta - This parameter specifies which version of the API to use. Set to false to use the release version.
 //   - options - StagingClientListLibrariesOptions contains the optional parameters for the StagingClient.NewListLibrariesPager method.
-func (client *StagingClient) ListLibraries(ctx context.Context, workspaceID string, environmentID string, preview bool, options *StagingClientListLibrariesOptions) ([]LibraryClassification, error) {
-	pager := client.NewListLibrariesPager(workspaceID, environmentID, preview, options)
+func (client *StagingClient) ListLibraries(ctx context.Context, workspaceID string, environmentID string, beta bool, options *StagingClientListLibrariesOptions) ([]LibraryClassification, error) {
+	pager := client.NewListLibrariesPager(workspaceID, environmentID, beta, options)
 	mapper := func(resp StagingClientListLibrariesResponse) []LibraryClassification {
 		return resp.Libraries.Libraries
 	}

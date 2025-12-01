@@ -113,7 +113,7 @@ func (client *ItemsClient) createApacheAirflowJobCreateRequest(ctx context.Conte
 	return req, nil
 }
 
-// DeleteApacheAirflowJob - PERMISSIONS The caller must have write permissions for the apache airflow job.
+// DeleteApacheAirflowJob - PERMISSIONS The caller must have write permissions for the Apache Airflow job.
 // REQUIRED DELEGATED SCOPES ApacheAirflowJob.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -168,7 +168,7 @@ func (client *ItemsClient) deleteApacheAirflowJobCreateRequest(ctx context.Conte
 	return req, nil
 }
 
-// GetApacheAirflowJob - PERMISSIONS The caller must have read permissions for the apache airflow job.
+// GetApacheAirflowJob - PERMISSIONS The caller must have read permissions for the Apache Airflow job.
 // REQUIRED DELEGATED SCOPES ApacheAirflowJob.Read.All or ApacheAirflowJob.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.

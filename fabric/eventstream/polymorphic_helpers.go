@@ -64,9 +64,9 @@ func unmarshalEventhouseDestinationPropertiesClassification(rawMsg json.RawMessa
 	}
 	var b EventhouseDestinationPropertiesClassification
 	switch m["dataIngestionMode"] {
-	case string(EventhouseDestinationPropertiesDataIngestionModeDirectIngestion):
+	case string(DataIngestionModeDirectIngestion):
 		b = &EventhouseDirectIngestionModeDestinationProperties{}
-	case string(EventhouseDestinationPropertiesDataIngestionModeProcessedIngestion):
+	case string(DataIngestionModeProcessedIngestion):
 		b = &EventhouseProcessedIngestionModeDestinationProperties{}
 	default:
 		b = &EventhouseDestinationProperties{}
@@ -160,19 +160,21 @@ func unmarshalOperatorClassification(rawMsg json.RawMessage) (OperatorClassifica
 	}
 	var b OperatorClassification
 	switch m["type"] {
-	case string(OperatorTypeAggregate):
+	case "Aggregate":
 		b = &AggregateOperator{}
-	case string(OperatorTypeExpand):
+	case "Expand":
 		b = &ExpandOperator{}
-	case string(OperatorTypeFilter):
+	case "Filter":
 		b = &FilterOperator{}
-	case string(OperatorTypeGroupBy):
+	case "GroupBy":
 		b = &GroupByOperator{}
-	case string(OperatorTypeJoin):
+	case "Join":
 		b = &JoinOperator{}
-	case string(OperatorTypeManageFields):
+	case "ManageFields":
 		b = &ManageFieldsOperator{}
-	case string(OperatorTypeUnion):
+	case "SQL":
+		b = &SQLOperator{}
+	case "Union":
 		b = &UnionOperator{}
 	default:
 		b = &Operator{}
@@ -227,6 +229,29 @@ func unmarshalSerializationInfoClassification(rawMsg json.RawMessage) (Serializa
 	return b, nil
 }
 
+func unmarshalSolacePubSubSourcePropertiesClassification(rawMsg json.RawMessage) (SolacePubSubSourcePropertiesClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b SolacePubSubSourcePropertiesClassification
+	switch m["pubSubType"] {
+	case string(PubSubTypeQueue):
+		b = &SolacePubSubQueueSourceProperties{}
+	case string(PubSubTypeTopics):
+		b = &SolacePubSubTopicsSourceProperties{}
+	default:
+		b = &SolacePubSubSourceProperties{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
 func unmarshalSourceResponseClassification(rawMsg json.RawMessage) (SourceResponseClassification, error) {
 	if rawMsg == nil || string(rawMsg) == "null" {
 		return nil, nil
@@ -247,6 +272,10 @@ func unmarshalSourceResponseClassification(rawMsg json.RawMessage) (SourceRespon
 		b = &AzureBlobStorageEventsSourceResponse{}
 	case string(SourceTypeAzureCosmosDBCDC):
 		b = &AzureCosmosDBCDCSourceResponse{}
+	case string(SourceTypeAzureDataExplorer):
+		b = &AzureDataExplorerSourceResponse{}
+	case string(SourceTypeAzureEventGridNamespace):
+		b = &AzureEventGridNamespaceSourceResponse{}
 	case string(SourceTypeAzureEventHub):
 		b = &AzureEventHubSourceResponse{}
 	case string(SourceTypeAzureIoTHub):
@@ -259,8 +288,6 @@ func unmarshalSourceResponseClassification(rawMsg json.RawMessage) (SourceRespon
 		b = &ConfluentCloudSourceResponse{}
 	case string(SourceTypeCustomEndpoint):
 		b = &CustomEndpointSourceResponse{}
-	case string(SourceTypeFabricCapacityUtilizationEvents):
-		b = &FabricCapacityUtilizationEventsSourceResponse{}
 	case string(SourceTypeFabricJobEvents):
 		b = &FabricJobEventsSourceResponse{}
 	case string(SourceTypeFabricOneLakeEvents):
@@ -269,14 +296,20 @@ func unmarshalSourceResponseClassification(rawMsg json.RawMessage) (SourceRespon
 		b = &FabricWorkspaceItemEventsSourceResponse{}
 	case string(SourceTypeGooglePubSub):
 		b = &GooglePubSubSourceResponse{}
+	case string(SourceTypeMqtt):
+		b = &MqttSourceResponse{}
 	case string(SourceTypeMySQLCDC):
 		b = &MySQLCDCSourceResponse{}
 	case string(SourceTypePostgreSQLCDC):
 		b = &PostgreSQLCDCSourceResponse{}
+	case string(SourceTypeRealTimeWeather):
+		b = &RealTimeWeatherSourceResponse{}
 	case string(SourceTypeSQLServerOnVMDBCDC):
 		b = &SQLServerOnVMDBCDCSourceResponse{}
 	case string(SourceTypeSampleData):
 		b = &SampleDataSourceResponse{}
+	case string(SourceTypeSolacePubSub):
+		b = &SolacePubSubSourceResponse{}
 	default:
 		b = &SourceResponse{}
 	}

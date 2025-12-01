@@ -435,8 +435,8 @@ func (client *ItemsClient) listEnvironmentsHandleResponse(resp *http.Response) (
 	return result, nil
 }
 
-// BeginPublishEnvironment - > [!NOTE] This API is a release version of a preview version due to be deprecated on March 1,
-// 2026. When calling this API - callers must set the query parameter preview to the value false
+// BeginPublishEnvironment - > [!NOTE] This API is a release version of a beta version due to be deprecated on March 1, 2026.
+// When calling this API - callers must set the query parameter beta to the value false
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS Write permission for the environment item.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All or Environment.ReadWrite.All
@@ -451,15 +451,15 @@ func (client *ItemsClient) listEnvironmentsHandleResponse(resp *http.Response) (
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - environmentID - The environment ID.
-//   - preview - This parameter specifies which version of the API to use. Set to false to use the release version.
+//   - beta - This parameter specifies which version of the API to use. Set to false to use the release version.
 //   - options - ItemsClientBeginPublishEnvironmentOptions contains the optional parameters for the ItemsClient.BeginPublishEnvironment
 //     method.
-func (client *ItemsClient) BeginPublishEnvironment(ctx context.Context, workspaceID string, environmentID string, preview bool, options *ItemsClientBeginPublishEnvironmentOptions) (*runtime.Poller[ItemsClientPublishEnvironmentResponse], error) {
-	return client.beginPublishEnvironment(ctx, workspaceID, environmentID, preview, options)
+func (client *ItemsClient) BeginPublishEnvironment(ctx context.Context, workspaceID string, environmentID string, beta bool, options *ItemsClientBeginPublishEnvironmentOptions) (*runtime.Poller[ItemsClientPublishEnvironmentResponse], error) {
+	return client.beginPublishEnvironment(ctx, workspaceID, environmentID, beta, options)
 }
 
-// PublishEnvironment - > [!NOTE] This API is a release version of a preview version due to be deprecated on March 1, 2026.
-// When calling this API - callers must set the query parameter preview to the value false
+// PublishEnvironment - > [!NOTE] This API is a release version of a beta version due to be deprecated on March 1, 2026. When
+// calling this API - callers must set the query parameter beta to the value false
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS Write permission for the environment item.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All or Environment.ReadWrite.All
@@ -472,13 +472,13 @@ func (client *ItemsClient) BeginPublishEnvironment(ctx context.Context, workspac
 // If the operation fails it returns an *core.ResponseError type.
 //
 // Generated from API version v1
-func (client *ItemsClient) publishEnvironment(ctx context.Context, workspaceID string, environmentID string, preview bool, options *ItemsClientBeginPublishEnvironmentOptions) (*http.Response, error) {
+func (client *ItemsClient) publishEnvironment(ctx context.Context, workspaceID string, environmentID string, beta bool, options *ItemsClientBeginPublishEnvironmentOptions) (*http.Response, error) {
 	var err error
 	const operationName = "environment.ItemsClient.BeginPublishEnvironment"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.publishEnvironmentCreateRequest(ctx, workspaceID, environmentID, preview, options)
+	req, err := client.publishEnvironmentCreateRequest(ctx, workspaceID, environmentID, beta, options)
 	if err != nil {
 		return nil, err
 	}
@@ -494,7 +494,7 @@ func (client *ItemsClient) publishEnvironment(ctx context.Context, workspaceID s
 }
 
 // publishEnvironmentCreateRequest creates the PublishEnvironment request.
-func (client *ItemsClient) publishEnvironmentCreateRequest(ctx context.Context, workspaceID string, environmentID string, preview bool, _ *ItemsClientBeginPublishEnvironmentOptions) (*policy.Request, error) {
+func (client *ItemsClient) publishEnvironmentCreateRequest(ctx context.Context, workspaceID string, environmentID string, beta bool, _ *ItemsClientBeginPublishEnvironmentOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/staging/publish"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -509,24 +509,26 @@ func (client *ItemsClient) publishEnvironmentCreateRequest(ctx context.Context, 
 		return nil, err
 	}
 	reqQP := req.Raw().URL.Query()
-	reqQP.Set("preview", strconv.FormatBool(preview))
+	reqQP.Set("beta", strconv.FormatBool(beta))
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }
 
-// PublishEnvironmentPreview - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use. This preview API
-// will be deprecated on March 1, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/items/publish-environment].
+// PublishEnvironmentPreview - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use. This beta API will
+// be deprecated on March 1, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/items/publish-environment].
 // The new version introduces breaking changes and is not
-// backward compatible. When calling this API, callers must specify true as the value for the query parameter preview.
-// DEPRECATION NOTICE A new query parameter preview has been introduced to facilitate this transition:
-// * The preview query parameter currently defaults to true.
-// * Set the value of the preview query parameter to false to use the stable Release version of this API.
-// * Starting March 1, 2026, the default value for preview will change to false.
+// backward compatible. When calling this API, callers must specify true as the value for the query parameter beta (preview
+// query parameter has been replaced by beta. For backward compatibility, preview
+// is still supported and behaves the same as beta).
+// DEPRECATION NOTICE A new query parameter beta has been introduced to facilitate this transition:
+// * The beta query parameter currently defaults to true.
+// * Set the value of the beta query parameter to false to use the stable Release version of this API.
+// * Starting March 1, 2026, the default value for beta will change to false.
 // It is recommended to migrate your integration to use the Release version as soon as possible by specifying false for the
-// preview query parameter (the default value for the preview query parameter will
-// be set to false on API's deprecation date).
+// beta query parameter (the default value for the beta query parameter will be
+// set to false on API's deprecation date).
 // The following incompatible changes were introduced in the Release version:
 // * Response is following long running operations (LRO) [/rest/api/fabric/articles/long-running-operation] pattern and HTTP
 // response code 202 may be returned.
@@ -543,19 +545,19 @@ func (client *ItemsClient) publishEnvironmentCreateRequest(ctx context.Context, 
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - environmentID - The environment ID.
-//   - preview - This parameter specifies which version of the API to use. Set to true to use the preview version described on
-//     this page, or to false to use the Release version detailed here
-//     [/rest/api/fabric/environment/items/publish-environment]. Starting March 1, 2026, the default value for preview will change
+//   - beta - This parameter specifies which version of the API to use. Set to true to use the beta version described on this
+//     page, or to false to use the Release version detailed here
+//     [/rest/api/fabric/environment/items/publish-environment]. Starting March 1, 2026, the default value for beta will change
 //     to false.
 //   - options - ItemsClientPublishEnvironmentPreviewOptions contains the optional parameters for the ItemsClient.PublishEnvironmentPreview
 //     method.
-func (client *ItemsClient) PublishEnvironmentPreview(ctx context.Context, workspaceID string, environmentID string, preview bool, options *ItemsClientPublishEnvironmentPreviewOptions) (ItemsClientPublishEnvironmentPreviewResponse, error) {
+func (client *ItemsClient) PublishEnvironmentPreview(ctx context.Context, workspaceID string, environmentID string, beta bool, options *ItemsClientPublishEnvironmentPreviewOptions) (ItemsClientPublishEnvironmentPreviewResponse, error) {
 	var err error
 	const operationName = "environment.ItemsClient.PublishEnvironmentPreview"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.publishEnvironmentPreviewCreateRequest(ctx, workspaceID, environmentID, preview, options)
+	req, err := client.publishEnvironmentPreviewCreateRequest(ctx, workspaceID, environmentID, beta, options)
 	if err != nil {
 		return ItemsClientPublishEnvironmentPreviewResponse{}, err
 	}
@@ -572,7 +574,7 @@ func (client *ItemsClient) PublishEnvironmentPreview(ctx context.Context, worksp
 }
 
 // publishEnvironmentPreviewCreateRequest creates the PublishEnvironmentPreview request.
-func (client *ItemsClient) publishEnvironmentPreviewCreateRequest(ctx context.Context, workspaceID string, environmentID string, preview bool, _ *ItemsClientPublishEnvironmentPreviewOptions) (*policy.Request, error) {
+func (client *ItemsClient) publishEnvironmentPreviewCreateRequest(ctx context.Context, workspaceID string, environmentID string, beta bool, _ *ItemsClientPublishEnvironmentPreviewOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/staging/publish"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -587,7 +589,7 @@ func (client *ItemsClient) publishEnvironmentPreviewCreateRequest(ctx context.Co
 		return nil, err
 	}
 	reqQP := req.Raw().URL.Query()
-	reqQP.Set("preview", strconv.FormatBool(preview))
+	reqQP.Set("beta", strconv.FormatBool(beta))
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
@@ -901,7 +903,7 @@ func (client *ItemsClient) beginGetEnvironmentDefinition(ctx context.Context, wo
 }
 
 // PublishEnvironment - returns ItemsClientPublishEnvironmentResponse in sync mode.
-// >  [!NOTE] This API is a release version of a preview version due to be deprecated on March 1, 2026. When calling this API - callers must set the query parameter preview to the value false
+// >  [!NOTE] This API is a release version of a beta version due to be deprecated on March 1, 2026. When calling this API - callers must set the query parameter beta to the value false
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
@@ -918,10 +920,10 @@ func (client *ItemsClient) beginGetEnvironmentDefinition(ctx context.Context, wo
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - environmentID - The environment ID.
-//   - preview - This parameter specifies which version of the API to use. Set to false to use the release version.
+//   - beta - This parameter specifies which version of the API to use. Set to false to use the release version.
 //   - options - ItemsClientBeginPublishEnvironmentOptions contains the optional parameters for the ItemsClient.BeginPublishEnvironment method.
-func (client *ItemsClient) PublishEnvironment(ctx context.Context, workspaceID string, environmentID string, preview bool, options *ItemsClientBeginPublishEnvironmentOptions) (ItemsClientPublishEnvironmentResponse, error) {
-	result, err := iruntime.NewLRO(client.BeginPublishEnvironment(ctx, workspaceID, environmentID, preview, options)).Sync(ctx)
+func (client *ItemsClient) PublishEnvironment(ctx context.Context, workspaceID string, environmentID string, beta bool, options *ItemsClientBeginPublishEnvironmentOptions) (ItemsClientPublishEnvironmentResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginPublishEnvironment(ctx, workspaceID, environmentID, beta, options)).Sync(ctx)
 	if err != nil {
 		var azcoreRespError *azcore.ResponseError
 		if errors.As(err, &azcoreRespError) {
@@ -933,9 +935,9 @@ func (client *ItemsClient) PublishEnvironment(ctx context.Context, workspaceID s
 }
 
 // beginPublishEnvironment creates the publishEnvironment request.
-func (client *ItemsClient) beginPublishEnvironment(ctx context.Context, workspaceID string, environmentID string, preview bool, options *ItemsClientBeginPublishEnvironmentOptions) (*runtime.Poller[ItemsClientPublishEnvironmentResponse], error) {
+func (client *ItemsClient) beginPublishEnvironment(ctx context.Context, workspaceID string, environmentID string, beta bool, options *ItemsClientBeginPublishEnvironmentOptions) (*runtime.Poller[ItemsClientPublishEnvironmentResponse], error) {
 	if options == nil || options.ResumeToken == "" {
-		resp, err := client.publishEnvironment(ctx, workspaceID, environmentID, preview, options)
+		resp, err := client.publishEnvironment(ctx, workspaceID, environmentID, beta, options)
 		if err != nil {
 			var azcoreRespError *azcore.ResponseError
 			if errors.As(err, &azcoreRespError) {

@@ -1525,6 +1525,7 @@ func (c CreatableShortcutTarget) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "azureBlobStorage", c.AzureBlobStorage)
 	populate(objectMap, "dataverse", c.Dataverse)
 	populate(objectMap, "googleCloudStorage", c.GoogleCloudStorage)
+	populate(objectMap, "oneDriveSharePoint", c.OneDriveSharePoint)
 	populate(objectMap, "oneLake", c.OneLake)
 	populate(objectMap, "s3Compatible", c.S3Compatible)
 	return json.Marshal(objectMap)
@@ -1553,6 +1554,9 @@ func (c *CreatableShortcutTarget) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "googleCloudStorage":
 			err = unpopulate(val, "GoogleCloudStorage", &c.GoogleCloudStorage)
+			delete(rawMsg, key)
+		case "oneDriveSharePoint":
+			err = unpopulate(val, "OneDriveSharePoint", &c.OneDriveSharePoint)
 			delete(rawMsg, key)
 		case "oneLake":
 			err = unpopulate(val, "OneLake", &c.OneLake)
@@ -6368,6 +6372,41 @@ func (o *OnPremisesGatewayPersonalCredentials) UnmarshalJSON(data []byte) error 
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type OneDriveSharePoint.
+func (o OneDriveSharePoint) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "connectionId", o.ConnectionID)
+	populate(objectMap, "location", o.Location)
+	populate(objectMap, "subpath", o.Subpath)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type OneDriveSharePoint.
+func (o *OneDriveSharePoint) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", o, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "connectionId":
+			err = unpopulate(val, "ConnectionID", &o.ConnectionID)
+			delete(rawMsg, key)
+		case "location":
+			err = unpopulate(val, "Location", &o.Location)
+			delete(rawMsg, key)
+		case "subpath":
+			err = unpopulate(val, "Subpath", &o.Subpath)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", o, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type OneLake.
 func (o OneLake) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -7497,6 +7536,7 @@ func (t Target) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "dataverse", t.Dataverse)
 	populate(objectMap, "externalDataShare", t.ExternalDataShare)
 	populate(objectMap, "googleCloudStorage", t.GoogleCloudStorage)
+	populate(objectMap, "oneDriveSharePoint", t.OneDriveSharePoint)
 	populate(objectMap, "oneLake", t.OneLake)
 	populate(objectMap, "s3Compatible", t.S3Compatible)
 	populate(objectMap, "type", t.Type)
@@ -7529,6 +7569,9 @@ func (t *Target) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "googleCloudStorage":
 			err = unpopulate(val, "GoogleCloudStorage", &t.GoogleCloudStorage)
+			delete(rawMsg, key)
+		case "oneDriveSharePoint":
+			err = unpopulate(val, "OneDriveSharePoint", &t.OneDriveSharePoint)
 			delete(rawMsg, key)
 		case "oneLake":
 			err = unpopulate(val, "OneLake", &t.OneLake)

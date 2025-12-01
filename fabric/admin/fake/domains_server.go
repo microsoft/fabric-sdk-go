@@ -218,7 +218,7 @@ func (d *DomainsServerTransport) dispatchBeginAssignDomainWorkspacesByCapacities
 		const regexStr = `/v1/admin/domains/(?P<domainId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/assignWorkspacesByCapacities`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 1 {
+		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		body, err := server.UnmarshalRequestAsJSON[admin.AssignDomainWorkspacesByCapacitiesRequest](req)
@@ -260,7 +260,7 @@ func (d *DomainsServerTransport) dispatchAssignDomainWorkspacesByIDs(req *http.R
 	const regexStr = `/v1/admin/domains/(?P<domainId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/assignWorkspaces`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	body, err := server.UnmarshalRequestAsJSON[admin.AssignDomainWorkspacesByIDsRequest](req)
@@ -295,7 +295,7 @@ func (d *DomainsServerTransport) dispatchBeginAssignDomainWorkspacesByPrincipals
 		const regexStr = `/v1/admin/domains/(?P<domainId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/assignWorkspacesByPrincipals`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 1 {
+		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		body, err := server.UnmarshalRequestAsJSON[admin.AssignDomainWorkspacesByPrincipalsRequest](req)
@@ -401,7 +401,7 @@ func (d *DomainsServerTransport) dispatchDeleteDomain(req *http.Request) (*http.
 	const regexStr = `/v1/admin/domains/(?P<domainId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	domainIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("domainId")])
@@ -430,7 +430,7 @@ func (d *DomainsServerTransport) dispatchGetDomain(req *http.Request) (*http.Res
 	const regexStr = `/v1/admin/domains/(?P<domainId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	qp := req.URL.Query()
@@ -468,7 +468,7 @@ func (d *DomainsServerTransport) dispatchGetDomainPreview(req *http.Request) (*h
 	const regexStr = `/v1/admin/domains/(?P<domainId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	qp := req.URL.Query()
@@ -508,7 +508,7 @@ func (d *DomainsServerTransport) dispatchNewListDomainWorkspacesPager(req *http.
 		const regexStr = `/v1/admin/domains/(?P<domainId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/workspaces`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 1 {
+		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		qp := req.URL.Query()
@@ -641,7 +641,7 @@ func (d *DomainsServerTransport) dispatchNewListRoleAssignmentsPager(req *http.R
 		const regexStr = `/v1/admin/domains/(?P<domainId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/roleAssignments`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 1 {
+		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		qp := req.URL.Query()
@@ -688,7 +688,7 @@ func (d *DomainsServerTransport) dispatchRoleAssignmentsBulkAssign(req *http.Req
 	const regexStr = `/v1/admin/domains/(?P<domainId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/roleAssignments/bulkAssign`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	body, err := server.UnmarshalRequestAsJSON[admin.DomainRoleAssignmentRequest](req)
@@ -721,7 +721,7 @@ func (d *DomainsServerTransport) dispatchRoleAssignmentsBulkUnassign(req *http.R
 	const regexStr = `/v1/admin/domains/(?P<domainId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/roleAssignments/bulkUnassign`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	body, err := server.UnmarshalRequestAsJSON[admin.DomainRoleUnassignmentRequest](req)
@@ -754,7 +754,7 @@ func (d *DomainsServerTransport) dispatchSyncRoleAssignmentsToSubdomains(req *ht
 	const regexStr = `/v1/admin/domains/(?P<domainId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/roleAssignments/syncToSubdomains`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	body, err := server.UnmarshalRequestAsJSON[admin.SyncRoleAssignmentsToSubdomainsRequest](req)
@@ -787,7 +787,7 @@ func (d *DomainsServerTransport) dispatchUnassignAllDomainWorkspaces(req *http.R
 	const regexStr = `/v1/admin/domains/(?P<domainId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/unassignAllWorkspaces`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	domainIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("domainId")])
@@ -816,7 +816,7 @@ func (d *DomainsServerTransport) dispatchUnassignDomainWorkspacesByIDs(req *http
 	const regexStr = `/v1/admin/domains/(?P<domainId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/unassignWorkspaces`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	body, err := server.UnmarshalRequestAsJSON[admin.UnassignDomainWorkspacesByIDsRequest](req)
@@ -855,7 +855,7 @@ func (d *DomainsServerTransport) dispatchUpdateDomain(req *http.Request) (*http.
 	const regexStr = `/v1/admin/domains/(?P<domainId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	qp := req.URL.Query()
@@ -897,7 +897,7 @@ func (d *DomainsServerTransport) dispatchUpdateDomainPreview(req *http.Request) 
 	const regexStr = `/v1/admin/domains/(?P<domainId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	qp := req.URL.Query()

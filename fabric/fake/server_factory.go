@@ -44,6 +44,7 @@ import (
 	mlmodelfake "github.com/microsoft/fabric-sdk-go/fabric/mlmodel/fake"
 	mounteddatafactoryfake "github.com/microsoft/fabric-sdk-go/fabric/mounteddatafactory/fake"
 	notebookfake "github.com/microsoft/fabric-sdk-go/fabric/notebook/fake"
+	operationsagentfake "github.com/microsoft/fabric-sdk-go/fabric/operationsagent/fake"
 	paginatedreportfake "github.com/microsoft/fabric-sdk-go/fabric/paginatedreport/fake"
 	reflexfake "github.com/microsoft/fabric-sdk-go/fabric/reflex/fake"
 	reportfake "github.com/microsoft/fabric-sdk-go/fabric/report/fake"
@@ -89,6 +90,7 @@ type ServerFactory struct {
 	MLModel                        mlmodelfake.ServerFactory
 	MountedDataFactory             mounteddatafactoryfake.ServerFactory
 	Notebook                       notebookfake.ServerFactory
+	OperationsAgent                operationsagentfake.ServerFactory
 	PaginatedReport                paginatedreportfake.ServerFactory
 	Reflex                         reflexfake.ServerFactory
 	Report                         reportfake.ServerFactory
@@ -137,6 +139,7 @@ type ServerFactoryTransport struct {
 	trMLModel                        *mlmodelfake.ServerFactoryTransport
 	trMountedDataFactory             *mounteddatafactoryfake.ServerFactoryTransport
 	trNotebook                       *notebookfake.ServerFactoryTransport
+	trOperationsAgent                *operationsagentfake.ServerFactoryTransport
 	trPaginatedReport                *paginatedreportfake.ServerFactoryTransport
 	trReflex                         *reflexfake.ServerFactoryTransport
 	trReport                         *reportfake.ServerFactoryTransport
@@ -313,6 +316,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return notebookfake.NewServerFactoryTransport(&s.srv.Notebook)
 		})
 		resp, err = s.trNotebook.Do(req)
+	case "operationsagent":
+		initServer(s, &s.trOperationsAgent, func() *operationsagentfake.ServerFactoryTransport {
+			return operationsagentfake.NewServerFactoryTransport(&s.srv.OperationsAgent)
+		})
+		resp, err = s.trOperationsAgent.Do(req)
 	case "paginatedreport":
 		initServer(s, &s.trPaginatedReport, func() *paginatedreportfake.ServerFactoryTransport {
 			return paginatedreportfake.NewServerFactoryTransport(&s.srv.PaginatedReport)

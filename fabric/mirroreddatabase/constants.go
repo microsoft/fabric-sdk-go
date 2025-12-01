@@ -64,6 +64,8 @@ const (
 	ItemTypeMountedDataFactory ItemType = "MountedDataFactory"
 	// ItemTypeNotebook - A notebook.
 	ItemTypeNotebook ItemType = "Notebook"
+	// ItemTypeOperationsAgent - A OperationsAgent.
+	ItemTypeOperationsAgent ItemType = "OperationsAgent"
 	// ItemTypePaginatedReport - PowerBI paginated report.
 	ItemTypePaginatedReport ItemType = "PaginatedReport"
 	// ItemTypeReflex - A Reflex.
@@ -76,6 +78,8 @@ const (
 	ItemTypeSQLEndpoint ItemType = "SQLEndpoint"
 	// ItemTypeSemanticModel - PowerBI semantic model.
 	ItemTypeSemanticModel ItemType = "SemanticModel"
+	// ItemTypeSnowflakeDatabase - A Snowflake Database to store Iceberg tables created from Snowflake account.
+	ItemTypeSnowflakeDatabase ItemType = "SnowflakeDatabase"
 	// ItemTypeSparkJobDefinition - A spark job definition.
 	ItemTypeSparkJobDefinition ItemType = "SparkJobDefinition"
 	// ItemTypeUserDataFunction - A User Data Function.
@@ -118,12 +122,14 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeMirroredWarehouse,
 		ItemTypeMountedDataFactory,
 		ItemTypeNotebook,
+		ItemTypeOperationsAgent,
 		ItemTypePaginatedReport,
 		ItemTypeReflex,
 		ItemTypeReport,
 		ItemTypeSQLDatabase,
 		ItemTypeSQLEndpoint,
 		ItemTypeSemanticModel,
+		ItemTypeSnowflakeDatabase,
 		ItemTypeSparkJobDefinition,
 		ItemTypeUserDataFunction,
 		ItemTypeVariableLibrary,
@@ -141,6 +147,8 @@ const (
 	MirroringStatusInitialized MirroringStatus = "Initialized"
 	// MirroringStatusInitializing - The associated SQL endpoint provisioning is in progress.
 	MirroringStatusInitializing MirroringStatus = "Initializing"
+	// MirroringStatusPaused - The mirroring instance for the mirrored database is paused.
+	MirroringStatusPaused MirroringStatus = "Paused"
 	// MirroringStatusRunning - The mirroring instance for the mirrored database is running.
 	MirroringStatusRunning MirroringStatus = "Running"
 	// MirroringStatusStarting - The mirroring instance for the mirrored database is starting.
@@ -156,6 +164,7 @@ func PossibleMirroringStatusValues() []MirroringStatus {
 	return []MirroringStatus{
 		MirroringStatusInitialized,
 		MirroringStatusInitializing,
+		MirroringStatusPaused,
 		MirroringStatusRunning,
 		MirroringStatusStarting,
 		MirroringStatusStopped,

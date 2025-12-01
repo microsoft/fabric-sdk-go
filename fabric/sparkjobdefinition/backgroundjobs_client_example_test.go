@@ -27,7 +27,7 @@ func ExampleBackgroundJobsClient_RunOnDemandSparkJobDefinition_runSparkJobDefini
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewBackgroundJobsClient().RunOnDemandSparkJobDefinition(ctx, "4b218778-e7a5-4d73-8187-f10824047715", "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7", "sparkjob", &sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions{RunSparkJobDefinitionRequest: nil})
+	_, err = clientFactory.NewBackgroundJobsClient().RunOnDemandSparkJobDefinition(ctx, "4b218778-e7a5-4d73-8187-f10824047715", "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7", &sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions{RunSparkJobDefinitionRequest: nil})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -44,7 +44,7 @@ func ExampleBackgroundJobsClient_RunOnDemandSparkJobDefinition_runSparkJobDefini
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewBackgroundJobsClient().RunOnDemandSparkJobDefinition(ctx, "4b218778-e7a5-4d73-8187-f10824047715", "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7", "sparkjob", &sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions{RunSparkJobDefinitionRequest: &sparkjobdefinition.RunSparkJobDefinitionRequest{
+	_, err = clientFactory.NewBackgroundJobsClient().RunOnDemandSparkJobDefinition(ctx, "4b218778-e7a5-4d73-8187-f10824047715", "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7", &sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions{RunSparkJobDefinitionRequest: &sparkjobdefinition.RunSparkJobDefinitionRequest{
 		ExecutionData: &sparkjobdefinition.ExecutionData{
 			AdditionalLibraryUris: []string{
 				"abfss://test@onelakecst180.dfs.pbidedicated.windows-int.net/dfsd.Lakehouse/Files/testfile.jar"},

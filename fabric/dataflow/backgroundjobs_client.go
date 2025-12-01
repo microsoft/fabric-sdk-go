@@ -30,6 +30,9 @@ type BackgroundJobsClient struct {
 
 // RunOnDemandApplyChanges - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
 // purposes only. It may change based on feedback and is not recommended for production use.
+// [!NOTE] The URL for this API has been updated to include the job type as part of the path, replacing the previous use of
+// a query parameter. For backward compatibility, invocations using the query
+// parameter are still supported.
 // REQUIRED DELEGATED SCOPES For dataflows APIs use these scope types:
 // * Specific scope: Dataflow.Execute.All
 //
@@ -46,16 +49,15 @@ type BackgroundJobsClient struct {
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - dataflowID - The dataflow ID.
-//   - jobType - ApplyChanges job type.
 //   - options - BackgroundJobsClientRunOnDemandApplyChangesOptions contains the optional parameters for the BackgroundJobsClient.RunOnDemandApplyChanges
 //     method.
-func (client *BackgroundJobsClient) RunOnDemandApplyChanges(ctx context.Context, workspaceID string, dataflowID string, jobType string, options *BackgroundJobsClientRunOnDemandApplyChangesOptions) (BackgroundJobsClientRunOnDemandApplyChangesResponse, error) {
+func (client *BackgroundJobsClient) RunOnDemandApplyChanges(ctx context.Context, workspaceID string, dataflowID string, options *BackgroundJobsClientRunOnDemandApplyChangesOptions) (BackgroundJobsClientRunOnDemandApplyChangesResponse, error) {
 	var err error
 	const operationName = "dataflow.BackgroundJobsClient.RunOnDemandApplyChanges"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.runOnDemandApplyChangesCreateRequest(ctx, workspaceID, dataflowID, jobType, options)
+	req, err := client.runOnDemandApplyChangesCreateRequest(ctx, workspaceID, dataflowID, options)
 	if err != nil {
 		return BackgroundJobsClientRunOnDemandApplyChangesResponse{}, err
 	}
@@ -72,8 +74,8 @@ func (client *BackgroundJobsClient) RunOnDemandApplyChanges(ctx context.Context,
 }
 
 // runOnDemandApplyChangesCreateRequest creates the RunOnDemandApplyChanges request.
-func (client *BackgroundJobsClient) runOnDemandApplyChangesCreateRequest(ctx context.Context, workspaceID string, dataflowID string, jobType string, _ *BackgroundJobsClientRunOnDemandApplyChangesOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/dataflows/{dataflowId}/jobs/instances"
+func (client *BackgroundJobsClient) runOnDemandApplyChangesCreateRequest(ctx context.Context, workspaceID string, dataflowID string, _ *BackgroundJobsClientRunOnDemandApplyChangesOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/dataflows/{dataflowId}/jobs/ApplyChanges/instances"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -86,9 +88,6 @@ func (client *BackgroundJobsClient) runOnDemandApplyChangesCreateRequest(ctx con
 	if err != nil {
 		return nil, err
 	}
-	reqQP := req.Raw().URL.Query()
-	reqQP.Set("jobType", jobType)
-	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }
@@ -111,7 +110,10 @@ func (client *BackgroundJobsClient) runOnDemandApplyChangesHandleResponse(resp *
 }
 
 // RunOnDemandExecute - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
-// only. It may change based on feedback and is not recommended for production use.
+// only. It may change based on feedback and is not recommended for production use. The URL for this
+// API has been updated to include the job type as part of the path, replacing the previous use of a query parameter. For
+// backward compatibility, invocations using the query parameter are still
+// supported.
 // REQUIRED DELEGATED SCOPES For dataflows APIs use these scope types:
 // * Specific scope: Dataflow.Execute.All
 //
@@ -128,16 +130,15 @@ func (client *BackgroundJobsClient) runOnDemandApplyChangesHandleResponse(resp *
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - dataflowID - The dataflow ID.
-//   - jobType - Execute job type. Refresh can also be used as an alias for Execute.
 //   - options - BackgroundJobsClientRunOnDemandExecuteOptions contains the optional parameters for the BackgroundJobsClient.RunOnDemandExecute
 //     method.
-func (client *BackgroundJobsClient) RunOnDemandExecute(ctx context.Context, workspaceID string, dataflowID string, jobType string, options *BackgroundJobsClientRunOnDemandExecuteOptions) (BackgroundJobsClientRunOnDemandExecuteResponse, error) {
+func (client *BackgroundJobsClient) RunOnDemandExecute(ctx context.Context, workspaceID string, dataflowID string, options *BackgroundJobsClientRunOnDemandExecuteOptions) (BackgroundJobsClientRunOnDemandExecuteResponse, error) {
 	var err error
 	const operationName = "dataflow.BackgroundJobsClient.RunOnDemandExecute"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.runOnDemandExecuteCreateRequest(ctx, workspaceID, dataflowID, jobType, options)
+	req, err := client.runOnDemandExecuteCreateRequest(ctx, workspaceID, dataflowID, options)
 	if err != nil {
 		return BackgroundJobsClientRunOnDemandExecuteResponse{}, err
 	}
@@ -154,8 +155,8 @@ func (client *BackgroundJobsClient) RunOnDemandExecute(ctx context.Context, work
 }
 
 // runOnDemandExecuteCreateRequest creates the RunOnDemandExecute request.
-func (client *BackgroundJobsClient) runOnDemandExecuteCreateRequest(ctx context.Context, workspaceID string, dataflowID string, jobType string, options *BackgroundJobsClientRunOnDemandExecuteOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/dataflows/{dataflowId}/jobs/instances"
+func (client *BackgroundJobsClient) runOnDemandExecuteCreateRequest(ctx context.Context, workspaceID string, dataflowID string, options *BackgroundJobsClientRunOnDemandExecuteOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/dataflows/{dataflowId}/jobs/Execute/instances"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -168,9 +169,6 @@ func (client *BackgroundJobsClient) runOnDemandExecuteCreateRequest(ctx context.
 	if err != nil {
 		return nil, err
 	}
-	reqQP := req.Raw().URL.Query()
-	reqQP.Set("jobType", jobType)
-	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	if options != nil && options.RunOnDemandItemJobRequest != nil {
 		if err := runtime.MarshalAsJSON(req, *options.RunOnDemandItemJobRequest); err != nil {

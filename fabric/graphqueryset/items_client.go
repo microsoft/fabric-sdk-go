@@ -31,7 +31,7 @@ type ItemsClient struct {
 }
 
 // BeginCreateGraphQuerySet - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create GraphQuerySet with a public definition, refer to GraphQuerySet [/rest/api/fabric/articles/item-management/definitions/graph-queryset]
+// To create GraphQuerySet with a public definition, refer to GraphQuerySet [/rest/api/fabric/articles/item-management/definitions/graph-queryset-definition]
 // article.
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES GraphQuerySet.ReadWrite.All or Item.ReadWrite.All
@@ -57,7 +57,7 @@ func (client *ItemsClient) BeginCreateGraphQuerySet(ctx context.Context, workspa
 }
 
 // CreateGraphQuerySet - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create GraphQuerySet with a public definition, refer to GraphQuerySet [/rest/api/fabric/articles/item-management/definitions/graph-queryset]
+// To create GraphQuerySet with a public definition, refer to GraphQuerySet [/rest/api/fabric/articles/item-management/definitions/graph-queryset-definition]
 // article.
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES GraphQuerySet.ReadWrite.All or Item.ReadWrite.All
@@ -534,7 +534,7 @@ func (client *ItemsClient) updateGraphQuerySetDefinitionCreateRequest(ctx contex
 // CreateGraphQuerySet - returns ItemsClientCreateGraphQuerySetResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// To create GraphQuerySet with a public definition, refer to GraphQuerySet [/rest/api/fabric/articles/item-management/definitions/graph-queryset] article.
+// To create GraphQuerySet with a public definition, refer to GraphQuerySet [/rest/api/fabric/articles/item-management/definitions/graph-queryset-definition] article.
 //
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES GraphQuerySet.ReadWrite.All or Item.ReadWrite.All

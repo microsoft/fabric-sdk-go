@@ -303,3 +303,106 @@ func (testsuite *FakeTestSuite) TestItems_UpdateApacheAirflowJobDefinition() {
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
+
+func (testsuite *FakeTestSuite) TestFiles_ListApacheAirflowJobFiles() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List Apache Airflow job files example"},
+	})
+	var exampleWorkspaceID string
+	var exampleApacheAirflowJobID string
+	var exampleBeta bool
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleApacheAirflowJobID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleBeta = true
+
+	exampleRes := apacheairflowjob.Files{
+		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/workspaces/cfafbeb1-8037-4d0c-896e-a46fb27ff229/ApacheAirflowJobs/5b218778-e7a5-4d73-8187-f10824047715/files?preview=true&continuationToken=LDEsMTAwMDAwLDA%3D"),
+		Value: []apacheairflowjob.FileMetadata{
+			{
+				FilePath:    to.Ptr("dags/example_dag.py"),
+				SizeInBytes: to.Ptr[int64](2048),
+			}},
+	}
+
+	testsuite.serverFactory.FilesServer.NewListApacheAirflowJobFilesPager = func(workspaceID string, apacheAirflowJobID string, beta bool, options *apacheairflowjob.FilesClientListApacheAirflowJobFilesOptions) (resp azfake.PagerResponder[apacheairflowjob.FilesClientListApacheAirflowJobFilesResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleApacheAirflowJobID, apacheAirflowJobID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.PagerResponder[apacheairflowjob.FilesClientListApacheAirflowJobFilesResponse]{}
+		resp.AddPage(http.StatusOK, apacheairflowjob.FilesClientListApacheAirflowJobFilesResponse{Files: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewFilesClient()
+	pager := client.NewListApacheAirflowJobFilesPager(exampleWorkspaceID, exampleApacheAirflowJobID, exampleBeta, &apacheairflowjob.FilesClientListApacheAirflowJobFilesOptions{RootPath: to.Ptr("dags"),
+		ContinuationToken: nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Files))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestFiles_GetApacheAirflowJobFile() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get an Apache Airflow job file example"},
+	})
+	var exampleWorkspaceID string
+	var exampleApacheAirflowJobID string
+	var exampleFilePath string
+	var exampleBeta bool
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleApacheAirflowJobID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleFilePath = "dags/example_dag.py"
+	exampleBeta = true
+
+	testsuite.serverFactory.FilesServer.GetApacheAirflowJobFile = func(ctx context.Context, workspaceID string, apacheAirflowJobID string, filePath string, beta bool, options *apacheairflowjob.FilesClientGetApacheAirflowJobFileOptions) (resp azfake.Responder[apacheairflowjob.FilesClientGetApacheAirflowJobFileResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleApacheAirflowJobID, apacheAirflowJobID)
+		testsuite.Require().Equal(exampleFilePath, filePath)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.Responder[apacheairflowjob.FilesClientGetApacheAirflowJobFileResponse]{}
+		resp.SetResponse(http.StatusOK, apacheairflowjob.FilesClientGetApacheAirflowJobFileResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewFilesClient()
+	_, err = client.GetApacheAirflowJobFile(ctx, exampleWorkspaceID, exampleApacheAirflowJobID, exampleFilePath, exampleBeta, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestFiles_DeleteApacheAirflowJobFile() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete an Apache Airflow job file example"},
+	})
+	var exampleWorkspaceID string
+	var exampleApacheAirflowJobID string
+	var exampleFilePath string
+	var exampleBeta bool
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleApacheAirflowJobID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleFilePath = "dags/example_dag.py"
+	exampleBeta = true
+
+	testsuite.serverFactory.FilesServer.DeleteApacheAirflowJobFile = func(ctx context.Context, workspaceID string, apacheAirflowJobID string, filePath string, beta bool, options *apacheairflowjob.FilesClientDeleteApacheAirflowJobFileOptions) (resp azfake.Responder[apacheairflowjob.FilesClientDeleteApacheAirflowJobFileResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleApacheAirflowJobID, apacheAirflowJobID)
+		testsuite.Require().Equal(exampleFilePath, filePath)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.Responder[apacheairflowjob.FilesClientDeleteApacheAirflowJobFileResponse]{}
+		resp.SetResponse(http.StatusOK, apacheairflowjob.FilesClientDeleteApacheAirflowJobFileResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewFilesClient()
+	_, err = client.DeleteApacheAirflowJobFile(ctx, exampleWorkspaceID, exampleApacheAirflowJobID, exampleFilePath, exampleBeta, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}

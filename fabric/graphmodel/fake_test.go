@@ -71,9 +71,6 @@ func (testsuite *FakeTestSuite) TestItems_ListGraphModels() {
 				DisplayName: to.Ptr("GraphModel Name 1"),
 				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
-				Properties: &graphmodel.Properties{
-					OneLakeRootPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/f089354e-8366-4e18-aea3-4cb4a3a50b48/41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"),
-				},
 			},
 			{
 				Type:        to.Ptr(graphmodel.ItemTypeGraphModel),
@@ -81,9 +78,6 @@ func (testsuite *FakeTestSuite) TestItems_ListGraphModels() {
 				DisplayName: to.Ptr("GraphModel Name 2"),
 				ID:          to.Ptr("f697fb63-abd4-4399-9548-be7e3c3c0dac"),
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
-				Properties: &graphmodel.Properties{
-					OneLakeRootPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/f089354e-8366-4e18-aea3-4cb4a3a50b48/d8f6cf16-3aac-4440-9d76-a03d86b7ae3e"),
-				},
 			}},
 	}
 
@@ -202,9 +196,6 @@ func (testsuite *FakeTestSuite) TestItems_GetGraphModel() {
 		DisplayName: to.Ptr("GraphModel 1"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
-		Properties: &graphmodel.Properties{
-			OneLakeRootPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/f089354e-8366-4e18-aea3-4cb4a3a50b48/41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"),
-		},
 	}
 
 	testsuite.serverFactory.ItemsServer.GetGraphModel = func(ctx context.Context, workspaceID string, graphModelID string, options *graphmodel.ItemsClientGetGraphModelOptions) (resp azfake.Responder[graphmodel.ItemsClientGetGraphModelResponse], errResp azfake.ErrorResponder) {
@@ -405,19 +396,19 @@ func (testsuite *FakeTestSuite) TestItems_ExecuteQueryPreview() {
 	})
 	var exampleWorkspaceID string
 	var exampleGraphModelID string
-	var examplePreview bool
+	var exampleBeta bool
 	var exampleCreateQueryResultRequest graphmodel.ExecuteQueryRequest
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
 	exampleGraphModelID = "5b218778-e7a5-4d73-8187-f10824047715"
-	examplePreview = true
+	exampleBeta = true
 	exampleCreateQueryResultRequest = graphmodel.ExecuteQueryRequest{
 		Query: to.Ptr("MATCH (node_station:`station`) RETURN TO_JSON_STRING(node_station) AS `station` LIMIT 10;"),
 	}
 
-	testsuite.serverFactory.ItemsServer.ExecuteQueryPreview = func(ctx context.Context, workspaceID string, graphModelID string, preview bool, createQueryResultRequest graphmodel.ExecuteQueryRequest, options *graphmodel.ItemsClientExecuteQueryPreviewOptions) (resp azfake.Responder[graphmodel.ItemsClientExecuteQueryPreviewResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ItemsServer.ExecuteQueryPreview = func(ctx context.Context, workspaceID string, graphModelID string, beta bool, createQueryResultRequest graphmodel.ExecuteQueryRequest, options *graphmodel.ItemsClientExecuteQueryPreviewOptions) (resp azfake.Responder[graphmodel.ItemsClientExecuteQueryPreviewResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleGraphModelID, graphModelID)
-		testsuite.Require().Equal(examplePreview, preview)
+		testsuite.Require().Equal(exampleBeta, beta)
 		testsuite.Require().True(reflect.DeepEqual(exampleCreateQueryResultRequest, createQueryResultRequest))
 		resp = azfake.Responder[graphmodel.ItemsClientExecuteQueryPreviewResponse]{}
 		resp.SetResponse(http.StatusOK, graphmodel.ItemsClientExecuteQueryPreviewResponse{}, nil)
@@ -425,7 +416,7 @@ func (testsuite *FakeTestSuite) TestItems_ExecuteQueryPreview() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.ExecuteQueryPreview(ctx, exampleWorkspaceID, exampleGraphModelID, examplePreview, exampleCreateQueryResultRequest, nil)
+	_, err = client.ExecuteQueryPreview(ctx, exampleWorkspaceID, exampleGraphModelID, exampleBeta, exampleCreateQueryResultRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
@@ -436,10 +427,10 @@ func (testsuite *FakeTestSuite) TestItems_GetQueryableGraphTypePreview() {
 	})
 	var exampleWorkspaceID string
 	var exampleGraphModelID string
-	var examplePreview bool
+	var exampleBeta bool
 	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
 	exampleGraphModelID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
-	examplePreview = true
+	exampleBeta = true
 
 	exampleRes := graphmodel.GraphType{
 		EdgeTypes: []graphmodel.EdgeType{
@@ -522,17 +513,17 @@ func (testsuite *FakeTestSuite) TestItems_GetQueryableGraphTypePreview() {
 			}},
 	}
 
-	testsuite.serverFactory.ItemsServer.GetQueryableGraphTypePreview = func(ctx context.Context, workspaceID string, graphModelID string, preview bool, options *graphmodel.ItemsClientGetQueryableGraphTypePreviewOptions) (resp azfake.Responder[graphmodel.ItemsClientGetQueryableGraphTypePreviewResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ItemsServer.GetQueryableGraphTypePreview = func(ctx context.Context, workspaceID string, graphModelID string, beta bool, options *graphmodel.ItemsClientGetQueryableGraphTypePreviewOptions) (resp azfake.Responder[graphmodel.ItemsClientGetQueryableGraphTypePreviewResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleGraphModelID, graphModelID)
-		testsuite.Require().Equal(examplePreview, preview)
+		testsuite.Require().Equal(exampleBeta, beta)
 		resp = azfake.Responder[graphmodel.ItemsClientGetQueryableGraphTypePreviewResponse]{}
 		resp.SetResponse(http.StatusOK, graphmodel.ItemsClientGetQueryableGraphTypePreviewResponse{GraphType: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	res, err := client.GetQueryableGraphTypePreview(ctx, exampleWorkspaceID, exampleGraphModelID, examplePreview, nil)
+	res, err := client.GetQueryableGraphTypePreview(ctx, exampleWorkspaceID, exampleGraphModelID, exampleBeta, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.GraphType))
 }

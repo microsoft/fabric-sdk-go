@@ -11,9 +11,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
-	"strconv"
 	"strings"
-	"time"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
@@ -96,90 +94,6 @@ func (client *LivySessionsClient) listLivySessionsHandleResponse(resp *http.Resp
 	return result, nil
 }
 
-// NewListLivySessionsPreviewPager - [!NOTE]
-// > This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based
-// on feedback and is not recommended for production use.
-// When calling this API, callers must specify true as the value for the query parameter preview.
-// This API supports pagination [/rest/api/fabric/articles/pagination].
-// PERMISSIONS The caller must have viewer or higher workspace role.
-// REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
-// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
-// listed in this section.
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
-// and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
-// INTERFACE
-//
-// Generated from API version v1
-//   - workspaceID - The workspace identifier.
-//   - preview - This required parameter must be set to true to access this API, which is currently in preview.
-//   - options - LivySessionsClientListLivySessionsPreviewOptions contains the optional parameters for the LivySessionsClient.NewListLivySessionsPreviewPager
-//     method.
-func (client *LivySessionsClient) NewListLivySessionsPreviewPager(workspaceID string, preview bool, options *LivySessionsClientListLivySessionsPreviewOptions) *runtime.Pager[LivySessionsClientListLivySessionsPreviewResponse] {
-	return runtime.NewPager(runtime.PagingHandler[LivySessionsClientListLivySessionsPreviewResponse]{
-		More: func(page LivySessionsClientListLivySessionsPreviewResponse) bool {
-			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
-		},
-		Fetcher: func(ctx context.Context, page *LivySessionsClientListLivySessionsPreviewResponse) (LivySessionsClientListLivySessionsPreviewResponse, error) {
-			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "spark.LivySessionsClient.NewListLivySessionsPreviewPager")
-			nextLink := ""
-			if page != nil {
-				nextLink = *page.ContinuationURI
-			}
-			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
-				return client.listLivySessionsPreviewCreateRequest(ctx, workspaceID, preview, options)
-			}, nil)
-			if err != nil {
-				return LivySessionsClientListLivySessionsPreviewResponse{}, err
-			}
-			return client.listLivySessionsPreviewHandleResponse(resp)
-		},
-		Tracer: client.internal.Tracer(),
-	})
-}
-
-// listLivySessionsPreviewCreateRequest creates the ListLivySessionsPreview request.
-func (client *LivySessionsClient) listLivySessionsPreviewCreateRequest(ctx context.Context, workspaceID string, preview bool, options *LivySessionsClientListLivySessionsPreviewOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/spark/livySessions"
-	if workspaceID == "" {
-		return nil, errors.New("parameter workspaceID cannot be empty")
-	}
-	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
-	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
-	if err != nil {
-		return nil, err
-	}
-	reqQP := req.Raw().URL.Query()
-	if options != nil && options.ContinuationToken != nil {
-		reqQP.Set("continuationToken", *options.ContinuationToken)
-	}
-	if options != nil && options.EndDateTime != nil {
-		reqQP.Set("endDateTime", options.EndDateTime.Format(time.RFC3339Nano))
-	}
-	reqQP.Set("preview", strconv.FormatBool(preview))
-	if options != nil && options.State != nil {
-		reqQP.Set("state", *options.State)
-	}
-	if options != nil && options.SubmittedDateTime != nil {
-		reqQP.Set("submittedDateTime", options.SubmittedDateTime.Format(time.RFC3339Nano))
-	}
-	if options != nil && options.SubmitterID != nil {
-		reqQP.Set("submitter.Id", *options.SubmitterID)
-	}
-	req.Raw().URL.RawQuery = reqQP.Encode()
-	req.Raw().Header["Accept"] = []string{"application/json"}
-	return req, nil
-}
-
-// listLivySessionsPreviewHandleResponse handles the ListLivySessionsPreview response.
-func (client *LivySessionsClient) listLivySessionsPreviewHandleResponse(resp *http.Response) (LivySessionsClientListLivySessionsPreviewResponse, error) {
-	result := LivySessionsClientListLivySessionsPreviewResponse{}
-	if err := runtime.UnmarshalAsJSON(resp, &result.LivySessions); err != nil {
-		return LivySessionsClientListLivySessionsPreviewResponse{}, err
-	}
-	return result, nil
-}
-
 // Custom code starts below
 
 // ListLivySessions - returns array of LivySession from all pages.
@@ -201,45 +115,6 @@ func (client *LivySessionsClient) listLivySessionsPreviewHandleResponse(resp *ht
 func (client *LivySessionsClient) ListLivySessions(ctx context.Context, workspaceID string, options *LivySessionsClientListLivySessionsOptions) ([]LivySession, error) {
 	pager := client.NewListLivySessionsPager(workspaceID, options)
 	mapper := func(resp LivySessionsClientListLivySessionsResponse) []LivySession {
-		return resp.Value
-	}
-	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
-	if err != nil {
-		var azcoreRespError *azcore.ResponseError
-		if errors.As(err, &azcoreRespError) {
-			return []LivySession{}, core.NewResponseError(azcoreRespError.RawResponse)
-		}
-		return []LivySession{}, err
-	}
-	return list, nil
-}
-
-// ListLivySessionsPreview - returns array of LivySession from all pages.
-// [!NOTE]
-//
-// >  This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
-//
-// When calling this API, callers must specify true as the value for the query parameter preview.
-//
-// This API supports pagination [/rest/api/fabric/articles/pagination].
-//
-// PERMISSIONS The caller must have viewer or higher workspace role.
-//
-// # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
-//
-// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
-//
-// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
-//
-// INTERFACE
-// Generated from API version v1
-//   - workspaceID - The workspace identifier.
-//   - preview - This required parameter must be set to true to access this API, which is currently in preview.
-//   - options - LivySessionsClientListLivySessionsPreviewOptions contains the optional parameters for the LivySessionsClient.NewListLivySessionsPreviewPager method.
-func (client *LivySessionsClient) ListLivySessionsPreview(ctx context.Context, workspaceID string, preview bool, options *LivySessionsClientListLivySessionsPreviewOptions) ([]LivySession, error) {
-	pager := client.NewListLivySessionsPreviewPager(workspaceID, preview, options)
-	mapper := func(resp LivySessionsClientListLivySessionsPreviewResponse) []LivySession {
 		return resp.Value
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()

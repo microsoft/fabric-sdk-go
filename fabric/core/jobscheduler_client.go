@@ -570,7 +570,11 @@ func (client *JobSchedulerClient) listItemSchedulesHandleResponse(resp *http.Res
 	return result, nil
 }
 
-// RunOnDemandItemJob - REQUIRED DELEGATED SCOPES For item APIs use these scope types:
+// RunOnDemandItemJob - > [!NOTE] The URL for this API has been updated to include the job type as part of the path, replacing
+// the previous use of a query parameter. For backward compatibility, invocations using the query
+// parameter are still supported.
+// REQUIRED DELEGATED SCOPES
+// For item APIs use these scope types:
 // * Generic scope: Item.Execute.All
 //
 // * Specific scope: itemType.Execute.All (for example: Notebook.Execute.All)
@@ -615,7 +619,7 @@ func (client *JobSchedulerClient) RunOnDemandItemJob(ctx context.Context, worksp
 
 // runOnDemandItemJobCreateRequest creates the RunOnDemandItemJob request.
 func (client *JobSchedulerClient) runOnDemandItemJobCreateRequest(ctx context.Context, workspaceID string, itemID string, jobType string, options *JobSchedulerClientRunOnDemandItemJobOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/jobs/instances"
+	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/jobs/{jobType}/instances"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -624,13 +628,14 @@ func (client *JobSchedulerClient) runOnDemandItemJobCreateRequest(ctx context.Co
 		return nil, errors.New("parameter itemID cannot be empty")
 	}
 	urlPath = strings.ReplaceAll(urlPath, "{itemId}", url.PathEscape(itemID))
+	if jobType == "" {
+		return nil, errors.New("parameter jobType cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{jobType}", url.PathEscape(jobType))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
 	}
-	reqQP := req.Raw().URL.Query()
-	reqQP.Set("jobType", jobType)
-	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	if options != nil && options.RunOnDemandItemJobRequest != nil {
 		if err := runtime.MarshalAsJSON(req, *options.RunOnDemandItemJobRequest); err != nil {
