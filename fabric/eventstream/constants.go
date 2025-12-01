@@ -10,17 +10,28 @@ package eventstream
 type AggregationFunction string
 
 const (
-	AggregationFunctionAverage                     AggregationFunction = "Average"
-	AggregationFunctionCount                       AggregationFunction = "Count"
-	AggregationFunctionMaximum                     AggregationFunction = "Maximum"
-	AggregationFunctionMinimum                     AggregationFunction = "Minimum"
-	AggregationFunctionPercentileContinuous        AggregationFunction = "PercentileContinuous"
-	AggregationFunctionPercentileDiscrete          AggregationFunction = "PercentileDiscrete"
-	AggregationFunctionStandardDeviation           AggregationFunction = "StandardDeviation"
+	// AggregationFunctionAverage - Average aggregation function.
+	AggregationFunctionAverage AggregationFunction = "Average"
+	// AggregationFunctionCount - Count aggregation function.
+	AggregationFunctionCount AggregationFunction = "Count"
+	// AggregationFunctionMaximum - Maximum aggregation function.
+	AggregationFunctionMaximum AggregationFunction = "Maximum"
+	// AggregationFunctionMinimum - Minimum aggregation function.
+	AggregationFunctionMinimum AggregationFunction = "Minimum"
+	// AggregationFunctionPercentileContinuous - PercentileContinuous aggregation function.
+	AggregationFunctionPercentileContinuous AggregationFunction = "PercentileContinuous"
+	// AggregationFunctionPercentileDiscrete - PercentileDiscrete aggregation function.
+	AggregationFunctionPercentileDiscrete AggregationFunction = "PercentileDiscrete"
+	// AggregationFunctionStandardDeviation - StandardDeviation aggregation function.
+	AggregationFunctionStandardDeviation AggregationFunction = "StandardDeviation"
+	// AggregationFunctionStandardDeviationPopulation - StandardDeviationPopulation aggregation function.
 	AggregationFunctionStandardDeviationPopulation AggregationFunction = "StandardDeviationPopulation"
-	AggregationFunctionSum                         AggregationFunction = "Sum"
-	AggregationFunctionVariance                    AggregationFunction = "Variance"
-	AggregationFunctionVariancePopulation          AggregationFunction = "VariancePopulation"
+	// AggregationFunctionSum - Sum aggregation function.
+	AggregationFunctionSum AggregationFunction = "Sum"
+	// AggregationFunctionVariance - Variance aggregation function.
+	AggregationFunctionVariance AggregationFunction = "Variance"
+	// AggregationFunctionVariancePopulation - VariancePopulation aggregation function.
+	AggregationFunctionVariancePopulation AggregationFunction = "VariancePopulation"
 )
 
 // PossibleAggregationFunctionValues returns the possible values for the AggregationFunction const type.
@@ -40,250 +51,24 @@ func PossibleAggregationFunctionValues() []AggregationFunction {
 	}
 }
 
-// AmazonKinesisSourcePropertiesRegion - The Amazon Kinesis region name.
-type AmazonKinesisSourcePropertiesRegion string
+// AutoOffsetReset - The auto offset reset property. Default is None.
+type AutoOffsetReset string
 
 const (
-	AmazonKinesisSourcePropertiesRegionAfSouth1     AmazonKinesisSourcePropertiesRegion = "af-south-1"
-	AmazonKinesisSourcePropertiesRegionApEast1      AmazonKinesisSourcePropertiesRegion = "ap-east-1"
-	AmazonKinesisSourcePropertiesRegionApNortheast1 AmazonKinesisSourcePropertiesRegion = "ap-northeast-1"
-	AmazonKinesisSourcePropertiesRegionApNortheast2 AmazonKinesisSourcePropertiesRegion = "ap-northeast-2"
-	AmazonKinesisSourcePropertiesRegionApNortheast3 AmazonKinesisSourcePropertiesRegion = "ap-northeast-3"
-	AmazonKinesisSourcePropertiesRegionApSouth1     AmazonKinesisSourcePropertiesRegion = "ap-south-1"
-	AmazonKinesisSourcePropertiesRegionApSouth2     AmazonKinesisSourcePropertiesRegion = "ap-south-2"
-	AmazonKinesisSourcePropertiesRegionApSoutheast1 AmazonKinesisSourcePropertiesRegion = "ap-southeast-1"
-	AmazonKinesisSourcePropertiesRegionApSoutheast2 AmazonKinesisSourcePropertiesRegion = "ap-southeast-2"
-	AmazonKinesisSourcePropertiesRegionApSoutheast3 AmazonKinesisSourcePropertiesRegion = "ap-southeast-3"
-	AmazonKinesisSourcePropertiesRegionApSoutheast4 AmazonKinesisSourcePropertiesRegion = "ap-southeast-4"
-	AmazonKinesisSourcePropertiesRegionApSoutheast5 AmazonKinesisSourcePropertiesRegion = "ap-southeast-5"
-	AmazonKinesisSourcePropertiesRegionCaCentral1   AmazonKinesisSourcePropertiesRegion = "ca-central-1"
-	AmazonKinesisSourcePropertiesRegionCaWest1      AmazonKinesisSourcePropertiesRegion = "ca-west-1"
-	AmazonKinesisSourcePropertiesRegionEuCentral1   AmazonKinesisSourcePropertiesRegion = "eu-central-1"
-	AmazonKinesisSourcePropertiesRegionEuCentral2   AmazonKinesisSourcePropertiesRegion = "eu-central-2"
-	AmazonKinesisSourcePropertiesRegionEuNorth1     AmazonKinesisSourcePropertiesRegion = "eu-north-1"
-	AmazonKinesisSourcePropertiesRegionEuSouth1     AmazonKinesisSourcePropertiesRegion = "eu-south-1"
-	AmazonKinesisSourcePropertiesRegionEuSouth2     AmazonKinesisSourcePropertiesRegion = "eu-south-2"
-	AmazonKinesisSourcePropertiesRegionEuWest1      AmazonKinesisSourcePropertiesRegion = "eu-west-1"
-	AmazonKinesisSourcePropertiesRegionEuWest2      AmazonKinesisSourcePropertiesRegion = "eu-west-2"
-	AmazonKinesisSourcePropertiesRegionEuWest3      AmazonKinesisSourcePropertiesRegion = "eu-west-3"
-	AmazonKinesisSourcePropertiesRegionIlCentral1   AmazonKinesisSourcePropertiesRegion = "il-central-1"
-	AmazonKinesisSourcePropertiesRegionMeCentral1   AmazonKinesisSourcePropertiesRegion = "me-central-1"
-	AmazonKinesisSourcePropertiesRegionMeSouth1     AmazonKinesisSourcePropertiesRegion = "me-south-1"
-	AmazonKinesisSourcePropertiesRegionSaEast1      AmazonKinesisSourcePropertiesRegion = "sa-east-1"
-	AmazonKinesisSourcePropertiesRegionUsEast1      AmazonKinesisSourcePropertiesRegion = "us-east-1"
-	AmazonKinesisSourcePropertiesRegionUsEast2      AmazonKinesisSourcePropertiesRegion = "us-east-2"
-	AmazonKinesisSourcePropertiesRegionUsGovEast1   AmazonKinesisSourcePropertiesRegion = "us-gov-east-1"
-	AmazonKinesisSourcePropertiesRegionUsGovWest1   AmazonKinesisSourcePropertiesRegion = "us-gov-west-1"
-	AmazonKinesisSourcePropertiesRegionUsWest1      AmazonKinesisSourcePropertiesRegion = "us-west-1"
-	AmazonKinesisSourcePropertiesRegionUsWest2      AmazonKinesisSourcePropertiesRegion = "us-west-2"
+	// AutoOffsetResetEarliest - The auto offset reset is Earliest.
+	AutoOffsetResetEarliest AutoOffsetReset = "Earliest"
+	// AutoOffsetResetLatest - The auto offset reset is Latest.
+	AutoOffsetResetLatest AutoOffsetReset = "Latest"
+	// AutoOffsetResetNone - The auto offset reset is None.
+	AutoOffsetResetNone AutoOffsetReset = "None"
 )
 
-// PossibleAmazonKinesisSourcePropertiesRegionValues returns the possible values for the AmazonKinesisSourcePropertiesRegion const type.
-func PossibleAmazonKinesisSourcePropertiesRegionValues() []AmazonKinesisSourcePropertiesRegion {
-	return []AmazonKinesisSourcePropertiesRegion{
-		AmazonKinesisSourcePropertiesRegionAfSouth1,
-		AmazonKinesisSourcePropertiesRegionApEast1,
-		AmazonKinesisSourcePropertiesRegionApNortheast1,
-		AmazonKinesisSourcePropertiesRegionApNortheast2,
-		AmazonKinesisSourcePropertiesRegionApNortheast3,
-		AmazonKinesisSourcePropertiesRegionApSouth1,
-		AmazonKinesisSourcePropertiesRegionApSouth2,
-		AmazonKinesisSourcePropertiesRegionApSoutheast1,
-		AmazonKinesisSourcePropertiesRegionApSoutheast2,
-		AmazonKinesisSourcePropertiesRegionApSoutheast3,
-		AmazonKinesisSourcePropertiesRegionApSoutheast4,
-		AmazonKinesisSourcePropertiesRegionApSoutheast5,
-		AmazonKinesisSourcePropertiesRegionCaCentral1,
-		AmazonKinesisSourcePropertiesRegionCaWest1,
-		AmazonKinesisSourcePropertiesRegionEuCentral1,
-		AmazonKinesisSourcePropertiesRegionEuCentral2,
-		AmazonKinesisSourcePropertiesRegionEuNorth1,
-		AmazonKinesisSourcePropertiesRegionEuSouth1,
-		AmazonKinesisSourcePropertiesRegionEuSouth2,
-		AmazonKinesisSourcePropertiesRegionEuWest1,
-		AmazonKinesisSourcePropertiesRegionEuWest2,
-		AmazonKinesisSourcePropertiesRegionEuWest3,
-		AmazonKinesisSourcePropertiesRegionIlCentral1,
-		AmazonKinesisSourcePropertiesRegionMeCentral1,
-		AmazonKinesisSourcePropertiesRegionMeSouth1,
-		AmazonKinesisSourcePropertiesRegionSaEast1,
-		AmazonKinesisSourcePropertiesRegionUsEast1,
-		AmazonKinesisSourcePropertiesRegionUsEast2,
-		AmazonKinesisSourcePropertiesRegionUsGovEast1,
-		AmazonKinesisSourcePropertiesRegionUsGovWest1,
-		AmazonKinesisSourcePropertiesRegionUsWest1,
-		AmazonKinesisSourcePropertiesRegionUsWest2,
-	}
-}
-
-// AmazonMSKKafkaSourcePropertiesSaslMechanism - The SASL mechanism.
-type AmazonMSKKafkaSourcePropertiesSaslMechanism string
-
-const (
-	AmazonMSKKafkaSourcePropertiesSaslMechanismPLAIN       AmazonMSKKafkaSourcePropertiesSaslMechanism = "PLAIN"
-	AmazonMSKKafkaSourcePropertiesSaslMechanismSCRAMSHA256 AmazonMSKKafkaSourcePropertiesSaslMechanism = "SCRAM-SHA-256"
-	AmazonMSKKafkaSourcePropertiesSaslMechanismSCRAMSHA512 AmazonMSKKafkaSourcePropertiesSaslMechanism = "SCRAM-SHA-512"
-)
-
-// PossibleAmazonMSKKafkaSourcePropertiesSaslMechanismValues returns the possible values for the AmazonMSKKafkaSourcePropertiesSaslMechanism const type.
-func PossibleAmazonMSKKafkaSourcePropertiesSaslMechanismValues() []AmazonMSKKafkaSourcePropertiesSaslMechanism {
-	return []AmazonMSKKafkaSourcePropertiesSaslMechanism{
-		AmazonMSKKafkaSourcePropertiesSaslMechanismPLAIN,
-		AmazonMSKKafkaSourcePropertiesSaslMechanismSCRAMSHA256,
-		AmazonMSKKafkaSourcePropertiesSaslMechanismSCRAMSHA512,
-	}
-}
-
-// AmazonMSKKafkaSourcePropertiesSecurityProtocol - The security protocol.
-type AmazonMSKKafkaSourcePropertiesSecurityProtocol string
-
-const (
-	AmazonMSKKafkaSourcePropertiesSecurityProtocolPLAINTEXT     AmazonMSKKafkaSourcePropertiesSecurityProtocol = "PLAINTEXT"
-	AmazonMSKKafkaSourcePropertiesSecurityProtocolSASLPLAINTEXT AmazonMSKKafkaSourcePropertiesSecurityProtocol = "SASL_PLAINTEXT"
-	AmazonMSKKafkaSourcePropertiesSecurityProtocolSASLSSL       AmazonMSKKafkaSourcePropertiesSecurityProtocol = "SASL_SSL"
-	AmazonMSKKafkaSourcePropertiesSecurityProtocolSSL           AmazonMSKKafkaSourcePropertiesSecurityProtocol = "SSL"
-)
-
-// PossibleAmazonMSKKafkaSourcePropertiesSecurityProtocolValues returns the possible values for the AmazonMSKKafkaSourcePropertiesSecurityProtocol const type.
-func PossibleAmazonMSKKafkaSourcePropertiesSecurityProtocolValues() []AmazonMSKKafkaSourcePropertiesSecurityProtocol {
-	return []AmazonMSKKafkaSourcePropertiesSecurityProtocol{
-		AmazonMSKKafkaSourcePropertiesSecurityProtocolPLAINTEXT,
-		AmazonMSKKafkaSourcePropertiesSecurityProtocolSASLPLAINTEXT,
-		AmazonMSKKafkaSourcePropertiesSecurityProtocolSASLSSL,
-		AmazonMSKKafkaSourcePropertiesSecurityProtocolSSL,
-	}
-}
-
-// ApacheKafkaSourcePropertiesSaslMechanism - The SASL mechanism.
-type ApacheKafkaSourcePropertiesSaslMechanism string
-
-const (
-	ApacheKafkaSourcePropertiesSaslMechanismPLAIN       ApacheKafkaSourcePropertiesSaslMechanism = "PLAIN"
-	ApacheKafkaSourcePropertiesSaslMechanismSCRAMSHA256 ApacheKafkaSourcePropertiesSaslMechanism = "SCRAM-SHA-256"
-	ApacheKafkaSourcePropertiesSaslMechanismSCRAMSHA512 ApacheKafkaSourcePropertiesSaslMechanism = "SCRAM-SHA-512"
-)
-
-// PossibleApacheKafkaSourcePropertiesSaslMechanismValues returns the possible values for the ApacheKafkaSourcePropertiesSaslMechanism const type.
-func PossibleApacheKafkaSourcePropertiesSaslMechanismValues() []ApacheKafkaSourcePropertiesSaslMechanism {
-	return []ApacheKafkaSourcePropertiesSaslMechanism{
-		ApacheKafkaSourcePropertiesSaslMechanismPLAIN,
-		ApacheKafkaSourcePropertiesSaslMechanismSCRAMSHA256,
-		ApacheKafkaSourcePropertiesSaslMechanismSCRAMSHA512,
-	}
-}
-
-// ApacheKafkaSourcePropertiesSecurityProtocol - The security protocol.
-type ApacheKafkaSourcePropertiesSecurityProtocol string
-
-const (
-	ApacheKafkaSourcePropertiesSecurityProtocolPLAINTEXT     ApacheKafkaSourcePropertiesSecurityProtocol = "PLAINTEXT"
-	ApacheKafkaSourcePropertiesSecurityProtocolSASLPLAINTEXT ApacheKafkaSourcePropertiesSecurityProtocol = "SASL_PLAINTEXT"
-	ApacheKafkaSourcePropertiesSecurityProtocolSASLSSL       ApacheKafkaSourcePropertiesSecurityProtocol = "SASL_SSL"
-	ApacheKafkaSourcePropertiesSecurityProtocolSSL           ApacheKafkaSourcePropertiesSecurityProtocol = "SSL"
-)
-
-// PossibleApacheKafkaSourcePropertiesSecurityProtocolValues returns the possible values for the ApacheKafkaSourcePropertiesSecurityProtocol const type.
-func PossibleApacheKafkaSourcePropertiesSecurityProtocolValues() []ApacheKafkaSourcePropertiesSecurityProtocol {
-	return []ApacheKafkaSourcePropertiesSecurityProtocol{
-		ApacheKafkaSourcePropertiesSecurityProtocolPLAINTEXT,
-		ApacheKafkaSourcePropertiesSecurityProtocolSASLPLAINTEXT,
-		ApacheKafkaSourcePropertiesSecurityProtocolSASLSSL,
-		ApacheKafkaSourcePropertiesSecurityProtocolSSL,
-	}
-}
-
-type AzureBlobStorageEventsIncludedEventTypesItem string
-
-const (
-	AzureBlobStorageEventsIncludedEventTypesItemMicrosoftStorageAsyncOperationInitiated      AzureBlobStorageEventsIncludedEventTypesItem = "Microsoft.Storage.AsyncOperationInitiated"
-	AzureBlobStorageEventsIncludedEventTypesItemMicrosoftStorageBlobCreated                  AzureBlobStorageEventsIncludedEventTypesItem = "Microsoft.Storage.BlobCreated"
-	AzureBlobStorageEventsIncludedEventTypesItemMicrosoftStorageBlobDeleted                  AzureBlobStorageEventsIncludedEventTypesItem = "Microsoft.Storage.BlobDeleted"
-	AzureBlobStorageEventsIncludedEventTypesItemMicrosoftStorageBlobInventoryPolicyCompleted AzureBlobStorageEventsIncludedEventTypesItem = "Microsoft.Storage.BlobInventoryPolicyCompleted"
-	AzureBlobStorageEventsIncludedEventTypesItemMicrosoftStorageBlobRenamed                  AzureBlobStorageEventsIncludedEventTypesItem = "Microsoft.Storage.BlobRenamed"
-	AzureBlobStorageEventsIncludedEventTypesItemMicrosoftStorageBlobTierChanged              AzureBlobStorageEventsIncludedEventTypesItem = "Microsoft.Storage.BlobTierChanged"
-	AzureBlobStorageEventsIncludedEventTypesItemMicrosoftStorageDirectoryCreated             AzureBlobStorageEventsIncludedEventTypesItem = "Microsoft.Storage.DirectoryCreated"
-	AzureBlobStorageEventsIncludedEventTypesItemMicrosoftStorageDirectoryDeleted             AzureBlobStorageEventsIncludedEventTypesItem = "Microsoft.Storage.DirectoryDeleted"
-	AzureBlobStorageEventsIncludedEventTypesItemMicrosoftStorageDirectoryRenamed             AzureBlobStorageEventsIncludedEventTypesItem = "Microsoft.Storage.DirectoryRenamed"
-	AzureBlobStorageEventsIncludedEventTypesItemMicrosoftStorageLifecyclePolicyCompleted     AzureBlobStorageEventsIncludedEventTypesItem = "Microsoft.Storage.LifecyclePolicyCompleted"
-)
-
-// PossibleAzureBlobStorageEventsIncludedEventTypesItemValues returns the possible values for the AzureBlobStorageEventsIncludedEventTypesItem const type.
-func PossibleAzureBlobStorageEventsIncludedEventTypesItemValues() []AzureBlobStorageEventsIncludedEventTypesItem {
-	return []AzureBlobStorageEventsIncludedEventTypesItem{
-		AzureBlobStorageEventsIncludedEventTypesItemMicrosoftStorageAsyncOperationInitiated,
-		AzureBlobStorageEventsIncludedEventTypesItemMicrosoftStorageBlobCreated,
-		AzureBlobStorageEventsIncludedEventTypesItemMicrosoftStorageBlobDeleted,
-		AzureBlobStorageEventsIncludedEventTypesItemMicrosoftStorageBlobInventoryPolicyCompleted,
-		AzureBlobStorageEventsIncludedEventTypesItemMicrosoftStorageBlobRenamed,
-		AzureBlobStorageEventsIncludedEventTypesItemMicrosoftStorageBlobTierChanged,
-		AzureBlobStorageEventsIncludedEventTypesItemMicrosoftStorageDirectoryCreated,
-		AzureBlobStorageEventsIncludedEventTypesItemMicrosoftStorageDirectoryDeleted,
-		AzureBlobStorageEventsIncludedEventTypesItemMicrosoftStorageDirectoryRenamed,
-		AzureBlobStorageEventsIncludedEventTypesItemMicrosoftStorageLifecyclePolicyCompleted,
-	}
-}
-
-// AzureCosmosDBCDCSourcePropertiesOffsetPolicy - The offset policy.
-type AzureCosmosDBCDCSourcePropertiesOffsetPolicy string
-
-const (
-	AzureCosmosDBCDCSourcePropertiesOffsetPolicyEarliest AzureCosmosDBCDCSourcePropertiesOffsetPolicy = "Earliest"
-	AzureCosmosDBCDCSourcePropertiesOffsetPolicyLatest   AzureCosmosDBCDCSourcePropertiesOffsetPolicy = "Latest"
-)
-
-// PossibleAzureCosmosDBCDCSourcePropertiesOffsetPolicyValues returns the possible values for the AzureCosmosDBCDCSourcePropertiesOffsetPolicy const type.
-func PossibleAzureCosmosDBCDCSourcePropertiesOffsetPolicyValues() []AzureCosmosDBCDCSourcePropertiesOffsetPolicy {
-	return []AzureCosmosDBCDCSourcePropertiesOffsetPolicy{
-		AzureCosmosDBCDCSourcePropertiesOffsetPolicyEarliest,
-		AzureCosmosDBCDCSourcePropertiesOffsetPolicyLatest,
-	}
-}
-
-// BaseKafkaSourcePropertiesAutoOffsetReset - The auto offset reset property. Default is None.
-type BaseKafkaSourcePropertiesAutoOffsetReset string
-
-const (
-	BaseKafkaSourcePropertiesAutoOffsetResetEarliest BaseKafkaSourcePropertiesAutoOffsetReset = "Earliest"
-	BaseKafkaSourcePropertiesAutoOffsetResetLatest   BaseKafkaSourcePropertiesAutoOffsetReset = "Latest"
-	BaseKafkaSourcePropertiesAutoOffsetResetNone     BaseKafkaSourcePropertiesAutoOffsetReset = "None"
-)
-
-// PossibleBaseKafkaSourcePropertiesAutoOffsetResetValues returns the possible values for the BaseKafkaSourcePropertiesAutoOffsetReset const type.
-func PossibleBaseKafkaSourcePropertiesAutoOffsetResetValues() []BaseKafkaSourcePropertiesAutoOffsetReset {
-	return []BaseKafkaSourcePropertiesAutoOffsetReset{
-		BaseKafkaSourcePropertiesAutoOffsetResetEarliest,
-		BaseKafkaSourcePropertiesAutoOffsetResetLatest,
-		BaseKafkaSourcePropertiesAutoOffsetResetNone,
-	}
-}
-
-// CSVSerializationPropertiesEncoding - The encoding type.
-type CSVSerializationPropertiesEncoding string
-
-const (
-	CSVSerializationPropertiesEncodingUTF8 CSVSerializationPropertiesEncoding = "UTF8"
-)
-
-// PossibleCSVSerializationPropertiesEncodingValues returns the possible values for the CSVSerializationPropertiesEncoding const type.
-func PossibleCSVSerializationPropertiesEncodingValues() []CSVSerializationPropertiesEncoding {
-	return []CSVSerializationPropertiesEncoding{
-		CSVSerializationPropertiesEncodingUTF8,
-	}
-}
-
-// CSVSerializationPropertiesFormat - The format type.
-type CSVSerializationPropertiesFormat string
-
-const (
-	CSVSerializationPropertiesFormatWithHeaders    CSVSerializationPropertiesFormat = "WithHeaders"
-	CSVSerializationPropertiesFormatWithoutHeaders CSVSerializationPropertiesFormat = "WithoutHeaders"
-)
-
-// PossibleCSVSerializationPropertiesFormatValues returns the possible values for the CSVSerializationPropertiesFormat const type.
-func PossibleCSVSerializationPropertiesFormatValues() []CSVSerializationPropertiesFormat {
-	return []CSVSerializationPropertiesFormat{
-		CSVSerializationPropertiesFormatWithHeaders,
-		CSVSerializationPropertiesFormatWithoutHeaders,
+// PossibleAutoOffsetResetValues returns the possible values for the AutoOffsetReset const type.
+func PossibleAutoOffsetResetValues() []AutoOffsetReset {
+	return []AutoOffsetReset{
+		AutoOffsetResetEarliest,
+		AutoOffsetResetLatest,
+		AutoOffsetResetNone,
 	}
 }
 
@@ -300,6 +85,24 @@ const (
 func PossibleCompatibilityLevelValues() []CompatibilityLevel {
 	return []CompatibilityLevel{
 		CompatibilityLevelOne0,
+	}
+}
+
+// DataIngestionMode - The data ingestion mode.
+type DataIngestionMode string
+
+const (
+	// DataIngestionModeDirectIngestion - Ingests your event data directly into the Eventhouse without any processing.
+	DataIngestionModeDirectIngestion DataIngestionMode = "DirectIngestion"
+	// DataIngestionModeProcessedIngestion - Processes your event data before ingesting it into the Eventhouse.
+	DataIngestionModeProcessedIngestion DataIngestionMode = "ProcessedIngestion"
+)
+
+// PossibleDataIngestionModeValues returns the possible values for the DataIngestionMode const type.
+func PossibleDataIngestionModeValues() []DataIngestionMode {
+	return []DataIngestionMode{
+		DataIngestionModeDirectIngestion,
+		DataIngestionModeProcessedIngestion,
 	}
 }
 
@@ -384,126 +187,62 @@ func PossibleDestinationTypeValues() []DestinationType {
 	}
 }
 
-// EventhouseDestinationPropertiesDataIngestionMode - The data ingestion mode.
-type EventhouseDestinationPropertiesDataIngestionMode string
+// Encoding - The encoding type.
+type Encoding string
 
 const (
-	EventhouseDestinationPropertiesDataIngestionModeDirectIngestion    EventhouseDestinationPropertiesDataIngestionMode = "DirectIngestion"
-	EventhouseDestinationPropertiesDataIngestionModeProcessedIngestion EventhouseDestinationPropertiesDataIngestionMode = "ProcessedIngestion"
+	// EncodingUTF8 - The encoding type is UTF8.
+	EncodingUTF8 Encoding = "UTF8"
 )
 
-// PossibleEventhouseDestinationPropertiesDataIngestionModeValues returns the possible values for the EventhouseDestinationPropertiesDataIngestionMode const type.
-func PossibleEventhouseDestinationPropertiesDataIngestionModeValues() []EventhouseDestinationPropertiesDataIngestionMode {
-	return []EventhouseDestinationPropertiesDataIngestionMode{
-		EventhouseDestinationPropertiesDataIngestionModeDirectIngestion,
-		EventhouseDestinationPropertiesDataIngestionModeProcessedIngestion,
+// PossibleEncodingValues returns the possible values for the Encoding const type.
+func PossibleEncodingValues() []Encoding {
+	return []Encoding{
+		EncodingUTF8,
 	}
 }
 
-type FabricCapacityUtilizationEventsSourcePropertiesEventScope string
+type EventScope string
 
 const (
-	FabricCapacityUtilizationEventsSourcePropertiesEventScopeCapacity  FabricCapacityUtilizationEventsSourcePropertiesEventScope = "Capacity"
-	FabricCapacityUtilizationEventsSourcePropertiesEventScopeItem      FabricCapacityUtilizationEventsSourcePropertiesEventScope = "Item"
-	FabricCapacityUtilizationEventsSourcePropertiesEventScopeSubItem   FabricCapacityUtilizationEventsSourcePropertiesEventScope = "SubItem"
-	FabricCapacityUtilizationEventsSourcePropertiesEventScopeTenant    FabricCapacityUtilizationEventsSourcePropertiesEventScope = "Tenant"
-	FabricCapacityUtilizationEventsSourcePropertiesEventScopeWorkspace FabricCapacityUtilizationEventsSourcePropertiesEventScope = "Workspace"
+	// EventScopeCapacity - The event scope is Capacity.
+	EventScopeCapacity EventScope = "Capacity"
+	// EventScopeItem - The event scope is Item.
+	EventScopeItem EventScope = "Item"
+	// EventScopeSubItem - The event scope is SubItem.
+	EventScopeSubItem EventScope = "SubItem"
+	// EventScopeTenant - The event scope is Tenant.
+	EventScopeTenant EventScope = "Tenant"
+	// EventScopeWorkspace - The event scope is Workspace.
+	EventScopeWorkspace EventScope = "Workspace"
 )
 
-// PossibleFabricCapacityUtilizationEventsSourcePropertiesEventScopeValues returns the possible values for the FabricCapacityUtilizationEventsSourcePropertiesEventScope const type.
-func PossibleFabricCapacityUtilizationEventsSourcePropertiesEventScopeValues() []FabricCapacityUtilizationEventsSourcePropertiesEventScope {
-	return []FabricCapacityUtilizationEventsSourcePropertiesEventScope{
-		FabricCapacityUtilizationEventsSourcePropertiesEventScopeCapacity,
-		FabricCapacityUtilizationEventsSourcePropertiesEventScopeItem,
-		FabricCapacityUtilizationEventsSourcePropertiesEventScopeSubItem,
-		FabricCapacityUtilizationEventsSourcePropertiesEventScopeTenant,
-		FabricCapacityUtilizationEventsSourcePropertiesEventScopeWorkspace,
+// PossibleEventScopeValues returns the possible values for the EventScope const type.
+func PossibleEventScopeValues() []EventScope {
+	return []EventScope{
+		EventScopeCapacity,
+		EventScopeItem,
+		EventScopeSubItem,
+		EventScopeTenant,
+		EventScopeWorkspace,
 	}
 }
 
-type FabricJobEventsSourcePropertiesEventScope string
+// Format - The format type.
+type Format string
 
 const (
-	FabricJobEventsSourcePropertiesEventScopeCapacity  FabricJobEventsSourcePropertiesEventScope = "Capacity"
-	FabricJobEventsSourcePropertiesEventScopeItem      FabricJobEventsSourcePropertiesEventScope = "Item"
-	FabricJobEventsSourcePropertiesEventScopeSubItem   FabricJobEventsSourcePropertiesEventScope = "SubItem"
-	FabricJobEventsSourcePropertiesEventScopeTenant    FabricJobEventsSourcePropertiesEventScope = "Tenant"
-	FabricJobEventsSourcePropertiesEventScopeWorkspace FabricJobEventsSourcePropertiesEventScope = "Workspace"
+	// FormatWithHeaders - The format includes headers.
+	FormatWithHeaders Format = "WithHeaders"
+	// FormatWithoutHeaders - The format does not include headers.
+	FormatWithoutHeaders Format = "WithoutHeaders"
 )
 
-// PossibleFabricJobEventsSourcePropertiesEventScopeValues returns the possible values for the FabricJobEventsSourcePropertiesEventScope const type.
-func PossibleFabricJobEventsSourcePropertiesEventScopeValues() []FabricJobEventsSourcePropertiesEventScope {
-	return []FabricJobEventsSourcePropertiesEventScope{
-		FabricJobEventsSourcePropertiesEventScopeCapacity,
-		FabricJobEventsSourcePropertiesEventScopeItem,
-		FabricJobEventsSourcePropertiesEventScopeSubItem,
-		FabricJobEventsSourcePropertiesEventScopeTenant,
-		FabricJobEventsSourcePropertiesEventScopeWorkspace,
-	}
-}
-
-type FabricWorkspaceItemEventsSourcePropertiesEventScope string
-
-const (
-	FabricWorkspaceItemEventsSourcePropertiesEventScopeCapacity  FabricWorkspaceItemEventsSourcePropertiesEventScope = "Capacity"
-	FabricWorkspaceItemEventsSourcePropertiesEventScopeItem      FabricWorkspaceItemEventsSourcePropertiesEventScope = "Item"
-	FabricWorkspaceItemEventsSourcePropertiesEventScopeSubItem   FabricWorkspaceItemEventsSourcePropertiesEventScope = "SubItem"
-	FabricWorkspaceItemEventsSourcePropertiesEventScopeTenant    FabricWorkspaceItemEventsSourcePropertiesEventScope = "Tenant"
-	FabricWorkspaceItemEventsSourcePropertiesEventScopeWorkspace FabricWorkspaceItemEventsSourcePropertiesEventScope = "Workspace"
-)
-
-// PossibleFabricWorkspaceItemEventsSourcePropertiesEventScopeValues returns the possible values for the FabricWorkspaceItemEventsSourcePropertiesEventScope const type.
-func PossibleFabricWorkspaceItemEventsSourcePropertiesEventScopeValues() []FabricWorkspaceItemEventsSourcePropertiesEventScope {
-	return []FabricWorkspaceItemEventsSourcePropertiesEventScope{
-		FabricWorkspaceItemEventsSourcePropertiesEventScopeCapacity,
-		FabricWorkspaceItemEventsSourcePropertiesEventScopeItem,
-		FabricWorkspaceItemEventsSourcePropertiesEventScopeSubItem,
-		FabricWorkspaceItemEventsSourcePropertiesEventScopeTenant,
-		FabricWorkspaceItemEventsSourcePropertiesEventScopeWorkspace,
-	}
-}
-
-// FilterConditionOperatorType - The operator type.
-type FilterConditionOperatorType string
-
-const (
-	FilterConditionOperatorTypeContains            FilterConditionOperatorType = "Contains"
-	FilterConditionOperatorTypeDoesNotContain      FilterConditionOperatorType = "DoesNotContain"
-	FilterConditionOperatorTypeDoesNotEndWith      FilterConditionOperatorType = "DoesNotEndWith"
-	FilterConditionOperatorTypeDoesNotStartWith    FilterConditionOperatorType = "DoesNotStartWith"
-	FilterConditionOperatorTypeEndsWith            FilterConditionOperatorType = "EndsWith"
-	FilterConditionOperatorTypeEquals              FilterConditionOperatorType = "Equals"
-	FilterConditionOperatorTypeGreaterThan         FilterConditionOperatorType = "GreaterThan"
-	FilterConditionOperatorTypeGreaterThanOrEquals FilterConditionOperatorType = "GreaterThanOrEquals"
-	FilterConditionOperatorTypeIsEmpty             FilterConditionOperatorType = "IsEmpty"
-	FilterConditionOperatorTypeIsNotNull           FilterConditionOperatorType = "IsNotNull"
-	FilterConditionOperatorTypeIsNotNullOrEmpty    FilterConditionOperatorType = "IsNotNullOrEmpty"
-	FilterConditionOperatorTypeIsNull              FilterConditionOperatorType = "IsNull"
-	FilterConditionOperatorTypeLessThan            FilterConditionOperatorType = "LessThan"
-	FilterConditionOperatorTypeLessThanOrEquals    FilterConditionOperatorType = "LessThanOrEquals"
-	FilterConditionOperatorTypeNotEquals           FilterConditionOperatorType = "NotEquals"
-	FilterConditionOperatorTypeStartsWith          FilterConditionOperatorType = "StartsWith"
-)
-
-// PossibleFilterConditionOperatorTypeValues returns the possible values for the FilterConditionOperatorType const type.
-func PossibleFilterConditionOperatorTypeValues() []FilterConditionOperatorType {
-	return []FilterConditionOperatorType{
-		FilterConditionOperatorTypeContains,
-		FilterConditionOperatorTypeDoesNotContain,
-		FilterConditionOperatorTypeDoesNotEndWith,
-		FilterConditionOperatorTypeDoesNotStartWith,
-		FilterConditionOperatorTypeEndsWith,
-		FilterConditionOperatorTypeEquals,
-		FilterConditionOperatorTypeGreaterThan,
-		FilterConditionOperatorTypeGreaterThanOrEquals,
-		FilterConditionOperatorTypeIsEmpty,
-		FilterConditionOperatorTypeIsNotNull,
-		FilterConditionOperatorTypeIsNotNullOrEmpty,
-		FilterConditionOperatorTypeIsNull,
-		FilterConditionOperatorTypeLessThan,
-		FilterConditionOperatorTypeLessThanOrEquals,
-		FilterConditionOperatorTypeNotEquals,
-		FilterConditionOperatorTypeStartsWith,
+// PossibleFormatValues returns the possible values for the Format const type.
+func PossibleFormatValues() []Format {
+	return []Format{
+		FormatWithHeaders,
+		FormatWithoutHeaders,
 	}
 }
 
@@ -511,10 +250,15 @@ func PossibleFilterConditionOperatorTypeValues() []FilterConditionOperatorType {
 type GroupByWindowType string
 
 const (
-	GroupByWindowTypeHopping  GroupByWindowType = "Hopping"
-	GroupByWindowTypeSession  GroupByWindowType = "Session"
-	GroupByWindowTypeSliding  GroupByWindowType = "Sliding"
+	// GroupByWindowTypeHopping - Hopping window type.
+	GroupByWindowTypeHopping GroupByWindowType = "Hopping"
+	// GroupByWindowTypeSession - Session window type.
+	GroupByWindowTypeSession GroupByWindowType = "Session"
+	// GroupByWindowTypeSliding - Sliding window type.
+	GroupByWindowTypeSliding GroupByWindowType = "Sliding"
+	// GroupByWindowTypeSnapshot - Snapshot window type.
 	GroupByWindowTypeSnapshot GroupByWindowType = "Snapshot"
+	// GroupByWindowTypeTumbling - Tumbling window type.
 	GroupByWindowTypeTumbling GroupByWindowType = "Tumbling"
 )
 
@@ -526,6 +270,47 @@ func PossibleGroupByWindowTypeValues() []GroupByWindowType {
 		GroupByWindowTypeSliding,
 		GroupByWindowTypeSnapshot,
 		GroupByWindowTypeTumbling,
+	}
+}
+
+type IncludedEventTypes string
+
+const (
+	// IncludedEventTypesMicrosoftStorageAsyncOperationInitiated - Async operation initiated event.
+	IncludedEventTypesMicrosoftStorageAsyncOperationInitiated IncludedEventTypes = "Microsoft.Storage.AsyncOperationInitiated"
+	// IncludedEventTypesMicrosoftStorageBlobCreated - Blob created event.
+	IncludedEventTypesMicrosoftStorageBlobCreated IncludedEventTypes = "Microsoft.Storage.BlobCreated"
+	// IncludedEventTypesMicrosoftStorageBlobDeleted - Blob deleted event.
+	IncludedEventTypesMicrosoftStorageBlobDeleted IncludedEventTypes = "Microsoft.Storage.BlobDeleted"
+	// IncludedEventTypesMicrosoftStorageBlobInventoryPolicyCompleted - Blob inventory policy completed event.
+	IncludedEventTypesMicrosoftStorageBlobInventoryPolicyCompleted IncludedEventTypes = "Microsoft.Storage.BlobInventoryPolicyCompleted"
+	// IncludedEventTypesMicrosoftStorageBlobRenamed - Blob renamed event.
+	IncludedEventTypesMicrosoftStorageBlobRenamed IncludedEventTypes = "Microsoft.Storage.BlobRenamed"
+	// IncludedEventTypesMicrosoftStorageBlobTierChanged - Blob tier changed event.
+	IncludedEventTypesMicrosoftStorageBlobTierChanged IncludedEventTypes = "Microsoft.Storage.BlobTierChanged"
+	// IncludedEventTypesMicrosoftStorageDirectoryCreated - Directory created event.
+	IncludedEventTypesMicrosoftStorageDirectoryCreated IncludedEventTypes = "Microsoft.Storage.DirectoryCreated"
+	// IncludedEventTypesMicrosoftStorageDirectoryDeleted - Directory deleted event.
+	IncludedEventTypesMicrosoftStorageDirectoryDeleted IncludedEventTypes = "Microsoft.Storage.DirectoryDeleted"
+	// IncludedEventTypesMicrosoftStorageDirectoryRenamed - Directory renamed event.
+	IncludedEventTypesMicrosoftStorageDirectoryRenamed IncludedEventTypes = "Microsoft.Storage.DirectoryRenamed"
+	// IncludedEventTypesMicrosoftStorageLifecyclePolicyCompleted - Lifecycle policy completed event.
+	IncludedEventTypesMicrosoftStorageLifecyclePolicyCompleted IncludedEventTypes = "Microsoft.Storage.LifecyclePolicyCompleted"
+)
+
+// PossibleIncludedEventTypesValues returns the possible values for the IncludedEventTypes const type.
+func PossibleIncludedEventTypesValues() []IncludedEventTypes {
+	return []IncludedEventTypes{
+		IncludedEventTypesMicrosoftStorageAsyncOperationInitiated,
+		IncludedEventTypesMicrosoftStorageBlobCreated,
+		IncludedEventTypesMicrosoftStorageBlobDeleted,
+		IncludedEventTypesMicrosoftStorageBlobInventoryPolicyCompleted,
+		IncludedEventTypesMicrosoftStorageBlobRenamed,
+		IncludedEventTypesMicrosoftStorageBlobTierChanged,
+		IncludedEventTypesMicrosoftStorageDirectoryCreated,
+		IncludedEventTypesMicrosoftStorageDirectoryDeleted,
+		IncludedEventTypesMicrosoftStorageDirectoryRenamed,
+		IncludedEventTypesMicrosoftStorageLifecyclePolicyCompleted,
 	}
 }
 
@@ -587,6 +372,8 @@ const (
 	ItemTypeMountedDataFactory ItemType = "MountedDataFactory"
 	// ItemTypeNotebook - A notebook.
 	ItemTypeNotebook ItemType = "Notebook"
+	// ItemTypeOperationsAgent - A OperationsAgent.
+	ItemTypeOperationsAgent ItemType = "OperationsAgent"
 	// ItemTypePaginatedReport - PowerBI paginated report.
 	ItemTypePaginatedReport ItemType = "PaginatedReport"
 	// ItemTypeReflex - A Reflex.
@@ -599,6 +386,8 @@ const (
 	ItemTypeSQLEndpoint ItemType = "SQLEndpoint"
 	// ItemTypeSemanticModel - PowerBI semantic model.
 	ItemTypeSemanticModel ItemType = "SemanticModel"
+	// ItemTypeSnowflakeDatabase - A Snowflake Database to store Iceberg tables created from Snowflake account.
+	ItemTypeSnowflakeDatabase ItemType = "SnowflakeDatabase"
 	// ItemTypeSparkJobDefinition - A spark job definition.
 	ItemTypeSparkJobDefinition ItemType = "SparkJobDefinition"
 	// ItemTypeUserDataFunction - A User Data Function.
@@ -641,12 +430,14 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeMirroredWarehouse,
 		ItemTypeMountedDataFactory,
 		ItemTypeNotebook,
+		ItemTypeOperationsAgent,
 		ItemTypePaginatedReport,
 		ItemTypeReflex,
 		ItemTypeReport,
 		ItemTypeSQLDatabase,
 		ItemTypeSQLEndpoint,
 		ItemTypeSemanticModel,
+		ItemTypeSnowflakeDatabase,
 		ItemTypeSparkJobDefinition,
 		ItemTypeUserDataFunction,
 		ItemTypeVariableLibrary,
@@ -655,33 +446,21 @@ func PossibleItemTypeValues() []ItemType {
 	}
 }
 
-// JSONSerializationPropertiesEncoding - The encoding type.
-type JSONSerializationPropertiesEncoding string
+// JoinType - The type of the join.
+type JoinType string
 
 const (
-	JSONSerializationPropertiesEncodingUTF8 JSONSerializationPropertiesEncoding = "UTF8"
+	// JoinTypeInner - Inner join.
+	JoinTypeInner JoinType = "Inner"
+	// JoinTypeLeftOuter - Left outer join.
+	JoinTypeLeftOuter JoinType = "LeftOuter"
 )
 
-// PossibleJSONSerializationPropertiesEncodingValues returns the possible values for the JSONSerializationPropertiesEncoding const type.
-func PossibleJSONSerializationPropertiesEncodingValues() []JSONSerializationPropertiesEncoding {
-	return []JSONSerializationPropertiesEncoding{
-		JSONSerializationPropertiesEncodingUTF8,
-	}
-}
-
-// JoinOperatorPropertiesJoinType - The type of the join.
-type JoinOperatorPropertiesJoinType string
-
-const (
-	JoinOperatorPropertiesJoinTypeInner     JoinOperatorPropertiesJoinType = "Inner"
-	JoinOperatorPropertiesJoinTypeLeftOuter JoinOperatorPropertiesJoinType = "LeftOuter"
-)
-
-// PossibleJoinOperatorPropertiesJoinTypeValues returns the possible values for the JoinOperatorPropertiesJoinType const type.
-func PossibleJoinOperatorPropertiesJoinTypeValues() []JoinOperatorPropertiesJoinType {
-	return []JoinOperatorPropertiesJoinType{
-		JoinOperatorPropertiesJoinTypeInner,
-		JoinOperatorPropertiesJoinTypeLeftOuter,
+// PossibleJoinTypeValues returns the possible values for the JoinType const type.
+func PossibleJoinTypeValues() []JoinType {
+	return []JoinType{
+		JoinTypeInner,
+		JoinTypeLeftOuter,
 	}
 }
 
@@ -733,72 +512,81 @@ func PossibleNodeStatusValues() []NodeStatus {
 	}
 }
 
-// OperatorCommonDurationUnit - The unit of the duration.
-type OperatorCommonDurationUnit string
+// OffsetPolicy - The offset policy.
+type OffsetPolicy string
 
 const (
-	OperatorCommonDurationUnitDay         OperatorCommonDurationUnit = "Day"
-	OperatorCommonDurationUnitDayOfYear   OperatorCommonDurationUnit = "DayOfYear"
-	OperatorCommonDurationUnitHour        OperatorCommonDurationUnit = "Hour"
-	OperatorCommonDurationUnitMicrosecond OperatorCommonDurationUnit = "Microsecond"
-	OperatorCommonDurationUnitMillisecond OperatorCommonDurationUnit = "Millisecond"
-	OperatorCommonDurationUnitMinute      OperatorCommonDurationUnit = "Minute"
-	OperatorCommonDurationUnitMonth       OperatorCommonDurationUnit = "Month"
-	OperatorCommonDurationUnitQuarter     OperatorCommonDurationUnit = "Quarter"
-	OperatorCommonDurationUnitSecond      OperatorCommonDurationUnit = "Second"
-	OperatorCommonDurationUnitWeek        OperatorCommonDurationUnit = "Week"
-	OperatorCommonDurationUnitWeekday     OperatorCommonDurationUnit = "Weekday"
-	OperatorCommonDurationUnitYear        OperatorCommonDurationUnit = "Year"
+	// OffsetPolicyEarliest - The offset policy is Earliest.
+	OffsetPolicyEarliest OffsetPolicy = "Earliest"
+	// OffsetPolicyLatest - The offset policy is Latest.
+	OffsetPolicyLatest OffsetPolicy = "Latest"
 )
 
-// PossibleOperatorCommonDurationUnitValues returns the possible values for the OperatorCommonDurationUnit const type.
-func PossibleOperatorCommonDurationUnitValues() []OperatorCommonDurationUnit {
-	return []OperatorCommonDurationUnit{
-		OperatorCommonDurationUnitDay,
-		OperatorCommonDurationUnitDayOfYear,
-		OperatorCommonDurationUnitHour,
-		OperatorCommonDurationUnitMicrosecond,
-		OperatorCommonDurationUnitMillisecond,
-		OperatorCommonDurationUnitMinute,
-		OperatorCommonDurationUnitMonth,
-		OperatorCommonDurationUnitQuarter,
-		OperatorCommonDurationUnitSecond,
-		OperatorCommonDurationUnitWeek,
-		OperatorCommonDurationUnitWeekday,
-		OperatorCommonDurationUnitYear,
+// PossibleOffsetPolicyValues returns the possible values for the OffsetPolicy const type.
+func PossibleOffsetPolicyValues() []OffsetPolicy {
+	return []OffsetPolicy{
+		OffsetPolicyEarliest,
+		OffsetPolicyLatest,
 	}
 }
 
-// OperatorType - The type of the operator. Additional operator types may be added over time.
+// OperatorType - The operator type.
 type OperatorType string
 
 const (
-	// OperatorTypeAggregate - The operator aggregates the input data.
-	OperatorTypeAggregate OperatorType = "Aggregate"
-	// OperatorTypeExpand - The operator expands the input data.
-	OperatorTypeExpand OperatorType = "Expand"
-	// OperatorTypeFilter - The operator filters the input data.
-	OperatorTypeFilter OperatorType = "Filter"
-	// OperatorTypeGroupBy - The operator groups the input data.
-	OperatorTypeGroupBy OperatorType = "GroupBy"
-	// OperatorTypeJoin - The operator joins the input data.
-	OperatorTypeJoin OperatorType = "Join"
-	// OperatorTypeManageFields - The operator manages the fields of the input data.
-	OperatorTypeManageFields OperatorType = "ManageFields"
-	// OperatorTypeUnion - The operator unions the input data.
-	OperatorTypeUnion OperatorType = "Union"
+	// OperatorTypeContains - Contains operator.
+	OperatorTypeContains OperatorType = "Contains"
+	// OperatorTypeDoesNotContain - DoesNotContain operator.
+	OperatorTypeDoesNotContain OperatorType = "DoesNotContain"
+	// OperatorTypeDoesNotEndWith - DoesNotEndWith operator.
+	OperatorTypeDoesNotEndWith OperatorType = "DoesNotEndWith"
+	// OperatorTypeDoesNotStartWith - DoesNotStartWith operator.
+	OperatorTypeDoesNotStartWith OperatorType = "DoesNotStartWith"
+	// OperatorTypeEndsWith - EndsWith operator.
+	OperatorTypeEndsWith OperatorType = "EndsWith"
+	// OperatorTypeEquals - Equals operator.
+	OperatorTypeEquals OperatorType = "Equals"
+	// OperatorTypeGreaterThan - GreaterThan operator.
+	OperatorTypeGreaterThan OperatorType = "GreaterThan"
+	// OperatorTypeGreaterThanOrEquals - GreaterThanOrEquals operator.
+	OperatorTypeGreaterThanOrEquals OperatorType = "GreaterThanOrEquals"
+	// OperatorTypeIsEmpty - IsEmpty operator.
+	OperatorTypeIsEmpty OperatorType = "IsEmpty"
+	// OperatorTypeIsNotNull - IsNotNull operator.
+	OperatorTypeIsNotNull OperatorType = "IsNotNull"
+	// OperatorTypeIsNotNullOrEmpty - IsNotNullOrEmpty operator.
+	OperatorTypeIsNotNullOrEmpty OperatorType = "IsNotNullOrEmpty"
+	// OperatorTypeIsNull - IsNull operator.
+	OperatorTypeIsNull OperatorType = "IsNull"
+	// OperatorTypeLessThan - LessThan operator.
+	OperatorTypeLessThan OperatorType = "LessThan"
+	// OperatorTypeLessThanOrEquals - LessThanOrEquals operator.
+	OperatorTypeLessThanOrEquals OperatorType = "LessThanOrEquals"
+	// OperatorTypeNotEquals - NotEquals operator.
+	OperatorTypeNotEquals OperatorType = "NotEquals"
+	// OperatorTypeStartsWith - StartsWith operator.
+	OperatorTypeStartsWith OperatorType = "StartsWith"
 )
 
 // PossibleOperatorTypeValues returns the possible values for the OperatorType const type.
 func PossibleOperatorTypeValues() []OperatorType {
 	return []OperatorType{
-		OperatorTypeAggregate,
-		OperatorTypeExpand,
-		OperatorTypeFilter,
-		OperatorTypeGroupBy,
-		OperatorTypeJoin,
-		OperatorTypeManageFields,
-		OperatorTypeUnion,
+		OperatorTypeContains,
+		OperatorTypeDoesNotContain,
+		OperatorTypeDoesNotEndWith,
+		OperatorTypeDoesNotStartWith,
+		OperatorTypeEndsWith,
+		OperatorTypeEquals,
+		OperatorTypeGreaterThan,
+		OperatorTypeGreaterThanOrEquals,
+		OperatorTypeIsEmpty,
+		OperatorTypeIsNotNull,
+		OperatorTypeIsNotNullOrEmpty,
+		OperatorTypeIsNull,
+		OperatorTypeLessThan,
+		OperatorTypeLessThanOrEquals,
+		OperatorTypeNotEquals,
+		OperatorTypeStartsWith,
 	}
 }
 
@@ -817,21 +605,174 @@ func PossiblePayloadTypeValues() []PayloadType {
 	}
 }
 
-// SampleDataSourcePropertiesType - The sample data type.
-type SampleDataSourcePropertiesType string
+// PubSubType - The Solace PubSub type.
+type PubSubType string
 
 const (
-	SampleDataSourcePropertiesTypeBicycles    SampleDataSourcePropertiesType = "Bicycles"
-	SampleDataSourcePropertiesTypeStockMarket SampleDataSourcePropertiesType = "StockMarket"
-	SampleDataSourcePropertiesTypeYellowTaxi  SampleDataSourcePropertiesType = "YellowTaxi"
+	// PubSubTypeQueue - The Solace PubSub queue type.
+	PubSubTypeQueue PubSubType = "Queue"
+	// PubSubTypeTopics - The Solace PubSub topics type.
+	PubSubTypeTopics PubSubType = "Topics"
 )
 
-// PossibleSampleDataSourcePropertiesTypeValues returns the possible values for the SampleDataSourcePropertiesType const type.
-func PossibleSampleDataSourcePropertiesTypeValues() []SampleDataSourcePropertiesType {
-	return []SampleDataSourcePropertiesType{
-		SampleDataSourcePropertiesTypeBicycles,
-		SampleDataSourcePropertiesTypeStockMarket,
-		SampleDataSourcePropertiesTypeYellowTaxi,
+// PossiblePubSubTypeValues returns the possible values for the PubSubType const type.
+func PossiblePubSubTypeValues() []PubSubType {
+	return []PubSubType{
+		PubSubTypeQueue,
+		PubSubTypeTopics,
+	}
+}
+
+// Region - The Amazon Kinesis region name.
+type Region string
+
+const (
+	// RegionAfSouth1 - Africa (Cape Town) region.
+	RegionAfSouth1 Region = "af-south-1"
+	// RegionApEast1 - Asia Pacific (Hong Kong) region.
+	RegionApEast1 Region = "ap-east-1"
+	// RegionApNortheast1 - Asia Pacific (Tokyo) region.
+	RegionApNortheast1 Region = "ap-northeast-1"
+	// RegionApNortheast2 - Asia Pacific (Seoul) region.
+	RegionApNortheast2 Region = "ap-northeast-2"
+	// RegionApNortheast3 - Asia Pacific (Osaka) region.
+	RegionApNortheast3 Region = "ap-northeast-3"
+	// RegionApSouth1 - Asia Pacific (Mumbai) region.
+	RegionApSouth1 Region = "ap-south-1"
+	// RegionApSouth2 - Asia Pacific (Hyderabad) region.
+	RegionApSouth2 Region = "ap-south-2"
+	// RegionApSoutheast1 - Asia Pacific (Singapore) region.
+	RegionApSoutheast1 Region = "ap-southeast-1"
+	// RegionApSoutheast2 - Asia Pacific (Sydney) region.
+	RegionApSoutheast2 Region = "ap-southeast-2"
+	// RegionApSoutheast3 - Asia Pacific (Jakarta) region.
+	RegionApSoutheast3 Region = "ap-southeast-3"
+	// RegionApSoutheast4 - Asia Pacific (Melbourne) region.
+	RegionApSoutheast4 Region = "ap-southeast-4"
+	// RegionApSoutheast5 - Asia Pacific (Malaysia) region.
+	RegionApSoutheast5 Region = "ap-southeast-5"
+	// RegionCaCentral1 - Canada (Central) region.
+	RegionCaCentral1 Region = "ca-central-1"
+	// RegionCaWest1 - Canada West (Calgary) region.
+	RegionCaWest1 Region = "ca-west-1"
+	// RegionEuCentral1 - Europe (Frankfurt) region.
+	RegionEuCentral1 Region = "eu-central-1"
+	// RegionEuCentral2 - Europe (Zurich) region.
+	RegionEuCentral2 Region = "eu-central-2"
+	// RegionEuNorth1 - Europe (Stockholm) region.
+	RegionEuNorth1 Region = "eu-north-1"
+	// RegionEuSouth1 - Europe (Milan) region.
+	RegionEuSouth1 Region = "eu-south-1"
+	// RegionEuSouth2 - Europe (Spain) region.
+	RegionEuSouth2 Region = "eu-south-2"
+	// RegionEuWest1 - Europe (Ireland) region.
+	RegionEuWest1 Region = "eu-west-1"
+	// RegionEuWest2 - Europe (London) region.
+	RegionEuWest2 Region = "eu-west-2"
+	// RegionEuWest3 - Europe (Paris) region.
+	RegionEuWest3 Region = "eu-west-3"
+	// RegionIlCentral1 - Israel (Tel Aviv) region.
+	RegionIlCentral1 Region = "il-central-1"
+	// RegionMeCentral1 - Middle East (UAE) region.
+	RegionMeCentral1 Region = "me-central-1"
+	// RegionMeSouth1 - Middle East (Bahrain) region.
+	RegionMeSouth1 Region = "me-south-1"
+	// RegionSaEast1 - South America (São Paulo) region.
+	RegionSaEast1 Region = "sa-east-1"
+	// RegionUsEast1 - US East (N. Virginia) region.
+	RegionUsEast1 Region = "us-east-1"
+	// RegionUsEast2 - US East (Ohio) region.
+	RegionUsEast2 Region = "us-east-2"
+	// RegionUsGovEast1 - AWS GovCloud (US-East) region.
+	RegionUsGovEast1 Region = "us-gov-east-1"
+	// RegionUsGovWest1 - AWS GovCloud (US-West) region.
+	RegionUsGovWest1 Region = "us-gov-west-1"
+	// RegionUsWest1 - US West (N. California) region.
+	RegionUsWest1 Region = "us-west-1"
+	// RegionUsWest2 - US West (Oregon) region.
+	RegionUsWest2 Region = "us-west-2"
+)
+
+// PossibleRegionValues returns the possible values for the Region const type.
+func PossibleRegionValues() []Region {
+	return []Region{
+		RegionAfSouth1,
+		RegionApEast1,
+		RegionApNortheast1,
+		RegionApNortheast2,
+		RegionApNortheast3,
+		RegionApSouth1,
+		RegionApSouth2,
+		RegionApSoutheast1,
+		RegionApSoutheast2,
+		RegionApSoutheast3,
+		RegionApSoutheast4,
+		RegionApSoutheast5,
+		RegionCaCentral1,
+		RegionCaWest1,
+		RegionEuCentral1,
+		RegionEuCentral2,
+		RegionEuNorth1,
+		RegionEuSouth1,
+		RegionEuSouth2,
+		RegionEuWest1,
+		RegionEuWest2,
+		RegionEuWest3,
+		RegionIlCentral1,
+		RegionMeCentral1,
+		RegionMeSouth1,
+		RegionSaEast1,
+		RegionUsEast1,
+		RegionUsEast2,
+		RegionUsGovEast1,
+		RegionUsGovWest1,
+		RegionUsWest1,
+		RegionUsWest2,
+	}
+}
+
+// SaslMechanism - The SASL mechanism.
+type SaslMechanism string
+
+const (
+	// SaslMechanismPLAIN - The SASL mechanism is PLAIN.
+	SaslMechanismPLAIN SaslMechanism = "PLAIN"
+	// SaslMechanismSCRAMSHA256 - The SASL mechanism is SCRAM-SHA-256.
+	SaslMechanismSCRAMSHA256 SaslMechanism = "SCRAM-SHA-256"
+	// SaslMechanismSCRAMSHA512 - The SASL mechanism is SCRAM-SHA-512.
+	SaslMechanismSCRAMSHA512 SaslMechanism = "SCRAM-SHA-512"
+)
+
+// PossibleSaslMechanismValues returns the possible values for the SaslMechanism const type.
+func PossibleSaslMechanismValues() []SaslMechanism {
+	return []SaslMechanism{
+		SaslMechanismPLAIN,
+		SaslMechanismSCRAMSHA256,
+		SaslMechanismSCRAMSHA512,
+	}
+}
+
+// SecurityProtocol - The security protocol.
+type SecurityProtocol string
+
+const (
+	// SecurityProtocolPLAINTEXT - The security protocol is PLAINTEXT.
+	SecurityProtocolPLAINTEXT SecurityProtocol = "PLAINTEXT"
+	// SecurityProtocolSASLPLAINTEXT - The security protocol is SASL_PLAINTEXT.
+	SecurityProtocolSASLPLAINTEXT SecurityProtocol = "SASL_PLAINTEXT"
+	// SecurityProtocolSASLSSL - The security protocol is SASL_SSL.
+	SecurityProtocolSASLSSL SecurityProtocol = "SASL_SSL"
+	// SecurityProtocolSSL - The security protocol is SSL.
+	SecurityProtocolSSL SecurityProtocol = "SSL"
+)
+
+// PossibleSecurityProtocolValues returns the possible values for the SecurityProtocol const type.
+func PossibleSecurityProtocolValues() []SecurityProtocol {
+	return []SecurityProtocol{
+		SecurityProtocolPLAINTEXT,
+		SecurityProtocolSASLPLAINTEXT,
+		SecurityProtocolSASLSSL,
+		SecurityProtocolSSL,
 	}
 }
 
@@ -856,6 +797,24 @@ func PossibleSerializationTypeValues() []SerializationType {
 	}
 }
 
+// ServerVersion - The MQTT server version.
+type ServerVersion string
+
+const (
+	// ServerVersionV3 - The MQTT server version is V3.
+	ServerVersionV3 ServerVersion = "V3"
+	// ServerVersionV5 - The MQTT server version is V5.
+	ServerVersionV5 ServerVersion = "V5"
+)
+
+// PossibleServerVersionValues returns the possible values for the ServerVersion const type.
+func PossibleServerVersionValues() []ServerVersion {
+	return []ServerVersion{
+		ServerVersionV3,
+		ServerVersionV5,
+	}
+}
+
 // SourceType - Represents the type of the source. Additional source types may be added over time.
 type SourceType string
 
@@ -870,6 +829,10 @@ const (
 	SourceTypeAzureBlobStorageEvents SourceType = "AzureBlobStorageEvents"
 	// SourceTypeAzureCosmosDBCDC - The Azure Cosmos DB CDC source type.
 	SourceTypeAzureCosmosDBCDC SourceType = "AzureCosmosDBCDC"
+	// SourceTypeAzureDataExplorer - The Azure Data Explorer source type.
+	SourceTypeAzureDataExplorer SourceType = "AzureDataExplorer"
+	// SourceTypeAzureEventGridNamespace - The Azure Event Grid Namespace source type.
+	SourceTypeAzureEventGridNamespace SourceType = "AzureEventGridNamespace"
 	// SourceTypeAzureEventHub - The Azure Event Hub source type.
 	SourceTypeAzureEventHub SourceType = "AzureEventHub"
 	// SourceTypeAzureIoTHub - The Azure IoT Hub source type.
@@ -882,8 +845,6 @@ const (
 	SourceTypeConfluentCloud SourceType = "ConfluentCloud"
 	// SourceTypeCustomEndpoint - The Custom Endpoint source type.
 	SourceTypeCustomEndpoint SourceType = "CustomEndpoint"
-	// SourceTypeFabricCapacityUtilizationEvents - The Fabric Capacity Utilization Events source type.
-	SourceTypeFabricCapacityUtilizationEvents SourceType = "FabricCapacityUtilizationEvents"
 	// SourceTypeFabricJobEvents - The Fabric Job Events source type.
 	SourceTypeFabricJobEvents SourceType = "FabricJobEvents"
 	// SourceTypeFabricOneLakeEvents - The Fabric One Lake Events source type.
@@ -892,14 +853,20 @@ const (
 	SourceTypeFabricWorkspaceItemEvents SourceType = "FabricWorkspaceItemEvents"
 	// SourceTypeGooglePubSub - The Google PubSub source type.
 	SourceTypeGooglePubSub SourceType = "GooglePubSub"
+	// SourceTypeMqtt - The MQTT source type.
+	SourceTypeMqtt SourceType = "Mqtt"
 	// SourceTypeMySQLCDC - The MySQL CDC source type.
 	SourceTypeMySQLCDC SourceType = "MySQLCDC"
 	// SourceTypePostgreSQLCDC - The PostgreSQL CDC source type.
 	SourceTypePostgreSQLCDC SourceType = "PostgreSQLCDC"
+	// SourceTypeRealTimeWeather - The Real Time Weather source type.
+	SourceTypeRealTimeWeather SourceType = "RealTimeWeather"
 	// SourceTypeSQLServerOnVMDBCDC - The SQL Server on VM DB CDC source type.
 	SourceTypeSQLServerOnVMDBCDC SourceType = "SQLServerOnVMDBCDC"
 	// SourceTypeSampleData - The Sample Data source type.
 	SourceTypeSampleData SourceType = "SampleData"
+	// SourceTypeSolacePubSub - The Solace PubSub source type.
+	SourceTypeSolacePubSub SourceType = "SolacePubSub"
 )
 
 // PossibleSourceTypeValues returns the possible values for the SourceType const type.
@@ -910,21 +877,25 @@ func PossibleSourceTypeValues() []SourceType {
 		SourceTypeApacheKafka,
 		SourceTypeAzureBlobStorageEvents,
 		SourceTypeAzureCosmosDBCDC,
+		SourceTypeAzureDataExplorer,
+		SourceTypeAzureEventGridNamespace,
 		SourceTypeAzureEventHub,
 		SourceTypeAzureIoTHub,
 		SourceTypeAzureSQLDBCDC,
 		SourceTypeAzureSQLMIDBCDC,
 		SourceTypeConfluentCloud,
 		SourceTypeCustomEndpoint,
-		SourceTypeFabricCapacityUtilizationEvents,
 		SourceTypeFabricJobEvents,
 		SourceTypeFabricOneLakeEvents,
 		SourceTypeFabricWorkspaceItemEvents,
 		SourceTypeGooglePubSub,
+		SourceTypeMqtt,
 		SourceTypeMySQLCDC,
 		SourceTypePostgreSQLCDC,
+		SourceTypeRealTimeWeather,
 		SourceTypeSQLServerOnVMDBCDC,
 		SourceTypeSampleData,
+		SourceTypeSolacePubSub,
 	}
 }
 
@@ -964,5 +935,53 @@ func PossibleTypeValues() []Type {
 		TypeCast,
 		TypeFunctionCall,
 		TypeRename,
+	}
+}
+
+// Unit - The unit of the duration.
+type Unit string
+
+const (
+	// UnitDay - Day unit.
+	UnitDay Unit = "Day"
+	// UnitDayOfYear - DayOfYear unit.
+	UnitDayOfYear Unit = "DayOfYear"
+	// UnitHour - Hour unit.
+	UnitHour Unit = "Hour"
+	// UnitMicrosecond - Microsecond unit.
+	UnitMicrosecond Unit = "Microsecond"
+	// UnitMillisecond - Millisecond unit.
+	UnitMillisecond Unit = "Millisecond"
+	// UnitMinute - Minute unit.
+	UnitMinute Unit = "Minute"
+	// UnitMonth - Month unit.
+	UnitMonth Unit = "Month"
+	// UnitQuarter - Quarter unit.
+	UnitQuarter Unit = "Quarter"
+	// UnitSecond - Second unit.
+	UnitSecond Unit = "Second"
+	// UnitWeek - Week unit.
+	UnitWeek Unit = "Week"
+	// UnitWeekday - Weekday unit.
+	UnitWeekday Unit = "Weekday"
+	// UnitYear - Year unit.
+	UnitYear Unit = "Year"
+)
+
+// PossibleUnitValues returns the possible values for the Unit const type.
+func PossibleUnitValues() []Unit {
+	return []Unit{
+		UnitDay,
+		UnitDayOfYear,
+		UnitHour,
+		UnitMicrosecond,
+		UnitMillisecond,
+		UnitMinute,
+		UnitMonth,
+		UnitQuarter,
+		UnitSecond,
+		UnitWeek,
+		UnitWeekday,
+		UnitYear,
 	}
 }

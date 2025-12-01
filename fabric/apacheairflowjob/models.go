@@ -81,6 +81,28 @@ type DefinitionResponse struct {
 	Definition *Definition
 }
 
+// FileMetadata - Apache Airflow job file metadata.
+type FileMetadata struct {
+	// READ-ONLY; The file path relative to the Apache Airflow job root. It must begin with either 'dags/' or 'plugins/' (for
+	// example, dags/example_dag.py).
+	FilePath *string
+
+	// READ-ONLY; The file size, in bytes.
+	SizeInBytes *int64
+}
+
+// Files - A list of Apache Airflow job files.
+type Files struct {
+	// READ-ONLY; A list of Apache Airflow job files.
+	Value []FileMetadata
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
 // ItemTag - Represents a tag applied on an item.
 type ItemTag struct {
 	// REQUIRED; The name of the tag.

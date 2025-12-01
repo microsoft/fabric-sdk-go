@@ -509,6 +509,33 @@ func ExampleOneLakeShortcutsClient_CreateShortcut_createShortcutOneLakeTargetExa
 }
 
 // Generated from example definition
+func ExampleOneLakeShortcutsClient_CreateShortcut_createShortcutOneDriveSharePointOrOneDriveForBusinessOrSharePointOnlineTargetExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewOneLakeShortcutsClient().CreateShortcut(ctx, "bf94607f-3ba1-4a95-8259-27649ccd7755", "884e71cd-f5b4-45f9-8e00-b71355f7ea5d", core.CreateShortcutRequest{
+		Name: to.Ptr("MyOneDriveSharePoint"),
+		Path: to.Ptr("Files"),
+		Target: &core.CreatableShortcutTarget{
+			OneDriveSharePoint: &core.OneDriveSharePoint{
+				ConnectionID: to.Ptr("97e33458-1353-4911-96b1-6f4f4bbfd335"),
+				Location:     to.Ptr("https://microsoft.sharepoint.com"),
+				Subpath:      to.Ptr("/Shared Documents/Test Folder"),
+			},
+		},
+	}, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: nil})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
 func ExampleOneLakeShortcutsClient_CreateShortcut_createShortcutS3CompatibleTargetExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -699,6 +726,38 @@ func ExampleOneLakeShortcutsClient_GetShortcut_getShortcutOneLakeTargetExample()
 	// 			Path: to.Ptr("Tables/myTablesFolder/someTableSubFolder"),
 	// 			ItemID: to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
 	// 			WorkspaceID: to.Ptr("acafbeb1-8037-4d0c-896e-a46fb27ff256"),
+	// 		},
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleOneLakeShortcutsClient_GetShortcut_getShortcutOneDriveSharePointOrOneDriveForBusinessOrSharePointOnlineTargetExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewOneLakeShortcutsClient().GetShortcut(ctx, "bf94607f-3ba1-4a95-8259-27649ccd7755", "884e71cd-f5b4-45f9-8e00-b71355f7ea5d", "Files", "MyOneDriveSharePoint", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.Shortcut = core.Shortcut{
+	// 	Name: to.Ptr("MyOneDriveSharePoint"),
+	// 	Path: to.Ptr("Files"),
+	// 	Target: &core.Target{
+	// 		Type: to.Ptr(core.TypeOneDriveSharePoint),
+	// 		OneDriveSharePoint: &core.OneDriveSharePoint{
+	// 			ConnectionID: to.Ptr("97e33458-1353-4911-96b1-6f4f4bbfd335"),
+	// 			Location: to.Ptr("https://microsoft.sharepoint.com"),
+	// 			Subpath: to.Ptr("/Shared Documents/Test Folder"),
 	// 		},
 	// 	},
 	// }

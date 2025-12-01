@@ -130,7 +130,7 @@ type AmazonKinesisSourceProperties struct {
 	DataConnectionID *string
 
 	// REQUIRED; The Amazon Kinesis region name.
-	Region *AmazonKinesisSourcePropertiesRegion
+	Region *Region
 }
 
 // AmazonKinesisSourceResponse - Amazon Kinesis source properties response.
@@ -172,7 +172,7 @@ func (a *AmazonKinesisSourceResponse) GetSourceResponse() *SourceResponse {
 // AmazonMSKKafkaSourceProperties - Amazon MSK Kafka source properties.
 type AmazonMSKKafkaSourceProperties struct {
 	// REQUIRED; The auto offset reset property. Default is None.
-	AutoOffsetReset *BaseKafkaSourcePropertiesAutoOffsetReset
+	AutoOffsetReset *AutoOffsetReset
 
 	// REQUIRED; The consumer group name.
 	ConsumerGroupName *string
@@ -181,10 +181,10 @@ type AmazonMSKKafkaSourceProperties struct {
 	DataConnectionID *string
 
 	// REQUIRED; The SASL mechanism.
-	SaslMechanism *AmazonMSKKafkaSourcePropertiesSaslMechanism
+	SaslMechanism *SaslMechanism
 
 	// REQUIRED; The security protocol.
-	SecurityProtocol *AmazonMSKKafkaSourcePropertiesSecurityProtocol
+	SecurityProtocol *SecurityProtocol
 
 	// REQUIRED; The Kafka topic.
 	Topic *string
@@ -229,7 +229,7 @@ func (a *AmazonMSKKafkaSourceResponse) GetSourceResponse() *SourceResponse {
 // ApacheKafkaSourceProperties - Apache Kafka source properties.
 type ApacheKafkaSourceProperties struct {
 	// REQUIRED; The auto offset reset property. Default is None.
-	AutoOffsetReset *BaseKafkaSourcePropertiesAutoOffsetReset
+	AutoOffsetReset *AutoOffsetReset
 
 	// REQUIRED; The consumer group name.
 	ConsumerGroupName *string
@@ -238,10 +238,10 @@ type ApacheKafkaSourceProperties struct {
 	DataConnectionID *string
 
 	// REQUIRED; The SASL mechanism.
-	SaslMechanism *ApacheKafkaSourcePropertiesSaslMechanism
+	SaslMechanism *SaslMechanism
 
 	// REQUIRED; The security protocol.
-	SecurityProtocol *ApacheKafkaSourcePropertiesSecurityProtocol
+	SecurityProtocol *SecurityProtocol
 
 	// REQUIRED; The Kafka topic.
 	Topic *string
@@ -305,7 +305,7 @@ type AzureBlobStorageEvents struct {
 	AzureResourceID *string
 
 	// REQUIRED; The included event types.
-	IncludedEventTypes []AzureBlobStorageEventsIncludedEventTypesItem
+	IncludedEventTypes []IncludedEventTypes
 
 	// The unique identifier of the source.
 	ID *string
@@ -368,7 +368,7 @@ type AzureCosmosDBCDCSourceProperties struct {
 	DatabaseName *string
 
 	// REQUIRED; The offset policy.
-	OffsetPolicy *AzureCosmosDBCDCSourcePropertiesOffsetPolicy
+	OffsetPolicy *OffsetPolicy
 }
 
 // AzureCosmosDBCDCSourceResponse - Azure Cosmos DB CDC source response.
@@ -397,6 +397,99 @@ type AzureCosmosDBCDCSourceResponse struct {
 
 // GetSourceResponse implements the SourceResponseClassification interface for type AzureCosmosDBCDCSourceResponse.
 func (a *AzureCosmosDBCDCSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        a.Error,
+		ID:           a.ID,
+		InputSchemas: a.InputSchemas,
+		Name:         a.Name,
+		Status:       a.Status,
+		Type:         a.Type,
+	}
+}
+
+// AzureDataExplorerSourceProperties - Azure Data Explorer source properties.
+type AzureDataExplorerSourceProperties struct {
+	// REQUIRED; The Azure Data Explorer data connection identifier.
+	DataConnectionID *string
+
+	// REQUIRED; The database name.
+	DatabaseName *string
+
+	// REQUIRED; The list of comma-separated table names.
+	TableNames *string
+}
+
+// AzureDataExplorerSourceResponse - Azure Data Explorer source response.
+type AzureDataExplorerSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Azure Data Explorer source.
+	Properties *AzureDataExplorerSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type AzureDataExplorerSourceResponse.
+func (a *AzureDataExplorerSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        a.Error,
+		ID:           a.ID,
+		InputSchemas: a.InputSchemas,
+		Name:         a.Name,
+		Status:       a.Status,
+		Type:         a.Type,
+	}
+}
+
+// AzureEventGridNamespaceSourceProperties - Azure Event Grid Namespace source properties.
+type AzureEventGridNamespaceSourceProperties struct {
+	// REQUIRED; The Azure Event Grid Namespace resource identifier.
+	NamespaceResourceID *string
+
+	// REQUIRED; The topic name.
+	Topic *string
+}
+
+// AzureEventGridNamespaceSourceResponse - Azure Event Grid Namespace source response.
+type AzureEventGridNamespaceSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Azure Event Grid Namespace source.
+	Properties *AzureEventGridNamespaceSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type AzureEventGridNamespaceSourceResponse.
+func (a *AzureEventGridNamespaceSourceResponse) GetSourceResponse() *SourceResponse {
 	return &SourceResponse{
 		Error:        a.Error,
 		ID:           a.ID,
@@ -578,7 +671,7 @@ func (a *AzureSQLMIDBCDCSourceResponse) GetSourceResponse() *SourceResponse {
 // BaseKafkaSourceProperties - Base Kafka source properties.
 type BaseKafkaSourceProperties struct {
 	// REQUIRED; The auto offset reset property. Default is None.
-	AutoOffsetReset *BaseKafkaSourcePropertiesAutoOffsetReset
+	AutoOffsetReset *AutoOffsetReset
 
 	// REQUIRED; The consumer group name.
 	ConsumerGroupName *string
@@ -621,10 +714,10 @@ type CSVSerializationProperties struct {
 	FieldDelimiter *string
 
 	// The encoding type.
-	Encoding *CSVSerializationPropertiesEncoding
+	Encoding *Encoding
 
 	// The format type.
-	Format *CSVSerializationPropertiesFormat
+	Format *Format
 }
 
 // CastProperties - Properties for a cast operation.
@@ -945,7 +1038,7 @@ type ErrorInfo struct {
 // EventhouseDestinationProperties - Eventhouse destination properties.
 type EventhouseDestinationProperties struct {
 	// REQUIRED; The data ingestion mode.
-	DataIngestionMode *EventhouseDestinationPropertiesDataIngestionMode
+	DataIngestionMode *DataIngestionMode
 
 	// REQUIRED; The Eventhouse item identifier.
 	ItemID *string
@@ -1002,7 +1095,7 @@ func (e *EventhouseDestinationResponse) GetDestinationResponse() *DestinationRes
 // EventhouseDirectIngestionModeDestinationProperties - Eventhouse DirectIngestion mode destination properties.
 type EventhouseDirectIngestionModeDestinationProperties struct {
 	// REQUIRED; The data ingestion mode.
-	DataIngestionMode *EventhouseDestinationPropertiesDataIngestionMode
+	DataIngestionMode *DataIngestionMode
 
 	// REQUIRED; The Eventhouse item identifier.
 	ItemID *string
@@ -1032,7 +1125,7 @@ func (e *EventhouseDirectIngestionModeDestinationProperties) GetEventhouseDestin
 // EventhouseProcessedIngestionModeDestinationProperties - Eventhouse ProcessedIngestion mode destination properties.
 type EventhouseProcessedIngestionModeDestinationProperties struct {
 	// REQUIRED; The data ingestion mode.
-	DataIngestionMode *EventhouseDestinationPropertiesDataIngestionMode
+	DataIngestionMode *DataIngestionMode
 
 	// REQUIRED; The KQL database name.
 	DatabaseName *string
@@ -1132,61 +1225,10 @@ type ExpandOperatorProperties struct {
 	IgnoreMissingOrEmpty *bool
 }
 
-// FabricCapacityUtilizationEventsSourceProperties - Fabric Capacity Utilization events source properties.
-type FabricCapacityUtilizationEventsSourceProperties struct {
-	// REQUIRED; The capacity identifier.
-	CapacityID *string
-
-	// REQUIRED
-	EventScope *FabricCapacityUtilizationEventsSourcePropertiesEventScope
-
-	// The advanced filters defined in https://learn.microsoft.com/en-us/azure/event-grid/event-filtering#advanced-filtering.
-	Filters any
-
-	// The included event types.
-	IncludedEventTypes []string
-}
-
-// FabricCapacityUtilizationEventsSourceResponse - Fabric Capacity Utilization events source response.
-type FabricCapacityUtilizationEventsSourceResponse struct {
-	// REQUIRED; The unique name of the source.
-	Name *string
-
-	// REQUIRED; The properties of the Fabric Capacity Utilization events source.
-	Properties *FabricCapacityUtilizationEventsSourceProperties
-
-	// REQUIRED; The status of the node. Additional node status may be added over time.
-	Status *NodeStatus
-
-	// REQUIRED; The type of the source.
-	Type *SourceType
-
-	// The error information.
-	Error *ErrorInfo
-
-	// The unique identifier of the source.
-	ID *string
-
-	// The input schemas of the source.
-	InputSchemas []InputSchema
-}
-
-// GetSourceResponse implements the SourceResponseClassification interface for type FabricCapacityUtilizationEventsSourceResponse.
-func (f *FabricCapacityUtilizationEventsSourceResponse) GetSourceResponse() *SourceResponse {
-	return &SourceResponse{
-		Error:        f.Error,
-		ID:           f.ID,
-		InputSchemas: f.InputSchemas,
-		Name:         f.Name,
-		Status:       f.Status,
-		Type:         f.Type,
-	}
-}
-
 // FabricJobEventsSourceProperties - Fabric Job events source properties.
 type FabricJobEventsSourceProperties struct {
 	// REQUIRED
-	EventScope *FabricJobEventsSourcePropertiesEventScope
+	EventScope *EventScope
 
 	// REQUIRED; The item identifier.
 	ItemID *string
@@ -1297,7 +1339,7 @@ func (f *FabricOneLakeEventsSourceResponse) GetSourceResponse() *SourceResponse 
 // FabricWorkspaceItemEventsSourceProperties - Fabric Workspace Item events source properties.
 type FabricWorkspaceItemEventsSourceProperties struct {
 	// REQUIRED
-	EventScope *FabricWorkspaceItemEventsSourcePropertiesEventScope
+	EventScope *EventScope
 
 	// REQUIRED; The workspace identifier.
 	WorkspaceID *string
@@ -1354,7 +1396,7 @@ type FilterCondition struct {
 	Column *ColumnReferenceExpression
 
 	// REQUIRED; The operator type.
-	OperatorType *FilterConditionOperatorType
+	OperatorType *OperatorType
 
 	// Represents a literal expression.
 	Value *LiteralExpression
@@ -1579,7 +1621,7 @@ func (j *JSONSerializationInfo) GetSerializationInfo() *SerializationInfo {
 // JSONSerializationProperties - JSON serialization properties.
 type JSONSerializationProperties struct {
 	// The encoding type.
-	Encoding *JSONSerializationPropertiesEncoding
+	Encoding *Encoding
 }
 
 // JoinOn - Represents a join condition.
@@ -1625,7 +1667,7 @@ type JoinOperatorProperties struct {
 	Duration *OperatorCommonDuration
 
 	// REQUIRED; The type of the join.
-	JoinType *JoinOperatorPropertiesJoinType
+	JoinType *JoinType
 
 	// A list of the join conditions.
 	JoinOn []JoinOn
@@ -1810,6 +1852,54 @@ func (m *ManageFieldsRenameOperation) GetManageFieldsOperation() *ManageFieldsOp
 	}
 }
 
+// MqttSourceProperties - MQTT source properties.
+type MqttSourceProperties struct {
+	// REQUIRED; The MQTT data connection identifier.
+	DataConnectionID *string
+
+	// REQUIRED; The MQTT server version.
+	ServerVersion *ServerVersion
+
+	// REQUIRED; The MQTT topic.
+	Topic *string
+}
+
+// MqttSourceResponse - MQTT source response.
+type MqttSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the MQTT source.
+	Properties *MqttSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type MqttSourceResponse.
+func (m *MqttSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        m.Error,
+		ID:           m.ID,
+		InputSchemas: m.InputSchemas,
+		Name:         m.Name,
+		Status:       m.Status,
+		Type:         m.Type,
+	}
+}
+
 // MySQLCDCSourceResponse - MySQL CDC source response.
 type MySQLCDCSourceResponse struct {
 	// REQUIRED; The unique name of the source.
@@ -1873,7 +1963,7 @@ func (o *Operator) GetOperator() *Operator { return o }
 // OperatorCommonDuration - Represents the duration.
 type OperatorCommonDuration struct {
 	// REQUIRED; The unit of the duration.
-	Unit *OperatorCommonDurationUnit
+	Unit *Unit
 
 	// REQUIRED; The value of the duration.
 	Value *int32
@@ -1930,10 +2020,90 @@ func (p *PostgreSQLCDCSourceResponse) GetSourceResponse() *SourceResponse {
 	}
 }
 
+// RealTimeWeatherSourceProperties - Real Time Weather source properties.
+type RealTimeWeatherSourceProperties struct {
+	// REQUIRED; The latitude for the weather data.
+	Latitude *float32
+
+	// REQUIRED; The longitude for the weather data.
+	Longitude *float32
+}
+
+// RealTimeWeatherSourceResponse - Real Time Weather source response.
+type RealTimeWeatherSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Real Time Weather source.
+	Properties *RealTimeWeatherSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type RealTimeWeatherSourceResponse.
+func (r *RealTimeWeatherSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        r.Error,
+		ID:           r.ID,
+		InputSchemas: r.InputSchemas,
+		Name:         r.Name,
+		Status:       r.Status,
+		Type:         r.Type,
+	}
+}
+
 // RenameProperties - Properties for a rename operation.
 type RenameProperties struct {
 	// REQUIRED; Represents a reference to a column.
 	Column *ColumnReferenceExpression
+}
+
+// SQLOperator - SQL operator.
+type SQLOperator struct {
+	// REQUIRED; A list of the references to the input nodes of the operator.
+	InputNodes []NodeReference
+
+	// REQUIRED; The name of the operator.
+	Name *string
+
+	// REQUIRED; SQL operator properties.
+	Properties *SQLOperatorProperties
+
+	// REQUIRED; The type of the operator. Additional operator types may be added over time.
+	Type *OperatorType
+
+	// The input schemas of the operator.
+	InputSchemas []InputSchema
+}
+
+// GetOperator implements the OperatorClassification interface for type SQLOperator.
+func (s *SQLOperator) GetOperator() *Operator {
+	return &Operator{
+		InputNodes:   s.InputNodes,
+		InputSchemas: s.InputSchemas,
+		Name:         s.Name,
+		Type:         s.Type,
+	}
+}
+
+// SQLOperatorProperties - SQL operator properties.
+type SQLOperatorProperties struct {
+	// REQUIRED; The Azure Stream Analytics & Eventstream Query to execute. Language reference documentation can be found here
+	// [https://learn.microsoft.com/en-us/stream-analytics-query/stream-analytics-query-language-reference].
+	Query *string
 }
 
 // SQLServerOnVMDBCDCSourceResponse - Azure SQL Server on VM DB CDC source response.
@@ -1975,7 +2145,7 @@ func (s *SQLServerOnVMDBCDCSourceResponse) GetSourceResponse() *SourceResponse {
 // SampleDataSourceProperties - Sample data source properties.
 type SampleDataSourceProperties struct {
 	// REQUIRED; The sample data type.
-	Type *SampleDataSourcePropertiesType
+	Type *Type
 }
 
 // SampleDataSourceResponse - Sample data events source response.
@@ -2089,6 +2259,129 @@ type SnapshotWindow struct {
 func (s *SnapshotWindow) GetGroupByWindow() *GroupByWindow {
 	return &GroupByWindow{
 		Type: s.Type,
+	}
+}
+
+// SolacePubSubQueueSourceProperties - Solace PubSub queue source properties.
+type SolacePubSubQueueSourceProperties struct {
+	// REQUIRED; The Solace PubSub data connection identifier.
+	DataConnectionID *string
+
+	// REQUIRED; The Solace PubSub message VPN name.
+	MessageVPNName *string
+
+	// REQUIRED; The Solace PubSub type.
+	PubSubType *PubSubType
+
+	// REQUIRED; The Solace PubSub queue name.
+	Queue *string
+
+	// Indicates whether to map Solace standard message properties to Kafka record headers.
+	MapSolaceProperties *bool
+
+	// Indicates whether to map user properties from Solace message to Kafka record headers.
+	MapUserProperties *bool
+}
+
+// GetSolacePubSubSourceProperties implements the SolacePubSubSourcePropertiesClassification interface for type SolacePubSubQueueSourceProperties.
+func (s *SolacePubSubQueueSourceProperties) GetSolacePubSubSourceProperties() *SolacePubSubSourceProperties {
+	return &SolacePubSubSourceProperties{
+		DataConnectionID:    s.DataConnectionID,
+		MapSolaceProperties: s.MapSolaceProperties,
+		MapUserProperties:   s.MapUserProperties,
+		MessageVPNName:      s.MessageVPNName,
+		PubSubType:          s.PubSubType,
+	}
+}
+
+// SolacePubSubSourceProperties - Solace PubSub source properties.
+type SolacePubSubSourceProperties struct {
+	// REQUIRED; The Solace PubSub data connection identifier.
+	DataConnectionID *string
+
+	// REQUIRED; The Solace PubSub message VPN name.
+	MessageVPNName *string
+
+	// REQUIRED; The Solace PubSub type.
+	PubSubType *PubSubType
+
+	// Indicates whether to map Solace standard message properties to Kafka record headers.
+	MapSolaceProperties *bool
+
+	// Indicates whether to map user properties from Solace message to Kafka record headers.
+	MapUserProperties *bool
+}
+
+// GetSolacePubSubSourceProperties implements the SolacePubSubSourcePropertiesClassification interface for type SolacePubSubSourceProperties.
+func (s *SolacePubSubSourceProperties) GetSolacePubSubSourceProperties() *SolacePubSubSourceProperties {
+	return s
+}
+
+// SolacePubSubSourceResponse - Solace PubSub source response.
+type SolacePubSubSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Solace PubSub source.
+	Properties SolacePubSubSourcePropertiesClassification
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type SolacePubSubSourceResponse.
+func (s *SolacePubSubSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        s.Error,
+		ID:           s.ID,
+		InputSchemas: s.InputSchemas,
+		Name:         s.Name,
+		Status:       s.Status,
+		Type:         s.Type,
+	}
+}
+
+// SolacePubSubTopicsSourceProperties - Solace PubSub topics source properties.
+type SolacePubSubTopicsSourceProperties struct {
+	// REQUIRED; The Solace PubSub data connection identifier.
+	DataConnectionID *string
+
+	// REQUIRED; The Solace PubSub message VPN name.
+	MessageVPNName *string
+
+	// REQUIRED; The Solace PubSub type.
+	PubSubType *PubSubType
+
+	// REQUIRED; The Solace PubSub topics.
+	Topics []string
+
+	// Indicates whether to map Solace standard message properties to Kafka record headers.
+	MapSolaceProperties *bool
+
+	// Indicates whether to map user properties from Solace message to Kafka record headers.
+	MapUserProperties *bool
+}
+
+// GetSolacePubSubSourceProperties implements the SolacePubSubSourcePropertiesClassification interface for type SolacePubSubTopicsSourceProperties.
+func (s *SolacePubSubTopicsSourceProperties) GetSolacePubSubSourceProperties() *SolacePubSubSourceProperties {
+	return &SolacePubSubSourceProperties{
+		DataConnectionID:    s.DataConnectionID,
+		MapSolaceProperties: s.MapSolaceProperties,
+		MapUserProperties:   s.MapUserProperties,
+		MessageVPNName:      s.MessageVPNName,
+		PubSubType:          s.PubSubType,
 	}
 }
 

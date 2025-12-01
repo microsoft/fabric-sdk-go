@@ -376,7 +376,7 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 	exampleEventstreamID = "8c500070-073f-4a88-b478-8fabe1941c52"
 
 	exampleRes := eventstream.TopologyResponse{
-		CompatibilityLevel: to.Ptr(eventstream.CompatibilityLevelOne0),
+		CompatibilityLevel: to.Ptr(eventstream.CompatibilityLevel("1.1")),
 		Destinations: []eventstream.DestinationResponseClassification{
 			&eventstream.CustomEndpointDestinationResponse{
 				Name: to.Ptr("CustomEndpointDestination"),
@@ -404,7 +404,7 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 					InputSerialization: &eventstream.JSONSerializationInfo{
 						Type: to.Ptr(eventstream.SerializationTypeJSON),
 						Properties: &eventstream.JSONSerializationProperties{
-							Encoding: to.Ptr(eventstream.JSONSerializationPropertiesEncodingUTF8),
+							Encoding: to.Ptr(eventstream.EncodingUTF8),
 						},
 					},
 					ItemID:                   to.Ptr("ee579458-85ea-4652-bd77-5c7d7c298b2a"),
@@ -423,14 +423,14 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 				Status: to.Ptr(eventstream.NodeStatusRunning),
 				Type:   to.Ptr(eventstream.DestinationTypeEventhouse),
 				Properties: &eventstream.EventhouseProcessedIngestionModeDestinationProperties{
-					DataIngestionMode: to.Ptr(eventstream.EventhouseDestinationPropertiesDataIngestionModeProcessedIngestion),
+					DataIngestionMode: to.Ptr(eventstream.DataIngestionModeProcessedIngestion),
 					ItemID:            to.Ptr("4c8c3353-9652-4567-b8f3-eb585ef01ba9"),
 					WorkspaceID:       to.Ptr("9625b495-17b3-4d6c-aeea-a81ae76ba369"),
 					DatabaseName:      to.Ptr("databaseName"),
 					InputSerialization: &eventstream.JSONSerializationInfo{
 						Type: to.Ptr(eventstream.SerializationTypeJSON),
 						Properties: &eventstream.JSONSerializationProperties{
-							Encoding: to.Ptr(eventstream.JSONSerializationPropertiesEncodingUTF8),
+							Encoding: to.Ptr(eventstream.EncodingUTF8),
 						},
 					},
 					TableName: to.Ptr("tableName"),
@@ -446,7 +446,7 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 				Status: to.Ptr(eventstream.NodeStatusExternal),
 				Type:   to.Ptr(eventstream.DestinationTypeEventhouse),
 				Properties: &eventstream.EventhouseDirectIngestionModeDestinationProperties{
-					DataIngestionMode: to.Ptr(eventstream.EventhouseDestinationPropertiesDataIngestionModeDirectIngestion),
+					DataIngestionMode: to.Ptr(eventstream.DataIngestionModeDirectIngestion),
 					ItemID:            to.Ptr("4c8c3353-9652-4567-b8f3-eb585ef01ba9"),
 					WorkspaceID:       to.Ptr("9625b495-17b3-4d6c-aeea-a81ae76ba369"),
 					ConnectionName:    to.Ptr("connectionName"),
@@ -456,7 +456,7 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 		Operators: []eventstream.OperatorClassification{
 			&eventstream.FilterOperator{
 				Name: to.Ptr("FilterName"),
-				Type: to.Ptr(eventstream.OperatorTypeFilter),
+				Type: to.Ptr(eventstream.OperatorType("Filter")),
 				InputNodes: []eventstream.NodeReference{
 					{
 						Name: to.Ptr("EventStreamName-stream"),
@@ -527,7 +527,7 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 									"column"},
 								Node: to.Ptr("nodeName"),
 							},
-							OperatorType: to.Ptr(eventstream.FilterConditionOperatorTypeEquals),
+							OperatorType: to.Ptr(eventstream.OperatorTypeEquals),
 							Value: &eventstream.LiteralExpression{
 								DataType: to.Ptr(eventstream.DataTypeNvarcharMax),
 								Value:    to.Ptr("stringValue"),
@@ -537,7 +537,7 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 			},
 			&eventstream.JoinOperator{
 				Name: to.Ptr("JoinerName"),
-				Type: to.Ptr(eventstream.OperatorTypeJoin),
+				Type: to.Ptr(eventstream.OperatorType("Join")),
 				InputNodes: []eventstream.NodeReference{
 					{
 						Name: to.Ptr("FilterName"),
@@ -547,7 +547,7 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 					}},
 				Properties: &eventstream.JoinOperatorProperties{
 					Duration: &eventstream.OperatorCommonDuration{
-						Unit:  to.Ptr(eventstream.OperatorCommonDurationUnitMinute),
+						Unit:  to.Ptr(eventstream.UnitMinute),
 						Value: to.Ptr[int32](1),
 					},
 					JoinOn: []eventstream.JoinOn{
@@ -561,12 +561,12 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 								Node:       to.Ptr("rightNodeName"),
 							},
 						}},
-					JoinType: to.Ptr(eventstream.JoinOperatorPropertiesJoinTypeInner),
+					JoinType: to.Ptr(eventstream.JoinTypeInner),
 				},
 			},
 			&eventstream.ManageFieldsOperator{
 				Name: to.Ptr("FieldsManagerName"),
-				Type: to.Ptr(eventstream.OperatorTypeManageFields),
+				Type: to.Ptr(eventstream.OperatorType("ManageFields")),
 				InputNodes: []eventstream.NodeReference{
 					{
 						Name: to.Ptr("DerivedStreamName"),
@@ -647,7 +647,7 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 			},
 			&eventstream.AggregateOperator{
 				Name: to.Ptr("AggregatorName"),
-				Type: to.Ptr(eventstream.OperatorTypeAggregate),
+				Type: to.Ptr(eventstream.OperatorType("Aggregate")),
 				InputNodes: []eventstream.NodeReference{
 					{
 						Name: to.Ptr("DerivedStreamName"),
@@ -662,7 +662,7 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 								Node:       to.Ptr("aggregationNode"),
 							},
 							Duration: &eventstream.OperatorCommonDuration{
-								Unit:  to.Ptr(eventstream.OperatorCommonDurationUnitMinute),
+								Unit:  to.Ptr(eventstream.UnitMinute),
 								Value: to.Ptr[int32](1),
 							},
 							PartitionBy: []eventstream.ColumnReferenceExpression{
@@ -675,7 +675,7 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 			},
 			&eventstream.GroupByOperator{
 				Name: to.Ptr("GroupByName"),
-				Type: to.Ptr(eventstream.OperatorTypeGroupBy),
+				Type: to.Ptr(eventstream.OperatorType("GroupBy")),
 				InputNodes: []eventstream.NodeReference{
 					{
 						Name: to.Ptr("DerivedStreamName"),
@@ -699,11 +699,11 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 						Type: to.Ptr(eventstream.GroupByWindowTypeTumbling),
 						Properties: &eventstream.TumblingWindowProperties{
 							Duration: &eventstream.OperatorCommonDuration{
-								Unit:  to.Ptr(eventstream.OperatorCommonDurationUnitMinute),
+								Unit:  to.Ptr(eventstream.UnitMinute),
 								Value: to.Ptr[int32](5),
 							},
 							Offset: &eventstream.OperatorCommonDuration{
-								Unit:  to.Ptr(eventstream.OperatorCommonDurationUnitMinute),
+								Unit:  to.Ptr(eventstream.UnitMinute),
 								Value: to.Ptr[int32](1),
 							},
 						},
@@ -712,7 +712,7 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 			},
 			&eventstream.UnionOperator{
 				Name: to.Ptr("UnionName"),
-				Type: to.Ptr(eventstream.OperatorTypeUnion),
+				Type: to.Ptr(eventstream.OperatorType("Union")),
 				InputNodes: []eventstream.NodeReference{
 					{
 						Name: to.Ptr("FilterName"),
@@ -724,7 +724,7 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 			},
 			&eventstream.ExpandOperator{
 				Name: to.Ptr("ExpansionName"),
-				Type: to.Ptr(eventstream.OperatorTypeExpand),
+				Type: to.Ptr(eventstream.OperatorType("Expand")),
 				InputNodes: []eventstream.NodeReference{
 					{
 						Name: to.Ptr("MyNode"),
@@ -737,8 +737,29 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 						}},
 					IgnoreMissingOrEmpty: to.Ptr(true),
 				},
+			},
+			&eventstream.SQLOperator{
+				Name: to.Ptr("SQLName"),
+				Type: to.Ptr(eventstream.OperatorType("SQL")),
+				InputNodes: []eventstream.NodeReference{
+					{
+						Name: to.Ptr("MyNode"),
+					}},
+				Properties: &eventstream.SQLOperatorProperties{
+					Query: to.Ptr("SELECT * INTO [MyStream] FROM [MyNode]"),
+				},
 			}},
 		Sources: []eventstream.SourceResponseClassification{
+			&eventstream.AzureEventGridNamespaceSourceResponse{
+				Name:   to.Ptr("AzureEventGridNamespaceSource"),
+				ID:     to.Ptr("97554164-1b8f-410b-bb72-750f6e88f1c6"),
+				Status: to.Ptr(eventstream.NodeStatusRunning),
+				Type:   to.Ptr(eventstream.SourceTypeAzureEventGridNamespace),
+				Properties: &eventstream.AzureEventGridNamespaceSourceProperties{
+					NamespaceResourceID: to.Ptr("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resourceGroupName/providers/Microsoft.EventGrid/namespaces/eventGridNamespaceName"),
+					Topic:               to.Ptr("eea0a4ba-733a-4519-a20c-3c95f3840efa"),
+				},
+			},
 			&eventstream.AzureEventHubSourceResponse{
 				Name:   to.Ptr("AzureEventHubSource"),
 				ID:     to.Ptr("514d0e11-cf65-44fb-a292-fc88a2a78618"),
@@ -750,7 +771,7 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 					InputSerialization: &eventstream.JSONSerializationInfo{
 						Type: to.Ptr(eventstream.SerializationTypeJSON),
 						Properties: &eventstream.JSONSerializationProperties{
-							Encoding: to.Ptr(eventstream.JSONSerializationPropertiesEncodingUTF8),
+							Encoding: to.Ptr(eventstream.EncodingUTF8),
 						},
 					},
 				},
@@ -766,9 +787,20 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 					InputSerialization: &eventstream.JSONSerializationInfo{
 						Type: to.Ptr(eventstream.SerializationTypeJSON),
 						Properties: &eventstream.JSONSerializationProperties{
-							Encoding: to.Ptr(eventstream.JSONSerializationPropertiesEncodingUTF8),
+							Encoding: to.Ptr(eventstream.EncodingUTF8),
 						},
 					},
+				},
+			},
+			&eventstream.AzureDataExplorerSourceResponse{
+				Name:   to.Ptr("AzureDataExplorerSource"),
+				ID:     to.Ptr("7ff51116-df2c-4e47-bf4f-1b59f5f0ed17"),
+				Status: to.Ptr(eventstream.NodeStatusRunning),
+				Type:   to.Ptr(eventstream.SourceTypeAzureDataExplorer),
+				Properties: &eventstream.AzureDataExplorerSourceProperties{
+					DataConnectionID: to.Ptr("980bd823-8389-471b-a7cd-f5ac33b53061"),
+					DatabaseName:     to.Ptr("databaseName"),
+					TableNames:       to.Ptr("tableName1,tableName2"),
 				},
 			},
 			&eventstream.CustomEndpointSourceResponse{
@@ -784,7 +816,7 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 				Status: to.Ptr(eventstream.NodeStatusRunning),
 				Type:   to.Ptr(eventstream.SourceTypeSampleData),
 				Properties: &eventstream.SampleDataSourceProperties{
-					Type: to.Ptr(eventstream.SampleDataSourcePropertiesTypeBicycles),
+					Type: to.Ptr(eventstream.Type("Bicycles")),
 				},
 			},
 			&eventstream.AmazonKinesisSourceResponse{
@@ -794,7 +826,7 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 				Type:   to.Ptr(eventstream.SourceTypeAmazonKinesis),
 				Properties: &eventstream.AmazonKinesisSourceProperties{
 					DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
-					Region:           to.Ptr(eventstream.AmazonKinesisSourcePropertiesRegionUsEast1),
+					Region:           to.Ptr(eventstream.RegionUsEast1),
 				},
 			},
 			&eventstream.AmazonMSKKafkaSourceResponse{
@@ -803,12 +835,12 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 				Status: to.Ptr(eventstream.NodeStatusRunning),
 				Type:   to.Ptr(eventstream.SourceTypeAmazonMSKKafka),
 				Properties: &eventstream.AmazonMSKKafkaSourceProperties{
-					AutoOffsetReset:   to.Ptr(eventstream.BaseKafkaSourcePropertiesAutoOffsetResetEarliest),
+					AutoOffsetReset:   to.Ptr(eventstream.AutoOffsetResetEarliest),
 					ConsumerGroupName: to.Ptr("consumerGroupName"),
 					DataConnectionID:  to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
 					Topic:             to.Ptr("topic"),
-					SaslMechanism:     to.Ptr(eventstream.AmazonMSKKafkaSourcePropertiesSaslMechanismPLAIN),
-					SecurityProtocol:  to.Ptr(eventstream.AmazonMSKKafkaSourcePropertiesSecurityProtocolSASLPLAINTEXT),
+					SaslMechanism:     to.Ptr(eventstream.SaslMechanismPLAIN),
+					SecurityProtocol:  to.Ptr(eventstream.SecurityProtocolSASLPLAINTEXT),
 				},
 			},
 			&eventstream.ApacheKafkaSourceResponse{
@@ -817,12 +849,12 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 				Status: to.Ptr(eventstream.NodeStatusRunning),
 				Type:   to.Ptr(eventstream.SourceTypeApacheKafka),
 				Properties: &eventstream.ApacheKafkaSourceProperties{
-					AutoOffsetReset:   to.Ptr(eventstream.BaseKafkaSourcePropertiesAutoOffsetResetLatest),
+					AutoOffsetReset:   to.Ptr(eventstream.AutoOffsetResetLatest),
 					ConsumerGroupName: to.Ptr("consumerGroupName"),
 					DataConnectionID:  to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
 					Topic:             to.Ptr("topic"),
-					SaslMechanism:     to.Ptr(eventstream.ApacheKafkaSourcePropertiesSaslMechanismSCRAMSHA512),
-					SecurityProtocol:  to.Ptr(eventstream.ApacheKafkaSourcePropertiesSecurityProtocolSASLSSL),
+					SaslMechanism:     to.Ptr(eventstream.SaslMechanismSCRAMSHA512),
+					SecurityProtocol:  to.Ptr(eventstream.SecurityProtocolSASLSSL),
 				},
 			},
 			&eventstream.ConfluentCloudSourceResponse{
@@ -831,7 +863,7 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 				Status: to.Ptr(eventstream.NodeStatusRunning),
 				Type:   to.Ptr(eventstream.SourceTypeConfluentCloud),
 				Properties: &eventstream.BaseKafkaSourceProperties{
-					AutoOffsetReset:   to.Ptr(eventstream.BaseKafkaSourcePropertiesAutoOffsetResetEarliest),
+					AutoOffsetReset:   to.Ptr(eventstream.AutoOffsetResetEarliest),
 					ConsumerGroupName: to.Ptr("consumerGroupName"),
 					DataConnectionID:  to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
 					Topic:             to.Ptr("topic"),
@@ -846,7 +878,7 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 					ContainerName:    to.Ptr("containerName"),
 					DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
 					DatabaseName:     to.Ptr("databaseName"),
-					OffsetPolicy:     to.Ptr(eventstream.AzureCosmosDBCDCSourcePropertiesOffsetPolicyEarliest),
+					OffsetPolicy:     to.Ptr(eventstream.OffsetPolicyEarliest),
 				},
 			},
 			&eventstream.AzureSQLDBCDCSourceResponse{
@@ -911,6 +943,43 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 				Properties: &eventstream.GooglePubSubSourceProperties{
 					DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
 				},
+			},
+			&eventstream.MqttSourceResponse{
+				Name:   to.Ptr("MqttSource"),
+				ID:     to.Ptr("77640306-3525-45cb-978c-f2ce6f1d2605"),
+				Status: to.Ptr(eventstream.NodeStatusRunning),
+				Type:   to.Ptr(eventstream.SourceTypeMqtt),
+				Properties: &eventstream.MqttSourceProperties{
+					DataConnectionID: to.Ptr("6950656c-9f6d-48e8-b7d1-6cf9eb7cca28"),
+					ServerVersion:    to.Ptr(eventstream.ServerVersionV5),
+					Topic:            to.Ptr("mqttTopicName"),
+				},
+			},
+			&eventstream.RealTimeWeatherSourceResponse{
+				Name:   to.Ptr("RealTimeWeatherSource"),
+				ID:     to.Ptr("bf273a56-dcb7-4cb1-8be4-5620f769fe1f"),
+				Status: to.Ptr(eventstream.NodeStatusRunning),
+				Type:   to.Ptr(eventstream.SourceTypeRealTimeWeather),
+				Properties: &eventstream.RealTimeWeatherSourceProperties{
+					Latitude:  to.Ptr[float32](-22.690611),
+					Longitude: to.Ptr[float32](-45.7846301),
+				},
+			},
+			&eventstream.SolacePubSubSourceResponse{
+				Name:   to.Ptr("SolacePubSubSource"),
+				ID:     to.Ptr("a612baf7-4d64-4522-8850-44847c99016c"),
+				Status: to.Ptr(eventstream.NodeStatusRunning),
+				Type:   to.Ptr(eventstream.SourceTypeSolacePubSub),
+				Properties: &eventstream.SolacePubSubTopicsSourceProperties{
+					DataConnectionID:    to.Ptr("684e1958-5999-4f3f-bfe5-e19dd55f9cbf"),
+					MapSolaceProperties: to.Ptr(false),
+					MapUserProperties:   to.Ptr(false),
+					MessageVPNName:      to.Ptr("messageVpnName"),
+					PubSubType:          to.Ptr(eventstream.PubSubTypeTopics),
+					Topics: []string{
+						"topicName1",
+						"topicName2"},
+				},
 			}},
 		Streams: []eventstream.StreamResponseClassification{
 			&eventstream.DefaultStreamResponse{
@@ -935,7 +1004,7 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 					InputSerialization: &eventstream.JSONSerializationInfo{
 						Type: to.Ptr(eventstream.SerializationTypeJSON),
 						Properties: &eventstream.JSONSerializationProperties{
-							Encoding: to.Ptr(eventstream.JSONSerializationPropertiesEncodingUTF8),
+							Encoding: to.Ptr(eventstream.EncodingUTF8),
 						},
 					},
 				},
@@ -1031,7 +1100,7 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamSource() {
 				InputSerialization: &eventstream.JSONSerializationInfo{
 					Type: to.Ptr(eventstream.SerializationTypeJSON),
 					Properties: &eventstream.JSONSerializationProperties{
-						Encoding: to.Ptr(eventstream.JSONSerializationPropertiesEncodingUTF8),
+						Encoding: to.Ptr(eventstream.EncodingUTF8),
 					},
 				},
 			},
@@ -1081,7 +1150,7 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamDestination() {
 				InputSerialization: &eventstream.JSONSerializationInfo{
 					Type: to.Ptr(eventstream.SerializationTypeJSON),
 					Properties: &eventstream.JSONSerializationProperties{
-						Encoding: to.Ptr(eventstream.JSONSerializationPropertiesEncodingUTF8),
+						Encoding: to.Ptr(eventstream.EncodingUTF8),
 					},
 				},
 				ItemID:      to.Ptr("ee579458-85ea-4652-bd77-5c7d7c298b2a"),

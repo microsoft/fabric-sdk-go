@@ -688,6 +688,9 @@ type CreatableShortcutTarget struct {
 	// An object containing the properties of the target Google Cloud Storage data source.
 	GoogleCloudStorage *GoogleCloudStorage
 
+	// An object containing the properties of the target OneDrive for Business & SharePoint Online data source.
+	OneDriveSharePoint *OneDriveSharePoint
+
 	// An object containing the properties of the target OneLake data source.
 	OneLake *OneLake
 
@@ -957,8 +960,8 @@ type CreateShortcutRequest struct {
 	Path *string
 
 	// REQUIRED; An object that contains the target datasource, and it must specify exactly one of the supported destinations:
-	// OneLake, Amazon S3, ADLS Gen2, Google Cloud Storage, S3 compatible, Dataverse or Azure
-	// Blob storage.
+	// OneLake, Amazon S3, ADLS Gen2, Google Cloud Storage, S3 compatible, Dataverse, Azure Blob
+	// storage or OneDrive SharePoint.
 	Target *CreatableShortcutTarget
 }
 
@@ -997,8 +1000,8 @@ type CreateShortcutWithTransformRequest struct {
 	Path *string
 
 	// REQUIRED; An object that contains the target datasource, and it must specify exactly one of the supported destinations:
-	// OneLake, Amazon S3, ADLS Gen2, Google Cloud Storage, S3 compatible, Dataverse or Azure
-	// Blob storage.
+	// OneLake, Amazon S3, ADLS Gen2, Google Cloud Storage, S3 compatible, Dataverse, Azure Blob
+	// storage or OneDrive SharePoint.
 	Target *CreatableShortcutTarget
 
 	// An object that contains the transform name and its corresponding properties to be applied to target data, and must specify
@@ -2706,6 +2709,27 @@ type OnPremisesGatewayPersonalCredentials struct {
 	EncryptedCredentials *string
 }
 
+// OneDriveSharePoint - An object containing the properties of the target OneDrive for Business or SharePoint Online data
+// source.
+type OneDriveSharePoint struct {
+	// REQUIRED; A string representing the connection that is bound with the shortcut. The connectionId is a unique identifier
+	// used to establish a connection between the shortcut and the target datasource. To find
+	// this connection ID, first create a cloud connection [/fabric/data-factory/data-source-management#add-a-data-source] to
+	// be used by the shortcut when connecting to the OneDrive SharePoint data location.
+	// Open the cloud connection's settings view and copy the GUID that is the connection ID.
+	ConnectionID *string
+
+	// REQUIRED; Specifies the location of the target OneDrive SharePoint container. The URI must be in the format https://microsoft.sharepoint.com
+	// which is the path of the target OneDrive SharePoint account.
+	Location *string
+
+	// REQUIRED; Specifies the container and subfolder within the OneDrive SharePoint account where the target folder is located.
+	// Must be of the format [container]/[subfolder]. [Container] is the name of the container
+	// that holds the files and folders. [Subfolder] is the name of the subfolder within the container and is optional. For example:
+	// /mycontainer/mysubfolder
+	Subpath *string
+}
+
 // OneLake - An object containing the properties of the target OneLake data source.
 type OneLake struct {
 	// REQUIRED; The ID of the target in OneLake. The target can be an item of Lakehouse, KQLDatabase, or Warehouse.
@@ -3239,6 +3263,9 @@ type Target struct {
 
 	// An object containing the properties of the target Google Cloud Storage data source.
 	GoogleCloudStorage *GoogleCloudStorage
+
+	// An object containing the properties of the target OneDrive for Business & SharePoint Online data source.
+	OneDriveSharePoint *OneDriveSharePoint
 
 	// An object containing the properties of the target OneLake data source.
 	OneLake *OneLake

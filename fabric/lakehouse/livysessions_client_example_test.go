@@ -48,13 +48,7 @@ func ExampleLivySessionsClient_NewListLivySessionsPager() {
 		// 				ItemID: to.Ptr("8cee7699-2e81-4121-9a53-cc9025046193"),
 		// 				WorkspaceID: to.Ptr("f8113ba8-dd81-443e-811a-b385340f3f05"),
 		// 			},
-		// 			DriverCores: to.Ptr[int32](2),
-		// 			DriverMemory: to.Ptr[int32](4),
-		// 			DynamicAllocationMaxExecutors: to.Ptr[int32](20),
 		// 			EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:37:30.000Z"); return t}()),
-		// 			ExecutorCores: float64(4),
-		// 			ExecutorMemory: to.Ptr[int32](8),
-		// 			IsDynamicAllocationEnabled: to.Ptr(true),
 		// 			Item: &lakehouse.ItemReferenceByID{
 		// 				ReferenceType: to.Ptr(lakehouse.ItemReferenceTypeByID),
 		// 				ItemID: to.Ptr("8cee7699-2e81-4121-9a53-cc9025046193"),
@@ -68,94 +62,6 @@ func ExampleLivySessionsClient_NewListLivySessionsPager() {
 		// 			LivyName: to.Ptr("random_test_name_app"),
 		// 			LivySessionItemResourceURI: to.Ptr(""),
 		// 			MaxNumberOfAttempts: to.Ptr[int32](1),
-		// 			NumExecutors: to.Ptr[int32](10),
-		// 			OperationName: to.Ptr("Batch Livy Run"),
-		// 			Origin: to.Ptr(lakehouse.OriginSubmittedJob),
-		// 			QueuedDuration: &lakehouse.Duration{
-		// 				TimeUnit: to.Ptr(lakehouse.TimeUnitSeconds),
-		// 				Value: to.Ptr[float32](1),
-		// 			},
-		// 			RunningDuration: &lakehouse.Duration{
-		// 				TimeUnit: to.Ptr(lakehouse.TimeUnitSeconds),
-		// 				Value: to.Ptr[float32](180),
-		// 			},
-		// 			RuntimeVersion: to.Ptr("1.3"),
-		// 			SparkApplicationID: to.Ptr("application_1730933685452_0001"),
-		// 			StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:34:11.000Z"); return t}()),
-		// 			State: to.Ptr(lakehouse.StateCancelled),
-		// 			SubmittedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:32:03.000Z"); return t}()),
-		// 			Submitter: &lakehouse.Principal{
-		// 				Type: to.Ptr(lakehouse.PrincipalTypeUser),
-		// 				ID: to.Ptr("6f23a8a6-d954-4550-b91a-4df73ccd0311"),
-		// 			},
-		// 			TotalDuration: &lakehouse.Duration{
-		// 				TimeUnit: to.Ptr(lakehouse.TimeUnitSeconds),
-		// 				Value: to.Ptr[float32](360),
-		// 			},
-		// 	}},
-		// }
-	}
-}
-
-// Generated from example definition
-func ExampleLivySessionsClient_NewListLivySessionsPreviewPager() {
-	cred, err := azidentity.NewDefaultAzureCredential(nil)
-	if err != nil {
-		log.Fatalf("failed to obtain a credential: %v", err)
-	}
-	ctx := context.Background()
-	clientFactory, err := lakehouse.NewClientFactory(cred, nil, nil)
-	if err != nil {
-		log.Fatalf("failed to create client: %v", err)
-	}
-	pager := clientFactory.NewLivySessionsClient().NewListLivySessionsPreviewPager("f8113ba8-dd81-443e-811a-b385340f3f05", "8cee7699-2e81-4121-9a53-cc9025046193", true, &lakehouse.LivySessionsClientListLivySessionsPreviewOptions{SubmittedDateTime: nil,
-		EndDateTime:       nil,
-		SubmitterID:       nil,
-		State:             nil,
-		ContinuationToken: nil,
-	})
-	for pager.More() {
-		page, err := pager.NextPage(ctx)
-		if err != nil {
-			log.Fatalf("failed to advance page: %v", err)
-		}
-		for _, v := range page.Value {
-			// You could use page here. We use blank identifier for just demo purposes.
-			_ = v
-		}
-		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
-		// page.LivySessions = lakehouse.LivySessions{
-		// 	Value: []lakehouse.LivySession{
-		// 		{
-		// 			AttemptNumber: to.Ptr[int32](1),
-		// 			CancellationReason: to.Ptr("User cancelled the Spark batch"),
-		// 			CapacityID: to.Ptr("3c0cd366-dc28-4b6d-a525-4d415a8666e7"),
-		// 			CreatorItem: &lakehouse.ItemReferenceByID{
-		// 				ReferenceType: to.Ptr(lakehouse.ItemReferenceTypeByID),
-		// 				ItemID: to.Ptr("8cee7699-2e81-4121-9a53-cc9025046193"),
-		// 				WorkspaceID: to.Ptr("f8113ba8-dd81-443e-811a-b385340f3f05"),
-		// 			},
-		// 			DriverCores: to.Ptr[int32](2),
-		// 			DriverMemory: to.Ptr[int32](4),
-		// 			DynamicAllocationMaxExecutors: to.Ptr[int32](20),
-		// 			EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:37:30.000Z"); return t}()),
-		// 			ExecutorCores: float64(4),
-		// 			ExecutorMemory: to.Ptr[int32](8),
-		// 			IsDynamicAllocationEnabled: to.Ptr(true),
-		// 			Item: &lakehouse.ItemReferenceByID{
-		// 				ReferenceType: to.Ptr(lakehouse.ItemReferenceTypeByID),
-		// 				ItemID: to.Ptr("8cee7699-2e81-4121-9a53-cc9025046193"),
-		// 				WorkspaceID: to.Ptr("f8113ba8-dd81-443e-811a-b385340f3f05"),
-		// 			},
-		// 			ItemName: to.Ptr("lh_itemName"),
-		// 			ItemType: to.Ptr(lakehouse.LivySessionItemTypeLakehouse),
-		// 			JobInstanceID: to.Ptr("c2baabbd-5327-430c-87a6-ff4f98285601"),
-		// 			JobType: to.Ptr(lakehouse.JobTypeSparkBatch),
-		// 			LivyID: to.Ptr("9611f500-bf44-42e0-a0de-78dacb374398"),
-		// 			LivyName: to.Ptr("random_test_name_app"),
-		// 			LivySessionItemResourceURI: to.Ptr(""),
-		// 			MaxNumberOfAttempts: to.Ptr[int32](1),
-		// 			NumExecutors: to.Ptr[int32](10),
 		// 			OperationName: to.Ptr("Batch Livy Run"),
 		// 			Origin: to.Ptr(lakehouse.OriginSubmittedJob),
 		// 			QueuedDuration: &lakehouse.Duration{
@@ -211,13 +117,7 @@ func ExampleLivySessionsClient_GetLivySession() {
 	// 		ItemID: to.Ptr("8cee7699-2e81-4121-9a53-cc9025046193"),
 	// 		WorkspaceID: to.Ptr("f8113ba8-dd81-443e-811a-b385340f3f05"),
 	// 	},
-	// 	DriverCores: to.Ptr[int32](2),
-	// 	DriverMemory: to.Ptr[int32](4),
-	// 	DynamicAllocationMaxExecutors: to.Ptr[int32](20),
 	// 	EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:37:30.000Z"); return t}()),
-	// 	ExecutorCores: float64(4),
-	// 	ExecutorMemory: to.Ptr[int32](8),
-	// 	IsDynamicAllocationEnabled: to.Ptr(true),
 	// 	Item: &lakehouse.ItemReferenceByID{
 	// 		ReferenceType: to.Ptr(lakehouse.ItemReferenceTypeByID),
 	// 		ItemID: to.Ptr("8cee7699-2e81-4121-9a53-cc9025046193"),
@@ -231,7 +131,6 @@ func ExampleLivySessionsClient_GetLivySession() {
 	// 	LivyName: to.Ptr("random_test_name_app"),
 	// 	LivySessionItemResourceURI: to.Ptr(""),
 	// 	MaxNumberOfAttempts: to.Ptr[int32](1),
-	// 	NumExecutors: to.Ptr[int32](10),
 	// 	OperationName: to.Ptr("Batch Livy Run"),
 	// 	Origin: to.Ptr(lakehouse.OriginSubmittedJob),
 	// 	QueuedDuration: &lakehouse.Duration{

@@ -47,6 +47,14 @@ func NewClientFactoryWithClient(client fabric.Client) *ClientFactory {
 	}
 }
 
+// NewFilesClient creates a new instance of FilesClient.
+func (c *ClientFactory) NewFilesClient() *FilesClient {
+	return &FilesClient{
+		internal: c.internal.WithClientName("apacheairflowjob.FilesClient"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewItemsClient creates a new instance of ItemsClient.
 func (c *ClientFactory) NewItemsClient() *ItemsClient {
 	return &ItemsClient{

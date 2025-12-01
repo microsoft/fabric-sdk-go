@@ -167,6 +167,9 @@ func (client *BackgroundJobsClient) deleteRefreshMaterializedLakeViewsScheduleCr
 
 // RunOnDemandRefreshMaterializedLakeViews - > [!NOTE] This API is part of a Preview release and is provided for evaluation
 // and development purposes only. It may change based on feedback and is not recommended for production use.
+// [!NOTE] The URL for this API has been updated to include the job type as part of the path, replacing the previous use of
+// a query parameter. For backward compatibility, invocations using the query
+// parameter are still supported.
 // REQUIRED DELEGATED SCOPES Lakehouse.Execute.All or Item.Execute.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -179,16 +182,15 @@ func (client *BackgroundJobsClient) deleteRefreshMaterializedLakeViewsScheduleCr
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - lakehouseID - The lakehouse ID.
-//   - jobType - RefreshMaterializedLakeViews job type.
 //   - options - BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsOptions contains the optional parameters for the BackgroundJobsClient.RunOnDemandRefreshMaterializedLakeViews
 //     method.
-func (client *BackgroundJobsClient) RunOnDemandRefreshMaterializedLakeViews(ctx context.Context, workspaceID string, lakehouseID string, jobType string, options *BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsOptions) (BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse, error) {
+func (client *BackgroundJobsClient) RunOnDemandRefreshMaterializedLakeViews(ctx context.Context, workspaceID string, lakehouseID string, options *BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsOptions) (BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse, error) {
 	var err error
 	const operationName = "lakehouse.BackgroundJobsClient.RunOnDemandRefreshMaterializedLakeViews"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.runOnDemandRefreshMaterializedLakeViewsCreateRequest(ctx, workspaceID, lakehouseID, jobType, options)
+	req, err := client.runOnDemandRefreshMaterializedLakeViewsCreateRequest(ctx, workspaceID, lakehouseID, options)
 	if err != nil {
 		return BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse{}, err
 	}
@@ -205,8 +207,8 @@ func (client *BackgroundJobsClient) RunOnDemandRefreshMaterializedLakeViews(ctx 
 }
 
 // runOnDemandRefreshMaterializedLakeViewsCreateRequest creates the RunOnDemandRefreshMaterializedLakeViews request.
-func (client *BackgroundJobsClient) runOnDemandRefreshMaterializedLakeViewsCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, jobType string, _ *BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/jobs/instances"
+func (client *BackgroundJobsClient) runOnDemandRefreshMaterializedLakeViewsCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, _ *BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/jobs/RefreshMaterializedLakeViews/instances"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -219,9 +221,6 @@ func (client *BackgroundJobsClient) runOnDemandRefreshMaterializedLakeViewsCreat
 	if err != nil {
 		return nil, err
 	}
-	reqQP := req.Raw().URL.Query()
-	reqQP.Set("jobType", jobType)
-	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }
@@ -244,7 +243,10 @@ func (client *BackgroundJobsClient) runOnDemandRefreshMaterializedLakeViewsHandl
 }
 
 // RunOnDemandTableMaintenance - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use.
+// purposes only. It may change based on feedback and is not recommended for production use. The URL for this
+// API has been updated to include the job type as part of the path, replacing the previous use of a query parameter. For
+// backward compatibility, invocations using the query parameter are still
+// supported.
 // REQUIRED DELEGATED SCOPES Lakehouse.Execute.All or Item.Execute.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -257,17 +259,16 @@ func (client *BackgroundJobsClient) runOnDemandRefreshMaterializedLakeViewsHandl
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - lakehouseID - The Lakehouse item ID.
-//   - jobType - TableMaintenance job type.
 //   - runOnDemandTableMaintenanceRequest - Run on-demand table maintenance request payload.
 //   - options - BackgroundJobsClientRunOnDemandTableMaintenanceOptions contains the optional parameters for the BackgroundJobsClient.RunOnDemandTableMaintenance
 //     method.
-func (client *BackgroundJobsClient) RunOnDemandTableMaintenance(ctx context.Context, workspaceID string, lakehouseID string, jobType string, runOnDemandTableMaintenanceRequest RunOnDemandTableMaintenanceRequest, options *BackgroundJobsClientRunOnDemandTableMaintenanceOptions) (BackgroundJobsClientRunOnDemandTableMaintenanceResponse, error) {
+func (client *BackgroundJobsClient) RunOnDemandTableMaintenance(ctx context.Context, workspaceID string, lakehouseID string, runOnDemandTableMaintenanceRequest RunOnDemandTableMaintenanceRequest, options *BackgroundJobsClientRunOnDemandTableMaintenanceOptions) (BackgroundJobsClientRunOnDemandTableMaintenanceResponse, error) {
 	var err error
 	const operationName = "lakehouse.BackgroundJobsClient.RunOnDemandTableMaintenance"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.runOnDemandTableMaintenanceCreateRequest(ctx, workspaceID, lakehouseID, jobType, runOnDemandTableMaintenanceRequest, options)
+	req, err := client.runOnDemandTableMaintenanceCreateRequest(ctx, workspaceID, lakehouseID, runOnDemandTableMaintenanceRequest, options)
 	if err != nil {
 		return BackgroundJobsClientRunOnDemandTableMaintenanceResponse{}, err
 	}
@@ -284,8 +285,8 @@ func (client *BackgroundJobsClient) RunOnDemandTableMaintenance(ctx context.Cont
 }
 
 // runOnDemandTableMaintenanceCreateRequest creates the RunOnDemandTableMaintenance request.
-func (client *BackgroundJobsClient) runOnDemandTableMaintenanceCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, jobType string, runOnDemandTableMaintenanceRequest RunOnDemandTableMaintenanceRequest, _ *BackgroundJobsClientRunOnDemandTableMaintenanceOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/jobs/instances"
+func (client *BackgroundJobsClient) runOnDemandTableMaintenanceCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, runOnDemandTableMaintenanceRequest RunOnDemandTableMaintenanceRequest, _ *BackgroundJobsClientRunOnDemandTableMaintenanceOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/jobs/TableMaintenance/instances"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -298,9 +299,6 @@ func (client *BackgroundJobsClient) runOnDemandTableMaintenanceCreateRequest(ctx
 	if err != nil {
 		return nil, err
 	}
-	reqQP := req.Raw().URL.Query()
-	reqQP.Set("jobType", jobType)
-	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	if err := runtime.MarshalAsJSON(req, runOnDemandTableMaintenanceRequest); err != nil {
 		return nil, err

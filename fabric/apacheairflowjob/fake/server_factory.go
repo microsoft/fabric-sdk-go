@@ -18,6 +18,7 @@ import (
 
 // ServerFactory is a fake server for instances of the apacheairflowjob.ClientFactory type.
 type ServerFactory struct {
+	FilesServer FilesServer
 	ItemsServer ItemsServer
 }
 
@@ -26,6 +27,7 @@ type ServerFactory struct {
 type ServerFactoryTransport struct {
 	srv           *ServerFactory
 	trMu          sync.Mutex
+	trFilesServer *FilesServerTransport
 	trItemsServer *ItemsServerTransport
 }
 
@@ -52,6 +54,9 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	var err error
 
 	switch client {
+	case "FilesClient":
+		initServer(s, &s.trFilesServer, func() *FilesServerTransport { return NewFilesServerTransport(&s.srv.FilesServer) })
+		resp, err = s.trFilesServer.Do(req)
 	case "ItemsClient":
 		initServer(s, &s.trItemsServer, func() *ItemsServerTransport { return NewItemsServerTransport(&s.srv.ItemsServer) })
 		resp, err = s.trItemsServer.Do(req)
