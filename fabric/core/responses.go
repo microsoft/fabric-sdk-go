@@ -574,6 +574,11 @@ type OneLakeSettingsClientModifyDiagnosticsResponse struct {
 	// placeholder for future response values
 }
 
+// OneLakeSettingsClientModifyImmutabilityPolicyResponse contains the response from method OneLakeSettingsClient.ModifyImmutabilityPolicy.
+type OneLakeSettingsClientModifyImmutabilityPolicyResponse struct {
+	// placeholder for future response values
+}
+
 // OneLakeShortcutsClientCreateShortcutResponse contains the response from method OneLakeShortcutsClient.CreateShortcut.
 type OneLakeShortcutsClientCreateShortcutResponse struct {
 	// An object representing a reference that points to other storage locations which can be internal or external to OneLake.

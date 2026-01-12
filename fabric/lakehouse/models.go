@@ -45,6 +45,9 @@ type CreateLakehouseRequest struct {
 	// The lakehouse creation payload.
 	CreationPayload *CreationPayload
 
+	// The lakehouse public definition.
+	Definition *Definition
+
 	// The lakehouse description. Maximum length is 256 characters.
 	Description *string
 
@@ -133,6 +136,35 @@ func (d *DayOfMonth) GetMonthlyOccurrence() *MonthlyOccurrence {
 	return &MonthlyOccurrence{
 		OccurrenceType: d.OccurrenceType,
 	}
+}
+
+// Definition - Lakehouse public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/lakehouse-definition]
+// for more details on how to craft a lakehouse definition.
+type Definition struct {
+	// REQUIRED; A list of definition parts.
+	Parts []DefinitionPart
+
+	// The format of the item definition.
+	Format *string
+}
+
+// DefinitionPart - Lakehouse definition part object.
+type DefinitionPart struct {
+	// The lakehouse part path.
+	Path *string
+
+	// The lakehouse part payload.
+	Payload *string
+
+	// The payload type.
+	PayloadType *PayloadType
+}
+
+// DefinitionResponse - Lakehouse public definition response.
+type DefinitionResponse struct {
+	// READ-ONLY; Lakehouse public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/lakehouse-definition]
+	// for more details on how to craft a lakehouse definition.
+	Definition *Definition
 }
 
 // Duration - A duration.
@@ -617,6 +649,13 @@ type Tables struct {
 
 	// The URI of the next chunk in the result set.
 	ContinuationURI *string
+}
+
+// UpdateLakehouseDefinitionRequest - Update Lakehouse public definition request payload.
+type UpdateLakehouseDefinitionRequest struct {
+	// REQUIRED; Lakehouse public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/lakehouse-definition]
+	// for more details on how to craft a lakehouse definition.
+	Definition *Definition
 }
 
 // UpdateLakehouseRefreshMaterializedLakeViewsScheduleRequest - Update lakehouse refresh materialized lake views schedule

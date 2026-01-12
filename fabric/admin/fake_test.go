@@ -542,6 +542,17 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ListGitConnections() {
 					OwnerName:       to.Ptr("Test Owner"),
 				},
 				WorkspaceID: to.Ptr("17d8929d-ab32-46d1-858b-fdea74e93bf2"),
+			},
+			{
+				GitProviderDetails: &admin.GitHubDetails{
+					BranchName:       to.Ptr("main"),
+					DirectoryName:    to.Ptr("/Enterprise/Dir"),
+					GitProviderType:  to.Ptr(admin.GitProviderTypeGitHub),
+					RepositoryName:   to.Ptr("Enterprise Repo"),
+					CustomDomainName: to.Ptr("my-enterprise.ghe.com"),
+					OwnerName:        to.Ptr("Enterprise Org"),
+				},
+				WorkspaceID: to.Ptr("e2c1a8b2-1234-4e56-9876-abcdef123456"),
 			}},
 	}
 

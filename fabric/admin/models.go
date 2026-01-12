@@ -479,6 +479,11 @@ type GitHubDetails struct {
 
 	// REQUIRED; The repository name. Maximum length is 128 characters.
 	RepositoryName *string
+
+	// > [!NOTE] Support for GitHub Enterprise with Data residency (ghe.com) is currently in Preview.(learn more [/fabric/fundamentals/preview]).
+	// The name of the enterprise github domain if it's not github.com. Only GitHub Enterprise with data residency domains (ghe.com)
+	// are supported. Maximum length is 100 characters.
+	CustomDomainName *string
 }
 
 // GetGitProviderDetails implements the GitProviderDetailsClassification interface for type GitHubDetails.

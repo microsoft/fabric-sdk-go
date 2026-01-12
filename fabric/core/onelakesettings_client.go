@@ -174,6 +174,66 @@ func (client *OneLakeSettingsClient) modifyDiagnosticsCreateRequest(ctx context.
 	return req, nil
 }
 
+// ModifyImmutabilityPolicy - Set immutability policy for data stored in OneLake. Currently, this feature supports configuring
+// a retention period specifically for diagnostic logs within a workspace, ensuring they remain unaltered
+// once written.
+// PERMISSIONS The caller must have an admin workspace role.
+// REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// LIMITATIONS Can be applied only if:
+// * The current workspace is storing diagnostic logs from other workspaces.
+// * There is already a retention period applied to the diagnostics logs in the workspace
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - immutabilityPolicyRequest - The immutability policy request object.
+//   - options - OneLakeSettingsClientModifyImmutabilityPolicyOptions contains the optional parameters for the OneLakeSettingsClient.ModifyImmutabilityPolicy
+//     method.
+func (client *OneLakeSettingsClient) ModifyImmutabilityPolicy(ctx context.Context, workspaceID string, immutabilityPolicyRequest ImmutabilityPolicyRequest, options *OneLakeSettingsClientModifyImmutabilityPolicyOptions) (OneLakeSettingsClientModifyImmutabilityPolicyResponse, error) {
+	var err error
+	const operationName = "core.OneLakeSettingsClient.ModifyImmutabilityPolicy"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.modifyImmutabilityPolicyCreateRequest(ctx, workspaceID, immutabilityPolicyRequest, options)
+	if err != nil {
+		return OneLakeSettingsClientModifyImmutabilityPolicyResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return OneLakeSettingsClientModifyImmutabilityPolicyResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return OneLakeSettingsClientModifyImmutabilityPolicyResponse{}, err
+	}
+	return OneLakeSettingsClientModifyImmutabilityPolicyResponse{}, nil
+}
+
+// modifyImmutabilityPolicyCreateRequest creates the ModifyImmutabilityPolicy request.
+func (client *OneLakeSettingsClient) modifyImmutabilityPolicyCreateRequest(ctx context.Context, workspaceID string, immutabilityPolicyRequest ImmutabilityPolicyRequest, _ *OneLakeSettingsClientModifyImmutabilityPolicyOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/onelake/settings/modifyImmutabilityPolicy"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, immutabilityPolicyRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // Custom code starts below
 
 // ModifyDiagnostics - returns OneLakeSettingsClientModifyDiagnosticsResponse in sync mode.

@@ -25,8 +25,9 @@ type ItemsClientBeginCreateSparkJobDefinitionOptions struct {
 // ItemsClientBeginGetSparkJobDefinitionDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetSparkJobDefinitionDefinition
 // method.
 type ItemsClientBeginGetSparkJobDefinitionDefinitionOptions struct {
-	// The format of the spark job definition public definition.
-	Format *string
+	// The format of the request. Can be either SparkJobDefinitionV1 or SparkJobDefinitionV2. Additional Format types may be added
+	// over time.
+	Format *Format
 
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
@@ -72,16 +73,9 @@ type LivySessionsClientGetLivySessionOptions struct {
 	// placeholder for future optional parameters
 }
 
-// LivySessionsClientListLivySessionsOptions contains the optional parameters for the LivySessionsClient.NewListLivySessionsPager
+// LivySessionsClientListLivySessionsBetaOptions contains the optional parameters for the LivySessionsClient.NewListLivySessionsBetaPager
 // method.
-type LivySessionsClientListLivySessionsOptions struct {
-	// Token to retrieve the next page of results, if available.
-	ContinuationToken *string
-}
-
-// LivySessionsClientListLivySessionsPreviewOptions contains the optional parameters for the LivySessionsClient.NewListLivySessionsPreviewPager
-// method.
-type LivySessionsClientListLivySessionsPreviewOptions struct {
+type LivySessionsClientListLivySessionsBetaOptions struct {
 	// Token to retrieve the next page of results, if available.
 	ContinuationToken *string
 
@@ -98,4 +92,11 @@ type LivySessionsClientListLivySessionsPreviewOptions struct {
 
 	// The GUID value of the user who submitted the session.
 	SubmitterID *string
+}
+
+// LivySessionsClientListLivySessionsOptions contains the optional parameters for the LivySessionsClient.NewListLivySessionsPager
+// method.
+type LivySessionsClientListLivySessionsOptions struct {
+	// Token to retrieve the next page of results, if available.
+	ContinuationToken *string
 }

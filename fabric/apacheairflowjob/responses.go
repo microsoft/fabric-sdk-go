@@ -6,6 +6,30 @@
 
 package apacheairflowjob
 
+import "io"
+
+// FilesClientCreateOrUpdateApacheAirflowJobFileBetaWithBinaryResponse contains the response from method FilesClient.CreateOrUpdateApacheAirflowJobFileBetaWithBinary.
+type FilesClientCreateOrUpdateApacheAirflowJobFileBetaWithBinaryResponse struct {
+	// placeholder for future response values
+}
+
+// FilesClientDeleteApacheAirflowJobFileBetaResponse contains the response from method FilesClient.DeleteApacheAirflowJobFileBeta.
+type FilesClientDeleteApacheAirflowJobFileBetaResponse struct {
+	// placeholder for future response values
+}
+
+// FilesClientGetApacheAirflowJobFileBetaResponse contains the response from method FilesClient.GetApacheAirflowJobFileBeta.
+type FilesClientGetApacheAirflowJobFileBetaResponse struct {
+	// Body contains the streaming response.
+	Body io.ReadCloser
+}
+
+// FilesClientListApacheAirflowJobFilesBetaResponse contains the response from method FilesClient.NewListApacheAirflowJobFilesBetaPager.
+type FilesClientListApacheAirflowJobFilesBetaResponse struct {
+	// A list of Apache Airflow job files.
+	Files
+}
+
 // ItemsClientCreateApacheAirflowJobResponse contains the response from method ItemsClient.BeginCreateApacheAirflowJob.
 type ItemsClientCreateApacheAirflowJobResponse struct {
 	// An Apache Airflow job object.
@@ -44,4 +68,41 @@ type ItemsClientUpdateApacheAirflowJobDefinitionResponse struct {
 type ItemsClientUpdateApacheAirflowJobResponse struct {
 	// An Apache Airflow job object.
 	ApacheAirflowJob
+}
+
+// PoolManagementClientCreateAirflowPoolTemplateBetaResponse contains the response from method PoolManagementClient.CreateAirflowPoolTemplateBeta.
+type PoolManagementClientCreateAirflowPoolTemplateBetaResponse struct {
+	// Apache Airflow pool template.
+	AirflowPoolTemplate
+
+	// Location contains the information returned from the Location header response.
+	Location *string
+}
+
+// PoolManagementClientDeleteAirflowPoolTemplateBetaResponse contains the response from method PoolManagementClient.DeleteAirflowPoolTemplateBeta.
+type PoolManagementClientDeleteAirflowPoolTemplateBetaResponse struct {
+	// placeholder for future response values
+}
+
+// PoolManagementClientGetAirflowPoolTemplateBetaResponse contains the response from method PoolManagementClient.GetAirflowPoolTemplateBeta.
+type PoolManagementClientGetAirflowPoolTemplateBetaResponse struct {
+	// Apache Airflow pool template.
+	AirflowPoolTemplate
+}
+
+// PoolManagementClientListAirflowPoolTemplatesBetaResponse contains the response from method PoolManagementClient.NewListAirflowPoolTemplatesBetaPager.
+type PoolManagementClientListAirflowPoolTemplatesBetaResponse struct {
+	AirflowPoolTemplates
+}
+
+// WorkspaceSettingsClientGetAirflowWorkspaceSettingsBetaResponse contains the response from method WorkspaceSettingsClient.GetAirflowWorkspaceSettingsBeta.
+type WorkspaceSettingsClientGetAirflowWorkspaceSettingsBetaResponse struct {
+	// Apache Airflow workspace settings.
+	AirflowWorkspaceSettings
+}
+
+// WorkspaceSettingsClientUpdateAirflowWorkspaceSettingsBetaResponse contains the response from method WorkspaceSettingsClient.UpdateAirflowWorkspaceSettingsBeta.
+type WorkspaceSettingsClientUpdateAirflowWorkspaceSettingsBetaResponse struct {
+	// Apache Airflow workspace settings.
+	AirflowWorkspaceSettings
 }

@@ -682,15 +682,15 @@ func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessions() {
 	}
 }
 
-func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessionsPreview() {
+func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessionsBeta() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"List all livy sessions (Preview) example"},
+		"example-id": {"List all livy sessions (Beta) example"},
 	})
 	var exampleWorkspaceID string
-	var examplePreview bool
+	var exampleBeta bool
 	exampleWorkspaceID = "f8113ba8-dd81-443e-811a-b385340f3f05"
-	examplePreview = true
+	exampleBeta = true
 
 	exampleRes := spark.LivySessions{
 		Value: []spark.LivySession{
@@ -750,16 +750,16 @@ func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessionsPreview() {
 			}},
 	}
 
-	testsuite.serverFactory.LivySessionsServer.NewListLivySessionsPreviewPager = func(workspaceID string, preview bool, options *spark.LivySessionsClientListLivySessionsPreviewOptions) (resp azfake.PagerResponder[spark.LivySessionsClientListLivySessionsPreviewResponse]) {
+	testsuite.serverFactory.LivySessionsServer.NewListLivySessionsBetaPager = func(workspaceID string, beta bool, options *spark.LivySessionsClientListLivySessionsBetaOptions) (resp azfake.PagerResponder[spark.LivySessionsClientListLivySessionsBetaResponse]) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
-		testsuite.Require().Equal(examplePreview, preview)
-		resp = azfake.PagerResponder[spark.LivySessionsClientListLivySessionsPreviewResponse]{}
-		resp.AddPage(http.StatusOK, spark.LivySessionsClientListLivySessionsPreviewResponse{LivySessions: exampleRes}, nil)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.PagerResponder[spark.LivySessionsClientListLivySessionsBetaResponse]{}
+		resp.AddPage(http.StatusOK, spark.LivySessionsClientListLivySessionsBetaResponse{LivySessions: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewLivySessionsClient()
-	pager := client.NewListLivySessionsPreviewPager(exampleWorkspaceID, examplePreview, &spark.LivySessionsClientListLivySessionsPreviewOptions{SubmittedDateTime: nil,
+	pager := client.NewListLivySessionsBetaPager(exampleWorkspaceID, exampleBeta, &spark.LivySessionsClientListLivySessionsBetaOptions{SubmittedDateTime: nil,
 		EndDateTime:       nil,
 		SubmitterID:       nil,
 		State:             nil,

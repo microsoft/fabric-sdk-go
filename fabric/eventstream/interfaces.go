@@ -47,7 +47,7 @@ type ManageFieldsOperationClassification interface {
 // Call the interface's GetOperator() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
 // - *AggregateOperator, *ExpandOperator, *FilterOperator, *GroupByOperator, *JoinOperator, *ManageFieldsOperator, *Operator,
-// - *UnionOperator
+// - *SQLOperator, *UnionOperator
 type OperatorClassification interface {
 	// GetOperator returns the Operator content of the underlying type.
 	GetOperator() *Operator
@@ -62,15 +62,24 @@ type SerializationInfoClassification interface {
 	GetSerializationInfo() *SerializationInfo
 }
 
+// SolacePubSubSourcePropertiesClassification provides polymorphic access to related types.
+// Call the interface's GetSolacePubSubSourceProperties() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *SolacePubSubQueueSourceProperties, *SolacePubSubSourceProperties, *SolacePubSubTopicsSourceProperties
+type SolacePubSubSourcePropertiesClassification interface {
+	// GetSolacePubSubSourceProperties returns the SolacePubSubSourceProperties content of the underlying type.
+	GetSolacePubSubSourceProperties() *SolacePubSubSourceProperties
+}
+
 // SourceResponseClassification provides polymorphic access to related types.
 // Call the interface's GetSourceResponse() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
 // - *AmazonKinesisSourceResponse, *AmazonMSKKafkaSourceResponse, *ApacheKafkaSourceResponse, *AzureBlobStorageEventsSourceResponse,
-// - *AzureCosmosDBCDCSourceResponse, *AzureEventHubSourceResponse, *AzureIoTHubSourceResponse, *AzureSQLDBCDCSourceResponse,
-// - *AzureSQLMIDBCDCSourceResponse, *ConfluentCloudSourceResponse, *CustomEndpointSourceResponse, *FabricCapacityUtilizationEventsSourceResponse,
-// - *FabricJobEventsSourceResponse, *FabricOneLakeEventsSourceResponse, *FabricWorkspaceItemEventsSourceResponse, *GooglePubSubSourceResponse,
-// - *MySQLCDCSourceResponse, *PostgreSQLCDCSourceResponse, *SQLServerOnVMDBCDCSourceResponse, *SampleDataSourceResponse,
-// - *SourceResponse
+// - *AzureCosmosDBCDCSourceResponse, *AzureDataExplorerSourceResponse, *AzureEventGridNamespaceSourceResponse, *AzureEventHubSourceResponse,
+// - *AzureIoTHubSourceResponse, *AzureSQLDBCDCSourceResponse, *AzureSQLMIDBCDCSourceResponse, *ConfluentCloudSourceResponse,
+// - *CustomEndpointSourceResponse, *FabricJobEventsSourceResponse, *FabricOneLakeEventsSourceResponse, *FabricWorkspaceItemEventsSourceResponse,
+// - *GooglePubSubSourceResponse, *MqttSourceResponse, *MySQLCDCSourceResponse, *PostgreSQLCDCSourceResponse, *RealTimeWeatherSourceResponse,
+// - *SQLServerOnVMDBCDCSourceResponse, *SampleDataSourceResponse, *SolacePubSubSourceResponse, *SourceResponse
 type SourceResponseClassification interface {
 	// GetSourceResponse returns the SourceResponse content of the underlying type.
 	GetSourceResponse() *SourceResponse

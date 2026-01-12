@@ -2492,6 +2492,37 @@ func (testsuite *FakeTestSuite) TestGit_Connect() {
 
 	_, err = client.Connect(ctx, exampleWorkspaceID, exampleGitConnectRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Connect a workspace to GitHub example - GitHub Enterprise With Data Residency (ghe.com)"},
+	})
+	exampleWorkspaceID = "1565e6a3-c020-4c0c-dda7-92bafe99eec5"
+	exampleGitConnectRequest = core.GitConnectRequest{
+		GitProviderDetails: &core.GitHubDetails{
+			BranchName:       to.Ptr("Test Branch"),
+			DirectoryName:    to.Ptr("Test Directory/Test Subdirectory"),
+			GitProviderType:  to.Ptr(core.GitProviderTypeGitHub),
+			RepositoryName:   to.Ptr("Test Repo"),
+			CustomDomainName: to.Ptr("my-enterprise.ghe.com"),
+			OwnerName:        to.Ptr("Test Owner"),
+		},
+		MyGitCredentials: &core.ConfiguredConnectionGitCredentials{
+			Source:       to.Ptr(core.GitCredentialsSourceConfiguredConnection),
+			ConnectionID: to.Ptr("3f2504e0-4f89-11d3-9a0c-0305e82c3301"),
+		},
+	}
+
+	testsuite.serverFactory.GitServer.Connect = func(ctx context.Context, workspaceID string, gitConnectRequest core.GitConnectRequest, options *core.GitClientConnectOptions) (resp azfake.Responder[core.GitClientConnectResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleGitConnectRequest, gitConnectRequest))
+		resp = azfake.Responder[core.GitClientConnectResponse]{}
+		resp.SetResponse(http.StatusOK, core.GitClientConnectResponse{}, nil)
+		return
+	}
+
+	_, err = client.Connect(ctx, exampleWorkspaceID, exampleGitConnectRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestGit_Disconnect() {
@@ -3627,6 +3658,36 @@ func (testsuite *FakeTestSuite) TestOneLakeShortcuts_CreateShortcut() {
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create shortcut OneDriveSharePoint or OneDrive for Business or SharePoint Online target example"},
+	})
+	exampleWorkspaceID = "bf94607f-3ba1-4a95-8259-27649ccd7755"
+	exampleItemID = "884e71cd-f5b4-45f9-8e00-b71355f7ea5d"
+	exampleCreateShortcutRequest = core.CreateShortcutRequest{
+		Name: to.Ptr("MyOneDriveSharePoint"),
+		Path: to.Ptr("Files"),
+		Target: &core.CreatableShortcutTarget{
+			OneDriveSharePoint: &core.OneDriveSharePoint{
+				ConnectionID: to.Ptr("97e33458-1353-4911-96b1-6f4f4bbfd335"),
+				Location:     to.Ptr("https://microsoft.sharepoint.com"),
+				Subpath:      to.Ptr("/Shared Documents/Test Folder"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.OneLakeShortcutsServer.CreateShortcut = func(ctx context.Context, workspaceID string, itemID string, createShortcutRequest core.CreateShortcutRequest, options *core.OneLakeShortcutsClientCreateShortcutOptions) (resp azfake.Responder[core.OneLakeShortcutsClientCreateShortcutResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateShortcutRequest, createShortcutRequest))
+		resp = azfake.Responder[core.OneLakeShortcutsClientCreateShortcutResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeShortcutsClientCreateShortcutResponse{}, nil)
+		return
+	}
+
+	_, err = client.CreateShortcut(ctx, exampleWorkspaceID, exampleItemID, exampleCreateShortcutRequest, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Create shortcut S3 Compatible target example"},
 	})
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff222"
@@ -3831,6 +3892,42 @@ func (testsuite *FakeTestSuite) TestOneLakeShortcuts_GetShortcut() {
 				Path:        to.Ptr("Tables/myTablesFolder/someTableSubFolder"),
 				ItemID:      to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
 				WorkspaceID: to.Ptr("acafbeb1-8037-4d0c-896e-a46fb27ff256"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.OneLakeShortcutsServer.GetShortcut = func(ctx context.Context, workspaceID string, itemID string, shortcutPath string, shortcutName string, options *core.OneLakeShortcutsClientGetShortcutOptions) (resp azfake.Responder[core.OneLakeShortcutsClientGetShortcutResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().Equal(exampleShortcutPath, shortcutPath)
+		testsuite.Require().Equal(exampleShortcutName, shortcutName)
+		resp = azfake.Responder[core.OneLakeShortcutsClientGetShortcutResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeShortcutsClientGetShortcutResponse{Shortcut: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.GetShortcut(ctx, exampleWorkspaceID, exampleItemID, exampleShortcutPath, exampleShortcutName, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Shortcut))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get shortcut OneDriveSharePoint or OneDrive for Business or SharePoint Online target example"},
+	})
+	exampleWorkspaceID = "bf94607f-3ba1-4a95-8259-27649ccd7755"
+	exampleItemID = "884e71cd-f5b4-45f9-8e00-b71355f7ea5d"
+	exampleShortcutPath = "Files"
+	exampleShortcutName = "MyOneDriveSharePoint"
+
+	exampleRes = core.Shortcut{
+		Name: to.Ptr("MyOneDriveSharePoint"),
+		Path: to.Ptr("Files"),
+		Target: &core.Target{
+			Type: to.Ptr(core.TypeOneDriveSharePoint),
+			OneDriveSharePoint: &core.OneDriveSharePoint{
+				ConnectionID: to.Ptr("97e33458-1353-4911-96b1-6f4f4bbfd335"),
+				Location:     to.Ptr("https://microsoft.sharepoint.com"),
+				Subpath:      to.Ptr("/Shared Documents/Test Folder"),
 			},
 		},
 	}
@@ -4364,6 +4461,65 @@ func (testsuite *FakeTestSuite) TestOneLakeSettings_GetSettings() {
 	res, err = client.GetSettings(ctx, exampleWorkspaceID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.GetOneLakeSettingsResponse))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get OneLake Settings with immutability policy example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
+
+	exampleRes = core.GetOneLakeSettingsResponse{
+		Diagnostics: &core.OneLakeDiagnosticSettings{
+			Destination: &core.LakehouseOneLakeDiagnosticSettingsDestination{
+				Type: to.Ptr("Lakehouse"),
+				Lakehouse: &core.ItemReferenceByID{
+					ReferenceType: to.Ptr(core.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("33d48b2c-5b7c-42e2-8467-87fecb105fdd"),
+					WorkspaceID:   to.Ptr("85173301-af01-49c9-b667-03edc44517da"),
+				},
+			},
+			Status: to.Ptr("Enabled"),
+		},
+		ImmutabilityPolicies: []core.ImmutabilityPolicy{
+			{
+				RetentionDays: to.Ptr[int32](30),
+				Scope:         to.Ptr(core.ImmutabilityScopeDiagnosticLogs),
+			}},
+	}
+
+	testsuite.serverFactory.OneLakeSettingsServer.GetSettings = func(ctx context.Context, workspaceID string, options *core.OneLakeSettingsClientGetSettingsOptions) (resp azfake.Responder[core.OneLakeSettingsClientGetSettingsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.OneLakeSettingsClientGetSettingsResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeSettingsClientGetSettingsResponse{GetOneLakeSettingsResponse: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.GetSettings(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.GetOneLakeSettingsResponse))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get OneLake Settings without immutability policy example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
+
+	exampleRes = core.GetOneLakeSettingsResponse{
+		Diagnostics: &core.OneLakeDiagnosticSettings{
+			Status: to.Ptr("Disabled"),
+		},
+	}
+
+	testsuite.serverFactory.OneLakeSettingsServer.GetSettings = func(ctx context.Context, workspaceID string, options *core.OneLakeSettingsClientGetSettingsOptions) (resp azfake.Responder[core.OneLakeSettingsClientGetSettingsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.OneLakeSettingsClientGetSettingsResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeSettingsClientGetSettingsResponse{GetOneLakeSettingsResponse: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.GetSettings(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.GetOneLakeSettingsResponse))
 }
 
 func (testsuite *FakeTestSuite) TestOneLakeSettings_ModifyDiagnostics() {
@@ -4471,6 +4627,53 @@ func (testsuite *FakeTestSuite) TestOneLakeSettings_ModifyDiagnostics() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestOneLakeSettings_ModifyImmutabilityPolicy() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Enable immutability for diagnostic logs example"},
+	})
+	var exampleWorkspaceID string
+	var exampleImmutabilityPolicyRequest core.ImmutabilityPolicyRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
+	exampleImmutabilityPolicyRequest = core.ImmutabilityPolicyRequest{
+		RetentionDays: to.Ptr[int32](7),
+		Scope:         to.Ptr(core.ImmutabilityScopeDiagnosticLogs),
+	}
+
+	testsuite.serverFactory.OneLakeSettingsServer.ModifyImmutabilityPolicy = func(ctx context.Context, workspaceID string, immutabilityPolicyRequest core.ImmutabilityPolicyRequest, options *core.OneLakeSettingsClientModifyImmutabilityPolicyOptions) (resp azfake.Responder[core.OneLakeSettingsClientModifyImmutabilityPolicyResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleImmutabilityPolicyRequest, immutabilityPolicyRequest))
+		resp = azfake.Responder[core.OneLakeSettingsClientModifyImmutabilityPolicyResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeSettingsClientModifyImmutabilityPolicyResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewOneLakeSettingsClient()
+	_, err = client.ModifyImmutabilityPolicy(ctx, exampleWorkspaceID, exampleImmutabilityPolicyRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Reduce retention days example (error case)"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
+	exampleImmutabilityPolicyRequest = core.ImmutabilityPolicyRequest{
+		RetentionDays: to.Ptr[int32](3),
+		Scope:         to.Ptr(core.ImmutabilityScopeDiagnosticLogs),
+	}
+
+	testsuite.serverFactory.OneLakeSettingsServer.ModifyImmutabilityPolicy = func(ctx context.Context, workspaceID string, immutabilityPolicyRequest core.ImmutabilityPolicyRequest, options *core.OneLakeSettingsClientModifyImmutabilityPolicyOptions) (resp azfake.Responder[core.OneLakeSettingsClientModifyImmutabilityPolicyResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleImmutabilityPolicyRequest, immutabilityPolicyRequest))
+		resp = azfake.Responder[core.OneLakeSettingsClientModifyImmutabilityPolicyResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeSettingsClientModifyImmutabilityPolicyResponse{}, nil)
+		return
+	}
+
+	_, err = client.ModifyImmutabilityPolicy(ctx, exampleWorkspaceID, exampleImmutabilityPolicyRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestDeploymentPipelines_ListDeploymentPipelines() {
@@ -7116,8 +7319,11 @@ func (testsuite *FakeTestSuite) TestConnections_CreateConnection() {
 			SkipTestConnection:   to.Ptr(false),
 			Credentials: &core.BasicCredentials{
 				CredentialType: to.Ptr(core.CredentialTypeBasic),
-				Password:       to.Ptr("********"),
-				Username:       to.Ptr("admin"),
+				PasswordReference: &core.KeyVaultSecretReference{
+					ConnectionID: to.Ptr("4399ab2c-7551-4c0e-8aa7-18fc2f217626"),
+					SecretName:   to.Ptr("some-secret"),
+				},
+				Username: to.Ptr("admin"),
 			},
 		},
 	}
@@ -7130,6 +7336,52 @@ func (testsuite *FakeTestSuite) TestConnections_CreateConnection() {
 	}
 
 	client := testsuite.clientFactory.NewConnectionsClient()
+	_, err = client.CreateConnection(ctx, exampleCreateConnectionRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Cloud example with KeyPair credentials"},
+	})
+	exampleCreateConnectionRequest = &core.CreateCloudConnectionRequest{
+		ConnectionDetails: &core.CreateConnectionDetails{
+			Type:           to.Ptr("SQL"),
+			CreationMethod: to.Ptr("SQL"),
+			Parameters: []core.ConnectionDetailsParameterClassification{
+				&core.ConnectionDetailsTextParameter{
+					Name:     to.Ptr("server"),
+					DataType: to.Ptr(core.DataTypeText),
+					Value:    to.Ptr("contoso.database.windows.net"),
+				},
+				&core.ConnectionDetailsTextParameter{
+					Name:     to.Ptr("warehouse"),
+					DataType: to.Ptr(core.DataTypeText),
+					Value:    to.Ptr("snowflake-warehouse"),
+				}},
+		},
+		ConnectivityType: to.Ptr(core.ConnectivityTypeShareableCloud),
+		DisplayName:      to.Ptr("SnowflakeCloudConnection"),
+		PrivacyLevel:     to.Ptr(core.PrivacyLevelOrganizational),
+		CredentialDetails: &core.CreateCredentialDetails{
+			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+			SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+			SkipTestConnection:   to.Ptr(false),
+			Credentials: &core.KeyPairCredentials{
+				CredentialType: to.Ptr(core.CredentialTypeKeyPair),
+				Identifier:     to.Ptr("admin"),
+				Passphrase:     to.Ptr("********"),
+				PrivateKey:     to.Ptr("-----BEGIN ENCRYPTED PRIVATE KEY-----\\nMIIEvQIBADANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQ...\\n-----END ENCRYPTED PRIVATE KEY-----"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.ConnectionsServer.CreateConnection = func(ctx context.Context, createConnectionRequest core.CreateConnectionRequestClassification, options *core.ConnectionsClientCreateConnectionOptions) (resp azfake.Responder[core.ConnectionsClientCreateConnectionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateConnectionRequest, createConnectionRequest))
+		resp = azfake.Responder[core.ConnectionsClientCreateConnectionResponse]{}
+		resp.SetResponse(http.StatusCreated, core.ConnectionsClientCreateConnectionResponse{}, nil)
+		return
+	}
+
 	_, err = client.CreateConnection(ctx, exampleCreateConnectionRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 

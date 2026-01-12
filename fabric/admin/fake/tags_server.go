@@ -141,7 +141,7 @@ func (t *TagsServerTransport) dispatchDeleteTag(req *http.Request) (*http.Respon
 	const regexStr = `/v1/admin/tags/(?P<tagId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	tagIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("tagId")])
@@ -209,7 +209,7 @@ func (t *TagsServerTransport) dispatchUpdateTag(req *http.Request) (*http.Respon
 	const regexStr = `/v1/admin/tags/(?P<tagId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	body, err := server.UnmarshalRequestAsJSON[admin.UpdateTagRequest](req)

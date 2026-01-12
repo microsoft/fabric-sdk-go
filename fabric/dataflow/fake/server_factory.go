@@ -20,6 +20,7 @@ import (
 type ServerFactory struct {
 	BackgroundJobsServer BackgroundJobsServer
 	ItemsServer          ItemsServer
+	QueryExecutionServer QueryExecutionServer
 }
 
 // ServerFactoryTransport connects instances of dataflow.ClientFactory to instances of ServerFactory.
@@ -29,6 +30,7 @@ type ServerFactoryTransport struct {
 	trMu                   sync.Mutex
 	trBackgroundJobsServer *BackgroundJobsServerTransport
 	trItemsServer          *ItemsServerTransport
+	trQueryExecutionServer *QueryExecutionServerTransport
 }
 
 // NewServerFactoryTransport creates a new instance of ServerFactoryTransport with the provided implementation.
@@ -62,6 +64,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	case "ItemsClient":
 		initServer(s, &s.trItemsServer, func() *ItemsServerTransport { return NewItemsServerTransport(&s.srv.ItemsServer) })
 		resp, err = s.trItemsServer.Do(req)
+	case "QueryExecutionClient":
+		initServer(s, &s.trQueryExecutionServer, func() *QueryExecutionServerTransport {
+			return NewQueryExecutionServerTransport(&s.srv.QueryExecutionServer)
+		})
+		resp, err = s.trQueryExecutionServer.Do(req)
 	default:
 		err = fmt.Errorf("unhandled client %s", client)
 	}

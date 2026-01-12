@@ -30,9 +30,9 @@ type LivySessionsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListLivySessionsPager func(workspaceID string, options *spark.LivySessionsClientListLivySessionsOptions) (resp azfake.PagerResponder[spark.LivySessionsClientListLivySessionsResponse])
 
-	// NewListLivySessionsPreviewPager is the fake for method LivySessionsClient.NewListLivySessionsPreviewPager
+	// NewListLivySessionsBetaPager is the fake for method LivySessionsClient.NewListLivySessionsBetaPager
 	// HTTP status codes to indicate success: http.StatusOK
-	NewListLivySessionsPreviewPager func(workspaceID string, preview bool, options *spark.LivySessionsClientListLivySessionsPreviewOptions) (resp azfake.PagerResponder[spark.LivySessionsClientListLivySessionsPreviewResponse])
+	NewListLivySessionsBetaPager func(workspaceID string, beta bool, options *spark.LivySessionsClientListLivySessionsBetaOptions) (resp azfake.PagerResponder[spark.LivySessionsClientListLivySessionsBetaResponse])
 }
 
 // NewLivySessionsServerTransport creates a new instance of LivySessionsServerTransport with the provided implementation.
@@ -40,18 +40,18 @@ type LivySessionsServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewLivySessionsServerTransport(srv *LivySessionsServer) *LivySessionsServerTransport {
 	return &LivySessionsServerTransport{
-		srv:                             srv,
-		newListLivySessionsPager:        newTracker[azfake.PagerResponder[spark.LivySessionsClientListLivySessionsResponse]](),
-		newListLivySessionsPreviewPager: newTracker[azfake.PagerResponder[spark.LivySessionsClientListLivySessionsPreviewResponse]](),
+		srv:                          srv,
+		newListLivySessionsPager:     newTracker[azfake.PagerResponder[spark.LivySessionsClientListLivySessionsResponse]](),
+		newListLivySessionsBetaPager: newTracker[azfake.PagerResponder[spark.LivySessionsClientListLivySessionsBetaResponse]](),
 	}
 }
 
 // LivySessionsServerTransport connects instances of spark.LivySessionsClient to instances of LivySessionsServer.
 // Don't use this type directly, use NewLivySessionsServerTransport instead.
 type LivySessionsServerTransport struct {
-	srv                             *LivySessionsServer
-	newListLivySessionsPager        *tracker[azfake.PagerResponder[spark.LivySessionsClientListLivySessionsResponse]]
-	newListLivySessionsPreviewPager *tracker[azfake.PagerResponder[spark.LivySessionsClientListLivySessionsPreviewResponse]]
+	srv                          *LivySessionsServer
+	newListLivySessionsPager     *tracker[azfake.PagerResponder[spark.LivySessionsClientListLivySessionsResponse]]
+	newListLivySessionsBetaPager *tracker[azfake.PagerResponder[spark.LivySessionsClientListLivySessionsBetaResponse]]
 }
 
 // Do implements the policy.Transporter interface for LivySessionsServerTransport.
@@ -81,8 +81,8 @@ func (l *LivySessionsServerTransport) dispatchToMethodFake(req *http.Request, me
 			switch method {
 			case "LivySessionsClient.NewListLivySessionsPager":
 				res.resp, res.err = l.dispatchNewListLivySessionsPager(req)
-			case "LivySessionsClient.NewListLivySessionsPreviewPager":
-				res.resp, res.err = l.dispatchNewListLivySessionsPreviewPager(req)
+			case "LivySessionsClient.NewListLivySessionsBetaPager":
+				res.resp, res.err = l.dispatchNewListLivySessionsBetaPager(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -111,7 +111,7 @@ func (l *LivySessionsServerTransport) dispatchNewListLivySessionsPager(req *http
 		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/spark/livySessions`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 1 {
+		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		qp := req.URL.Query()
@@ -151,16 +151,16 @@ func (l *LivySessionsServerTransport) dispatchNewListLivySessionsPager(req *http
 	return resp, nil
 }
 
-func (l *LivySessionsServerTransport) dispatchNewListLivySessionsPreviewPager(req *http.Request) (*http.Response, error) {
-	if l.srv.NewListLivySessionsPreviewPager == nil {
-		return nil, &nonRetriableError{errors.New("fake for method NewListLivySessionsPreviewPager not implemented")}
+func (l *LivySessionsServerTransport) dispatchNewListLivySessionsBetaPager(req *http.Request) (*http.Response, error) {
+	if l.srv.NewListLivySessionsBetaPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListLivySessionsBetaPager not implemented")}
 	}
-	newListLivySessionsPreviewPager := l.newListLivySessionsPreviewPager.get(req)
-	if newListLivySessionsPreviewPager == nil {
+	newListLivySessionsBetaPager := l.newListLivySessionsBetaPager.get(req)
+	if newListLivySessionsBetaPager == nil {
 		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/spark/livySessions`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 1 {
+		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		qp := req.URL.Query()
@@ -168,11 +168,11 @@ func (l *LivySessionsServerTransport) dispatchNewListLivySessionsPreviewPager(re
 		if err != nil {
 			return nil, err
 		}
-		previewUnescaped, err := url.QueryUnescape(qp.Get("preview"))
+		betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
 		if err != nil {
 			return nil, err
 		}
-		previewParam, err := strconv.ParseBool(previewUnescaped)
+		betaParam, err := strconv.ParseBool(betaUnescaped)
 		if err != nil {
 			return nil, err
 		}
@@ -207,9 +207,9 @@ func (l *LivySessionsServerTransport) dispatchNewListLivySessionsPreviewPager(re
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
-		var options *spark.LivySessionsClientListLivySessionsPreviewOptions
+		var options *spark.LivySessionsClientListLivySessionsBetaOptions
 		if submittedDateTimeParam != nil || endDateTimeParam != nil || submitterIDParam != nil || stateParam != nil || continuationTokenParam != nil {
-			options = &spark.LivySessionsClientListLivySessionsPreviewOptions{
+			options = &spark.LivySessionsClientListLivySessionsBetaOptions{
 				SubmittedDateTime: submittedDateTimeParam,
 				EndDateTime:       endDateTimeParam,
 				SubmitterID:       submitterIDParam,
@@ -217,23 +217,23 @@ func (l *LivySessionsServerTransport) dispatchNewListLivySessionsPreviewPager(re
 				ContinuationToken: continuationTokenParam,
 			}
 		}
-		resp := l.srv.NewListLivySessionsPreviewPager(workspaceIDParam, previewParam, options)
-		newListLivySessionsPreviewPager = &resp
-		l.newListLivySessionsPreviewPager.add(req, newListLivySessionsPreviewPager)
-		server.PagerResponderInjectNextLinks(newListLivySessionsPreviewPager, req, func(page *spark.LivySessionsClientListLivySessionsPreviewResponse, createLink func() string) {
+		resp := l.srv.NewListLivySessionsBetaPager(workspaceIDParam, betaParam, options)
+		newListLivySessionsBetaPager = &resp
+		l.newListLivySessionsBetaPager.add(req, newListLivySessionsBetaPager)
+		server.PagerResponderInjectNextLinks(newListLivySessionsBetaPager, req, func(page *spark.LivySessionsClientListLivySessionsBetaResponse, createLink func() string) {
 			page.ContinuationURI = to.Ptr(createLink())
 		})
 	}
-	resp, err := server.PagerResponderNext(newListLivySessionsPreviewPager, req)
+	resp, err := server.PagerResponderNext(newListLivySessionsBetaPager, req)
 	if err != nil {
 		return nil, err
 	}
 	if !contains([]int{http.StatusOK}, resp.StatusCode) {
-		l.newListLivySessionsPreviewPager.remove(req)
+		l.newListLivySessionsBetaPager.remove(req)
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
 	}
-	if !server.PagerResponderMore(newListLivySessionsPreviewPager) {
-		l.newListLivySessionsPreviewPager.remove(req)
+	if !server.PagerResponderMore(newListLivySessionsBetaPager) {
+		l.newListLivySessionsBetaPager.remove(req)
 	}
 	return resp, nil
 }

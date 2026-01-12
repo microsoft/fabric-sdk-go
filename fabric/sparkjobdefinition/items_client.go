@@ -31,8 +31,10 @@ type ItemsClient struct {
 }
 
 // BeginCreateSparkJobDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create spark job definition with a public definition, refer to Spark job definition [/rest/api/fabric/articles/item-management/definitions/spark-job-definition]
-// article.
+// To create spark job definition with a public definition, refer to SparkJobDefinitionV1 [/rest/api/fabric/articles/item-management/definitions/spark-job-definition-v1]
+// article for SparkJobDefinitionV1
+// format and SparkJobDefinitionV2 [/rest/api/fabric/articles/item-management/definitions/spark-job-definition-v2] article
+// for SparkJobDefinitionV2 format.
 // PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES SparkJobDefinition.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
@@ -57,8 +59,10 @@ func (client *ItemsClient) BeginCreateSparkJobDefinition(ctx context.Context, wo
 }
 
 // CreateSparkJobDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create spark job definition with a public definition, refer to Spark job definition [/rest/api/fabric/articles/item-management/definitions/spark-job-definition]
-// article.
+// To create spark job definition with a public definition, refer to SparkJobDefinitionV1 [/rest/api/fabric/articles/item-management/definitions/spark-job-definition-v1]
+// article for SparkJobDefinitionV1
+// format and SparkJobDefinitionV2 [/rest/api/fabric/articles/item-management/definitions/spark-job-definition-v2] article
+// for SparkJobDefinitionV2 format.
 // PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES SparkJobDefinition.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
@@ -307,7 +311,7 @@ func (client *ItemsClient) getSparkJobDefinitionDefinitionCreateRequest(ctx cont
 	}
 	reqQP := req.Raw().URL.Query()
 	if options != nil && options.Format != nil {
-		reqQP.Set("format", *options.Format)
+		reqQP.Set("format", string(*options.Format))
 	}
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
@@ -450,7 +454,11 @@ func (client *ItemsClient) updateSparkJobDefinitionHandleResponse(resp *http.Res
 }
 
 // BeginUpdateSparkJobDefinitionDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// Updating the spark job definition's definition, does not affect its sensitivity label.
+// To update spark job definition with a public definition, refer to SparkJobDefinitionV1 [/rest/api/fabric/articles/item-management/definitions/spark-job-definition-v1]
+// article for SparkJobDefinitionV1
+// format and SparkJobDefinitionV2 [/rest/api/fabric/articles/item-management/definitions/spark-job-definition-v2] article
+// for SparkJobDefinitionV2 format.
+// Updating the spark job definition's definition does not affect its sensitivity label.
 // PERMISSIONS The caller must have read and write permissions for the spark job definition.
 // REQUIRED DELEGATED SCOPES SparkJobDefinition.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -472,7 +480,11 @@ func (client *ItemsClient) BeginUpdateSparkJobDefinitionDefinition(ctx context.C
 }
 
 // UpdateSparkJobDefinitionDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// Updating the spark job definition's definition, does not affect its sensitivity label.
+// To update spark job definition with a public definition, refer to SparkJobDefinitionV1 [/rest/api/fabric/articles/item-management/definitions/spark-job-definition-v1]
+// article for SparkJobDefinitionV1
+// format and SparkJobDefinitionV2 [/rest/api/fabric/articles/item-management/definitions/spark-job-definition-v2] article
+// for SparkJobDefinitionV2 format.
+// Updating the spark job definition's definition does not affect its sensitivity label.
 // PERMISSIONS The caller must have read and write permissions for the spark job definition.
 // REQUIRED DELEGATED SCOPES SparkJobDefinition.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -537,7 +549,8 @@ func (client *ItemsClient) updateSparkJobDefinitionDefinitionCreateRequest(ctx c
 // CreateSparkJobDefinition - returns ItemsClientCreateSparkJobDefinitionResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// To create spark job definition with a public definition, refer to Spark job definition [/rest/api/fabric/articles/item-management/definitions/spark-job-definition] article.
+// To create spark job definition with a public definition, refer to SparkJobDefinitionV1 [/rest/api/fabric/articles/item-management/definitions/spark-job-definition-v1] article for SparkJobDefinitionV1
+// format and SparkJobDefinitionV2 [/rest/api/fabric/articles/item-management/definitions/spark-job-definition-v2] article for SparkJobDefinitionV2 format.
 //
 // PERMISSIONS The caller must have a contributor workspace role.
 //
@@ -686,7 +699,10 @@ func (client *ItemsClient) beginGetSparkJobDefinitionDefinition(ctx context.Cont
 // UpdateSparkJobDefinitionDefinition - returns ItemsClientUpdateSparkJobDefinitionDefinitionResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// Updating the spark job definition's definition, does not affect its sensitivity label.
+// To update spark job definition with a public definition, refer to SparkJobDefinitionV1 [/rest/api/fabric/articles/item-management/definitions/spark-job-definition-v1] article for SparkJobDefinitionV1
+// format and SparkJobDefinitionV2 [/rest/api/fabric/articles/item-management/definitions/spark-job-definition-v2] article for SparkJobDefinitionV2 format.
+//
+// Updating the spark job definition's definition does not affect its sensitivity label.
 //
 // PERMISSIONS The caller must have read and write permissions for the spark job definition.
 //

@@ -6,6 +6,34 @@
 
 package apacheairflowjob
 
+// FilesClientCreateOrUpdateApacheAirflowJobFileBetaWithBinaryOptions contains the optional parameters for the FilesClient.CreateOrUpdateApacheAirflowJobFileBetaWithBinary
+// method.
+type FilesClientCreateOrUpdateApacheAirflowJobFileBetaWithBinaryOptions struct {
+	// placeholder for future optional parameters
+}
+
+// FilesClientDeleteApacheAirflowJobFileBetaOptions contains the optional parameters for the FilesClient.DeleteApacheAirflowJobFileBeta
+// method.
+type FilesClientDeleteApacheAirflowJobFileBetaOptions struct {
+	// placeholder for future optional parameters
+}
+
+// FilesClientGetApacheAirflowJobFileBetaOptions contains the optional parameters for the FilesClient.GetApacheAirflowJobFileBeta
+// method.
+type FilesClientGetApacheAirflowJobFileBetaOptions struct {
+	// placeholder for future optional parameters
+}
+
+// FilesClientListApacheAirflowJobFilesBetaOptions contains the optional parameters for the FilesClient.NewListApacheAirflowJobFilesBetaPager
+// method.
+type FilesClientListApacheAirflowJobFilesBetaOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+
+	// The folder path to list. If not provided, the root directory is used.
+	RootPath *string
+}
+
 // ItemsClientBeginCreateApacheAirflowJobOptions contains the optional parameters for the ItemsClient.BeginCreateApacheAirflowJob
 // method.
 type ItemsClientBeginCreateApacheAirflowJobOptions struct {
@@ -53,5 +81,42 @@ type ItemsClientListApacheAirflowJobsOptions struct {
 
 // ItemsClientUpdateApacheAirflowJobOptions contains the optional parameters for the ItemsClient.UpdateApacheAirflowJob method.
 type ItemsClientUpdateApacheAirflowJobOptions struct {
+	// placeholder for future optional parameters
+}
+
+// PoolManagementClientCreateAirflowPoolTemplateBetaOptions contains the optional parameters for the PoolManagementClient.CreateAirflowPoolTemplateBeta
+// method.
+type PoolManagementClientCreateAirflowPoolTemplateBetaOptions struct {
+	// placeholder for future optional parameters
+}
+
+// PoolManagementClientDeleteAirflowPoolTemplateBetaOptions contains the optional parameters for the PoolManagementClient.DeleteAirflowPoolTemplateBeta
+// method.
+type PoolManagementClientDeleteAirflowPoolTemplateBetaOptions struct {
+	// placeholder for future optional parameters
+}
+
+// PoolManagementClientGetAirflowPoolTemplateBetaOptions contains the optional parameters for the PoolManagementClient.GetAirflowPoolTemplateBeta
+// method.
+type PoolManagementClientGetAirflowPoolTemplateBetaOptions struct {
+	// placeholder for future optional parameters
+}
+
+// PoolManagementClientListAirflowPoolTemplatesBetaOptions contains the optional parameters for the PoolManagementClient.NewListAirflowPoolTemplatesBetaPager
+// method.
+type PoolManagementClientListAirflowPoolTemplatesBetaOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// WorkspaceSettingsClientGetAirflowWorkspaceSettingsBetaOptions contains the optional parameters for the WorkspaceSettingsClient.GetAirflowWorkspaceSettingsBeta
+// method.
+type WorkspaceSettingsClientGetAirflowWorkspaceSettingsBetaOptions struct {
+	// placeholder for future optional parameters
+}
+
+// WorkspaceSettingsClientUpdateAirflowWorkspaceSettingsBetaOptions contains the optional parameters for the WorkspaceSettingsClient.UpdateAirflowWorkspaceSettingsBeta
+// method.
+type WorkspaceSettingsClientUpdateAirflowWorkspaceSettingsBetaOptions struct {
 	// placeholder for future optional parameters
 }

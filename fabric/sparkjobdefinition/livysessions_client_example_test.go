@@ -99,7 +99,7 @@ func ExampleLivySessionsClient_NewListLivySessionsPager() {
 }
 
 // Generated from example definition
-func ExampleLivySessionsClient_NewListLivySessionsPreviewPager() {
+func ExampleLivySessionsClient_NewListLivySessionsBetaPager() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -109,7 +109,7 @@ func ExampleLivySessionsClient_NewListLivySessionsPreviewPager() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewLivySessionsClient().NewListLivySessionsPreviewPager("f8113ba8-dd81-443e-811a-b385340f3f05", "8cee7699-2e81-4121-9a53-cc9025046193", true, &sparkjobdefinition.LivySessionsClientListLivySessionsPreviewOptions{SubmittedDateTime: nil,
+	pager := clientFactory.NewLivySessionsClient().NewListLivySessionsBetaPager("f8113ba8-dd81-443e-811a-b385340f3f05", "8cee7699-2e81-4121-9a53-cc9025046193", true, &sparkjobdefinition.LivySessionsClientListLivySessionsBetaOptions{SubmittedDateTime: nil,
 		EndDateTime:       nil,
 		SubmitterID:       to.Ptr("6f23a8a6-d954-4550-b91a-4df73ccd0311"),
 		State:             nil,

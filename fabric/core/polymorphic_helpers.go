@@ -126,6 +126,8 @@ func unmarshalCredentialsClassification(rawMsg json.RawMessage) (CredentialsClas
 		b = &BasicCredentials{}
 	case string(CredentialTypeKey):
 		b = &KeyCredentials{}
+	case string(CredentialTypeKeyPair):
+		b = &KeyPairCredentials{}
 	case string(CredentialTypeServicePrincipal):
 		b = &ServicePrincipalCredentials{}
 	case string(CredentialTypeSharedAccessSignature):

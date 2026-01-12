@@ -29,7 +29,7 @@ func ExampleBackgroundJobsClient_RunOnDemandTableMaintenance_runTableMaintenance
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewBackgroundJobsClient().RunOnDemandTableMaintenance(ctx, "4b218778-e7a5-4d73-8187-f10824047715", "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7", "TableMaintenance", lakehouse.RunOnDemandTableMaintenanceRequest{
+	_, err = clientFactory.NewBackgroundJobsClient().RunOnDemandTableMaintenance(ctx, "4b218778-e7a5-4d73-8187-f10824047715", "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7", lakehouse.RunOnDemandTableMaintenanceRequest{
 		ExecutionData: &lakehouse.TableMaintenanceExecutionData{
 			OptimizeSettings: &lakehouse.OptimizeSettings{
 				VOrder: to.Ptr(true),
@@ -59,7 +59,7 @@ func ExampleBackgroundJobsClient_RunOnDemandTableMaintenance_runTableMaintenance
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewBackgroundJobsClient().RunOnDemandTableMaintenance(ctx, "4b218778-e7a5-4d73-8187-f10824047715", "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7", "TableMaintenance", lakehouse.RunOnDemandTableMaintenanceRequest{
+	_, err = clientFactory.NewBackgroundJobsClient().RunOnDemandTableMaintenance(ctx, "4b218778-e7a5-4d73-8187-f10824047715", "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7", lakehouse.RunOnDemandTableMaintenanceRequest{
 		ExecutionData: &lakehouse.TableMaintenanceExecutionData{
 			OptimizeSettings: &lakehouse.OptimizeSettings{
 				VOrder: to.Ptr(true),
@@ -88,7 +88,7 @@ func ExampleBackgroundJobsClient_RunOnDemandTableMaintenance_runTableMaintenance
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewBackgroundJobsClient().RunOnDemandTableMaintenance(ctx, "4b218778-e7a5-4d73-8187-f10824047715", "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7", "TableMaintenance", lakehouse.RunOnDemandTableMaintenanceRequest{
+	_, err = clientFactory.NewBackgroundJobsClient().RunOnDemandTableMaintenance(ctx, "4b218778-e7a5-4d73-8187-f10824047715", "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7", lakehouse.RunOnDemandTableMaintenanceRequest{
 		ExecutionData: &lakehouse.TableMaintenanceExecutionData{
 			OptimizeSettings: &lakehouse.OptimizeSettings{},
 			TableName:        to.Ptr("table1"),
@@ -136,7 +136,7 @@ func ExampleBackgroundJobsClient_RunOnDemandRefreshMaterializedLakeViews() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewBackgroundJobsClient().RunOnDemandRefreshMaterializedLakeViews(ctx, "4b218778-e7a5-4d73-8187-f10824047715", "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7", "RefreshMaterializedLakeViews", nil)
+	_, err = clientFactory.NewBackgroundJobsClient().RunOnDemandRefreshMaterializedLakeViews(ctx, "4b218778-e7a5-4d73-8187-f10824047715", "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

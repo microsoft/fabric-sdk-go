@@ -47,10 +47,34 @@ func NewClientFactoryWithClient(client fabric.Client) *ClientFactory {
 	}
 }
 
+// NewFilesClient creates a new instance of FilesClient.
+func (c *ClientFactory) NewFilesClient() *FilesClient {
+	return &FilesClient{
+		internal: c.internal.WithClientName("apacheairflowjob.FilesClient"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewItemsClient creates a new instance of ItemsClient.
 func (c *ClientFactory) NewItemsClient() *ItemsClient {
 	return &ItemsClient{
 		internal: c.internal.WithClientName("apacheairflowjob.ItemsClient"),
+		endpoint: c.endpoint,
+	}
+}
+
+// NewPoolManagementClient creates a new instance of PoolManagementClient.
+func (c *ClientFactory) NewPoolManagementClient() *PoolManagementClient {
+	return &PoolManagementClient{
+		internal: c.internal.WithClientName("apacheairflowjob.PoolManagementClient"),
+		endpoint: c.endpoint,
+	}
+}
+
+// NewWorkspaceSettingsClient creates a new instance of WorkspaceSettingsClient.
+func (c *ClientFactory) NewWorkspaceSettingsClient() *WorkspaceSettingsClient {
+	return &WorkspaceSettingsClient{
+		internal: c.internal.WithClientName("apacheairflowjob.WorkspaceSettingsClient"),
 		endpoint: c.endpoint,
 	}
 }

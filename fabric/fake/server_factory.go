@@ -20,6 +20,7 @@ import (
 	apacheairflowjobfake "github.com/microsoft/fabric-sdk-go/fabric/apacheairflowjob/fake"
 	copyjobfake "github.com/microsoft/fabric-sdk-go/fabric/copyjob/fake"
 	corefake "github.com/microsoft/fabric-sdk-go/fabric/core/fake"
+	cosmosdbdatabasefake "github.com/microsoft/fabric-sdk-go/fabric/cosmosdbdatabase/fake"
 	dashboardfake "github.com/microsoft/fabric-sdk-go/fabric/dashboard/fake"
 	dataflowfake "github.com/microsoft/fabric-sdk-go/fabric/dataflow/fake"
 	datamartfake "github.com/microsoft/fabric-sdk-go/fabric/datamart/fake"
@@ -28,6 +29,7 @@ import (
 	digitaltwinbuilderflowfake "github.com/microsoft/fabric-sdk-go/fabric/digitaltwinbuilderflow/fake"
 	environmentfake "github.com/microsoft/fabric-sdk-go/fabric/environment/fake"
 	eventhousefake "github.com/microsoft/fabric-sdk-go/fabric/eventhouse/fake"
+	eventschemasetfake "github.com/microsoft/fabric-sdk-go/fabric/eventschemaset/fake"
 	eventstreamfake "github.com/microsoft/fabric-sdk-go/fabric/eventstream/fake"
 	graphmodelfake "github.com/microsoft/fabric-sdk-go/fabric/graphmodel/fake"
 	graphqlapifake "github.com/microsoft/fabric-sdk-go/fabric/graphqlapi/fake"
@@ -44,7 +46,10 @@ import (
 	mlmodelfake "github.com/microsoft/fabric-sdk-go/fabric/mlmodel/fake"
 	mounteddatafactoryfake "github.com/microsoft/fabric-sdk-go/fabric/mounteddatafactory/fake"
 	notebookfake "github.com/microsoft/fabric-sdk-go/fabric/notebook/fake"
+	ontologyfake "github.com/microsoft/fabric-sdk-go/fabric/ontology/fake"
+	operationsagentfake "github.com/microsoft/fabric-sdk-go/fabric/operationsagent/fake"
 	paginatedreportfake "github.com/microsoft/fabric-sdk-go/fabric/paginatedreport/fake"
+	realtimeintelligencefake "github.com/microsoft/fabric-sdk-go/fabric/realtimeintelligence/fake"
 	reflexfake "github.com/microsoft/fabric-sdk-go/fabric/reflex/fake"
 	reportfake "github.com/microsoft/fabric-sdk-go/fabric/report/fake"
 	semanticmodelfake "github.com/microsoft/fabric-sdk-go/fabric/semanticmodel/fake"
@@ -65,6 +70,7 @@ type ServerFactory struct {
 	Apache                         apacheairflowjobfake.ServerFactory
 	CopyJob                        copyjobfake.ServerFactory
 	Core                           corefake.ServerFactory
+	Cosmos                         cosmosdbdatabasefake.ServerFactory
 	Dashboard                      dashboardfake.ServerFactory
 	Dataflow                       dataflowfake.ServerFactory
 	Datamart                       datamartfake.ServerFactory
@@ -73,6 +79,7 @@ type ServerFactory struct {
 	DigitalTwinBuilderFlow         digitaltwinbuilderflowfake.ServerFactory
 	Environment                    environmentfake.ServerFactory
 	Eventhouse                     eventhousefake.ServerFactory
+	EventSchemaSet                 eventschemasetfake.ServerFactory
 	Eventstream                    eventstreamfake.ServerFactory
 	GraphModel                     graphmodelfake.ServerFactory
 	GraphQLApi                     graphqlapifake.ServerFactory
@@ -89,7 +96,10 @@ type ServerFactory struct {
 	MLModel                        mlmodelfake.ServerFactory
 	MountedDataFactory             mounteddatafactoryfake.ServerFactory
 	Notebook                       notebookfake.ServerFactory
+	Ontology                       ontologyfake.ServerFactory
+	OperationsAgent                operationsagentfake.ServerFactory
 	PaginatedReport                paginatedreportfake.ServerFactory
+	Real                           realtimeintelligencefake.ServerFactory
 	Reflex                         reflexfake.ServerFactory
 	Report                         reportfake.ServerFactory
 	SemanticModel                  semanticmodelfake.ServerFactory
@@ -113,6 +123,7 @@ type ServerFactoryTransport struct {
 	trApache                         *apacheairflowjobfake.ServerFactoryTransport
 	trCopyJob                        *copyjobfake.ServerFactoryTransport
 	trCore                           *corefake.ServerFactoryTransport
+	trCosmos                         *cosmosdbdatabasefake.ServerFactoryTransport
 	trDashboard                      *dashboardfake.ServerFactoryTransport
 	trDataflow                       *dataflowfake.ServerFactoryTransport
 	trDatamart                       *datamartfake.ServerFactoryTransport
@@ -121,6 +132,7 @@ type ServerFactoryTransport struct {
 	trDigitalTwinBuilderFlow         *digitaltwinbuilderflowfake.ServerFactoryTransport
 	trEnvironment                    *environmentfake.ServerFactoryTransport
 	trEventhouse                     *eventhousefake.ServerFactoryTransport
+	trEventSchemaSet                 *eventschemasetfake.ServerFactoryTransport
 	trEventstream                    *eventstreamfake.ServerFactoryTransport
 	trGraphModel                     *graphmodelfake.ServerFactoryTransport
 	trGraphQLApi                     *graphqlapifake.ServerFactoryTransport
@@ -137,7 +149,10 @@ type ServerFactoryTransport struct {
 	trMLModel                        *mlmodelfake.ServerFactoryTransport
 	trMountedDataFactory             *mounteddatafactoryfake.ServerFactoryTransport
 	trNotebook                       *notebookfake.ServerFactoryTransport
+	trOntology                       *ontologyfake.ServerFactoryTransport
+	trOperationsAgent                *operationsagentfake.ServerFactoryTransport
 	trPaginatedReport                *paginatedreportfake.ServerFactoryTransport
+	trReal                           *realtimeintelligencefake.ServerFactoryTransport
 	trReflex                         *reflexfake.ServerFactoryTransport
 	trReport                         *reportfake.ServerFactoryTransport
 	trSemanticModel                  *semanticmodelfake.ServerFactoryTransport
@@ -195,6 +210,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	case "core":
 		initServer(s, &s.trCore, func() *corefake.ServerFactoryTransport { return corefake.NewServerFactoryTransport(&s.srv.Core) })
 		resp, err = s.trCore.Do(req)
+	case "cosmosdbdatabase":
+		initServer(s, &s.trCosmos, func() *cosmosdbdatabasefake.ServerFactoryTransport {
+			return cosmosdbdatabasefake.NewServerFactoryTransport(&s.srv.Cosmos)
+		})
+		resp, err = s.trCosmos.Do(req)
 	case "dashboard":
 		initServer(s, &s.trDashboard, func() *dashboardfake.ServerFactoryTransport {
 			return dashboardfake.NewServerFactoryTransport(&s.srv.Dashboard)
@@ -235,6 +255,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return eventhousefake.NewServerFactoryTransport(&s.srv.Eventhouse)
 		})
 		resp, err = s.trEventhouse.Do(req)
+	case "eventschemaset":
+		initServer(s, &s.trEventSchemaSet, func() *eventschemasetfake.ServerFactoryTransport {
+			return eventschemasetfake.NewServerFactoryTransport(&s.srv.EventSchemaSet)
+		})
+		resp, err = s.trEventSchemaSet.Do(req)
 	case "eventstream":
 		initServer(s, &s.trEventstream, func() *eventstreamfake.ServerFactoryTransport {
 			return eventstreamfake.NewServerFactoryTransport(&s.srv.Eventstream)
@@ -313,11 +338,26 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return notebookfake.NewServerFactoryTransport(&s.srv.Notebook)
 		})
 		resp, err = s.trNotebook.Do(req)
+	case "ontology":
+		initServer(s, &s.trOntology, func() *ontologyfake.ServerFactoryTransport {
+			return ontologyfake.NewServerFactoryTransport(&s.srv.Ontology)
+		})
+		resp, err = s.trOntology.Do(req)
+	case "operationsagent":
+		initServer(s, &s.trOperationsAgent, func() *operationsagentfake.ServerFactoryTransport {
+			return operationsagentfake.NewServerFactoryTransport(&s.srv.OperationsAgent)
+		})
+		resp, err = s.trOperationsAgent.Do(req)
 	case "paginatedreport":
 		initServer(s, &s.trPaginatedReport, func() *paginatedreportfake.ServerFactoryTransport {
 			return paginatedreportfake.NewServerFactoryTransport(&s.srv.PaginatedReport)
 		})
 		resp, err = s.trPaginatedReport.Do(req)
+	case "realtimeintelligence":
+		initServer(s, &s.trReal, func() *realtimeintelligencefake.ServerFactoryTransport {
+			return realtimeintelligencefake.NewServerFactoryTransport(&s.srv.Real)
+		})
+		resp, err = s.trReal.Do(req)
 	case "reflex":
 		initServer(s, &s.trReflex, func() *reflexfake.ServerFactoryTransport { return reflexfake.NewServerFactoryTransport(&s.srv.Reflex) })
 		resp, err = s.trReflex.Do(req)

@@ -148,6 +148,58 @@ func (testsuite *FakeTestSuite) TestItems_CreateLakehouse() {
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a lakehouse with definition example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCreateLakehouseRequest = lakehouse.CreateLakehouseRequest{
+		Description: to.Ptr("Example lakehouse with definition"),
+		Definition: &lakehouse.Definition{
+			Format: to.Ptr("LakehouseDefinitionV1"),
+			Parts: []lakehouse.DefinitionPart{
+				{
+					Path:        to.Ptr("lakehouse.metadata.json"),
+					Payload:     to.Ptr("eyJkZWZhdWx0U2NoZW1hIjoiZGJvIn0="),
+					PayloadType: to.Ptr(lakehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("shortcuts.metadata.json"),
+					Payload:     to.Ptr("WwogIHsKICAgICJuYW1lIjogIk55Y1RheGkiLAogICAgInBhdGgiOiAiL1RhYmxlcyIsCiAgICAidGFyZ2V0IjogewogICAgICAidHlwZSI6ICJPbmVMYWtlIiwKICAgICAgIm9uZUxha2UiOiB7CiAgICAgICAgInBhdGgiOiAiRmlsZXMvTnljVGF4aSIsCiAgICAgICAgIml0ZW1JZCI6ICIxNzBjYzY3Ni1hYzFhLTkwNmUtNDE5Mi0zZGJlZGM1MmYwMWUiLAogICAgICAgICJ3b3Jrc3BhY2VJZCI6ICJjZmFmYmViMS04MDM3LTRkMGMtODk2ZS1hNDZmYjI3ZmYyMjkiLAogICAgICAgICJhcnRpZmFjdFR5cGUiOiAiTGFrZWhvdXNlIgogICAgICB9CiAgICB9CiAgfQpd"),
+					PayloadType: to.Ptr(lakehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("data-access-roles.json"),
+					Payload:     to.Ptr("Ww0KICAgICAgICAgICAgICB7DQogICAgICAgICAgICAgICAgIm5hbWUiOiAiZGltZW5zaW9ucnVsZXJlbmFtZSIsDQogICAgICAgICAgICAgICAgImtpbmQiOiAiUG9saWN5IiwNCiAgICAgICAgICAgICAgICAiZGVjaXNpb25SdWxlcyI6IFsNCiAgICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICAgImVmZmVjdCI6ICJQZXJtaXQiLA0KICAgICAgICAgICAgICAgICAgICAicGVybWlzc2lvbiI6IFsNCiAgICAgICAgICAgICAgICAgICAgICB7DQogICAgICAgICAgICAgICAgICAgICAgICAiYXR0cmlidXRlTmFtZSI6ICJQYXRoIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICJhdHRyaWJ1dGVWYWx1ZUluY2x1ZGVkSW4iOiBbDQogICAgICAgICAgICAgICAgICAgICAgICAgICIvVGFibGVzL2Riby9kaW1lbnNpb25fY2l0eSIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICIvVGFibGVzL2Riby9kaW1lbnNpb25fY3VzdG9tZXIiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAiL1RhYmxlcy9kYm8vZGltZW5zaW9uX2RhdGUiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAiL1RhYmxlcy9kYm8vZGltZW5zaW9uX2VtcGxveWVlIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgIi9UYWJsZXMvZGJvL2RpbWVuc2lvbl9zdG9ja19pdGVtIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgIi9UYWJsZXMvYnJvbnplIg0KICAgICAgICAgICAgICAgICAgICAgICAgXQ0KICAgICAgICAgICAgICAgICAgICAgIH0sDQogICAgICAgICAgICAgICAgICAgICAgew0KICAgICAgICAgICAgICAgICAgICAgICAgImF0dHJpYnV0ZU5hbWUiOiAiQWN0aW9uIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICJhdHRyaWJ1dGVWYWx1ZUluY2x1ZGVkSW4iOiBbDQogICAgICAgICAgICAgICAgICAgICAgICAgICJSZWFkIg0KICAgICAgICAgICAgICAgICAgICAgICAgXQ0KICAgICAgICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgICAgICAgXSwNCiAgICAgICAgICAgICAgICAgICAgImNvbnN0cmFpbnRzIjoge30NCiAgICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgICBdLA0KICAgICAgICAgICAgICAgICJtZW1iZXJzIjogew0KICAgICAgICAgICAgICAgICAgImZhYnJpY0l0ZW1NZW1iZXJzIjogW10sDQogICAgICAgICAgICAgICAgICAgICJtaWNyb3NvZnRFbnRyYU1lbWJlcnMiOiBbDQogICAgICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICAgICAidGVuYW50SWQiOiAiMWU4NTAwMGUtZWUzNS00MTEyLWJkNDYtMmYwMGIzZDk0MTU0IiwNCiAgICAgICAgICAgICAgICAgICAgICAib2JqZWN0SWQiOiAiNWYzZWZkMzctYTZkMi00MzJmLTk5ZmEtNmFkYzI4NDhhNDBhIg0KICAgICAgICAgICAgICAgICAgICB9DQogICAgICAgICAgICAgICAgICBdDQogICAgICAgICAgICAgICAgfQ0KICAgICAgICAgICAgICB9LA0KICAgICAgICAgICAgICB7DQogICAgICAgICAgICAgICAgIm5hbWUiOiAiRGVmYXVsdFJlYWRlciIsDQogICAgICAgICAgICAgICAgImtpbmQiOiAiUG9saWN5IiwNCiAgICAgICAgICAgICAgICAiZGVjaXNpb25SdWxlcyI6IFsNCiAgICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICAgImVmZmVjdCI6ICJQZXJtaXQiLA0KICAgICAgICAgICAgICAgICAgICAicGVybWlzc2lvbiI6IFsNCiAgICAgICAgICAgICAgICAgICAgICB7DQogICAgICAgICAgICAgICAgICAgICAgICAiYXR0cmlidXRlTmFtZSI6ICJBY3Rpb24iLA0KICAgICAgICAgICAgICAgICAgICAgICAgImF0dHJpYnV0ZVZhbHVlSW5jbHVkZWRJbiI6IFsNCiAgICAgICAgICAgICAgICAgICAgICAgICAgIlJlYWQiDQogICAgICAgICAgICAgICAgICAgICAgICBdDQogICAgICAgICAgICAgICAgICAgICAgfSwNCiAgICAgICAgICAgICAgICAgICAgICB7DQogICAgICAgICAgICAgICAgICAgICAgICAiYXR0cmlidXRlTmFtZSI6ICJQYXRoIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICJhdHRyaWJ1dGVWYWx1ZUluY2x1ZGVkSW4iOiBbDQogICAgICAgICAgICAgICAgICAgICAgICAgICIqIg0KICAgICAgICAgICAgICAgICAgICAgICAgXQ0KICAgICAgICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgICAgICAgXQ0KICAgICAgICAgICAgICAgICAgfQ0KICAgICAgICAgICAgICAgIF0sDQogICAgICAgICAgICAgICAgIm1lbWJlcnMiOiB7DQogICAgICAgICAgICAgICAgICAiZmFicmljSXRlbU1lbWJlcnMiOiBbDQogICAgICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICAgICAiaXRlbUFjY2VzcyI6IFsNCiAgICAgICAgICAgICAgICAgICAgICAgICJSZWFkQWxsIg0KICAgICAgICAgICAgICAgICAgICAgIF0sDQogICAgICAgICAgICAgICAgICAgICAgInNvdXJjZVBhdGgiOiAiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwLzAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCINCiAgICAgICAgICAgICAgICAgICAgfQ0KICAgICAgICAgICAgICAgICAgXQ0KICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgfQ0KICAgICAgICAgICAgXQ=="),
+					PayloadType: to.Ptr(lakehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("alm.settings.json"),
+					Payload:     to.Ptr("ew0KICAgICAgICAgICJ2ZXJzaW9uIjogIjEuMC4xIiwNCiAgICAgICAgICAib2JqZWN0VHlwZXMiOiBbDQogICAgICAgICAgICB7DQogICAgICAgICAgICAgICJuYW1lIjogIlNob3J0Y3V0cyIsDQogICAgICAgICAgICAgICJzdGF0ZSI6ICJFbmFibGVkIiwNCiAgICAgICAgICAgICAgInN1Yk9iamVjdFR5cGVzIjogWw0KICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICJuYW1lIjogIlNob3J0Y3V0cy5PbmVMYWtlIiwNCiAgICAgICAgICAgICAgICAgICJzdGF0ZSI6ICJFbmFibGVkIg0KICAgICAgICAgICAgICAgIH0sDQogICAgICAgICAgICAgICAgew0KICAgICAgICAgICAgICAgICAgIm5hbWUiOiAiU2hvcnRjdXRzLkFkbHNHZW4yIiwNCiAgICAgICAgICAgICAgICAgICJzdGF0ZSI6ICJFbmFibGVkIg0KICAgICAgICAgICAgICAgIH0sDQogICAgICAgICAgICAgICAgew0KICAgICAgICAgICAgICAgICAgIm5hbWUiOiAiU2hvcnRjdXRzLkRhdGF2ZXJzZSIsDQogICAgICAgICAgICAgICAgICAic3RhdGUiOiAiRW5hYmxlZCINCiAgICAgICAgICAgICAgICB9LA0KICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICJuYW1lIjogIlNob3J0Y3V0cy5BbWF6b25TMyIsDQogICAgICAgICAgICAgICAgICAic3RhdGUiOiAiRW5hYmxlZCINCiAgICAgICAgICAgICAgICB9LA0KICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICJuYW1lIjogIlNob3J0Y3V0cy5TM0NvbXBhdGlibGUiLA0KICAgICAgICAgICAgICAgICAgInN0YXRlIjogIkVuYWJsZWQiDQogICAgICAgICAgICAgICAgfSwNCiAgICAgICAgICAgICAgICB7DQogICAgICAgICAgICAgICAgICAibmFtZSI6ICJTaG9ydGN1dHMuR29vZ2xlQ2xvdWRTdG9yYWdlIiwNCiAgICAgICAgICAgICAgICAgICJzdGF0ZSI6ICJFbmFibGVkIg0KICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgXQ0KICAgICAgICAgICAgfSwNCiAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgIm5hbWUiOiAiRGF0YUFjY2Vzc1JvbGVzIiwNCiAgICAgICAgICAgICAgInN0YXRlIjogIkVuYWJsZWQiDQogICAgICAgICAgICB9DQogICAgICAgICAgXQ0KICAgICAgICB9"),
+					PayloadType: to.Ptr(lakehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ewogICIkc2NoZW1hIjogImh0dHBzOi8vZGV2ZWxvcGVyLm1pY3Jvc29mdC5jb20vanNvbi1zY2hlbWFzL2ZhYnJpYy9naXRJbnRlZ3JhdGlvbi9wbGF0Zm9ybVByb3BlcnRpZXMvMi4wLjAvc2NoZW1hLmpzb24iLAogICJtZXRhZGF0YSI6IHsKICAgICJ0eXBlIjogIkxha2Vob3VzZSIsCiAgICAiZGlzcGxheU5hbWUiOiAiTGFrZWhvdXNlX2NyZWF0ZWRfd2l0aF9kZWZpbml0aW9uIiwKICAgICJkZXNjcmlwdGlvbiI6ICJFeGFtcGxlIGxha2Vob3VzZSB3aXRoIGRlZmluaXRpb24iCiAgfSwKICAiY29uZmlnIjogewogICAgInZlcnNpb24iOiAiMi4wIiwKICAgICJsb2dpY2FsSWQiOiAiN2Q2NDE0ZDEtMmM1Ni04OWI2LTQ4NzQtOWM4NDUwMzgxZDJiIgogIH0KfQ=="),
+					PayloadType: to.Ptr(lakehouse.PayloadTypeInlineBase64),
+				}},
+		},
+		DisplayName: to.Ptr("Lakehouse_created_with_definition"),
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginCreateLakehouse = func(ctx context.Context, workspaceID string, createLakehouseRequest lakehouse.CreateLakehouseRequest, options *lakehouse.ItemsClientBeginCreateLakehouseOptions) (resp azfake.PollerResponder[lakehouse.ItemsClientCreateLakehouseResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateLakehouseRequest, createLakehouseRequest))
+		resp = azfake.PollerResponder[lakehouse.ItemsClientCreateLakehouseResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, lakehouse.ItemsClientCreateLakehouseResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateLakehouse(ctx, exampleWorkspaceID, exampleCreateLakehouseRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Create a lakehouse with schema example"},
 	})
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
@@ -312,6 +364,130 @@ func (testsuite *FakeTestSuite) TestItems_DeleteLakehouse() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
+func (testsuite *FakeTestSuite) TestItems_GetLakehouseDefinition() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a lakehouse public definition example"},
+	})
+	var exampleWorkspaceID string
+	var exampleLakehouseID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleLakehouseID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	exampleRes := lakehouse.DefinitionResponse{
+		Definition: &lakehouse.Definition{
+			Parts: []lakehouse.DefinitionPart{
+				{
+					Path:        to.Ptr("lakehouse.metadata.json"),
+					Payload:     to.Ptr("eyJkZWZhdWx0U2NoZW1hIjoiZGJvIn0="),
+					PayloadType: to.Ptr(lakehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("shortcuts.metadata.json"),
+					Payload:     to.Ptr("WwogIHsKICAgICJuYW1lIjogIk55Y1RheGkiLAogICAgInBhdGgiOiAiL1RhYmxlcyIsCiAgICAidGFyZ2V0IjogewogICAgICAidHlwZSI6ICJPbmVMYWtlIiwKICAgICAgIm9uZUxha2UiOiB7CiAgICAgICAgInBhdGgiOiAiRmlsZXMvTnljVGF4aSIsCiAgICAgICAgIml0ZW1JZCI6ICIxNzBjYzY3Ni1hYzFhLTkwNmUtNDE5Mi0zZGJlZGM1MmYwMWUiLAogICAgICAgICJ3b3Jrc3BhY2VJZCI6ICJjZmFmYmViMS04MDM3LTRkMGMtODk2ZS1hNDZmYjI3ZmYyMjkiLAogICAgICAgICJhcnRpZmFjdFR5cGUiOiAiTGFrZWhvdXNlIgogICAgICB9CiAgICB9CiAgfQpd"),
+					PayloadType: to.Ptr(lakehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("data-access-roles.json"),
+					Payload:     to.Ptr("Ww0KICAgICAgICAgICAgICB7DQogICAgICAgICAgICAgICAgIm5hbWUiOiAiZGltZW5zaW9ucnVsZXJlbmFtZSIsDQogICAgICAgICAgICAgICAgImtpbmQiOiAiUG9saWN5IiwNCiAgICAgICAgICAgICAgICAiZGVjaXNpb25SdWxlcyI6IFsNCiAgICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICAgImVmZmVjdCI6ICJQZXJtaXQiLA0KICAgICAgICAgICAgICAgICAgICAicGVybWlzc2lvbiI6IFsNCiAgICAgICAgICAgICAgICAgICAgICB7DQogICAgICAgICAgICAgICAgICAgICAgICAiYXR0cmlidXRlTmFtZSI6ICJQYXRoIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICJhdHRyaWJ1dGVWYWx1ZUluY2x1ZGVkSW4iOiBbDQogICAgICAgICAgICAgICAgICAgICAgICAgICIvVGFibGVzL2Riby9kaW1lbnNpb25fY2l0eSIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICIvVGFibGVzL2Riby9kaW1lbnNpb25fY3VzdG9tZXIiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAiL1RhYmxlcy9kYm8vZGltZW5zaW9uX2RhdGUiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAiL1RhYmxlcy9kYm8vZGltZW5zaW9uX2VtcGxveWVlIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgIi9UYWJsZXMvZGJvL2RpbWVuc2lvbl9zdG9ja19pdGVtIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgIi9UYWJsZXMvYnJvbnplIg0KICAgICAgICAgICAgICAgICAgICAgICAgXQ0KICAgICAgICAgICAgICAgICAgICAgIH0sDQogICAgICAgICAgICAgICAgICAgICAgew0KICAgICAgICAgICAgICAgICAgICAgICAgImF0dHJpYnV0ZU5hbWUiOiAiQWN0aW9uIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICJhdHRyaWJ1dGVWYWx1ZUluY2x1ZGVkSW4iOiBbDQogICAgICAgICAgICAgICAgICAgICAgICAgICJSZWFkIg0KICAgICAgICAgICAgICAgICAgICAgICAgXQ0KICAgICAgICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgICAgICAgXSwNCiAgICAgICAgICAgICAgICAgICAgImNvbnN0cmFpbnRzIjoge30NCiAgICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgICBdLA0KICAgICAgICAgICAgICAgICJtZW1iZXJzIjogew0KICAgICAgICAgICAgICAgICAgImZhYnJpY0l0ZW1NZW1iZXJzIjogW10sDQogICAgICAgICAgICAgICAgICAgICJtaWNyb3NvZnRFbnRyYU1lbWJlcnMiOiBbDQogICAgICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICAgICAidGVuYW50SWQiOiAiMWU4NTAwMGUtZWUzNS00MTEyLWJkNDYtMmYwMGIzZDk0MTU0IiwNCiAgICAgICAgICAgICAgICAgICAgICAib2JqZWN0SWQiOiAiNWYzZWZkMzctYTZkMi00MzJmLTk5ZmEtNmFkYzI4NDhhNDBhIg0KICAgICAgICAgICAgICAgICAgICB9DQogICAgICAgICAgICAgICAgICBdDQogICAgICAgICAgICAgICAgfQ0KICAgICAgICAgICAgICB9LA0KICAgICAgICAgICAgICB7DQogICAgICAgICAgICAgICAgIm5hbWUiOiAiRGVmYXVsdFJlYWRlciIsDQogICAgICAgICAgICAgICAgImtpbmQiOiAiUG9saWN5IiwNCiAgICAgICAgICAgICAgICAiZGVjaXNpb25SdWxlcyI6IFsNCiAgICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICAgImVmZmVjdCI6ICJQZXJtaXQiLA0KICAgICAgICAgICAgICAgICAgICAicGVybWlzc2lvbiI6IFsNCiAgICAgICAgICAgICAgICAgICAgICB7DQogICAgICAgICAgICAgICAgICAgICAgICAiYXR0cmlidXRlTmFtZSI6ICJBY3Rpb24iLA0KICAgICAgICAgICAgICAgICAgICAgICAgImF0dHJpYnV0ZVZhbHVlSW5jbHVkZWRJbiI6IFsNCiAgICAgICAgICAgICAgICAgICAgICAgICAgIlJlYWQiDQogICAgICAgICAgICAgICAgICAgICAgICBdDQogICAgICAgICAgICAgICAgICAgICAgfSwNCiAgICAgICAgICAgICAgICAgICAgICB7DQogICAgICAgICAgICAgICAgICAgICAgICAiYXR0cmlidXRlTmFtZSI6ICJQYXRoIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICJhdHRyaWJ1dGVWYWx1ZUluY2x1ZGVkSW4iOiBbDQogICAgICAgICAgICAgICAgICAgICAgICAgICIqIg0KICAgICAgICAgICAgICAgICAgICAgICAgXQ0KICAgICAgICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgICAgICAgXQ0KICAgICAgICAgICAgICAgICAgfQ0KICAgICAgICAgICAgICAgIF0sDQogICAgICAgICAgICAgICAgIm1lbWJlcnMiOiB7DQogICAgICAgICAgICAgICAgICAiZmFicmljSXRlbU1lbWJlcnMiOiBbDQogICAgICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICAgICAiaXRlbUFjY2VzcyI6IFsNCiAgICAgICAgICAgICAgICAgICAgICAgICJSZWFkQWxsIg0KICAgICAgICAgICAgICAgICAgICAgIF0sDQogICAgICAgICAgICAgICAgICAgICAgInNvdXJjZVBhdGgiOiAiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwLzAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCINCiAgICAgICAgICAgICAgICAgICAgfQ0KICAgICAgICAgICAgICAgICAgXQ0KICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgfQ0KICAgICAgICAgICAgXQ=="),
+					PayloadType: to.Ptr(lakehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("alm.settings.json"),
+					Payload:     to.Ptr("ew0KICAgICAgICAgICJ2ZXJzaW9uIjogIjEuMC4xIiwNCiAgICAgICAgICAib2JqZWN0VHlwZXMiOiBbDQogICAgICAgICAgICB7DQogICAgICAgICAgICAgICJuYW1lIjogIlNob3J0Y3V0cyIsDQogICAgICAgICAgICAgICJzdGF0ZSI6ICJFbmFibGVkIiwNCiAgICAgICAgICAgICAgInN1Yk9iamVjdFR5cGVzIjogWw0KICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICJuYW1lIjogIlNob3J0Y3V0cy5PbmVMYWtlIiwNCiAgICAgICAgICAgICAgICAgICJzdGF0ZSI6ICJFbmFibGVkIg0KICAgICAgICAgICAgICAgIH0sDQogICAgICAgICAgICAgICAgew0KICAgICAgICAgICAgICAgICAgIm5hbWUiOiAiU2hvcnRjdXRzLkFkbHNHZW4yIiwNCiAgICAgICAgICAgICAgICAgICJzdGF0ZSI6ICJFbmFibGVkIg0KICAgICAgICAgICAgICAgIH0sDQogICAgICAgICAgICAgICAgew0KICAgICAgICAgICAgICAgICAgIm5hbWUiOiAiU2hvcnRjdXRzLkRhdGF2ZXJzZSIsDQogICAgICAgICAgICAgICAgICAic3RhdGUiOiAiRW5hYmxlZCINCiAgICAgICAgICAgICAgICB9LA0KICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICJuYW1lIjogIlNob3J0Y3V0cy5BbWF6b25TMyIsDQogICAgICAgICAgICAgICAgICAic3RhdGUiOiAiRW5hYmxlZCINCiAgICAgICAgICAgICAgICB9LA0KICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICJuYW1lIjogIlNob3J0Y3V0cy5TM0NvbXBhdGlibGUiLA0KICAgICAgICAgICAgICAgICAgInN0YXRlIjogIkVuYWJsZWQiDQogICAgICAgICAgICAgICAgfSwNCiAgICAgICAgICAgICAgICB7DQogICAgICAgICAgICAgICAgICAibmFtZSI6ICJTaG9ydGN1dHMuR29vZ2xlQ2xvdWRTdG9yYWdlIiwNCiAgICAgICAgICAgICAgICAgICJzdGF0ZSI6ICJFbmFibGVkIg0KICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgXQ0KICAgICAgICAgICAgfSwNCiAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgIm5hbWUiOiAiRGF0YUFjY2Vzc1JvbGVzIiwNCiAgICAgICAgICAgICAgInN0YXRlIjogIkVuYWJsZWQiDQogICAgICAgICAgICB9DQogICAgICAgICAgXQ0KICAgICAgICB9"),
+					PayloadType: to.Ptr(lakehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ewogICIkc2NoZW1hIjogImh0dHBzOi8vZGV2ZWxvcGVyLm1pY3Jvc29mdC5jb20vanNvbi1zY2hlbWFzL2ZhYnJpYy9naXRJbnRlZ3JhdGlvbi9wbGF0Zm9ybVByb3BlcnRpZXMvMi4wLjAvc2NoZW1hLmpzb24iLAogICJtZXRhZGF0YSI6IHsKICAgICJ0eXBlIjogIkxha2Vob3VzZSIsCiAgICAiZGlzcGxheU5hbWUiOiAiTGFrZWhvdXNlX2NyZWF0ZWRfd2l0aF9kZWZpbml0aW9uIiwKICAgICJkZXNjcmlwdGlvbiI6ICJFeGFtcGxlIGxha2Vob3VzZSB3aXRoIGRlZmluaXRpb24iCiAgfSwKICAiY29uZmlnIjogewogICAgInZlcnNpb24iOiAiMi4wIiwKICAgICJsb2dpY2FsSWQiOiAiN2Q2NDE0ZDEtMmM1Ni04OWI2LTQ4NzQtOWM4NDUwMzgxZDJiIgogIH0KfQ=="),
+					PayloadType: to.Ptr(lakehouse.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginGetLakehouseDefinition = func(ctx context.Context, workspaceID string, lakehouseID string, options *lakehouse.ItemsClientBeginGetLakehouseDefinitionOptions) (resp azfake.PollerResponder[lakehouse.ItemsClientGetLakehouseDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleLakehouseID, lakehouseID)
+		resp = azfake.PollerResponder[lakehouse.ItemsClientGetLakehouseDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, lakehouse.ItemsClientGetLakehouseDefinitionResponse{DefinitionResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	poller, err := client.BeginGetLakehouseDefinition(ctx, exampleWorkspaceID, exampleLakehouseID, &lakehouse.ItemsClientBeginGetLakehouseDefinitionOptions{Format: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DefinitionResponse))
+}
+
+func (testsuite *FakeTestSuite) TestItems_UpdateLakehouseDefinition() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update a lakehouse public definition example"},
+	})
+	var exampleWorkspaceID string
+	var exampleLakehouseID string
+	var exampleUpdateLakehouseDefinitionRequest lakehouse.UpdateLakehouseDefinitionRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleLakehouseID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleUpdateLakehouseDefinitionRequest = lakehouse.UpdateLakehouseDefinitionRequest{
+		Definition: &lakehouse.Definition{
+			Format: to.Ptr("LakehouseDefinitionV1"),
+			Parts: []lakehouse.DefinitionPart{
+				{
+					Path:        to.Ptr("lakehouse.metadata.json"),
+					Payload:     to.Ptr("eyJkZWZhdWx0U2NoZW1hIjoiZGJvIn0="),
+					PayloadType: to.Ptr(lakehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("shortcuts.metadata.json"),
+					Payload:     to.Ptr("WwogIHsKICAgICJuYW1lIjogIk55Y1RheGkiLAogICAgInBhdGgiOiAiL1RhYmxlcyIsCiAgICAidGFyZ2V0IjogewogICAgICAidHlwZSI6ICJPbmVMYWtlIiwKICAgICAgIm9uZUxha2UiOiB7CiAgICAgICAgInBhdGgiOiAiRmlsZXMvTnljVGF4aSIsCiAgICAgICAgIml0ZW1JZCI6ICIxNzBjYzY3Ni1hYzFhLTkwNmUtNDE5Mi0zZGJlZGM1MmYwMWUiLAogICAgICAgICJ3b3Jrc3BhY2VJZCI6ICJjZmFmYmViMS04MDM3LTRkMGMtODk2ZS1hNDZmYjI3ZmYyMjkiLAogICAgICAgICJhcnRpZmFjdFR5cGUiOiAiTGFrZWhvdXNlIgogICAgICB9CiAgICB9CiAgfQpd"),
+					PayloadType: to.Ptr(lakehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("data-access-roles.json"),
+					Payload:     to.Ptr("Ww0KICAgICAgICAgICAgICB7DQogICAgICAgICAgICAgICAgIm5hbWUiOiAiZGltZW5zaW9ucnVsZXJlbmFtZSIsDQogICAgICAgICAgICAgICAgImtpbmQiOiAiUG9saWN5IiwNCiAgICAgICAgICAgICAgICAiZGVjaXNpb25SdWxlcyI6IFsNCiAgICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICAgImVmZmVjdCI6ICJQZXJtaXQiLA0KICAgICAgICAgICAgICAgICAgICAicGVybWlzc2lvbiI6IFsNCiAgICAgICAgICAgICAgICAgICAgICB7DQogICAgICAgICAgICAgICAgICAgICAgICAiYXR0cmlidXRlTmFtZSI6ICJQYXRoIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICJhdHRyaWJ1dGVWYWx1ZUluY2x1ZGVkSW4iOiBbDQogICAgICAgICAgICAgICAgICAgICAgICAgICIvVGFibGVzL2Riby9kaW1lbnNpb25fY2l0eSIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICIvVGFibGVzL2Riby9kaW1lbnNpb25fY3VzdG9tZXIiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAiL1RhYmxlcy9kYm8vZGltZW5zaW9uX2RhdGUiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAiL1RhYmxlcy9kYm8vZGltZW5zaW9uX2VtcGxveWVlIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgIi9UYWJsZXMvZGJvL2RpbWVuc2lvbl9zdG9ja19pdGVtIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgIi9UYWJsZXMvYnJvbnplIg0KICAgICAgICAgICAgICAgICAgICAgICAgXQ0KICAgICAgICAgICAgICAgICAgICAgIH0sDQogICAgICAgICAgICAgICAgICAgICAgew0KICAgICAgICAgICAgICAgICAgICAgICAgImF0dHJpYnV0ZU5hbWUiOiAiQWN0aW9uIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICJhdHRyaWJ1dGVWYWx1ZUluY2x1ZGVkSW4iOiBbDQogICAgICAgICAgICAgICAgICAgICAgICAgICJSZWFkIg0KICAgICAgICAgICAgICAgICAgICAgICAgXQ0KICAgICAgICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgICAgICAgXSwNCiAgICAgICAgICAgICAgICAgICAgImNvbnN0cmFpbnRzIjoge30NCiAgICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgICBdLA0KICAgICAgICAgICAgICAgICJtZW1iZXJzIjogew0KICAgICAgICAgICAgICAgICAgImZhYnJpY0l0ZW1NZW1iZXJzIjogW10sDQogICAgICAgICAgICAgICAgICAgICJtaWNyb3NvZnRFbnRyYU1lbWJlcnMiOiBbDQogICAgICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICAgICAidGVuYW50SWQiOiAiMWU4NTAwMGUtZWUzNS00MTEyLWJkNDYtMmYwMGIzZDk0MTU0IiwNCiAgICAgICAgICAgICAgICAgICAgICAib2JqZWN0SWQiOiAiNWYzZWZkMzctYTZkMi00MzJmLTk5ZmEtNmFkYzI4NDhhNDBhIg0KICAgICAgICAgICAgICAgICAgICB9DQogICAgICAgICAgICAgICAgICBdDQogICAgICAgICAgICAgICAgfQ0KICAgICAgICAgICAgICB9LA0KICAgICAgICAgICAgICB7DQogICAgICAgICAgICAgICAgIm5hbWUiOiAiRGVmYXVsdFJlYWRlciIsDQogICAgICAgICAgICAgICAgImtpbmQiOiAiUG9saWN5IiwNCiAgICAgICAgICAgICAgICAiZGVjaXNpb25SdWxlcyI6IFsNCiAgICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICAgImVmZmVjdCI6ICJQZXJtaXQiLA0KICAgICAgICAgICAgICAgICAgICAicGVybWlzc2lvbiI6IFsNCiAgICAgICAgICAgICAgICAgICAgICB7DQogICAgICAgICAgICAgICAgICAgICAgICAiYXR0cmlidXRlTmFtZSI6ICJBY3Rpb24iLA0KICAgICAgICAgICAgICAgICAgICAgICAgImF0dHJpYnV0ZVZhbHVlSW5jbHVkZWRJbiI6IFsNCiAgICAgICAgICAgICAgICAgICAgICAgICAgIlJlYWQiDQogICAgICAgICAgICAgICAgICAgICAgICBdDQogICAgICAgICAgICAgICAgICAgICAgfSwNCiAgICAgICAgICAgICAgICAgICAgICB7DQogICAgICAgICAgICAgICAgICAgICAgICAiYXR0cmlidXRlTmFtZSI6ICJQYXRoIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICJhdHRyaWJ1dGVWYWx1ZUluY2x1ZGVkSW4iOiBbDQogICAgICAgICAgICAgICAgICAgICAgICAgICIqIg0KICAgICAgICAgICAgICAgICAgICAgICAgXQ0KICAgICAgICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgICAgICAgXQ0KICAgICAgICAgICAgICAgICAgfQ0KICAgICAgICAgICAgICAgIF0sDQogICAgICAgICAgICAgICAgIm1lbWJlcnMiOiB7DQogICAgICAgICAgICAgICAgICAiZmFicmljSXRlbU1lbWJlcnMiOiBbDQogICAgICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICAgICAiaXRlbUFjY2VzcyI6IFsNCiAgICAgICAgICAgICAgICAgICAgICAgICJSZWFkQWxsIg0KICAgICAgICAgICAgICAgICAgICAgIF0sDQogICAgICAgICAgICAgICAgICAgICAgInNvdXJjZVBhdGgiOiAiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwLzAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCINCiAgICAgICAgICAgICAgICAgICAgfQ0KICAgICAgICAgICAgICAgICAgXQ0KICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgfQ0KICAgICAgICAgICAgXQ=="),
+					PayloadType: to.Ptr(lakehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("alm.settings.json"),
+					Payload:     to.Ptr("ew0KICAgICAgICAgICJ2ZXJzaW9uIjogIjEuMC4xIiwNCiAgICAgICAgICAib2JqZWN0VHlwZXMiOiBbDQogICAgICAgICAgICB7DQogICAgICAgICAgICAgICJuYW1lIjogIlNob3J0Y3V0cyIsDQogICAgICAgICAgICAgICJzdGF0ZSI6ICJFbmFibGVkIiwNCiAgICAgICAgICAgICAgInN1Yk9iamVjdFR5cGVzIjogWw0KICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICJuYW1lIjogIlNob3J0Y3V0cy5PbmVMYWtlIiwNCiAgICAgICAgICAgICAgICAgICJzdGF0ZSI6ICJFbmFibGVkIg0KICAgICAgICAgICAgICAgIH0sDQogICAgICAgICAgICAgICAgew0KICAgICAgICAgICAgICAgICAgIm5hbWUiOiAiU2hvcnRjdXRzLkFkbHNHZW4yIiwNCiAgICAgICAgICAgICAgICAgICJzdGF0ZSI6ICJFbmFibGVkIg0KICAgICAgICAgICAgICAgIH0sDQogICAgICAgICAgICAgICAgew0KICAgICAgICAgICAgICAgICAgIm5hbWUiOiAiU2hvcnRjdXRzLkRhdGF2ZXJzZSIsDQogICAgICAgICAgICAgICAgICAic3RhdGUiOiAiRW5hYmxlZCINCiAgICAgICAgICAgICAgICB9LA0KICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICJuYW1lIjogIlNob3J0Y3V0cy5BbWF6b25TMyIsDQogICAgICAgICAgICAgICAgICAic3RhdGUiOiAiRW5hYmxlZCINCiAgICAgICAgICAgICAgICB9LA0KICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICJuYW1lIjogIlNob3J0Y3V0cy5TM0NvbXBhdGlibGUiLA0KICAgICAgICAgICAgICAgICAgInN0YXRlIjogIkVuYWJsZWQiDQogICAgICAgICAgICAgICAgfSwNCiAgICAgICAgICAgICAgICB7DQogICAgICAgICAgICAgICAgICAibmFtZSI6ICJTaG9ydGN1dHMuR29vZ2xlQ2xvdWRTdG9yYWdlIiwNCiAgICAgICAgICAgICAgICAgICJzdGF0ZSI6ICJFbmFibGVkIg0KICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgXQ0KICAgICAgICAgICAgfSwNCiAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgIm5hbWUiOiAiRGF0YUFjY2Vzc1JvbGVzIiwNCiAgICAgICAgICAgICAgInN0YXRlIjogIkVuYWJsZWQiDQogICAgICAgICAgICB9DQogICAgICAgICAgXQ0KICAgICAgICB9"),
+					PayloadType: to.Ptr(lakehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ewogICIkc2NoZW1hIjogImh0dHBzOi8vZGV2ZWxvcGVyLm1pY3Jvc29mdC5jb20vanNvbi1zY2hlbWFzL2ZhYnJpYy9naXRJbnRlZ3JhdGlvbi9wbGF0Zm9ybVByb3BlcnRpZXMvMi4wLjAvc2NoZW1hLmpzb24iLAogICJtZXRhZGF0YSI6IHsKICAgICJ0eXBlIjogIkxha2Vob3VzZSIsCiAgICAiZGlzcGxheU5hbWUiOiAiTGFrZWhvdXNlX2NyZWF0ZWRfd2l0aF9kZWZpbml0aW9uIiwKICAgICJkZXNjcmlwdGlvbiI6ICJFeGFtcGxlIGxha2Vob3VzZSB3aXRoIGRlZmluaXRpb24iCiAgfSwKICAiY29uZmlnIjogewogICAgInZlcnNpb24iOiAiMi4wIiwKICAgICJsb2dpY2FsSWQiOiAiN2Q2NDE0ZDEtMmM1Ni04OWI2LTQ4NzQtOWM4NDUwMzgxZDJiIgogIH0KfQ=="),
+					PayloadType: to.Ptr(lakehouse.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	exampleRes := lakehouse.Lakehouse{
+		Type:        to.Ptr(lakehouse.ItemTypeLakehouse),
+		Description: to.Ptr("A new description for lakehouse."),
+		DisplayName: to.Ptr("Lakehouse_New_Name"),
+		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginUpdateLakehouseDefinition = func(ctx context.Context, workspaceID string, lakehouseID string, updateLakehouseDefinitionRequest lakehouse.UpdateLakehouseDefinitionRequest, options *lakehouse.ItemsClientBeginUpdateLakehouseDefinitionOptions) (resp azfake.PollerResponder[lakehouse.ItemsClientUpdateLakehouseDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleLakehouseID, lakehouseID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateLakehouseDefinitionRequest, updateLakehouseDefinitionRequest))
+		resp = azfake.PollerResponder[lakehouse.ItemsClientUpdateLakehouseDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, lakehouse.ItemsClientUpdateLakehouseDefinitionResponse{Lakehouse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	poller, err := client.BeginUpdateLakehouseDefinition(ctx, exampleWorkspaceID, exampleLakehouseID, exampleUpdateLakehouseDefinitionRequest, &lakehouse.ItemsClientBeginUpdateLakehouseDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Lakehouse))
+}
+
 func (testsuite *FakeTestSuite) TestTables_ListTables() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -363,11 +539,9 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandTableMaintenance()
 	})
 	var exampleWorkspaceID string
 	var exampleLakehouseID string
-	var exampleJobType string
 	var exampleRunOnDemandTableMaintenanceRequest lakehouse.RunOnDemandTableMaintenanceRequest
 	exampleWorkspaceID = "4b218778-e7a5-4d73-8187-f10824047715"
 	exampleLakehouseID = "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"
-	exampleJobType = "TableMaintenance"
 	exampleRunOnDemandTableMaintenanceRequest = lakehouse.RunOnDemandTableMaintenanceRequest{
 		ExecutionData: &lakehouse.TableMaintenanceExecutionData{
 			OptimizeSettings: &lakehouse.OptimizeSettings{
@@ -383,10 +557,9 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandTableMaintenance()
 		},
 	}
 
-	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandTableMaintenance = func(ctx context.Context, workspaceID string, lakehouseID string, jobType string, runOnDemandTableMaintenanceRequest lakehouse.RunOnDemandTableMaintenanceRequest, options *lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandTableMaintenance = func(ctx context.Context, workspaceID string, lakehouseID string, runOnDemandTableMaintenanceRequest lakehouse.RunOnDemandTableMaintenanceRequest, options *lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleLakehouseID, lakehouseID)
-		testsuite.Require().Equal(exampleJobType, jobType)
 		testsuite.Require().True(reflect.DeepEqual(exampleRunOnDemandTableMaintenanceRequest, runOnDemandTableMaintenanceRequest))
 		resp = azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceResponse]{}
 		resp.SetResponse(http.StatusAccepted, lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceResponse{}, nil)
@@ -394,7 +567,7 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandTableMaintenance()
 	}
 
 	client := testsuite.clientFactory.NewBackgroundJobsClient()
-	_, err = client.RunOnDemandTableMaintenance(ctx, exampleWorkspaceID, exampleLakehouseID, exampleJobType, exampleRunOnDemandTableMaintenanceRequest, nil)
+	_, err = client.RunOnDemandTableMaintenance(ctx, exampleWorkspaceID, exampleLakehouseID, exampleRunOnDemandTableMaintenanceRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 
 	// From example
@@ -403,7 +576,6 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandTableMaintenance()
 	})
 	exampleWorkspaceID = "4b218778-e7a5-4d73-8187-f10824047715"
 	exampleLakehouseID = "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"
-	exampleJobType = "TableMaintenance"
 	exampleRunOnDemandTableMaintenanceRequest = lakehouse.RunOnDemandTableMaintenanceRequest{
 		ExecutionData: &lakehouse.TableMaintenanceExecutionData{
 			OptimizeSettings: &lakehouse.OptimizeSettings{
@@ -418,17 +590,16 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandTableMaintenance()
 		},
 	}
 
-	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandTableMaintenance = func(ctx context.Context, workspaceID string, lakehouseID string, jobType string, runOnDemandTableMaintenanceRequest lakehouse.RunOnDemandTableMaintenanceRequest, options *lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandTableMaintenance = func(ctx context.Context, workspaceID string, lakehouseID string, runOnDemandTableMaintenanceRequest lakehouse.RunOnDemandTableMaintenanceRequest, options *lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleLakehouseID, lakehouseID)
-		testsuite.Require().Equal(exampleJobType, jobType)
 		testsuite.Require().True(reflect.DeepEqual(exampleRunOnDemandTableMaintenanceRequest, runOnDemandTableMaintenanceRequest))
 		resp = azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceResponse]{}
 		resp.SetResponse(http.StatusAccepted, lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceResponse{}, nil)
 		return
 	}
 
-	_, err = client.RunOnDemandTableMaintenance(ctx, exampleWorkspaceID, exampleLakehouseID, exampleJobType, exampleRunOnDemandTableMaintenanceRequest, nil)
+	_, err = client.RunOnDemandTableMaintenance(ctx, exampleWorkspaceID, exampleLakehouseID, exampleRunOnDemandTableMaintenanceRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 
 	// From example
@@ -437,7 +608,6 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandTableMaintenance()
 	})
 	exampleWorkspaceID = "4b218778-e7a5-4d73-8187-f10824047715"
 	exampleLakehouseID = "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"
-	exampleJobType = "TableMaintenance"
 	exampleRunOnDemandTableMaintenanceRequest = lakehouse.RunOnDemandTableMaintenanceRequest{
 		ExecutionData: &lakehouse.TableMaintenanceExecutionData{
 			OptimizeSettings: &lakehouse.OptimizeSettings{},
@@ -445,17 +615,16 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandTableMaintenance()
 		},
 	}
 
-	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandTableMaintenance = func(ctx context.Context, workspaceID string, lakehouseID string, jobType string, runOnDemandTableMaintenanceRequest lakehouse.RunOnDemandTableMaintenanceRequest, options *lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandTableMaintenance = func(ctx context.Context, workspaceID string, lakehouseID string, runOnDemandTableMaintenanceRequest lakehouse.RunOnDemandTableMaintenanceRequest, options *lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleLakehouseID, lakehouseID)
-		testsuite.Require().Equal(exampleJobType, jobType)
 		testsuite.Require().True(reflect.DeepEqual(exampleRunOnDemandTableMaintenanceRequest, runOnDemandTableMaintenanceRequest))
 		resp = azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceResponse]{}
 		resp.SetResponse(http.StatusAccepted, lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceResponse{}, nil)
 		return
 	}
 
-	_, err = client.RunOnDemandTableMaintenance(ctx, exampleWorkspaceID, exampleLakehouseID, exampleJobType, exampleRunOnDemandTableMaintenanceRequest, nil)
+	_, err = client.RunOnDemandTableMaintenance(ctx, exampleWorkspaceID, exampleLakehouseID, exampleRunOnDemandTableMaintenanceRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
@@ -501,22 +670,19 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandRefreshMaterialize
 	})
 	var exampleWorkspaceID string
 	var exampleLakehouseID string
-	var exampleJobType string
 	exampleWorkspaceID = "4b218778-e7a5-4d73-8187-f10824047715"
 	exampleLakehouseID = "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"
-	exampleJobType = "RefreshMaterializedLakeViews"
 
-	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandRefreshMaterializedLakeViews = func(ctx context.Context, workspaceID string, lakehouseID string, jobType string, options *lakehouse.BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandRefreshMaterializedLakeViews = func(ctx context.Context, workspaceID string, lakehouseID string, options *lakehouse.BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleLakehouseID, lakehouseID)
-		testsuite.Require().Equal(exampleJobType, jobType)
 		resp = azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse]{}
 		resp.SetResponse(http.StatusAccepted, lakehouse.BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse{}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewBackgroundJobsClient()
-	_, err = client.RunOnDemandRefreshMaterializedLakeViews(ctx, exampleWorkspaceID, exampleLakehouseID, exampleJobType, nil)
+	_, err = client.RunOnDemandRefreshMaterializedLakeViews(ctx, exampleWorkspaceID, exampleLakehouseID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
@@ -690,17 +856,17 @@ func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessions() {
 	}
 }
 
-func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessionsPreview() {
+func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessionsBeta() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"List all livy sessions (Preview) example"},
+		"example-id": {"List all livy sessions (Beta) example"},
 	})
 	var exampleWorkspaceID string
 	var exampleLakehouseID string
-	var examplePreview bool
+	var exampleBeta bool
 	exampleWorkspaceID = "f8113ba8-dd81-443e-811a-b385340f3f05"
 	exampleLakehouseID = "8cee7699-2e81-4121-9a53-cc9025046193"
-	examplePreview = true
+	exampleBeta = true
 
 	exampleRes := lakehouse.LivySessions{
 		Value: []lakehouse.LivySession{
@@ -760,17 +926,17 @@ func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessionsPreview() {
 			}},
 	}
 
-	testsuite.serverFactory.LivySessionsServer.NewListLivySessionsPreviewPager = func(workspaceID string, lakehouseID string, preview bool, options *lakehouse.LivySessionsClientListLivySessionsPreviewOptions) (resp azfake.PagerResponder[lakehouse.LivySessionsClientListLivySessionsPreviewResponse]) {
+	testsuite.serverFactory.LivySessionsServer.NewListLivySessionsBetaPager = func(workspaceID string, lakehouseID string, beta bool, options *lakehouse.LivySessionsClientListLivySessionsBetaOptions) (resp azfake.PagerResponder[lakehouse.LivySessionsClientListLivySessionsBetaResponse]) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleLakehouseID, lakehouseID)
-		testsuite.Require().Equal(examplePreview, preview)
-		resp = azfake.PagerResponder[lakehouse.LivySessionsClientListLivySessionsPreviewResponse]{}
-		resp.AddPage(http.StatusOK, lakehouse.LivySessionsClientListLivySessionsPreviewResponse{LivySessions: exampleRes}, nil)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.PagerResponder[lakehouse.LivySessionsClientListLivySessionsBetaResponse]{}
+		resp.AddPage(http.StatusOK, lakehouse.LivySessionsClientListLivySessionsBetaResponse{LivySessions: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewLivySessionsClient()
-	pager := client.NewListLivySessionsPreviewPager(exampleWorkspaceID, exampleLakehouseID, examplePreview, &lakehouse.LivySessionsClientListLivySessionsPreviewOptions{SubmittedDateTime: nil,
+	pager := client.NewListLivySessionsBetaPager(exampleWorkspaceID, exampleLakehouseID, exampleBeta, &lakehouse.LivySessionsClientListLivySessionsBetaOptions{SubmittedDateTime: nil,
 		EndDateTime:       nil,
 		SubmitterID:       nil,
 		State:             nil,
