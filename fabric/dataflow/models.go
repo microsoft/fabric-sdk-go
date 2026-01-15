@@ -324,6 +324,15 @@ func (d *DurationParameter) GetParameter() *Parameter {
 	}
 }
 
+// ExecuteQueryRequest - Request payload for executing a query against a dataflow.
+type ExecuteQueryRequest struct {
+	// REQUIRED; The name of the query to execute from the dataflow (or from the custom mashup document if provided).
+	QueryName *string
+
+	// Optional custom mashup document to override the dataflow's default mashup.
+	CustomMashupDocument *string
+}
+
 // ExecutionPayload - The execution data payload for Dataflow
 type ExecutionPayload struct {
 	// Options to run the execute operation. Additional executeOptions may be added over time.

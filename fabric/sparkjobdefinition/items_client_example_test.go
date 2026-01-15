@@ -89,6 +89,59 @@ func ExampleItemsClient_BeginCreateSparkJobDefinition_createASparkJobDefinitionE
 }
 
 // Generated from example definition
+func ExampleItemsClient_BeginCreateSparkJobDefinition_createASparkJobDefinitionWithPublicDefinitionAndInlineFilesExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := sparkjobdefinition.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginCreateSparkJobDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", sparkjobdefinition.CreateSparkJobDefinitionRequest{
+		Description: to.Ptr("A spark job definition description."),
+		Definition: &sparkjobdefinition.PublicDefinition{
+			Format: to.Ptr(sparkjobdefinition.FormatSparkJobDefinitionV2),
+			Parts: []sparkjobdefinition.PublicDefinitionPart{
+				{
+					Path:        to.Ptr("SparkJobDefinitionV1.json"),
+					Payload:     to.Ptr("ewogICAgICAiZXhlY3V0Y..mFjdElkIjpudWxsCiAgICB9"),
+					PayloadType: to.Ptr(sparkjobdefinition.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Main/main.py"),
+					Payload:     to.Ptr("cHJpbnQoMSk="),
+					PayloadType: to.Ptr(sparkjobdefinition.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libs/lib1.py"),
+					Payload:     to.Ptr("cHJpbnQoMSk="),
+					PayloadType: to.Ptr(sparkjobdefinition.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libs/lib2.py"),
+					Payload:     to.Ptr("cHJpbnQoMSk="),
+					PayloadType: to.Ptr(sparkjobdefinition.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(sparkjobdefinition.PayloadTypeInlineBase64),
+				}},
+		},
+		DisplayName: to.Ptr("SparkJobDefinition 1"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
 func ExampleItemsClient_BeginCreateSparkJobDefinition_createASparkJobDefinitionWithPublicDefinitionExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -102,7 +155,7 @@ func ExampleItemsClient_BeginCreateSparkJobDefinition_createASparkJobDefinitionW
 	poller, err := clientFactory.NewItemsClient().BeginCreateSparkJobDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", sparkjobdefinition.CreateSparkJobDefinitionRequest{
 		Description: to.Ptr("A spark job definition description."),
 		Definition: &sparkjobdefinition.PublicDefinition{
-			Format: to.Ptr("SparkJobDefinitionV1"),
+			Format: to.Ptr(sparkjobdefinition.FormatSparkJobDefinitionV1),
 			Parts: []sparkjobdefinition.PublicDefinitionPart{
 				{
 					Path:        to.Ptr("SparkJobDefinitionV1.json"),
@@ -204,7 +257,7 @@ func ExampleItemsClient_DeleteSparkJobDefinition() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_BeginGetSparkJobDefinitionDefinition() {
+func ExampleItemsClient_BeginGetSparkJobDefinitionDefinition_getASparkJobDefinitionPublicDefinitionExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -243,7 +296,67 @@ func ExampleItemsClient_BeginGetSparkJobDefinitionDefinition() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_BeginUpdateSparkJobDefinitionDefinition() {
+func ExampleItemsClient_BeginGetSparkJobDefinitionDefinition_getASparkJobDefinitionPublicDefinitionExampleWithSparkJobDefinitionV2Format() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := sparkjobdefinition.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginGetSparkJobDefinitionDefinition(ctx, "6e335e92-a2a2-4b5a-970a-bd6a89fbb765", "cfafbeb1-8037-4d0c-896e-a46fb27ff229", &sparkjobdefinition.ItemsClientBeginGetSparkJobDefinitionDefinitionOptions{Format: to.Ptr(sparkjobdefinition.FormatSparkJobDefinitionV2)})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	res, err := poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.Response = sparkjobdefinition.Response{
+	// 	Definition: &sparkjobdefinition.PublicDefinition{
+	// 		Parts: []sparkjobdefinition.PublicDefinitionPart{
+	// 			{
+	// 				Path: to.Ptr("SparkJobDefinitionV1.json"),
+	// 				Payload: to.Ptr("ew0KICAiZXhlY3V0YW..OWRmNDhhY2ZmZTgifQ"),
+	// 				PayloadType: to.Ptr(sparkjobdefinition.PayloadTypeInlineBase64),
+	// 			},
+	// 			{
+	// 				Path: to.Ptr(".platform"),
+	// 				Payload: to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+	// 				PayloadType: to.Ptr(sparkjobdefinition.PayloadTypeInlineBase64),
+	// 		}},
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginUpdateSparkJobDefinitionDefinition_updateASparkJobDefinitionWithPublicDefinitionAndInlineFilesExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := sparkjobdefinition.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginUpdateSparkJobDefinitionDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", sparkjobdefinition.UpdateSparkJobDefinitionDefinitionRequest{}, &sparkjobdefinition.ItemsClientBeginUpdateSparkJobDefinitionDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginUpdateSparkJobDefinitionDefinition_updateASparkJobDefinitionWithPublicDefinitionExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)

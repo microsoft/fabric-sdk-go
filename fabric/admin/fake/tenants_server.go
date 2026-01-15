@@ -150,7 +150,7 @@ func (t *TenantsServerTransport) dispatchDeleteCapacityTenantSettingOverride(req
 	const regexStr = `/v1/admin/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/delegatedTenantSettingOverrides/(?P<tenantSettingName>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
@@ -224,7 +224,7 @@ func (t *TenantsServerTransport) dispatchNewListCapacityTenantSettingsOverridesB
 		const regexStr = `/v1/admin/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/delegatedTenantSettingOverrides`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 1 {
+		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		qp := req.URL.Query()
@@ -388,7 +388,7 @@ func (t *TenantsServerTransport) dispatchUpdateCapacityTenantSettingOverride(req
 	const regexStr = `/v1/admin/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/delegatedTenantSettingOverrides/(?P<tenantSettingName>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/update`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	body, err := server.UnmarshalRequestAsJSON[admin.UpdateCapacityTenantSettingOverrideRequest](req)
@@ -425,7 +425,7 @@ func (t *TenantsServerTransport) dispatchUpdateTenantSetting(req *http.Request) 
 	const regexStr = `/v1/admin/tenantsettings/(?P<tenantSettingName>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/update`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	body, err := server.UnmarshalRequestAsJSON[admin.UpdateTenantSettingRequest](req)

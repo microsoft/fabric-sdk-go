@@ -56,6 +56,11 @@ type ItemTag struct {
 
 // RefreshMetadataRequest - Refresh SQL analaytics endpoint request payload.
 type RefreshMetadataRequest struct {
+	// When set to true, this property instructs the system to drop and recreate all tables on SQL analytics endpoint during the
+	// refresh process. Use this option if you need to fully rebuild tables from
+	// their source definitions, for example to resolve inconsistencies or ensure a clean refresh. The default value is false.
+	RecreateTables *bool
+
 	// The request duration before timing out. The default value is 15 minutes.
 	Timeout *Duration
 }

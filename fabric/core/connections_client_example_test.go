@@ -115,8 +115,58 @@ func ExampleConnectionsClient_CreateConnection_cloudExample() {
 			SkipTestConnection:   to.Ptr(false),
 			Credentials: &core.BasicCredentials{
 				CredentialType: to.Ptr(core.CredentialTypeBasic),
-				Password:       to.Ptr("********"),
-				Username:       to.Ptr("admin"),
+				PasswordReference: &core.KeyVaultSecretReference{
+					ConnectionID: to.Ptr("4399ab2c-7551-4c0e-8aa7-18fc2f217626"),
+					SecretName:   to.Ptr("some-secret"),
+				},
+				Username: to.Ptr("admin"),
+			},
+		},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleConnectionsClient_CreateConnection_cloudExampleWithKeyPairCredentials() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewConnectionsClient().CreateConnection(ctx, &core.CreateCloudConnectionRequest{
+		ConnectionDetails: &core.CreateConnectionDetails{
+			Type:           to.Ptr("SQL"),
+			CreationMethod: to.Ptr("SQL"),
+			Parameters: []core.ConnectionDetailsParameterClassification{
+				&core.ConnectionDetailsTextParameter{
+					Name:     to.Ptr("server"),
+					DataType: to.Ptr(core.DataTypeText),
+					Value:    to.Ptr("contoso.database.windows.net"),
+				},
+				&core.ConnectionDetailsTextParameter{
+					Name:     to.Ptr("warehouse"),
+					DataType: to.Ptr(core.DataTypeText),
+					Value:    to.Ptr("snowflake-warehouse"),
+				}},
+		},
+		ConnectivityType: to.Ptr(core.ConnectivityTypeShareableCloud),
+		DisplayName:      to.Ptr("SnowflakeCloudConnection"),
+		PrivacyLevel:     to.Ptr(core.PrivacyLevelOrganizational),
+		CredentialDetails: &core.CreateCredentialDetails{
+			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
+			SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+			SkipTestConnection:   to.Ptr(false),
+			Credentials: &core.KeyPairCredentials{
+				CredentialType: to.Ptr(core.CredentialTypeKeyPair),
+				Identifier:     to.Ptr("admin"),
+				Passphrase:     to.Ptr("********"),
+				PrivateKey:     to.Ptr("-----BEGIN ENCRYPTED PRIVATE KEY-----\\nMIIEvQIBADANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQ...\\n-----END ENCRYPTED PRIVATE KEY-----"),
 			},
 		},
 	}, nil)

@@ -18,15 +18,21 @@ import (
 
 // ServerFactory is a fake server for instances of the apacheairflowjob.ClientFactory type.
 type ServerFactory struct {
-	ItemsServer ItemsServer
+	FilesServer             FilesServer
+	ItemsServer             ItemsServer
+	PoolManagementServer    PoolManagementServer
+	WorkspaceSettingsServer WorkspaceSettingsServer
 }
 
 // ServerFactoryTransport connects instances of apacheairflowjob.ClientFactory to instances of ServerFactory.
 // Don't use this type directly, use NewServerFactoryTransport instead.
 type ServerFactoryTransport struct {
-	srv           *ServerFactory
-	trMu          sync.Mutex
-	trItemsServer *ItemsServerTransport
+	srv                       *ServerFactory
+	trMu                      sync.Mutex
+	trFilesServer             *FilesServerTransport
+	trItemsServer             *ItemsServerTransport
+	trPoolManagementServer    *PoolManagementServerTransport
+	trWorkspaceSettingsServer *WorkspaceSettingsServerTransport
 }
 
 // NewServerFactoryTransport creates a new instance of ServerFactoryTransport with the provided implementation.
@@ -52,9 +58,22 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	var err error
 
 	switch client {
+	case "FilesClient":
+		initServer(s, &s.trFilesServer, func() *FilesServerTransport { return NewFilesServerTransport(&s.srv.FilesServer) })
+		resp, err = s.trFilesServer.Do(req)
 	case "ItemsClient":
 		initServer(s, &s.trItemsServer, func() *ItemsServerTransport { return NewItemsServerTransport(&s.srv.ItemsServer) })
 		resp, err = s.trItemsServer.Do(req)
+	case "PoolManagementClient":
+		initServer(s, &s.trPoolManagementServer, func() *PoolManagementServerTransport {
+			return NewPoolManagementServerTransport(&s.srv.PoolManagementServer)
+		})
+		resp, err = s.trPoolManagementServer.Do(req)
+	case "WorkspaceSettingsClient":
+		initServer(s, &s.trWorkspaceSettingsServer, func() *WorkspaceSettingsServerTransport {
+			return NewWorkspaceSettingsServerTransport(&s.srv.WorkspaceSettingsServer)
+		})
+		resp, err = s.trWorkspaceSettingsServer.Do(req)
 	default:
 		err = fmt.Errorf("unhandled client %s", client)
 	}

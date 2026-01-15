@@ -32,6 +32,10 @@ type OneLakeSettingsServer struct {
 	// BeginModifyDiagnostics is the fake for method OneLakeSettingsClient.BeginModifyDiagnostics
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
 	BeginModifyDiagnostics func(ctx context.Context, workspaceID string, options *core.OneLakeSettingsClientBeginModifyDiagnosticsOptions) (resp azfake.PollerResponder[core.OneLakeSettingsClientModifyDiagnosticsResponse], errResp azfake.ErrorResponder)
+
+	// ModifyImmutabilityPolicy is the fake for method OneLakeSettingsClient.ModifyImmutabilityPolicy
+	// HTTP status codes to indicate success: http.StatusOK
+	ModifyImmutabilityPolicy func(ctx context.Context, workspaceID string, immutabilityPolicyRequest core.ImmutabilityPolicyRequest, options *core.OneLakeSettingsClientModifyImmutabilityPolicyOptions) (resp azfake.Responder[core.OneLakeSettingsClientModifyImmutabilityPolicyResponse], errResp azfake.ErrorResponder)
 }
 
 // NewOneLakeSettingsServerTransport creates a new instance of OneLakeSettingsServerTransport with the provided implementation.
@@ -80,6 +84,8 @@ func (o *OneLakeSettingsServerTransport) dispatchToMethodFake(req *http.Request,
 				res.resp, res.err = o.dispatchGetSettings(req)
 			case "OneLakeSettingsClient.BeginModifyDiagnostics":
 				res.resp, res.err = o.dispatchBeginModifyDiagnostics(req)
+			case "OneLakeSettingsClient.ModifyImmutabilityPolicy":
+				res.resp, res.err = o.dispatchModifyImmutabilityPolicy(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -106,7 +112,7 @@ func (o *OneLakeSettingsServerTransport) dispatchGetSettings(req *http.Request) 
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/onelake/settings`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
@@ -137,7 +143,7 @@ func (o *OneLakeSettingsServerTransport) dispatchBeginModifyDiagnostics(req *htt
 		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/onelake/settings/modifyDiagnostics`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 1 {
+		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		body, err := server.UnmarshalRequestAsJSON[core.OneLakeDiagnosticSettings](req)
@@ -175,6 +181,39 @@ func (o *OneLakeSettingsServerTransport) dispatchBeginModifyDiagnostics(req *htt
 		o.beginModifyDiagnostics.remove(req)
 	}
 
+	return resp, nil
+}
+
+func (o *OneLakeSettingsServerTransport) dispatchModifyImmutabilityPolicy(req *http.Request) (*http.Response, error) {
+	if o.srv.ModifyImmutabilityPolicy == nil {
+		return nil, &nonRetriableError{errors.New("fake for method ModifyImmutabilityPolicy not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/onelake/settings/modifyImmutabilityPolicy`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.ImmutabilityPolicyRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := o.srv.ModifyImmutabilityPolicy(req.Context(), workspaceIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
 	return resp, nil
 }
 

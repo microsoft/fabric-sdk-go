@@ -172,6 +172,7 @@ func (i *ItemTag) UnmarshalJSON(data []byte) error {
 // MarshalJSON implements the json.Marshaller interface for type RefreshMetadataRequest.
 func (r RefreshMetadataRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
+	populate(objectMap, "recreateTables", r.RecreateTables)
 	populate(objectMap, "timeout", r.Timeout)
 	return json.Marshal(objectMap)
 }
@@ -185,6 +186,9 @@ func (r *RefreshMetadataRequest) UnmarshalJSON(data []byte) error {
 	for key, val := range rawMsg {
 		var err error
 		switch key {
+		case "recreateTables":
+			err = unpopulate(val, "RecreateTables", &r.RecreateTables)
+			delete(rawMsg, key)
 		case "timeout":
 			err = unpopulate(val, "Timeout", &r.Timeout)
 			delete(rawMsg, key)

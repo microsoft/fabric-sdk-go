@@ -619,6 +619,12 @@ type OneLakeSettingsClientGetSettingsOptions struct {
 	// placeholder for future optional parameters
 }
 
+// OneLakeSettingsClientModifyImmutabilityPolicyOptions contains the optional parameters for the OneLakeSettingsClient.ModifyImmutabilityPolicy
+// method.
+type OneLakeSettingsClientModifyImmutabilityPolicyOptions struct {
+	// placeholder for future optional parameters
+}
+
 // OneLakeShortcutsClientBeginCreatesShortcutsInBulkOptions contains the optional parameters for the OneLakeShortcutsClient.BeginCreatesShortcutsInBulk
 // method.
 type OneLakeShortcutsClientBeginCreatesShortcutsInBulkOptions struct {

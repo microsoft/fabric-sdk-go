@@ -37,8 +37,8 @@ type CustomPoolsClientUpdateWorkspaceCustomPoolResponse struct {
 	CustomPool
 }
 
-// LivySessionsClientListLivySessionsPreviewResponse contains the response from method LivySessionsClient.NewListLivySessionsPreviewPager.
-type LivySessionsClientListLivySessionsPreviewResponse struct {
+// LivySessionsClientListLivySessionsBetaResponse contains the response from method LivySessionsClient.NewListLivySessionsBetaPager.
+type LivySessionsClientListLivySessionsBetaResponse struct {
 	// A paginated list of livy sessions.
 	LivySessions
 }

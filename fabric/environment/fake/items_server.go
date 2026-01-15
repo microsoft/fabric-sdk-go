@@ -52,11 +52,11 @@ type ItemsServer struct {
 
 	// BeginPublishEnvironment is the fake for method ItemsClient.BeginPublishEnvironment
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
-	BeginPublishEnvironment func(ctx context.Context, workspaceID string, environmentID string, preview bool, options *environment.ItemsClientBeginPublishEnvironmentOptions) (resp azfake.PollerResponder[environment.ItemsClientPublishEnvironmentResponse], errResp azfake.ErrorResponder)
+	BeginPublishEnvironment func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.ItemsClientBeginPublishEnvironmentOptions) (resp azfake.PollerResponder[environment.ItemsClientPublishEnvironmentResponse], errResp azfake.ErrorResponder)
 
 	// PublishEnvironmentPreview is the fake for method ItemsClient.PublishEnvironmentPreview
 	// HTTP status codes to indicate success: http.StatusOK
-	PublishEnvironmentPreview func(ctx context.Context, workspaceID string, environmentID string, preview bool, options *environment.ItemsClientPublishEnvironmentPreviewOptions) (resp azfake.Responder[environment.ItemsClientPublishEnvironmentPreviewResponse], errResp azfake.ErrorResponder)
+	PublishEnvironmentPreview func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.ItemsClientPublishEnvironmentPreviewOptions) (resp azfake.Responder[environment.ItemsClientPublishEnvironmentPreviewResponse], errResp azfake.ErrorResponder)
 
 	// UpdateEnvironment is the fake for method ItemsClient.UpdateEnvironment
 	// HTTP status codes to indicate success: http.StatusOK
@@ -163,7 +163,7 @@ func (i *ItemsServerTransport) dispatchCancelPublishEnvironment(req *http.Reques
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/staging/cancelPublish`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
@@ -198,7 +198,7 @@ func (i *ItemsServerTransport) dispatchBeginCreateEnvironment(req *http.Request)
 		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 1 {
+		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		body, err := server.UnmarshalRequestAsJSON[environment.CreateEnvironmentRequest](req)
@@ -240,7 +240,7 @@ func (i *ItemsServerTransport) dispatchDeleteEnvironment(req *http.Request) (*ht
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
@@ -273,7 +273,7 @@ func (i *ItemsServerTransport) dispatchGetEnvironment(req *http.Request) (*http.
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
@@ -308,7 +308,7 @@ func (i *ItemsServerTransport) dispatchBeginGetEnvironmentDefinition(req *http.R
 		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 2 {
+		if len(matches) < 3 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		qp := req.URL.Query()
@@ -364,7 +364,7 @@ func (i *ItemsServerTransport) dispatchNewListEnvironmentsPager(req *http.Reques
 		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 1 {
+		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		qp := req.URL.Query()
@@ -413,7 +413,7 @@ func (i *ItemsServerTransport) dispatchBeginPublishEnvironment(req *http.Request
 		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/staging/publish`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 2 {
+		if len(matches) < 3 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		qp := req.URL.Query()
@@ -425,15 +425,15 @@ func (i *ItemsServerTransport) dispatchBeginPublishEnvironment(req *http.Request
 		if err != nil {
 			return nil, err
 		}
-		previewUnescaped, err := url.QueryUnescape(qp.Get("preview"))
+		betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
 		if err != nil {
 			return nil, err
 		}
-		previewParam, err := strconv.ParseBool(previewUnescaped)
+		betaParam, err := strconv.ParseBool(betaUnescaped)
 		if err != nil {
 			return nil, err
 		}
-		respr, errRespr := i.srv.BeginPublishEnvironment(req.Context(), workspaceIDParam, environmentIDParam, previewParam, nil)
+		respr, errRespr := i.srv.BeginPublishEnvironment(req.Context(), workspaceIDParam, environmentIDParam, betaParam, nil)
 		if respErr := server.GetError(errRespr, req); respErr != nil {
 			return nil, respErr
 		}
@@ -464,7 +464,7 @@ func (i *ItemsServerTransport) dispatchPublishEnvironmentPreview(req *http.Reque
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/staging/publish`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	qp := req.URL.Query()
@@ -476,15 +476,15 @@ func (i *ItemsServerTransport) dispatchPublishEnvironmentPreview(req *http.Reque
 	if err != nil {
 		return nil, err
 	}
-	previewUnescaped, err := url.QueryUnescape(qp.Get("preview"))
+	betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
 	if err != nil {
 		return nil, err
 	}
-	previewParam, err := strconv.ParseBool(previewUnescaped)
+	betaParam, err := strconv.ParseBool(betaUnescaped)
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := i.srv.PublishEnvironmentPreview(req.Context(), workspaceIDParam, environmentIDParam, previewParam, nil)
+	respr, errRespr := i.srv.PublishEnvironmentPreview(req.Context(), workspaceIDParam, environmentIDParam, betaParam, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -506,7 +506,7 @@ func (i *ItemsServerTransport) dispatchUpdateEnvironment(req *http.Request) (*ht
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	body, err := server.UnmarshalRequestAsJSON[environment.UpdateEnvironmentRequest](req)
@@ -545,7 +545,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateEnvironmentDefinition(req *htt
 		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 2 {
+		if len(matches) < 3 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		qp := req.URL.Query()

@@ -217,11 +217,15 @@ type BasicCredentials struct {
 	// REQUIRED; The credential type of the connection.
 	CredentialType *CredentialType
 
-	// REQUIRED; The password.
-	Password *string
-
 	// REQUIRED; The username.
 	Username *string
+
+	// The password. Use password or passwordReference. You can't use both at the same time
+	Password *string
+
+	// The reference to a password stored in Azure Key Vault. Use password or passwordReference. You can't use both at the same
+	// time.
+	PasswordReference *KeyVaultSecretReference
 }
 
 // GetCredentials implements the CredentialsClassification interface for type BasicCredentials.
@@ -688,6 +692,9 @@ type CreatableShortcutTarget struct {
 	// An object containing the properties of the target Google Cloud Storage data source.
 	GoogleCloudStorage *GoogleCloudStorage
 
+	// An object containing the properties of the target OneDrive for Business & SharePoint Online data source.
+	OneDriveSharePoint *OneDriveSharePoint
+
 	// An object containing the properties of the target OneLake data source.
 	OneLake *OneLake
 
@@ -957,8 +964,8 @@ type CreateShortcutRequest struct {
 	Path *string
 
 	// REQUIRED; An object that contains the target datasource, and it must specify exactly one of the supported destinations:
-	// OneLake, Amazon S3, ADLS Gen2, Google Cloud Storage, S3 compatible, Dataverse or Azure
-	// Blob storage.
+	// OneLake, Amazon S3, ADLS Gen2, Google Cloud Storage, S3 compatible, Dataverse, Azure Blob
+	// storage or OneDrive SharePoint.
 	Target *CreatableShortcutTarget
 }
 
@@ -997,8 +1004,8 @@ type CreateShortcutWithTransformRequest struct {
 	Path *string
 
 	// REQUIRED; An object that contains the target datasource, and it must specify exactly one of the supported destinations:
-	// OneLake, Amazon S3, ADLS Gen2, Google Cloud Storage, S3 compatible, Dataverse or Azure
-	// Blob storage.
+	// OneLake, Amazon S3, ADLS Gen2, Google Cloud Storage, S3 compatible, Dataverse, Azure Blob
+	// storage or OneDrive SharePoint.
 	Target *CreatableShortcutTarget
 
 	// An object that contains the transform name and its corresponding properties to be applied to target data, and must specify
@@ -1889,6 +1896,9 @@ type GatewayRoleAssignments struct {
 type GetOneLakeSettingsResponse struct {
 	// REQUIRED; OneLake diagnostic settings object.
 	Diagnostics *OneLakeDiagnosticSettings
+
+	// Immutability settings of the workspace.
+	ImmutabilityPolicies []ImmutabilityPolicy
 }
 
 // GitConnectRequest - Contains the Git connect request data.
@@ -1951,6 +1961,11 @@ type GitHubDetails struct {
 
 	// REQUIRED; The repository name. Maximum length is 128 characters.
 	RepositoryName *string
+
+	// > [!NOTE] Support for GitHub Enterprise with Data residency (ghe.com) is currently in Preview.(learn more [/fabric/fundamentals/preview]).
+	// The name of the enterprise github domain if it's not github.com. Only GitHub Enterprise with data residency domains (ghe.com)
+	// are supported. Maximum length is 100 characters.
+	CustomDomainName *string
 }
 
 // GetGitProviderDetails implements the GitProviderDetailsClassification interface for type GitHubDetails.
@@ -2015,6 +2030,24 @@ type GoogleCloudStorage struct {
 
 	// REQUIRED; Specifies a target folder or subfolder within the GCS bucket. For example: /folder
 	Subpath *string
+}
+
+// ImmutabilityPolicy - Immutability policy object.
+type ImmutabilityPolicy struct {
+	// REQUIRED; Value of the retention days configured.
+	RetentionDays *int32
+
+	// REQUIRED; Scope of the immutability policy.
+	Scope *ImmutabilityScope
+}
+
+// ImmutabilityPolicyRequest - Immutability policy request object.
+type ImmutabilityPolicyRequest struct {
+	// REQUIRED; Retention Days for the action.
+	RetentionDays *int32
+
+	// REQUIRED; Scope of the current immutability setting.
+	Scope *ImmutabilityScope
 }
 
 // InboundRules - The policy for all inbound communications to a workspace.
@@ -2293,8 +2326,11 @@ type KeyCredentials struct {
 	// REQUIRED; The credential type of the connection.
 	CredentialType *CredentialType
 
-	// REQUIRED; The key.
+	// The key. Use key or keyReference. You can't use both at the same time.
 	Key *string
+
+	// The reference to a key stored in Azure Key Vault. Use key or keyReference. You can't use both at the same time.
+	KeyReference *KeyVaultSecretReference
 }
 
 // GetCredentials implements the CredentialsClassification interface for type KeyCredentials.
@@ -2302,6 +2338,40 @@ func (k *KeyCredentials) GetCredentials() *Credentials {
 	return &Credentials{
 		CredentialType: k.CredentialType,
 	}
+}
+
+// KeyPairCredentials - Credentials for KeyPair CredentialType.
+type KeyPairCredentials struct {
+	// REQUIRED; The credential type of the connection.
+	CredentialType *CredentialType
+
+	// REQUIRED; The identifier for the key.
+	Identifier *string
+
+	// REQUIRED; The private key based on PKCS #8 standard.
+	PrivateKey *string
+
+	// The passphrase for the private key if the private key is encrypted.
+	Passphrase *string
+}
+
+// GetCredentials implements the CredentialsClassification interface for type KeyPairCredentials.
+func (k *KeyPairCredentials) GetCredentials() *Credentials {
+	return &Credentials{
+		CredentialType: k.CredentialType,
+	}
+}
+
+// KeyVaultSecretReference - The reference to a secret stored in Azure Key Vault.
+type KeyVaultSecretReference struct {
+	// REQUIRED; The connection ID of the Key Vault connection.
+	ConnectionID *string
+
+	// REQUIRED; The name of the secret in Key Vault.
+	SecretName *string
+
+	// The version of the secret in Key Vault.
+	Version *string
 }
 
 // LakehouseOneLakeDiagnosticSettingsDestination - Lakehouse destination for OneLake diagnostic logs.
@@ -2706,6 +2776,27 @@ type OnPremisesGatewayPersonalCredentials struct {
 	EncryptedCredentials *string
 }
 
+// OneDriveSharePoint - An object containing the properties of the target OneDrive for Business or SharePoint Online data
+// source.
+type OneDriveSharePoint struct {
+	// REQUIRED; A string representing the connection that is bound with the shortcut. The connectionId is a unique identifier
+	// used to establish a connection between the shortcut and the target datasource. To find
+	// this connection ID, first create a cloud connection [/fabric/data-factory/data-source-management#add-a-data-source] to
+	// be used by the shortcut when connecting to the OneDrive SharePoint data location.
+	// Open the cloud connection's settings view and copy the GUID that is the connection ID.
+	ConnectionID *string
+
+	// REQUIRED; Specifies the location of the target OneDrive SharePoint container. The URI must be in the format https://microsoft.sharepoint.com
+	// which is the path of the target OneDrive SharePoint account.
+	Location *string
+
+	// REQUIRED; Specifies the container and subfolder within the OneDrive SharePoint account where the target folder is located.
+	// Must be of the format [container]/[subfolder]. [Container] is the name of the container
+	// that holds the files and folders. [Subfolder] is the name of the subfolder within the container and is optional. For example:
+	// /mycontainer/mysubfolder
+	Subpath *string
+}
+
 // OneLake - An object containing the properties of the target OneLake data source.
 type OneLake struct {
 	// REQUIRED; The ID of the target in OneLake. The target can be an item of Lakehouse, KQLDatabase, or Warehouse.
@@ -3036,11 +3127,16 @@ type ServicePrincipalCredentials struct {
 	// REQUIRED; The client ID of the service principal.
 	ServicePrincipalClientID *string
 
-	// REQUIRED; The secret of the service principal.
-	ServicePrincipalSecret *string
-
 	// REQUIRED; The tenant ID of the service principal.
 	TenantID *string
+
+	// The secret of the service principal. Use servicePrincipalSecret or servicePrincipalSecretReference. You can't use both
+	// at the same time.
+	ServicePrincipalSecret *string
+
+	// The reference to a service principal secret stored in Azure Key Vault. Use servicePrincipalSecret or servicePrincipalSecretReference.
+	// You can't use both at the same time.
+	ServicePrincipalSecretReference *KeyVaultSecretReference
 }
 
 // GetCredentials implements the CredentialsClassification interface for type ServicePrincipalCredentials.
@@ -3091,8 +3187,11 @@ type SharedAccessSignatureCredentials struct {
 	// REQUIRED; The credential type of the connection.
 	CredentialType *CredentialType
 
-	// REQUIRED; The token.
+	// The token. Use token or tokenReference. You can't use both at the same time.
 	Token *string
+
+	// The reference to a token stored in Azure Key Vault. Use token or tokenReference. You can't use both at the same time.
+	TokenReference *KeyVaultSecretReference
 }
 
 // GetCredentials implements the CredentialsClassification interface for type SharedAccessSignatureCredentials.
@@ -3239,6 +3338,9 @@ type Target struct {
 
 	// An object containing the properties of the target Google Cloud Storage data source.
 	GoogleCloudStorage *GoogleCloudStorage
+
+	// An object containing the properties of the target OneDrive for Business & SharePoint Online data source.
+	OneDriveSharePoint *OneDriveSharePoint
 
 	// An object containing the properties of the target OneLake data source.
 	OneLake *OneLake

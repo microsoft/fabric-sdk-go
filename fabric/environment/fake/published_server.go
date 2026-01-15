@@ -32,19 +32,19 @@ type PublishedServer struct {
 
 	// GetSparkCompute is the fake for method PublishedClient.GetSparkCompute
 	// HTTP status codes to indicate success: http.StatusOK
-	GetSparkCompute func(ctx context.Context, workspaceID string, environmentID string, preview bool, options *environment.PublishedClientGetSparkComputeOptions) (resp azfake.Responder[environment.PublishedClientGetSparkComputeResponse], errResp azfake.ErrorResponder)
+	GetSparkCompute func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.PublishedClientGetSparkComputeOptions) (resp azfake.Responder[environment.PublishedClientGetSparkComputeResponse], errResp azfake.ErrorResponder)
 
 	// GetSparkComputePreview is the fake for method PublishedClient.GetSparkComputePreview
 	// HTTP status codes to indicate success: http.StatusOK
-	GetSparkComputePreview func(ctx context.Context, workspaceID string, environmentID string, preview bool, options *environment.PublishedClientGetSparkComputePreviewOptions) (resp azfake.Responder[environment.PublishedClientGetSparkComputePreviewResponse], errResp azfake.ErrorResponder)
+	GetSparkComputePreview func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.PublishedClientGetSparkComputePreviewOptions) (resp azfake.Responder[environment.PublishedClientGetSparkComputePreviewResponse], errResp azfake.ErrorResponder)
 
 	// NewListLibrariesPager is the fake for method PublishedClient.NewListLibrariesPager
 	// HTTP status codes to indicate success: http.StatusOK
-	NewListLibrariesPager func(workspaceID string, environmentID string, preview bool, options *environment.PublishedClientListLibrariesOptions) (resp azfake.PagerResponder[environment.PublishedClientListLibrariesResponse])
+	NewListLibrariesPager func(workspaceID string, environmentID string, beta bool, options *environment.PublishedClientListLibrariesOptions) (resp azfake.PagerResponder[environment.PublishedClientListLibrariesResponse])
 
 	// ListLibrariesPreview is the fake for method PublishedClient.ListLibrariesPreview
 	// HTTP status codes to indicate success: http.StatusOK
-	ListLibrariesPreview func(ctx context.Context, workspaceID string, environmentID string, preview bool, options *environment.PublishedClientListLibrariesPreviewOptions) (resp azfake.Responder[environment.PublishedClientListLibrariesPreviewResponse], errResp azfake.ErrorResponder)
+	ListLibrariesPreview func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.PublishedClientListLibrariesPreviewOptions) (resp azfake.Responder[environment.PublishedClientListLibrariesPreviewResponse], errResp azfake.ErrorResponder)
 }
 
 // NewPublishedServerTransport creates a new instance of PublishedServerTransport with the provided implementation.
@@ -125,7 +125,7 @@ func (p *PublishedServerTransport) dispatchExportExternalLibraries(req *http.Req
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/libraries/exportExternalLibraries`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
@@ -158,7 +158,7 @@ func (p *PublishedServerTransport) dispatchGetSparkCompute(req *http.Request) (*
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sparkcompute`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	qp := req.URL.Query()
@@ -170,15 +170,15 @@ func (p *PublishedServerTransport) dispatchGetSparkCompute(req *http.Request) (*
 	if err != nil {
 		return nil, err
 	}
-	previewUnescaped, err := url.QueryUnescape(qp.Get("preview"))
+	betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
 	if err != nil {
 		return nil, err
 	}
-	previewParam, err := strconv.ParseBool(previewUnescaped)
+	betaParam, err := strconv.ParseBool(betaUnescaped)
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := p.srv.GetSparkCompute(req.Context(), workspaceIDParam, environmentIDParam, previewParam, nil)
+	respr, errRespr := p.srv.GetSparkCompute(req.Context(), workspaceIDParam, environmentIDParam, betaParam, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -200,7 +200,7 @@ func (p *PublishedServerTransport) dispatchGetSparkComputePreview(req *http.Requ
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sparkcompute`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	qp := req.URL.Query()
@@ -212,15 +212,15 @@ func (p *PublishedServerTransport) dispatchGetSparkComputePreview(req *http.Requ
 	if err != nil {
 		return nil, err
 	}
-	previewUnescaped, err := url.QueryUnescape(qp.Get("preview"))
+	betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
 	if err != nil {
 		return nil, err
 	}
-	previewParam, err := strconv.ParseBool(previewUnescaped)
+	betaParam, err := strconv.ParseBool(betaUnescaped)
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := p.srv.GetSparkComputePreview(req.Context(), workspaceIDParam, environmentIDParam, previewParam, nil)
+	respr, errRespr := p.srv.GetSparkComputePreview(req.Context(), workspaceIDParam, environmentIDParam, betaParam, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -244,7 +244,7 @@ func (p *PublishedServerTransport) dispatchNewListLibrariesPager(req *http.Reque
 		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/libraries`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 2 {
+		if len(matches) < 3 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		qp := req.URL.Query()
@@ -261,11 +261,11 @@ func (p *PublishedServerTransport) dispatchNewListLibrariesPager(req *http.Reque
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
-		previewUnescaped, err := url.QueryUnescape(qp.Get("preview"))
+		betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
 		if err != nil {
 			return nil, err
 		}
-		previewParam, err := strconv.ParseBool(previewUnescaped)
+		betaParam, err := strconv.ParseBool(betaUnescaped)
 		if err != nil {
 			return nil, err
 		}
@@ -275,7 +275,7 @@ func (p *PublishedServerTransport) dispatchNewListLibrariesPager(req *http.Reque
 				ContinuationToken: continuationTokenParam,
 			}
 		}
-		resp := p.srv.NewListLibrariesPager(workspaceIDParam, environmentIDParam, previewParam, options)
+		resp := p.srv.NewListLibrariesPager(workspaceIDParam, environmentIDParam, betaParam, options)
 		newListLibrariesPager = &resp
 		p.newListLibrariesPager.add(req, newListLibrariesPager)
 		server.PagerResponderInjectNextLinks(newListLibrariesPager, req, func(page *environment.PublishedClientListLibrariesResponse, createLink func() string) {
@@ -303,7 +303,7 @@ func (p *PublishedServerTransport) dispatchListLibrariesPreview(req *http.Reques
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/libraries`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	qp := req.URL.Query()
@@ -315,15 +315,15 @@ func (p *PublishedServerTransport) dispatchListLibrariesPreview(req *http.Reques
 	if err != nil {
 		return nil, err
 	}
-	previewUnescaped, err := url.QueryUnescape(qp.Get("preview"))
+	betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
 	if err != nil {
 		return nil, err
 	}
-	previewParam, err := strconv.ParseBool(previewUnescaped)
+	betaParam, err := strconv.ParseBool(betaUnescaped)
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := p.srv.ListLibrariesPreview(req.Context(), workspaceIDParam, environmentIDParam, previewParam, nil)
+	respr, errRespr := p.srv.ListLibrariesPreview(req.Context(), workspaceIDParam, environmentIDParam, betaParam, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}

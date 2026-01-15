@@ -62,3 +62,11 @@ func (c *ClientFactory) NewItemsClient() *ItemsClient {
 		endpoint: c.endpoint,
 	}
 }
+
+// NewQueryExecutionClient creates a new instance of QueryExecutionClient.
+func (c *ClientFactory) NewQueryExecutionClient() *QueryExecutionClient {
+	return &QueryExecutionClient{
+		internal: c.internal.WithClientName("dataflow.QueryExecutionClient"),
+		endpoint: c.endpoint,
+	}
+}

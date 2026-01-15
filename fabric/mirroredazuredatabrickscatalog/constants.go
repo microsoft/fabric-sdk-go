@@ -67,6 +67,8 @@ const (
 	ItemTypeApacheAirflowJob ItemType = "ApacheAirflowJob"
 	// ItemTypeCopyJob - A Copy job.
 	ItemTypeCopyJob ItemType = "CopyJob"
+	// ItemTypeCosmosDBDatabase - A Cosmos DB Database.
+	ItemTypeCosmosDBDatabase ItemType = "CosmosDBDatabase"
 	// ItemTypeDashboard - PowerBI dashboard.
 	ItemTypeDashboard ItemType = "Dashboard"
 	// ItemTypeDataPipeline - A data pipeline.
@@ -81,6 +83,8 @@ const (
 	ItemTypeDigitalTwinBuilderFlow ItemType = "DigitalTwinBuilderFlow"
 	// ItemTypeEnvironment - An environment.
 	ItemTypeEnvironment ItemType = "Environment"
+	// ItemTypeEventSchemaSet - An EventSchemaSet.
+	ItemTypeEventSchemaSet ItemType = "EventSchemaSet"
 	// ItemTypeEventhouse - An eventhouse.
 	ItemTypeEventhouse ItemType = "Eventhouse"
 	// ItemTypeEventstream - An eventstream.
@@ -115,6 +119,10 @@ const (
 	ItemTypeMountedDataFactory ItemType = "MountedDataFactory"
 	// ItemTypeNotebook - A notebook.
 	ItemTypeNotebook ItemType = "Notebook"
+	// ItemTypeOntology - An Ontology.
+	ItemTypeOntology ItemType = "Ontology"
+	// ItemTypeOperationsAgent - A OperationsAgent.
+	ItemTypeOperationsAgent ItemType = "OperationsAgent"
 	// ItemTypePaginatedReport - PowerBI paginated report.
 	ItemTypePaginatedReport ItemType = "PaginatedReport"
 	// ItemTypeReflex - A Reflex.
@@ -127,6 +135,8 @@ const (
 	ItemTypeSQLEndpoint ItemType = "SQLEndpoint"
 	// ItemTypeSemanticModel - PowerBI semantic model.
 	ItemTypeSemanticModel ItemType = "SemanticModel"
+	// ItemTypeSnowflakeDatabase - A Snowflake Database to store Iceberg tables created from Snowflake account.
+	ItemTypeSnowflakeDatabase ItemType = "SnowflakeDatabase"
 	// ItemTypeSparkJobDefinition - A spark job definition.
 	ItemTypeSparkJobDefinition ItemType = "SparkJobDefinition"
 	// ItemTypeUserDataFunction - A User Data Function.
@@ -145,6 +155,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeAnomalyDetector,
 		ItemTypeApacheAirflowJob,
 		ItemTypeCopyJob,
+		ItemTypeCosmosDBDatabase,
 		ItemTypeDashboard,
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
@@ -152,6 +163,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeDigitalTwinBuilder,
 		ItemTypeDigitalTwinBuilderFlow,
 		ItemTypeEnvironment,
+		ItemTypeEventSchemaSet,
 		ItemTypeEventhouse,
 		ItemTypeEventstream,
 		ItemTypeGraphModel,
@@ -169,12 +181,15 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeMirroredWarehouse,
 		ItemTypeMountedDataFactory,
 		ItemTypeNotebook,
+		ItemTypeOntology,
+		ItemTypeOperationsAgent,
 		ItemTypePaginatedReport,
 		ItemTypeReflex,
 		ItemTypeReport,
 		ItemTypeSQLDatabase,
 		ItemTypeSQLEndpoint,
 		ItemTypeSemanticModel,
+		ItemTypeSnowflakeDatabase,
 		ItemTypeSparkJobDefinition,
 		ItemTypeUserDataFunction,
 		ItemTypeVariableLibrary,

@@ -145,7 +145,7 @@ func (e *ExternalDataSharesProviderServerTransport) dispatchRevokeExternalDataSh
 	const regexStr = `/v1/admin/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/items/(?P<itemId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/externalDataShares/(?P<externalDataShareId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/revoke`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 3 {
+	if len(matches) < 4 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])

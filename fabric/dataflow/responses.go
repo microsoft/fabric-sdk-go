@@ -6,6 +6,8 @@
 
 package dataflow
 
+import "io"
+
 // BackgroundJobsClientRunOnDemandApplyChangesResponse contains the response from method BackgroundJobsClient.RunOnDemandApplyChanges.
 type BackgroundJobsClientRunOnDemandApplyChangesResponse struct {
 	// Location contains the information returned from the Location header response.
@@ -86,4 +88,10 @@ type ItemsClientUpdateDataflowDefinitionResponse struct {
 type ItemsClientUpdateDataflowResponse struct {
 	// A Dataflow object.
 	Dataflow
+}
+
+// QueryExecutionClientExecuteQueryResponse contains the response from method QueryExecutionClient.BeginExecuteQuery.
+type QueryExecutionClientExecuteQueryResponse struct {
+	// Body contains the streaming response.
+	Body io.ReadCloser
 }

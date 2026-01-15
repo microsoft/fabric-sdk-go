@@ -61,8 +61,8 @@ type LivySessionsClientGetLivySessionResponse struct {
 	LivySession
 }
 
-// LivySessionsClientListLivySessionsPreviewResponse contains the response from method LivySessionsClient.NewListLivySessionsPreviewPager.
-type LivySessionsClientListLivySessionsPreviewResponse struct {
+// LivySessionsClientListLivySessionsBetaResponse contains the response from method LivySessionsClient.NewListLivySessionsBetaPager.
+type LivySessionsClientListLivySessionsBetaResponse struct {
 	// A paginated list of livy sessions.
 	LivySessions
 }

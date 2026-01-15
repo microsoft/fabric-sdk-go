@@ -17,9 +17,6 @@ type AnomalyDetector struct {
 	// The item display name.
 	DisplayName *string
 
-	// The AnomalyDetector properties.
-	Properties *Properties
-
 	// READ-ONLY; The folder ID.
 	FolderID *string
 
@@ -98,12 +95,6 @@ type ItemTag struct {
 
 	// REQUIRED; The tag ID.
 	ID *string
-}
-
-// Properties - The AnomalyDetector properties.
-type Properties struct {
-	// REQUIRED; OneLake path to the AnomalyDetector root directory.
-	OneLakeRootPath *string
 }
 
 // UpdateAnomalyDetectorDefinitionRequest - Update AnomalyDetector definition request payload.
