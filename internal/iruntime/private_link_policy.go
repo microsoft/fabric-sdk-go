@@ -6,7 +6,8 @@ import (
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
-	"github.com/google/uuid"
+
+	"github.com/microsoft/fabric-sdk-go/internal/uuid"
 )
 
 // PrivateLinkPolicy modifies request URLs to support workspace-level private links

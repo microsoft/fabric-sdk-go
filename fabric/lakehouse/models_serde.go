@@ -84,6 +84,7 @@ func (c *CreateLakehouseRefreshMaterializedLakeViewsScheduleRequest) UnmarshalJS
 func (c CreateLakehouseRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "creationPayload", c.CreationPayload)
+	populate(objectMap, "definition", c.Definition)
 	populate(objectMap, "description", c.Description)
 	populate(objectMap, "displayName", c.DisplayName)
 	populate(objectMap, "folderId", c.FolderID)
@@ -101,6 +102,9 @@ func (c *CreateLakehouseRequest) UnmarshalJSON(data []byte) error {
 		switch key {
 		case "creationPayload":
 			err = unpopulate(val, "CreationPayload", &c.CreationPayload)
+			delete(rawMsg, key)
+		case "definition":
+			err = unpopulate(val, "Definition", &c.Definition)
 			delete(rawMsg, key)
 		case "description":
 			err = unpopulate(val, "Description", &c.Description)
@@ -254,6 +258,99 @@ func (d *DayOfMonth) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "occurrenceType":
 			err = unpopulate(val, "OccurrenceType", &d.OccurrenceType)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", d, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type Definition.
+func (d Definition) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "format", d.Format)
+	populate(objectMap, "parts", d.Parts)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type Definition.
+func (d *Definition) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", d, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "format":
+			err = unpopulate(val, "Format", &d.Format)
+			delete(rawMsg, key)
+		case "parts":
+			err = unpopulate(val, "Parts", &d.Parts)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", d, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type DefinitionPart.
+func (d DefinitionPart) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "path", d.Path)
+	populate(objectMap, "payload", d.Payload)
+	populate(objectMap, "payloadType", d.PayloadType)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type DefinitionPart.
+func (d *DefinitionPart) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", d, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "path":
+			err = unpopulate(val, "Path", &d.Path)
+			delete(rawMsg, key)
+		case "payload":
+			err = unpopulate(val, "Payload", &d.Payload)
+			delete(rawMsg, key)
+		case "payloadType":
+			err = unpopulate(val, "PayloadType", &d.PayloadType)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", d, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type DefinitionResponse.
+func (d DefinitionResponse) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "definition", d.Definition)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type DefinitionResponse.
+func (d *DefinitionResponse) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", d, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "definition":
+			err = unpopulate(val, "Definition", &d.Definition)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -1366,6 +1463,33 @@ func (t *Tables) UnmarshalJSON(data []byte) error {
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", t, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type UpdateLakehouseDefinitionRequest.
+func (u UpdateLakehouseDefinitionRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "definition", u.Definition)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type UpdateLakehouseDefinitionRequest.
+func (u *UpdateLakehouseDefinitionRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", u, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "definition":
+			err = unpopulate(val, "Definition", &u.Definition)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", u, err)
 		}
 	}
 	return nil

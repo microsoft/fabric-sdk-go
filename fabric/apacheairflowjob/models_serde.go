@@ -14,6 +14,115 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 )
 
+// MarshalJSON implements the json.Marshaller interface for type AirflowPoolTemplate.
+func (a AirflowPoolTemplate) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "apacheAirflowJobVersion", a.ApacheAirflowJobVersion)
+	populate(objectMap, "computeScalability", a.ComputeScalability)
+	populate(objectMap, "id", a.ID)
+	populate(objectMap, "name", a.Name)
+	populate(objectMap, "nodeSize", a.NodeSize)
+	populate(objectMap, "shutdownPolicy", a.ShutdownPolicy)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type AirflowPoolTemplate.
+func (a *AirflowPoolTemplate) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", a, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "apacheAirflowJobVersion":
+			err = unpopulate(val, "ApacheAirflowJobVersion", &a.ApacheAirflowJobVersion)
+			delete(rawMsg, key)
+		case "computeScalability":
+			err = unpopulate(val, "ComputeScalability", &a.ComputeScalability)
+			delete(rawMsg, key)
+		case "id":
+			err = unpopulate(val, "ID", &a.ID)
+			delete(rawMsg, key)
+		case "name":
+			err = unpopulate(val, "Name", &a.Name)
+			delete(rawMsg, key)
+		case "nodeSize":
+			err = unpopulate(val, "NodeSize", &a.NodeSize)
+			delete(rawMsg, key)
+		case "shutdownPolicy":
+			err = unpopulate(val, "ShutdownPolicy", &a.ShutdownPolicy)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", a, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type AirflowPoolTemplates.
+func (a AirflowPoolTemplates) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "continuationToken", a.ContinuationToken)
+	populate(objectMap, "continuationUri", a.ContinuationURI)
+	populate(objectMap, "value", a.Value)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type AirflowPoolTemplates.
+func (a *AirflowPoolTemplates) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", a, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "continuationToken":
+			err = unpopulate(val, "ContinuationToken", &a.ContinuationToken)
+			delete(rawMsg, key)
+		case "continuationUri":
+			err = unpopulate(val, "ContinuationURI", &a.ContinuationURI)
+			delete(rawMsg, key)
+		case "value":
+			err = unpopulate(val, "Value", &a.Value)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", a, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type AirflowWorkspaceSettings.
+func (a AirflowWorkspaceSettings) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "defaultPoolTemplateId", a.DefaultPoolTemplateID)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type AirflowWorkspaceSettings.
+func (a *AirflowWorkspaceSettings) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", a, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "defaultPoolTemplateId":
+			err = unpopulate(val, "DefaultPoolTemplateID", &a.DefaultPoolTemplateID)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", a, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type ApacheAirflowJob.
 func (a ApacheAirflowJob) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -95,6 +204,76 @@ func (a *ApacheAirflowJobs) UnmarshalJSON(data []byte) error {
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", a, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type ComputeScalability.
+func (c ComputeScalability) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "maxNodeCount", c.MaxNodeCount)
+	populate(objectMap, "minNodeCount", c.MinNodeCount)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ComputeScalability.
+func (c *ComputeScalability) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "maxNodeCount":
+			err = unpopulate(val, "MaxNodeCount", &c.MaxNodeCount)
+			delete(rawMsg, key)
+		case "minNodeCount":
+			err = unpopulate(val, "MinNodeCount", &c.MinNodeCount)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type CreateAirflowPoolTemplateRequest.
+func (c CreateAirflowPoolTemplateRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "apacheAirflowJobVersion", c.ApacheAirflowJobVersion)
+	populate(objectMap, "computeScalability", c.ComputeScalability)
+	populate(objectMap, "name", c.Name)
+	populate(objectMap, "nodeSize", c.NodeSize)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CreateAirflowPoolTemplateRequest.
+func (c *CreateAirflowPoolTemplateRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "apacheAirflowJobVersion":
+			err = unpopulate(val, "ApacheAirflowJobVersion", &c.ApacheAirflowJobVersion)
+			delete(rawMsg, key)
+		case "computeScalability":
+			err = unpopulate(val, "ComputeScalability", &c.ComputeScalability)
+			delete(rawMsg, key)
+		case "name":
+			err = unpopulate(val, "Name", &c.Name)
+			delete(rawMsg, key)
+		case "nodeSize":
+			err = unpopulate(val, "NodeSize", &c.NodeSize)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
 		}
 	}
 	return nil
@@ -228,6 +407,72 @@ func (d *DefinitionResponse) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type FileMetadata.
+func (f FileMetadata) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "filePath", f.FilePath)
+	populate(objectMap, "sizeInBytes", f.SizeInBytes)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type FileMetadata.
+func (f *FileMetadata) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", f, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "filePath":
+			err = unpopulate(val, "FilePath", &f.FilePath)
+			delete(rawMsg, key)
+		case "sizeInBytes":
+			err = unpopulate(val, "SizeInBytes", &f.SizeInBytes)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", f, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type Files.
+func (f Files) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "continuationToken", f.ContinuationToken)
+	populate(objectMap, "continuationUri", f.ContinuationURI)
+	populate(objectMap, "value", f.Value)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type Files.
+func (f *Files) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", f, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "continuationToken":
+			err = unpopulate(val, "ContinuationToken", &f.ContinuationToken)
+			delete(rawMsg, key)
+		case "continuationUri":
+			err = unpopulate(val, "ContinuationURI", &f.ContinuationURI)
+			delete(rawMsg, key)
+		case "value":
+			err = unpopulate(val, "Value", &f.Value)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", f, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type ItemTag.
 func (i ItemTag) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -254,6 +499,33 @@ func (i *ItemTag) UnmarshalJSON(data []byte) error {
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", i, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type UpdateAirflowWorkspaceSettingsRequest.
+func (u UpdateAirflowWorkspaceSettingsRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "defaultPoolTemplateId", u.DefaultPoolTemplateID)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type UpdateAirflowWorkspaceSettingsRequest.
+func (u *UpdateAirflowWorkspaceSettingsRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", u, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "defaultPoolTemplateId":
+			err = unpopulate(val, "DefaultPoolTemplateID", &u.DefaultPoolTemplateID)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", u, err)
 		}
 	}
 	return nil

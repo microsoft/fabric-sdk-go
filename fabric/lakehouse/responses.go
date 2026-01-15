@@ -55,6 +55,12 @@ type ItemsClientDeleteLakehouseResponse struct {
 	// placeholder for future response values
 }
 
+// ItemsClientGetLakehouseDefinitionResponse contains the response from method ItemsClient.BeginGetLakehouseDefinition.
+type ItemsClientGetLakehouseDefinitionResponse struct {
+	// Lakehouse public definition response.
+	DefinitionResponse
+}
+
 // ItemsClientGetLakehouseResponse contains the response from method ItemsClient.GetLakehouse.
 type ItemsClientGetLakehouseResponse struct {
 	// A lakehouse item.
@@ -65,6 +71,12 @@ type ItemsClientGetLakehouseResponse struct {
 type ItemsClientListLakehousesResponse struct {
 	// A list of lakehouses.
 	Lakehouses
+}
+
+// ItemsClientUpdateLakehouseDefinitionResponse contains the response from method ItemsClient.BeginUpdateLakehouseDefinition.
+type ItemsClientUpdateLakehouseDefinitionResponse struct {
+	// A lakehouse item.
+	Lakehouse
 }
 
 // ItemsClientUpdateLakehouseResponse contains the response from method ItemsClient.UpdateLakehouse.
@@ -79,8 +91,8 @@ type LivySessionsClientGetLivySessionResponse struct {
 	LivySession
 }
 
-// LivySessionsClientListLivySessionsPreviewResponse contains the response from method LivySessionsClient.NewListLivySessionsPreviewPager.
-type LivySessionsClientListLivySessionsPreviewResponse struct {
+// LivySessionsClientListLivySessionsBetaResponse contains the response from method LivySessionsClient.NewListLivySessionsBetaPager.
+type LivySessionsClientListLivySessionsBetaResponse struct {
 	// A paginated list of livy sessions.
 	LivySessions
 }

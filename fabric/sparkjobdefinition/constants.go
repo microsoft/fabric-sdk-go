@@ -6,6 +6,26 @@
 
 package sparkjobdefinition
 
+type Format string
+
+const (
+	// FormatSparkJobDefinitionV1 - The default format for spark job definitions. Does not support Main/Libs file parts. Refer
+	// to [SparkJobDefinitionV1](/rest/api/fabric/articles/item-management/definitions/spark-job-definition-v1) article for more
+	// details.
+	FormatSparkJobDefinitionV1 Format = "SparkJobDefinitionV1"
+	// FormatSparkJobDefinitionV2 - The new format for spark job definitions. Supports Main/Libs file parts. Refer to [SparkJobDefinitionV2](/rest/api/fabric/articles/item-management/definitions/spark-job-definition-v2)
+	// article for more details.
+	FormatSparkJobDefinitionV2 Format = "SparkJobDefinitionV2"
+)
+
+// PossibleSparkJobDefinitionFormatValues returns the possible values for the Format const type.
+func PossibleSparkJobDefinitionFormatValues() []Format {
+	return []Format{
+		FormatSparkJobDefinitionV1,
+		FormatSparkJobDefinitionV2,
+	}
+}
+
 // GroupType - The type of the group. Additional group types may be added over time.
 type GroupType string
 
@@ -52,6 +72,8 @@ const (
 	ItemTypeApacheAirflowJob ItemType = "ApacheAirflowJob"
 	// ItemTypeCopyJob - A Copy job.
 	ItemTypeCopyJob ItemType = "CopyJob"
+	// ItemTypeCosmosDBDatabase - A Cosmos DB Database.
+	ItemTypeCosmosDBDatabase ItemType = "CosmosDBDatabase"
 	// ItemTypeDashboard - PowerBI dashboard.
 	ItemTypeDashboard ItemType = "Dashboard"
 	// ItemTypeDataPipeline - A data pipeline.
@@ -66,6 +88,8 @@ const (
 	ItemTypeDigitalTwinBuilderFlow ItemType = "DigitalTwinBuilderFlow"
 	// ItemTypeEnvironment - An environment.
 	ItemTypeEnvironment ItemType = "Environment"
+	// ItemTypeEventSchemaSet - An EventSchemaSet.
+	ItemTypeEventSchemaSet ItemType = "EventSchemaSet"
 	// ItemTypeEventhouse - An eventhouse.
 	ItemTypeEventhouse ItemType = "Eventhouse"
 	// ItemTypeEventstream - An eventstream.
@@ -100,6 +124,10 @@ const (
 	ItemTypeMountedDataFactory ItemType = "MountedDataFactory"
 	// ItemTypeNotebook - A notebook.
 	ItemTypeNotebook ItemType = "Notebook"
+	// ItemTypeOntology - An Ontology.
+	ItemTypeOntology ItemType = "Ontology"
+	// ItemTypeOperationsAgent - A OperationsAgent.
+	ItemTypeOperationsAgent ItemType = "OperationsAgent"
 	// ItemTypePaginatedReport - PowerBI paginated report.
 	ItemTypePaginatedReport ItemType = "PaginatedReport"
 	// ItemTypeReflex - A Reflex.
@@ -112,6 +140,8 @@ const (
 	ItemTypeSQLEndpoint ItemType = "SQLEndpoint"
 	// ItemTypeSemanticModel - PowerBI semantic model.
 	ItemTypeSemanticModel ItemType = "SemanticModel"
+	// ItemTypeSnowflakeDatabase - A Snowflake Database to store Iceberg tables created from Snowflake account.
+	ItemTypeSnowflakeDatabase ItemType = "SnowflakeDatabase"
 	// ItemTypeSparkJobDefinition - A spark job definition.
 	ItemTypeSparkJobDefinition ItemType = "SparkJobDefinition"
 	// ItemTypeUserDataFunction - A User Data Function.
@@ -130,6 +160,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeAnomalyDetector,
 		ItemTypeApacheAirflowJob,
 		ItemTypeCopyJob,
+		ItemTypeCosmosDBDatabase,
 		ItemTypeDashboard,
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
@@ -137,6 +168,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeDigitalTwinBuilder,
 		ItemTypeDigitalTwinBuilderFlow,
 		ItemTypeEnvironment,
+		ItemTypeEventSchemaSet,
 		ItemTypeEventhouse,
 		ItemTypeEventstream,
 		ItemTypeGraphModel,
@@ -154,12 +186,15 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeMirroredWarehouse,
 		ItemTypeMountedDataFactory,
 		ItemTypeNotebook,
+		ItemTypeOntology,
+		ItemTypeOperationsAgent,
 		ItemTypePaginatedReport,
 		ItemTypeReflex,
 		ItemTypeReport,
 		ItemTypeSQLDatabase,
 		ItemTypeSQLEndpoint,
 		ItemTypeSemanticModel,
+		ItemTypeSnowflakeDatabase,
 		ItemTypeSparkJobDefinition,
 		ItemTypeUserDataFunction,
 		ItemTypeVariableLibrary,

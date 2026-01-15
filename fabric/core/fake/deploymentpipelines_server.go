@@ -206,7 +206,7 @@ func (d *DeploymentPipelinesServerTransport) dispatchAddDeploymentPipelineRoleAs
 	const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/roleAssignments`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	body, err := server.UnmarshalRequestAsJSON[core.AddDeploymentPipelineRoleAssignmentRequest](req)
@@ -239,7 +239,7 @@ func (d *DeploymentPipelinesServerTransport) dispatchAssignWorkspaceToStage(req 
 	const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/stages/(?P<stageId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/assignWorkspace`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	body, err := server.UnmarshalRequestAsJSON[core.DeploymentPipelineAssignWorkspaceRequest](req)
@@ -299,7 +299,7 @@ func (d *DeploymentPipelinesServerTransport) dispatchDeleteDeploymentPipeline(re
 	const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	deploymentPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("deploymentPipelineId")])
@@ -328,7 +328,7 @@ func (d *DeploymentPipelinesServerTransport) dispatchDeleteDeploymentPipelineRol
 	const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/roleAssignments/(?P<principalId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	deploymentPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("deploymentPipelineId")])
@@ -363,7 +363,7 @@ func (d *DeploymentPipelinesServerTransport) dispatchBeginDeployStageContent(req
 		const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/deploy`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 1 {
+		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		body, err := server.UnmarshalRequestAsJSON[core.DeployRequest](req)
@@ -405,7 +405,7 @@ func (d *DeploymentPipelinesServerTransport) dispatchGetDeploymentPipeline(req *
 	const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	deploymentPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("deploymentPipelineId")])
@@ -434,7 +434,7 @@ func (d *DeploymentPipelinesServerTransport) dispatchGetDeploymentPipelineOperat
 	const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/operations/(?P<operationId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	deploymentPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("deploymentPipelineId")])
@@ -467,7 +467,7 @@ func (d *DeploymentPipelinesServerTransport) dispatchGetDeploymentPipelineStage(
 	const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/stages/(?P<stageId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	deploymentPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("deploymentPipelineId")])
@@ -502,7 +502,7 @@ func (d *DeploymentPipelinesServerTransport) dispatchNewListDeploymentPipelineOp
 		const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/operations`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 1 {
+		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		qp := req.URL.Query()
@@ -551,7 +551,7 @@ func (d *DeploymentPipelinesServerTransport) dispatchNewListDeploymentPipelineRo
 		const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/roleAssignments`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 1 {
+		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		qp := req.URL.Query()
@@ -600,7 +600,7 @@ func (d *DeploymentPipelinesServerTransport) dispatchNewListDeploymentPipelineSt
 		const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/stages/(?P<stageId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/items`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 2 {
+		if len(matches) < 3 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		qp := req.URL.Query()
@@ -653,7 +653,7 @@ func (d *DeploymentPipelinesServerTransport) dispatchNewListDeploymentPipelineSt
 		const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/stages`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 1 {
+		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		qp := req.URL.Query()
@@ -739,7 +739,7 @@ func (d *DeploymentPipelinesServerTransport) dispatchUnassignWorkspaceFromStage(
 	const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/stages/(?P<stageId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/unassignWorkspace`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	deploymentPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("deploymentPipelineId")])
@@ -772,7 +772,7 @@ func (d *DeploymentPipelinesServerTransport) dispatchUpdateDeploymentPipeline(re
 	const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	body, err := server.UnmarshalRequestAsJSON[core.UpdateDeploymentPipelineRequest](req)
@@ -805,7 +805,7 @@ func (d *DeploymentPipelinesServerTransport) dispatchUpdateDeploymentPipelineSta
 	const regexStr = `/v1/deploymentPipelines/(?P<deploymentPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/stages/(?P<stageId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	body, err := server.UnmarshalRequestAsJSON[core.DeploymentPipelineStageRequest](req)

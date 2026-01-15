@@ -102,7 +102,7 @@ func (l *LongRunningOperationsServerTransport) dispatchGetOperationResult(req *h
 	const regexStr = `/v1/operations/(?P<operationId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/result`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	operationIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("operationId")])
@@ -134,7 +134,7 @@ func (l *LongRunningOperationsServerTransport) dispatchGetOperationState(req *ht
 	const regexStr = `/v1/operations/(?P<operationId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 1 {
+	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	operationIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("operationId")])

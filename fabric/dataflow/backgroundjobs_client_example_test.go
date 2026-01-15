@@ -81,7 +81,7 @@ func ExampleBackgroundJobsClient_RunOnDemandExecute_runDataflowExecuteJobInstanc
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewBackgroundJobsClient().RunOnDemandExecute(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "dddddddd-9999-0000-1111-eeeeeeeeeeee", "Execute", &dataflow.BackgroundJobsClientRunOnDemandExecuteOptions{RunOnDemandItemJobRequest: nil})
+	_, err = clientFactory.NewBackgroundJobsClient().RunOnDemandExecute(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "dddddddd-9999-0000-1111-eeeeeeeeeeee", &dataflow.BackgroundJobsClientRunOnDemandExecuteOptions{RunOnDemandItemJobRequest: nil})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -98,7 +98,7 @@ func ExampleBackgroundJobsClient_RunOnDemandExecute_runDataflowExecuteJobInstanc
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewBackgroundJobsClient().RunOnDemandExecute(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "dddddddd-9999-0000-1111-eeeeeeeeeeee", "Execute", &dataflow.BackgroundJobsClientRunOnDemandExecuteOptions{RunOnDemandItemJobRequest: &dataflow.RunOnDemandDataflowExecuteJobRequest{
+	_, err = clientFactory.NewBackgroundJobsClient().RunOnDemandExecute(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "dddddddd-9999-0000-1111-eeeeeeeeeeee", &dataflow.BackgroundJobsClientRunOnDemandExecuteOptions{RunOnDemandItemJobRequest: &dataflow.RunOnDemandDataflowExecuteJobRequest{
 		ExecutionData: &dataflow.ExecutionPayload{
 			ExecuteOption: to.Ptr(dataflow.ExecuteOptionApplyChangesIfNeeded),
 			Parameters: []dataflow.ItemJobParameter{
@@ -131,7 +131,7 @@ func ExampleBackgroundJobsClient_RunOnDemandApplyChanges() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewBackgroundJobsClient().RunOnDemandApplyChanges(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "dddddddd-9999-0000-1111-eeeeeeeeeeee", "ApplyChanges", nil)
+	_, err = clientFactory.NewBackgroundJobsClient().RunOnDemandApplyChanges(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "dddddddd-9999-0000-1111-eeeeeeeeeeee", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

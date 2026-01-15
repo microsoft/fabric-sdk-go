@@ -268,10 +268,8 @@ type Properties struct {
 // definition public definition.
 type PublicDefinition struct {
 	// REQUIRED; A list of definition parts.
-	Parts []PublicDefinitionPart
-
-	// The format of the item definition. Supported format: SparkJobDefinitionV1.
-	Format *string
+	Parts  []PublicDefinitionPart
+	Format *Format
 }
 
 // PublicDefinitionPart - Spark job definition definition part object.

@@ -160,6 +160,36 @@ func ExampleGitClient_Connect_connectAWorkspaceToGitHubExample() {
 }
 
 // Generated from example definition
+func ExampleGitClient_Connect_connectAWorkspaceToGitHubExampleGitHubEnterpriseWithDataResidencyGheCom() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewGitClient().Connect(ctx, "1565e6a3-c020-4c0c-dda7-92bafe99eec5", core.GitConnectRequest{
+		GitProviderDetails: &core.GitHubDetails{
+			BranchName:       to.Ptr("Test Branch"),
+			DirectoryName:    to.Ptr("Test Directory/Test Subdirectory"),
+			GitProviderType:  to.Ptr(core.GitProviderTypeGitHub),
+			RepositoryName:   to.Ptr("Test Repo"),
+			CustomDomainName: to.Ptr("my-enterprise.ghe.com"),
+			OwnerName:        to.Ptr("Test Owner"),
+		},
+		MyGitCredentials: &core.ConfiguredConnectionGitCredentials{
+			Source:       to.Ptr(core.GitCredentialsSourceConfiguredConnection),
+			ConnectionID: to.Ptr("3f2504e0-4f89-11d3-9a0c-0305e82c3301"),
+		},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
 func ExampleGitClient_Disconnect() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {

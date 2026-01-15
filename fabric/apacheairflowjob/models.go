@@ -6,6 +6,44 @@
 
 package apacheairflowjob
 
+// AirflowPoolTemplate - Apache Airflow pool template.
+type AirflowPoolTemplate struct {
+	// The Apache Airflow job version.
+	ApacheAirflowJobVersion *string
+
+	// Compute scalability settings.
+	ComputeScalability *ComputeScalability
+
+	// The pool template name.
+	Name *string
+
+	// The node size.
+	NodeSize *NodeSize
+
+	// READ-ONLY; The pool template ID.
+	ID *string
+
+	// READ-ONLY; The shutdown policy.
+	ShutdownPolicy *ShutdownPolicy
+}
+
+type AirflowPoolTemplates struct {
+	// REQUIRED; A list of Apache Airflow pool templates.
+	Value []AirflowPoolTemplate
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
+// AirflowWorkspaceSettings - Apache Airflow workspace settings.
+type AirflowWorkspaceSettings struct {
+	// The default pool template ID for the workspace.
+	DefaultPoolTemplateID *string
+}
+
 // ApacheAirflowJob - An Apache Airflow job object.
 type ApacheAirflowJob struct {
 	// REQUIRED; The item type.
@@ -40,6 +78,30 @@ type ApacheAirflowJobs struct {
 
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
+}
+
+// ComputeScalability - Compute scalability properties.
+type ComputeScalability struct {
+	// REQUIRED; The maximum node count.
+	MaxNodeCount *int32
+
+	// REQUIRED; The minimum node count. The minimum value is always 5.
+	MinNodeCount *int32
+}
+
+// CreateAirflowPoolTemplateRequest - Create Apache Airflow pool template request payload.
+type CreateAirflowPoolTemplateRequest struct {
+	// REQUIRED; The Apache Airflow job version (e.g., '1.0.0').
+	ApacheAirflowJobVersion *string
+
+	// REQUIRED; Compute scalability settings.
+	ComputeScalability *ComputeScalability
+
+	// REQUIRED; The pool template name.
+	Name *string
+
+	// REQUIRED; The node size.
+	NodeSize *NodeSize
 }
 
 // CreateApacheAirflowJobRequest - Create request payload.
@@ -81,6 +143,28 @@ type DefinitionResponse struct {
 	Definition *Definition
 }
 
+// FileMetadata - Apache Airflow job file metadata.
+type FileMetadata struct {
+	// READ-ONLY; The file path relative to the Apache Airflow job root. It must begin with either 'dags/' or 'plugins/' (for
+	// example, dags/example_dag.py).
+	FilePath *string
+
+	// READ-ONLY; The file size, in bytes.
+	SizeInBytes *int64
+}
+
+// Files - A list of Apache Airflow job files.
+type Files struct {
+	// READ-ONLY; A list of Apache Airflow job files.
+	Value []FileMetadata
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
 // ItemTag - Represents a tag applied on an item.
 type ItemTag struct {
 	// REQUIRED; The name of the tag.
@@ -88,6 +172,12 @@ type ItemTag struct {
 
 	// REQUIRED; The tag ID.
 	ID *string
+}
+
+// UpdateAirflowWorkspaceSettingsRequest - Update Apache Airflow workspace settings request payload.
+type UpdateAirflowWorkspaceSettingsRequest struct {
+	// The default pool template ID for the workspace.
+	DefaultPoolTemplateID *string
 }
 
 // UpdateApacheAirflowJobDefinitionRequest - Update public definition request payload.

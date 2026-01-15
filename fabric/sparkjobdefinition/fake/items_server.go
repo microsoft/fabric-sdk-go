@@ -145,7 +145,7 @@ func (i *ItemsServerTransport) dispatchBeginCreateSparkJobDefinition(req *http.R
 		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sparkJobDefinitions`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 1 {
+		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		body, err := server.UnmarshalRequestAsJSON[sparkjobdefinition.CreateSparkJobDefinitionRequest](req)
@@ -187,7 +187,7 @@ func (i *ItemsServerTransport) dispatchDeleteSparkJobDefinition(req *http.Reques
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sparkJobDefinitions/(?P<sparkJobDefinitionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
@@ -220,7 +220,7 @@ func (i *ItemsServerTransport) dispatchGetSparkJobDefinition(req *http.Request) 
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sparkJobDefinitions/(?P<sparkJobDefinitionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
@@ -255,7 +255,7 @@ func (i *ItemsServerTransport) dispatchBeginGetSparkJobDefinitionDefinition(req 
 		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sparkJobDefinitions/(?P<sparkJobDefinitionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 2 {
+		if len(matches) < 3 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		qp := req.URL.Query()
@@ -271,7 +271,7 @@ func (i *ItemsServerTransport) dispatchBeginGetSparkJobDefinitionDefinition(req 
 		if err != nil {
 			return nil, err
 		}
-		formatParam := getOptional(formatUnescaped)
+		formatParam := getOptional(sparkjobdefinition.Format(formatUnescaped))
 		var options *sparkjobdefinition.ItemsClientBeginGetSparkJobDefinitionDefinitionOptions
 		if formatParam != nil {
 			options = &sparkjobdefinition.ItemsClientBeginGetSparkJobDefinitionDefinitionOptions{
@@ -311,7 +311,7 @@ func (i *ItemsServerTransport) dispatchNewListSparkJobDefinitionsPager(req *http
 		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sparkJobDefinitions`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 1 {
+		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		qp := req.URL.Query()
@@ -358,7 +358,7 @@ func (i *ItemsServerTransport) dispatchUpdateSparkJobDefinition(req *http.Reques
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sparkJobDefinitions/(?P<sparkJobDefinitionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	body, err := server.UnmarshalRequestAsJSON[sparkjobdefinition.UpdateSparkJobDefinitionRequest](req)
@@ -397,7 +397,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateSparkJobDefinitionDefinition(r
 		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sparkJobDefinitions/(?P<sparkJobDefinitionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 2 {
+		if len(matches) < 3 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		qp := req.URL.Query()

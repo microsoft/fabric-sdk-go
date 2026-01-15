@@ -39,16 +39,9 @@ type CustomPoolsClientUpdateWorkspaceCustomPoolOptions struct {
 	// placeholder for future optional parameters
 }
 
-// LivySessionsClientListLivySessionsOptions contains the optional parameters for the LivySessionsClient.NewListLivySessionsPager
+// LivySessionsClientListLivySessionsBetaOptions contains the optional parameters for the LivySessionsClient.NewListLivySessionsBetaPager
 // method.
-type LivySessionsClientListLivySessionsOptions struct {
-	// Token to retrieve the next page of results, if available.
-	ContinuationToken *string
-}
-
-// LivySessionsClientListLivySessionsPreviewOptions contains the optional parameters for the LivySessionsClient.NewListLivySessionsPreviewPager
-// method.
-type LivySessionsClientListLivySessionsPreviewOptions struct {
+type LivySessionsClientListLivySessionsBetaOptions struct {
 	// Token to retrieve the next page of results, if available.
 	ContinuationToken *string
 
@@ -65,6 +58,13 @@ type LivySessionsClientListLivySessionsPreviewOptions struct {
 
 	// The GUID value of the user who submitted the session.
 	SubmitterID *string
+}
+
+// LivySessionsClientListLivySessionsOptions contains the optional parameters for the LivySessionsClient.NewListLivySessionsPager
+// method.
+type LivySessionsClientListLivySessionsOptions struct {
+	// Token to retrieve the next page of results, if available.
+	ContinuationToken *string
 }
 
 // WorkspaceSettingsClientGetSparkSettingsOptions contains the optional parameters for the WorkspaceSettingsClient.GetSparkSettings

@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
@@ -37,6 +38,10 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetLakehouse func(ctx context.Context, workspaceID string, lakehouseID string, options *lakehouse.ItemsClientGetLakehouseOptions) (resp azfake.Responder[lakehouse.ItemsClientGetLakehouseResponse], errResp azfake.ErrorResponder)
 
+	// BeginGetLakehouseDefinition is the fake for method ItemsClient.BeginGetLakehouseDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	BeginGetLakehouseDefinition func(ctx context.Context, workspaceID string, lakehouseID string, options *lakehouse.ItemsClientBeginGetLakehouseDefinitionOptions) (resp azfake.PollerResponder[lakehouse.ItemsClientGetLakehouseDefinitionResponse], errResp azfake.ErrorResponder)
+
 	// NewListLakehousesPager is the fake for method ItemsClient.NewListLakehousesPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListLakehousesPager func(workspaceID string, options *lakehouse.ItemsClientListLakehousesOptions) (resp azfake.PagerResponder[lakehouse.ItemsClientListLakehousesResponse])
@@ -44,6 +49,10 @@ type ItemsServer struct {
 	// UpdateLakehouse is the fake for method ItemsClient.UpdateLakehouse
 	// HTTP status codes to indicate success: http.StatusOK
 	UpdateLakehouse func(ctx context.Context, workspaceID string, lakehouseID string, updateLakehouseRequest lakehouse.UpdateLakehouseRequest, options *lakehouse.ItemsClientUpdateLakehouseOptions) (resp azfake.Responder[lakehouse.ItemsClientUpdateLakehouseResponse], errResp azfake.ErrorResponder)
+
+	// BeginUpdateLakehouseDefinition is the fake for method ItemsClient.BeginUpdateLakehouseDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	BeginUpdateLakehouseDefinition func(ctx context.Context, workspaceID string, lakehouseID string, updateLakehouseDefinitionRequest lakehouse.UpdateLakehouseDefinitionRequest, options *lakehouse.ItemsClientBeginUpdateLakehouseDefinitionOptions) (resp azfake.PollerResponder[lakehouse.ItemsClientUpdateLakehouseDefinitionResponse], errResp azfake.ErrorResponder)
 }
 
 // NewItemsServerTransport creates a new instance of ItemsServerTransport with the provided implementation.
@@ -51,18 +60,22 @@ type ItemsServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewItemsServerTransport(srv *ItemsServer) *ItemsServerTransport {
 	return &ItemsServerTransport{
-		srv:                    srv,
-		beginCreateLakehouse:   newTracker[azfake.PollerResponder[lakehouse.ItemsClientCreateLakehouseResponse]](),
-		newListLakehousesPager: newTracker[azfake.PagerResponder[lakehouse.ItemsClientListLakehousesResponse]](),
+		srv:                            srv,
+		beginCreateLakehouse:           newTracker[azfake.PollerResponder[lakehouse.ItemsClientCreateLakehouseResponse]](),
+		beginGetLakehouseDefinition:    newTracker[azfake.PollerResponder[lakehouse.ItemsClientGetLakehouseDefinitionResponse]](),
+		newListLakehousesPager:         newTracker[azfake.PagerResponder[lakehouse.ItemsClientListLakehousesResponse]](),
+		beginUpdateLakehouseDefinition: newTracker[azfake.PollerResponder[lakehouse.ItemsClientUpdateLakehouseDefinitionResponse]](),
 	}
 }
 
 // ItemsServerTransport connects instances of lakehouse.ItemsClient to instances of ItemsServer.
 // Don't use this type directly, use NewItemsServerTransport instead.
 type ItemsServerTransport struct {
-	srv                    *ItemsServer
-	beginCreateLakehouse   *tracker[azfake.PollerResponder[lakehouse.ItemsClientCreateLakehouseResponse]]
-	newListLakehousesPager *tracker[azfake.PagerResponder[lakehouse.ItemsClientListLakehousesResponse]]
+	srv                            *ItemsServer
+	beginCreateLakehouse           *tracker[azfake.PollerResponder[lakehouse.ItemsClientCreateLakehouseResponse]]
+	beginGetLakehouseDefinition    *tracker[azfake.PollerResponder[lakehouse.ItemsClientGetLakehouseDefinitionResponse]]
+	newListLakehousesPager         *tracker[azfake.PagerResponder[lakehouse.ItemsClientListLakehousesResponse]]
+	beginUpdateLakehouseDefinition *tracker[azfake.PollerResponder[lakehouse.ItemsClientUpdateLakehouseDefinitionResponse]]
 }
 
 // Do implements the policy.Transporter interface for ItemsServerTransport.
@@ -96,10 +109,14 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 				res.resp, res.err = i.dispatchDeleteLakehouse(req)
 			case "ItemsClient.GetLakehouse":
 				res.resp, res.err = i.dispatchGetLakehouse(req)
+			case "ItemsClient.BeginGetLakehouseDefinition":
+				res.resp, res.err = i.dispatchBeginGetLakehouseDefinition(req)
 			case "ItemsClient.NewListLakehousesPager":
 				res.resp, res.err = i.dispatchNewListLakehousesPager(req)
 			case "ItemsClient.UpdateLakehouse":
 				res.resp, res.err = i.dispatchUpdateLakehouse(req)
+			case "ItemsClient.BeginUpdateLakehouseDefinition":
+				res.resp, res.err = i.dispatchBeginUpdateLakehouseDefinition(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -128,7 +145,7 @@ func (i *ItemsServerTransport) dispatchBeginCreateLakehouse(req *http.Request) (
 		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 1 {
+		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		body, err := server.UnmarshalRequestAsJSON[lakehouse.CreateLakehouseRequest](req)
@@ -170,7 +187,7 @@ func (i *ItemsServerTransport) dispatchDeleteLakehouse(req *http.Request) (*http
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
@@ -203,7 +220,7 @@ func (i *ItemsServerTransport) dispatchGetLakehouse(req *http.Request) (*http.Re
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
@@ -229,6 +246,62 @@ func (i *ItemsServerTransport) dispatchGetLakehouse(req *http.Request) (*http.Re
 	return resp, nil
 }
 
+func (i *ItemsServerTransport) dispatchBeginGetLakehouseDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginGetLakehouseDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginGetLakehouseDefinition not implemented")}
+	}
+	beginGetLakehouseDefinition := i.beginGetLakehouseDefinition.get(req)
+	if beginGetLakehouseDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 3 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		lakehouseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("lakehouseId")])
+		if err != nil {
+			return nil, err
+		}
+		formatUnescaped, err := url.QueryUnescape(qp.Get("format"))
+		if err != nil {
+			return nil, err
+		}
+		formatParam := getOptional(formatUnescaped)
+		var options *lakehouse.ItemsClientBeginGetLakehouseDefinitionOptions
+		if formatParam != nil {
+			options = &lakehouse.ItemsClientBeginGetLakehouseDefinitionOptions{
+				Format: formatParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginGetLakehouseDefinition(req.Context(), workspaceIDParam, lakehouseIDParam, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginGetLakehouseDefinition = &respr
+		i.beginGetLakehouseDefinition.add(req, beginGetLakehouseDefinition)
+	}
+
+	resp, err := server.PollerResponderNext(beginGetLakehouseDefinition, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+		i.beginGetLakehouseDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginGetLakehouseDefinition) {
+		i.beginGetLakehouseDefinition.remove(req)
+	}
+
+	return resp, nil
+}
+
 func (i *ItemsServerTransport) dispatchNewListLakehousesPager(req *http.Request) (*http.Response, error) {
 	if i.srv.NewListLakehousesPager == nil {
 		return nil, &nonRetriableError{errors.New("fake for method NewListLakehousesPager not implemented")}
@@ -238,7 +311,7 @@ func (i *ItemsServerTransport) dispatchNewListLakehousesPager(req *http.Request)
 		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-		if matches == nil || len(matches) < 1 {
+		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
 		qp := req.URL.Query()
@@ -285,7 +358,7 @@ func (i *ItemsServerTransport) dispatchUpdateLakehouse(req *http.Request) (*http
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	body, err := server.UnmarshalRequestAsJSON[lakehouse.UpdateLakehouseRequest](req)
@@ -312,6 +385,69 @@ func (i *ItemsServerTransport) dispatchUpdateLakehouse(req *http.Request) (*http
 	if err != nil {
 		return nil, err
 	}
+	return resp, nil
+}
+
+func (i *ItemsServerTransport) dispatchBeginUpdateLakehouseDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginUpdateLakehouseDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginUpdateLakehouseDefinition not implemented")}
+	}
+	beginUpdateLakehouseDefinition := i.beginUpdateLakehouseDefinition.get(req)
+	if beginUpdateLakehouseDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 3 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		body, err := server.UnmarshalRequestAsJSON[lakehouse.UpdateLakehouseDefinitionRequest](req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		lakehouseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("lakehouseId")])
+		if err != nil {
+			return nil, err
+		}
+		updateMetadataUnescaped, err := url.QueryUnescape(qp.Get("updateMetadata"))
+		if err != nil {
+			return nil, err
+		}
+		updateMetadataParam, err := parseOptional(updateMetadataUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		var options *lakehouse.ItemsClientBeginUpdateLakehouseDefinitionOptions
+		if updateMetadataParam != nil {
+			options = &lakehouse.ItemsClientBeginUpdateLakehouseDefinitionOptions{
+				UpdateMetadata: updateMetadataParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginUpdateLakehouseDefinition(req.Context(), workspaceIDParam, lakehouseIDParam, body, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginUpdateLakehouseDefinition = &respr
+		i.beginUpdateLakehouseDefinition.add(req, beginUpdateLakehouseDefinition)
+	}
+
+	resp, err := server.PollerResponderNext(beginUpdateLakehouseDefinition, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+		i.beginUpdateLakehouseDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginUpdateLakehouseDefinition) {
+		i.beginUpdateLakehouseDefinition.remove(req)
+	}
+
 	return resp, nil
 }
 

@@ -136,13 +136,65 @@ func (testsuite *FakeTestSuite) TestItems_CreateSparkJobDefinition() {
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a spark job definition with public definition and inline files example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCreateSparkJobDefinitionRequest = sparkjobdefinition.CreateSparkJobDefinitionRequest{
+		Description: to.Ptr("A spark job definition description."),
+		Definition: &sparkjobdefinition.PublicDefinition{
+			Format: to.Ptr(sparkjobdefinition.FormatSparkJobDefinitionV2),
+			Parts: []sparkjobdefinition.PublicDefinitionPart{
+				{
+					Path:        to.Ptr("SparkJobDefinitionV1.json"),
+					Payload:     to.Ptr("ewogICAgICAiZXhlY3V0Y..mFjdElkIjpudWxsCiAgICB9"),
+					PayloadType: to.Ptr(sparkjobdefinition.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Main/main.py"),
+					Payload:     to.Ptr("cHJpbnQoMSk="),
+					PayloadType: to.Ptr(sparkjobdefinition.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libs/lib1.py"),
+					Payload:     to.Ptr("cHJpbnQoMSk="),
+					PayloadType: to.Ptr(sparkjobdefinition.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("Libs/lib2.py"),
+					Payload:     to.Ptr("cHJpbnQoMSk="),
+					PayloadType: to.Ptr(sparkjobdefinition.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(sparkjobdefinition.PayloadTypeInlineBase64),
+				}},
+		},
+		DisplayName: to.Ptr("SparkJobDefinition 1"),
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginCreateSparkJobDefinition = func(ctx context.Context, workspaceID string, createSparkJobDefinitionRequest sparkjobdefinition.CreateSparkJobDefinitionRequest, options *sparkjobdefinition.ItemsClientBeginCreateSparkJobDefinitionOptions) (resp azfake.PollerResponder[sparkjobdefinition.ItemsClientCreateSparkJobDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateSparkJobDefinitionRequest, createSparkJobDefinitionRequest))
+		resp = azfake.PollerResponder[sparkjobdefinition.ItemsClientCreateSparkJobDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, sparkjobdefinition.ItemsClientCreateSparkJobDefinitionResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateSparkJobDefinition(ctx, exampleWorkspaceID, exampleCreateSparkJobDefinitionRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Create a spark job definition with public definition example"},
 	})
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
 	exampleCreateSparkJobDefinitionRequest = sparkjobdefinition.CreateSparkJobDefinitionRequest{
 		Description: to.Ptr("A spark job definition description."),
 		Definition: &sparkjobdefinition.PublicDefinition{
-			Format: to.Ptr("SparkJobDefinitionV1"),
+			Format: to.Ptr(sparkjobdefinition.FormatSparkJobDefinitionV1),
 			Parts: []sparkjobdefinition.PublicDefinitionPart{
 				{
 					Path:        to.Ptr("SparkJobDefinitionV1.json"),
@@ -308,12 +360,49 @@ func (testsuite *FakeTestSuite) TestItems_GetSparkJobDefinitionDefinition() {
 	res, err := poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Response))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a spark job definition public definition example with SparkJobDefinitionV2 format"},
+	})
+	exampleWorkspaceID = "6e335e92-a2a2-4b5a-970a-bd6a89fbb765"
+	exampleSparkJobDefinitionID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+
+	exampleRes = sparkjobdefinition.Response{
+		Definition: &sparkjobdefinition.PublicDefinition{
+			Parts: []sparkjobdefinition.PublicDefinitionPart{
+				{
+					Path:        to.Ptr("SparkJobDefinitionV1.json"),
+					Payload:     to.Ptr("ew0KICAiZXhlY3V0YW..OWRmNDhhY2ZmZTgifQ"),
+					PayloadType: to.Ptr(sparkjobdefinition.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(sparkjobdefinition.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginGetSparkJobDefinitionDefinition = func(ctx context.Context, workspaceID string, sparkJobDefinitionID string, options *sparkjobdefinition.ItemsClientBeginGetSparkJobDefinitionDefinitionOptions) (resp azfake.PollerResponder[sparkjobdefinition.ItemsClientGetSparkJobDefinitionDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleSparkJobDefinitionID, sparkJobDefinitionID)
+		resp = azfake.PollerResponder[sparkjobdefinition.ItemsClientGetSparkJobDefinitionDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, sparkjobdefinition.ItemsClientGetSparkJobDefinitionDefinitionResponse{Response: exampleRes}, nil)
+		return
+	}
+
+	poller, err = client.BeginGetSparkJobDefinitionDefinition(ctx, exampleWorkspaceID, exampleSparkJobDefinitionID, &sparkjobdefinition.ItemsClientBeginGetSparkJobDefinitionDefinitionOptions{Format: to.Ptr(sparkjobdefinition.FormatSparkJobDefinitionV2)})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Response))
 }
 
 func (testsuite *FakeTestSuite) TestItems_UpdateSparkJobDefinitionDefinition() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Update a spark job definition public definition example"},
+		"example-id": {"Update a spark job definition with public definition and inline files example"},
 	})
 	var exampleWorkspaceID string
 	var exampleSparkJobDefinitionID string
@@ -335,6 +424,27 @@ func (testsuite *FakeTestSuite) TestItems_UpdateSparkJobDefinitionDefinition() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update a spark job definition with public definition example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleSparkJobDefinitionID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleUpdateSparkJobDefinitionRequest = sparkjobdefinition.UpdateSparkJobDefinitionDefinitionRequest{}
+
+	testsuite.serverFactory.ItemsServer.BeginUpdateSparkJobDefinitionDefinition = func(ctx context.Context, workspaceID string, sparkJobDefinitionID string, updateSparkJobDefinitionRequest sparkjobdefinition.UpdateSparkJobDefinitionDefinitionRequest, options *sparkjobdefinition.ItemsClientBeginUpdateSparkJobDefinitionDefinitionOptions) (resp azfake.PollerResponder[sparkjobdefinition.ItemsClientUpdateSparkJobDefinitionDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleSparkJobDefinitionID, sparkJobDefinitionID)
+		resp = azfake.PollerResponder[sparkjobdefinition.ItemsClientUpdateSparkJobDefinitionDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, sparkjobdefinition.ItemsClientUpdateSparkJobDefinitionDefinitionResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginUpdateSparkJobDefinitionDefinition(ctx, exampleWorkspaceID, exampleSparkJobDefinitionID, exampleUpdateSparkJobDefinitionRequest, &sparkjobdefinition.ItemsClientBeginUpdateSparkJobDefinitionDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandSparkJobDefinition() {
@@ -344,22 +454,19 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandSparkJobDefinition
 	})
 	var exampleWorkspaceID string
 	var exampleSparkJobDefinitionID string
-	var exampleJobType string
 	exampleWorkspaceID = "4b218778-e7a5-4d73-8187-f10824047715"
 	exampleSparkJobDefinitionID = "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"
-	exampleJobType = "sparkjob"
 
-	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandSparkJobDefinition = func(ctx context.Context, workspaceID string, sparkJobDefinitionID string, jobType string, options *sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions) (resp azfake.Responder[sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandSparkJobDefinition = func(ctx context.Context, workspaceID string, sparkJobDefinitionID string, options *sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions) (resp azfake.Responder[sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleSparkJobDefinitionID, sparkJobDefinitionID)
-		testsuite.Require().Equal(exampleJobType, jobType)
 		resp = azfake.Responder[sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse]{}
 		resp.SetResponse(http.StatusAccepted, sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse{}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewBackgroundJobsClient()
-	_, err = client.RunOnDemandSparkJobDefinition(ctx, exampleWorkspaceID, exampleSparkJobDefinitionID, exampleJobType, &sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions{RunSparkJobDefinitionRequest: nil})
+	_, err = client.RunOnDemandSparkJobDefinition(ctx, exampleWorkspaceID, exampleSparkJobDefinitionID, &sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions{RunSparkJobDefinitionRequest: nil})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 
 	// From example
@@ -368,18 +475,16 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandSparkJobDefinition
 	})
 	exampleWorkspaceID = "4b218778-e7a5-4d73-8187-f10824047715"
 	exampleSparkJobDefinitionID = "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"
-	exampleJobType = "sparkjob"
 
-	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandSparkJobDefinition = func(ctx context.Context, workspaceID string, sparkJobDefinitionID string, jobType string, options *sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions) (resp azfake.Responder[sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandSparkJobDefinition = func(ctx context.Context, workspaceID string, sparkJobDefinitionID string, options *sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions) (resp azfake.Responder[sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleSparkJobDefinitionID, sparkJobDefinitionID)
-		testsuite.Require().Equal(exampleJobType, jobType)
 		resp = azfake.Responder[sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse]{}
 		resp.SetResponse(http.StatusAccepted, sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse{}, nil)
 		return
 	}
 
-	_, err = client.RunOnDemandSparkJobDefinition(ctx, exampleWorkspaceID, exampleSparkJobDefinitionID, exampleJobType, &sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions{RunSparkJobDefinitionRequest: &sparkjobdefinition.RunSparkJobDefinitionRequest{
+	_, err = client.RunOnDemandSparkJobDefinition(ctx, exampleWorkspaceID, exampleSparkJobDefinitionID, &sparkjobdefinition.BackgroundJobsClientRunOnDemandSparkJobDefinitionOptions{RunSparkJobDefinitionRequest: &sparkjobdefinition.RunSparkJobDefinitionRequest{
 		ExecutionData: &sparkjobdefinition.ExecutionData{
 			AdditionalLibraryUris: []string{
 				"abfss://test@onelakecst180.dfs.pbidedicated.windows-int.net/dfsd.Lakehouse/Files/testfile.jar"},
@@ -490,17 +595,17 @@ func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessions() {
 	}
 }
 
-func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessionsPreview() {
+func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessionsBeta() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"List all livy sessions (Preview) example"},
+		"example-id": {"List all livy sessions (Beta) example"},
 	})
 	var exampleWorkspaceID string
 	var exampleSparkJobDefinitionID string
-	var examplePreview bool
+	var exampleBeta bool
 	exampleWorkspaceID = "f8113ba8-dd81-443e-811a-b385340f3f05"
 	exampleSparkJobDefinitionID = "8cee7699-2e81-4121-9a53-cc9025046193"
-	examplePreview = true
+	exampleBeta = true
 
 	exampleRes := sparkjobdefinition.LivySessions{
 		Value: []sparkjobdefinition.LivySession{
@@ -560,17 +665,17 @@ func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessionsPreview() {
 			}},
 	}
 
-	testsuite.serverFactory.LivySessionsServer.NewListLivySessionsPreviewPager = func(workspaceID string, sparkJobDefinitionID string, preview bool, options *sparkjobdefinition.LivySessionsClientListLivySessionsPreviewOptions) (resp azfake.PagerResponder[sparkjobdefinition.LivySessionsClientListLivySessionsPreviewResponse]) {
+	testsuite.serverFactory.LivySessionsServer.NewListLivySessionsBetaPager = func(workspaceID string, sparkJobDefinitionID string, beta bool, options *sparkjobdefinition.LivySessionsClientListLivySessionsBetaOptions) (resp azfake.PagerResponder[sparkjobdefinition.LivySessionsClientListLivySessionsBetaResponse]) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleSparkJobDefinitionID, sparkJobDefinitionID)
-		testsuite.Require().Equal(examplePreview, preview)
-		resp = azfake.PagerResponder[sparkjobdefinition.LivySessionsClientListLivySessionsPreviewResponse]{}
-		resp.AddPage(http.StatusOK, sparkjobdefinition.LivySessionsClientListLivySessionsPreviewResponse{LivySessions: exampleRes}, nil)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.PagerResponder[sparkjobdefinition.LivySessionsClientListLivySessionsBetaResponse]{}
+		resp.AddPage(http.StatusOK, sparkjobdefinition.LivySessionsClientListLivySessionsBetaResponse{LivySessions: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewLivySessionsClient()
-	pager := client.NewListLivySessionsPreviewPager(exampleWorkspaceID, exampleSparkJobDefinitionID, examplePreview, &sparkjobdefinition.LivySessionsClientListLivySessionsPreviewOptions{SubmittedDateTime: nil,
+	pager := client.NewListLivySessionsBetaPager(exampleWorkspaceID, exampleSparkJobDefinitionID, exampleBeta, &sparkjobdefinition.LivySessionsClientListLivySessionsBetaOptions{SubmittedDateTime: nil,
 		EndDateTime:       nil,
 		SubmitterID:       to.Ptr("6f23a8a6-d954-4550-b91a-4df73ccd0311"),
 		State:             nil,

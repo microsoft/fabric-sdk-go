@@ -44,6 +44,27 @@ type ItemsClientBeginCreateLakehouseOptions struct {
 	ResumeToken string
 }
 
+// ItemsClientBeginGetLakehouseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetLakehouseDefinition
+// method.
+type ItemsClientBeginGetLakehouseDefinitionOptions struct {
+	// The format of the lakehouse public definition.
+	Format *string
+
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// ItemsClientBeginUpdateLakehouseDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateLakehouseDefinition
+// method.
+type ItemsClientBeginUpdateLakehouseDefinitionOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+
+	// When set to true and the .platform file is provided as part of the definition, the item's metadata is updated using the
+	// metadata in the .platform file
+	UpdateMetadata *bool
+}
+
 // ItemsClientDeleteLakehouseOptions contains the optional parameters for the ItemsClient.DeleteLakehouse method.
 type ItemsClientDeleteLakehouseOptions struct {
 	// placeholder for future optional parameters
@@ -70,16 +91,9 @@ type LivySessionsClientGetLivySessionOptions struct {
 	// placeholder for future optional parameters
 }
 
-// LivySessionsClientListLivySessionsOptions contains the optional parameters for the LivySessionsClient.NewListLivySessionsPager
+// LivySessionsClientListLivySessionsBetaOptions contains the optional parameters for the LivySessionsClient.NewListLivySessionsBetaPager
 // method.
-type LivySessionsClientListLivySessionsOptions struct {
-	// Token to retrieve the next page of results, if available.
-	ContinuationToken *string
-}
-
-// LivySessionsClientListLivySessionsPreviewOptions contains the optional parameters for the LivySessionsClient.NewListLivySessionsPreviewPager
-// method.
-type LivySessionsClientListLivySessionsPreviewOptions struct {
+type LivySessionsClientListLivySessionsBetaOptions struct {
 	// Token to retrieve the next page of results, if available.
 	ContinuationToken *string
 
@@ -96,6 +110,13 @@ type LivySessionsClientListLivySessionsPreviewOptions struct {
 
 	// The GUID value of the user who submitted the session.
 	SubmitterID *string
+}
+
+// LivySessionsClientListLivySessionsOptions contains the optional parameters for the LivySessionsClient.NewListLivySessionsPager
+// method.
+type LivySessionsClientListLivySessionsOptions struct {
+	// Token to retrieve the next page of results, if available.
+	ContinuationToken *string
 }
 
 // TablesClientBeginLoadTableOptions contains the optional parameters for the TablesClient.BeginLoadTable method.

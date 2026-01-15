@@ -1259,6 +1259,7 @@ func (g *GitConnections) UnmarshalJSON(data []byte) error {
 func (g GitHubDetails) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "branchName", g.BranchName)
+	populate(objectMap, "customDomainName", g.CustomDomainName)
 	populate(objectMap, "directoryName", g.DirectoryName)
 	objectMap["gitProviderType"] = GitProviderTypeGitHub
 	populate(objectMap, "ownerName", g.OwnerName)
@@ -1277,6 +1278,9 @@ func (g *GitHubDetails) UnmarshalJSON(data []byte) error {
 		switch key {
 		case "branchName":
 			err = unpopulate(val, "BranchName", &g.BranchName)
+			delete(rawMsg, key)
+		case "customDomainName":
+			err = unpopulate(val, "CustomDomainName", &g.CustomDomainName)
 			delete(rawMsg, key)
 		case "directoryName":
 			err = unpopulate(val, "DirectoryName", &g.DirectoryName)

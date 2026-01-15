@@ -11,6 +11,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -30,8 +31,10 @@ type ItemsClient struct {
 }
 
 // BeginCreateLakehouse - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// This API does not support create a lakehouse with definition.
-// PERMISSIONS The caller must have a contributor workspace role.
+// To create lakehouse with a public definition, refer to Lakehouse definition [/rest/api/fabric/articles/item-management/definitions/lakehouse-definition]
+// article.
+// PERMISSIONS
+// The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES Lakehouse.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -51,8 +54,10 @@ func (client *ItemsClient) BeginCreateLakehouse(ctx context.Context, workspaceID
 }
 
 // CreateLakehouse - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// This API does not support create a lakehouse with definition.
-// PERMISSIONS The caller must have a contributor workspace role.
+// To create lakehouse with a public definition, refer to Lakehouse definition [/rest/api/fabric/articles/item-management/definitions/lakehouse-definition]
+// article.
+// PERMISSIONS
+// The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES Lakehouse.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -220,6 +225,87 @@ func (client *ItemsClient) getLakehouseHandleResponse(resp *http.Response) (Item
 	return result, nil
 }
 
+// BeginGetLakehouseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// When you get a lakehouse's public definition, the sensitivity label is not a part of the definition.
+// PERMISSIONS The caller must have read and write permissions for the lakehouse.
+// REQUIRED DELEGATED SCOPES Lakehouse.ReadWrite.All or Item.ReadWrite.All
+// LIMITATIONS This API is blocked for a lakehouse with an encrypted sensitivity label.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - lakehouseID - The lakehouse ID.
+//   - options - ItemsClientBeginGetLakehouseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetLakehouseDefinition
+//     method.
+func (client *ItemsClient) BeginGetLakehouseDefinition(ctx context.Context, workspaceID string, lakehouseID string, options *ItemsClientBeginGetLakehouseDefinitionOptions) (*runtime.Poller[ItemsClientGetLakehouseDefinitionResponse], error) {
+	return client.beginGetLakehouseDefinition(ctx, workspaceID, lakehouseID, options)
+}
+
+// GetLakehouseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// When you get a lakehouse's public definition, the sensitivity label is not a part of the definition.
+// PERMISSIONS The caller must have read and write permissions for the lakehouse.
+// REQUIRED DELEGATED SCOPES Lakehouse.ReadWrite.All or Item.ReadWrite.All
+// LIMITATIONS This API is blocked for a lakehouse with an encrypted sensitivity label.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) getLakehouseDefinition(ctx context.Context, workspaceID string, lakehouseID string, options *ItemsClientBeginGetLakehouseDefinitionOptions) (*http.Response, error) {
+	var err error
+	const operationName = "lakehouse.ItemsClient.BeginGetLakehouseDefinition"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getLakehouseDefinitionCreateRequest(ctx, workspaceID, lakehouseID, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// getLakehouseDefinitionCreateRequest creates the GetLakehouseDefinition request.
+func (client *ItemsClient) getLakehouseDefinitionCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, options *ItemsClientBeginGetLakehouseDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/getDefinition"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if lakehouseID == "" {
+		return nil, errors.New("parameter lakehouseID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{lakehouseId}", url.PathEscape(lakehouseID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.Format != nil {
+		reqQP.Set("format", *options.Format)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
 // NewListLakehousesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
@@ -354,14 +440,98 @@ func (client *ItemsClient) updateLakehouseHandleResponse(resp *http.Response) (I
 	return result, nil
 }
 
+// BeginUpdateLakehouseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Updating the lakehouse's definition does not affect its sensitivity label.
+// PERMISSIONS The caller must have read and write permissions for the lakehouse.
+// REQUIRED DELEGATED SCOPES Lakehouse.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - lakehouseID - The lakehouse ID.
+//   - updateLakehouseDefinitionRequest - Update lakehouse definition request payload.
+//   - options - ItemsClientBeginUpdateLakehouseDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateLakehouseDefinition
+//     method.
+func (client *ItemsClient) BeginUpdateLakehouseDefinition(ctx context.Context, workspaceID string, lakehouseID string, updateLakehouseDefinitionRequest UpdateLakehouseDefinitionRequest, options *ItemsClientBeginUpdateLakehouseDefinitionOptions) (*runtime.Poller[ItemsClientUpdateLakehouseDefinitionResponse], error) {
+	return client.beginUpdateLakehouseDefinition(ctx, workspaceID, lakehouseID, updateLakehouseDefinitionRequest, options)
+}
+
+// UpdateLakehouseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Updating the lakehouse's definition does not affect its sensitivity label.
+// PERMISSIONS The caller must have read and write permissions for the lakehouse.
+// REQUIRED DELEGATED SCOPES Lakehouse.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) updateLakehouseDefinition(ctx context.Context, workspaceID string, lakehouseID string, updateLakehouseDefinitionRequest UpdateLakehouseDefinitionRequest, options *ItemsClientBeginUpdateLakehouseDefinitionOptions) (*http.Response, error) {
+	var err error
+	const operationName = "lakehouse.ItemsClient.BeginUpdateLakehouseDefinition"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateLakehouseDefinitionCreateRequest(ctx, workspaceID, lakehouseID, updateLakehouseDefinitionRequest, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// updateLakehouseDefinitionCreateRequest creates the UpdateLakehouseDefinition request.
+func (client *ItemsClient) updateLakehouseDefinitionCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, updateLakehouseDefinitionRequest UpdateLakehouseDefinitionRequest, options *ItemsClientBeginUpdateLakehouseDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/updateDefinition"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if lakehouseID == "" {
+		return nil, errors.New("parameter lakehouseID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{lakehouseId}", url.PathEscape(lakehouseID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.UpdateMetadata != nil {
+		reqQP.Set("updateMetadata", strconv.FormatBool(*options.UpdateMetadata))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateLakehouseDefinitionRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // Custom code starts below
 
 // CreateLakehouse - returns ItemsClientCreateLakehouseResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// This API does not support create a lakehouse with definition.
+// To create lakehouse with a public definition, refer to Lakehouse definition [/rest/api/fabric/articles/item-management/definitions/lakehouse-definition] article.
 //
-// PERMISSIONS The caller must have a contributor workspace role.
+// PERMISSIONS
+// The caller must have a contributor workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Lakehouse.ReadWrite.All or Item.ReadWrite.All
 //
@@ -421,6 +591,151 @@ func (client *ItemsClient) beginCreateLakehouse(ctx context.Context, workspaceID
 			return nil, err
 		}
 		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientCreateLakehouseResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// GetLakehouseDefinition - returns ItemsClientGetLakehouseDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// When you get a lakehouse's public definition, the sensitivity label is not a part of the definition.
+//
+// PERMISSIONS The caller must have read and write permissions for the lakehouse.
+//
+// # REQUIRED DELEGATED SCOPES Lakehouse.ReadWrite.All or Item.ReadWrite.All
+//
+// LIMITATIONS This API is blocked for a lakehouse with an encrypted sensitivity label.
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - lakehouseID - The lakehouse ID.
+//   - options - ItemsClientBeginGetLakehouseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetLakehouseDefinition method.
+func (client *ItemsClient) GetLakehouseDefinition(ctx context.Context, workspaceID string, lakehouseID string, options *ItemsClientBeginGetLakehouseDefinitionOptions) (ItemsClientGetLakehouseDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginGetLakehouseDefinition(ctx, workspaceID, lakehouseID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientGetLakehouseDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientGetLakehouseDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginGetLakehouseDefinition creates the getLakehouseDefinition request.
+func (client *ItemsClient) beginGetLakehouseDefinition(ctx context.Context, workspaceID string, lakehouseID string, options *ItemsClientBeginGetLakehouseDefinitionOptions) (*runtime.Poller[ItemsClientGetLakehouseDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.getLakehouseDefinition(ctx, workspaceID, lakehouseID, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientGetLakehouseDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientGetLakehouseDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientGetLakehouseDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientGetLakehouseDefinitionResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// UpdateLakehouseDefinition - returns ItemsClientUpdateLakehouseDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// Updating the lakehouse's definition does not affect its sensitivity label.
+//
+// PERMISSIONS The caller must have read and write permissions for the lakehouse.
+//
+// # REQUIRED DELEGATED SCOPES Lakehouse.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - lakehouseID - The lakehouse ID.
+//   - updateLakehouseDefinitionRequest - Update lakehouse definition request payload.
+//   - options - ItemsClientBeginUpdateLakehouseDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateLakehouseDefinition method.
+func (client *ItemsClient) UpdateLakehouseDefinition(ctx context.Context, workspaceID string, lakehouseID string, updateLakehouseDefinitionRequest UpdateLakehouseDefinitionRequest, options *ItemsClientBeginUpdateLakehouseDefinitionOptions) (ItemsClientUpdateLakehouseDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginUpdateLakehouseDefinition(ctx, workspaceID, lakehouseID, updateLakehouseDefinitionRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientUpdateLakehouseDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientUpdateLakehouseDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginUpdateLakehouseDefinition creates the updateLakehouseDefinition request.
+func (client *ItemsClient) beginUpdateLakehouseDefinition(ctx context.Context, workspaceID string, lakehouseID string, updateLakehouseDefinitionRequest UpdateLakehouseDefinitionRequest, options *ItemsClientBeginUpdateLakehouseDefinitionOptions) (*runtime.Poller[ItemsClientUpdateLakehouseDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.updateLakehouseDefinition(ctx, workspaceID, lakehouseID, updateLakehouseDefinitionRequest, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateLakehouseDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientUpdateLakehouseDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateLakehouseDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientUpdateLakehouseDefinitionResponse]{
 			Handler: handler,
 			Tracer:  client.internal.Tracer(),
 		})

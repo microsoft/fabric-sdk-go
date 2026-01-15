@@ -622,6 +622,37 @@ func (d *DurationParameter) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type ExecuteQueryRequest.
+func (e ExecuteQueryRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "customMashupDocument", e.CustomMashupDocument)
+	populate(objectMap, "queryName", e.QueryName)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ExecuteQueryRequest.
+func (e *ExecuteQueryRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", e, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "customMashupDocument":
+			err = unpopulate(val, "CustomMashupDocument", &e.CustomMashupDocument)
+			delete(rawMsg, key)
+		case "queryName":
+			err = unpopulate(val, "QueryName", &e.QueryName)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", e, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type ExecutionPayload.
 func (e ExecutionPayload) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)

@@ -82,3 +82,10 @@ type ItemsClientListDataflowsOptions struct {
 type ItemsClientUpdateDataflowOptions struct {
 	// placeholder for future optional parameters
 }
+
+// QueryExecutionClientBeginExecuteQueryOptions contains the optional parameters for the QueryExecutionClient.BeginExecuteQuery
+// method.
+type QueryExecutionClientBeginExecuteQueryOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}

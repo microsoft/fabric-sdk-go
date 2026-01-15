@@ -37,7 +37,7 @@ type TagsClient struct {
 //
 // For more information about scopes, see Scopes article [/rest/api/fabric/articles/scopes].
 //
-// LIMITATIONS Maximum 25 requests per hour per principal.
+// LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -165,7 +165,7 @@ func (client *TagsClient) listTagsHandleResponse(resp *http.Response) (TagsClien
 //
 // For more information about scopes, see Scopes article [/rest/api/fabric/articles/scopes].
 //
-// LIMITATIONS Maximum 25 requests per hour per principal.
+// LIMITATIONS Maximum 25 requests per one minute per principal.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]

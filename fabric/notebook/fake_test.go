@@ -535,17 +535,17 @@ func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessions() {
 	}
 }
 
-func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessionsPreview() {
+func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessionsBeta() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"List all livy sessions (Preview) example"},
+		"example-id": {"List all livy sessions (Beta) example"},
 	})
 	var exampleWorkspaceID string
 	var exampleNotebookID string
-	var examplePreview bool
+	var exampleBeta bool
 	exampleWorkspaceID = "f8113ba8-dd81-443e-811a-b385340f3f05"
 	exampleNotebookID = "8cee7699-2e81-4121-9a53-cc9025046193"
-	examplePreview = true
+	exampleBeta = true
 
 	exampleRes := notebook.LivySessions{
 		Value: []notebook.LivySession{
@@ -605,17 +605,17 @@ func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessionsPreview() {
 			}},
 	}
 
-	testsuite.serverFactory.LivySessionsServer.NewListLivySessionsPreviewPager = func(workspaceID string, notebookID string, preview bool, options *notebook.LivySessionsClientListLivySessionsPreviewOptions) (resp azfake.PagerResponder[notebook.LivySessionsClientListLivySessionsPreviewResponse]) {
+	testsuite.serverFactory.LivySessionsServer.NewListLivySessionsBetaPager = func(workspaceID string, notebookID string, beta bool, options *notebook.LivySessionsClientListLivySessionsBetaOptions) (resp azfake.PagerResponder[notebook.LivySessionsClientListLivySessionsBetaResponse]) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleNotebookID, notebookID)
-		testsuite.Require().Equal(examplePreview, preview)
-		resp = azfake.PagerResponder[notebook.LivySessionsClientListLivySessionsPreviewResponse]{}
-		resp.AddPage(http.StatusOK, notebook.LivySessionsClientListLivySessionsPreviewResponse{LivySessions: exampleRes}, nil)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.PagerResponder[notebook.LivySessionsClientListLivySessionsBetaResponse]{}
+		resp.AddPage(http.StatusOK, notebook.LivySessionsClientListLivySessionsBetaResponse{LivySessions: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewLivySessionsClient()
-	pager := client.NewListLivySessionsPreviewPager(exampleWorkspaceID, exampleNotebookID, examplePreview, &notebook.LivySessionsClientListLivySessionsPreviewOptions{SubmittedDateTime: nil,
+	pager := client.NewListLivySessionsBetaPager(exampleWorkspaceID, exampleNotebookID, exampleBeta, &notebook.LivySessionsClientListLivySessionsBetaOptions{SubmittedDateTime: nil,
 		EndDateTime:       nil,
 		SubmitterID:       nil,
 		State:             nil,

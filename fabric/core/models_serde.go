@@ -523,6 +523,7 @@ func (b BasicCredentials) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	objectMap["credentialType"] = CredentialTypeBasic
 	populate(objectMap, "password", b.Password)
+	populate(objectMap, "passwordReference", b.PasswordReference)
 	populate(objectMap, "username", b.Username)
 	return json.Marshal(objectMap)
 }
@@ -541,6 +542,9 @@ func (b *BasicCredentials) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "password":
 			err = unpopulate(val, "Password", &b.Password)
+			delete(rawMsg, key)
+		case "passwordReference":
+			err = unpopulate(val, "PasswordReference", &b.PasswordReference)
 			delete(rawMsg, key)
 		case "username":
 			err = unpopulate(val, "Username", &b.Username)
@@ -1525,6 +1529,7 @@ func (c CreatableShortcutTarget) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "azureBlobStorage", c.AzureBlobStorage)
 	populate(objectMap, "dataverse", c.Dataverse)
 	populate(objectMap, "googleCloudStorage", c.GoogleCloudStorage)
+	populate(objectMap, "oneDriveSharePoint", c.OneDriveSharePoint)
 	populate(objectMap, "oneLake", c.OneLake)
 	populate(objectMap, "s3Compatible", c.S3Compatible)
 	return json.Marshal(objectMap)
@@ -1553,6 +1558,9 @@ func (c *CreatableShortcutTarget) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "googleCloudStorage":
 			err = unpopulate(val, "GoogleCloudStorage", &c.GoogleCloudStorage)
+			delete(rawMsg, key)
+		case "oneDriveSharePoint":
+			err = unpopulate(val, "OneDriveSharePoint", &c.OneDriveSharePoint)
 			delete(rawMsg, key)
 		case "oneLake":
 			err = unpopulate(val, "OneLake", &c.OneLake)
@@ -4326,6 +4334,7 @@ func (g *GatewayRoleAssignments) UnmarshalJSON(data []byte) error {
 func (g GetOneLakeSettingsResponse) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "diagnostics", g.Diagnostics)
+	populate(objectMap, "immutabilityPolicies", g.ImmutabilityPolicies)
 	return json.Marshal(objectMap)
 }
 
@@ -4340,6 +4349,9 @@ func (g *GetOneLakeSettingsResponse) UnmarshalJSON(data []byte) error {
 		switch key {
 		case "diagnostics":
 			err = unpopulate(val, "Diagnostics", &g.Diagnostics)
+			delete(rawMsg, key)
+		case "immutabilityPolicies":
+			err = unpopulate(val, "ImmutabilityPolicies", &g.ImmutabilityPolicies)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -4473,6 +4485,7 @@ func (g *GitCredentialsConfigurationResponse) UnmarshalJSON(data []byte) error {
 func (g GitHubDetails) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "branchName", g.BranchName)
+	populate(objectMap, "customDomainName", g.CustomDomainName)
 	populate(objectMap, "directoryName", g.DirectoryName)
 	objectMap["gitProviderType"] = GitProviderTypeGitHub
 	populate(objectMap, "ownerName", g.OwnerName)
@@ -4491,6 +4504,9 @@ func (g *GitHubDetails) UnmarshalJSON(data []byte) error {
 		switch key {
 		case "branchName":
 			err = unpopulate(val, "BranchName", &g.BranchName)
+			delete(rawMsg, key)
+		case "customDomainName":
+			err = unpopulate(val, "CustomDomainName", &g.CustomDomainName)
 			delete(rawMsg, key)
 		case "directoryName":
 			err = unpopulate(val, "DirectoryName", &g.DirectoryName)
@@ -4647,6 +4663,68 @@ func (g *GoogleCloudStorage) UnmarshalJSON(data []byte) error {
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", g, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type ImmutabilityPolicy.
+func (i ImmutabilityPolicy) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "retentionDays", i.RetentionDays)
+	populate(objectMap, "scope", i.Scope)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ImmutabilityPolicy.
+func (i *ImmutabilityPolicy) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", i, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "retentionDays":
+			err = unpopulate(val, "RetentionDays", &i.RetentionDays)
+			delete(rawMsg, key)
+		case "scope":
+			err = unpopulate(val, "Scope", &i.Scope)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", i, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type ImmutabilityPolicyRequest.
+func (i ImmutabilityPolicyRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "retentionDays", i.RetentionDays)
+	populate(objectMap, "scope", i.Scope)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ImmutabilityPolicyRequest.
+func (i *ImmutabilityPolicyRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", i, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "retentionDays":
+			err = unpopulate(val, "RetentionDays", &i.RetentionDays)
+			delete(rawMsg, key)
+		case "scope":
+			err = unpopulate(val, "Scope", &i.Scope)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", i, err)
 		}
 	}
 	return nil
@@ -5404,6 +5482,7 @@ func (k KeyCredentials) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	objectMap["credentialType"] = CredentialTypeKey
 	populate(objectMap, "key", k.Key)
+	populate(objectMap, "keyReference", k.KeyReference)
 	return json.Marshal(objectMap)
 }
 
@@ -5421,6 +5500,83 @@ func (k *KeyCredentials) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "key":
 			err = unpopulate(val, "Key", &k.Key)
+			delete(rawMsg, key)
+		case "keyReference":
+			err = unpopulate(val, "KeyReference", &k.KeyReference)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", k, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type KeyPairCredentials.
+func (k KeyPairCredentials) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["credentialType"] = CredentialTypeKeyPair
+	populate(objectMap, "identifier", k.Identifier)
+	populate(objectMap, "passphrase", k.Passphrase)
+	populate(objectMap, "privateKey", k.PrivateKey)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type KeyPairCredentials.
+func (k *KeyPairCredentials) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", k, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "credentialType":
+			err = unpopulate(val, "CredentialType", &k.CredentialType)
+			delete(rawMsg, key)
+		case "identifier":
+			err = unpopulate(val, "Identifier", &k.Identifier)
+			delete(rawMsg, key)
+		case "passphrase":
+			err = unpopulate(val, "Passphrase", &k.Passphrase)
+			delete(rawMsg, key)
+		case "privateKey":
+			err = unpopulate(val, "PrivateKey", &k.PrivateKey)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", k, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type KeyVaultSecretReference.
+func (k KeyVaultSecretReference) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "connectionId", k.ConnectionID)
+	populate(objectMap, "secretName", k.SecretName)
+	populate(objectMap, "version", k.Version)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type KeyVaultSecretReference.
+func (k *KeyVaultSecretReference) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", k, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "connectionId":
+			err = unpopulate(val, "ConnectionID", &k.ConnectionID)
+			delete(rawMsg, key)
+		case "secretName":
+			err = unpopulate(val, "SecretName", &k.SecretName)
+			delete(rawMsg, key)
+		case "version":
+			err = unpopulate(val, "Version", &k.Version)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -6368,6 +6524,41 @@ func (o *OnPremisesGatewayPersonalCredentials) UnmarshalJSON(data []byte) error 
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type OneDriveSharePoint.
+func (o OneDriveSharePoint) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "connectionId", o.ConnectionID)
+	populate(objectMap, "location", o.Location)
+	populate(objectMap, "subpath", o.Subpath)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type OneDriveSharePoint.
+func (o *OneDriveSharePoint) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", o, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "connectionId":
+			err = unpopulate(val, "ConnectionID", &o.ConnectionID)
+			delete(rawMsg, key)
+		case "location":
+			err = unpopulate(val, "Location", &o.Location)
+			delete(rawMsg, key)
+		case "subpath":
+			err = unpopulate(val, "Subpath", &o.Subpath)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", o, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type OneLake.
 func (o OneLake) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -7124,6 +7315,7 @@ func (s ServicePrincipalCredentials) MarshalJSON() ([]byte, error) {
 	objectMap["credentialType"] = CredentialTypeServicePrincipal
 	populate(objectMap, "servicePrincipalClientId", s.ServicePrincipalClientID)
 	populate(objectMap, "servicePrincipalSecret", s.ServicePrincipalSecret)
+	populate(objectMap, "servicePrincipalSecretReference", s.ServicePrincipalSecretReference)
 	populate(objectMap, "tenantId", s.TenantID)
 	return json.Marshal(objectMap)
 }
@@ -7145,6 +7337,9 @@ func (s *ServicePrincipalCredentials) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "servicePrincipalSecret":
 			err = unpopulate(val, "ServicePrincipalSecret", &s.ServicePrincipalSecret)
+			delete(rawMsg, key)
+		case "servicePrincipalSecretReference":
+			err = unpopulate(val, "ServicePrincipalSecretReference", &s.ServicePrincipalSecretReference)
 			delete(rawMsg, key)
 		case "tenantId":
 			err = unpopulate(val, "TenantID", &s.TenantID)
@@ -7213,6 +7408,7 @@ func (s SharedAccessSignatureCredentials) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	objectMap["credentialType"] = CredentialTypeSharedAccessSignature
 	populate(objectMap, "token", s.Token)
+	populate(objectMap, "tokenReference", s.TokenReference)
 	return json.Marshal(objectMap)
 }
 
@@ -7230,6 +7426,9 @@ func (s *SharedAccessSignatureCredentials) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "token":
 			err = unpopulate(val, "Token", &s.Token)
+			delete(rawMsg, key)
+		case "tokenReference":
+			err = unpopulate(val, "TokenReference", &s.TokenReference)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -7497,6 +7696,7 @@ func (t Target) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "dataverse", t.Dataverse)
 	populate(objectMap, "externalDataShare", t.ExternalDataShare)
 	populate(objectMap, "googleCloudStorage", t.GoogleCloudStorage)
+	populate(objectMap, "oneDriveSharePoint", t.OneDriveSharePoint)
 	populate(objectMap, "oneLake", t.OneLake)
 	populate(objectMap, "s3Compatible", t.S3Compatible)
 	populate(objectMap, "type", t.Type)
@@ -7529,6 +7729,9 @@ func (t *Target) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "googleCloudStorage":
 			err = unpopulate(val, "GoogleCloudStorage", &t.GoogleCloudStorage)
+			delete(rawMsg, key)
+		case "oneDriveSharePoint":
+			err = unpopulate(val, "OneDriveSharePoint", &t.OneDriveSharePoint)
 			delete(rawMsg, key)
 		case "oneLake":
 			err = unpopulate(val, "OneLake", &t.OneLake)
