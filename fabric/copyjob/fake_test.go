@@ -70,6 +70,9 @@ func (testsuite *FakeTestSuite) TestItems_ListCopyJobs() {
 				Description: to.Ptr("A Copy job description."),
 				DisplayName: to.Ptr("CopyJob Name 1"),
 				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				SensitivityLabel: &copyjob.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 			},
 			{
@@ -77,6 +80,9 @@ func (testsuite *FakeTestSuite) TestItems_ListCopyJobs() {
 				Description: to.Ptr("A Copy job description."),
 				DisplayName: to.Ptr("CopyJob Name 2"),
 				ID:          to.Ptr("f697fb63-abd4-4399-9548-be7e3c3c0dac"),
+				SensitivityLabel: &copyjob.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 			}},
 	}
@@ -89,7 +95,10 @@ func (testsuite *FakeTestSuite) TestItems_ListCopyJobs() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	pager := client.NewListCopyJobsPager(exampleWorkspaceID, &copyjob.ItemsClientListCopyJobsOptions{ContinuationToken: nil})
+	pager := client.NewListCopyJobsPager(exampleWorkspaceID, &copyjob.ItemsClientListCopyJobsOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")
@@ -179,6 +188,9 @@ func (testsuite *FakeTestSuite) TestItems_GetCopyJob() {
 		Description: to.Ptr("A Copy job description."),
 		DisplayName: to.Ptr("CopyJob 1"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &copyjob.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	}
 

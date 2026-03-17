@@ -142,7 +142,7 @@ func (i *ItemsServerTransport) dispatchBeginCreateDigitalTwinBuilderFlow(req *ht
 	}
 	beginCreateDigitalTwinBuilderFlow := i.beginCreateDigitalTwinBuilderFlow.get(req)
 	if beginCreateDigitalTwinBuilderFlow == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/DigitalTwinBuilderFlows`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/digitalTwinBuilderFlows`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 2 {
@@ -184,7 +184,7 @@ func (i *ItemsServerTransport) dispatchDeleteDigitalTwinBuilderFlow(req *http.Re
 	if i.srv.DeleteDigitalTwinBuilderFlow == nil {
 		return nil, &nonRetriableError{errors.New("fake for method DeleteDigitalTwinBuilderFlow not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/DigitalTwinBuilderFlows/(?P<digitalTwinBuilderFlowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/digitalTwinBuilderFlows/(?P<digitalTwinBuilderFlowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -217,7 +217,7 @@ func (i *ItemsServerTransport) dispatchGetDigitalTwinBuilderFlow(req *http.Reque
 	if i.srv.GetDigitalTwinBuilderFlow == nil {
 		return nil, &nonRetriableError{errors.New("fake for method GetDigitalTwinBuilderFlow not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/DigitalTwinBuilderFlows/(?P<digitalTwinBuilderFlowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/digitalTwinBuilderFlows/(?P<digitalTwinBuilderFlowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -252,7 +252,7 @@ func (i *ItemsServerTransport) dispatchBeginGetDigitalTwinBuilderFlowDefinition(
 	}
 	beginGetDigitalTwinBuilderFlowDefinition := i.beginGetDigitalTwinBuilderFlowDefinition.get(req)
 	if beginGetDigitalTwinBuilderFlowDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/DigitalTwinBuilderFlows/(?P<digitalTwinBuilderFlowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/digitalTwinBuilderFlows/(?P<digitalTwinBuilderFlowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
@@ -296,7 +296,7 @@ func (i *ItemsServerTransport) dispatchNewListDigitalTwinBuilderFlowsPager(req *
 	}
 	newListDigitalTwinBuilderFlowsPager := i.newListDigitalTwinBuilderFlowsPager.get(req)
 	if newListDigitalTwinBuilderFlowsPager == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/DigitalTwinBuilderFlows`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/digitalTwinBuilderFlows`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 2 {
@@ -307,14 +307,29 @@ func (i *ItemsServerTransport) dispatchNewListDigitalTwinBuilderFlowsPager(req *
 		if err != nil {
 			return nil, err
 		}
+		recursiveUnescaped, err := url.QueryUnescape(qp.Get("recursive"))
+		if err != nil {
+			return nil, err
+		}
+		recursiveParam, err := parseOptional(recursiveUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDUnescaped, err := url.QueryUnescape(qp.Get("rootFolderId"))
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDParam := getOptional(rootFolderIDUnescaped)
 		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
 		if err != nil {
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
 		var options *digitaltwinbuilderflow.ItemsClientListDigitalTwinBuilderFlowsOptions
-		if continuationTokenParam != nil {
+		if recursiveParam != nil || rootFolderIDParam != nil || continuationTokenParam != nil {
 			options = &digitaltwinbuilderflow.ItemsClientListDigitalTwinBuilderFlowsOptions{
+				Recursive:         recursiveParam,
+				RootFolderID:      rootFolderIDParam,
 				ContinuationToken: continuationTokenParam,
 			}
 		}
@@ -343,7 +358,7 @@ func (i *ItemsServerTransport) dispatchUpdateDigitalTwinBuilderFlow(req *http.Re
 	if i.srv.UpdateDigitalTwinBuilderFlow == nil {
 		return nil, &nonRetriableError{errors.New("fake for method UpdateDigitalTwinBuilderFlow not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/DigitalTwinBuilderFlows/(?P<digitalTwinBuilderFlowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/digitalTwinBuilderFlows/(?P<digitalTwinBuilderFlowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -382,7 +397,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateDigitalTwinBuilderFlowDefiniti
 	}
 	beginUpdateDigitalTwinBuilderFlowDefinition := i.beginUpdateDigitalTwinBuilderFlowDefinition.get(req)
 	if beginUpdateDigitalTwinBuilderFlowDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/DigitalTwinBuilderFlows/(?P<digitalTwinBuilderFlowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/digitalTwinBuilderFlows/(?P<digitalTwinBuilderFlowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {

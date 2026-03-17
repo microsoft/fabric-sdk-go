@@ -43,7 +43,7 @@ type ItemsClient struct {
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -69,7 +69,7 @@ func (client *ItemsClient) BeginCreateGraphModel(ctx context.Context, workspaceI
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -97,7 +97,7 @@ func (client *ItemsClient) createGraphModel(ctx context.Context, workspaceID str
 
 // createGraphModelCreateRequest creates the CreateGraphModel request.
 func (client *ItemsClient) createGraphModelCreateRequest(ctx context.Context, workspaceID string, createGraphModelRequest CreateGraphModelRequest, _ *ItemsClientBeginCreateGraphModelOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphModels"
+	urlPath := "/v1/workspaces/{workspaceId}/graphModels"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -120,7 +120,7 @@ func (client *ItemsClient) createGraphModelCreateRequest(ctx context.Context, wo
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -151,7 +151,7 @@ func (client *ItemsClient) DeleteGraphModel(ctx context.Context, workspaceID str
 
 // deleteGraphModelCreateRequest creates the DeleteGraphModel request.
 func (client *ItemsClient) deleteGraphModelCreateRequest(ctx context.Context, workspaceID string, graphModelID string, _ *ItemsClientDeleteGraphModelOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphModels/{GraphModelId}"
+	urlPath := "/v1/workspaces/{workspaceId}/graphModels/{graphModelId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -159,7 +159,7 @@ func (client *ItemsClient) deleteGraphModelCreateRequest(ctx context.Context, wo
 	if graphModelID == "" {
 		return nil, errors.New("parameter graphModelID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{GraphModelId}", url.PathEscape(graphModelID))
+	urlPath = strings.ReplaceAll(urlPath, "{graphModelId}", url.PathEscape(graphModelID))
 	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -168,7 +168,7 @@ func (client *ItemsClient) deleteGraphModelCreateRequest(ctx context.Context, wo
 	return req, nil
 }
 
-// ExecuteQueryPreview - > [!NOTE] GraphModel item is currently in Preview (learn more [/fabric/fundamentals/preview]). This
+// ExecuteQueryBeta - > [!NOTE] GraphModel item is currently in Preview (learn more [/fabric/fundamentals/preview]). This
 // API is part of a Beta release and is provided for evaluation and development purposes only. It may
 // change based on feedback and is not recommended for production use. When calling this API, callers must specify true as
 // the value for the query parameter beta (preview query parameter has been
@@ -180,7 +180,7 @@ func (client *ItemsClient) deleteGraphModelCreateRequest(ctx context.Context, wo
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -189,32 +189,31 @@ func (client *ItemsClient) deleteGraphModelCreateRequest(ctx context.Context, wo
 //   - graphModelID - The GraphModel ID.
 //   - beta - This required parameter must be set to true to access this API, which is currently in beta.
 //   - createQueryResultRequest - Execute query request payload.
-//   - options - ItemsClientExecuteQueryPreviewOptions contains the optional parameters for the ItemsClient.ExecuteQueryPreview
-//     method.
-func (client *ItemsClient) ExecuteQueryPreview(ctx context.Context, workspaceID string, graphModelID string, beta bool, createQueryResultRequest ExecuteQueryRequest, options *ItemsClientExecuteQueryPreviewOptions) (ItemsClientExecuteQueryPreviewResponse, error) {
+//   - options - ItemsClientExecuteQueryBetaOptions contains the optional parameters for the ItemsClient.ExecuteQueryBeta method.
+func (client *ItemsClient) ExecuteQueryBeta(ctx context.Context, workspaceID string, graphModelID string, beta bool, createQueryResultRequest ExecuteQueryRequest, options *ItemsClientExecuteQueryBetaOptions) (ItemsClientExecuteQueryBetaResponse, error) {
 	var err error
-	const operationName = "graphmodel.ItemsClient.ExecuteQueryPreview"
+	const operationName = "graphmodel.ItemsClient.ExecuteQueryBeta"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.executeQueryPreviewCreateRequest(ctx, workspaceID, graphModelID, beta, createQueryResultRequest, options)
+	req, err := client.executeQueryBetaCreateRequest(ctx, workspaceID, graphModelID, beta, createQueryResultRequest, options)
 	if err != nil {
-		return ItemsClientExecuteQueryPreviewResponse{}, err
+		return ItemsClientExecuteQueryBetaResponse{}, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return ItemsClientExecuteQueryPreviewResponse{}, err
+		return ItemsClientExecuteQueryBetaResponse{}, err
 	}
 	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
 		err = core.NewResponseError(httpResp)
-		return ItemsClientExecuteQueryPreviewResponse{}, err
+		return ItemsClientExecuteQueryBetaResponse{}, err
 	}
-	return ItemsClientExecuteQueryPreviewResponse{Body: httpResp.Body}, nil
+	return ItemsClientExecuteQueryBetaResponse{Body: httpResp.Body}, nil
 }
 
-// executeQueryPreviewCreateRequest creates the ExecuteQueryPreview request.
-func (client *ItemsClient) executeQueryPreviewCreateRequest(ctx context.Context, workspaceID string, graphModelID string, beta bool, createQueryResultRequest ExecuteQueryRequest, _ *ItemsClientExecuteQueryPreviewOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphModels/{GraphModelId}/executeQuery"
+// executeQueryBetaCreateRequest creates the ExecuteQueryBeta request.
+func (client *ItemsClient) executeQueryBetaCreateRequest(ctx context.Context, workspaceID string, graphModelID string, beta bool, createQueryResultRequest ExecuteQueryRequest, _ *ItemsClientExecuteQueryBetaOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/graphModels/{graphModelId}/executeQuery"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -222,7 +221,7 @@ func (client *ItemsClient) executeQueryPreviewCreateRequest(ctx context.Context,
 	if graphModelID == "" {
 		return nil, errors.New("parameter graphModelID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{GraphModelId}", url.PathEscape(graphModelID))
+	urlPath = strings.ReplaceAll(urlPath, "{graphModelId}", url.PathEscape(graphModelID))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -245,7 +244,7 @@ func (client *ItemsClient) executeQueryPreviewCreateRequest(ctx context.Context,
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -277,7 +276,7 @@ func (client *ItemsClient) GetGraphModel(ctx context.Context, workspaceID string
 
 // getGraphModelCreateRequest creates the GetGraphModel request.
 func (client *ItemsClient) getGraphModelCreateRequest(ctx context.Context, workspaceID string, graphModelID string, _ *ItemsClientGetGraphModelOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphModels/{GraphModelId}"
+	urlPath := "/v1/workspaces/{workspaceId}/graphModels/{graphModelId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -285,7 +284,7 @@ func (client *ItemsClient) getGraphModelCreateRequest(ctx context.Context, works
 	if graphModelID == "" {
 		return nil, errors.New("parameter graphModelID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{GraphModelId}", url.PathEscape(graphModelID))
+	urlPath = strings.ReplaceAll(urlPath, "{graphModelId}", url.PathEscape(graphModelID))
 	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -312,7 +311,7 @@ func (client *ItemsClient) getGraphModelHandleResponse(resp *http.Response) (Ite
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -334,7 +333,7 @@ func (client *ItemsClient) BeginGetGraphModelDefinition(ctx context.Context, wor
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -362,7 +361,7 @@ func (client *ItemsClient) getGraphModelDefinition(ctx context.Context, workspac
 
 // getGraphModelDefinitionCreateRequest creates the GetGraphModelDefinition request.
 func (client *ItemsClient) getGraphModelDefinitionCreateRequest(ctx context.Context, workspaceID string, graphModelID string, options *ItemsClientBeginGetGraphModelDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphModels/{GraphModelId}/getDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/graphModels/{graphModelId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -370,7 +369,7 @@ func (client *ItemsClient) getGraphModelDefinitionCreateRequest(ctx context.Cont
 	if graphModelID == "" {
 		return nil, errors.New("parameter graphModelID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{GraphModelId}", url.PathEscape(graphModelID))
+	urlPath = strings.ReplaceAll(urlPath, "{graphModelId}", url.PathEscape(graphModelID))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -384,7 +383,7 @@ func (client *ItemsClient) getGraphModelDefinitionCreateRequest(ctx context.Cont
 	return req, nil
 }
 
-// GetQueryableGraphTypePreview - > [!NOTE] GraphModel item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// GetQueryableGraphTypeBeta - > [!NOTE] GraphModel item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // This API is part of a Beta release and is provided for evaluation and development purposes only. It may
 // change based on feedback and is not recommended for production use. When calling this API, callers must specify true as
 // the value for the query parameter beta (preview query parameter has been
@@ -396,7 +395,7 @@ func (client *ItemsClient) getGraphModelDefinitionCreateRequest(ctx context.Cont
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -404,33 +403,33 @@ func (client *ItemsClient) getGraphModelDefinitionCreateRequest(ctx context.Cont
 //   - workspaceID - The workspace ID.
 //   - graphModelID - The GraphModel ID.
 //   - beta - This required parameter must be set to true to access this API, which is currently in beta.
-//   - options - ItemsClientGetQueryableGraphTypePreviewOptions contains the optional parameters for the ItemsClient.GetQueryableGraphTypePreview
+//   - options - ItemsClientGetQueryableGraphTypeBetaOptions contains the optional parameters for the ItemsClient.GetQueryableGraphTypeBeta
 //     method.
-func (client *ItemsClient) GetQueryableGraphTypePreview(ctx context.Context, workspaceID string, graphModelID string, beta bool, options *ItemsClientGetQueryableGraphTypePreviewOptions) (ItemsClientGetQueryableGraphTypePreviewResponse, error) {
+func (client *ItemsClient) GetQueryableGraphTypeBeta(ctx context.Context, workspaceID string, graphModelID string, beta bool, options *ItemsClientGetQueryableGraphTypeBetaOptions) (ItemsClientGetQueryableGraphTypeBetaResponse, error) {
 	var err error
-	const operationName = "graphmodel.ItemsClient.GetQueryableGraphTypePreview"
+	const operationName = "graphmodel.ItemsClient.GetQueryableGraphTypeBeta"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.getQueryableGraphTypePreviewCreateRequest(ctx, workspaceID, graphModelID, beta, options)
+	req, err := client.getQueryableGraphTypeBetaCreateRequest(ctx, workspaceID, graphModelID, beta, options)
 	if err != nil {
-		return ItemsClientGetQueryableGraphTypePreviewResponse{}, err
+		return ItemsClientGetQueryableGraphTypeBetaResponse{}, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return ItemsClientGetQueryableGraphTypePreviewResponse{}, err
+		return ItemsClientGetQueryableGraphTypeBetaResponse{}, err
 	}
 	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
 		err = core.NewResponseError(httpResp)
-		return ItemsClientGetQueryableGraphTypePreviewResponse{}, err
+		return ItemsClientGetQueryableGraphTypeBetaResponse{}, err
 	}
-	resp, err := client.getQueryableGraphTypePreviewHandleResponse(httpResp)
+	resp, err := client.getQueryableGraphTypeBetaHandleResponse(httpResp)
 	return resp, err
 }
 
-// getQueryableGraphTypePreviewCreateRequest creates the GetQueryableGraphTypePreview request.
-func (client *ItemsClient) getQueryableGraphTypePreviewCreateRequest(ctx context.Context, workspaceID string, graphModelID string, beta bool, _ *ItemsClientGetQueryableGraphTypePreviewOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphModels/{GraphModelId}/getQueryableGraphType"
+// getQueryableGraphTypeBetaCreateRequest creates the GetQueryableGraphTypeBeta request.
+func (client *ItemsClient) getQueryableGraphTypeBetaCreateRequest(ctx context.Context, workspaceID string, graphModelID string, beta bool, _ *ItemsClientGetQueryableGraphTypeBetaOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/graphModels/{graphModelId}/getQueryableGraphType"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -438,7 +437,7 @@ func (client *ItemsClient) getQueryableGraphTypePreviewCreateRequest(ctx context
 	if graphModelID == "" {
 		return nil, errors.New("parameter graphModelID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{GraphModelId}", url.PathEscape(graphModelID))
+	urlPath = strings.ReplaceAll(urlPath, "{graphModelId}", url.PathEscape(graphModelID))
 	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -450,11 +449,11 @@ func (client *ItemsClient) getQueryableGraphTypePreviewCreateRequest(ctx context
 	return req, nil
 }
 
-// getQueryableGraphTypePreviewHandleResponse handles the GetQueryableGraphTypePreview response.
-func (client *ItemsClient) getQueryableGraphTypePreviewHandleResponse(resp *http.Response) (ItemsClientGetQueryableGraphTypePreviewResponse, error) {
-	result := ItemsClientGetQueryableGraphTypePreviewResponse{}
+// getQueryableGraphTypeBetaHandleResponse handles the GetQueryableGraphTypeBeta response.
+func (client *ItemsClient) getQueryableGraphTypeBetaHandleResponse(resp *http.Response) (ItemsClientGetQueryableGraphTypeBetaResponse, error) {
+	result := ItemsClientGetQueryableGraphTypeBetaResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.GraphType); err != nil {
-		return ItemsClientGetQueryableGraphTypePreviewResponse{}, err
+		return ItemsClientGetQueryableGraphTypeBetaResponse{}, err
 	}
 	return result, nil
 }
@@ -467,7 +466,7 @@ func (client *ItemsClient) getQueryableGraphTypePreviewHandleResponse(resp *http
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 //
 // Generated from API version v1
@@ -499,7 +498,7 @@ func (client *ItemsClient) NewListGraphModelsPager(workspaceID string, options *
 
 // listGraphModelsCreateRequest creates the ListGraphModels request.
 func (client *ItemsClient) listGraphModelsCreateRequest(ctx context.Context, workspaceID string, options *ItemsClientListGraphModelsOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphModels"
+	urlPath := "/v1/workspaces/{workspaceId}/graphModels"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -511,6 +510,12 @@ func (client *ItemsClient) listGraphModelsCreateRequest(ctx context.Context, wor
 	reqQP := req.Raw().URL.Query()
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	if options != nil && options.Recursive != nil {
+		reqQP.Set("recursive", strconv.FormatBool(*options.Recursive))
+	}
+	if options != nil && options.RootFolderID != nil {
+		reqQP.Set("rootFolderId", *options.RootFolderID)
 	}
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
@@ -533,7 +538,7 @@ func (client *ItemsClient) listGraphModelsHandleResponse(resp *http.Response) (I
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -566,7 +571,7 @@ func (client *ItemsClient) UpdateGraphModel(ctx context.Context, workspaceID str
 
 // updateGraphModelCreateRequest creates the UpdateGraphModel request.
 func (client *ItemsClient) updateGraphModelCreateRequest(ctx context.Context, workspaceID string, graphModelID string, updateGraphModelRequest UpdateGraphModelRequest, _ *ItemsClientUpdateGraphModelOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphModels/{GraphModelId}"
+	urlPath := "/v1/workspaces/{workspaceId}/graphModels/{graphModelId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -574,7 +579,7 @@ func (client *ItemsClient) updateGraphModelCreateRequest(ctx context.Context, wo
 	if graphModelID == "" {
 		return nil, errors.New("parameter graphModelID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{GraphModelId}", url.PathEscape(graphModelID))
+	urlPath = strings.ReplaceAll(urlPath, "{graphModelId}", url.PathEscape(graphModelID))
 	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -604,7 +609,7 @@ func (client *ItemsClient) updateGraphModelHandleResponse(resp *http.Response) (
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -627,7 +632,7 @@ func (client *ItemsClient) BeginUpdateGraphModelDefinition(ctx context.Context, 
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -655,7 +660,7 @@ func (client *ItemsClient) updateGraphModelDefinition(ctx context.Context, works
 
 // updateGraphModelDefinitionCreateRequest creates the UpdateGraphModelDefinition request.
 func (client *ItemsClient) updateGraphModelDefinitionCreateRequest(ctx context.Context, workspaceID string, graphModelID string, updateGraphModelDefinitionRequest UpdateGraphModelDefinitionRequest, options *ItemsClientBeginUpdateGraphModelDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphModels/{GraphModelId}/updateDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/graphModels/{graphModelId}/updateDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -663,7 +668,7 @@ func (client *ItemsClient) updateGraphModelDefinitionCreateRequest(ctx context.C
 	if graphModelID == "" {
 		return nil, errors.New("parameter graphModelID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{GraphModelId}", url.PathEscape(graphModelID))
+	urlPath = strings.ReplaceAll(urlPath, "{graphModelId}", url.PathEscape(graphModelID))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -699,7 +704,7 @@ func (client *ItemsClient) updateGraphModelDefinitionCreateRequest(ctx context.C
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
 // Generated from API version v1
@@ -772,7 +777,7 @@ func (client *ItemsClient) beginCreateGraphModel(ctx context.Context, workspaceI
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
 // Generated from API version v1
@@ -845,7 +850,7 @@ func (client *ItemsClient) beginGetGraphModelDefinition(ctx context.Context, wor
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
 // Generated from API version v1
@@ -917,7 +922,7 @@ func (client *ItemsClient) beginUpdateGraphModelDefinition(ctx context.Context, 
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
 // Generated from API version v1

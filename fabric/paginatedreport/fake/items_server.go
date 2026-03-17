@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
@@ -116,14 +117,29 @@ func (i *ItemsServerTransport) dispatchNewListPaginatedReportsPager(req *http.Re
 		if err != nil {
 			return nil, err
 		}
+		recursiveUnescaped, err := url.QueryUnescape(qp.Get("recursive"))
+		if err != nil {
+			return nil, err
+		}
+		recursiveParam, err := parseOptional(recursiveUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDUnescaped, err := url.QueryUnescape(qp.Get("rootFolderId"))
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDParam := getOptional(rootFolderIDUnescaped)
 		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
 		if err != nil {
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
 		var options *paginatedreport.ItemsClientListPaginatedReportsOptions
-		if continuationTokenParam != nil {
+		if recursiveParam != nil || rootFolderIDParam != nil || continuationTokenParam != nil {
 			options = &paginatedreport.ItemsClientListPaginatedReportsOptions{
+				Recursive:         recursiveParam,
+				RootFolderID:      rootFolderIDParam,
 				ContinuationToken: continuationTokenParam,
 			}
 		}

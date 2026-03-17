@@ -27,7 +27,10 @@ func ExampleItemsClient_NewListMapsPager() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewItemsClient().NewListMapsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &maps.ItemsClientListMapsOptions{ContinuationToken: nil})
+	pager := clientFactory.NewItemsClient().NewListMapsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &maps.ItemsClientListMapsOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
 		if err != nil {
@@ -45,6 +48,9 @@ func ExampleItemsClient_NewListMapsPager() {
 		// 			Description: to.Ptr("A Map description."),
 		// 			DisplayName: to.Ptr("Map Name 1"),
 		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+		// 			SensitivityLabel: &maps.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 		},
 		// 		{
@@ -52,6 +58,9 @@ func ExampleItemsClient_NewListMapsPager() {
 		// 			Description: to.Ptr("A Map description."),
 		// 			DisplayName: to.Ptr("Map Name 2"),
 		// 			ID: to.Ptr("f697fb63-abd4-4399-9548-be7e3c3c0dac"),
+		// 			SensitivityLabel: &maps.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 	}},
 		// }
@@ -142,6 +151,9 @@ func ExampleItemsClient_GetMap() {
 	// 	Description: to.Ptr("A Map description."),
 	// 	DisplayName: to.Ptr("Map 1"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+	// 	SensitivityLabel: &maps.SensitivityLabel{
+	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// }
 }

@@ -47,18 +47,18 @@ func NewClientFactoryWithClient(client fabric.Client) *ClientFactory {
 	}
 }
 
-// NewClient creates a new instance of Client.
-func (c *ClientFactory) NewClient() *Client {
-	return &Client{
-		internal: c.internal.WithClientName("sqlendpoint.Client"),
-		endpoint: c.endpoint,
-	}
-}
-
 // NewItemsClient creates a new instance of ItemsClient.
 func (c *ClientFactory) NewItemsClient() *ItemsClient {
 	return &ItemsClient{
 		internal: c.internal.WithClientName("sqlendpoint.ItemsClient"),
+		endpoint: c.endpoint,
+	}
+}
+
+// NewSQLAuditSettingsClient creates a new instance of SQLAuditSettingsClient.
+func (c *ClientFactory) NewSQLAuditSettingsClient() *SQLAuditSettingsClient {
+	return &SQLAuditSettingsClient{
+		internal: c.internal.WithClientName("sqlendpoint.SQLAuditSettingsClient"),
 		endpoint: c.endpoint,
 	}
 }

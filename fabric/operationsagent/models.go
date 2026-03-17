@@ -19,13 +19,16 @@ type CreateOperationsAgentRequest struct {
 
 	// The folder ID. If not specified or null, the OperationsAgent is created with the workspace as its folder.
 	FolderID *string
+
+	// The sensitivity label settings for the OperationsAgent.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // DefinitionResponse - OperationsAgent public definition response.
 type DefinitionResponse struct {
-	// READ-ONLY; OperationsAgent public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/operations-agent]
-	// for more details on how to craft a OperationsAgent public
-	// definition.
+	// READ-ONLY; OperationsAgent public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/operations-agent-definition]
+	// for more details on the structure of the
+	// OperationsAgent definition.
 	Definition *PublicDefinition
 }
 
@@ -58,6 +61,9 @@ type OperationsAgent struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
+
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
 
@@ -83,9 +89,9 @@ type Properties struct {
 	State *AgentState
 }
 
-// PublicDefinition - OperationsAgent public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/operations-agent]
-// for more details on how to craft a OperationsAgent public
-// definition.
+// PublicDefinition - OperationsAgent public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/operations-agent-definition]
+// for more details on the structure of the
+// OperationsAgent definition.
 type PublicDefinition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []PublicDefinitionPart
@@ -106,11 +112,26 @@ type PublicDefinitionPart struct {
 	PayloadType *PayloadType
 }
 
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
 // UpdateOperationsAgentDefinitionRequest - Update OperationsAgent public definition request payload.
 type UpdateOperationsAgentDefinitionRequest struct {
-	// REQUIRED; OperationsAgent public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/operations-agent]
-	// for more details on how to craft a OperationsAgent public
-	// definition.
+	// REQUIRED; OperationsAgent public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/operations-agent-definition]
+	// for more details on the structure of the
+	// OperationsAgent definition.
 	Definition *PublicDefinition
 }
 

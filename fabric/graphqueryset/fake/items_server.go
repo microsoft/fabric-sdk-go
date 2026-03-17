@@ -142,7 +142,7 @@ func (i *ItemsServerTransport) dispatchBeginCreateGraphQuerySet(req *http.Reques
 	}
 	beginCreateGraphQuerySet := i.beginCreateGraphQuerySet.get(req)
 	if beginCreateGraphQuerySet == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphQuerySets`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphQuerySets`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 2 {
@@ -184,7 +184,7 @@ func (i *ItemsServerTransport) dispatchDeleteGraphQuerySet(req *http.Request) (*
 	if i.srv.DeleteGraphQuerySet == nil {
 		return nil, &nonRetriableError{errors.New("fake for method DeleteGraphQuerySet not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphQuerySets/(?P<GraphQuerySetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphQuerySets/(?P<graphQuerySetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -194,7 +194,7 @@ func (i *ItemsServerTransport) dispatchDeleteGraphQuerySet(req *http.Request) (*
 	if err != nil {
 		return nil, err
 	}
-	graphQuerySetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("GraphQuerySetId")])
+	graphQuerySetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("graphQuerySetId")])
 	if err != nil {
 		return nil, err
 	}
@@ -217,7 +217,7 @@ func (i *ItemsServerTransport) dispatchGetGraphQuerySet(req *http.Request) (*htt
 	if i.srv.GetGraphQuerySet == nil {
 		return nil, &nonRetriableError{errors.New("fake for method GetGraphQuerySet not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphQuerySets/(?P<GraphQuerySetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphQuerySets/(?P<graphQuerySetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -227,7 +227,7 @@ func (i *ItemsServerTransport) dispatchGetGraphQuerySet(req *http.Request) (*htt
 	if err != nil {
 		return nil, err
 	}
-	graphQuerySetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("GraphQuerySetId")])
+	graphQuerySetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("graphQuerySetId")])
 	if err != nil {
 		return nil, err
 	}
@@ -252,7 +252,7 @@ func (i *ItemsServerTransport) dispatchBeginGetGraphQuerySetDefinition(req *http
 	}
 	beginGetGraphQuerySetDefinition := i.beginGetGraphQuerySetDefinition.get(req)
 	if beginGetGraphQuerySetDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphQuerySets/(?P<GraphQuerySetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphQuerySets/(?P<graphQuerySetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
@@ -263,7 +263,7 @@ func (i *ItemsServerTransport) dispatchBeginGetGraphQuerySetDefinition(req *http
 		if err != nil {
 			return nil, err
 		}
-		graphQuerySetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("GraphQuerySetId")])
+		graphQuerySetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("graphQuerySetId")])
 		if err != nil {
 			return nil, err
 		}
@@ -308,7 +308,7 @@ func (i *ItemsServerTransport) dispatchNewListGraphQuerySetsPager(req *http.Requ
 	}
 	newListGraphQuerySetsPager := i.newListGraphQuerySetsPager.get(req)
 	if newListGraphQuerySetsPager == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphQuerySets`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphQuerySets`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 2 {
@@ -319,14 +319,29 @@ func (i *ItemsServerTransport) dispatchNewListGraphQuerySetsPager(req *http.Requ
 		if err != nil {
 			return nil, err
 		}
+		recursiveUnescaped, err := url.QueryUnescape(qp.Get("recursive"))
+		if err != nil {
+			return nil, err
+		}
+		recursiveParam, err := parseOptional(recursiveUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDUnescaped, err := url.QueryUnescape(qp.Get("rootFolderId"))
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDParam := getOptional(rootFolderIDUnescaped)
 		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
 		if err != nil {
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
 		var options *graphqueryset.ItemsClientListGraphQuerySetsOptions
-		if continuationTokenParam != nil {
+		if recursiveParam != nil || rootFolderIDParam != nil || continuationTokenParam != nil {
 			options = &graphqueryset.ItemsClientListGraphQuerySetsOptions{
+				Recursive:         recursiveParam,
+				RootFolderID:      rootFolderIDParam,
 				ContinuationToken: continuationTokenParam,
 			}
 		}
@@ -355,7 +370,7 @@ func (i *ItemsServerTransport) dispatchUpdateGraphQuerySet(req *http.Request) (*
 	if i.srv.UpdateGraphQuerySet == nil {
 		return nil, &nonRetriableError{errors.New("fake for method UpdateGraphQuerySet not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphQuerySets/(?P<GraphQuerySetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphQuerySets/(?P<graphQuerySetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -369,7 +384,7 @@ func (i *ItemsServerTransport) dispatchUpdateGraphQuerySet(req *http.Request) (*
 	if err != nil {
 		return nil, err
 	}
-	graphQuerySetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("GraphQuerySetId")])
+	graphQuerySetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("graphQuerySetId")])
 	if err != nil {
 		return nil, err
 	}
@@ -394,7 +409,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateGraphQuerySetDefinition(req *h
 	}
 	beginUpdateGraphQuerySetDefinition := i.beginUpdateGraphQuerySetDefinition.get(req)
 	if beginUpdateGraphQuerySetDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphQuerySets/(?P<GraphQuerySetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphQuerySets/(?P<graphQuerySetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
@@ -409,7 +424,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateGraphQuerySetDefinition(req *h
 		if err != nil {
 			return nil, err
 		}
-		graphQuerySetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("GraphQuerySetId")])
+		graphQuerySetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("graphQuerySetId")])
 		if err != nil {
 			return nil, err
 		}

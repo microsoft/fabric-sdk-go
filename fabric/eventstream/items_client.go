@@ -360,6 +360,12 @@ func (client *ItemsClient) listEventstreamsCreateRequest(ctx context.Context, wo
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
 	}
+	if options != nil && options.Recursive != nil {
+		reqQP.Set("recursive", strconv.FormatBool(*options.Recursive))
+	}
+	if options != nil && options.RootFolderID != nil {
+		reqQP.Set("rootFolderId", *options.RootFolderID)
+	}
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil

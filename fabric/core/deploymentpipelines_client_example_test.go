@@ -273,7 +273,7 @@ func ExampleDeploymentPipelinesClient_NewListDeploymentPipelineRoleAssignmentsPa
 		// 	Value: []core.DeploymentPipelineRoleAssignment{
 		// 		{
 		// 			ID: to.Ptr("6e335e92-a2a2-4b5a-970a-bd6a89fbb765"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.UserPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				ID: to.Ptr("6e335e92-a2a2-4b5a-970a-bd6a89fbb765"),
 		// 			},
@@ -281,7 +281,7 @@ func ExampleDeploymentPipelinesClient_NewListDeploymentPipelineRoleAssignmentsPa
 		// 		},
 		// 		{
 		// 			ID: to.Ptr("154aef10-47b8-48c4-ab97-f0bf9d5f8fcf"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.GroupPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeGroup),
 		// 				ID: to.Ptr("154aef10-47b8-48c4-ab97-f0bf9d5f8fcf"),
 		// 			},
@@ -289,7 +289,7 @@ func ExampleDeploymentPipelinesClient_NewListDeploymentPipelineRoleAssignmentsPa
 		// 		},
 		// 		{
 		// 			ID: to.Ptr("a35d842b-90d5-59a1-c56a-5f8fcff0bf9d"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.ServicePrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeServicePrincipal),
 		// 				ID: to.Ptr("a35d842b-90d5-59a1-c56a-5f8fcff0bf9d"),
 		// 			},
@@ -327,7 +327,7 @@ func ExampleDeploymentPipelinesClient_NewListDeploymentPipelineRoleAssignmentsPa
 		// 	Value: []core.DeploymentPipelineRoleAssignment{
 		// 		{
 		// 			ID: to.Ptr("6e335e92-a2a2-4b5a-970a-bd6a89fbb765"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.UserPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				ID: to.Ptr("6e335e92-a2a2-4b5a-970a-bd6a89fbb765"),
 		// 			},
@@ -335,7 +335,7 @@ func ExampleDeploymentPipelinesClient_NewListDeploymentPipelineRoleAssignmentsPa
 		// 		},
 		// 		{
 		// 			ID: to.Ptr("154aef10-47b8-48c4-ab97-f0bf9d5f8fcf"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.GroupPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeGroup),
 		// 				ID: to.Ptr("154aef10-47b8-48c4-ab97-f0bf9d5f8fcf"),
 		// 			},
@@ -343,7 +343,7 @@ func ExampleDeploymentPipelinesClient_NewListDeploymentPipelineRoleAssignmentsPa
 		// 		},
 		// 		{
 		// 			ID: to.Ptr("a35d842b-90d5-59a1-c56a-5f8fcff0bf9d"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.ServicePrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeServicePrincipal),
 		// 				ID: to.Ptr("a35d842b-90d5-59a1-c56a-5f8fcff0bf9d"),
 		// 			},
@@ -365,7 +365,7 @@ func ExampleDeploymentPipelinesClient_AddDeploymentPipelineRoleAssignment_addAGr
 		log.Fatalf("failed to create client: %v", err)
 	}
 	res, err := clientFactory.NewDeploymentPipelinesClient().AddDeploymentPipelineRoleAssignment(ctx, "8ce96c50-85a0-4db3-85c6-7ccc3ed46523", core.AddDeploymentPipelineRoleAssignmentRequest{
-		Principal: &core.Principal{
+		Principal: &core.GroupPrincipal{
 			Type: to.Ptr(core.PrincipalTypeGroup),
 			ID:   to.Ptr("154aef10-47b8-48c4-ab97-f0bf9d5f8fcf"),
 		},
@@ -379,7 +379,7 @@ func ExampleDeploymentPipelinesClient_AddDeploymentPipelineRoleAssignment_addAGr
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
 	// res.DeploymentPipelineRoleAssignment = core.DeploymentPipelineRoleAssignment{
 	// 	ID: to.Ptr("154aef10-47b8-48c4-ab97-f0bf9d5f8fcf"),
-	// 	Principal: &core.Principal{
+	// 	Principal: &core.GroupPrincipal{
 	// 		Type: to.Ptr(core.PrincipalTypeGroup),
 	// 		ID: to.Ptr("154aef10-47b8-48c4-ab97-f0bf9d5f8fcf"),
 	// 	},
@@ -399,7 +399,7 @@ func ExampleDeploymentPipelinesClient_AddDeploymentPipelineRoleAssignment_addASe
 		log.Fatalf("failed to create client: %v", err)
 	}
 	res, err := clientFactory.NewDeploymentPipelinesClient().AddDeploymentPipelineRoleAssignment(ctx, "8ce96c50-85a0-4db3-85c6-7ccc3ed46523", core.AddDeploymentPipelineRoleAssignmentRequest{
-		Principal: &core.Principal{
+		Principal: &core.ServicePrincipal{
 			Type: to.Ptr(core.PrincipalTypeServicePrincipal),
 			ID:   to.Ptr("a35d842b-90d5-59a1-c56a-5f8fcff0bf9d"),
 		},
@@ -413,7 +413,7 @@ func ExampleDeploymentPipelinesClient_AddDeploymentPipelineRoleAssignment_addASe
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
 	// res.DeploymentPipelineRoleAssignment = core.DeploymentPipelineRoleAssignment{
 	// 	ID: to.Ptr("a35d842b-90d5-59a1-c56a-5f8fcff0bf9d"),
-	// 	Principal: &core.Principal{
+	// 	Principal: &core.ServicePrincipal{
 	// 		Type: to.Ptr(core.PrincipalTypeServicePrincipal),
 	// 		ID: to.Ptr("a35d842b-90d5-59a1-c56a-5f8fcff0bf9d"),
 	// 	},
@@ -433,7 +433,7 @@ func ExampleDeploymentPipelinesClient_AddDeploymentPipelineRoleAssignment_addAUs
 		log.Fatalf("failed to create client: %v", err)
 	}
 	res, err := clientFactory.NewDeploymentPipelinesClient().AddDeploymentPipelineRoleAssignment(ctx, "8ce96c50-85a0-4db3-85c6-7ccc3ed46523", core.AddDeploymentPipelineRoleAssignmentRequest{
-		Principal: &core.Principal{
+		Principal: &core.UserPrincipal{
 			Type: to.Ptr(core.PrincipalTypeUser),
 			ID:   to.Ptr("a35d842b-90d5-59a2-c56a-5f8fcff0bf9d"),
 		},
@@ -447,7 +447,7 @@ func ExampleDeploymentPipelinesClient_AddDeploymentPipelineRoleAssignment_addAUs
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
 	// res.DeploymentPipelineRoleAssignment = core.DeploymentPipelineRoleAssignment{
 	// 	ID: to.Ptr("a35d842b-90d5-59a2-c56a-5f8fcff0bf9d"),
-	// 	Principal: &core.Principal{
+	// 	Principal: &core.UserPrincipal{
 	// 		Type: to.Ptr(core.PrincipalTypeUser),
 	// 		ID: to.Ptr("a35d842b-90d5-59a2-c56a-5f8fcff0bf9d"),
 	// 	},
@@ -522,7 +522,7 @@ func ExampleDeploymentPipelinesClient_NewListDeploymentPipelineOperationsPager_l
 		// 			Note: &core.DeploymentPipelineOperationNote{
 		// 				Content: to.Ptr("Sample note"),
 		// 			},
-		// 			PerformedBy: &core.Principal{
+		// 			PerformedBy: &core.UserPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				ID: to.Ptr("a35d842b-90d5-59a2-c56a-5f8fcff0bf9d"),
 		// 			},
@@ -545,7 +545,7 @@ func ExampleDeploymentPipelinesClient_NewListDeploymentPipelineOperationsPager_l
 		// 				Content: to.Ptr("Lorem ipsum odor amet, consectetuer adipiscing elit. Himenaeos litora volutpat sem eget ipsum sollicitudin ad porta ligula tristique sapien suscipit magnis pulvinar placerat in vulputate aliquam mauris aptent velit phasellus netus fringilla ad taciti in himenaeos eu vitae feugiat et auctor class maximus urna integer erat amet efficitur ex tellus conubia lorem nam viverra cras magnis potenti pharetra natoque suscipit scelerisque eros adipiscing mollis sagittis habitasse ligula nullam rhoncus at scelerisque justo dolor pretium libero urna massa tristique diam viverra aenean mauris malesuada mus sed ultrices consectetur tristique pretium imperdiet vulputate ligula senectus pretium aenean inceptos id cras magna ut nisl etiam eget magna nibh feugiat duis imperdiet ut ornare arcu primis curae taciti purus quisque turpis lacus auctor ligula tristique placerat consectetur mus vitae penatibus varius proin ligula viverra diam neque at tortor porttitor urna ullamcorper ut nec lobortis porta urna egestas eu cursus ante "),
 		// 				IsTruncated: to.Ptr(true),
 		// 			},
-		// 			PerformedBy: &core.Principal{
+		// 			PerformedBy: &core.UserPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				ID: to.Ptr("a35d842b-90d5-59a2-c56a-5f8fcff0bf9d"),
 		// 			},
@@ -597,7 +597,7 @@ func ExampleDeploymentPipelinesClient_NewListDeploymentPipelineOperationsPager_l
 		// 			Note: &core.DeploymentPipelineOperationNote{
 		// 				Content: to.Ptr("Sample note"),
 		// 			},
-		// 			PerformedBy: &core.Principal{
+		// 			PerformedBy: &core.UserPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				ID: to.Ptr("a35d842b-90d5-59a2-c56a-5f8fcff0bf9d"),
 		// 			},
@@ -620,7 +620,7 @@ func ExampleDeploymentPipelinesClient_NewListDeploymentPipelineOperationsPager_l
 		// 				Content: to.Ptr("Lorem ipsum odor amet, consectetuer adipiscing elit. Himenaeos litora volutpat sem eget ipsum sollicitudin ad porta ligula tristique sapien suscipit magnis pulvinar placerat in vulputate aliquam mauris aptent velit phasellus netus fringilla ad taciti in himenaeos eu vitae feugiat et auctor class maximus urna integer erat amet efficitur ex tellus conubia lorem nam viverra cras magnis potenti pharetra natoque suscipit scelerisque eros adipiscing mollis sagittis habitasse ligula nullam rhoncus at scelerisque justo dolor pretium libero urna massa tristique diam viverra aenean mauris malesuada mus sed ultrices consectetur tristique pretium imperdiet vulputate ligula senectus pretium aenean inceptos id cras magna ut nisl etiam eget magna nibh feugiat duis imperdiet ut ornare arcu primis curae taciti purus quisque turpis lacus auctor ligula tristique placerat consectetur mus vitae penatibus varius proin ligula viverra diam neque at tortor porttitor urna ullamcorper ut nec lobortis porta urna egestas eu cursus ante "),
 		// 				IsTruncated: to.Ptr(true),
 		// 			},
-		// 			PerformedBy: &core.Principal{
+		// 			PerformedBy: &core.UserPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				ID: to.Ptr("a35d842b-90d5-59a2-c56a-5f8fcff0bf9d"),
 		// 			},
@@ -664,7 +664,7 @@ func ExampleDeploymentPipelinesClient_GetDeploymentPipelineOperation() {
 	// 	Note: &core.DeploymentPipelineOperationNote{
 	// 		Content: to.Ptr("Sample note"),
 	// 	},
-	// 	PerformedBy: &core.Principal{
+	// 	PerformedBy: &core.UserPrincipal{
 	// 		Type: to.Ptr(core.PrincipalTypeUser),
 	// 		ID: to.Ptr("a35d842b-90d5-59a2-c56a-5f8fcff0bf9d"),
 	// 	},

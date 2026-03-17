@@ -27,7 +27,10 @@ func ExampleItemsClient_NewListEventhousesPager() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewItemsClient().NewListEventhousesPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &eventhouse.ItemsClientListEventhousesOptions{ContinuationToken: nil})
+	pager := clientFactory.NewItemsClient().NewListEventhousesPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &eventhouse.ItemsClientListEventhousesOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
 		if err != nil {
@@ -45,6 +48,9 @@ func ExampleItemsClient_NewListEventhousesPager() {
 		// 			Description: to.Ptr("An eventhouse description."),
 		// 			DisplayName: to.Ptr("Eventhouse_1"),
 		// 			ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		// 			SensitivityLabel: &eventhouse.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 			Properties: &eventhouse.Properties{
 		// 				DatabasesItemIDs: []string{
@@ -60,6 +66,9 @@ func ExampleItemsClient_NewListEventhousesPager() {
 		// 				Description: to.Ptr("An eventhouse description."),
 		// 				DisplayName: to.Ptr("Eventhouse_2"),
 		// 				ID: to.Ptr("340d91b9-5a39-409c-b9c0-05ba832c476e"),
+		// 				SensitivityLabel: &eventhouse.SensitivityLabel{
+		// 					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 				},
 		// 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 				Properties: &eventhouse.Properties{
 		// 					DatabasesItemIDs: []string{
@@ -96,6 +105,9 @@ func ExampleItemsClient_GetEventhouse() {
 	// 	Description: to.Ptr("An eventhouse description."),
 	// 	DisplayName: to.Ptr("Eventhouse_1"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+	// 	SensitivityLabel: &eventhouse.SensitivityLabel{
+	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// 	Properties: &eventhouse.Properties{
 	// 		DatabasesItemIDs: []string{
@@ -134,6 +146,9 @@ func ExampleItemsClient_UpdateEventhouse() {
 	// 	Description: to.Ptr("A new description for eventhouse."),
 	// 	DisplayName: to.Ptr("Eventhouse_New_Name"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+	// 	SensitivityLabel: &eventhouse.SensitivityLabel{
+	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// }
 }

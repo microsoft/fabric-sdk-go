@@ -117,7 +117,7 @@ func (b *BackgroundJobsServerTransport) dispatchCreateRefreshMaterializedLakeVie
 	if b.srv.CreateRefreshMaterializedLakeViewsSchedule == nil {
 		return nil, &nonRetriableError{errors.New("fake for method CreateRefreshMaterializedLakeViewsSchedule not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/RefreshMaterializedLakeViews/schedules`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/refreshMaterializedLakeViews/schedules`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -157,7 +157,7 @@ func (b *BackgroundJobsServerTransport) dispatchDeleteRefreshMaterializedLakeVie
 	if b.srv.DeleteRefreshMaterializedLakeViewsSchedule == nil {
 		return nil, &nonRetriableError{errors.New("fake for method DeleteRefreshMaterializedLakeViewsSchedule not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/RefreshMaterializedLakeViews/schedules/(?P<scheduleId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/refreshMaterializedLakeViews/schedules/(?P<scheduleId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 4 {
@@ -194,7 +194,7 @@ func (b *BackgroundJobsServerTransport) dispatchRunOnDemandRefreshMaterializedLa
 	if b.srv.RunOnDemandRefreshMaterializedLakeViews == nil {
 		return nil, &nonRetriableError{errors.New("fake for method RunOnDemandRefreshMaterializedLakeViews not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/RefreshMaterializedLakeViews/instances`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/refreshMaterializedLakeViews/instances`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -233,7 +233,7 @@ func (b *BackgroundJobsServerTransport) dispatchRunOnDemandTableMaintenance(req 
 	if b.srv.RunOnDemandTableMaintenance == nil {
 		return nil, &nonRetriableError{errors.New("fake for method RunOnDemandTableMaintenance not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/TableMaintenance/instances`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/tableMaintenance/instances`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -276,7 +276,7 @@ func (b *BackgroundJobsServerTransport) dispatchUpdateRefreshMaterializedLakeVie
 	if b.srv.UpdateRefreshMaterializedLakeViewsSchedule == nil {
 		return nil, &nonRetriableError{errors.New("fake for method UpdateRefreshMaterializedLakeViewsSchedule not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/RefreshMaterializedLakeViews/schedules/(?P<scheduleId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/refreshMaterializedLakeViews/schedules/(?P<scheduleId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 4 {

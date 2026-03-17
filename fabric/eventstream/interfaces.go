@@ -75,11 +75,12 @@ type SolacePubSubSourcePropertiesClassification interface {
 // Call the interface's GetSourceResponse() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
 // - *AmazonKinesisSourceResponse, *AmazonMSKKafkaSourceResponse, *ApacheKafkaSourceResponse, *AzureBlobStorageEventsSourceResponse,
-// - *AzureCosmosDBCDCSourceResponse, *AzureDataExplorerSourceResponse, *AzureEventGridNamespaceSourceResponse, *AzureEventHubSourceResponse,
-// - *AzureIoTHubSourceResponse, *AzureSQLDBCDCSourceResponse, *AzureSQLMIDBCDCSourceResponse, *ConfluentCloudSourceResponse,
-// - *CustomEndpointSourceResponse, *FabricJobEventsSourceResponse, *FabricOneLakeEventsSourceResponse, *FabricWorkspaceItemEventsSourceResponse,
-// - *GooglePubSubSourceResponse, *MqttSourceResponse, *MySQLCDCSourceResponse, *PostgreSQLCDCSourceResponse, *RealTimeWeatherSourceResponse,
-// - *SQLServerOnVMDBCDCSourceResponse, *SampleDataSourceResponse, *SolacePubSubSourceResponse, *SourceResponse
+// - *AzureCosmosDBCDCSourceResponse, *AzureDataExplorerSourceResponse, *AzureEventGridNamespaceSourceResponse, *AzureEventHubExtendedSourceResponse,
+// - *AzureEventHubSourceResponse, *AzureIoTHubSourceResponse, *AzureSQLDBCDCSourceResponse, *AzureSQLMIDBCDCSourceResponse,
+// - *ConfluentCloudSourceResponse, *CustomEndpointSourceResponse, *FabricCapacityOverviewEventsSourceResponse, *FabricJobEventsSourceResponse,
+// - *FabricOneLakeEventsSourceResponse, *FabricWorkspaceItemEventsSourceResponse, *GooglePubSubSourceResponse, *HTTPSourceResponse,
+// - *MqttSourceResponse, *MySQLCDCSourceResponse, *PostgreSQLCDCSourceResponse, *RealTimeWeatherSourceResponse, *SQLServerOnVMDBCDCSourceResponse,
+// - *SampleDataSourceResponse, *SolacePubSubSourceResponse, *SourceResponse
 type SourceResponseClassification interface {
 	// GetSourceResponse returns the SourceResponse content of the underlying type.
 	GetSourceResponse() *SourceResponse

@@ -319,14 +319,29 @@ func (i *ItemsServerTransport) dispatchNewListReflexesPager(req *http.Request) (
 		if err != nil {
 			return nil, err
 		}
+		recursiveUnescaped, err := url.QueryUnescape(qp.Get("recursive"))
+		if err != nil {
+			return nil, err
+		}
+		recursiveParam, err := parseOptional(recursiveUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDUnescaped, err := url.QueryUnescape(qp.Get("rootFolderId"))
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDParam := getOptional(rootFolderIDUnescaped)
 		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
 		if err != nil {
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
 		var options *reflex.ItemsClientListReflexesOptions
-		if continuationTokenParam != nil {
+		if recursiveParam != nil || rootFolderIDParam != nil || continuationTokenParam != nil {
 			options = &reflex.ItemsClientListReflexesOptions{
+				Recursive:         recursiveParam,
+				RootFolderID:      rootFolderIDParam,
 				ContinuationToken: continuationTokenParam,
 			}
 		}

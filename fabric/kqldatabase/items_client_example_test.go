@@ -27,7 +27,10 @@ func ExampleItemsClient_NewListKQLDatabasesPager() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewItemsClient().NewListKQLDatabasesPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &kqldatabase.ItemsClientListKQLDatabasesOptions{ContinuationToken: nil})
+	pager := clientFactory.NewItemsClient().NewListKQLDatabasesPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &kqldatabase.ItemsClientListKQLDatabasesOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
 		if err != nil {
@@ -45,6 +48,9 @@ func ExampleItemsClient_NewListKQLDatabasesPager() {
 		// 			Description: to.Ptr("A KQL database description."),
 		// 			DisplayName: to.Ptr("KQLDatabase_1"),
 		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+		// 			SensitivityLabel: &kqldatabase.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 			Properties: &kqldatabase.Properties{
 		// 				DatabaseType: to.Ptr(kqldatabase.TypeReadWrite),
@@ -58,6 +64,9 @@ func ExampleItemsClient_NewListKQLDatabasesPager() {
 		// 			Description: to.Ptr("A KQL database description."),
 		// 			DisplayName: to.Ptr("KQLDatabase_2"),
 		// 			ID: to.Ptr("340d91b9-5a39-409c-b9c0-05ba832c476e"),
+		// 			SensitivityLabel: &kqldatabase.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 			Properties: &kqldatabase.Properties{
 		// 				DatabaseType: to.Ptr(kqldatabase.TypeReadWrite),
@@ -251,6 +260,9 @@ func ExampleItemsClient_GetKQLDatabase() {
 	// 	Description: to.Ptr("A KQL database description."),
 	// 	DisplayName: to.Ptr("KQLDatabase_1"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+	// 	SensitivityLabel: &kqldatabase.SensitivityLabel{
+	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// 	Properties: &kqldatabase.Properties{
 	// 		DatabaseType: to.Ptr(kqldatabase.TypeReadWrite),
@@ -287,6 +299,9 @@ func ExampleItemsClient_UpdateKQLDatabase() {
 	// 	Description: to.Ptr("A new description for KQL database."),
 	// 	DisplayName: to.Ptr("KQLDatabase_New_Name"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+	// 	SensitivityLabel: &kqldatabase.SensitivityLabel{
+	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// }
 }

@@ -16,13 +16,16 @@ type CreateUserDataFunctionRequest struct {
 
 	// The UserDataFunction description. Maximum length is 256 characters.
 	Description *string
+
+	// The sensitivity label settings for the UserDataFunction.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // DefinitionResponse - UserDataFunction public definition response.
 type DefinitionResponse struct {
-	// READ-ONLY; UserDataFunction public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/user-data-function]
-	// for more details on how to craft a UserDataFunction public
-	// definition.
+	// READ-ONLY; UserDataFunction public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/user-data-function-definition]
+	// for more details on the structure of the
+	// UserDataFunction definition.
 	Definition *PublicDefinition
 }
 
@@ -35,9 +38,9 @@ type ItemTag struct {
 	ID *string
 }
 
-// PublicDefinition - UserDataFunction public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/user-data-function]
-// for more details on how to craft a UserDataFunction public
-// definition.
+// PublicDefinition - UserDataFunction public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/user-data-function-definition]
+// for more details on the structure of the
+// UserDataFunction definition.
 type PublicDefinition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []PublicDefinitionPart
@@ -58,11 +61,26 @@ type PublicDefinitionPart struct {
 	PayloadType *PayloadType
 }
 
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
 // UpdateUserDataFunctionDefinitionRequest - Update UserDataFunction public definition request payload.
 type UpdateUserDataFunctionDefinitionRequest struct {
-	// REQUIRED; UserDataFunction public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/user-data-function]
-	// for more details on how to craft a UserDataFunction public
-	// definition.
+	// REQUIRED; UserDataFunction public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/user-data-function-definition]
+	// for more details on the structure of the
+	// UserDataFunction definition.
 	Definition *PublicDefinition
 }
 
@@ -91,6 +109,9 @@ type UserDataFunction struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
 
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag

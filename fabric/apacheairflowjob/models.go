@@ -6,6 +6,78 @@
 
 package apacheairflowjob
 
+// AirflowComputeResponse - Apache Airflow compute configuration response.
+type AirflowComputeResponse struct {
+	// READ-ONLY; The Apache Airflow job version.
+	ApacheAirflowJobVersion *string
+
+	// READ-ONLY; The Apache Airflow job version details.
+	ApacheAirflowJobVersionDetails *VersionDetails
+
+	// READ-ONLY; The availability zones status.
+	AvailabilityZones *AvailabilityZonesStatus
+
+	// READ-ONLY; Compute scalability settings.
+	ComputeScalability *ComputeScalability
+
+	// READ-ONLY; The node size.
+	NodeSize *NodeSize
+
+	// READ-ONLY; The pool template ID.
+	PoolTemplateID *string
+
+	// READ-ONLY; The pool template name.
+	PoolTemplateName *string
+
+	// READ-ONLY; The shutdown policy.
+	ShutdownPolicy *ShutdownPolicy
+}
+
+// AirflowEnvironmentSettingsResponse - Apache Airflow environment settings response.
+type AirflowEnvironmentSettingsResponse struct {
+	// READ-ONLY; Airflow configuration overrides.
+	AirflowConfigurationOverrides []NameValuePair
+
+	// READ-ONLY; Environment variables configured for the Airflow environment.
+	EnvironmentVariables []NameValuePair
+
+	// READ-ONLY; The triggerers status.
+	Triggerers *TriggerersStatus
+}
+
+// AirflowEnvironmentStatusResponse - Apache Airflow environment status response.
+type AirflowEnvironmentStatusResponse struct {
+	// READ-ONLY; The Apache Airflow environment status.
+	Status *AirflowEnvironmentStatus
+}
+
+// AirflowLibrariesResponse - Apache Airflow libraries response.
+type AirflowLibrariesResponse struct {
+	// READ-ONLY; A list of installed libraries.
+	Value []AirflowLibrary
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
+// AirflowLibrary - Apache Airflow library.
+type AirflowLibrary struct {
+	// READ-ONLY; The library type.
+	LibraryType *LibraryType
+
+	// READ-ONLY; The library name.
+	Name *string
+
+	// READ-ONLY; The library source.
+	Source *LibrarySource
+
+	// READ-ONLY; The library version.
+	Version *string
+}
+
 // AirflowPoolTemplate - Apache Airflow pool template.
 type AirflowPoolTemplate struct {
 	// The Apache Airflow job version.
@@ -60,6 +132,9 @@ type ApacheAirflowJob struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
 
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
@@ -117,6 +192,9 @@ type CreateApacheAirflowJobRequest struct {
 
 	// The folder ID. If not specified or null, the Apache Airflow is created with the workspace as its folder.
 	FolderID *string
+
+	// The sensitivity label settings for the Apache Airflow job.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // Definition - Apache Airflow job public definition object.
@@ -174,6 +252,30 @@ type ItemTag struct {
 	ID *string
 }
 
+// NameValuePair - A name-value pair.
+type NameValuePair struct {
+	// The name.
+	Name *string
+
+	// The value.
+	Value *string
+}
+
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
 // UpdateAirflowWorkspaceSettingsRequest - Update Apache Airflow workspace settings request payload.
 type UpdateAirflowWorkspaceSettingsRequest struct {
 	// The default pool template ID for the workspace.
@@ -193,4 +295,13 @@ type UpdateApacheAirflowJobRequest struct {
 
 	// The Apache Airflow job display name. The display name must follow naming rules according to item type.
 	DisplayName *string
+}
+
+// VersionDetails - Apache Airflow job version details.
+type VersionDetails struct {
+	// READ-ONLY; The Apache Airflow version.
+	ApacheAirflowVersion *string
+
+	// READ-ONLY; The Python version.
+	PythonVersion *string
 }

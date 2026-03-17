@@ -56,7 +56,7 @@ func TestFakeTest(t *testing.T) {
 	suite.Run(t, new(FakeTestSuite))
 }
 
-func (testsuite *FakeTestSuite) TestStaging_GetSparkComputePreview() {
+func (testsuite *FakeTestSuite) TestStaging_GetSparkComputeBeta() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Get environment staging spark compute example"},
@@ -89,22 +89,22 @@ func (testsuite *FakeTestSuite) TestStaging_GetSparkComputePreview() {
 		},
 	}
 
-	testsuite.serverFactory.StagingServer.GetSparkComputePreview = func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.StagingClientGetSparkComputePreviewOptions) (resp azfake.Responder[environment.StagingClientGetSparkComputePreviewResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.StagingServer.GetSparkComputeBeta = func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.StagingClientGetSparkComputeBetaOptions) (resp azfake.Responder[environment.StagingClientGetSparkComputeBetaResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
 		testsuite.Require().Equal(exampleBeta, beta)
-		resp = azfake.Responder[environment.StagingClientGetSparkComputePreviewResponse]{}
-		resp.SetResponse(http.StatusOK, environment.StagingClientGetSparkComputePreviewResponse{SparkComputePreview: exampleRes}, nil)
+		resp = azfake.Responder[environment.StagingClientGetSparkComputeBetaResponse]{}
+		resp.SetResponse(http.StatusOK, environment.StagingClientGetSparkComputeBetaResponse{SparkComputePreview: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewStagingClient()
-	res, err := client.GetSparkComputePreview(ctx, exampleWorkspaceID, exampleEnvironmentID, exampleBeta, nil)
+	res, err := client.GetSparkComputeBeta(ctx, exampleWorkspaceID, exampleEnvironmentID, exampleBeta, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.SparkComputePreview))
 }
 
-func (testsuite *FakeTestSuite) TestStaging_UpdateSparkComputePreview() {
+func (testsuite *FakeTestSuite) TestStaging_UpdateSparkComputeBeta() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Update environment staging spark compute example"},
@@ -158,18 +158,18 @@ func (testsuite *FakeTestSuite) TestStaging_UpdateSparkComputePreview() {
 		},
 	}
 
-	testsuite.serverFactory.StagingServer.UpdateSparkComputePreview = func(ctx context.Context, workspaceID string, environmentID string, beta bool, updateEnvironmentSparkComputeRequest environment.UpdateEnvironmentSparkComputeRequestPreview, options *environment.StagingClientUpdateSparkComputePreviewOptions) (resp azfake.Responder[environment.StagingClientUpdateSparkComputePreviewResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.StagingServer.UpdateSparkComputeBeta = func(ctx context.Context, workspaceID string, environmentID string, beta bool, updateEnvironmentSparkComputeRequest environment.UpdateEnvironmentSparkComputeRequestPreview, options *environment.StagingClientUpdateSparkComputeBetaOptions) (resp azfake.Responder[environment.StagingClientUpdateSparkComputeBetaResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
 		testsuite.Require().Equal(exampleBeta, beta)
 		testsuite.Require().True(reflect.DeepEqual(exampleUpdateEnvironmentSparkComputeRequest, updateEnvironmentSparkComputeRequest))
-		resp = azfake.Responder[environment.StagingClientUpdateSparkComputePreviewResponse]{}
-		resp.SetResponse(http.StatusOK, environment.StagingClientUpdateSparkComputePreviewResponse{SparkComputePreview: exampleRes}, nil)
+		resp = azfake.Responder[environment.StagingClientUpdateSparkComputeBetaResponse]{}
+		resp.SetResponse(http.StatusOK, environment.StagingClientUpdateSparkComputeBetaResponse{SparkComputePreview: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewStagingClient()
-	res, err := client.UpdateSparkComputePreview(ctx, exampleWorkspaceID, exampleEnvironmentID, exampleBeta, exampleUpdateEnvironmentSparkComputeRequest, nil)
+	res, err := client.UpdateSparkComputeBeta(ctx, exampleWorkspaceID, exampleEnvironmentID, exampleBeta, exampleUpdateEnvironmentSparkComputeRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.SparkComputePreview))
 }
@@ -415,7 +415,7 @@ func (testsuite *FakeTestSuite) TestStaging_ListLibraries() {
 	}
 }
 
-func (testsuite *FakeTestSuite) TestStaging_UploadCustomLibraryPreview() {
+func (testsuite *FakeTestSuite) TestStaging_UploadCustomLibraryBeta() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Upload environment staging libraries example"},
@@ -425,20 +425,20 @@ func (testsuite *FakeTestSuite) TestStaging_UploadCustomLibraryPreview() {
 	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
 	exampleEnvironmentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
 
-	testsuite.serverFactory.StagingServer.UploadCustomLibraryPreview = func(ctx context.Context, workspaceID string, environmentID string, options *environment.StagingClientUploadCustomLibraryPreviewOptions) (resp azfake.Responder[environment.StagingClientUploadCustomLibraryPreviewResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.StagingServer.UploadCustomLibraryBeta = func(ctx context.Context, workspaceID string, environmentID string, options *environment.StagingClientUploadCustomLibraryBetaOptions) (resp azfake.Responder[environment.StagingClientUploadCustomLibraryBetaResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
-		resp = azfake.Responder[environment.StagingClientUploadCustomLibraryPreviewResponse]{}
-		resp.SetResponse(http.StatusOK, environment.StagingClientUploadCustomLibraryPreviewResponse{}, nil)
+		resp = azfake.Responder[environment.StagingClientUploadCustomLibraryBetaResponse]{}
+		resp.SetResponse(http.StatusOK, environment.StagingClientUploadCustomLibraryBetaResponse{}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewStagingClient()
-	_, err = client.UploadCustomLibraryPreview(ctx, exampleWorkspaceID, exampleEnvironmentID, nil)
+	_, err = client.UploadCustomLibraryBeta(ctx, exampleWorkspaceID, exampleEnvironmentID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
-func (testsuite *FakeTestSuite) TestStaging_DeleteCustomLibraryPreview() {
+func (testsuite *FakeTestSuite) TestStaging_DeleteCustomLibraryBeta() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Delete environment staging libraries example"},
@@ -450,21 +450,21 @@ func (testsuite *FakeTestSuite) TestStaging_DeleteCustomLibraryPreview() {
 	exampleEnvironmentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
 	exampleLibraryToDelete = "samplelibrary.jar"
 
-	testsuite.serverFactory.StagingServer.DeleteCustomLibraryPreview = func(ctx context.Context, workspaceID string, environmentID string, libraryToDelete string, options *environment.StagingClientDeleteCustomLibraryPreviewOptions) (resp azfake.Responder[environment.StagingClientDeleteCustomLibraryPreviewResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.StagingServer.DeleteCustomLibraryBeta = func(ctx context.Context, workspaceID string, environmentID string, libraryToDelete string, options *environment.StagingClientDeleteCustomLibraryBetaOptions) (resp azfake.Responder[environment.StagingClientDeleteCustomLibraryBetaResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
 		testsuite.Require().Equal(exampleLibraryToDelete, libraryToDelete)
-		resp = azfake.Responder[environment.StagingClientDeleteCustomLibraryPreviewResponse]{}
-		resp.SetResponse(http.StatusOK, environment.StagingClientDeleteCustomLibraryPreviewResponse{}, nil)
+		resp = azfake.Responder[environment.StagingClientDeleteCustomLibraryBetaResponse]{}
+		resp.SetResponse(http.StatusOK, environment.StagingClientDeleteCustomLibraryBetaResponse{}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewStagingClient()
-	_, err = client.DeleteCustomLibraryPreview(ctx, exampleWorkspaceID, exampleEnvironmentID, exampleLibraryToDelete, nil)
+	_, err = client.DeleteCustomLibraryBeta(ctx, exampleWorkspaceID, exampleEnvironmentID, exampleLibraryToDelete, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
-func (testsuite *FakeTestSuite) TestStaging_ListLibrariesPreview() {
+func (testsuite *FakeTestSuite) TestStaging_ListLibrariesBeta() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Get environment staging libraries example"},
@@ -490,17 +490,17 @@ func (testsuite *FakeTestSuite) TestStaging_ListLibrariesPreview() {
 		EnvironmentYml: to.Ptr("name: sample-environment\ndependencies:\n  - fuzzywuzzy==0.0.1\n  - matplotlib==0.0.1"),
 	}
 
-	testsuite.serverFactory.StagingServer.ListLibrariesPreview = func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.StagingClientListLibrariesPreviewOptions) (resp azfake.Responder[environment.StagingClientListLibrariesPreviewResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.StagingServer.ListLibrariesBeta = func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.StagingClientListLibrariesBetaOptions) (resp azfake.Responder[environment.StagingClientListLibrariesBetaResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
 		testsuite.Require().Equal(exampleBeta, beta)
-		resp = azfake.Responder[environment.StagingClientListLibrariesPreviewResponse]{}
-		resp.SetResponse(http.StatusOK, environment.StagingClientListLibrariesPreviewResponse{LibrariesPreview: exampleRes}, nil)
+		resp = azfake.Responder[environment.StagingClientListLibrariesBetaResponse]{}
+		resp.SetResponse(http.StatusOK, environment.StagingClientListLibrariesBetaResponse{LibrariesPreview: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewStagingClient()
-	res, err := client.ListLibrariesPreview(ctx, exampleWorkspaceID, exampleEnvironmentID, exampleBeta, nil)
+	res, err := client.ListLibrariesBeta(ctx, exampleWorkspaceID, exampleEnvironmentID, exampleBeta, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.LibrariesPreview))
 }
@@ -632,7 +632,7 @@ func (testsuite *FakeTestSuite) TestStaging_ExportExternalLibraries() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
-func (testsuite *FakeTestSuite) TestPublished_GetSparkComputePreview() {
+func (testsuite *FakeTestSuite) TestPublished_GetSparkComputeBeta() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Get environment Spark compute example"},
@@ -665,17 +665,17 @@ func (testsuite *FakeTestSuite) TestPublished_GetSparkComputePreview() {
 		},
 	}
 
-	testsuite.serverFactory.PublishedServer.GetSparkComputePreview = func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.PublishedClientGetSparkComputePreviewOptions) (resp azfake.Responder[environment.PublishedClientGetSparkComputePreviewResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.PublishedServer.GetSparkComputeBeta = func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.PublishedClientGetSparkComputeBetaOptions) (resp azfake.Responder[environment.PublishedClientGetSparkComputeBetaResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
 		testsuite.Require().Equal(exampleBeta, beta)
-		resp = azfake.Responder[environment.PublishedClientGetSparkComputePreviewResponse]{}
-		resp.SetResponse(http.StatusOK, environment.PublishedClientGetSparkComputePreviewResponse{SparkComputePreview: exampleRes}, nil)
+		resp = azfake.Responder[environment.PublishedClientGetSparkComputeBetaResponse]{}
+		resp.SetResponse(http.StatusOK, environment.PublishedClientGetSparkComputeBetaResponse{SparkComputePreview: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewPublishedClient()
-	res, err := client.GetSparkComputePreview(ctx, exampleWorkspaceID, exampleEnvironmentID, exampleBeta, nil)
+	res, err := client.GetSparkComputeBeta(ctx, exampleWorkspaceID, exampleEnvironmentID, exampleBeta, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.SparkComputePreview))
 }
@@ -795,7 +795,7 @@ func (testsuite *FakeTestSuite) TestPublished_ListLibraries() {
 	}
 }
 
-func (testsuite *FakeTestSuite) TestPublished_ListLibrariesPreview() {
+func (testsuite *FakeTestSuite) TestPublished_ListLibrariesBeta() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Get environment published libraries example"},
@@ -821,17 +821,17 @@ func (testsuite *FakeTestSuite) TestPublished_ListLibrariesPreview() {
 		EnvironmentYml: to.Ptr("name: sample-environment\ndependencies:\n  - fuzzywuzzy==0.0.1\n  - matplotlib==0.0.1"),
 	}
 
-	testsuite.serverFactory.PublishedServer.ListLibrariesPreview = func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.PublishedClientListLibrariesPreviewOptions) (resp azfake.Responder[environment.PublishedClientListLibrariesPreviewResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.PublishedServer.ListLibrariesBeta = func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.PublishedClientListLibrariesBetaOptions) (resp azfake.Responder[environment.PublishedClientListLibrariesBetaResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
 		testsuite.Require().Equal(exampleBeta, beta)
-		resp = azfake.Responder[environment.PublishedClientListLibrariesPreviewResponse]{}
-		resp.SetResponse(http.StatusOK, environment.PublishedClientListLibrariesPreviewResponse{LibrariesPreview: exampleRes}, nil)
+		resp = azfake.Responder[environment.PublishedClientListLibrariesBetaResponse]{}
+		resp.SetResponse(http.StatusOK, environment.PublishedClientListLibrariesBetaResponse{LibrariesPreview: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewPublishedClient()
-	res, err := client.ListLibrariesPreview(ctx, exampleWorkspaceID, exampleEnvironmentID, exampleBeta, nil)
+	res, err := client.ListLibrariesBeta(ctx, exampleWorkspaceID, exampleEnvironmentID, exampleBeta, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.LibrariesPreview))
 }
@@ -874,6 +874,9 @@ func (testsuite *FakeTestSuite) TestItems_ListEnvironments() {
 				Description: to.Ptr("A environment description."),
 				DisplayName: to.Ptr("Environment_1"),
 				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				SensitivityLabel: &environment.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 				Properties: &environment.Properties{
 					PublishDetails: &environment.PublishDetails{
@@ -897,6 +900,9 @@ func (testsuite *FakeTestSuite) TestItems_ListEnvironments() {
 				Description: to.Ptr("A environment description."),
 				DisplayName: to.Ptr("Environment_2"),
 				ID:          to.Ptr("a8a1bffa-7eea-49dc-a1d2-6281c1d031f1"),
+				SensitivityLabel: &environment.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 				Properties: &environment.Properties{
 					PublishDetails: &environment.PublishDetails{
@@ -925,7 +931,10 @@ func (testsuite *FakeTestSuite) TestItems_ListEnvironments() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	pager := client.NewListEnvironmentsPager(exampleWorkspaceID, &environment.ItemsClientListEnvironmentsOptions{ContinuationToken: nil})
+	pager := client.NewListEnvironmentsPager(exampleWorkspaceID, &environment.ItemsClientListEnvironmentsOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")
@@ -1040,6 +1049,9 @@ func (testsuite *FakeTestSuite) TestItems_GetEnvironment() {
 		Description: to.Ptr("An Environment description"),
 		DisplayName: to.Ptr("Environment_1"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &environment.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		Properties: &environment.Properties{
 			PublishDetails: &environment.PublishDetails{
@@ -1313,7 +1325,7 @@ func (testsuite *FakeTestSuite) TestItems_PublishEnvironment() {
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Properties))
 }
 
-func (testsuite *FakeTestSuite) TestItems_PublishEnvironmentPreview() {
+func (testsuite *FakeTestSuite) TestItems_PublishEnvironmentBeta() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Publish environment example"},
@@ -1341,17 +1353,17 @@ func (testsuite *FakeTestSuite) TestItems_PublishEnvironmentPreview() {
 		},
 	}
 
-	testsuite.serverFactory.ItemsServer.PublishEnvironmentPreview = func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.ItemsClientPublishEnvironmentPreviewOptions) (resp azfake.Responder[environment.ItemsClientPublishEnvironmentPreviewResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ItemsServer.PublishEnvironmentBeta = func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.ItemsClientPublishEnvironmentBetaOptions) (resp azfake.Responder[environment.ItemsClientPublishEnvironmentBetaResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
 		testsuite.Require().Equal(exampleBeta, beta)
-		resp = azfake.Responder[environment.ItemsClientPublishEnvironmentPreviewResponse]{}
-		resp.SetResponse(http.StatusOK, environment.ItemsClientPublishEnvironmentPreviewResponse{Properties: exampleRes}, nil)
+		resp = azfake.Responder[environment.ItemsClientPublishEnvironmentBetaResponse]{}
+		resp.SetResponse(http.StatusOK, environment.ItemsClientPublishEnvironmentBetaResponse{Properties: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	res, err := client.PublishEnvironmentPreview(ctx, exampleWorkspaceID, exampleEnvironmentID, exampleBeta, nil)
+	res, err := client.PublishEnvironmentBeta(ctx, exampleWorkspaceID, exampleEnvironmentID, exampleBeta, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Properties))
 }

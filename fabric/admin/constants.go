@@ -40,6 +40,30 @@ func PossibleCategoryValues() []Category {
 	}
 }
 
+// ConnectionAccessActionType - Defines the access control behavior for outbound connections. This enum is used for the field
+// defaultAction to specify whether outbound communication should be allowed or denied by default. This type
+// enables both global and connection-specific control over outbound access, helping enforce secure and predictable network
+// communication policies. Additional connection access action types may be added
+// over time.
+type ConnectionAccessActionType string
+
+const (
+	// ConnectionAccessActionTypeAllow - Permits outbound connections. When used as a default action, all cloud connections are
+	// allowed.
+	ConnectionAccessActionTypeAllow ConnectionAccessActionType = "Allow"
+	// ConnectionAccessActionTypeDeny - Blocks outbound connections. When used as a default action, all cloud connections are
+	// denied unless explicitly allowed.
+	ConnectionAccessActionTypeDeny ConnectionAccessActionType = "Deny"
+)
+
+// PossibleConnectionAccessActionTypeValues returns the possible values for the ConnectionAccessActionType const type.
+func PossibleConnectionAccessActionTypeValues() []ConnectionAccessActionType {
+	return []ConnectionAccessActionType{
+		ConnectionAccessActionTypeAllow,
+		ConnectionAccessActionTypeDeny,
+	}
+}
+
 // ContributorsScopeType - The contributor scope. Additional contributor scopes may be added over time.
 type ContributorsScopeType string
 
@@ -124,6 +148,29 @@ func PossibleExternalDataShareStatusValues() []ExternalDataShareStatus {
 		ExternalDataShareStatusInvitationExpired,
 		ExternalDataShareStatusPending,
 		ExternalDataShareStatusRevoked,
+	}
+}
+
+// GatewayAccessActionType - Defines the access control behavior for outbound gateways. This enum is used for the field defaultAction
+// to specify whether outbound communication should be allowed or denied by default. This type
+// enables both global and gateway-specific control over outbound access, helping enforce secure and predictable network communication
+// policies. Additional gateway access action types may be added over
+// time.
+type GatewayAccessActionType string
+
+const (
+	// GatewayAccessActionTypeAllow - Permits outbound gateways. When used as a default action, all gateways are allowed.
+	GatewayAccessActionTypeAllow GatewayAccessActionType = "Allow"
+	// GatewayAccessActionTypeDeny - Blocks outbound gateways. When used as a default action, all gateways are denied unless explicitly
+	// allowed.
+	GatewayAccessActionTypeDeny GatewayAccessActionType = "Deny"
+)
+
+// PossibleGatewayAccessActionTypeValues returns the possible values for the GatewayAccessActionType const type.
+func PossibleGatewayAccessActionTypeValues() []GatewayAccessActionType {
+	return []GatewayAccessActionType{
+		GatewayAccessActionTypeAllow,
+		GatewayAccessActionTypeDeny,
 	}
 }
 
@@ -222,6 +269,8 @@ const (
 	ItemTypeCosmosDBDatabase ItemType = "CosmosDBDatabase"
 	// ItemTypeDashboard - PowerBI dashboard.
 	ItemTypeDashboard ItemType = "Dashboard"
+	// ItemTypeDataAgent - A DataAgent.
+	ItemTypeDataAgent ItemType = "DataAgent"
 	// ItemTypeDataPipeline - A data pipeline.
 	ItemTypeDataPipeline ItemType = "DataPipeline"
 	// ItemTypeDataflow - A Dataflow.
@@ -308,6 +357,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeCopyJob,
 		ItemTypeCosmosDBDatabase,
 		ItemTypeDashboard,
+		ItemTypeDataAgent,
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
 		ItemTypeDatamart,
@@ -346,6 +396,25 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeVariableLibrary,
 		ItemTypeWarehouse,
 		ItemTypeWarehouseSnapshot,
+	}
+}
+
+// NetworkAccessRule - The default option for a network communications policy. Additional network connection defaults may
+// be added over time.
+type NetworkAccessRule string
+
+const (
+	// NetworkAccessRuleAllow - Allow all connections.
+	NetworkAccessRuleAllow NetworkAccessRule = "Allow"
+	// NetworkAccessRuleDeny - Deny all connections.
+	NetworkAccessRuleDeny NetworkAccessRule = "Deny"
+)
+
+// PossibleNetworkAccessRuleValues returns the possible values for the NetworkAccessRule const type.
+func PossibleNetworkAccessRuleValues() []NetworkAccessRule {
+	return []NetworkAccessRule{
+		NetworkAccessRuleAllow,
+		NetworkAccessRuleDeny,
 	}
 }
 

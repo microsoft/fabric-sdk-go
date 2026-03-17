@@ -156,6 +156,68 @@ func (client *WorkspacesClient) listGitConnectionsHandleResponse(resp *http.Resp
 	return result, nil
 }
 
+// NewListNetworkingCommunicationPoliciesPager - This API supports pagination [/rest/api/fabric/articles/pagination] With
+// the continuation token provided in the response, you can get the next set of records.
+// PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
+// REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes | |
+// INTERFACE
+//
+// Generated from API version v1
+//   - options - WorkspacesClientListNetworkingCommunicationPoliciesOptions contains the optional parameters for the WorkspacesClient.NewListNetworkingCommunicationPoliciesPager
+//     method.
+func (client *WorkspacesClient) NewListNetworkingCommunicationPoliciesPager(options *WorkspacesClientListNetworkingCommunicationPoliciesOptions) *runtime.Pager[WorkspacesClientListNetworkingCommunicationPoliciesResponse] {
+	return runtime.NewPager(runtime.PagingHandler[WorkspacesClientListNetworkingCommunicationPoliciesResponse]{
+		More: func(page WorkspacesClientListNetworkingCommunicationPoliciesResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *WorkspacesClientListNetworkingCommunicationPoliciesResponse) (WorkspacesClientListNetworkingCommunicationPoliciesResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "admin.WorkspacesClient.NewListNetworkingCommunicationPoliciesPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.listNetworkingCommunicationPoliciesCreateRequest(ctx, options)
+			}, nil)
+			if err != nil {
+				return WorkspacesClientListNetworkingCommunicationPoliciesResponse{}, err
+			}
+			return client.listNetworkingCommunicationPoliciesHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
+}
+
+// listNetworkingCommunicationPoliciesCreateRequest creates the ListNetworkingCommunicationPolicies request.
+func (client *WorkspacesClient) listNetworkingCommunicationPoliciesCreateRequest(ctx context.Context, options *WorkspacesClientListNetworkingCommunicationPoliciesOptions) (*policy.Request, error) {
+	urlPath := "/v1/admin/workspaces/networking/communicationpolicies"
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// listNetworkingCommunicationPoliciesHandleResponse handles the ListNetworkingCommunicationPolicies response.
+func (client *WorkspacesClient) listNetworkingCommunicationPoliciesHandleResponse(resp *http.Response) (WorkspacesClientListNetworkingCommunicationPoliciesResponse, error) {
+	result := WorkspacesClientListNetworkingCommunicationPoliciesResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.NetworkCommunicationPolicies); err != nil {
+		return WorkspacesClientListNetworkingCommunicationPoliciesResponse{}, err
+	}
+	return result, nil
+}
+
 // ListWorkspaceAccessDetails - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
 // purposes only. It may change based on feedback and is not recommended for production use.
 // PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
@@ -388,6 +450,37 @@ func (client *WorkspacesClient) ListGitConnections(ctx context.Context, options 
 			return []GitConnectionDetails{}, core.NewResponseError(azcoreRespError.RawResponse)
 		}
 		return []GitConnectionDetails{}, err
+	}
+	return list, nil
+}
+
+// ListNetworkingCommunicationPolicies - returns array of NetworkCommunicationPolicyDetails from all pages.
+// This API supports pagination [/rest/api/fabric/articles/pagination] With the continuation token provided in the response, you can get the next set of records.
+//
+// PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
+//
+// # REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes | |
+//
+// INTERFACE
+// Generated from API version v1
+//   - options - WorkspacesClientListNetworkingCommunicationPoliciesOptions contains the optional parameters for the WorkspacesClient.NewListNetworkingCommunicationPoliciesPager method.
+func (client *WorkspacesClient) ListNetworkingCommunicationPolicies(ctx context.Context, options *WorkspacesClientListNetworkingCommunicationPoliciesOptions) ([]NetworkCommunicationPolicyDetails, error) {
+	pager := client.NewListNetworkingCommunicationPoliciesPager(options)
+	mapper := func(resp WorkspacesClientListNetworkingCommunicationPoliciesResponse) []NetworkCommunicationPolicyDetails {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []NetworkCommunicationPolicyDetails{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []NetworkCommunicationPolicyDetails{}, err
 	}
 	return list, nil
 }

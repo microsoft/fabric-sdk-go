@@ -29,6 +29,18 @@ type OneLakeDataAccessSecurityServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	CreateOrUpdateDataAccessRoles func(ctx context.Context, workspaceID string, itemID string, createOrUpdateDataAccessRolesRequest core.CreateOrUpdateDataAccessRolesRequest, options *core.OneLakeDataAccessSecurityClientCreateOrUpdateDataAccessRolesOptions) (resp azfake.Responder[core.OneLakeDataAccessSecurityClientCreateOrUpdateDataAccessRolesResponse], errResp azfake.ErrorResponder)
 
+	// CreateOrUpdateSingleDataAccessRole is the fake for method OneLakeDataAccessSecurityClient.CreateOrUpdateSingleDataAccessRole
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated
+	CreateOrUpdateSingleDataAccessRole func(ctx context.Context, workspaceID string, itemID string, createOrUpdateSingleDataAccessRoleRequest core.CreateOrUpdateSingleDataAccessRoleRequest, options *core.OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleOptions) (resp azfake.Responder[core.OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleResponse], errResp azfake.ErrorResponder)
+
+	// DeleteDataAccessRole is the fake for method OneLakeDataAccessSecurityClient.DeleteDataAccessRole
+	// HTTP status codes to indicate success: http.StatusOK
+	DeleteDataAccessRole func(ctx context.Context, workspaceID string, itemID string, roleName string, options *core.OneLakeDataAccessSecurityClientDeleteDataAccessRoleOptions) (resp azfake.Responder[core.OneLakeDataAccessSecurityClientDeleteDataAccessRoleResponse], errResp azfake.ErrorResponder)
+
+	// GetDataAccessRole is the fake for method OneLakeDataAccessSecurityClient.GetDataAccessRole
+	// HTTP status codes to indicate success: http.StatusOK
+	GetDataAccessRole func(ctx context.Context, workspaceID string, itemID string, roleName string, options *core.OneLakeDataAccessSecurityClientGetDataAccessRoleOptions) (resp azfake.Responder[core.OneLakeDataAccessSecurityClientGetDataAccessRoleResponse], errResp azfake.ErrorResponder)
+
 	// ListDataAccessRoles is the fake for method OneLakeDataAccessSecurityClient.ListDataAccessRoles
 	// HTTP status codes to indicate success: http.StatusOK
 	ListDataAccessRoles func(ctx context.Context, workspaceID string, itemID string, options *core.OneLakeDataAccessSecurityClientListDataAccessRolesOptions) (resp azfake.Responder[core.OneLakeDataAccessSecurityClientListDataAccessRolesResponse], errResp azfake.ErrorResponder)
@@ -74,6 +86,12 @@ func (o *OneLakeDataAccessSecurityServerTransport) dispatchToMethodFake(req *htt
 			switch method {
 			case "OneLakeDataAccessSecurityClient.CreateOrUpdateDataAccessRoles":
 				res.resp, res.err = o.dispatchCreateOrUpdateDataAccessRoles(req)
+			case "OneLakeDataAccessSecurityClient.CreateOrUpdateSingleDataAccessRole":
+				res.resp, res.err = o.dispatchCreateOrUpdateSingleDataAccessRole(req)
+			case "OneLakeDataAccessSecurityClient.DeleteDataAccessRole":
+				res.resp, res.err = o.dispatchDeleteDataAccessRole(req)
+			case "OneLakeDataAccessSecurityClient.GetDataAccessRole":
+				res.resp, res.err = o.dispatchGetDataAccessRole(req)
 			case "OneLakeDataAccessSecurityClient.ListDataAccessRoles":
 				res.resp, res.err = o.dispatchListDataAccessRoles(req)
 			default:
@@ -150,6 +168,151 @@ func (o *OneLakeDataAccessSecurityServerTransport) dispatchCreateOrUpdateDataAcc
 	}
 	if val := server.GetResponse(respr).Etag; val != nil {
 		resp.Header.Set("Etag", *val)
+	}
+	return resp, nil
+}
+
+func (o *OneLakeDataAccessSecurityServerTransport) dispatchCreateOrUpdateSingleDataAccessRole(req *http.Request) (*http.Response, error) {
+	if o.srv.CreateOrUpdateSingleDataAccessRole == nil {
+		return nil, &nonRetriableError{errors.New("fake for method CreateOrUpdateSingleDataAccessRole not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/items/(?P<itemId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataAccessRoles`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	qp := req.URL.Query()
+	body, err := server.UnmarshalRequestAsJSON[core.CreateOrUpdateSingleDataAccessRoleRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	itemIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("itemId")])
+	if err != nil {
+		return nil, err
+	}
+	dataAccessRoleConflictPolicyUnescaped, err := url.QueryUnescape(qp.Get("dataAccessRoleConflictPolicy"))
+	if err != nil {
+		return nil, err
+	}
+	dataAccessRoleConflictPolicyParam := getOptional(core.DataAccessRoleConflictPolicy(dataAccessRoleConflictPolicyUnescaped))
+	ifMatchParam := getOptional(getHeaderValue(req.Header, "If-Match"))
+	ifNoneMatchParam := getOptional(getHeaderValue(req.Header, "If-None-Match"))
+	var options *core.OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleOptions
+	if dataAccessRoleConflictPolicyParam != nil || ifMatchParam != nil || ifNoneMatchParam != nil {
+		options = &core.OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleOptions{
+			DataAccessRoleConflictPolicy: dataAccessRoleConflictPolicyParam,
+			IfMatch:                      ifMatchParam,
+			IfNoneMatch:                  ifNoneMatchParam,
+		}
+	}
+	respr, errRespr := o.srv.CreateOrUpdateSingleDataAccessRole(req.Context(), workspaceIDParam, itemIDParam, body, options)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK, http.StatusCreated}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusCreated", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	if val := server.GetResponse(respr).ETag; val != nil {
+		resp.Header.Set("ETag", *val)
+	}
+	if val := server.GetResponse(respr).Location; val != nil {
+		resp.Header.Set("Location", *val)
+	}
+	return resp, nil
+}
+
+func (o *OneLakeDataAccessSecurityServerTransport) dispatchDeleteDataAccessRole(req *http.Request) (*http.Response, error) {
+	if o.srv.DeleteDataAccessRole == nil {
+		return nil, &nonRetriableError{errors.New("fake for method DeleteDataAccessRole not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/items/(?P<itemId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataAccessRoles/(?P<roleName>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 4 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	itemIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("itemId")])
+	if err != nil {
+		return nil, err
+	}
+	roleNameParam, err := url.PathUnescape(matches[regex.SubexpIndex("roleName")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := o.srv.DeleteDataAccessRole(req.Context(), workspaceIDParam, itemIDParam, roleNameParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (o *OneLakeDataAccessSecurityServerTransport) dispatchGetDataAccessRole(req *http.Request) (*http.Response, error) {
+	if o.srv.GetDataAccessRole == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetDataAccessRole not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/items/(?P<itemId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataAccessRoles/(?P<roleName>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 4 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	itemIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("itemId")])
+	if err != nil {
+		return nil, err
+	}
+	roleNameParam, err := url.PathUnescape(matches[regex.SubexpIndex("roleName")])
+	if err != nil {
+		return nil, err
+	}
+	ifMatchParam := getOptional(getHeaderValue(req.Header, "If-Match"))
+	ifNoneMatchParam := getOptional(getHeaderValue(req.Header, "If-None-Match"))
+	var options *core.OneLakeDataAccessSecurityClientGetDataAccessRoleOptions
+	if ifMatchParam != nil || ifNoneMatchParam != nil {
+		options = &core.OneLakeDataAccessSecurityClientGetDataAccessRoleOptions{
+			IfMatch:     ifMatchParam,
+			IfNoneMatch: ifNoneMatchParam,
+		}
+	}
+	respr, errRespr := o.srv.GetDataAccessRole(req.Context(), workspaceIDParam, itemIDParam, roleNameParam, options)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).DataAccessRoleBase, req)
+	if err != nil {
+		return nil, err
+	}
+	if val := server.GetResponse(respr).ETag; val != nil {
+		resp.Header.Set("ETag", *val)
 	}
 	return resp, nil
 }

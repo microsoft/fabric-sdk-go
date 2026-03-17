@@ -31,7 +31,7 @@ type ItemsClient struct {
 }
 
 // BeginCreateReflex - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create notebook with definition, refer to Reflex definition [/rest/api/fabric/articles/item-management/definitions/reflex-definition]
+// To create reflex item with definition, refer to Reflex definition [/rest/api/fabric/articles/item-management/definitions/reflex-definition]
 // article.
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Reflex.ReadWrite.All or Item.ReadWrite.All
@@ -55,7 +55,7 @@ func (client *ItemsClient) BeginCreateReflex(ctx context.Context, workspaceID st
 }
 
 // CreateReflex - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create notebook with definition, refer to Reflex definition [/rest/api/fabric/articles/item-management/definitions/reflex-definition]
+// To create reflex item with definition, refer to Reflex definition [/rest/api/fabric/articles/item-management/definitions/reflex-definition]
 // article.
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Reflex.ReadWrite.All or Item.ReadWrite.All
@@ -360,6 +360,12 @@ func (client *ItemsClient) listReflexesCreateRequest(ctx context.Context, worksp
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
 	}
+	if options != nil && options.Recursive != nil {
+		reqQP.Set("recursive", strconv.FormatBool(*options.Recursive))
+	}
+	if options != nil && options.RootFolderID != nil {
+		reqQP.Set("rootFolderId", *options.RootFolderID)
+	}
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
@@ -530,7 +536,7 @@ func (client *ItemsClient) updateReflexDefinitionCreateRequest(ctx context.Conte
 // CreateReflex - returns ItemsClientCreateReflexResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// To create notebook with definition, refer to Reflex definition [/rest/api/fabric/articles/item-management/definitions/reflex-definition] article.
+// To create reflex item with definition, refer to Reflex definition [/rest/api/fabric/articles/item-management/definitions/reflex-definition] article.
 //
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Reflex.ReadWrite.All or Item.ReadWrite.All

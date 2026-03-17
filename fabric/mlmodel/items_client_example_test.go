@@ -27,7 +27,10 @@ func ExampleItemsClient_NewListMLModelsPager() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewItemsClient().NewListMLModelsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &mlmodel.ItemsClientListMLModelsOptions{ContinuationToken: nil})
+	pager := clientFactory.NewItemsClient().NewListMLModelsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &mlmodel.ItemsClientListMLModelsOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
 		if err != nil {
@@ -45,6 +48,9 @@ func ExampleItemsClient_NewListMLModelsPager() {
 		// 			Description: to.Ptr("A machine learning model description."),
 		// 			DisplayName: to.Ptr("MLModel_1"),
 		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+		// 			SensitivityLabel: &mlmodel.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 		},
 		// 		{
@@ -52,6 +58,9 @@ func ExampleItemsClient_NewListMLModelsPager() {
 		// 			Description: to.Ptr("A machine learning model description."),
 		// 			DisplayName: to.Ptr("MLModel_2"),
 		// 			ID: to.Ptr("f2a6411d-c204-47d3-b992-5338be0d2cee"),
+		// 			SensitivityLabel: &mlmodel.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 	}},
 		// }
@@ -105,6 +114,9 @@ func ExampleItemsClient_GetMLModel() {
 	// 	Description: to.Ptr("A machine learning model description."),
 	// 	DisplayName: to.Ptr("MLModel_1"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+	// 	SensitivityLabel: &mlmodel.SensitivityLabel{
+	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// }
 }
@@ -134,6 +146,9 @@ func ExampleItemsClient_UpdateMLModel() {
 	// 	Description: to.Ptr("A new description for machine learning model."),
 	// 	DisplayName: to.Ptr("MLModel's name"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+	// 	SensitivityLabel: &mlmodel.SensitivityLabel{
+	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// }
 }

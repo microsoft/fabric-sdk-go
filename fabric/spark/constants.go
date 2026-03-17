@@ -45,18 +45,21 @@ func PossibleGroupTypeValues() []GroupType {
 	}
 }
 
-// ItemReferenceType - The Item reference type. Additional ItemReferenceType types may be added over time.
+// ItemReferenceType - The item reference type. Additional ItemReferenceType types may be added over time.
 type ItemReferenceType string
 
 const (
 	// ItemReferenceTypeByID - The item is referenced by its ID.
 	ItemReferenceTypeByID ItemReferenceType = "ById"
+	// ItemReferenceTypeByVariable - The item is referenced by a variable.
+	ItemReferenceTypeByVariable ItemReferenceType = "ByVariable"
 )
 
 // PossibleItemReferenceTypeValues returns the possible values for the ItemReferenceType const type.
 func PossibleItemReferenceTypeValues() []ItemReferenceType {
 	return []ItemReferenceType{
 		ItemReferenceTypeByID,
+		ItemReferenceTypeByVariable,
 	}
 }
 

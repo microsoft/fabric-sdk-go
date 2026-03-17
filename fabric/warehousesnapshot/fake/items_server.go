@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
@@ -125,7 +126,7 @@ func (i *ItemsServerTransport) dispatchBeginCreateWarehouseSnapshot(req *http.Re
 	}
 	beginCreateWarehouseSnapshot := i.beginCreateWarehouseSnapshot.get(req)
 	if beginCreateWarehouseSnapshot == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/warehousesnapshots`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/warehouseSnapshots`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 2 {
@@ -167,7 +168,7 @@ func (i *ItemsServerTransport) dispatchDeleteWarehouseSnapshot(req *http.Request
 	if i.srv.DeleteWarehouseSnapshot == nil {
 		return nil, &nonRetriableError{errors.New("fake for method DeleteWarehouseSnapshot not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/warehousesnapshots/(?P<warehouseSnapshotId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/warehouseSnapshots/(?P<warehouseSnapshotId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -200,7 +201,7 @@ func (i *ItemsServerTransport) dispatchGetWarehouseSnapshot(req *http.Request) (
 	if i.srv.GetWarehouseSnapshot == nil {
 		return nil, &nonRetriableError{errors.New("fake for method GetWarehouseSnapshot not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/warehousesnapshots/(?P<warehouseSnapshotId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/warehouseSnapshots/(?P<warehouseSnapshotId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -235,7 +236,7 @@ func (i *ItemsServerTransport) dispatchNewListWarehouseSnapshotsPager(req *http.
 	}
 	newListWarehouseSnapshotsPager := i.newListWarehouseSnapshotsPager.get(req)
 	if newListWarehouseSnapshotsPager == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/warehousesnapshots`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/warehouseSnapshots`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 2 {
@@ -246,14 +247,29 @@ func (i *ItemsServerTransport) dispatchNewListWarehouseSnapshotsPager(req *http.
 		if err != nil {
 			return nil, err
 		}
+		recursiveUnescaped, err := url.QueryUnescape(qp.Get("recursive"))
+		if err != nil {
+			return nil, err
+		}
+		recursiveParam, err := parseOptional(recursiveUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDUnescaped, err := url.QueryUnescape(qp.Get("rootFolderId"))
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDParam := getOptional(rootFolderIDUnescaped)
 		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
 		if err != nil {
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
 		var options *warehousesnapshot.ItemsClientListWarehouseSnapshotsOptions
-		if continuationTokenParam != nil {
+		if recursiveParam != nil || rootFolderIDParam != nil || continuationTokenParam != nil {
 			options = &warehousesnapshot.ItemsClientListWarehouseSnapshotsOptions{
+				Recursive:         recursiveParam,
+				RootFolderID:      rootFolderIDParam,
 				ContinuationToken: continuationTokenParam,
 			}
 		}
@@ -282,7 +298,7 @@ func (i *ItemsServerTransport) dispatchUpdateWarehouseSnapshot(req *http.Request
 	if i.srv.UpdateWarehouseSnapshot == nil {
 		return nil, &nonRetriableError{errors.New("fake for method UpdateWarehouseSnapshot not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/warehousesnapshots/(?P<warehouseSnapshotId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/warehouseSnapshots/(?P<warehouseSnapshotId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {

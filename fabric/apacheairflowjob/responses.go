@@ -8,6 +8,18 @@ package apacheairflowjob
 
 import "io"
 
+// ComputeClientGetApacheAirflowJobComputeBetaResponse contains the response from method ComputeClient.GetApacheAirflowJobComputeBeta.
+type ComputeClientGetApacheAirflowJobComputeBetaResponse struct {
+	// Apache Airflow compute configuration response.
+	AirflowComputeResponse
+}
+
+// EnvironmentClientGetApacheAirflowJobEnvironmentBetaResponse contains the response from method EnvironmentClient.GetApacheAirflowJobEnvironmentBeta.
+type EnvironmentClientGetApacheAirflowJobEnvironmentBetaResponse struct {
+	// Apache Airflow environment status response.
+	AirflowEnvironmentStatusResponse
+}
+
 // FilesClientCreateOrUpdateApacheAirflowJobFileBetaWithBinaryResponse contains the response from method FilesClient.CreateOrUpdateApacheAirflowJobFileBetaWithBinary.
 type FilesClientCreateOrUpdateApacheAirflowJobFileBetaWithBinaryResponse struct {
 	// placeholder for future response values
@@ -93,6 +105,18 @@ type PoolManagementClientGetAirflowPoolTemplateBetaResponse struct {
 // PoolManagementClientListAirflowPoolTemplatesBetaResponse contains the response from method PoolManagementClient.NewListAirflowPoolTemplatesBetaPager.
 type PoolManagementClientListAirflowPoolTemplatesBetaResponse struct {
 	AirflowPoolTemplates
+}
+
+// RequirementsClientListApacheAirflowJobLibrariesBetaResponse contains the response from method RequirementsClient.NewListApacheAirflowJobLibrariesBetaPager.
+type RequirementsClientListApacheAirflowJobLibrariesBetaResponse struct {
+	// Apache Airflow libraries response.
+	AirflowLibrariesResponse
+}
+
+// SettingsClientGetApacheAirflowJobSettingsBetaResponse contains the response from method SettingsClient.GetApacheAirflowJobSettingsBeta.
+type SettingsClientGetApacheAirflowJobSettingsBetaResponse struct {
+	// Apache Airflow environment settings response.
+	AirflowEnvironmentSettingsResponse
 }
 
 // WorkspaceSettingsClientGetAirflowWorkspaceSettingsBetaResponse contains the response from method WorkspaceSettingsClient.GetAirflowWorkspaceSettingsBeta.

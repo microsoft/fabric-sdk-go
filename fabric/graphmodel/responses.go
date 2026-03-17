@@ -28,8 +28,8 @@ type ItemsClientDeleteGraphModelResponse struct {
 	// placeholder for future response values
 }
 
-// ItemsClientExecuteQueryPreviewResponse contains the response from method ItemsClient.ExecuteQueryPreview.
-type ItemsClientExecuteQueryPreviewResponse struct {
+// ItemsClientExecuteQueryBetaResponse contains the response from method ItemsClient.ExecuteQueryBeta.
+type ItemsClientExecuteQueryBetaResponse struct {
 	// Body contains the streaming response.
 	Body io.ReadCloser
 }
@@ -46,8 +46,8 @@ type ItemsClientGetGraphModelResponse struct {
 	GraphModel
 }
 
-// ItemsClientGetQueryableGraphTypePreviewResponse contains the response from method ItemsClient.GetQueryableGraphTypePreview.
-type ItemsClientGetQueryableGraphTypePreviewResponse struct {
+// ItemsClientGetQueryableGraphTypeBetaResponse contains the response from method ItemsClient.GetQueryableGraphTypeBeta.
+type ItemsClientGetQueryableGraphTypeBetaResponse struct {
 	// The graph type that specifies the structure of a graph.
 	GraphType
 }

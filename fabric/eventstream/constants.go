@@ -273,6 +273,24 @@ func PossibleGroupByWindowTypeValues() []GroupByWindowType {
 	}
 }
 
+// HTTPMethod - The HTTP method. Additional methods may be added over time.
+type HTTPMethod string
+
+const (
+	// HTTPMethodGET - The HTTP GET method.
+	HTTPMethodGET HTTPMethod = "GET"
+	// HTTPMethodPOST - The HTTP POST method.
+	HTTPMethodPOST HTTPMethod = "POST"
+)
+
+// PossibleHTTPMethodValues returns the possible values for the HTTPMethod const type.
+func PossibleHTTPMethodValues() []HTTPMethod {
+	return []HTTPMethod{
+		HTTPMethodGET,
+		HTTPMethodPOST,
+	}
+}
+
 type IncludedEventTypes string
 
 const (
@@ -328,6 +346,8 @@ const (
 	ItemTypeCosmosDBDatabase ItemType = "CosmosDBDatabase"
 	// ItemTypeDashboard - PowerBI dashboard.
 	ItemTypeDashboard ItemType = "Dashboard"
+	// ItemTypeDataAgent - A DataAgent.
+	ItemTypeDataAgent ItemType = "DataAgent"
 	// ItemTypeDataPipeline - A data pipeline.
 	ItemTypeDataPipeline ItemType = "DataPipeline"
 	// ItemTypeDataflow - A Dataflow.
@@ -414,6 +434,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeCopyJob,
 		ItemTypeCosmosDBDatabase,
 		ItemTypeDashboard,
+		ItemTypeDataAgent,
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
 		ItemTypeDatamart,
@@ -785,6 +806,26 @@ func PossibleSecurityProtocolValues() []SecurityProtocol {
 	}
 }
 
+// SensitivityLabelApplyStrategy - The strategy for applying the sensitivity label. The default value is ApplyOrFail. Additional
+// types may be added over time.
+type SensitivityLabelApplyStrategy string
+
+const (
+	// SensitivityLabelApplyStrategyApplyOrFail - Apply the sensitivity label or fail the operation if it cannot be applied.
+	SensitivityLabelApplyStrategyApplyOrFail SensitivityLabelApplyStrategy = "ApplyOrFail"
+	// SensitivityLabelApplyStrategyIgnore - Ignore the sensitivity label if it cannot be applied and proceed with the operation
+	// without applying the label.
+	SensitivityLabelApplyStrategyIgnore SensitivityLabelApplyStrategy = "Ignore"
+)
+
+// PossibleSensitivityLabelApplyStrategyValues returns the possible values for the SensitivityLabelApplyStrategy const type.
+func PossibleSensitivityLabelApplyStrategyValues() []SensitivityLabelApplyStrategy {
+	return []SensitivityLabelApplyStrategy{
+		SensitivityLabelApplyStrategyApplyOrFail,
+		SensitivityLabelApplyStrategyIgnore,
+	}
+}
+
 // SerializationType - The serialization type.
 type SerializationType string
 
@@ -844,6 +885,8 @@ const (
 	SourceTypeAzureEventGridNamespace SourceType = "AzureEventGridNamespace"
 	// SourceTypeAzureEventHub - The Azure Event Hub source type.
 	SourceTypeAzureEventHub SourceType = "AzureEventHub"
+	// SourceTypeAzureEventHubExtended - The Azure Event Hub Extended source type.
+	SourceTypeAzureEventHubExtended SourceType = "AzureEventHubExtended"
 	// SourceTypeAzureIoTHub - The Azure IoT Hub source type.
 	SourceTypeAzureIoTHub SourceType = "AzureIoTHub"
 	// SourceTypeAzureSQLDBCDC - The Azure SQL DB CDC source type.
@@ -854,14 +897,18 @@ const (
 	SourceTypeConfluentCloud SourceType = "ConfluentCloud"
 	// SourceTypeCustomEndpoint - The Custom Endpoint source type.
 	SourceTypeCustomEndpoint SourceType = "CustomEndpoint"
+	// SourceTypeFabricCapacityOverviewEvents - The Fabric Capacity Overview Events source type.
+	SourceTypeFabricCapacityOverviewEvents SourceType = "FabricCapacityOverviewEvents"
 	// SourceTypeFabricJobEvents - The Fabric Job Events source type.
 	SourceTypeFabricJobEvents SourceType = "FabricJobEvents"
-	// SourceTypeFabricOneLakeEvents - The Fabric One Lake Events source type.
+	// SourceTypeFabricOneLakeEvents - The Fabric OneLake Events source type.
 	SourceTypeFabricOneLakeEvents SourceType = "FabricOneLakeEvents"
 	// SourceTypeFabricWorkspaceItemEvents - The Fabric Workspace Item Events source type.
 	SourceTypeFabricWorkspaceItemEvents SourceType = "FabricWorkspaceItemEvents"
 	// SourceTypeGooglePubSub - The Google PubSub source type.
 	SourceTypeGooglePubSub SourceType = "GooglePubSub"
+	// SourceTypeHTTP - The HTTP source type.
+	SourceTypeHTTP SourceType = "Http"
 	// SourceTypeMqtt - The MQTT source type.
 	SourceTypeMqtt SourceType = "Mqtt"
 	// SourceTypeMySQLCDC - The MySQL CDC source type.
@@ -889,15 +936,18 @@ func PossibleSourceTypeValues() []SourceType {
 		SourceTypeAzureDataExplorer,
 		SourceTypeAzureEventGridNamespace,
 		SourceTypeAzureEventHub,
+		SourceTypeAzureEventHubExtended,
 		SourceTypeAzureIoTHub,
 		SourceTypeAzureSQLDBCDC,
 		SourceTypeAzureSQLMIDBCDC,
 		SourceTypeConfluentCloud,
 		SourceTypeCustomEndpoint,
+		SourceTypeFabricCapacityOverviewEvents,
 		SourceTypeFabricJobEvents,
 		SourceTypeFabricOneLakeEvents,
 		SourceTypeFabricWorkspaceItemEvents,
 		SourceTypeGooglePubSub,
+		SourceTypeHTTP,
 		SourceTypeMqtt,
 		SourceTypeMySQLCDC,
 		SourceTypePostgreSQLCDC,
@@ -905,6 +955,24 @@ func PossibleSourceTypeValues() []SourceType {
 		SourceTypeSQLServerOnVMDBCDC,
 		SourceTypeSampleData,
 		SourceTypeSolacePubSub,
+	}
+}
+
+// StartPosition - The start position in the Azure Event Hub stream.
+type StartPosition string
+
+const (
+	// StartPositionEarliest - Start from the earliest event.
+	StartPositionEarliest StartPosition = "Earliest"
+	// StartPositionLatest - Start from the latest event.
+	StartPositionLatest StartPosition = "Latest"
+)
+
+// PossibleStartPositionValues returns the possible values for the StartPosition const type.
+func PossibleStartPositionValues() []StartPosition {
+	return []StartPosition{
+		StartPositionEarliest,
+		StartPositionLatest,
 	}
 }
 

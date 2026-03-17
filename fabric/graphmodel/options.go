@@ -44,8 +44,8 @@ type ItemsClientDeleteGraphModelOptions struct {
 	// placeholder for future optional parameters
 }
 
-// ItemsClientExecuteQueryPreviewOptions contains the optional parameters for the ItemsClient.ExecuteQueryPreview method.
-type ItemsClientExecuteQueryPreviewOptions struct {
+// ItemsClientExecuteQueryBetaOptions contains the optional parameters for the ItemsClient.ExecuteQueryBeta method.
+type ItemsClientExecuteQueryBetaOptions struct {
 	// placeholder for future optional parameters
 }
 
@@ -54,9 +54,9 @@ type ItemsClientGetGraphModelOptions struct {
 	// placeholder for future optional parameters
 }
 
-// ItemsClientGetQueryableGraphTypePreviewOptions contains the optional parameters for the ItemsClient.GetQueryableGraphTypePreview
+// ItemsClientGetQueryableGraphTypeBetaOptions contains the optional parameters for the ItemsClient.GetQueryableGraphTypeBeta
 // method.
-type ItemsClientGetQueryableGraphTypePreviewOptions struct {
+type ItemsClientGetQueryableGraphTypeBetaOptions struct {
 	// placeholder for future optional parameters
 }
 
@@ -64,6 +64,15 @@ type ItemsClientGetQueryableGraphTypePreviewOptions struct {
 type ItemsClientListGraphModelsOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
+
+	// Lists items in a folder and its nested folders, or just a folder only. True - All items in the folder and its nested folders
+	// are listed, False - Only items in the folder are listed. The default value
+	// is true.
+	Recursive *bool
+
+	// This parameter allows users to filter items based on a specific root folder. If not provided, the workspace is used as
+	// the root folder.
+	RootFolderID *string
 }
 
 // ItemsClientUpdateGraphModelOptions contains the optional parameters for the ItemsClient.UpdateGraphModel method.

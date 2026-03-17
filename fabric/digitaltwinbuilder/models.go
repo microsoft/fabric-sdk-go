@@ -17,9 +17,14 @@ type CreateDigitalTwinBuilderRequest struct {
 
 	// The digitaltwinbuilder description. Maximum length is 256 characters.
 	Description *string
+
+	// The sensitivity label settings for the DigitalTwinBuilder.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
-// Definition - DigitalTwinBuilder public definition object.
+// Definition - DigitalTwinBuilder public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/digital-twin-builder-definition]
+// for more details on the structure of the
+// DigitalTwinBuilder definition.
 type Definition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []DefinitionPart
@@ -42,7 +47,9 @@ type DefinitionPart struct {
 
 // DefinitionResponse - DigitalTwinBuilder public definition response.
 type DefinitionResponse struct {
-	// READ-ONLY; DigitalTwinBuilder public definition object.
+	// READ-ONLY; DigitalTwinBuilder public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/digital-twin-builder-definition]
+	// for more details on the structure of the
+	// DigitalTwinBuilder definition.
 	Definition *Definition
 }
 
@@ -62,6 +69,9 @@ type DigitalTwinBuilder struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
 
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
@@ -91,9 +101,26 @@ type ItemTag struct {
 	ID *string
 }
 
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
 // UpdateDigitalTwinBuilderDefinitionRequest - Update digitaltwinbuilder public definition request payload.
 type UpdateDigitalTwinBuilderDefinitionRequest struct {
-	// REQUIRED; DigitalTwinBuilder public definition object.
+	// REQUIRED; DigitalTwinBuilder public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/digital-twin-builder-definition]
+	// for more details on the structure of the
+	// DigitalTwinBuilder definition.
 	Definition *Definition
 }
 

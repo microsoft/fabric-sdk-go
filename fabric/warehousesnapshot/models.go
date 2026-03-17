@@ -21,6 +21,9 @@ type CreateWarehouseSnapshotRequest struct {
 
 	// The folder ID. If not specified or null, the Warehouse snapshot is created with the workspace as its folder.
 	FolderID *string
+
+	// The sensitivity label settings for the Warehouse snapshot.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // CreationPayload - The Warehouse snapshot creation payload.
@@ -52,6 +55,21 @@ type Properties struct {
 
 	// REQUIRED; The current warehouse snapshot date and time in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
 	SnapshotDateTime *time.Time
+}
+
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
 }
 
 // UpdateProperties - The Warehouse snapshot update properties payload.
@@ -92,6 +110,9 @@ type WarehouseSnapshot struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
 
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag

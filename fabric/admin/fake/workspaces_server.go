@@ -33,6 +33,10 @@ type WorkspacesServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListGitConnectionsPager func(options *admin.WorkspacesClientListGitConnectionsOptions) (resp azfake.PagerResponder[admin.WorkspacesClientListGitConnectionsResponse])
 
+	// NewListNetworkingCommunicationPoliciesPager is the fake for method WorkspacesClient.NewListNetworkingCommunicationPoliciesPager
+	// HTTP status codes to indicate success: http.StatusOK
+	NewListNetworkingCommunicationPoliciesPager func(options *admin.WorkspacesClientListNetworkingCommunicationPoliciesOptions) (resp azfake.PagerResponder[admin.WorkspacesClientListNetworkingCommunicationPoliciesResponse])
+
 	// ListWorkspaceAccessDetails is the fake for method WorkspacesClient.ListWorkspaceAccessDetails
 	// HTTP status codes to indicate success: http.StatusOK
 	ListWorkspaceAccessDetails func(ctx context.Context, workspaceID string, options *admin.WorkspacesClientListWorkspaceAccessDetailsOptions) (resp azfake.Responder[admin.WorkspacesClientListWorkspaceAccessDetailsResponse], errResp azfake.ErrorResponder)
@@ -53,16 +57,18 @@ func NewWorkspacesServerTransport(srv *WorkspacesServer) *WorkspacesServerTransp
 	return &WorkspacesServerTransport{
 		srv:                        srv,
 		newListGitConnectionsPager: newTracker[azfake.PagerResponder[admin.WorkspacesClientListGitConnectionsResponse]](),
-		newListWorkspacesPager:     newTracker[azfake.PagerResponder[admin.WorkspacesClientListWorkspacesResponse]](),
+		newListNetworkingCommunicationPoliciesPager: newTracker[azfake.PagerResponder[admin.WorkspacesClientListNetworkingCommunicationPoliciesResponse]](),
+		newListWorkspacesPager:                      newTracker[azfake.PagerResponder[admin.WorkspacesClientListWorkspacesResponse]](),
 	}
 }
 
 // WorkspacesServerTransport connects instances of admin.WorkspacesClient to instances of WorkspacesServer.
 // Don't use this type directly, use NewWorkspacesServerTransport instead.
 type WorkspacesServerTransport struct {
-	srv                        *WorkspacesServer
-	newListGitConnectionsPager *tracker[azfake.PagerResponder[admin.WorkspacesClientListGitConnectionsResponse]]
-	newListWorkspacesPager     *tracker[azfake.PagerResponder[admin.WorkspacesClientListWorkspacesResponse]]
+	srv                                         *WorkspacesServer
+	newListGitConnectionsPager                  *tracker[azfake.PagerResponder[admin.WorkspacesClientListGitConnectionsResponse]]
+	newListNetworkingCommunicationPoliciesPager *tracker[azfake.PagerResponder[admin.WorkspacesClientListNetworkingCommunicationPoliciesResponse]]
+	newListWorkspacesPager                      *tracker[azfake.PagerResponder[admin.WorkspacesClientListWorkspacesResponse]]
 }
 
 // Do implements the policy.Transporter interface for WorkspacesServerTransport.
@@ -94,6 +100,8 @@ func (w *WorkspacesServerTransport) dispatchToMethodFake(req *http.Request, meth
 				res.resp, res.err = w.dispatchGetWorkspace(req)
 			case "WorkspacesClient.NewListGitConnectionsPager":
 				res.resp, res.err = w.dispatchNewListGitConnectionsPager(req)
+			case "WorkspacesClient.NewListNetworkingCommunicationPoliciesPager":
+				res.resp, res.err = w.dispatchNewListNetworkingCommunicationPoliciesPager(req)
 			case "WorkspacesClient.ListWorkspaceAccessDetails":
 				res.resp, res.err = w.dispatchListWorkspaceAccessDetails(req)
 			case "WorkspacesClient.NewListWorkspacesPager":
@@ -183,6 +191,45 @@ func (w *WorkspacesServerTransport) dispatchNewListGitConnectionsPager(req *http
 	}
 	if !server.PagerResponderMore(newListGitConnectionsPager) {
 		w.newListGitConnectionsPager.remove(req)
+	}
+	return resp, nil
+}
+
+func (w *WorkspacesServerTransport) dispatchNewListNetworkingCommunicationPoliciesPager(req *http.Request) (*http.Response, error) {
+	if w.srv.NewListNetworkingCommunicationPoliciesPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListNetworkingCommunicationPoliciesPager not implemented")}
+	}
+	newListNetworkingCommunicationPoliciesPager := w.newListNetworkingCommunicationPoliciesPager.get(req)
+	if newListNetworkingCommunicationPoliciesPager == nil {
+		qp := req.URL.Query()
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *admin.WorkspacesClientListNetworkingCommunicationPoliciesOptions
+		if continuationTokenParam != nil {
+			options = &admin.WorkspacesClientListNetworkingCommunicationPoliciesOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := w.srv.NewListNetworkingCommunicationPoliciesPager(options)
+		newListNetworkingCommunicationPoliciesPager = &resp
+		w.newListNetworkingCommunicationPoliciesPager.add(req, newListNetworkingCommunicationPoliciesPager)
+		server.PagerResponderInjectNextLinks(newListNetworkingCommunicationPoliciesPager, req, func(page *admin.WorkspacesClientListNetworkingCommunicationPoliciesResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
+	}
+	resp, err := server.PagerResponderNext(newListNetworkingCommunicationPoliciesPager, req)
+	if err != nil {
+		return nil, err
+	}
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		w.newListNetworkingCommunicationPoliciesPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
+	}
+	if !server.PagerResponderMore(newListNetworkingCommunicationPoliciesPager) {
+		w.newListNetworkingCommunicationPoliciesPager.remove(req)
 	}
 	return resp, nil
 }

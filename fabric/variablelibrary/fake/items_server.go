@@ -142,7 +142,7 @@ func (i *ItemsServerTransport) dispatchBeginCreateVariableLibrary(req *http.Requ
 	}
 	beginCreateVariableLibrary := i.beginCreateVariableLibrary.get(req)
 	if beginCreateVariableLibrary == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/VariableLibraries`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/variableLibraries`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 2 {
@@ -184,7 +184,7 @@ func (i *ItemsServerTransport) dispatchDeleteVariableLibrary(req *http.Request) 
 	if i.srv.DeleteVariableLibrary == nil {
 		return nil, &nonRetriableError{errors.New("fake for method DeleteVariableLibrary not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/VariableLibraries/(?P<variableLibraryId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/variableLibraries/(?P<variableLibraryId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -217,7 +217,7 @@ func (i *ItemsServerTransport) dispatchGetVariableLibrary(req *http.Request) (*h
 	if i.srv.GetVariableLibrary == nil {
 		return nil, &nonRetriableError{errors.New("fake for method GetVariableLibrary not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/VariableLibraries/(?P<variableLibraryId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/variableLibraries/(?P<variableLibraryId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -252,7 +252,7 @@ func (i *ItemsServerTransport) dispatchBeginGetVariableLibraryDefinition(req *ht
 	}
 	beginGetVariableLibraryDefinition := i.beginGetVariableLibraryDefinition.get(req)
 	if beginGetVariableLibraryDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/VariableLibraries/(?P<variableLibraryId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/variableLibraries/(?P<variableLibraryId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
@@ -308,7 +308,7 @@ func (i *ItemsServerTransport) dispatchNewListVariableLibrariesPager(req *http.R
 	}
 	newListVariableLibrariesPager := i.newListVariableLibrariesPager.get(req)
 	if newListVariableLibrariesPager == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/VariableLibraries`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/variableLibraries`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 2 {
@@ -319,14 +319,29 @@ func (i *ItemsServerTransport) dispatchNewListVariableLibrariesPager(req *http.R
 		if err != nil {
 			return nil, err
 		}
+		recursiveUnescaped, err := url.QueryUnescape(qp.Get("recursive"))
+		if err != nil {
+			return nil, err
+		}
+		recursiveParam, err := parseOptional(recursiveUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDUnescaped, err := url.QueryUnescape(qp.Get("rootFolderId"))
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDParam := getOptional(rootFolderIDUnescaped)
 		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
 		if err != nil {
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
 		var options *variablelibrary.ItemsClientListVariableLibrariesOptions
-		if continuationTokenParam != nil {
+		if recursiveParam != nil || rootFolderIDParam != nil || continuationTokenParam != nil {
 			options = &variablelibrary.ItemsClientListVariableLibrariesOptions{
+				Recursive:         recursiveParam,
+				RootFolderID:      rootFolderIDParam,
 				ContinuationToken: continuationTokenParam,
 			}
 		}
@@ -355,7 +370,7 @@ func (i *ItemsServerTransport) dispatchUpdateVariableLibrary(req *http.Request) 
 	if i.srv.UpdateVariableLibrary == nil {
 		return nil, &nonRetriableError{errors.New("fake for method UpdateVariableLibrary not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/VariableLibraries/(?P<variableLibraryId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/variableLibraries/(?P<variableLibraryId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -394,7 +409,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateVariableLibraryDefinition(req 
 	}
 	beginUpdateVariableLibraryDefinition := i.beginUpdateVariableLibraryDefinition.get(req)
 	if beginUpdateVariableLibraryDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/VariableLibraries/(?P<variableLibraryId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/variableLibraries/(?P<variableLibraryId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {

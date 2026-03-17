@@ -72,7 +72,7 @@ func (client *BackgroundJobsClient) CreateRefreshMaterializedLakeViewsSchedule(c
 
 // createRefreshMaterializedLakeViewsScheduleCreateRequest creates the CreateRefreshMaterializedLakeViewsSchedule request.
 func (client *BackgroundJobsClient) createRefreshMaterializedLakeViewsScheduleCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, createScheduleRequest CreateLakehouseRefreshMaterializedLakeViewsScheduleRequest, _ *BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/jobs/RefreshMaterializedLakeViews/schedules"
+	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/jobs/refreshMaterializedLakeViews/schedules"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -144,7 +144,7 @@ func (client *BackgroundJobsClient) DeleteRefreshMaterializedLakeViewsSchedule(c
 
 // deleteRefreshMaterializedLakeViewsScheduleCreateRequest creates the DeleteRefreshMaterializedLakeViewsSchedule request.
 func (client *BackgroundJobsClient) deleteRefreshMaterializedLakeViewsScheduleCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, scheduleID string, _ *BackgroundJobsClientDeleteRefreshMaterializedLakeViewsScheduleOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/jobs/RefreshMaterializedLakeViews/schedules/{scheduleId}"
+	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/jobs/refreshMaterializedLakeViews/schedules/{scheduleId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -208,7 +208,7 @@ func (client *BackgroundJobsClient) RunOnDemandRefreshMaterializedLakeViews(ctx 
 
 // runOnDemandRefreshMaterializedLakeViewsCreateRequest creates the RunOnDemandRefreshMaterializedLakeViews request.
 func (client *BackgroundJobsClient) runOnDemandRefreshMaterializedLakeViewsCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, _ *BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/jobs/RefreshMaterializedLakeViews/instances"
+	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/jobs/refreshMaterializedLakeViews/instances"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -286,7 +286,7 @@ func (client *BackgroundJobsClient) RunOnDemandTableMaintenance(ctx context.Cont
 
 // runOnDemandTableMaintenanceCreateRequest creates the RunOnDemandTableMaintenance request.
 func (client *BackgroundJobsClient) runOnDemandTableMaintenanceCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, runOnDemandTableMaintenanceRequest RunOnDemandTableMaintenanceRequest, _ *BackgroundJobsClientRunOnDemandTableMaintenanceOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/jobs/TableMaintenance/instances"
+	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/jobs/tableMaintenance/instances"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -365,7 +365,7 @@ func (client *BackgroundJobsClient) UpdateRefreshMaterializedLakeViewsSchedule(c
 
 // updateRefreshMaterializedLakeViewsScheduleCreateRequest creates the UpdateRefreshMaterializedLakeViewsSchedule request.
 func (client *BackgroundJobsClient) updateRefreshMaterializedLakeViewsScheduleCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, scheduleID string, updateScheduleRequest UpdateLakehouseRefreshMaterializedLakeViewsScheduleRequest, _ *BackgroundJobsClientUpdateRefreshMaterializedLakeViewsScheduleOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/jobs/RefreshMaterializedLakeViews/schedules/{scheduleId}"
+	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/jobs/refreshMaterializedLakeViews/schedules/{scheduleId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}

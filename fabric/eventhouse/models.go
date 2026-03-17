@@ -23,6 +23,9 @@ type CreateEventhouseRequest struct {
 
 	// The folder ID. If not specified or null, the eventhouse is created with the workspace as its folder.
 	FolderID *string
+
+	// The sensitivity label settings for the eventhouse.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // CreationPayload - Eventhouse item payload
@@ -35,7 +38,8 @@ type CreationPayload struct {
 	MinimumConsumptionUnits *float64
 }
 
-// Definition - Eventhouse public definition object.
+// Definition - Eventhouse public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/eventhouse-definition]
+// for more details on the structure of the Eventhouse definition.
 type Definition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []DefinitionPart
@@ -58,7 +62,8 @@ type DefinitionPart struct {
 
 // DefinitionResponse - Eventhouse public definition response.
 type DefinitionResponse struct {
-	// READ-ONLY; Eventhouse public definition object.
+	// READ-ONLY; Eventhouse public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/eventhouse-definition]
+	// for more details on the structure of the Eventhouse definition.
 	Definition *Definition
 }
 
@@ -81,6 +86,9 @@ type Eventhouse struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
 
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
@@ -129,9 +137,25 @@ type Properties struct {
 	MinimumConsumptionUnits *float64
 }
 
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
 // UpdateEventhouseDefinitionRequest - Update eventhouse public definition request payload.
 type UpdateEventhouseDefinitionRequest struct {
-	// REQUIRED; Eventhouse public definition object.
+	// REQUIRED; Eventhouse public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/eventhouse-definition]
+	// for more details on the structure of the Eventhouse definition.
 	Definition *Definition
 }
 

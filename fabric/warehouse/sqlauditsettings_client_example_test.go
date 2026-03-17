@@ -17,7 +17,7 @@ import (
 )
 
 // Generated from example definition
-func ExampleClient_UpdateSQLAuditSettings() {
+func ExampleSQLAuditSettingsClient_UpdateSQLAuditSettings() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -27,7 +27,7 @@ func ExampleClient_UpdateSQLAuditSettings() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewClient().UpdateSQLAuditSettings(ctx, "a97f3e88-9f0a-4183-b1d9-31e6eb00e778", "70bcc992-a346-4f21-afe5-8b9ed1596a2b", warehouse.SQLAuditSettingsUpdate{
+	res, err := clientFactory.NewSQLAuditSettingsClient().UpdateSQLAuditSettings(ctx, "a97f3e88-9f0a-4183-b1d9-31e6eb00e778", "70bcc992-a346-4f21-afe5-8b9ed1596a2b", warehouse.SQLAuditSettingsUpdate{
 		RetentionDays: to.Ptr[int32](10),
 		State:         to.Ptr(warehouse.AuditSettingsStateEnabled),
 	}, nil)
@@ -46,7 +46,7 @@ func ExampleClient_UpdateSQLAuditSettings() {
 }
 
 // Generated from example definition
-func ExampleClient_GetSQLAuditSettings() {
+func ExampleSQLAuditSettingsClient_GetSQLAuditSettings() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -56,7 +56,7 @@ func ExampleClient_GetSQLAuditSettings() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewClient().GetSQLAuditSettings(ctx, "a97f3e88-9f0a-4183-b1d9-31e6eb00e778", "70bcc992-a346-4f21-afe5-8b9ed1596a2b", nil)
+	res, err := clientFactory.NewSQLAuditSettingsClient().GetSQLAuditSettings(ctx, "a97f3e88-9f0a-4183-b1d9-31e6eb00e778", "70bcc992-a346-4f21-afe5-8b9ed1596a2b", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -72,7 +72,7 @@ func ExampleClient_GetSQLAuditSettings() {
 }
 
 // Generated from example definition
-func ExampleClient_SetAuditActionsAndGroups() {
+func ExampleSQLAuditSettingsClient_SetAuditActionsAndGroups() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -82,7 +82,7 @@ func ExampleClient_SetAuditActionsAndGroups() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewClient().SetAuditActionsAndGroups(ctx, "a97f3e88-9f0a-4183-b1d9-31e6eb00e778", "70bcc992-a346-4f21-afe5-8b9ed1596a2b", []string{
+	_, err = clientFactory.NewSQLAuditSettingsClient().SetAuditActionsAndGroups(ctx, "a97f3e88-9f0a-4183-b1d9-31e6eb00e778", "70bcc992-a346-4f21-afe5-8b9ed1596a2b", []string{
 		"SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP",
 		"FAILED_DATABASE_AUTHENTICATION_GROUP",
 		"BATCH_COMPLETED_GROUP"}, nil)

@@ -27,7 +27,10 @@ func ExampleItemsClient_NewListGraphModelsPager() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewItemsClient().NewListGraphModelsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &graphmodel.ItemsClientListGraphModelsOptions{ContinuationToken: nil})
+	pager := clientFactory.NewItemsClient().NewListGraphModelsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &graphmodel.ItemsClientListGraphModelsOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
 		if err != nil {
@@ -45,6 +48,9 @@ func ExampleItemsClient_NewListGraphModelsPager() {
 		// 			Description: to.Ptr("A GraphModel description."),
 		// 			DisplayName: to.Ptr("GraphModel Name 1"),
 		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+		// 			SensitivityLabel: &graphmodel.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 		},
 		// 		{
@@ -52,6 +58,9 @@ func ExampleItemsClient_NewListGraphModelsPager() {
 		// 			Description: to.Ptr("A GraphModel description."),
 		// 			DisplayName: to.Ptr("GraphModel Name 2"),
 		// 			ID: to.Ptr("f697fb63-abd4-4399-9548-be7e3c3c0dac"),
+		// 			SensitivityLabel: &graphmodel.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 	}},
 		// }
@@ -158,6 +167,9 @@ func ExampleItemsClient_GetGraphModel() {
 	// 	Description: to.Ptr("A GraphModel description."),
 	// 	DisplayName: to.Ptr("GraphModel 1"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+	// 	SensitivityLabel: &graphmodel.SensitivityLabel{
+	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// }
 }
@@ -316,7 +328,7 @@ func ExampleItemsClient_BeginUpdateGraphModelDefinition() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_ExecuteQueryPreview() {
+func ExampleItemsClient_ExecuteQueryBeta() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -326,7 +338,7 @@ func ExampleItemsClient_ExecuteQueryPreview() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewItemsClient().ExecuteQueryPreview(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", true, graphmodel.ExecuteQueryRequest{
+	_, err = clientFactory.NewItemsClient().ExecuteQueryBeta(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", true, graphmodel.ExecuteQueryRequest{
 		Query: to.Ptr("MATCH (node_station:`station`) RETURN TO_JSON_STRING(node_station) AS `station` LIMIT 10;"),
 	}, nil)
 	if err != nil {
@@ -335,7 +347,7 @@ func ExampleItemsClient_ExecuteQueryPreview() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_GetQueryableGraphTypePreview() {
+func ExampleItemsClient_GetQueryableGraphTypeBeta() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -345,7 +357,7 @@ func ExampleItemsClient_GetQueryableGraphTypePreview() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewItemsClient().GetQueryableGraphTypePreview(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", true, nil)
+	res, err := clientFactory.NewItemsClient().GetQueryableGraphTypeBeta(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", true, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

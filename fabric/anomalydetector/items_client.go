@@ -99,7 +99,7 @@ func (client *ItemsClient) createAnomalyDetector(ctx context.Context, workspaceI
 
 // createAnomalyDetectorCreateRequest creates the CreateAnomalyDetector request.
 func (client *ItemsClient) createAnomalyDetectorCreateRequest(ctx context.Context, workspaceID string, createAnomalyDetectorRequest CreateAnomalyDetectorRequest, _ *ItemsClientBeginCreateAnomalyDetectorOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/anomalydetectors"
+	urlPath := "/v1/workspaces/{workspaceId}/anomalyDetectors"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -154,7 +154,7 @@ func (client *ItemsClient) DeleteAnomalyDetector(ctx context.Context, workspaceI
 
 // deleteAnomalyDetectorCreateRequest creates the DeleteAnomalyDetector request.
 func (client *ItemsClient) deleteAnomalyDetectorCreateRequest(ctx context.Context, workspaceID string, anomalyDetectorID string, _ *ItemsClientDeleteAnomalyDetectorOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/anomalydetectors/{anomalyDetectorId}"
+	urlPath := "/v1/workspaces/{workspaceId}/anomalyDetectors/{anomalyDetectorId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -211,7 +211,7 @@ func (client *ItemsClient) GetAnomalyDetector(ctx context.Context, workspaceID s
 
 // getAnomalyDetectorCreateRequest creates the GetAnomalyDetector request.
 func (client *ItemsClient) getAnomalyDetectorCreateRequest(ctx context.Context, workspaceID string, anomalyDetectorID string, _ *ItemsClientGetAnomalyDetectorOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/anomalydetectors/{anomalyDetectorId}"
+	urlPath := "/v1/workspaces/{workspaceId}/anomalyDetectors/{anomalyDetectorId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -296,7 +296,7 @@ func (client *ItemsClient) getAnomalyDetectorDefinition(ctx context.Context, wor
 
 // getAnomalyDetectorDefinitionCreateRequest creates the GetAnomalyDetectorDefinition request.
 func (client *ItemsClient) getAnomalyDetectorDefinitionCreateRequest(ctx context.Context, workspaceID string, anomalyDetectorID string, options *ItemsClientBeginGetAnomalyDetectorDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/anomalydetectors/{anomalyDetectorId}/getDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/anomalyDetectors/{anomalyDetectorId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -358,7 +358,7 @@ func (client *ItemsClient) NewListAnomalyDetectorsPager(workspaceID string, opti
 
 // listAnomalyDetectorsCreateRequest creates the ListAnomalyDetectors request.
 func (client *ItemsClient) listAnomalyDetectorsCreateRequest(ctx context.Context, workspaceID string, options *ItemsClientListAnomalyDetectorsOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/anomalydetectors"
+	urlPath := "/v1/workspaces/{workspaceId}/anomalyDetectors"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -370,6 +370,12 @@ func (client *ItemsClient) listAnomalyDetectorsCreateRequest(ctx context.Context
 	reqQP := req.Raw().URL.Query()
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	if options != nil && options.Recursive != nil {
+		reqQP.Set("recursive", strconv.FormatBool(*options.Recursive))
+	}
+	if options != nil && options.RootFolderID != nil {
+		reqQP.Set("rootFolderId", *options.RootFolderID)
 	}
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
@@ -426,7 +432,7 @@ func (client *ItemsClient) UpdateAnomalyDetector(ctx context.Context, workspaceI
 
 // updateAnomalyDetectorCreateRequest creates the UpdateAnomalyDetector request.
 func (client *ItemsClient) updateAnomalyDetectorCreateRequest(ctx context.Context, workspaceID string, anomalyDetectorID string, updateAnomalyDetectorRequest UpdateAnomalyDetectorRequest, _ *ItemsClientUpdateAnomalyDetectorOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/anomalydetectors/{anomalyDetectorId}"
+	urlPath := "/v1/workspaces/{workspaceId}/anomalyDetectors/{anomalyDetectorId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -515,7 +521,7 @@ func (client *ItemsClient) updateAnomalyDetectorDefinition(ctx context.Context, 
 
 // updateAnomalyDetectorDefinitionCreateRequest creates the UpdateAnomalyDetectorDefinition request.
 func (client *ItemsClient) updateAnomalyDetectorDefinitionCreateRequest(ctx context.Context, workspaceID string, anomalyDetectorID string, updateAnomalyDetectorDefinitionRequest UpdateAnomalyDetectorDefinitionRequest, options *ItemsClientBeginUpdateAnomalyDetectorDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/anomalydetectors/{anomalyDetectorId}/updateDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/anomalyDetectors/{anomalyDetectorId}/updateDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}

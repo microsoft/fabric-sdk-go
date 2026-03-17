@@ -16,12 +16,15 @@ type CreateEventSchemaSetRequest struct {
 
 	// The EventSchemaSet description. Maximum length is 256 characters.
 	Description *string
+
+	// The sensitivity label settings for the EventSchemaSet.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // DefinitionResponse - EventSchemaSet public definition response.
 type DefinitionResponse struct {
-	// READ-ONLY; EventSchemaSet public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/event-schema-set]
-	// for more details on how to craft a EventSchemaSet public
+	// READ-ONLY; EventSchemaSet public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/eventschemaset-definition]
+	// for more details on the structure of the EventSchemaSet
 	// definition.
 	Definition *PublicDefinition
 }
@@ -45,6 +48,9 @@ type EventSchemaSet struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
 
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
@@ -80,8 +86,8 @@ type Properties struct {
 	OneLakeRootPath *string
 }
 
-// PublicDefinition - EventSchemaSet public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/event-schema-set]
-// for more details on how to craft a EventSchemaSet public
+// PublicDefinition - EventSchemaSet public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/eventschemaset-definition]
+// for more details on the structure of the EventSchemaSet
 // definition.
 type PublicDefinition struct {
 	// REQUIRED; A list of definition parts.
@@ -103,10 +109,25 @@ type PublicDefinitionPart struct {
 	PayloadType *PayloadType
 }
 
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
 // UpdateEventSchemaSetDefinitionRequest - Update EventSchemaSet public definition request payload.
 type UpdateEventSchemaSetDefinitionRequest struct {
-	// REQUIRED; EventSchemaSet public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/event-schema-set]
-	// for more details on how to craft a EventSchemaSet public
+	// REQUIRED; EventSchemaSet public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/eventschemaset-definition]
+	// for more details on the structure of the EventSchemaSet
 	// definition.
 	Definition *PublicDefinition
 }

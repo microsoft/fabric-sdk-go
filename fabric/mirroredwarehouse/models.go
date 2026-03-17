@@ -32,6 +32,9 @@ type MirroredWarehouse struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
+
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
 
@@ -49,4 +52,10 @@ type MirroredWarehouses struct {
 
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
+}
+
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
 }

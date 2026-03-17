@@ -22,32 +22,32 @@ import (
 	"github.com/microsoft/fabric-sdk-go/fabric/sqldatabase"
 )
 
-// Server is a fake server for instances of the sqldatabase.Client type.
-type Server struct {
-	// StartMirroring is the fake for method Client.StartMirroring
+// MirroringServer is a fake server for instances of the sqldatabase.MirroringClient type.
+type MirroringServer struct {
+	// StartMirroring is the fake for method MirroringClient.StartMirroring
 	// HTTP status codes to indicate success: http.StatusOK
-	StartMirroring func(ctx context.Context, workspaceID string, sqlDatabaseID string, options *sqldatabase.ClientStartMirroringOptions) (resp azfake.Responder[sqldatabase.ClientStartMirroringResponse], errResp azfake.ErrorResponder)
+	StartMirroring func(ctx context.Context, workspaceID string, sqlDatabaseID string, options *sqldatabase.MirroringClientStartMirroringOptions) (resp azfake.Responder[sqldatabase.MirroringClientStartMirroringResponse], errResp azfake.ErrorResponder)
 
-	// StopMirroring is the fake for method Client.StopMirroring
+	// StopMirroring is the fake for method MirroringClient.StopMirroring
 	// HTTP status codes to indicate success: http.StatusOK
-	StopMirroring func(ctx context.Context, workspaceID string, sqlDatabaseID string, options *sqldatabase.ClientStopMirroringOptions) (resp azfake.Responder[sqldatabase.ClientStopMirroringResponse], errResp azfake.ErrorResponder)
+	StopMirroring func(ctx context.Context, workspaceID string, sqlDatabaseID string, options *sqldatabase.MirroringClientStopMirroringOptions) (resp azfake.Responder[sqldatabase.MirroringClientStopMirroringResponse], errResp azfake.ErrorResponder)
 }
 
-// NewServerTransport creates a new instance of ServerTransport with the provided implementation.
-// The returned ServerTransport instance is connected to an instance of sqldatabase.Client via the
+// NewMirroringServerTransport creates a new instance of MirroringServerTransport with the provided implementation.
+// The returned MirroringServerTransport instance is connected to an instance of sqldatabase.MirroringClient via the
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
-func NewServerTransport(srv *Server) *ServerTransport {
-	return &ServerTransport{srv: srv}
+func NewMirroringServerTransport(srv *MirroringServer) *MirroringServerTransport {
+	return &MirroringServerTransport{srv: srv}
 }
 
-// ServerTransport connects instances of sqldatabase.Client to instances of Server.
-// Don't use this type directly, use NewServerTransport instead.
-type ServerTransport struct {
-	srv *Server
+// MirroringServerTransport connects instances of sqldatabase.MirroringClient to instances of MirroringServer.
+// Don't use this type directly, use NewMirroringServerTransport instead.
+type MirroringServerTransport struct {
+	srv *MirroringServer
 }
 
-// Do implements the policy.Transporter interface for ServerTransport.
-func (s *ServerTransport) Do(req *http.Request) (*http.Response, error) {
+// Do implements the policy.Transporter interface for MirroringServerTransport.
+func (m *MirroringServerTransport) Do(req *http.Request) (*http.Response, error) {
 	rawMethod := req.Context().Value(runtime.CtxAPINameKey{})
 	method, ok := rawMethod.(string)
 	if !ok {
@@ -56,25 +56,25 @@ func (s *ServerTransport) Do(req *http.Request) (*http.Response, error) {
 
 	parts := strings.Split(method, ".")
 	method = parts[1] + "." + parts[2]
-	return s.dispatchToMethodFake(req, method)
+	return m.dispatchToMethodFake(req, method)
 }
 
-func (s *ServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
+func (m *MirroringServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
 	resultChan := make(chan result)
 	defer close(resultChan)
 
 	go func() {
 		var intercepted bool
 		var res result
-		if serverTransportInterceptor != nil {
-			res.resp, res.err, intercepted = serverTransportInterceptor.Do(req)
+		if mirroringServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = mirroringServerTransportInterceptor.Do(req)
 		}
 		if !intercepted {
 			switch method {
-			case "Client.StartMirroring":
-				res.resp, res.err = s.dispatchStartMirroring(req)
-			case "Client.StopMirroring":
-				res.resp, res.err = s.dispatchStopMirroring(req)
+			case "MirroringClient.StartMirroring":
+				res.resp, res.err = m.dispatchStartMirroring(req)
+			case "MirroringClient.StopMirroring":
+				res.resp, res.err = m.dispatchStopMirroring(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -94,11 +94,11 @@ func (s *ServerTransport) dispatchToMethodFake(req *http.Request, method string)
 	}
 }
 
-func (s *ServerTransport) dispatchStartMirroring(req *http.Request) (*http.Response, error) {
-	if s.srv.StartMirroring == nil {
+func (m *MirroringServerTransport) dispatchStartMirroring(req *http.Request) (*http.Response, error) {
+	if m.srv.StartMirroring == nil {
 		return nil, &nonRetriableError{errors.New("fake for method StartMirroring not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sqlDatabases/(?P<SQLDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/startMirroring`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sqlDatabases/(?P<sqlDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/startMirroring`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -108,11 +108,11 @@ func (s *ServerTransport) dispatchStartMirroring(req *http.Request) (*http.Respo
 	if err != nil {
 		return nil, err
 	}
-	sqlDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("SQLDatabaseId")])
+	sqlDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("sqlDatabaseId")])
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := s.srv.StartMirroring(req.Context(), workspaceIDParam, sqlDatabaseIDParam, nil)
+	respr, errRespr := m.srv.StartMirroring(req.Context(), workspaceIDParam, sqlDatabaseIDParam, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -127,11 +127,11 @@ func (s *ServerTransport) dispatchStartMirroring(req *http.Request) (*http.Respo
 	return resp, nil
 }
 
-func (s *ServerTransport) dispatchStopMirroring(req *http.Request) (*http.Response, error) {
-	if s.srv.StopMirroring == nil {
+func (m *MirroringServerTransport) dispatchStopMirroring(req *http.Request) (*http.Response, error) {
+	if m.srv.StopMirroring == nil {
 		return nil, &nonRetriableError{errors.New("fake for method StopMirroring not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sqlDatabases/(?P<SQLDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/stopMirroring`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sqlDatabases/(?P<sqlDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/stopMirroring`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -141,11 +141,11 @@ func (s *ServerTransport) dispatchStopMirroring(req *http.Request) (*http.Respon
 	if err != nil {
 		return nil, err
 	}
-	sqlDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("SQLDatabaseId")])
+	sqlDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("sqlDatabaseId")])
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := s.srv.StopMirroring(req.Context(), workspaceIDParam, sqlDatabaseIDParam, nil)
+	respr, errRespr := m.srv.StopMirroring(req.Context(), workspaceIDParam, sqlDatabaseIDParam, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -160,8 +160,8 @@ func (s *ServerTransport) dispatchStopMirroring(req *http.Request) (*http.Respon
 	return resp, nil
 }
 
-// set this to conditionally intercept incoming requests to ServerTransport
-var serverTransportInterceptor interface {
+// set this to conditionally intercept incoming requests to MirroringServerTransport
+var mirroringServerTransportInterceptor interface {
 	// Do returns true if the server transport should use the returned response/error
 	Do(*http.Request) (*http.Response, error, bool)
 }

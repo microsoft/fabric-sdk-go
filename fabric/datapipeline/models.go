@@ -19,6 +19,9 @@ type CreateDataPipelineRequest struct {
 
 	// The folder ID. If not specified or null, the data pipeline is created with the workspace as its folder.
 	FolderID *string
+
+	// The sensitivity label settings for the data pipeline.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // DataPipeline - A data pipeline object.
@@ -37,6 +40,9 @@ type DataPipeline struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
 
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
@@ -57,7 +63,9 @@ type DataPipelines struct {
 	ContinuationURI *string
 }
 
-// Definition - Data pipeline public definition object.
+// Definition - Data pipeline public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/datapipeline-definition]
+// for more details on the structure of the Data pipeline
+// definition.
 type Definition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []DefinitionPart
@@ -80,7 +88,9 @@ type DefinitionPart struct {
 
 // DefinitionResponse - Data pipeline public definition response.
 type DefinitionResponse struct {
-	// READ-ONLY; Data pipeline public definition object.
+	// READ-ONLY; Data pipeline public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/datapipeline-definition]
+	// for more details on the structure of the Data pipeline
+	// definition.
 	Definition *Definition
 }
 
@@ -93,9 +103,26 @@ type ItemTag struct {
 	ID *string
 }
 
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
 // UpdateDataPipelineDefinitionRequest - Update data pipeline public definition request payload.
 type UpdateDataPipelineDefinitionRequest struct {
-	// REQUIRED; Data pipeline public definition object.
+	// REQUIRED; Data pipeline public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/datapipeline-definition]
+	// for more details on the structure of the Data pipeline
+	// definition.
 	Definition *Definition
 }
 

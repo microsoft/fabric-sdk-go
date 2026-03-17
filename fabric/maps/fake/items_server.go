@@ -142,7 +142,7 @@ func (i *ItemsServerTransport) dispatchBeginCreateMap(req *http.Request) (*http.
 	}
 	beginCreateMap := i.beginCreateMap.get(req)
 	if beginCreateMap == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/Maps`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/maps`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 2 {
@@ -184,7 +184,7 @@ func (i *ItemsServerTransport) dispatchDeleteMap(req *http.Request) (*http.Respo
 	if i.srv.DeleteMap == nil {
 		return nil, &nonRetriableError{errors.New("fake for method DeleteMap not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/Maps/(?P<MapId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/maps/(?P<mapId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -194,7 +194,7 @@ func (i *ItemsServerTransport) dispatchDeleteMap(req *http.Request) (*http.Respo
 	if err != nil {
 		return nil, err
 	}
-	mapIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("MapId")])
+	mapIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("mapId")])
 	if err != nil {
 		return nil, err
 	}
@@ -217,7 +217,7 @@ func (i *ItemsServerTransport) dispatchGetMap(req *http.Request) (*http.Response
 	if i.srv.GetMap == nil {
 		return nil, &nonRetriableError{errors.New("fake for method GetMap not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/Maps/(?P<MapId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/maps/(?P<mapId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -227,7 +227,7 @@ func (i *ItemsServerTransport) dispatchGetMap(req *http.Request) (*http.Response
 	if err != nil {
 		return nil, err
 	}
-	mapIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("MapId")])
+	mapIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("mapId")])
 	if err != nil {
 		return nil, err
 	}
@@ -252,7 +252,7 @@ func (i *ItemsServerTransport) dispatchBeginGetMapDefinition(req *http.Request) 
 	}
 	beginGetMapDefinition := i.beginGetMapDefinition.get(req)
 	if beginGetMapDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/Maps/(?P<MapId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/maps/(?P<mapId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
@@ -263,7 +263,7 @@ func (i *ItemsServerTransport) dispatchBeginGetMapDefinition(req *http.Request) 
 		if err != nil {
 			return nil, err
 		}
-		mapIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("MapId")])
+		mapIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("mapId")])
 		if err != nil {
 			return nil, err
 		}
@@ -308,7 +308,7 @@ func (i *ItemsServerTransport) dispatchNewListMapsPager(req *http.Request) (*htt
 	}
 	newListMapsPager := i.newListMapsPager.get(req)
 	if newListMapsPager == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/Maps`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/maps`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 2 {
@@ -319,14 +319,29 @@ func (i *ItemsServerTransport) dispatchNewListMapsPager(req *http.Request) (*htt
 		if err != nil {
 			return nil, err
 		}
+		recursiveUnescaped, err := url.QueryUnescape(qp.Get("recursive"))
+		if err != nil {
+			return nil, err
+		}
+		recursiveParam, err := parseOptional(recursiveUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDUnescaped, err := url.QueryUnescape(qp.Get("rootFolderId"))
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDParam := getOptional(rootFolderIDUnescaped)
 		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
 		if err != nil {
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
 		var options *maps.ItemsClientListMapsOptions
-		if continuationTokenParam != nil {
+		if recursiveParam != nil || rootFolderIDParam != nil || continuationTokenParam != nil {
 			options = &maps.ItemsClientListMapsOptions{
+				Recursive:         recursiveParam,
+				RootFolderID:      rootFolderIDParam,
 				ContinuationToken: continuationTokenParam,
 			}
 		}
@@ -355,7 +370,7 @@ func (i *ItemsServerTransport) dispatchUpdateMap(req *http.Request) (*http.Respo
 	if i.srv.UpdateMap == nil {
 		return nil, &nonRetriableError{errors.New("fake for method UpdateMap not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/Maps/(?P<MapId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/maps/(?P<mapId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -369,7 +384,7 @@ func (i *ItemsServerTransport) dispatchUpdateMap(req *http.Request) (*http.Respo
 	if err != nil {
 		return nil, err
 	}
-	mapIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("MapId")])
+	mapIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("mapId")])
 	if err != nil {
 		return nil, err
 	}
@@ -394,7 +409,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateMapDefinition(req *http.Reques
 	}
 	beginUpdateMapDefinition := i.beginUpdateMapDefinition.get(req)
 	if beginUpdateMapDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/Maps/(?P<MapId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/maps/(?P<mapId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
@@ -409,7 +424,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateMapDefinition(req *http.Reques
 		if err != nil {
 			return nil, err
 		}
-		mapIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("MapId")])
+		mapIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("mapId")])
 		if err != nil {
 			return nil, err
 		}

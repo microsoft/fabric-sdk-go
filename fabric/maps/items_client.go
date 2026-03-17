@@ -96,7 +96,7 @@ func (client *ItemsClient) createMap(ctx context.Context, workspaceID string, cr
 
 // createMapCreateRequest creates the CreateMap request.
 func (client *ItemsClient) createMapCreateRequest(ctx context.Context, workspaceID string, createMapRequest CreateMapRequest, _ *ItemsClientBeginCreateMapOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/Maps"
+	urlPath := "/v1/workspaces/{workspaceId}/maps"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -150,7 +150,7 @@ func (client *ItemsClient) DeleteMap(ctx context.Context, workspaceID string, ma
 
 // deleteMapCreateRequest creates the DeleteMap request.
 func (client *ItemsClient) deleteMapCreateRequest(ctx context.Context, workspaceID string, mapID string, _ *ItemsClientDeleteMapOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/Maps/{MapId}"
+	urlPath := "/v1/workspaces/{workspaceId}/maps/{mapId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -158,7 +158,7 @@ func (client *ItemsClient) deleteMapCreateRequest(ctx context.Context, workspace
 	if mapID == "" {
 		return nil, errors.New("parameter mapID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{MapId}", url.PathEscape(mapID))
+	urlPath = strings.ReplaceAll(urlPath, "{mapId}", url.PathEscape(mapID))
 	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -206,7 +206,7 @@ func (client *ItemsClient) GetMap(ctx context.Context, workspaceID string, mapID
 
 // getMapCreateRequest creates the GetMap request.
 func (client *ItemsClient) getMapCreateRequest(ctx context.Context, workspaceID string, mapID string, _ *ItemsClientGetMapOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/Maps/{MapId}"
+	urlPath := "/v1/workspaces/{workspaceId}/maps/{mapId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -214,7 +214,7 @@ func (client *ItemsClient) getMapCreateRequest(ctx context.Context, workspaceID 
 	if mapID == "" {
 		return nil, errors.New("parameter mapID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{MapId}", url.PathEscape(mapID))
+	urlPath = strings.ReplaceAll(urlPath, "{mapId}", url.PathEscape(mapID))
 	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -291,7 +291,7 @@ func (client *ItemsClient) getMapDefinition(ctx context.Context, workspaceID str
 
 // getMapDefinitionCreateRequest creates the GetMapDefinition request.
 func (client *ItemsClient) getMapDefinitionCreateRequest(ctx context.Context, workspaceID string, mapID string, options *ItemsClientBeginGetMapDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/Maps/{MapId}/getDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/maps/{mapId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -299,7 +299,7 @@ func (client *ItemsClient) getMapDefinitionCreateRequest(ctx context.Context, wo
 	if mapID == "" {
 		return nil, errors.New("parameter mapID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{MapId}", url.PathEscape(mapID))
+	urlPath = strings.ReplaceAll(urlPath, "{mapId}", url.PathEscape(mapID))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -352,7 +352,7 @@ func (client *ItemsClient) NewListMapsPager(workspaceID string, options *ItemsCl
 
 // listMapsCreateRequest creates the ListMaps request.
 func (client *ItemsClient) listMapsCreateRequest(ctx context.Context, workspaceID string, options *ItemsClientListMapsOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/Maps"
+	urlPath := "/v1/workspaces/{workspaceId}/maps"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -364,6 +364,12 @@ func (client *ItemsClient) listMapsCreateRequest(ctx context.Context, workspaceI
 	reqQP := req.Raw().URL.Query()
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	if options != nil && options.Recursive != nil {
+		reqQP.Set("recursive", strconv.FormatBool(*options.Recursive))
+	}
+	if options != nil && options.RootFolderID != nil {
+		reqQP.Set("rootFolderId", *options.RootFolderID)
 	}
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
@@ -419,7 +425,7 @@ func (client *ItemsClient) UpdateMap(ctx context.Context, workspaceID string, ma
 
 // updateMapCreateRequest creates the UpdateMap request.
 func (client *ItemsClient) updateMapCreateRequest(ctx context.Context, workspaceID string, mapID string, updateMapRequest UpdateMapRequest, _ *ItemsClientUpdateMapOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/Maps/{MapId}"
+	urlPath := "/v1/workspaces/{workspaceId}/maps/{mapId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -427,7 +433,7 @@ func (client *ItemsClient) updateMapCreateRequest(ctx context.Context, workspace
 	if mapID == "" {
 		return nil, errors.New("parameter mapID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{MapId}", url.PathEscape(mapID))
+	urlPath = strings.ReplaceAll(urlPath, "{mapId}", url.PathEscape(mapID))
 	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -508,7 +514,7 @@ func (client *ItemsClient) updateMapDefinition(ctx context.Context, workspaceID 
 
 // updateMapDefinitionCreateRequest creates the UpdateMapDefinition request.
 func (client *ItemsClient) updateMapDefinitionCreateRequest(ctx context.Context, workspaceID string, mapID string, updateMapDefinitionRequest UpdateMapDefinitionRequest, options *ItemsClientBeginUpdateMapDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/Maps/{MapId}/updateDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/maps/{mapId}/updateDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -516,7 +522,7 @@ func (client *ItemsClient) updateMapDefinitionCreateRequest(ctx context.Context,
 	if mapID == "" {
 		return nil, errors.New("parameter mapID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{MapId}", url.PathEscape(mapID))
+	urlPath = strings.ReplaceAll(urlPath, "{mapId}", url.PathEscape(mapID))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err

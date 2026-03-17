@@ -27,7 +27,10 @@ func ExampleItemsClient_NewListEnvironmentsPager() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewItemsClient().NewListEnvironmentsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &environment.ItemsClientListEnvironmentsOptions{ContinuationToken: nil})
+	pager := clientFactory.NewItemsClient().NewListEnvironmentsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &environment.ItemsClientListEnvironmentsOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
 		if err != nil {
@@ -45,6 +48,9 @@ func ExampleItemsClient_NewListEnvironmentsPager() {
 		// 			Description: to.Ptr("A environment description."),
 		// 			DisplayName: to.Ptr("Environment_1"),
 		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+		// 			SensitivityLabel: &environment.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 			Properties: &environment.Properties{
 		// 				PublishDetails: &environment.PublishDetails{
@@ -68,6 +74,9 @@ func ExampleItemsClient_NewListEnvironmentsPager() {
 		// 			Description: to.Ptr("A environment description."),
 		// 			DisplayName: to.Ptr("Environment_2"),
 		// 			ID: to.Ptr("a8a1bffa-7eea-49dc-a1d2-6281c1d031f1"),
+		// 			SensitivityLabel: &environment.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 			Properties: &environment.Properties{
 		// 				PublishDetails: &environment.PublishDetails{
@@ -199,6 +208,9 @@ func ExampleItemsClient_GetEnvironment() {
 	// 	Description: to.Ptr("An Environment description"),
 	// 	DisplayName: to.Ptr("Environment_1"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+	// 	SensitivityLabel: &environment.SensitivityLabel{
+	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// 	Properties: &environment.Properties{
 	// 		PublishDetails: &environment.PublishDetails{
@@ -430,7 +442,7 @@ func ExampleItemsClient_BeginPublishEnvironment() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_PublishEnvironmentPreview() {
+func ExampleItemsClient_PublishEnvironmentBeta() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -440,7 +452,7 @@ func ExampleItemsClient_PublishEnvironmentPreview() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewItemsClient().PublishEnvironmentPreview(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", true, nil)
+	res, err := clientFactory.NewItemsClient().PublishEnvironmentBeta(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", true, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

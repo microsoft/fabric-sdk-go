@@ -30,9 +30,9 @@ type StagingServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	DeleteCustomLibrary func(ctx context.Context, workspaceID string, environmentID string, libraryName string, options *environment.StagingClientDeleteCustomLibraryOptions) (resp azfake.Responder[environment.StagingClientDeleteCustomLibraryResponse], errResp azfake.ErrorResponder)
 
-	// DeleteCustomLibraryPreview is the fake for method StagingClient.DeleteCustomLibraryPreview
+	// DeleteCustomLibraryBeta is the fake for method StagingClient.DeleteCustomLibraryBeta
 	// HTTP status codes to indicate success: http.StatusOK
-	DeleteCustomLibraryPreview func(ctx context.Context, workspaceID string, environmentID string, libraryToDelete string, options *environment.StagingClientDeleteCustomLibraryPreviewOptions) (resp azfake.Responder[environment.StagingClientDeleteCustomLibraryPreviewResponse], errResp azfake.ErrorResponder)
+	DeleteCustomLibraryBeta func(ctx context.Context, workspaceID string, environmentID string, libraryToDelete string, options *environment.StagingClientDeleteCustomLibraryBetaOptions) (resp azfake.Responder[environment.StagingClientDeleteCustomLibraryBetaResponse], errResp azfake.ErrorResponder)
 
 	// ExportExternalLibraries is the fake for method StagingClient.ExportExternalLibraries
 	// HTTP status codes to indicate success: http.StatusOK
@@ -42,9 +42,9 @@ type StagingServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetSparkCompute func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.StagingClientGetSparkComputeOptions) (resp azfake.Responder[environment.StagingClientGetSparkComputeResponse], errResp azfake.ErrorResponder)
 
-	// GetSparkComputePreview is the fake for method StagingClient.GetSparkComputePreview
+	// GetSparkComputeBeta is the fake for method StagingClient.GetSparkComputeBeta
 	// HTTP status codes to indicate success: http.StatusOK
-	GetSparkComputePreview func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.StagingClientGetSparkComputePreviewOptions) (resp azfake.Responder[environment.StagingClientGetSparkComputePreviewResponse], errResp azfake.ErrorResponder)
+	GetSparkComputeBeta func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.StagingClientGetSparkComputeBetaOptions) (resp azfake.Responder[environment.StagingClientGetSparkComputeBetaResponse], errResp azfake.ErrorResponder)
 
 	// ImportExternalLibraries is the fake for method StagingClient.ImportExternalLibraries
 	// HTTP status codes to indicate success: http.StatusOK
@@ -54,9 +54,9 @@ type StagingServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListLibrariesPager func(workspaceID string, environmentID string, beta bool, options *environment.StagingClientListLibrariesOptions) (resp azfake.PagerResponder[environment.StagingClientListLibrariesResponse])
 
-	// ListLibrariesPreview is the fake for method StagingClient.ListLibrariesPreview
+	// ListLibrariesBeta is the fake for method StagingClient.ListLibrariesBeta
 	// HTTP status codes to indicate success: http.StatusOK
-	ListLibrariesPreview func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.StagingClientListLibrariesPreviewOptions) (resp azfake.Responder[environment.StagingClientListLibrariesPreviewResponse], errResp azfake.ErrorResponder)
+	ListLibrariesBeta func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.StagingClientListLibrariesBetaOptions) (resp azfake.Responder[environment.StagingClientListLibrariesBetaResponse], errResp azfake.ErrorResponder)
 
 	// RemoveExternalLibrary is the fake for method StagingClient.RemoveExternalLibrary
 	// HTTP status codes to indicate success: http.StatusOK
@@ -66,17 +66,17 @@ type StagingServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	UpdateSparkCompute func(ctx context.Context, workspaceID string, environmentID string, beta bool, updateEnvironmentSparkComputeRequest environment.UpdateEnvironmentSparkComputeRequest, options *environment.StagingClientUpdateSparkComputeOptions) (resp azfake.Responder[environment.StagingClientUpdateSparkComputeResponse], errResp azfake.ErrorResponder)
 
-	// UpdateSparkComputePreview is the fake for method StagingClient.UpdateSparkComputePreview
+	// UpdateSparkComputeBeta is the fake for method StagingClient.UpdateSparkComputeBeta
 	// HTTP status codes to indicate success: http.StatusOK
-	UpdateSparkComputePreview func(ctx context.Context, workspaceID string, environmentID string, beta bool, updateEnvironmentSparkComputeRequest environment.UpdateEnvironmentSparkComputeRequestPreview, options *environment.StagingClientUpdateSparkComputePreviewOptions) (resp azfake.Responder[environment.StagingClientUpdateSparkComputePreviewResponse], errResp azfake.ErrorResponder)
+	UpdateSparkComputeBeta func(ctx context.Context, workspaceID string, environmentID string, beta bool, updateEnvironmentSparkComputeRequest environment.UpdateEnvironmentSparkComputeRequestPreview, options *environment.StagingClientUpdateSparkComputeBetaOptions) (resp azfake.Responder[environment.StagingClientUpdateSparkComputeBetaResponse], errResp azfake.ErrorResponder)
 
 	// UploadCustomLibrary is the fake for method StagingClient.UploadCustomLibrary
 	// HTTP status codes to indicate success: http.StatusOK
 	UploadCustomLibrary func(ctx context.Context, workspaceID string, environmentID string, libraryName string, options *environment.StagingClientUploadCustomLibraryOptions) (resp azfake.Responder[environment.StagingClientUploadCustomLibraryResponse], errResp azfake.ErrorResponder)
 
-	// UploadCustomLibraryPreview is the fake for method StagingClient.UploadCustomLibraryPreview
+	// UploadCustomLibraryBeta is the fake for method StagingClient.UploadCustomLibraryBeta
 	// HTTP status codes to indicate success: http.StatusOK
-	UploadCustomLibraryPreview func(ctx context.Context, workspaceID string, environmentID string, options *environment.StagingClientUploadCustomLibraryPreviewOptions) (resp azfake.Responder[environment.StagingClientUploadCustomLibraryPreviewResponse], errResp azfake.ErrorResponder)
+	UploadCustomLibraryBeta func(ctx context.Context, workspaceID string, environmentID string, options *environment.StagingClientUploadCustomLibraryBetaOptions) (resp azfake.Responder[environment.StagingClientUploadCustomLibraryBetaResponse], errResp azfake.ErrorResponder)
 }
 
 // NewStagingServerTransport creates a new instance of StagingServerTransport with the provided implementation.
@@ -123,30 +123,30 @@ func (s *StagingServerTransport) dispatchToMethodFake(req *http.Request, method 
 			switch method {
 			case "StagingClient.DeleteCustomLibrary":
 				res.resp, res.err = s.dispatchDeleteCustomLibrary(req)
-			case "StagingClient.DeleteCustomLibraryPreview":
-				res.resp, res.err = s.dispatchDeleteCustomLibraryPreview(req)
+			case "StagingClient.DeleteCustomLibraryBeta":
+				res.resp, res.err = s.dispatchDeleteCustomLibraryBeta(req)
 			case "StagingClient.ExportExternalLibraries":
 				res.resp, res.err = s.dispatchExportExternalLibraries(req)
 			case "StagingClient.GetSparkCompute":
 				res.resp, res.err = s.dispatchGetSparkCompute(req)
-			case "StagingClient.GetSparkComputePreview":
-				res.resp, res.err = s.dispatchGetSparkComputePreview(req)
+			case "StagingClient.GetSparkComputeBeta":
+				res.resp, res.err = s.dispatchGetSparkComputeBeta(req)
 			case "StagingClient.ImportExternalLibraries":
 				res.resp, res.err = s.dispatchImportExternalLibraries(req)
 			case "StagingClient.NewListLibrariesPager":
 				res.resp, res.err = s.dispatchNewListLibrariesPager(req)
-			case "StagingClient.ListLibrariesPreview":
-				res.resp, res.err = s.dispatchListLibrariesPreview(req)
+			case "StagingClient.ListLibrariesBeta":
+				res.resp, res.err = s.dispatchListLibrariesBeta(req)
 			case "StagingClient.RemoveExternalLibrary":
 				res.resp, res.err = s.dispatchRemoveExternalLibrary(req)
 			case "StagingClient.UpdateSparkCompute":
 				res.resp, res.err = s.dispatchUpdateSparkCompute(req)
-			case "StagingClient.UpdateSparkComputePreview":
-				res.resp, res.err = s.dispatchUpdateSparkComputePreview(req)
+			case "StagingClient.UpdateSparkComputeBeta":
+				res.resp, res.err = s.dispatchUpdateSparkComputeBeta(req)
 			case "StagingClient.UploadCustomLibrary":
 				res.resp, res.err = s.dispatchUploadCustomLibrary(req)
-			case "StagingClient.UploadCustomLibraryPreview":
-				res.resp, res.err = s.dispatchUploadCustomLibraryPreview(req)
+			case "StagingClient.UploadCustomLibraryBeta":
+				res.resp, res.err = s.dispatchUploadCustomLibraryBeta(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -203,9 +203,9 @@ func (s *StagingServerTransport) dispatchDeleteCustomLibrary(req *http.Request) 
 	return resp, nil
 }
 
-func (s *StagingServerTransport) dispatchDeleteCustomLibraryPreview(req *http.Request) (*http.Response, error) {
-	if s.srv.DeleteCustomLibraryPreview == nil {
-		return nil, &nonRetriableError{errors.New("fake for method DeleteCustomLibraryPreview not implemented")}
+func (s *StagingServerTransport) dispatchDeleteCustomLibraryBeta(req *http.Request) (*http.Response, error) {
+	if s.srv.DeleteCustomLibraryBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method DeleteCustomLibraryBeta not implemented")}
 	}
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/staging/libraries`
 	regex := regexp.MustCompile(regexStr)
@@ -226,7 +226,7 @@ func (s *StagingServerTransport) dispatchDeleteCustomLibraryPreview(req *http.Re
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := s.srv.DeleteCustomLibraryPreview(req.Context(), workspaceIDParam, environmentIDParam, libraryToDeleteParam, nil)
+	respr, errRespr := s.srv.DeleteCustomLibraryBeta(req.Context(), workspaceIDParam, environmentIDParam, libraryToDeleteParam, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -316,9 +316,9 @@ func (s *StagingServerTransport) dispatchGetSparkCompute(req *http.Request) (*ht
 	return resp, nil
 }
 
-func (s *StagingServerTransport) dispatchGetSparkComputePreview(req *http.Request) (*http.Response, error) {
-	if s.srv.GetSparkComputePreview == nil {
-		return nil, &nonRetriableError{errors.New("fake for method GetSparkComputePreview not implemented")}
+func (s *StagingServerTransport) dispatchGetSparkComputeBeta(req *http.Request) (*http.Response, error) {
+	if s.srv.GetSparkComputeBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetSparkComputeBeta not implemented")}
 	}
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/staging/sparkcompute`
 	regex := regexp.MustCompile(regexStr)
@@ -343,7 +343,7 @@ func (s *StagingServerTransport) dispatchGetSparkComputePreview(req *http.Reques
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := s.srv.GetSparkComputePreview(req.Context(), workspaceIDParam, environmentIDParam, betaParam, nil)
+	respr, errRespr := s.srv.GetSparkComputeBeta(req.Context(), workspaceIDParam, environmentIDParam, betaParam, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -452,9 +452,9 @@ func (s *StagingServerTransport) dispatchNewListLibrariesPager(req *http.Request
 	return resp, nil
 }
 
-func (s *StagingServerTransport) dispatchListLibrariesPreview(req *http.Request) (*http.Response, error) {
-	if s.srv.ListLibrariesPreview == nil {
-		return nil, &nonRetriableError{errors.New("fake for method ListLibrariesPreview not implemented")}
+func (s *StagingServerTransport) dispatchListLibrariesBeta(req *http.Request) (*http.Response, error) {
+	if s.srv.ListLibrariesBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method ListLibrariesBeta not implemented")}
 	}
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/staging/libraries`
 	regex := regexp.MustCompile(regexStr)
@@ -479,7 +479,7 @@ func (s *StagingServerTransport) dispatchListLibrariesPreview(req *http.Request)
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := s.srv.ListLibrariesPreview(req.Context(), workspaceIDParam, environmentIDParam, betaParam, nil)
+	respr, errRespr := s.srv.ListLibrariesBeta(req.Context(), workspaceIDParam, environmentIDParam, betaParam, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -577,9 +577,9 @@ func (s *StagingServerTransport) dispatchUpdateSparkCompute(req *http.Request) (
 	return resp, nil
 }
 
-func (s *StagingServerTransport) dispatchUpdateSparkComputePreview(req *http.Request) (*http.Response, error) {
-	if s.srv.UpdateSparkComputePreview == nil {
-		return nil, &nonRetriableError{errors.New("fake for method UpdateSparkComputePreview not implemented")}
+func (s *StagingServerTransport) dispatchUpdateSparkComputeBeta(req *http.Request) (*http.Response, error) {
+	if s.srv.UpdateSparkComputeBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method UpdateSparkComputeBeta not implemented")}
 	}
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/staging/sparkcompute`
 	regex := regexp.MustCompile(regexStr)
@@ -608,7 +608,7 @@ func (s *StagingServerTransport) dispatchUpdateSparkComputePreview(req *http.Req
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := s.srv.UpdateSparkComputePreview(req.Context(), workspaceIDParam, environmentIDParam, betaParam, body, nil)
+	respr, errRespr := s.srv.UpdateSparkComputeBeta(req.Context(), workspaceIDParam, environmentIDParam, betaParam, body, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -660,9 +660,9 @@ func (s *StagingServerTransport) dispatchUploadCustomLibrary(req *http.Request) 
 	return resp, nil
 }
 
-func (s *StagingServerTransport) dispatchUploadCustomLibraryPreview(req *http.Request) (*http.Response, error) {
-	if s.srv.UploadCustomLibraryPreview == nil {
-		return nil, &nonRetriableError{errors.New("fake for method UploadCustomLibraryPreview not implemented")}
+func (s *StagingServerTransport) dispatchUploadCustomLibraryBeta(req *http.Request) (*http.Response, error) {
+	if s.srv.UploadCustomLibraryBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method UploadCustomLibraryBeta not implemented")}
 	}
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/staging/libraries`
 	regex := regexp.MustCompile(regexStr)
@@ -678,7 +678,7 @@ func (s *StagingServerTransport) dispatchUploadCustomLibraryPreview(req *http.Re
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := s.srv.UploadCustomLibraryPreview(req.Context(), workspaceIDParam, environmentIDParam, nil)
+	respr, errRespr := s.srv.UploadCustomLibraryBeta(req.Context(), workspaceIDParam, environmentIDParam, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}

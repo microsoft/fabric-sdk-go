@@ -17,9 +17,13 @@ type CreateOntologyRequest struct {
 
 	// The ontology description. Maximum length is 256 characters.
 	Description *string
+
+	// The sensitivity label settings for the Ontology.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
-// Definition - Ontology public definition object.
+// Definition - Ontology public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/ontology-definition]
+// for more details on the structure of the Ontology definition.
 type Definition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []DefinitionPart
@@ -42,7 +46,8 @@ type DefinitionPart struct {
 
 // DefinitionResponse - Ontology public definition response.
 type DefinitionResponse struct {
-	// READ-ONLY; Ontology public definition object.
+	// READ-ONLY; Ontology public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/ontology-definition]
+	// for more details on the structure of the Ontology definition.
 	Definition *Definition
 }
 
@@ -84,6 +89,9 @@ type Ontology struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
+
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
 
@@ -91,9 +99,25 @@ type Ontology struct {
 	WorkspaceID *string
 }
 
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
 // UpdateOntologyDefinitionRequest - Update ontology public definition request payload.
 type UpdateOntologyDefinitionRequest struct {
-	// REQUIRED; Ontology public definition object.
+	// REQUIRED; Ontology public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/ontology-definition]
+	// for more details on the structure of the Ontology definition.
 	Definition *Definition
 }
 

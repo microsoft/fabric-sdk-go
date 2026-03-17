@@ -70,6 +70,9 @@ func (testsuite *FakeTestSuite) TestItems_ListDatamarts() {
 				Description: to.Ptr("A datamart description."),
 				DisplayName: to.Ptr("Datamart Name 1"),
 				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				SensitivityLabel: &datamart.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 			}},
 	}
@@ -82,7 +85,10 @@ func (testsuite *FakeTestSuite) TestItems_ListDatamarts() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	pager := client.NewListDatamartsPager(exampleWorkspaceID, &datamart.ItemsClientListDatamartsOptions{ContinuationToken: nil})
+	pager := client.NewListDatamartsPager(exampleWorkspaceID, &datamart.ItemsClientListDatamartsOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")

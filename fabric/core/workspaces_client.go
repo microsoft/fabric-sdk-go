@@ -532,9 +532,7 @@ func (client *WorkspacesClient) getGitOutboundPolicyHandleResponse(resp *http.Re
 	return result, nil
 }
 
-// GetNetworkCommunicationPolicy - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use.
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// GetNetworkCommunicationPolicy - PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -597,8 +595,13 @@ func (client *WorkspacesClient) getNetworkCommunicationPolicyHandleResponse(resp
 	return result, nil
 }
 
-// GetOutboundCloudConnectionRules - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use.
+// GetOutboundCloudConnectionRules - This API helps workspace administrators view the effective outbound network communication
+// policies enforced for cloud connections. Cloud connection rules are returned and applied only if the
+// workspace’s network communication policy has outbound.publicAccessRules.defaultAction set to Deny. If OAP is not enabled
+// for the workspace, the API fails because outbound connections are not being
+// restricted.
+// > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change
+// based on feedback and is not recommended for production use.
 // PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -662,8 +665,13 @@ func (client *WorkspacesClient) getOutboundCloudConnectionRulesHandleResponse(re
 	return result, nil
 }
 
-// GetOutboundGatewayRules - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use.
+// GetOutboundGatewayRules - This API helps workspace administrators view the effective outbound network communication policies
+// enforced for on-premises and VNet data gateways. Gateway rules are returned and applied only if the
+// workspace’s network communication policy has outbound.publicAccessRules.defaultAction set to Deny. If OAP is not enabled
+// for the workspace, the API fails because outbound connections are not being
+// restricted.
+// > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change
+// based on feedback and is not recommended for production use.
 // PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -1129,8 +1137,9 @@ func (client *WorkspacesClient) setGitOutboundPolicyHandleResponse(resp *http.Re
 	return result, nil
 }
 
-// SetNetworkCommunicationPolicy - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use.
+// SetNetworkCommunicationPolicy - This API uses the PUT method and will overwrite all settings. Remaining policy will be
+// set to default value if only partial policy is provided in the request body. Always run Get Network Communication
+// Policy first and provide full policy in the request body.
 // PERMISSIONS The caller must have admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -1198,14 +1207,17 @@ func (client *WorkspacesClient) setNetworkCommunicationPolicyHandleResponse(resp
 	return result, nil
 }
 
-// SetOutboundCloudConnectionRules - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use.
-// [!NOTE] Outbound access protection rules are only enforced if the workspace’s network communication policy has outbound.publicAccessRules.defaultAction
-// set to Deny. If OAP is not enabled on workspace,
-// API fails as outbound connections are not being restricted.
-// [!NOTE] This API uses the PUT method and will overwrite all outbound access connections for the workspace. Remaining policy
-// will be set to default value if partial policy is provided in the request
-// body. Always run Get first and provide full policy in the request body.
+// SetOutboundCloudConnectionRules - This API enables workspace administrators to set a collection of outbound network communication
+// rules that control which cloud connection types and, where applicable, their external
+// endpoints/workspaces are allowed from the workspace.
+// > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change
+// based on feedback and is not recommended for production use.
+// [!NOTE] Outbound access protection rules are only enforced if the workspace's network communication policy has outbound.publicAccessRules.defaultAction
+// set to Deny. If OAP is not enabled on the
+// workspace, the API fails because outbound connections are not restricted.
+// [!NOTE] This API uses the PUT method and will overwrite all outbound access connections for the workspace. Any omitted
+// settings are set to their default values. Always call Get first and provide the
+// full policy in the request body.
 // PERMISSIONS The caller must have admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -1270,8 +1282,11 @@ func (client *WorkspacesClient) setOutboundCloudConnectionRulesHandleResponse(re
 	return result, nil
 }
 
-// SetOutboundGatewayRules - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use.
+// SetOutboundGatewayRules - This API enables workspace administrators to define, replace, or override the set of outbound
+// network communication policies that control which on-prem /Vnet Data Gateways are to be allowed from
+// current workspace.
+// > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change
+// based on feedback and is not recommended for production use.
 // [!NOTE] Outbound access protection rules are only enforced if the workspace’s network communication policy has outbound.publicAccessRules.defaultAction
 // set to Deny. If OAP is not enabled on workspace,
 // API fails as outbound connections are not being restricted.

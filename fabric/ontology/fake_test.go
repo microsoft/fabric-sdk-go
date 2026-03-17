@@ -70,6 +70,9 @@ func (testsuite *FakeTestSuite) TestItems_ListOntologies() {
 				Description: to.Ptr("An ontology description."),
 				DisplayName: to.Ptr("Ontology Name 1"),
 				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				SensitivityLabel: &ontology.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 			},
 			{
@@ -77,6 +80,9 @@ func (testsuite *FakeTestSuite) TestItems_ListOntologies() {
 				Description: to.Ptr("An ontology description."),
 				DisplayName: to.Ptr("Ontology Name 2"),
 				ID:          to.Ptr("f697fb63-abd4-4399-9548-be7e3c3c0dac"),
+				SensitivityLabel: &ontology.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 			}},
 	}
@@ -89,7 +95,10 @@ func (testsuite *FakeTestSuite) TestItems_ListOntologies() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	pager := client.NewListOntologiesPager(exampleWorkspaceID, &ontology.ItemsClientListOntologiesOptions{ContinuationToken: nil})
+	pager := client.NewListOntologiesPager(exampleWorkspaceID, &ontology.ItemsClientListOntologiesOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")
@@ -184,6 +193,9 @@ func (testsuite *FakeTestSuite) TestItems_GetOntology() {
 		Description: to.Ptr("An ontology description."),
 		DisplayName: to.Ptr("Ontology 1"),
 		ID:          to.Ptr("41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"),
+		SensitivityLabel: &ontology.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	}
 

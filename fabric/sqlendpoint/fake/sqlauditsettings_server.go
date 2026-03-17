@@ -22,36 +22,36 @@ import (
 	"github.com/microsoft/fabric-sdk-go/fabric/sqlendpoint"
 )
 
-// Server is a fake server for instances of the sqlendpoint.Client type.
-type Server struct {
-	// GetSQLAuditSettings is the fake for method Client.GetSQLAuditSettings
+// SQLAuditSettingsServer is a fake server for instances of the sqlendpoint.SQLAuditSettingsClient type.
+type SQLAuditSettingsServer struct {
+	// GetSQLAuditSettings is the fake for method SQLAuditSettingsClient.GetSQLAuditSettings
 	// HTTP status codes to indicate success: http.StatusOK
-	GetSQLAuditSettings func(ctx context.Context, workspaceID string, itemID string, options *sqlendpoint.ClientGetSQLAuditSettingsOptions) (resp azfake.Responder[sqlendpoint.ClientGetSQLAuditSettingsResponse], errResp azfake.ErrorResponder)
+	GetSQLAuditSettings func(ctx context.Context, workspaceID string, itemID string, options *sqlendpoint.SQLAuditSettingsClientGetSQLAuditSettingsOptions) (resp azfake.Responder[sqlendpoint.SQLAuditSettingsClientGetSQLAuditSettingsResponse], errResp azfake.ErrorResponder)
 
-	// SetAuditActionsAndGroups is the fake for method Client.SetAuditActionsAndGroups
+	// SetAuditActionsAndGroups is the fake for method SQLAuditSettingsClient.SetAuditActionsAndGroups
 	// HTTP status codes to indicate success: http.StatusOK
-	SetAuditActionsAndGroups func(ctx context.Context, workspaceID string, itemID string, setAuditActionsAndGroupsRequest []string, options *sqlendpoint.ClientSetAuditActionsAndGroupsOptions) (resp azfake.Responder[sqlendpoint.ClientSetAuditActionsAndGroupsResponse], errResp azfake.ErrorResponder)
+	SetAuditActionsAndGroups func(ctx context.Context, workspaceID string, itemID string, setAuditActionsAndGroupsRequest []string, options *sqlendpoint.SQLAuditSettingsClientSetAuditActionsAndGroupsOptions) (resp azfake.Responder[sqlendpoint.SQLAuditSettingsClientSetAuditActionsAndGroupsResponse], errResp azfake.ErrorResponder)
 
-	// UpdateSQLAuditSettings is the fake for method Client.UpdateSQLAuditSettings
+	// UpdateSQLAuditSettings is the fake for method SQLAuditSettingsClient.UpdateSQLAuditSettings
 	// HTTP status codes to indicate success: http.StatusOK
-	UpdateSQLAuditSettings func(ctx context.Context, workspaceID string, itemID string, updateAuditSettingsRequest sqlendpoint.SQLAuditSettingsUpdate, options *sqlendpoint.ClientUpdateSQLAuditSettingsOptions) (resp azfake.Responder[sqlendpoint.ClientUpdateSQLAuditSettingsResponse], errResp azfake.ErrorResponder)
+	UpdateSQLAuditSettings func(ctx context.Context, workspaceID string, itemID string, updateAuditSettingsRequest sqlendpoint.SQLAuditSettingsUpdate, options *sqlendpoint.SQLAuditSettingsClientUpdateSQLAuditSettingsOptions) (resp azfake.Responder[sqlendpoint.SQLAuditSettingsClientUpdateSQLAuditSettingsResponse], errResp azfake.ErrorResponder)
 }
 
-// NewServerTransport creates a new instance of ServerTransport with the provided implementation.
-// The returned ServerTransport instance is connected to an instance of sqlendpoint.Client via the
+// NewSQLAuditSettingsServerTransport creates a new instance of SQLAuditSettingsServerTransport with the provided implementation.
+// The returned SQLAuditSettingsServerTransport instance is connected to an instance of sqlendpoint.SQLAuditSettingsClient via the
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
-func NewServerTransport(srv *Server) *ServerTransport {
-	return &ServerTransport{srv: srv}
+func NewSQLAuditSettingsServerTransport(srv *SQLAuditSettingsServer) *SQLAuditSettingsServerTransport {
+	return &SQLAuditSettingsServerTransport{srv: srv}
 }
 
-// ServerTransport connects instances of sqlendpoint.Client to instances of Server.
-// Don't use this type directly, use NewServerTransport instead.
-type ServerTransport struct {
-	srv *Server
+// SQLAuditSettingsServerTransport connects instances of sqlendpoint.SQLAuditSettingsClient to instances of SQLAuditSettingsServer.
+// Don't use this type directly, use NewSQLAuditSettingsServerTransport instead.
+type SQLAuditSettingsServerTransport struct {
+	srv *SQLAuditSettingsServer
 }
 
-// Do implements the policy.Transporter interface for ServerTransport.
-func (s *ServerTransport) Do(req *http.Request) (*http.Response, error) {
+// Do implements the policy.Transporter interface for SQLAuditSettingsServerTransport.
+func (s *SQLAuditSettingsServerTransport) Do(req *http.Request) (*http.Response, error) {
 	rawMethod := req.Context().Value(runtime.CtxAPINameKey{})
 	method, ok := rawMethod.(string)
 	if !ok {
@@ -63,23 +63,23 @@ func (s *ServerTransport) Do(req *http.Request) (*http.Response, error) {
 	return s.dispatchToMethodFake(req, method)
 }
 
-func (s *ServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
+func (s *SQLAuditSettingsServerTransport) dispatchToMethodFake(req *http.Request, method string) (*http.Response, error) {
 	resultChan := make(chan result)
 	defer close(resultChan)
 
 	go func() {
 		var intercepted bool
 		var res result
-		if serverTransportInterceptor != nil {
-			res.resp, res.err, intercepted = serverTransportInterceptor.Do(req)
+		if sqlAuditSettingsServerTransportInterceptor != nil {
+			res.resp, res.err, intercepted = sqlAuditSettingsServerTransportInterceptor.Do(req)
 		}
 		if !intercepted {
 			switch method {
-			case "Client.GetSQLAuditSettings":
+			case "SQLAuditSettingsClient.GetSQLAuditSettings":
 				res.resp, res.err = s.dispatchGetSQLAuditSettings(req)
-			case "Client.SetAuditActionsAndGroups":
+			case "SQLAuditSettingsClient.SetAuditActionsAndGroups":
 				res.resp, res.err = s.dispatchSetAuditActionsAndGroups(req)
-			case "Client.UpdateSQLAuditSettings":
+			case "SQLAuditSettingsClient.UpdateSQLAuditSettings":
 				res.resp, res.err = s.dispatchUpdateSQLAuditSettings(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
@@ -100,7 +100,7 @@ func (s *ServerTransport) dispatchToMethodFake(req *http.Request, method string)
 	}
 }
 
-func (s *ServerTransport) dispatchGetSQLAuditSettings(req *http.Request) (*http.Response, error) {
+func (s *SQLAuditSettingsServerTransport) dispatchGetSQLAuditSettings(req *http.Request) (*http.Response, error) {
 	if s.srv.GetSQLAuditSettings == nil {
 		return nil, &nonRetriableError{errors.New("fake for method GetSQLAuditSettings not implemented")}
 	}
@@ -133,7 +133,7 @@ func (s *ServerTransport) dispatchGetSQLAuditSettings(req *http.Request) (*http.
 	return resp, nil
 }
 
-func (s *ServerTransport) dispatchSetAuditActionsAndGroups(req *http.Request) (*http.Response, error) {
+func (s *SQLAuditSettingsServerTransport) dispatchSetAuditActionsAndGroups(req *http.Request) (*http.Response, error) {
 	if s.srv.SetAuditActionsAndGroups == nil {
 		return nil, &nonRetriableError{errors.New("fake for method SetAuditActionsAndGroups not implemented")}
 	}
@@ -170,7 +170,7 @@ func (s *ServerTransport) dispatchSetAuditActionsAndGroups(req *http.Request) (*
 	return resp, nil
 }
 
-func (s *ServerTransport) dispatchUpdateSQLAuditSettings(req *http.Request) (*http.Response, error) {
+func (s *SQLAuditSettingsServerTransport) dispatchUpdateSQLAuditSettings(req *http.Request) (*http.Response, error) {
 	if s.srv.UpdateSQLAuditSettings == nil {
 		return nil, &nonRetriableError{errors.New("fake for method UpdateSQLAuditSettings not implemented")}
 	}
@@ -207,8 +207,8 @@ func (s *ServerTransport) dispatchUpdateSQLAuditSettings(req *http.Request) (*ht
 	return resp, nil
 }
 
-// set this to conditionally intercept incoming requests to ServerTransport
-var serverTransportInterceptor interface {
+// set this to conditionally intercept incoming requests to SQLAuditSettingsServerTransport
+var sqlAuditSettingsServerTransportInterceptor interface {
 	// Do returns true if the server transport should use the returned response/error
 	Do(*http.Request) (*http.Response, error, bool)
 }

@@ -18,9 +18,13 @@ import (
 
 // ServerFactory is a fake server for instances of the apacheairflowjob.ClientFactory type.
 type ServerFactory struct {
+	ComputeServer           ComputeServer
+	EnvironmentServer       EnvironmentServer
 	FilesServer             FilesServer
 	ItemsServer             ItemsServer
 	PoolManagementServer    PoolManagementServer
+	RequirementsServer      RequirementsServer
+	SettingsServer          SettingsServer
 	WorkspaceSettingsServer WorkspaceSettingsServer
 }
 
@@ -29,9 +33,13 @@ type ServerFactory struct {
 type ServerFactoryTransport struct {
 	srv                       *ServerFactory
 	trMu                      sync.Mutex
+	trComputeServer           *ComputeServerTransport
+	trEnvironmentServer       *EnvironmentServerTransport
 	trFilesServer             *FilesServerTransport
 	trItemsServer             *ItemsServerTransport
 	trPoolManagementServer    *PoolManagementServerTransport
+	trRequirementsServer      *RequirementsServerTransport
+	trSettingsServer          *SettingsServerTransport
 	trWorkspaceSettingsServer *WorkspaceSettingsServerTransport
 }
 
@@ -58,6 +66,12 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	var err error
 
 	switch client {
+	case "ComputeClient":
+		initServer(s, &s.trComputeServer, func() *ComputeServerTransport { return NewComputeServerTransport(&s.srv.ComputeServer) })
+		resp, err = s.trComputeServer.Do(req)
+	case "EnvironmentClient":
+		initServer(s, &s.trEnvironmentServer, func() *EnvironmentServerTransport { return NewEnvironmentServerTransport(&s.srv.EnvironmentServer) })
+		resp, err = s.trEnvironmentServer.Do(req)
 	case "FilesClient":
 		initServer(s, &s.trFilesServer, func() *FilesServerTransport { return NewFilesServerTransport(&s.srv.FilesServer) })
 		resp, err = s.trFilesServer.Do(req)
@@ -69,6 +83,12 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return NewPoolManagementServerTransport(&s.srv.PoolManagementServer)
 		})
 		resp, err = s.trPoolManagementServer.Do(req)
+	case "RequirementsClient":
+		initServer(s, &s.trRequirementsServer, func() *RequirementsServerTransport { return NewRequirementsServerTransport(&s.srv.RequirementsServer) })
+		resp, err = s.trRequirementsServer.Do(req)
+	case "SettingsClient":
+		initServer(s, &s.trSettingsServer, func() *SettingsServerTransport { return NewSettingsServerTransport(&s.srv.SettingsServer) })
+		resp, err = s.trSettingsServer.Do(req)
 	case "WorkspaceSettingsClient":
 		initServer(s, &s.trWorkspaceSettingsServer, func() *WorkspaceSettingsServerTransport {
 			return NewWorkspaceSettingsServerTransport(&s.srv.WorkspaceSettingsServer)

@@ -70,6 +70,9 @@ func (testsuite *FakeTestSuite) TestItems_ListKQLDatabases() {
 				Description: to.Ptr("A KQL database description."),
 				DisplayName: to.Ptr("KQLDatabase_1"),
 				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				SensitivityLabel: &kqldatabase.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 				Properties: &kqldatabase.Properties{
 					DatabaseType:           to.Ptr(kqldatabase.TypeReadWrite),
@@ -83,6 +86,9 @@ func (testsuite *FakeTestSuite) TestItems_ListKQLDatabases() {
 				Description: to.Ptr("A KQL database description."),
 				DisplayName: to.Ptr("KQLDatabase_2"),
 				ID:          to.Ptr("340d91b9-5a39-409c-b9c0-05ba832c476e"),
+				SensitivityLabel: &kqldatabase.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 				Properties: &kqldatabase.Properties{
 					DatabaseType:           to.Ptr(kqldatabase.TypeReadWrite),
@@ -101,7 +107,10 @@ func (testsuite *FakeTestSuite) TestItems_ListKQLDatabases() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	pager := client.NewListKQLDatabasesPager(exampleWorkspaceID, &kqldatabase.ItemsClientListKQLDatabasesOptions{ContinuationToken: nil})
+	pager := client.NewListKQLDatabasesPager(exampleWorkspaceID, &kqldatabase.ItemsClientListKQLDatabasesOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")
@@ -285,6 +294,9 @@ func (testsuite *FakeTestSuite) TestItems_GetKQLDatabase() {
 		Description: to.Ptr("A KQL database description."),
 		DisplayName: to.Ptr("KQLDatabase_1"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &kqldatabase.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		Properties: &kqldatabase.Properties{
 			DatabaseType:           to.Ptr(kqldatabase.TypeReadWrite),
@@ -328,6 +340,9 @@ func (testsuite *FakeTestSuite) TestItems_UpdateKQLDatabase() {
 		Description: to.Ptr("A new description for KQL database."),
 		DisplayName: to.Ptr("KQLDatabase_New_Name"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &kqldatabase.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	}
 
@@ -461,4 +476,339 @@ func (testsuite *FakeTestSuite) TestItems_UpdateKQLDatabaseDefinition() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestTableShortcuts_ListShortcuts() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List table shortcuts in a database example"},
+	})
+	var exampleWorkspaceID string
+	var exampleKqlDatabaseID string
+	exampleWorkspaceID = "cbe5fdd7-a54e-40d2-ae3b-8d2f63ed6e4b"
+	exampleKqlDatabaseID = "719688da-facb-4202-99e5-02626e4b32f6"
+
+	exampleRes := kqldatabase.TableShortcuts{
+		Value: []kqldatabase.TableShortcut{
+			{
+				Name:                    to.Ptr("EmployeesShortcut"),
+				EnableQueryAcceleration: to.Ptr(false),
+				Target: &kqldatabase.Target{
+					Type: to.Ptr(kqldatabase.ShortcutTypeOneLake),
+					OneLake: &kqldatabase.OneLake{
+						Path:        to.Ptr("Tables/Employees"),
+						ItemID:      to.Ptr("1fce2608-78e8-4472-86bc-fa8ff3e26c8f"),
+						WorkspaceID: to.Ptr("cbe5fdd7-a54e-40d2-ae3b-8d2f63ed6e4b"),
+					},
+				},
+			},
+			{
+				Name:                    to.Ptr("PricesShortcut"),
+				EnableQueryAcceleration: to.Ptr(true),
+				Target: &kqldatabase.Target{
+					Type: to.Ptr(kqldatabase.ShortcutTypeOneLake),
+					OneLake: &kqldatabase.OneLake{
+						Path:        to.Ptr("Tables/Prices"),
+						ItemID:      to.Ptr("1fce2608-78e8-4472-86bc-fa8ff3e26c8f"),
+						WorkspaceID: to.Ptr("cbe5fdd7-a54e-40d2-ae3b-8d2f63ed6e4b"),
+					},
+				},
+			},
+			{
+				Name:                    to.Ptr("AmazonS3TableShortcut"),
+				EnableQueryAcceleration: to.Ptr(false),
+				Target: &kqldatabase.Target{
+					Type: to.Ptr(kqldatabase.ShortcutTypeAmazonS3),
+					AmazonS3: &kqldatabase.AmazonS3{
+						ConnectionID: to.Ptr("dc2cf8ff-abfa-4413-8244-ee10160ed37f"),
+						Location:     to.Ptr("s3://aamerril-testbucket"),
+						Subpath:      to.Ptr("/"),
+					},
+				},
+			}},
+	}
+
+	testsuite.serverFactory.TableShortcutsServer.NewListShortcutsPager = func(workspaceID string, kqlDatabaseID string, options *kqldatabase.TableShortcutsClientListShortcutsOptions) (resp azfake.PagerResponder[kqldatabase.TableShortcutsClientListShortcutsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleKqlDatabaseID, kqlDatabaseID)
+		resp = azfake.PagerResponder[kqldatabase.TableShortcutsClientListShortcutsResponse]{}
+		resp.AddPage(http.StatusOK, kqldatabase.TableShortcutsClientListShortcutsResponse{TableShortcuts: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTableShortcutsClient()
+	pager := client.NewListShortcutsPager(exampleWorkspaceID, exampleKqlDatabaseID, &kqldatabase.TableShortcutsClientListShortcutsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.TableShortcuts))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestTableShortcuts_CreateShortcut() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create table shortcut AdlsGen2 target example"},
+	})
+	var exampleWorkspaceID string
+	var exampleKqlDatabaseID string
+	var exampleCreateTableShortcutRequest kqldatabase.CreateTableShortcutRequest
+	exampleWorkspaceID = "cbe5fdd7-a54e-40d2-ae3b-8d2f63ed6e4b"
+	exampleKqlDatabaseID = "719688da-facb-4202-99e5-02626e4b32f6"
+	exampleCreateTableShortcutRequest = kqldatabase.CreateTableShortcutRequest{
+		Name:                    to.Ptr("AdlsGen2Shortcut1"),
+		EnableQueryAcceleration: to.Ptr(false),
+		Target: &kqldatabase.CreatableShortcutTarget{
+			AdlsGen2: &kqldatabase.AdlsGen2{
+				ConnectionID: to.Ptr("b45eb9be-4b26-4837-82f3-17288ba9ed00"),
+				Location:     to.Ptr("https://azurestoragedlsgen2.dfs.core.windows.net"),
+				Subpath:      to.Ptr("azurestoragedlsgen2fs/files/prices"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.TableShortcutsServer.BeginCreateShortcut = func(ctx context.Context, workspaceID string, kqlDatabaseID string, createTableShortcutRequest kqldatabase.CreateTableShortcutRequest, options *kqldatabase.TableShortcutsClientBeginCreateShortcutOptions) (resp azfake.PollerResponder[kqldatabase.TableShortcutsClientCreateShortcutResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleKqlDatabaseID, kqlDatabaseID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateTableShortcutRequest, createTableShortcutRequest))
+		resp = azfake.PollerResponder[kqldatabase.TableShortcutsClientCreateShortcutResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, kqldatabase.TableShortcutsClientCreateShortcutResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTableShortcutsClient()
+	poller, err := client.BeginCreateShortcut(ctx, exampleWorkspaceID, exampleKqlDatabaseID, exampleCreateTableShortcutRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create table shortcut AmazonS3 target example"},
+	})
+	exampleWorkspaceID = "cbe5fdd7-a54e-40d2-ae3b-8d2f63ed6e4b"
+	exampleKqlDatabaseID = "719688da-facb-4202-99e5-02626e4b32f6"
+	exampleCreateTableShortcutRequest = kqldatabase.CreateTableShortcutRequest{
+		Name:                    to.Ptr("AmazonS3TableShortcut"),
+		EnableQueryAcceleration: to.Ptr(false),
+		Target: &kqldatabase.CreatableShortcutTarget{
+			AmazonS3: &kqldatabase.AmazonS3{
+				ConnectionID: to.Ptr("dc2cf8ff-abfa-4413-8244-ee10160ed37f"),
+				Location:     to.Ptr("s3://aamerril-testbucket"),
+				Subpath:      to.Ptr("/"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.TableShortcutsServer.BeginCreateShortcut = func(ctx context.Context, workspaceID string, kqlDatabaseID string, createTableShortcutRequest kqldatabase.CreateTableShortcutRequest, options *kqldatabase.TableShortcutsClientBeginCreateShortcutOptions) (resp azfake.PollerResponder[kqldatabase.TableShortcutsClientCreateShortcutResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleKqlDatabaseID, kqlDatabaseID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateTableShortcutRequest, createTableShortcutRequest))
+		resp = azfake.PollerResponder[kqldatabase.TableShortcutsClientCreateShortcutResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, kqldatabase.TableShortcutsClientCreateShortcutResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateShortcut(ctx, exampleWorkspaceID, exampleKqlDatabaseID, exampleCreateTableShortcutRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create table shortcut Azure Blob Storage target example"},
+	})
+	exampleWorkspaceID = "cbe5fdd7-a54e-40d2-ae3b-8d2f63ed6e4b"
+	exampleKqlDatabaseID = "719688da-facb-4202-99e5-02626e4b32f6"
+	exampleCreateTableShortcutRequest = kqldatabase.CreateTableShortcutRequest{
+		Name:                    to.Ptr("AzureBlobStorageShortcut1"),
+		EnableQueryAcceleration: to.Ptr(false),
+		Target: &kqldatabase.CreatableShortcutTarget{
+			AzureBlobStorage: &kqldatabase.AzureBlobStorage{
+				ConnectionID: to.Ptr("b1293901-e88b-4a3f-87d9-6d23e81ea30c"),
+				Location:     to.Ptr("https://ranhoudineblobstorage.blob.core.windows.net"),
+				Subpath:      to.Ptr("mycontainer/files/prices"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.TableShortcutsServer.BeginCreateShortcut = func(ctx context.Context, workspaceID string, kqlDatabaseID string, createTableShortcutRequest kqldatabase.CreateTableShortcutRequest, options *kqldatabase.TableShortcutsClientBeginCreateShortcutOptions) (resp azfake.PollerResponder[kqldatabase.TableShortcutsClientCreateShortcutResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleKqlDatabaseID, kqlDatabaseID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateTableShortcutRequest, createTableShortcutRequest))
+		resp = azfake.PollerResponder[kqldatabase.TableShortcutsClientCreateShortcutResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, kqldatabase.TableShortcutsClientCreateShortcutResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateShortcut(ctx, exampleWorkspaceID, exampleKqlDatabaseID, exampleCreateTableShortcutRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create table shortcut Google Cloud Storage target example"},
+	})
+	exampleWorkspaceID = "cbe5fdd7-a54e-40d2-ae3b-8d2f63ed6e4b"
+	exampleKqlDatabaseID = "719688da-facb-4202-99e5-02626e4b32f6"
+	exampleCreateTableShortcutRequest = kqldatabase.CreateTableShortcutRequest{
+		Name:                    to.Ptr("GoogleCloudStorageTableShortcut3"),
+		EnableQueryAcceleration: to.Ptr(false),
+		Target: &kqldatabase.CreatableShortcutTarget{
+			GoogleCloudStorage: &kqldatabase.GoogleCloudStorage{
+				ConnectionID: to.Ptr("32dd2eb6-07f4-4ddf-a8d3-6f392430998b"),
+				Location:     to.Ptr("gs://ranbucket1"),
+				Subpath:      to.Ptr("/"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.TableShortcutsServer.BeginCreateShortcut = func(ctx context.Context, workspaceID string, kqlDatabaseID string, createTableShortcutRequest kqldatabase.CreateTableShortcutRequest, options *kqldatabase.TableShortcutsClientBeginCreateShortcutOptions) (resp azfake.PollerResponder[kqldatabase.TableShortcutsClientCreateShortcutResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleKqlDatabaseID, kqlDatabaseID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateTableShortcutRequest, createTableShortcutRequest))
+		resp = azfake.PollerResponder[kqldatabase.TableShortcutsClientCreateShortcutResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, kqldatabase.TableShortcutsClientCreateShortcutResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateShortcut(ctx, exampleWorkspaceID, exampleKqlDatabaseID, exampleCreateTableShortcutRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create table shortcut One Lake target example"},
+	})
+	exampleWorkspaceID = "cbe5fdd7-a54e-40d2-ae3b-8d2f63ed6e4b"
+	exampleKqlDatabaseID = "719688da-facb-4202-99e5-02626e4b32f6"
+	exampleCreateTableShortcutRequest = kqldatabase.CreateTableShortcutRequest{
+		Name:                    to.Ptr("OneLakeTableShortcut"),
+		EnableQueryAcceleration: to.Ptr(true),
+		Target: &kqldatabase.CreatableShortcutTarget{
+			OneLake: &kqldatabase.OneLake{
+				Path:        to.Ptr("/Tables/Weather"),
+				ItemID:      to.Ptr("1fce2608-78e8-4472-86bc-fa8ff3e26c8f"),
+				WorkspaceID: to.Ptr("cbe5fdd7-a54e-40d2-ae3b-8d2f63ed6e4b"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.TableShortcutsServer.BeginCreateShortcut = func(ctx context.Context, workspaceID string, kqlDatabaseID string, createTableShortcutRequest kqldatabase.CreateTableShortcutRequest, options *kqldatabase.TableShortcutsClientBeginCreateShortcutOptions) (resp azfake.PollerResponder[kqldatabase.TableShortcutsClientCreateShortcutResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleKqlDatabaseID, kqlDatabaseID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateTableShortcutRequest, createTableShortcutRequest))
+		resp = azfake.PollerResponder[kqldatabase.TableShortcutsClientCreateShortcutResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, kqldatabase.TableShortcutsClientCreateShortcutResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateShortcut(ctx, exampleWorkspaceID, exampleKqlDatabaseID, exampleCreateTableShortcutRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create table shortcut S3 Compatible target example"},
+	})
+	exampleWorkspaceID = "cbe5fdd7-a54e-40d2-ae3b-8d2f63ed6e4b"
+	exampleKqlDatabaseID = "719688da-facb-4202-99e5-02626e4b32f6"
+	exampleCreateTableShortcutRequest = kqldatabase.CreateTableShortcutRequest{
+		Name:                    to.Ptr("S3CompatibleShortcut"),
+		EnableQueryAcceleration: to.Ptr(false),
+		Target: &kqldatabase.CreatableShortcutTarget{
+			S3Compatible: &kqldatabase.S3Compatible{
+				Bucket:       to.Ptr("firstbucket"),
+				ConnectionID: to.Ptr("32dd2eb6-07f4-4ddf-a8d3-6f392430998b"),
+				Location:     to.Ptr("s3://aamerril-testbucket"),
+				Subpath:      to.Ptr("/"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.TableShortcutsServer.BeginCreateShortcut = func(ctx context.Context, workspaceID string, kqlDatabaseID string, createTableShortcutRequest kqldatabase.CreateTableShortcutRequest, options *kqldatabase.TableShortcutsClientBeginCreateShortcutOptions) (resp azfake.PollerResponder[kqldatabase.TableShortcutsClientCreateShortcutResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleKqlDatabaseID, kqlDatabaseID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateTableShortcutRequest, createTableShortcutRequest))
+		resp = azfake.PollerResponder[kqldatabase.TableShortcutsClientCreateShortcutResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, kqldatabase.TableShortcutsClientCreateShortcutResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateShortcut(ctx, exampleWorkspaceID, exampleKqlDatabaseID, exampleCreateTableShortcutRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestTableShortcuts_GetShortcut() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a table shortcut in a database example"},
+	})
+	var exampleWorkspaceID string
+	var exampleKqlDatabaseID string
+	var exampleShortcutName string
+	exampleWorkspaceID = "cbe5fdd7-a54e-40d2-ae3b-8d2f63ed6e4b"
+	exampleKqlDatabaseID = "719688da-facb-4202-99e5-02626e4b32f6"
+	exampleShortcutName = "PricesShortcut"
+
+	exampleRes := kqldatabase.TableShortcut{
+		Name:                    to.Ptr("PricesShortcut"),
+		EnableQueryAcceleration: to.Ptr(true),
+		Target: &kqldatabase.Target{
+			Type: to.Ptr(kqldatabase.ShortcutTypeOneLake),
+			OneLake: &kqldatabase.OneLake{
+				Path:        to.Ptr("Tables/Prices"),
+				ItemID:      to.Ptr("1fce2608-78e8-4472-86bc-fa8ff3e26c8f"),
+				WorkspaceID: to.Ptr("cbe5fdd7-a54e-40d2-ae3b-8d2f63ed6e4b"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.TableShortcutsServer.GetShortcut = func(ctx context.Context, workspaceID string, kqlDatabaseID string, shortcutName string, options *kqldatabase.TableShortcutsClientGetShortcutOptions) (resp azfake.Responder[kqldatabase.TableShortcutsClientGetShortcutResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleKqlDatabaseID, kqlDatabaseID)
+		testsuite.Require().Equal(exampleShortcutName, shortcutName)
+		resp = azfake.Responder[kqldatabase.TableShortcutsClientGetShortcutResponse]{}
+		resp.SetResponse(http.StatusOK, kqldatabase.TableShortcutsClientGetShortcutResponse{TableShortcut: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTableShortcutsClient()
+	res, err := client.GetShortcut(ctx, exampleWorkspaceID, exampleKqlDatabaseID, exampleShortcutName, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.TableShortcut))
+}
+
+func (testsuite *FakeTestSuite) TestTableShortcuts_DeleteShortcut() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a table shortcut in a database example"},
+	})
+	var exampleWorkspaceID string
+	var exampleKqlDatabaseID string
+	var exampleShortcutName string
+	exampleWorkspaceID = "cbe5fdd7-a54e-40d2-ae3b-8d2f63ed6e4b"
+	exampleKqlDatabaseID = "719688da-facb-4202-99e5-02626e4b32f6"
+	exampleShortcutName = "AnotherShortcut1"
+
+	testsuite.serverFactory.TableShortcutsServer.DeleteShortcut = func(ctx context.Context, workspaceID string, kqlDatabaseID string, shortcutName string, options *kqldatabase.TableShortcutsClientDeleteShortcutOptions) (resp azfake.Responder[kqldatabase.TableShortcutsClientDeleteShortcutResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleKqlDatabaseID, kqlDatabaseID)
+		testsuite.Require().Equal(exampleShortcutName, shortcutName)
+		resp = azfake.Responder[kqldatabase.TableShortcutsClientDeleteShortcutResponse]{}
+		resp.SetResponse(http.StatusOK, kqldatabase.TableShortcutsClientDeleteShortcutResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTableShortcutsClient()
+	_, err = client.DeleteShortcut(ctx, exampleWorkspaceID, exampleKqlDatabaseID, exampleShortcutName, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
 }

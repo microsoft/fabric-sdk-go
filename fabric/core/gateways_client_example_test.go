@@ -368,7 +368,7 @@ func ExampleGatewaysClient_NewListGatewayRoleAssignmentsPager_listGatewayRoleAss
 		// 	Value: []core.GatewayRoleAssignment{
 		// 		{
 		// 			ID: to.Ptr("ef543eb8-969c-46b0-a5a1-3f93351b6b31"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.UserPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				ID: to.Ptr("ef543eb8-969c-46b0-a5a1-3f93351b6b31"),
 		// 			},
@@ -376,7 +376,7 @@ func ExampleGatewaysClient_NewListGatewayRoleAssignmentsPager_listGatewayRoleAss
 		// 		},
 		// 		{
 		// 			ID: to.Ptr("5cf7d203-9123-4dff-a87f-7097dc4b5d60"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.UserPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				ID: to.Ptr("5cf7d203-9123-4dff-a87f-7097dc4b5d60"),
 		// 			},
@@ -384,7 +384,7 @@ func ExampleGatewaysClient_NewListGatewayRoleAssignmentsPager_listGatewayRoleAss
 		// 		},
 		// 		{
 		// 			ID: to.Ptr("5931cd21-857f-42a5-beaf-0120e8b36542"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.UserPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				ID: to.Ptr("5931cd21-857f-42a5-beaf-0120e8b36542"),
 		// 			},
@@ -392,7 +392,7 @@ func ExampleGatewaysClient_NewListGatewayRoleAssignmentsPager_listGatewayRoleAss
 		// 		},
 		// 		{
 		// 			ID: to.Ptr("97614f04-507c-4f6c-8dbc-da1845f582ef"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.UserPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				ID: to.Ptr("97614f04-507c-4f6c-8dbc-da1845f582ef"),
 		// 			},
@@ -400,7 +400,7 @@ func ExampleGatewaysClient_NewListGatewayRoleAssignmentsPager_listGatewayRoleAss
 		// 		},
 		// 		{
 		// 			ID: to.Ptr("a5d9f30d-a15c-4fb9-b8ff-e2a884c9fd82"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.GroupPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeGroup),
 		// 				ID: to.Ptr("a5d9f30d-a15c-4fb9-b8ff-e2a884c9fd82"),
 		// 			},
@@ -438,7 +438,7 @@ func ExampleGatewaysClient_NewListGatewayRoleAssignmentsPager_listGatewayRoleAss
 		// 	Value: []core.GatewayRoleAssignment{
 		// 		{
 		// 			ID: to.Ptr("ef543eb8-969c-46b0-a5a1-3f93351b6b31"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.UserPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				ID: to.Ptr("ef543eb8-969c-46b0-a5a1-3f93351b6b31"),
 		// 			},
@@ -446,7 +446,7 @@ func ExampleGatewaysClient_NewListGatewayRoleAssignmentsPager_listGatewayRoleAss
 		// 		},
 		// 		{
 		// 			ID: to.Ptr("5cf7d203-9123-4dff-a87f-7097dc4b5d60"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.UserPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				ID: to.Ptr("5cf7d203-9123-4dff-a87f-7097dc4b5d60"),
 		// 			},
@@ -454,7 +454,7 @@ func ExampleGatewaysClient_NewListGatewayRoleAssignmentsPager_listGatewayRoleAss
 		// 		},
 		// 		{
 		// 			ID: to.Ptr("5931cd21-857f-42a5-beaf-0120e8b36542"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.UserPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				ID: to.Ptr("5931cd21-857f-42a5-beaf-0120e8b36542"),
 		// 			},
@@ -462,7 +462,7 @@ func ExampleGatewaysClient_NewListGatewayRoleAssignmentsPager_listGatewayRoleAss
 		// 		},
 		// 		{
 		// 			ID: to.Ptr("97614f04-507c-4f6c-8dbc-da1845f582ef"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.UserPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				ID: to.Ptr("97614f04-507c-4f6c-8dbc-da1845f582ef"),
 		// 			},
@@ -470,7 +470,7 @@ func ExampleGatewaysClient_NewListGatewayRoleAssignmentsPager_listGatewayRoleAss
 		// 		},
 		// 		{
 		// 			ID: to.Ptr("a5d9f30d-a15c-4fb9-b8ff-e2a884c9fd82"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.GroupPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeGroup),
 		// 				ID: to.Ptr("a5d9f30d-a15c-4fb9-b8ff-e2a884c9fd82"),
 		// 			},
@@ -492,7 +492,7 @@ func ExampleGatewaysClient_AddGatewayRoleAssignment() {
 		log.Fatalf("failed to create client: %v", err)
 	}
 	_, err = clientFactory.NewGatewaysClient().AddGatewayRoleAssignment(ctx, "d12d139f-4141-467c-9f53-80787b198843", core.AddGatewayRoleAssignmentRequest{
-		Principal: &core.Principal{
+		Principal: &core.UserPrincipal{
 			Type: to.Ptr(core.PrincipalTypeUser),
 			ID:   to.Ptr("6a002b3d-e4ec-43df-8c08-e8eb7547d9dd"),
 		},
@@ -523,7 +523,7 @@ func ExampleGatewaysClient_GetGatewayRoleAssignment() {
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
 	// res.GatewayRoleAssignment = core.GatewayRoleAssignment{
 	// 	ID: to.Ptr("056afb37-8f6c-4fd8-9aa5-64ba7f1974e7"),
-	// 	Principal: &core.Principal{
+	// 	Principal: &core.UserPrincipal{
 	// 		Type: to.Ptr(core.PrincipalTypeUser),
 	// 		ID: to.Ptr("056afb37-8f6c-4fd8-9aa5-64ba7f1974e7"),
 	// 	},
@@ -553,7 +553,7 @@ func ExampleGatewaysClient_UpdateGatewayRoleAssignment() {
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
 	// res.GatewayRoleAssignment = core.GatewayRoleAssignment{
 	// 	ID: to.Ptr("43970761-afc9-4428-ae6e-3b08bef098ff"),
-	// 	Principal: &core.Principal{
+	// 	Principal: &core.UserPrincipal{
 	// 		Type: to.Ptr(core.PrincipalTypeUser),
 	// 		ID: to.Ptr("43970761-afc9-4428-ae6e-3b08bef098ff"),
 	// 	},

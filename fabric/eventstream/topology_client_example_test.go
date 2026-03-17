@@ -439,6 +439,17 @@ func ExampleTopologyClient_GetEventstreamTopology() {
 	// 						},
 	// 					},
 	// 				},
+	// 				&eventstream.AzureEventHubExtendedSourceResponse{
+	// 					Name: to.Ptr("AzureEventHubExtendedSource"),
+	// 					ID: to.Ptr("d1c9f8a2-8f3e-4c7c-b9b9-4e1b7b3a5f3f"),
+	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 					Type: to.Ptr(eventstream.SourceTypeAzureEventHubExtended),
+	// 					Properties: &eventstream.AzureEventHubExtendedSourceProperties{
+	// 						ConsumerGroupName: to.Ptr("$Default"),
+	// 						DataConnectionID: to.Ptr("7b0d2f83-1b3f-4f3b-a0f9-1d6b2f7b6c21"),
+	// 						StartPosition: to.Ptr(eventstream.StartPositionEarliest),
+	// 					},
+	// 				},
 	// 				&eventstream.AzureIoTHubSourceResponse{
 	// 					Name: to.Ptr("AzureIoTHubSource"),
 	// 					ID: to.Ptr("e2886002-d696-4c05-969c-51361365cc24"),
@@ -474,207 +485,346 @@ func ExampleTopologyClient_GetEventstreamTopology() {
 	// 					Properties: map[string]any{
 	// 					},
 	// 				},
-	// 				&eventstream.SampleDataSourceResponse{
-	// 					Name: to.Ptr("SampleDataSource"),
-	// 					ID: to.Ptr("19258e62-4de9-4c52-b45e-71502dc2ddea"),
+	// 				&eventstream.AzureBlobStorageEventsSourceResponse{
+	// 					Name: to.Ptr("AzureBlobStorageEventsSource"),
+	// 					ID: to.Ptr("8b6b1b8e-9b7f-4a7d-8f6b-6f2a8b7c4b15"),
 	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
-	// 					Type: to.Ptr(eventstream.SourceTypeSampleData),
-	// 					Properties: &eventstream.SampleDataSourceProperties{
-	// 						Type: to.Ptr(eventstream.Type("Bicycles")),
-	// 					},
-	// 				},
-	// 				&eventstream.AmazonKinesisSourceResponse{
-	// 					Name: to.Ptr("AmazonKinesisSource"),
-	// 					ID: to.Ptr("7afaa265-1d67-416f-8183-e6e1b1ebb4ea"),
-	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
-	// 					Type: to.Ptr(eventstream.SourceTypeAmazonKinesis),
-	// 					Properties: &eventstream.AmazonKinesisSourceProperties{
-	// 						DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
-	// 						Region: to.Ptr(eventstream.RegionUsEast1),
-	// 					},
-	// 				},
-	// 				&eventstream.AmazonMSKKafkaSourceResponse{
-	// 					Name: to.Ptr("AmazonMSKKafkaSource"),
-	// 					ID: to.Ptr("d020dd19-e84c-42e1-b4be-87e58145e1b5"),
-	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
-	// 					Type: to.Ptr(eventstream.SourceTypeAmazonMSKKafka),
-	// 					Properties: &eventstream.AmazonMSKKafkaSourceProperties{
-	// 						AutoOffsetReset: to.Ptr(eventstream.AutoOffsetResetEarliest),
-	// 						ConsumerGroupName: to.Ptr("consumerGroupName"),
-	// 						DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
-	// 						Topic: to.Ptr("topic"),
-	// 						SaslMechanism: to.Ptr(eventstream.SaslMechanismPLAIN),
-	// 						SecurityProtocol: to.Ptr(eventstream.SecurityProtocolSASLPLAINTEXT),
-	// 					},
-	// 				},
-	// 				&eventstream.ApacheKafkaSourceResponse{
-	// 					Name: to.Ptr("ApacheKafkaSource"),
-	// 					ID: to.Ptr("03a6dd4a-4627-422f-a287-2ccd7daf903d"),
-	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
-	// 					Type: to.Ptr(eventstream.SourceTypeApacheKafka),
-	// 					Properties: &eventstream.ApacheKafkaSourceProperties{
-	// 						AutoOffsetReset: to.Ptr(eventstream.AutoOffsetResetLatest),
-	// 						ConsumerGroupName: to.Ptr("consumerGroupName"),
-	// 						DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
-	// 						Topic: to.Ptr("topic"),
-	// 						SaslMechanism: to.Ptr(eventstream.SaslMechanismSCRAMSHA512),
-	// 						SecurityProtocol: to.Ptr(eventstream.SecurityProtocolSASLSSL),
-	// 					},
-	// 				},
-	// 				&eventstream.ConfluentCloudSourceResponse{
-	// 					Name: to.Ptr("ConfluentCloudSource"),
-	// 					ID: to.Ptr("6f493321-6c12-40c6-9980-c2aa38804829"),
-	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
-	// 					Type: to.Ptr(eventstream.SourceTypeConfluentCloud),
-	// 					Properties: &eventstream.BaseKafkaSourceProperties{
-	// 						AutoOffsetReset: to.Ptr(eventstream.AutoOffsetResetEarliest),
-	// 						ConsumerGroupName: to.Ptr("consumerGroupName"),
-	// 						DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
-	// 						Topic: to.Ptr("topic"),
-	// 					},
-	// 				},
-	// 				&eventstream.AzureCosmosDBCDCSourceResponse{
-	// 					Name: to.Ptr("AzureCosmosDBCDCSource"),
-	// 					ID: to.Ptr("e7f88779-0349-47e3-bead-85afc9d3c9a4"),
-	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
-	// 					Type: to.Ptr(eventstream.SourceTypeAzureCosmosDBCDC),
-	// 					Properties: &eventstream.AzureCosmosDBCDCSourceProperties{
-	// 						ContainerName: to.Ptr("containerName"),
-	// 						DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
-	// 						DatabaseName: to.Ptr("databaseName"),
-	// 						OffsetPolicy: to.Ptr(eventstream.OffsetPolicyEarliest),
-	// 					},
-	// 				},
-	// 				&eventstream.AzureSQLDBCDCSourceResponse{
-	// 					Name: to.Ptr("AzureSQLDBCDCSource"),
-	// 					ID: to.Ptr("da5ed80d-c672-4809-a7ac-6224aa2ab2c7"),
-	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
-	// 					Type: to.Ptr(eventstream.SourceTypeAzureSQLDBCDC),
-	// 					Properties: &eventstream.BaseSQLCDCSourceProperties{
-	// 						DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
-	// 						TableName: to.Ptr("tableName"),
-	// 					},
-	// 				},
-	// 				&eventstream.AzureSQLMIDBCDCSourceResponse{
-	// 					Name: to.Ptr("AzureSQLMIDBCDCSource"),
-	// 					ID: to.Ptr("745e401f-aac6-463f-b107-c336a2440abe"),
-	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
-	// 					Type: to.Ptr(eventstream.SourceTypeAzureSQLMIDBCDC),
-	// 					Properties: &eventstream.BaseSQLCDCSourceProperties{
-	// 						DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
-	// 						TableName: to.Ptr("tableName"),
-	// 					},
-	// 				},
-	// 				&eventstream.SQLServerOnVMDBCDCSourceResponse{
-	// 					Name: to.Ptr("SQLServerOnVMDBCDCSource"),
-	// 					ID: to.Ptr("759842ab-a968-498d-9f37-f46297da8b07"),
-	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
-	// 					Type: to.Ptr(eventstream.SourceTypeSQLServerOnVMDBCDC),
-	// 					Properties: &eventstream.BaseSQLCDCSourceProperties{
-	// 						DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
-	// 						TableName: to.Ptr("tableName"),
-	// 					},
-	// 				},
-	// 				&eventstream.MySQLCDCSourceResponse{
-	// 					Name: to.Ptr("MySQLCDCSource"),
-	// 					ID: to.Ptr("9791cd2a-19fb-4991-b878-2b061420a460"),
-	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
-	// 					Type: to.Ptr(eventstream.SourceTypeMySQLCDC),
-	// 					Properties: map[string]any{
-	// 						"dataConnectionId": "2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37",
-	// 						"port": float64(3306),
-	// 						"serverId": float64(9),
-	// 						"tableName": "tableName",
-	// 					},
-	// 				},
-	// 				&eventstream.PostgreSQLCDCSourceResponse{
-	// 					Name: to.Ptr("PostgreSQLCDCSource"),
-	// 					ID: to.Ptr("57b3394b-bcf3-479a-952b-22a815e1d684"),
-	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
-	// 					Type: to.Ptr(eventstream.SourceTypePostgreSQLCDC),
-	// 					Properties: &eventstream.PostgreSQLCDCSourceProperties{
-	// 						DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
-	// 						TableName: to.Ptr("tableName"),
-	// 						Port: to.Ptr[int32](5432),
-	// 						SlotName: to.Ptr("slotName"),
-	// 					},
-	// 				},
-	// 				&eventstream.GooglePubSubSourceResponse{
-	// 					Name: to.Ptr("GooglePubSubSource"),
-	// 					ID: to.Ptr("d5f702ca-8b2b-4ac5-88e7-50697cb1b207"),
-	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
-	// 					Type: to.Ptr(eventstream.SourceTypeGooglePubSub),
-	// 					Properties: &eventstream.GooglePubSubSourceProperties{
-	// 						DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
-	// 					},
-	// 				},
-	// 				&eventstream.MqttSourceResponse{
-	// 					Name: to.Ptr("MqttSource"),
-	// 					ID: to.Ptr("77640306-3525-45cb-978c-f2ce6f1d2605"),
-	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
-	// 					Type: to.Ptr(eventstream.SourceTypeMqtt),
-	// 					Properties: &eventstream.MqttSourceProperties{
-	// 						DataConnectionID: to.Ptr("6950656c-9f6d-48e8-b7d1-6cf9eb7cca28"),
-	// 						ServerVersion: to.Ptr(eventstream.ServerVersionV5),
-	// 						Topic: to.Ptr("mqttTopicName"),
-	// 					},
-	// 				},
-	// 				&eventstream.RealTimeWeatherSourceResponse{
-	// 					Name: to.Ptr("RealTimeWeatherSource"),
-	// 					ID: to.Ptr("bf273a56-dcb7-4cb1-8be4-5620f769fe1f"),
-	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
-	// 					Type: to.Ptr(eventstream.SourceTypeRealTimeWeather),
-	// 					Properties: &eventstream.RealTimeWeatherSourceProperties{
-	// 						Latitude: to.Ptr[float32](-22.690611),
-	// 						Longitude: to.Ptr[float32](-45.7846301),
-	// 					},
-	// 				},
-	// 				&eventstream.SolacePubSubSourceResponse{
-	// 					Name: to.Ptr("SolacePubSubSource"),
-	// 					ID: to.Ptr("a612baf7-4d64-4522-8850-44847c99016c"),
-	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
-	// 					Type: to.Ptr(eventstream.SourceTypeSolacePubSub),
-	// 					Properties: &eventstream.SolacePubSubTopicsSourceProperties{
-	// 						DataConnectionID: to.Ptr("684e1958-5999-4f3f-bfe5-e19dd55f9cbf"),
-	// 						MapSolaceProperties: to.Ptr(false),
-	// 						MapUserProperties: to.Ptr(false),
-	// 						MessageVPNName: to.Ptr("messageVpnName"),
-	// 						PubSubType: to.Ptr(eventstream.PubSubTypeTopics),
-	// 						Topics: []string{
-	// 							"topicName1",
-	// 							"topicName2"},
-	// 						},
-	// 				}},
-	// 				Streams: []eventstream.StreamResponseClassification{
-	// 					&eventstream.DefaultStreamResponse{
-	// 						Name: to.Ptr("Eventstream-stream"),
-	// 						Type: to.Ptr(eventstream.StreamTypeDefaultStream),
-	// 						ID: to.Ptr("8eff3cbe-f452-4d7f-bc2d-f35b4359c917"),
-	// 						InputNodes: []eventstream.NodeReference{
+	// 					Type: to.Ptr(eventstream.SourceTypeAzureBlobStorageEvents),
+	// 					Properties: &eventstream.AzureBlobStorageEventsSourceProperties{
+	// 						AzureBlobStorageEvents: []eventstream.AzureBlobStorageEvents{
 	// 							{
-	// 								Name: to.Ptr("AzureEventHubSource"),
-	// 						}},
-	// 						Properties: map[string]any{
+	// 								AzureResourceID: to.Ptr("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resourceGroupName/providers/Microsoft.Storage/storageAccounts/storageAccountName"),
+	// 								ID: to.Ptr("c1a7f10c-3b4a-4d1a-9f6f-1d2b3c4d5e6f"),
+	// 								IncludedEventTypes: []eventstream.IncludedEventTypes{
+	// 									eventstream.IncludedEventTypesMicrosoftStorageBlobCreated,
+	// 									eventstream.IncludedEventTypesMicrosoftStorageBlobDeleted},
+	// 							}},
+	// 							StreamEvents: to.Ptr(true),
 	// 						},
 	// 					},
-	// 					&eventstream.DerivedStreamResponse{
-	// 						Name: to.Ptr("DerivedStreamName"),
-	// 						Type: to.Ptr(eventstream.StreamTypeDerivedStream),
-	// 						ID: to.Ptr("0f6f0dd8-9de2-48e2-92e7-e15b755b22a6"),
-	// 						InputNodes: []eventstream.NodeReference{
-	// 							{
-	// 								Name: to.Ptr("FilterName"),
-	// 						}},
-	// 						Properties: &eventstream.DerivedStreamProperties{
-	// 							InputSerialization: &eventstream.JSONSerializationInfo{
-	// 								Type: to.Ptr(eventstream.SerializationTypeJSON),
-	// 								Properties: &eventstream.JSONSerializationProperties{
-	// 									Encoding: to.Ptr(eventstream.EncodingUTF8),
-	// 								},
+	// 					&eventstream.FabricCapacityOverviewEventsSourceResponse{
+	// 						Name: to.Ptr("FabricCapacityOverviewEventsSource"),
+	// 						ID: to.Ptr("2e7b7f0f-6f1a-4d38-8b12-67d0e2d3e0b9"),
+	// 						Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 						Type: to.Ptr(eventstream.SourceTypeFabricCapacityOverviewEvents),
+	// 						Properties: &eventstream.FabricCapacityOverviewEventsSourceProperties{
+	// 							CapacityID: to.Ptr("0b6d8e27-0b7b-4e18-9e5b-2e6b9d9d7e3a"),
+	// 							EventScope: to.Ptr(eventstream.EventScopeCapacity),
+	// 							Filters: []any{
+	// 								map[string]any{
+	// 									"key": "data.counter",
+	// 									"operatorType": "NumberIn",
+	// 									"values":[]any{
+	// 										float64(5),
+	// 										float64(1),
+	// 									},
+	// 							}},
+	// 							IncludedEventTypes: []string{
+	// 								"Microsoft.Fabric.Capacity.State",
+	// 								"Microsoft.Fabric.Capacity.Summary"},
 	// 							},
 	// 						},
-	// 				}},
-	// 			}
+	// 						&eventstream.FabricJobEventsSourceResponse{
+	// 							Name: to.Ptr("FabricJobEventsSource"),
+	// 							ID: to.Ptr("f9c8c1e2-1c5b-4c2a-8f3a-1a2b3c4d5e6f"),
+	// 							Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 							Type: to.Ptr(eventstream.SourceTypeFabricJobEvents),
+	// 							Properties: &eventstream.FabricJobEventsSourceProperties{
+	// 								EventScope: to.Ptr(eventstream.EventScopeWorkspace),
+	// 								Filters: []any{
+	// 									map[string]any{
+	// 										"key": "data.jobType",
+	// 										"operatorType": "StringIn",
+	// 										"values":[]any{
+	// 											"Pipeline",
+	// 											"Notebook",
+	// 										},
+	// 									},
+	// 								},
+	// 								IncludedEventTypes: []string{
+	// 									"Microsoft.Fabric.Job.Started",
+	// 									"Microsoft.Fabric.Job.Completed"},
+	// 									ItemID: to.Ptr("ee579458-85ea-4652-bd77-5c7d7c298b2a"),
+	// 									WorkspaceID: to.Ptr("9625b495-17b3-4d6c-aeea-a81ae76ba369"),
+	// 								},
+	// 							},
+	// 							&eventstream.FabricOneLakeEventsSourceResponse{
+	// 								Name: to.Ptr("FabricOneLakeEventsSource"),
+	// 								ID: to.Ptr("b7a6f5e4-3d2c-4b1a-9f8e-7d6c5b4a3f2e"),
+	// 								Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 								Type: to.Ptr(eventstream.SourceTypeFabricOneLakeEvents),
+	// 								Properties: &eventstream.FabricOneLakeEventsSourceProperties{
+	// 									Filters: []any{
+	// 										map[string]any{
+	// 											"key": "data.path",
+	// 											"operatorType": "StringEndsWith",
+	// 											"values":[]any{
+	// 												".json",
+	// 												".csv",
+	// 											},
+	// 										},
+	// 									},
+	// 									IncludedEventTypes: []string{
+	// 										"Microsoft.Fabric.OneLake.FileCreated",
+	// 										"Microsoft.Fabric.OneLake.FileDeleted"},
+	// 										ItemID: to.Ptr("ee579458-85ea-4652-bd77-5c7d7c298b2a"),
+	// 										OneLakePaths: []string{
+	// 											"/Files/Events/",
+	// 											"/Tables/Telemetry/"},
+	// 											TenantID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+	// 											WorkspaceID: to.Ptr("9625b495-17b3-4d6c-aeea-a81ae76ba369"),
+	// 										},
+	// 									},
+	// 									&eventstream.FabricWorkspaceItemEventsSourceResponse{
+	// 										Name: to.Ptr("FabricWorkspaceItemEventsSource"),
+	// 										ID: to.Ptr("e6d5c4b3-a2b1-4c5d-9e8f-7a6b5c4d3e2f"),
+	// 										Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 										Type: to.Ptr(eventstream.SourceTypeFabricWorkspaceItemEvents),
+	// 										Properties: &eventstream.FabricWorkspaceItemEventsSourceProperties{
+	// 											EventScope: to.Ptr(eventstream.EventScopeItem),
+	// 											Filters: []any{
+	// 												map[string]any{
+	// 													"key": "data.itemType",
+	// 													"operatorType": "StringIn",
+	// 													"values":[]any{
+	// 														"Lakehouse",
+	// 														"Notebook",
+	// 													},
+	// 												},
+	// 											},
+	// 											IncludedEventTypes: []string{
+	// 												"Microsoft.Fabric.Item.Created",
+	// 												"Microsoft.Fabric.Item.Deleted"},
+	// 												ItemID: to.Ptr("4c8c3353-9652-4567-b8f3-eb585ef01ba9"),
+	// 												WorkspaceID: to.Ptr("9625b495-17b3-4d6c-aeea-a81ae76ba369"),
+	// 											},
+	// 										},
+	// 										&eventstream.SampleDataSourceResponse{
+	// 											Name: to.Ptr("SampleDataSource"),
+	// 											ID: to.Ptr("19258e62-4de9-4c52-b45e-71502dc2ddea"),
+	// 											Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 											Type: to.Ptr(eventstream.SourceTypeSampleData),
+	// 											Properties: &eventstream.SampleDataSourceProperties{
+	// 												Type: to.Ptr(eventstream.Type("Bicycles")),
+	// 											},
+	// 										},
+	// 										&eventstream.AmazonKinesisSourceResponse{
+	// 											Name: to.Ptr("AmazonKinesisSource"),
+	// 											ID: to.Ptr("7afaa265-1d67-416f-8183-e6e1b1ebb4ea"),
+	// 											Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 											Type: to.Ptr(eventstream.SourceTypeAmazonKinesis),
+	// 											Properties: &eventstream.AmazonKinesisSourceProperties{
+	// 												DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 												Region: to.Ptr(eventstream.RegionUsEast1),
+	// 											},
+	// 										},
+	// 										&eventstream.AmazonMSKKafkaSourceResponse{
+	// 											Name: to.Ptr("AmazonMSKKafkaSource"),
+	// 											ID: to.Ptr("d020dd19-e84c-42e1-b4be-87e58145e1b5"),
+	// 											Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 											Type: to.Ptr(eventstream.SourceTypeAmazonMSKKafka),
+	// 											Properties: &eventstream.AmazonMSKKafkaSourceProperties{
+	// 												AutoOffsetReset: to.Ptr(eventstream.AutoOffsetResetEarliest),
+	// 												ConsumerGroupName: to.Ptr("consumerGroupName"),
+	// 												DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 												Topic: to.Ptr("topic"),
+	// 												SaslMechanism: to.Ptr(eventstream.SaslMechanismPLAIN),
+	// 												SecurityProtocol: to.Ptr(eventstream.SecurityProtocolSASLPLAINTEXT),
+	// 											},
+	// 										},
+	// 										&eventstream.ApacheKafkaSourceResponse{
+	// 											Name: to.Ptr("ApacheKafkaSource"),
+	// 											ID: to.Ptr("03a6dd4a-4627-422f-a287-2ccd7daf903d"),
+	// 											Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 											Type: to.Ptr(eventstream.SourceTypeApacheKafka),
+	// 											Properties: &eventstream.ApacheKafkaSourceProperties{
+	// 												AutoOffsetReset: to.Ptr(eventstream.AutoOffsetResetLatest),
+	// 												ConsumerGroupName: to.Ptr("consumerGroupName"),
+	// 												DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 												Topic: to.Ptr("topic"),
+	// 												SaslMechanism: to.Ptr(eventstream.SaslMechanismSCRAMSHA512),
+	// 												SecurityProtocol: to.Ptr(eventstream.SecurityProtocolSASLSSL),
+	// 											},
+	// 										},
+	// 										&eventstream.ConfluentCloudSourceResponse{
+	// 											Name: to.Ptr("ConfluentCloudSource"),
+	// 											ID: to.Ptr("6f493321-6c12-40c6-9980-c2aa38804829"),
+	// 											Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 											Type: to.Ptr(eventstream.SourceTypeConfluentCloud),
+	// 											Properties: &eventstream.BaseKafkaSourceProperties{
+	// 												AutoOffsetReset: to.Ptr(eventstream.AutoOffsetResetEarliest),
+	// 												ConsumerGroupName: to.Ptr("consumerGroupName"),
+	// 												DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 												Topic: to.Ptr("topic"),
+	// 											},
+	// 										},
+	// 										&eventstream.AzureCosmosDBCDCSourceResponse{
+	// 											Name: to.Ptr("AzureCosmosDBCDCSource"),
+	// 											ID: to.Ptr("e7f88779-0349-47e3-bead-85afc9d3c9a4"),
+	// 											Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 											Type: to.Ptr(eventstream.SourceTypeAzureCosmosDBCDC),
+	// 											Properties: &eventstream.AzureCosmosDBCDCSourceProperties{
+	// 												ContainerName: to.Ptr("containerName"),
+	// 												DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 												DatabaseName: to.Ptr("databaseName"),
+	// 												OffsetPolicy: to.Ptr(eventstream.OffsetPolicyEarliest),
+	// 											},
+	// 										},
+	// 										&eventstream.AzureSQLDBCDCSourceResponse{
+	// 											Name: to.Ptr("AzureSQLDBCDCSource"),
+	// 											ID: to.Ptr("da5ed80d-c672-4809-a7ac-6224aa2ab2c7"),
+	// 											Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 											Type: to.Ptr(eventstream.SourceTypeAzureSQLDBCDC),
+	// 											Properties: &eventstream.BaseSQLCDCSourceProperties{
+	// 												DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 												TableName: to.Ptr("tableName"),
+	// 											},
+	// 										},
+	// 										&eventstream.AzureSQLMIDBCDCSourceResponse{
+	// 											Name: to.Ptr("AzureSQLMIDBCDCSource"),
+	// 											ID: to.Ptr("745e401f-aac6-463f-b107-c336a2440abe"),
+	// 											Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 											Type: to.Ptr(eventstream.SourceTypeAzureSQLMIDBCDC),
+	// 											Properties: &eventstream.BaseSQLCDCSourceProperties{
+	// 												DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 												TableName: to.Ptr("tableName"),
+	// 											},
+	// 										},
+	// 										&eventstream.SQLServerOnVMDBCDCSourceResponse{
+	// 											Name: to.Ptr("SQLServerOnVMDBCDCSource"),
+	// 											ID: to.Ptr("759842ab-a968-498d-9f37-f46297da8b07"),
+	// 											Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 											Type: to.Ptr(eventstream.SourceTypeSQLServerOnVMDBCDC),
+	// 											Properties: &eventstream.BaseSQLCDCSourceProperties{
+	// 												DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 												TableName: to.Ptr("tableName"),
+	// 											},
+	// 										},
+	// 										&eventstream.MySQLCDCSourceResponse{
+	// 											Name: to.Ptr("MySQLCDCSource"),
+	// 											ID: to.Ptr("9791cd2a-19fb-4991-b878-2b061420a460"),
+	// 											Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 											Type: to.Ptr(eventstream.SourceTypeMySQLCDC),
+	// 											Properties: map[string]any{
+	// 												"dataConnectionId": "2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37",
+	// 												"port": float64(3306),
+	// 												"serverId": float64(9),
+	// 												"tableName": "tableName",
+	// 											},
+	// 										},
+	// 										&eventstream.PostgreSQLCDCSourceResponse{
+	// 											Name: to.Ptr("PostgreSQLCDCSource"),
+	// 											ID: to.Ptr("57b3394b-bcf3-479a-952b-22a815e1d684"),
+	// 											Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 											Type: to.Ptr(eventstream.SourceTypePostgreSQLCDC),
+	// 											Properties: &eventstream.PostgreSQLCDCSourceProperties{
+	// 												DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 												TableName: to.Ptr("tableName"),
+	// 												Port: to.Ptr[int32](5432),
+	// 												SlotName: to.Ptr("slotName"),
+	// 											},
+	// 										},
+	// 										&eventstream.GooglePubSubSourceResponse{
+	// 											Name: to.Ptr("GooglePubSubSource"),
+	// 											ID: to.Ptr("d5f702ca-8b2b-4ac5-88e7-50697cb1b207"),
+	// 											Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 											Type: to.Ptr(eventstream.SourceTypeGooglePubSub),
+	// 											Properties: &eventstream.GooglePubSubSourceProperties{
+	// 												DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 											},
+	// 										},
+	// 										&eventstream.HTTPSourceResponse{
+	// 											Name: to.Ptr("HttpSource"),
+	// 											ID: to.Ptr("0d61c91a-6b1d-4f4f-8e9a-1a7ef0f4d4f1"),
+	// 											Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 											Type: to.Ptr(eventstream.SourceTypeHTTP),
+	// 											Properties: &eventstream.HTTPSourceProperties{
+	// 												Method: to.Ptr(eventstream.HTTPMethodGET),
+	// 												DataConnectionID: to.Ptr("9dfcf6c1-0b38-4d53-9a2f-7b7f7d3f1a4b"),
+	// 												MaxRetries: to.Ptr[int32](3),
+	// 												PollIntervalMs: to.Ptr[int32](60000),
+	// 												RequestBody: to.Ptr("{\"query\":\"sample\"}"),
+	// 												RequestHeaders: []eventstream.KeyStringValuePair{
+	// 													{
+	// 														Key: to.Ptr("Accept"),
+	// 														Value: to.Ptr("application/json"),
+	// 												}},
+	// 												RequestParameters: []eventstream.KeyStringValuePair{
+	// 													{
+	// 														Key: to.Ptr("country"),
+	// 														Value: to.Ptr("US"),
+	// 												}},
+	// 												RetriableHTTPStatusCodes: to.Ptr("408,423,429"),
+	// 												RetryBackoffMs: to.Ptr[int32](2000),
+	// 											},
+	// 										},
+	// 										&eventstream.MqttSourceResponse{
+	// 											Name: to.Ptr("MqttSource"),
+	// 											ID: to.Ptr("77640306-3525-45cb-978c-f2ce6f1d2605"),
+	// 											Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 											Type: to.Ptr(eventstream.SourceTypeMqtt),
+	// 											Properties: &eventstream.MqttSourceProperties{
+	// 												DataConnectionID: to.Ptr("6950656c-9f6d-48e8-b7d1-6cf9eb7cca28"),
+	// 												ServerVersion: to.Ptr(eventstream.ServerVersionV5),
+	// 												Topic: to.Ptr("mqttTopicName"),
+	// 											},
+	// 										},
+	// 										&eventstream.RealTimeWeatherSourceResponse{
+	// 											Name: to.Ptr("RealTimeWeatherSource"),
+	// 											ID: to.Ptr("bf273a56-dcb7-4cb1-8be4-5620f769fe1f"),
+	// 											Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 											Type: to.Ptr(eventstream.SourceTypeRealTimeWeather),
+	// 											Properties: &eventstream.RealTimeWeatherSourceProperties{
+	// 												Latitude: to.Ptr[float32](-22.690611),
+	// 												Longitude: to.Ptr[float32](-45.7846301),
+	// 											},
+	// 										},
+	// 										&eventstream.SolacePubSubSourceResponse{
+	// 											Name: to.Ptr("SolacePubSubSource"),
+	// 											ID: to.Ptr("a612baf7-4d64-4522-8850-44847c99016c"),
+	// 											Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 											Type: to.Ptr(eventstream.SourceTypeSolacePubSub),
+	// 											Properties: &eventstream.SolacePubSubTopicsSourceProperties{
+	// 												DataConnectionID: to.Ptr("684e1958-5999-4f3f-bfe5-e19dd55f9cbf"),
+	// 												MapSolaceProperties: to.Ptr(false),
+	// 												MapUserProperties: to.Ptr(false),
+	// 												MessageVPNName: to.Ptr("messageVpnName"),
+	// 												PubSubType: to.Ptr(eventstream.PubSubTypeTopics),
+	// 												Topics: []string{
+	// 													"topicName1",
+	// 													"topicName2"},
+	// 												},
+	// 										}},
+	// 										Streams: []eventstream.StreamResponseClassification{
+	// 											&eventstream.DefaultStreamResponse{
+	// 												Name: to.Ptr("Eventstream-stream"),
+	// 												Type: to.Ptr(eventstream.StreamTypeDefaultStream),
+	// 												ID: to.Ptr("8eff3cbe-f452-4d7f-bc2d-f35b4359c917"),
+	// 												InputNodes: []eventstream.NodeReference{
+	// 													{
+	// 														Name: to.Ptr("AzureEventHubSource"),
+	// 												}},
+	// 												Properties: map[string]any{
+	// 												},
+	// 											},
+	// 											&eventstream.DerivedStreamResponse{
+	// 												Name: to.Ptr("DerivedStreamName"),
+	// 												Type: to.Ptr(eventstream.StreamTypeDerivedStream),
+	// 												ID: to.Ptr("0f6f0dd8-9de2-48e2-92e7-e15b755b22a6"),
+	// 												InputNodes: []eventstream.NodeReference{
+	// 													{
+	// 														Name: to.Ptr("FilterName"),
+	// 												}},
+	// 												Properties: &eventstream.DerivedStreamProperties{
+	// 													InputSerialization: &eventstream.JSONSerializationInfo{
+	// 														Type: to.Ptr(eventstream.SerializationTypeJSON),
+	// 														Properties: &eventstream.JSONSerializationProperties{
+	// 															Encoding: to.Ptr(eventstream.EncodingUTF8),
+	// 														},
+	// 													},
+	// 												},
+	// 										}},
+	// 									}
 }
 
 // Generated from example definition

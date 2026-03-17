@@ -210,11 +210,11 @@ func ExampleWorkspacesClient_ListWorkspaceAccessDetails() {
 	// res.WorkspaceAccessDetailsResponse = admin.WorkspaceAccessDetailsResponse{
 	// 	AccessDetails: []admin.WorkspaceAccessDetails{
 	// 		{
-	// 			Principal: &admin.Principal{
+	// 			Principal: &admin.UserPrincipal{
 	// 				Type: to.Ptr(admin.PrincipalTypeUser),
 	// 				DisplayName: to.Ptr("Jacob Hancock"),
 	// 				ID: to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-	// 				UserDetails: &admin.PrincipalUserDetails{
+	// 				UserDetails: &admin.UserPrincipalUserDetails{
 	// 					UserPrincipalName: to.Ptr("jacob@example.com"),
 	// 				},
 	// 			},
@@ -224,11 +224,11 @@ func ExampleWorkspacesClient_ListWorkspaceAccessDetails() {
 	// 			},
 	// 		},
 	// 		{
-	// 			Principal: &admin.Principal{
+	// 			Principal: &admin.UserPrincipal{
 	// 				Type: to.Ptr(admin.PrincipalTypeUser),
 	// 				DisplayName: to.Ptr("Caleb Foster"),
 	// 				ID: to.Ptr("c7db8e03-c8cb-4d4c-9f64-1dcd327c9d3c"),
-	// 				UserDetails: &admin.PrincipalUserDetails{
+	// 				UserDetails: &admin.UserPrincipalUserDetails{
 	// 					UserPrincipalName: to.Ptr("caleb@example.com"),
 	// 				},
 	// 			},
@@ -238,13 +238,13 @@ func ExampleWorkspacesClient_ListWorkspaceAccessDetails() {
 	// 			},
 	// 		},
 	// 		{
-	// 			Principal: &admin.Principal{
+	// 			Principal: &admin.GroupPrincipal{
 	// 				Type: to.Ptr(admin.PrincipalTypeGroup),
 	// 				DisplayName: to.Ptr("TestSecurityGroup"),
-	// 				GroupDetails: &admin.PrincipalGroupDetails{
+	// 				ID: to.Ptr("f51b705f-a409-4d40-9197-c5d5f349e2f0"),
+	// 				GroupDetails: &admin.GroupPrincipalGroupDetails{
 	// 					GroupType: to.Ptr(admin.GroupTypeSecurityGroup),
 	// 				},
-	// 				ID: to.Ptr("f51b705f-a409-4d40-9197-c5d5f349e2f0"),
 	// 			},
 	// 			WorkspaceAccessDetails: &admin.WorkspaceAccessDetail{
 	// 				Type: to.Ptr(admin.WorkspaceTypeWorkspace),
@@ -266,7 +266,7 @@ func ExampleWorkspacesClient_RestoreWorkspace() {
 		log.Fatalf("failed to create client: %v", err)
 	}
 	_, err = clientFactory.NewWorkspacesClient().RestoreWorkspace(ctx, "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f", admin.RestoreWorkspaceRequest{
-		NewWorkspaceAdminPrincipal: &admin.Principal{
+		NewWorkspaceAdminPrincipal: &admin.UserPrincipal{
 			Type: to.Ptr(admin.PrincipalTypeUser),
 			ID:   to.Ptr("17dd1e38-a4c6-41ed-bc4f-1e383f8ddd01"),
 		},
@@ -274,5 +274,82 @@ func ExampleWorkspacesClient_RestoreWorkspace() {
 	}, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_NewListNetworkingCommunicationPoliciesPager() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := admin.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewWorkspacesClient().NewListNetworkingCommunicationPoliciesPager(&admin.WorkspacesClientListNetworkingCommunicationPoliciesOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.NetworkCommunicationPolicies = admin.NetworkCommunicationPolicies{
+		// 	ContinuationToken: to.Ptr("eyJMYXN0U2VlbkNvbm5lY3Rpb25JZCI6NX0="),
+		// 	ContinuationURI: to.Ptr("https://api.fabric.microsoft.com/v1/admin/workspaces/networking/communicationpolicies?continuationToken=eyJMYXN0U2VlbkNvbm5lY3Rpb25JZCI6NX0="),
+		// 	Value: []admin.NetworkCommunicationPolicyDetails{
+		// 		{
+		// 			Inbound: &admin.NetworkCommunicationPolicyInboundDetails{
+		// 				PublicAccessRules: &admin.NetworkRules{
+		// 					DefaultAction: to.Ptr(admin.NetworkAccessRuleDeny),
+		// 				},
+		// 			},
+		// 			Outbound: &admin.NetworkCommunicationPolicyOutboundDetails{
+		// 				Connections: &admin.WorkspaceOutboundConnections{
+		// 					DefaultAction: to.Ptr(admin.ConnectionAccessActionTypeDeny),
+		// 					Rules: []admin.OutboundConnectionRule{
+		// 						{
+		// 							AllowedEndpoints: []admin.ConnectionRuleEndpointMetadata{
+		// 								{
+		// 									HostnamePattern: to.Ptr("*.microsoft.com"),
+		// 							}},
+		// 							ConnectionType: to.Ptr("SQL"),
+		// 							DefaultAction: to.Ptr(admin.ConnectionAccessActionTypeDeny),
+		// 						},
+		// 						{
+		// 							AllowedWorkspaces: []admin.ConnectionRuleWorkspaceMetadata{
+		// 								{
+		// 									WorkspaceID: to.Ptr("91c5ae74-e82d-4dd3-bfeb-6b1814030123"),
+		// 							}},
+		// 							ConnectionType: to.Ptr("lakehouse"),
+		// 							DefaultAction: to.Ptr(admin.ConnectionAccessActionTypeDeny),
+		// 						},
+		// 						{
+		// 							ConnectionType: to.Ptr("Maria DB"),
+		// 							DefaultAction: to.Ptr(admin.ConnectionAccessActionTypeAllow),
+		// 					}},
+		// 				},
+		// 				Gateways: &admin.WorkspaceOutboundGateways{
+		// 					AllowedGateways: []admin.GatewayAccessRuleMetadata{
+		// 						{
+		// 							ID: to.Ptr("17d8929d-ab32-46d1-858b-fdea74e93bf2"),
+		// 					}},
+		// 					DefaultAction: to.Ptr(admin.GatewayAccessActionTypeDeny),
+		// 				},
+		// 				Git: &admin.NetworkRules{
+		// 					DefaultAction: to.Ptr(admin.NetworkAccessRuleDeny),
+		// 				},
+		// 				PublicAccessRules: &admin.NetworkRules{
+		// 					DefaultAction: to.Ptr(admin.NetworkAccessRuleDeny),
+		// 				},
+		// 			},
+		// 			WorkspaceID: to.Ptr("fa9ad228-3e6b-44d4-b5f4-e275f337afa9"),
+		// 	}},
+		// }
 	}
 }

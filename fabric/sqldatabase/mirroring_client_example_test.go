@@ -16,7 +16,7 @@ import (
 )
 
 // Generated from example definition
-func ExampleClient_StartMirroring() {
+func ExampleMirroringClient_StartMirroring() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -26,14 +26,14 @@ func ExampleClient_StartMirroring() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewClient().StartMirroring(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", nil)
+	_, err = clientFactory.NewMirroringClient().StartMirroring(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
 }
 
 // Generated from example definition
-func ExampleClient_StopMirroring() {
+func ExampleMirroringClient_StopMirroring() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -43,7 +43,7 @@ func ExampleClient_StopMirroring() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewClient().StopMirroring(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", nil)
+	_, err = clientFactory.NewMirroringClient().StopMirroring(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

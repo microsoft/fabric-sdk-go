@@ -6,16 +6,6 @@
 
 package sqldatabase
 
-// ClientStartMirroringOptions contains the optional parameters for the Client.StartMirroring method.
-type ClientStartMirroringOptions struct {
-	// placeholder for future optional parameters
-}
-
-// ClientStopMirroringOptions contains the optional parameters for the Client.StopMirroring method.
-type ClientStopMirroringOptions struct {
-	// placeholder for future optional parameters
-}
-
 // ItemsClientBeginCreateSQLDatabaseOptions contains the optional parameters for the ItemsClient.BeginCreateSQLDatabase method.
 type ItemsClientBeginCreateSQLDatabaseOptions struct {
 	// Resumes the long-running operation from the provided token.
@@ -25,6 +15,12 @@ type ItemsClientBeginCreateSQLDatabaseOptions struct {
 // ItemsClientBeginGetSQLDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetSQLDatabaseDefinition
 // method.
 type ItemsClientBeginGetSQLDatabaseDefinitionOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// ItemsClientBeginRevalidateCMKOptions contains the optional parameters for the ItemsClient.BeginRevalidateCMK method.
+type ItemsClientBeginRevalidateCMKOptions struct {
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
@@ -54,9 +50,40 @@ type ItemsClientGetSQLDatabaseOptions struct {
 type ItemsClientListSQLDatabasesOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
+
+	// Lists items in a folder and its nested folders, or just a folder only. True - All items in the folder and its nested folders
+	// are listed, False - Only items in the folder are listed. The default value
+	// is true.
+	Recursive *bool
+
+	// This parameter allows users to filter items based on a specific root folder. If not provided, the workspace is used as
+	// the root folder.
+	RootFolderID *string
 }
 
 // ItemsClientUpdateSQLDatabaseOptions contains the optional parameters for the ItemsClient.UpdateSQLDatabase method.
 type ItemsClientUpdateSQLDatabaseOptions struct {
+	// placeholder for future optional parameters
+}
+
+// MirroringClientStartMirroringOptions contains the optional parameters for the MirroringClient.StartMirroring method.
+type MirroringClientStartMirroringOptions struct {
+	// placeholder for future optional parameters
+}
+
+// MirroringClientStopMirroringOptions contains the optional parameters for the MirroringClient.StopMirroring method.
+type MirroringClientStopMirroringOptions struct {
+	// placeholder for future optional parameters
+}
+
+// SQLAuditSettingsClientGetSQLAuditSettingsOptions contains the optional parameters for the SQLAuditSettingsClient.GetSQLAuditSettings
+// method.
+type SQLAuditSettingsClientGetSQLAuditSettingsOptions struct {
+	// placeholder for future optional parameters
+}
+
+// SQLAuditSettingsClientUpdateSQLAuditSettingsOptions contains the optional parameters for the SQLAuditSettingsClient.UpdateSQLAuditSettings
+// method.
+type SQLAuditSettingsClientUpdateSQLAuditSettingsOptions struct {
 	// placeholder for future optional parameters
 }

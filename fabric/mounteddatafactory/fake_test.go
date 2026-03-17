@@ -70,6 +70,9 @@ func (testsuite *FakeTestSuite) TestItems_ListMountedDataFactories() {
 				Description: to.Ptr("A MountedDataFactory description."),
 				DisplayName: to.Ptr("MountedDataFactory Name 1"),
 				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				SensitivityLabel: &mounteddatafactory.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 			},
 			{
@@ -77,6 +80,9 @@ func (testsuite *FakeTestSuite) TestItems_ListMountedDataFactories() {
 				Description: to.Ptr("A MountedDataFactory description."),
 				DisplayName: to.Ptr("MountedDataFactory Name 2"),
 				ID:          to.Ptr("f697fb63-abd4-4399-9548-be7e3c3c0dac"),
+				SensitivityLabel: &mounteddatafactory.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 			}},
 	}
@@ -89,7 +95,10 @@ func (testsuite *FakeTestSuite) TestItems_ListMountedDataFactories() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	pager := client.NewListMountedDataFactoriesPager(exampleWorkspaceID, &mounteddatafactory.ItemsClientListMountedDataFactoriesOptions{ContinuationToken: nil})
+	pager := client.NewListMountedDataFactoriesPager(exampleWorkspaceID, &mounteddatafactory.ItemsClientListMountedDataFactoriesOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")
@@ -156,6 +165,9 @@ func (testsuite *FakeTestSuite) TestItems_GetMountedDataFactory() {
 		Description: to.Ptr("A MountedDataFactory description."),
 		DisplayName: to.Ptr("MountedDataFactory 1"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &mounteddatafactory.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	}
 
@@ -193,6 +205,9 @@ func (testsuite *FakeTestSuite) TestItems_UpdateMountedDataFactory() {
 		Description: to.Ptr("MountedDataFactory's New description"),
 		DisplayName: to.Ptr("MountedDataFactory's New name"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &mounteddatafactory.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	}
 

@@ -21,6 +21,7 @@ func (c CreateMapRequest) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "description", c.Description)
 	populate(objectMap, "displayName", c.DisplayName)
 	populate(objectMap, "folderId", c.FolderID)
+	populate(objectMap, "sensitivityLabelSettings", c.SensitivityLabelSettings)
 	return json.Marshal(objectMap)
 }
 
@@ -44,6 +45,9 @@ func (c *CreateMapRequest) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "folderId":
 			err = unpopulate(val, "FolderID", &c.FolderID)
+			delete(rawMsg, key)
+		case "sensitivityLabelSettings":
+			err = unpopulate(val, "SensitivityLabelSettings", &c.SensitivityLabelSettings)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -91,6 +95,7 @@ func (m Map) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", m.DisplayName)
 	populate(objectMap, "folderId", m.FolderID)
 	populate(objectMap, "id", m.ID)
+	populate(objectMap, "sensitivityLabel", m.SensitivityLabel)
 	populate(objectMap, "tags", m.Tags)
 	populate(objectMap, "type", m.Type)
 	populate(objectMap, "workspaceId", m.WorkspaceID)
@@ -117,6 +122,9 @@ func (m *Map) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &m.ID)
+			delete(rawMsg, key)
+		case "sensitivityLabel":
+			err = unpopulate(val, "SensitivityLabel", &m.SensitivityLabel)
 			delete(rawMsg, key)
 		case "tags":
 			err = unpopulate(val, "Tags", &m.Tags)
@@ -258,6 +266,64 @@ func (m *Maps) UnmarshalJSON(data []byte) error {
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", m, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type SensitivityLabel.
+func (s SensitivityLabel) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "id", s.ID)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type SensitivityLabel.
+func (s *SensitivityLabel) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", s, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "id":
+			err = unpopulate(val, "ID", &s.ID)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", s, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type SensitivityLabelSettings.
+func (s SensitivityLabelSettings) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "labelId", s.LabelID)
+	populate(objectMap, "sensitivityLabelApplyStrategy", s.SensitivityLabelApplyStrategy)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type SensitivityLabelSettings.
+func (s *SensitivityLabelSettings) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", s, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "labelId":
+			err = unpopulate(val, "LabelID", &s.LabelID)
+			delete(rawMsg, key)
+		case "sensitivityLabelApplyStrategy":
+			err = unpopulate(val, "SensitivityLabelApplyStrategy", &s.SensitivityLabelApplyStrategy)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", s, err)
 		}
 	}
 	return nil

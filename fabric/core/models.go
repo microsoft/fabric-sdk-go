@@ -32,7 +32,7 @@ type AcceptExternalDataShareInvitationResponse struct {
 // AddConnectionRoleAssignmentRequest - The add connection role assignment request for a principal.
 type AddConnectionRoleAssignmentRequest struct {
 	// REQUIRED; The principal.
-	Principal *Principal
+	Principal PrincipalClassification
 
 	// REQUIRED; The connection role of the principal.
 	Role *ConnectionRole
@@ -41,7 +41,7 @@ type AddConnectionRoleAssignmentRequest struct {
 // AddDeploymentPipelineRoleAssignmentRequest - Add deployment pipeline role assignment request payload.
 type AddDeploymentPipelineRoleAssignmentRequest struct {
 	// REQUIRED; The principal.
-	Principal *Principal
+	Principal PrincipalClassification
 
 	// REQUIRED; The deployment pipeline role of the principal.
 	Role *DeploymentPipelineRole
@@ -50,7 +50,7 @@ type AddDeploymentPipelineRoleAssignmentRequest struct {
 // AddGatewayRoleAssignmentRequest - The add gateway role assignment request for a principal.
 type AddGatewayRoleAssignmentRequest struct {
 	// REQUIRED; The principal.
-	Principal *Principal
+	Principal PrincipalClassification
 
 	// REQUIRED; The gateway role of the principal.
 	Role *GatewayRole
@@ -59,7 +59,7 @@ type AddGatewayRoleAssignmentRequest struct {
 // AddWorkspaceRoleAssignmentRequest - Add workspace role assignment request payload.
 type AddWorkspaceRoleAssignmentRequest struct {
 	// REQUIRED; The principal.
-	Principal *Principal
+	Principal PrincipalClassification
 
 	// REQUIRED; The workspace role of the principal.
 	Role *WorkspaceRole
@@ -248,6 +248,49 @@ type BulkCreateShortcutsRequest struct {
 	CreateShortcutRequests []CreateShortcutWithTransformRequest
 }
 
+// BulkExportItemDefinitionsRequest - Bulk export item definitions request payload.
+type BulkExportItemDefinitionsRequest struct {
+	// REQUIRED; The mode for bulk export item definitions operation
+	Mode *BulkExportItemDefinitionsMode
+
+	// A list of item identifiers to retrieve
+	Items []ExportItemIdentifier
+}
+
+// BulkExportItemDefinitionsResponse - Bulk export item definitions response by definitions' parts.
+type BulkExportItemDefinitionsResponse struct {
+	// READ-ONLY; A list of item definition parts.
+	DefinitionParts []ItemDefinitionPart
+
+	// READ-ONLY; A list of item definition index entries.
+	ItemDefinitionsIndex []ItemDefinitionIndexEntry
+}
+
+// BulkImportItemDefinitionsRequest - Bulk import of exported item definitions request payload.
+type BulkImportItemDefinitionsRequest struct {
+	// REQUIRED; A list of items definitions parts to import
+	DefinitionParts []ItemDefinitionPart
+
+	// The import items request's configuration.
+	Options *BulkImportItemDefinitionsRequestOptions
+}
+
+// BulkImportItemDefinitionsRequestOptions - The import items request's configuration.
+type BulkImportItemDefinitionsRequestOptions struct {
+	// Specifies how to handle an imported item without a Logical ID when an item with the same display name and item type already
+	// exists in the workspace.
+	// True – The imported item will be paired with the existing workspace item based on display name and type.
+	// False – Name-based pairing is disabled. If a workspace item with the same display name and type exists, the import fails
+	// due to a name duplication conflict.
+	// Default value is false
+	AllowPairingByName *bool
+}
+
+// BulkImportItemDefinitionsResponse - Bulk import item definitions response payload.
+type BulkImportItemDefinitionsResponse struct {
+	ImportItemDefinitionsDetails []ImportItemDefinitionsDetails
+}
+
 // BulkMoveItemsRequest - Bulk move items request.
 type BulkMoveItemsRequest struct {
 	// REQUIRED; The IDs of requested items to move.
@@ -264,12 +307,17 @@ type CSVToDeltaTransform struct {
 
 	// REQUIRED; The type of transform. Additional transform types may be added over time.
 	Type *TransformType
+
+	// Determines whether subfolders within the target path are included in the transform operation. True - Include subfolders,
+	// False - Do not include subfolders. Default value is False.
+	IncludeSubfolders *bool
 }
 
 // GetTransform implements the TransformClassification interface for type CSVToDeltaTransform.
 func (c *CSVToDeltaTransform) GetTransform() *Transform {
 	return &Transform{
-		Type: c.Type,
+		IncludeSubfolders: c.IncludeSubfolders,
+		Type:              c.Type,
 	}
 }
 
@@ -636,7 +684,7 @@ type ConnectionRoleAssignment struct {
 	ID *string
 
 	// REQUIRED; The principal.
-	Principal *Principal
+	Principal PrincipalClassification
 
 	// REQUIRED; The connection role of the principal.
 	Role *ConnectionRole
@@ -661,7 +709,7 @@ type ConnectionRoleAssignments struct {
 type ConnectionRuleEndpointMetadata struct {
 	// REQUIRED; A wildcard-supported pattern that defines the allowed external endpoint. Examples include *.microsoft.com, api.contoso.com,
 	// or data.partner.org.
-	HostNamePattern *string
+	HostnamePattern *string
 }
 
 // ConnectionRuleWorkspaceMetadata - Represents a workspace-level exception rule that allows outbound communication to a specific
@@ -865,6 +913,9 @@ type CreateItemRequest struct {
 
 	// The folder ID. If not specified or null, the item is created with the workspace as its folder.
 	FolderID *string
+
+	// The sensitivity label settings for the item.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // CreateManagedPrivateEndpointRequest - Create managed private endpoint request payload.
@@ -944,6 +995,13 @@ type CreateOrUpdateDataAccessRolesRequest struct {
 	// For example, a member can be a Microsoft Entra ID group and permission scope can be a Read Action applied on the given
 	// Path to File, Folder(s) or Table(s) in OneLake.
 	Value []DataAccessRole
+}
+
+// CreateOrUpdateSingleDataAccessRoleRequest - Wrapper object for creating or updating a single data access role (without
+// id).
+type CreateOrUpdateSingleDataAccessRoleRequest struct {
+	// A single data access role definition (id is not included).
+	Value []DataAccessRoleBase
 }
 
 // CreateScheduleRequest - Create item schedule plan request payload.
@@ -1157,19 +1215,45 @@ func (d *DailyScheduleConfig) GetScheduleConfig() *ScheduleConfig {
 	}
 }
 
-// DataAccessRole - A Data access role represents a set of permissions and permission scopes that define what actions its
-// members are allowed to perform for the data in scope. Data access roles are used to manage data
-// access security and ensure that only authorized users can view, edit, or delete certain data. Members are users or groups
-// who have been granted the role, and they can read the data based on the
-// permissions assigned to the role. For example, a member can be an Microsoft Entra ID group and permission scope can be
-// a Read Action applied on the given Path to File, Folder(s) or Table(s) in
-// OneLake.
+// DataAccessRole - Extends base data access role with server-assigned read-only id property.
 type DataAccessRole struct {
 	// REQUIRED; The array of permissions that make up the Data access role.
 	DecisionRules []DecisionRule
 
 	// REQUIRED; The name of the Data access role.
 	Name *string
+
+	// The members object which contains the members of the role as arrays of different member types.
+	Members *Members
+
+	// READ-ONLY; The unique id for the Data access role.
+	ID *string
+}
+
+// DataAccessRoleBase - Base data access role object used for single-role operations (does not include id). Represents a set
+// of permissions and permission scopes that define allowed actions for scoped data.
+type DataAccessRoleBase struct {
+	// REQUIRED; The array of permissions that make up the Data access role.
+	DecisionRules []DecisionRule
+
+	// REQUIRED; The name of the Data access role.
+	Name *string
+
+	// The members object which contains the members of the role as arrays of different member types.
+	Members *Members
+}
+
+// DataAccessRoleListItem - Data access role object returned by list operations. Includes the entity tag (ETag) used for concurrency
+// control.
+type DataAccessRoleListItem struct {
+	// REQUIRED; The array of permissions that make up the Data access role.
+	DecisionRules []DecisionRule
+
+	// REQUIRED; The name of the Data access role.
+	Name *string
+
+	// Entity tag for the role, used for concurrency control.
+	ETag *string
 
 	// The members object which contains the members of the role as arrays of different member types.
 	Members *Members
@@ -1185,7 +1269,7 @@ type DataAccessRoles struct {
 	// role, and they can read the data based on the permissions assigned to the role.
 	// For example, a member can be a Microsoft Entra ID group and permission scope can be a Read Action applied on the given
 	// Path to File, Folder(s) or Table(s) in OneLake.
-	Value []DataAccessRole
+	Value []DataAccessRoleListItem
 
 	// The token for the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationToken *string
@@ -1373,7 +1457,7 @@ type DeploymentPipelineOperation struct {
 	Note *DeploymentPipelineOperationNote
 
 	// The principal that performed the deployment pipeline operation.
-	PerformedBy *Principal
+	PerformedBy PrincipalClassification
 
 	// READ-ONLY; The operation ID.
 	ID *string
@@ -1410,7 +1494,7 @@ type DeploymentPipelineOperationExtendedInfo struct {
 	Note *DeploymentPipelineOperationNote
 
 	// The principal that performed the deployment pipeline operation.
-	PerformedBy *Principal
+	PerformedBy PrincipalClassification
 
 	// READ-ONLY; The operation ID.
 	ID *string
@@ -1472,7 +1556,7 @@ type DeploymentPipelineRoleAssignment struct {
 	ID *string
 
 	// READ-ONLY; The principal.
-	Principal *Principal
+	Principal PrincipalClassification
 
 	// READ-ONLY; The deployment pipeline role of the principal.
 	Role *DeploymentPipelineRole
@@ -1652,6 +1736,27 @@ type Domains struct {
 	ContinuationURI *string
 }
 
+// EntireTenantPrincipal - Represents a tenant principal
+type EntireTenantPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type EntireTenantPrincipal.
+func (e *EntireTenantPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: e.DisplayName,
+		ID:          e.ID,
+		Type:        e.Type,
+	}
+}
+
 // ErrorRelatedResource - The error related resource details object.
 type ErrorRelatedResource struct {
 	// READ-ONLY; The resource ID that's involved in the error.
@@ -1693,10 +1798,16 @@ type ErrorResponseDetails struct {
 	RelatedResource *ErrorRelatedResource
 }
 
+// ExportItemIdentifier - The item identifier.
+type ExportItemIdentifier struct {
+	// REQUIRED; The item ID.
+	ID *string
+}
+
 // ExternalDataShare - An external data share object.
 type ExternalDataShare struct {
 	// READ-ONLY; The principal that created the external data share.
-	CreatorPrincipal *Principal
+	CreatorPrincipal PrincipalClassification
 
 	// READ-ONLY; The external data share ID.
 	ID *string
@@ -1875,7 +1986,7 @@ type GatewayRoleAssignment struct {
 	ID *string
 
 	// REQUIRED; The principal.
-	Principal *Principal
+	Principal PrincipalClassification
 
 	// REQUIRED; The gateway role of the principal.
 	Role *GatewayRole
@@ -2032,6 +2143,36 @@ type GoogleCloudStorage struct {
 	Subpath *string
 }
 
+// GroupPrincipal - Represents a security group.
+type GroupPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// Group specific details. Applicable when the principal type is Group.
+	GroupDetails *GroupPrincipalGroupDetails
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type GroupPrincipal.
+func (g *GroupPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: g.DisplayName,
+		ID:          g.ID,
+		Type:        g.Type,
+	}
+}
+
+// GroupPrincipalGroupDetails - Group specific details. Applicable when the principal type is Group.
+type GroupPrincipalGroupDetails struct {
+	// The type of the group. Additional group types may be added over time.
+	GroupType *GroupType
+}
+
 // ImmutabilityPolicy - Immutability policy object.
 type ImmutabilityPolicy struct {
 	// REQUIRED; Value of the retention days configured.
@@ -2048,6 +2189,27 @@ type ImmutabilityPolicyRequest struct {
 
 	// REQUIRED; Scope of the current immutability setting.
 	Scope *ImmutabilityScope
+}
+
+// ImportItemDefinitionsDetails - The item's definition operation details
+type ImportItemDefinitionsDetails struct {
+	// READ-ONLY; The item display name. The display name must follow naming rules according to item type.
+	ItemDisplayName *string
+
+	// READ-ONLY; The item object Id
+	ItemID *string
+
+	// READ-ONLY; The item logical Id.
+	ItemLogicalID *string
+
+	// READ-ONLY; The item type.
+	ItemType *ItemType
+
+	// READ-ONLY; The status of the dependency resolution.
+	OperationStatus *ImportItemDefinitionOperationStatus
+
+	// READ-ONLY; The operation type performed on the item.
+	OperationType *ItemDefinitionOperationType
 }
 
 // InboundRules - The policy for all inbound communications to a workspace.
@@ -2091,6 +2253,9 @@ type Item struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
 
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
@@ -2149,6 +2314,15 @@ type ItemDefinition struct {
 
 	// The format of the item definition.
 	Format *string
+}
+
+// ItemDefinitionIndexEntry - An entry in the item definitions index.
+type ItemDefinitionIndexEntry struct {
+	// READ-ONLY; The item ID.
+	ID *string
+
+	// READ-ONLY; The item definition root path.
+	RootPath *string
 }
 
 // ItemDefinitionPart - An item definition part object.
@@ -2271,6 +2445,24 @@ func (i *ItemReferenceByID) GetItemReference() *ItemReference {
 	}
 }
 
+// ItemReferenceByVariable - An item reference by variable.
+type ItemReferenceByVariable struct {
+	// REQUIRED; The item reference type.
+	ReferenceType *ItemReferenceType
+
+	// REQUIRED; A variable reference string that specifies the Variable Library and the variable name inside it. Format: $(/**/_VarLibrary_/_VarName_)
+	// for a Variable Library named VarLibrary and a variable named
+	// VarName.
+	VariableReference *string
+}
+
+// GetItemReference implements the ItemReferenceClassification interface for type ItemReferenceByVariable.
+func (i *ItemReferenceByVariable) GetItemReference() *ItemReference {
+	return &ItemReference{
+		ReferenceType: i.ReferenceType,
+	}
+}
+
 // ItemSchedule - Item schedule.
 type ItemSchedule struct {
 	// REQUIRED; Whether this schedule is enabled. True - Enabled, False - Disabled.
@@ -2286,7 +2478,7 @@ type ItemSchedule struct {
 	CreatedDateTime *time.Time
 
 	// The user identity that created this schedule or last modified.
-	Owner *Principal
+	Owner PrincipalClassification
 }
 
 // ItemSchedules - list of schedules for this item.
@@ -2795,6 +2987,11 @@ type OneDriveSharePoint struct {
 	// that holds the files and folders. [Subfolder] is the name of the subfolder within the container and is optional. For example:
 	// /mycontainer/mysubfolder
 	Subpath *string
+
+	// Specifies whether the user wants the fabric item sensitivity to be consistent with site level labels for Sharepoint shortcuts.
+	// If user sets it to true, and if a sharepoint site has a more restrictive
+	// label than the Fabric item, then only the label of the fabric item will be updated to match the sharepoint site.
+	UpdateFabricItemSensitivity *bool
 }
 
 // OneLake - An object containing the properties of the target OneLake data source.
@@ -2926,6 +3123,18 @@ type OutboundRules struct {
 	PublicAccessRules *NetworkRules
 }
 
+// Parameter - An item job parameter.
+type Parameter struct {
+	// REQUIRED; The parameter name, specified by the caller, must be unique (case-insensitive check) and no longer than 256 characters.
+	Name *string
+
+	// REQUIRED; The parameter type.
+	Type *ItemJobParameterType
+
+	// REQUIRED; The parameter value based on the parameter type.
+	Value any
+}
+
 // PermissionScope - Defines a set of attributes (properties) that determine the scope and level of access to a resource.
 // When attributeName property is set to Path, the attributeValueIncludedIn property must specify the
 // location of the resource being accessed, such as "Tables/Table1". When the attributeName property is set to Action, the
@@ -2999,45 +3208,12 @@ type Principal struct {
 	// REQUIRED; The type of the principal. Additional principal types may be added over time.
 	Type *PrincipalType
 
-	// Group specific details. Applicable when the principal type is Group.
-	GroupDetails *PrincipalGroupDetails
-
-	// Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
-	ServicePrincipalProfileDetails *PrincipalServicePrincipalProfileDetails
-
 	// READ-ONLY; The principal's display name.
 	DisplayName *string
-
-	// READ-ONLY; Service principal specific details. Applicable when the principal type is ServicePrincipal.
-	ServicePrincipalDetails *PrincipalServicePrincipalDetails
-
-	// READ-ONLY; User principal specific details. Applicable when the principal type is User.
-	UserDetails *PrincipalUserDetails
 }
 
-// PrincipalGroupDetails - Group specific details. Applicable when the principal type is Group.
-type PrincipalGroupDetails struct {
-	// The type of the group. Additional group types may be added over time.
-	GroupType *GroupType
-}
-
-// PrincipalServicePrincipalDetails - Service principal specific details. Applicable when the principal type is ServicePrincipal.
-type PrincipalServicePrincipalDetails struct {
-	// READ-ONLY; The service principal's Microsoft Entra AppId.
-	AADAppID *string
-}
-
-// PrincipalServicePrincipalProfileDetails - Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
-type PrincipalServicePrincipalProfileDetails struct {
-	// The service principal profile's parent principal.
-	ParentPrincipal *Principal
-}
-
-// PrincipalUserDetails - User principal specific details. Applicable when the principal type is User.
-type PrincipalUserDetails struct {
-	// READ-ONLY; The user principal name.
-	UserPrincipalName *string
-}
+// GetPrincipal implements the PrincipalClassification interface for type Principal.
+func (p *Principal) GetPrincipal() *Principal { return p }
 
 // PrivateEndpointConnectionState - Private endpoint connection state
 type PrivateEndpointConnectionState struct {
@@ -3077,8 +3253,14 @@ type RowConstraint struct {
 
 // RunOnDemandItemJobRequest - Run on demand item job instance payload
 type RunOnDemandItemJobRequest struct {
-	// Payload for run on-demand job request. Needed only if the job type requires a payload.
+	// The execution data for an on-demand job. This is fixed static data defined by the specific item job type.
 	ExecutionData any
+
+	// The parameter list for an on-demand job. These are per-run, user-defined inputs that tailor this invocation. Note: This
+	// property is not broadly supported. If the API returns an error with errorCode
+	// FeatureNotAvailable and errorMessage Parameter is not allowed for this item type or this item job type, the parameters
+	// property is not supported for the specified item type or item job type.
+	Parameters []Parameter
 }
 
 // S3Compatible - An object containing the properties of the target S3 compatible data source.
@@ -3119,6 +3301,45 @@ type ScheduleConfig struct {
 // GetScheduleConfig implements the ScheduleConfigClassification interface for type ScheduleConfig.
 func (s *ScheduleConfig) GetScheduleConfig() *ScheduleConfig { return s }
 
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
+// ServicePrincipal - Represents a Microsoft Entra service principal.
+type ServicePrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+
+	// READ-ONLY; Service principal specific details. Applicable when the principal type is ServicePrincipal.
+	ServicePrincipalDetails *ServicePrincipalDetails
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type ServicePrincipal.
+func (s *ServicePrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: s.DisplayName,
+		ID:          s.ID,
+		Type:        s.Type,
+	}
+}
+
 // ServicePrincipalCredentials - Credentials for ServicePrincipal CredentialType.
 type ServicePrincipalCredentials struct {
 	// REQUIRED; The credential type of the connection.
@@ -3144,6 +3365,43 @@ func (s *ServicePrincipalCredentials) GetCredentials() *Credentials {
 	return &Credentials{
 		CredentialType: s.CredentialType,
 	}
+}
+
+// ServicePrincipalDetails - Service principal specific details. Applicable when the principal type is ServicePrincipal.
+type ServicePrincipalDetails struct {
+	// READ-ONLY; The service principal's Microsoft Entra AppId.
+	AADAppID *string
+}
+
+// ServicePrincipalProfilePrincipal - Represents a service principal profile.
+type ServicePrincipalProfilePrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
+	ServicePrincipalProfileDetails *ServicePrincipalProfilePrincipalServicePrincipalProfileDetails
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type ServicePrincipalProfilePrincipal.
+func (s *ServicePrincipalProfilePrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: s.DisplayName,
+		ID:          s.ID,
+		Type:        s.Type,
+	}
+}
+
+// ServicePrincipalProfilePrincipalServicePrincipalProfileDetails - Service principal profile details. Applicable when the
+// principal type is ServicePrincipalProfile.
+type ServicePrincipalProfilePrincipalServicePrincipalProfileDetails struct {
+	// The service principal profile's parent principal.
+	ParentPrincipal PrincipalClassification
 }
 
 // ShareableCloudConnection - A connection that connects through the cloud.
@@ -3263,7 +3521,7 @@ type ShortcutTransformFlagged struct {
 
 	// Determines whether this shortcut is a transform shortcut. True - A shortcut transform, False - A regular shortcut. You
 	// can get the shortcut transform properties using Get Shortcut
-	// [rest/api/fabric/core/onelake-shortcuts/get-shortcut].
+	// [/rest/api/fabric/core/onelake-shortcuts/get-shortcut].
 	IsShortcutTransform *bool
 
 	// An object that contains the transform name and its corresponding properties to be applied to target data, and must specify
@@ -3366,6 +3624,10 @@ func (t *TenantTagScope) GetTagScope() *TagScope {
 type Transform struct {
 	// REQUIRED; The type of transform. Additional transform types may be added over time.
 	Type *TransformType
+
+	// Determines whether subfolders within the target path are included in the transform operation. True - Include subfolders,
+	// False - Do not include subfolders. Default value is False.
+	IncludeSubfolders *bool
 }
 
 // GetTransform implements the TransformClassification interface for type Transform.
@@ -3771,6 +4033,36 @@ type UpdateWorkspaceRoleAssignmentRequest struct {
 	Role *WorkspaceRole
 }
 
+// UserPrincipal - Represents a Microsoft Entra user principal.
+type UserPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+
+	// READ-ONLY; User principal specific details. Applicable when the principal type is User.
+	UserDetails *UserPrincipalUserDetails
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type UserPrincipal.
+func (u *UserPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: u.DisplayName,
+		ID:          u.ID,
+		Type:        u.Type,
+	}
+}
+
+// UserPrincipalUserDetails - User principal specific details. Applicable when the principal type is User.
+type UserPrincipalUserDetails struct {
+	// READ-ONLY; The user principal name.
+	UserPrincipalName *string
+}
+
 // VirtualNetworkAzureResource - The properties of a Virtual Network Azure resource
 type VirtualNetworkAzureResource struct {
 	// REQUIRED; The name of the resource group
@@ -4056,7 +4348,7 @@ type WorkspaceRoleAssignment struct {
 	ID *string
 
 	// READ-ONLY; The principal.
-	Principal *Principal
+	Principal PrincipalClassification
 
 	// READ-ONLY; The workspace role of the principal.
 	Role *WorkspaceRole

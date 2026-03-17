@@ -60,11 +60,19 @@ type ItemsClientGetEnvironmentOptions struct {
 type ItemsClientListEnvironmentsOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
+
+	// Lists items in a folder and its nested folders, or just a folder only. True - All items in the folder and its nested folders
+	// are listed, False - Only items in the folder are listed. The default value
+	// is true.
+	Recursive *bool
+
+	// This parameter allows users to filter items based on a specific root folder. If not provided, the workspace is used as
+	// the root folder.
+	RootFolderID *string
 }
 
-// ItemsClientPublishEnvironmentPreviewOptions contains the optional parameters for the ItemsClient.PublishEnvironmentPreview
-// method.
-type ItemsClientPublishEnvironmentPreviewOptions struct {
+// ItemsClientPublishEnvironmentBetaOptions contains the optional parameters for the ItemsClient.PublishEnvironmentBeta method.
+type ItemsClientPublishEnvironmentBetaOptions struct {
 	// placeholder for future optional parameters
 }
 
@@ -79,14 +87,19 @@ type PublishedClientExportExternalLibrariesOptions struct {
 	// placeholder for future optional parameters
 }
 
+// PublishedClientGetSparkComputeBetaOptions contains the optional parameters for the PublishedClient.GetSparkComputeBeta
+// method.
+type PublishedClientGetSparkComputeBetaOptions struct {
+	// placeholder for future optional parameters
+}
+
 // PublishedClientGetSparkComputeOptions contains the optional parameters for the PublishedClient.GetSparkCompute method.
 type PublishedClientGetSparkComputeOptions struct {
 	// placeholder for future optional parameters
 }
 
-// PublishedClientGetSparkComputePreviewOptions contains the optional parameters for the PublishedClient.GetSparkComputePreview
-// method.
-type PublishedClientGetSparkComputePreviewOptions struct {
+// PublishedClientListLibrariesBetaOptions contains the optional parameters for the PublishedClient.ListLibrariesBeta method.
+type PublishedClientListLibrariesBetaOptions struct {
 	// placeholder for future optional parameters
 }
 
@@ -96,20 +109,14 @@ type PublishedClientListLibrariesOptions struct {
 	ContinuationToken *string
 }
 
-// PublishedClientListLibrariesPreviewOptions contains the optional parameters for the PublishedClient.ListLibrariesPreview
+// StagingClientDeleteCustomLibraryBetaOptions contains the optional parameters for the StagingClient.DeleteCustomLibraryBeta
 // method.
-type PublishedClientListLibrariesPreviewOptions struct {
+type StagingClientDeleteCustomLibraryBetaOptions struct {
 	// placeholder for future optional parameters
 }
 
 // StagingClientDeleteCustomLibraryOptions contains the optional parameters for the StagingClient.DeleteCustomLibrary method.
 type StagingClientDeleteCustomLibraryOptions struct {
-	// placeholder for future optional parameters
-}
-
-// StagingClientDeleteCustomLibraryPreviewOptions contains the optional parameters for the StagingClient.DeleteCustomLibraryPreview
-// method.
-type StagingClientDeleteCustomLibraryPreviewOptions struct {
 	// placeholder for future optional parameters
 }
 
@@ -119,14 +126,13 @@ type StagingClientExportExternalLibrariesOptions struct {
 	// placeholder for future optional parameters
 }
 
-// StagingClientGetSparkComputeOptions contains the optional parameters for the StagingClient.GetSparkCompute method.
-type StagingClientGetSparkComputeOptions struct {
+// StagingClientGetSparkComputeBetaOptions contains the optional parameters for the StagingClient.GetSparkComputeBeta method.
+type StagingClientGetSparkComputeBetaOptions struct {
 	// placeholder for future optional parameters
 }
 
-// StagingClientGetSparkComputePreviewOptions contains the optional parameters for the StagingClient.GetSparkComputePreview
-// method.
-type StagingClientGetSparkComputePreviewOptions struct {
+// StagingClientGetSparkComputeOptions contains the optional parameters for the StagingClient.GetSparkCompute method.
+type StagingClientGetSparkComputeOptions struct {
 	// placeholder for future optional parameters
 }
 
@@ -136,15 +142,15 @@ type StagingClientImportExternalLibrariesOptions struct {
 	// placeholder for future optional parameters
 }
 
+// StagingClientListLibrariesBetaOptions contains the optional parameters for the StagingClient.ListLibrariesBeta method.
+type StagingClientListLibrariesBetaOptions struct {
+	// placeholder for future optional parameters
+}
+
 // StagingClientListLibrariesOptions contains the optional parameters for the StagingClient.NewListLibrariesPager method.
 type StagingClientListLibrariesOptions struct {
 	// Token to retrieve the next page of results, if available.
 	ContinuationToken *string
-}
-
-// StagingClientListLibrariesPreviewOptions contains the optional parameters for the StagingClient.ListLibrariesPreview method.
-type StagingClientListLibrariesPreviewOptions struct {
-	// placeholder for future optional parameters
 }
 
 // StagingClientRemoveExternalLibraryOptions contains the optional parameters for the StagingClient.RemoveExternalLibrary
@@ -153,24 +159,24 @@ type StagingClientRemoveExternalLibraryOptions struct {
 	// placeholder for future optional parameters
 }
 
+// StagingClientUpdateSparkComputeBetaOptions contains the optional parameters for the StagingClient.UpdateSparkComputeBeta
+// method.
+type StagingClientUpdateSparkComputeBetaOptions struct {
+	// placeholder for future optional parameters
+}
+
 // StagingClientUpdateSparkComputeOptions contains the optional parameters for the StagingClient.UpdateSparkCompute method.
 type StagingClientUpdateSparkComputeOptions struct {
 	// placeholder for future optional parameters
 }
 
-// StagingClientUpdateSparkComputePreviewOptions contains the optional parameters for the StagingClient.UpdateSparkComputePreview
+// StagingClientUploadCustomLibraryBetaOptions contains the optional parameters for the StagingClient.UploadCustomLibraryBeta
 // method.
-type StagingClientUpdateSparkComputePreviewOptions struct {
+type StagingClientUploadCustomLibraryBetaOptions struct {
 	// placeholder for future optional parameters
 }
 
 // StagingClientUploadCustomLibraryOptions contains the optional parameters for the StagingClient.UploadCustomLibrary method.
 type StagingClientUploadCustomLibraryOptions struct {
-	// placeholder for future optional parameters
-}
-
-// StagingClientUploadCustomLibraryPreviewOptions contains the optional parameters for the StagingClient.UploadCustomLibraryPreview
-// method.
-type StagingClientUploadCustomLibraryPreviewOptions struct {
 	// placeholder for future optional parameters
 }

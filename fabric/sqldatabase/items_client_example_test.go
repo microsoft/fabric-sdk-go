@@ -29,7 +29,10 @@ func ExampleItemsClient_NewListSQLDatabasesPager() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewItemsClient().NewListSQLDatabasesPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &sqldatabase.ItemsClientListSQLDatabasesOptions{ContinuationToken: nil})
+	pager := clientFactory.NewItemsClient().NewListSQLDatabasesPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &sqldatabase.ItemsClientListSQLDatabasesOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
 		if err != nil {
@@ -47,6 +50,9 @@ func ExampleItemsClient_NewListSQLDatabasesPager() {
 		// 			Description: to.Ptr("A SQLDatabase description."),
 		// 			DisplayName: to.Ptr("SQLDatabase1"),
 		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+		// 			SensitivityLabel: &sqldatabase.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 			Properties: &sqldatabase.Properties{
 		// 				ConnectionString: to.Ptr("Data Source=fvzeldvqgvce3b2hxvbg4hnjqu-nowrtjcsie2e3ny6v4ojbd3esa.database.fabric.microsoft.com,1433;Initial Catalog=SQLDatabase1-45c6e7cf-89b1-4a69-b4e1-5495271c7e45;MultipleActiveResultSets=False;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False"),
@@ -59,6 +65,9 @@ func ExampleItemsClient_NewListSQLDatabasesPager() {
 		// 			Description: to.Ptr("A SQLDatabase description."),
 		// 			DisplayName: to.Ptr("SQLDatabase2"),
 		// 			ID: to.Ptr("f697fb63-abd4-4399-9548-be7e3c3c0dac"),
+		// 			SensitivityLabel: &sqldatabase.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 			Properties: &sqldatabase.Properties{
 		// 				ConnectionString: to.Ptr("Data Source=x6eps4xrq2xudenlfv6naeo3i4-cfqmbux5lgvuzcoypz4jiwkqxq.database.fabric.microsoft.com,1433;Initial Catalog=SQLDatabase2-85fdf021-23ed-4307-be63-92e553a22d54;MultipleActiveResultSets=False;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False"),
@@ -182,9 +191,13 @@ func ExampleItemsClient_GetSQLDatabase() {
 	// 	Description: to.Ptr("A SQLDatabase description."),
 	// 	DisplayName: to.Ptr("SQLDatabase1"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+	// 	SensitivityLabel: &sqldatabase.SensitivityLabel{
+	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// 	Properties: &sqldatabase.Properties{
 	// 		BackupRetentionDays: to.Ptr[int32](7),
+	// 		Collation: to.Ptr("Albanian_CI_AI_WS"),
 	// 		ConnectionString: to.Ptr("Data Source=fvzeldvqgvce3b2hxvbg4hnjqu-nowrtjcsie2e3ny6v4ojbd3esa.database.fabric.microsoft.com,1433;Initial Catalog=SQLDatabase1-45c6e7cf-89b1-4a69-b4e1-5495271c7e45;MultipleActiveResultSets=False;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False"),
 	// 		DatabaseName: to.Ptr("SQLDatabase1-45c6e7cf-89b1-4a69-b4e1-5495271c7e45"),
 	// 		EarliestRestorePoint: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-12-01T00:00:00.000Z"); return t}()),
@@ -219,6 +232,9 @@ func ExampleItemsClient_UpdateSQLDatabase() {
 	// 	Description: to.Ptr("SQLDatabase's New description"),
 	// 	DisplayName: to.Ptr("SQLDatabase's name"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+	// 	SensitivityLabel: &sqldatabase.SensitivityLabel{
+	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// }
 }
@@ -305,6 +321,27 @@ func ExampleItemsClient_BeginUpdateSQLDatabasesDefinition() {
 				}},
 		},
 	}, &sqldatabase.ItemsClientBeginUpdateSQLDatabasesDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginRevalidateCMK() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := sqldatabase.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginRevalidateCMK(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

@@ -6,23 +6,6 @@
 
 package sqlendpoint
 
-// ClientGetSQLAuditSettingsResponse contains the response from method Client.GetSQLAuditSettings.
-type ClientGetSQLAuditSettingsResponse struct {
-	// The current state of audit settings for an item.
-	SQLAuditSettings
-}
-
-// ClientSetAuditActionsAndGroupsResponse contains the response from method Client.SetAuditActionsAndGroups.
-type ClientSetAuditActionsAndGroupsResponse struct {
-	// placeholder for future response values
-}
-
-// ClientUpdateSQLAuditSettingsResponse contains the response from method Client.UpdateSQLAuditSettings.
-type ClientUpdateSQLAuditSettingsResponse struct {
-	// The current state of audit settings for an item.
-	SQLAuditSettings
-}
-
 // ItemsClientGetConnectionStringResponse contains the response from method ItemsClient.GetConnectionString.
 type ItemsClientGetConnectionStringResponse struct {
 	// The SQL connection string for the workspace containing this SQL endpoint.
@@ -39,4 +22,21 @@ type ItemsClientListSQLEndpointsResponse struct {
 type ItemsClientRefreshSQLEndpointMetadataResponse struct {
 	// A list of table synchronization statuses.
 	TableSyncStatuses
+}
+
+// SQLAuditSettingsClientGetSQLAuditSettingsResponse contains the response from method SQLAuditSettingsClient.GetSQLAuditSettings.
+type SQLAuditSettingsClientGetSQLAuditSettingsResponse struct {
+	// The current state of audit settings for an item.
+	SQLAuditSettings
+}
+
+// SQLAuditSettingsClientSetAuditActionsAndGroupsResponse contains the response from method SQLAuditSettingsClient.SetAuditActionsAndGroups.
+type SQLAuditSettingsClientSetAuditActionsAndGroupsResponse struct {
+	// placeholder for future response values
+}
+
+// SQLAuditSettingsClientUpdateSQLAuditSettingsResponse contains the response from method SQLAuditSettingsClient.UpdateSQLAuditSettings.
+type SQLAuditSettingsClientUpdateSQLAuditSettingsResponse struct {
+	// The current state of audit settings for an item.
+	SQLAuditSettings
 }

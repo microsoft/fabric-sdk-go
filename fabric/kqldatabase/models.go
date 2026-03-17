@@ -6,6 +6,86 @@
 
 package kqldatabase
 
+// AdlsGen2 - An object containing the properties of the target ADLS Gen2 data source.
+type AdlsGen2 struct {
+	// REQUIRED; A string representing the connection that is bound with the shortcut. The connectionId is a unique identifier
+	// used to establish a connection between the shortcut and the target datasource. To find
+	// this connection ID, first create a cloud connection [/fabric/data-factory/data-source-management#add-a-data-source] to
+	// be used by the shortcut when connecting to the ADLS data location. Open the cloud
+	// connection's Settings view and copy the connection ID; this is a GUID.
+	ConnectionID *string
+
+	// REQUIRED; Specifies the location of the target ADLS container. The URI must be in the format https://[account-name].dfs.core.windows.net
+	// where [account-name] is the name of the target ADLS account.
+	Location *string
+
+	// REQUIRED; Specifies the container and subfolder within the ADLS account where the target folder is located. Must be of
+	// the format [container]/[subfolder] where [container] is the name of the container that
+	// holds the files and folders; [subfolder] is the name of the subfolder within the container (optional). For example: /mycontainer/mysubfolder
+	Subpath *string
+}
+
+// AmazonS3 - An object containing the properties of the target Amazon S3 data source.
+type AmazonS3 struct {
+	// REQUIRED; A string representing the connection that is bound with the shortcut. The connectionId is a unique identifier
+	// used to establish a connection between the shortcut and the target datasource. To find
+	// this connection ID, first create a cloud connection [/fabric/data-factory/data-source-management#add-a-data-source] to
+	// be used by the shortcut when connecting to the Amazon S3 data location. Open the
+	// cloud connection's Settings view and copy the connection ID; this is a GUID.
+	ConnectionID *string
+
+	// REQUIRED; HTTP URL that points to the target bucket in S3. The URL should be in the format https://[bucket-name].s3.[region-code].amazonaws.com,
+	// where "bucket-name" is the name of the S3 bucket you want to
+	// point to, and "region-code" is the code for the region where the bucket is located. For example: https://my-s3-bucket.s3.us-west-2.amazonaws.com
+	Location *string
+
+	// Specifies a target folder or subfolder within the S3 bucket.
+	Subpath *string
+}
+
+// AzureBlobStorage - An object containing the properties of the target Azure Blob Storage data source.
+type AzureBlobStorage struct {
+	// REQUIRED; A string representing the connection that is bound with the shortcut. The connectionId is a unique identifier
+	// used to establish a connection between the shortcut and the target datasource. To find
+	// this connection ID, first create a cloud connection [/fabric/data-factory/data-source-management#add-a-data-source] to
+	// be used by the shortcut when connecting to the Azure Blob Storage data location.
+	// Open the cloud connection's settings view and copy the GUID that is the connection ID.
+	ConnectionID *string
+
+	// REQUIRED; Specifies the location of the target Azure Blob Storage container. The URI must be in the format https://[account-name].blob.core.windows.net
+	// where [account-name] is the name of the target Azure Blob
+	// Storage account.
+	Location *string
+
+	// REQUIRED; Specifies the container and subfolder within the Azure Blob Storage account where the target folder is located.
+	// Must be of the format [container]/[subfolder]. [Container] is the name of the container
+	// that holds the files and folders. [Subfolder] is the name of the subfolder within the container and is optional. For example:
+	// /mycontainer/mysubfolder
+	Subpath *string
+}
+
+// CreatableShortcutTarget - An object that contains the target datasource, and must specify exactly one of the supported
+// destinations as described in the table below.
+type CreatableShortcutTarget struct {
+	// An object containing the properties of the target ADLS Gen2 data source.
+	AdlsGen2 *AdlsGen2
+
+	// An object containing the properties of the target Amazon S3 data source.
+	AmazonS3 *AmazonS3
+
+	// An object containing the properties of the target Azure Blob Storage data source.
+	AzureBlobStorage *AzureBlobStorage
+
+	// An object containing the properties of the target Google Cloud Storage data source.
+	GoogleCloudStorage *GoogleCloudStorage
+
+	// An object containing the properties of the target OneLake data source.
+	OneLake *OneLake
+
+	// An object containing the properties of the target S3 compatible data source.
+	S3Compatible *S3Compatible
+}
+
 // CreateKQLDatabaseRequest - Create KQL database request payload.
 type CreateKQLDatabaseRequest struct {
 	// REQUIRED; The KQL database display name. The database name can contain alphanumeric characters, underscores, periods, and
@@ -23,6 +103,22 @@ type CreateKQLDatabaseRequest struct {
 
 	// The folder ID. If not specified or null, the KQL database is created with the workspace as its folder.
 	FolderID *string
+
+	// The sensitivity label settings for the KQL database.
+	SensitivityLabelSettings *SensitivityLabelSettings
+}
+
+// CreateTableShortcutRequest - Properties of a request to create a new table shortcut
+type CreateTableShortcutRequest struct {
+	// REQUIRED; A boolean flag indicating whether the shortcut has query acceleration enabled.
+	EnableQueryAcceleration *bool
+
+	// REQUIRED; The table shortcut name. The table shortcut name cannot contain the following characters: ? : / \ " ] [ + # %
+	Name *string
+
+	// REQUIRED; An object that contains the target datasource, and it must specify exactly one of the supported destinations:
+	// OneLake, Amazon S3, ADLS Gen2, Google Cloud Storage, S3 compatible or Azure Blob storage
+	Target *CreatableShortcutTarget
 }
 
 // CreationPayload - KQL database item payload
@@ -37,7 +133,9 @@ type CreationPayload struct {
 // GetCreationPayload implements the CreationPayloadClassification interface for type CreationPayload.
 func (c *CreationPayload) GetCreationPayload() *CreationPayload { return c }
 
-// Definition - KQL database public definition object.
+// Definition - KQL database public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/kql-database-definition]
+// for more details on the structure of the KQL database
+// definition.
 type Definition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []DefinitionPart
@@ -60,8 +158,25 @@ type DefinitionPart struct {
 
 // DefinitionResponse - KQL database public definition response.
 type DefinitionResponse struct {
-	// READ-ONLY; KQL database public definition object.
+	// READ-ONLY; KQL database public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/kql-database-definition]
+	// for more details on the structure of the KQL database
+	// definition.
 	Definition *Definition
+}
+
+// GoogleCloudStorage - An object containing the properties of the target Google Cloud Storage data source.
+type GoogleCloudStorage struct {
+	// REQUIRED; A string representing the connection that is bound with the shortcut. The connectionId is a unique identifier
+	// used to establish a connection between the shortcut and the target datasource.
+	ConnectionID *string
+
+	// REQUIRED; HTTP URL that points to the target bucket in GCS. The URL should be in the format https://[bucket-name].storage.googleapis.com,
+	// where [bucket-name] is the name of the bucket you want to point to. For
+	// example: https://my-gcs-bucket.storage.googleapis.com
+	Location *string
+
+	// REQUIRED; Specifies a target folder or subfolder within the GCS bucket. For example: /folder
+	Subpath *string
 }
 
 // ItemTag - Represents a tag applied on an item.
@@ -93,6 +208,9 @@ type KQLDatabase struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
+
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
 
@@ -110,6 +228,27 @@ type KQLDatabases struct {
 
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
+}
+
+// OneLake - An object containing the properties of the target OneLake data source.
+type OneLake struct {
+	// REQUIRED; The ID of the target in OneLake. The target can be an item of Lakehouse, KQLDatabase, or Warehouse.
+	ItemID *string
+
+	// REQUIRED; A string representing the full path to the target folder within the Item. This path should be relative to the
+	// root of the OneLake directory structure. For example:
+	// "Tables/myTablesFolder/someTableSubFolder".
+	Path *string
+
+	// REQUIRED; The ID of the target workspace.
+	WorkspaceID *string
+
+	// A string representing the connection that is bound with the shortcut. The connectionId is a unique identifier used to establish
+	// a connection between the shortcut and the target datasource. To find
+	// this connection ID, first create a cloud connection [/fabric/data-factory/data-source-management#add-a-data-source] to
+	// be used by the shortcut when connecting to the Amazon S3 data location. Open the
+	// cloud connection's Settings view and copy the connection ID; this is a GUID.
+	ConnectionID *string
 }
 
 // Properties - The KQL database properties.
@@ -144,6 +283,39 @@ func (r *ReadWriteDatabaseCreationPayload) GetCreationPayload() *CreationPayload
 	}
 }
 
+// S3Compatible - An object containing the properties of the target S3 compatible data source.
+type S3Compatible struct {
+	// REQUIRED; Specifies the target bucket within the S3 compatible location.
+	Bucket *string
+
+	// REQUIRED; A string representing the connection that is bound with the shortcut. The connectionId is a unique identifier
+	// used to establish a connection between the shortcut and the target datasource.
+	ConnectionID *string
+
+	// REQUIRED; HTTP URL of the S3 compatible endpoint. This endpoint must be able to receive ListBuckets S3 API calls. The URL
+	// must be in the non-bucket specific format; no bucket should be specified here. For
+	// example: https://s3endpoint.contoso.com
+	Location *string
+
+	// REQUIRED; Specifies a target folder or subfolder within the S3 compatible bucket. For example: /folder
+	Subpath *string
+}
+
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
 // ShortcutDatabaseCreationPayload - Shortcut KQL database item creation payload
 type ShortcutDatabaseCreationPayload struct {
 	// REQUIRED; The type of the KQL database
@@ -170,9 +342,60 @@ func (s *ShortcutDatabaseCreationPayload) GetCreationPayload() *CreationPayload 
 	}
 }
 
+// TableShortcut - Properties of a table shortcut.
+type TableShortcut struct {
+	// REQUIRED; A boolean flag indicating whether the shortcut has query acceleration enabled.
+	EnableQueryAcceleration *bool
+
+	// REQUIRED; The table shortcut name. The table shortcut name cannot contain the following characters: ? : / \ " ] [ + # %
+	Name *string
+
+	// REQUIRED; An object that contains the target datasource, and it must specify exactly one of the supported destinations:
+	// OneLake, Amazon S3, ADLS Gen2, Google Cloud Storage, S3 compatible or Azure Blob storage
+	Target *Target
+}
+
+type TableShortcuts struct {
+	// REQUIRED; A list of table shortcuts.
+	Value []TableShortcut
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
+// Target - An object that contains the target datasource, and must specify exactly one of the supported destinations as described
+// in the table below.
+type Target struct {
+	// An object containing the properties of the target ADLS Gen2 data source.
+	AdlsGen2 *AdlsGen2
+
+	// An object containing the properties of the target Amazon S3 data source.
+	AmazonS3 *AmazonS3
+
+	// An object containing the properties of the target Azure Blob Storage data source.
+	AzureBlobStorage *AzureBlobStorage
+
+	// An object containing the properties of the target Google Cloud Storage data source.
+	GoogleCloudStorage *GoogleCloudStorage
+
+	// An object containing the properties of the target OneLake data source.
+	OneLake *OneLake
+
+	// An object containing the properties of the target S3 compatible data source.
+	S3Compatible *S3Compatible
+
+	// Target type of the shortcut. String value representing one of the supported datasources.
+	Type *ShortcutType
+}
+
 // UpdateKQLDatabaseDefinitionRequest - Update KQL database public definition request payload.
 type UpdateKQLDatabaseDefinitionRequest struct {
-	// REQUIRED; KQL database public definition object.
+	// REQUIRED; KQL database public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/kql-database-definition]
+	// for more details on the structure of the KQL database
+	// definition.
 	Definition *Definition
 }
 

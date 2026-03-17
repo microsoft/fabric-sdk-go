@@ -27,7 +27,10 @@ func ExampleItemsClient_NewListSparkJobDefinitionsPager() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewItemsClient().NewListSparkJobDefinitionsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &sparkjobdefinition.ItemsClientListSparkJobDefinitionsOptions{ContinuationToken: nil})
+	pager := clientFactory.NewItemsClient().NewListSparkJobDefinitionsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &sparkjobdefinition.ItemsClientListSparkJobDefinitionsOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
 		if err != nil {
@@ -45,6 +48,9 @@ func ExampleItemsClient_NewListSparkJobDefinitionsPager() {
 		// 			Description: to.Ptr("A spark job definition description."),
 		// 			DisplayName: to.Ptr("SparkJobDefinition Name 1"),
 		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+		// 			SensitivityLabel: &sparkjobdefinition.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 			Properties: &sparkjobdefinition.Properties{
 		// 				OneLakeRootPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/f089354e-8366-4e18-aea3-4cb4a3a50b48/41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"),
@@ -55,6 +61,9 @@ func ExampleItemsClient_NewListSparkJobDefinitionsPager() {
 		// 			Description: to.Ptr("A spark job definition description."),
 		// 			DisplayName: to.Ptr("SparkJobDefinition Name 2"),
 		// 			ID: to.Ptr("f697fb63-abd4-4399-9548-be7e3c3c0dac"),
+		// 			SensitivityLabel: &sparkjobdefinition.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 			Properties: &sparkjobdefinition.Properties{
 		// 				OneLakeRootPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/f089354e-8366-4e18-aea3-4cb4a3a50b48/d8f6cf16-3aac-4440-9d76-a03d86b7ae3e"),
@@ -202,6 +211,9 @@ func ExampleItemsClient_GetSparkJobDefinition() {
 	// 	Description: to.Ptr("A spark job definition description."),
 	// 	DisplayName: to.Ptr("SparkJobDefinition 1"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+	// 	SensitivityLabel: &sparkjobdefinition.SensitivityLabel{
+	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// 	Properties: &sparkjobdefinition.Properties{
 	// 		OneLakeRootPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/f089354e-8366-4e18-aea3-4cb4a3a50b48/41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"),
@@ -235,6 +247,9 @@ func ExampleItemsClient_UpdateSparkJobDefinition() {
 	// 	Description: to.Ptr("SparkJobDefinition's New description"),
 	// 	DisplayName: to.Ptr("SparkJobDefinition's New name"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+	// 	SensitivityLabel: &sparkjobdefinition.SensitivityLabel{
+	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// }
 }

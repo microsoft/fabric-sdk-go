@@ -19,9 +19,14 @@ type CreateKQLDashboardRequest struct {
 
 	// The folder ID. If not specified or null, the KQL dashboard is created with the workspace as its folder.
 	FolderID *string
+
+	// The sensitivity label settings for the KQL dashboard.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
-// Definition - KQL dashboard public definition object.
+// Definition - KQL dashboard public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/kql-dashboard-definition]
+// for more details on the structure of the KQL dashboard
+// definition.
 type Definition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []DefinitionPart
@@ -44,7 +49,9 @@ type DefinitionPart struct {
 
 // DefinitionResponse - KQL dashboard public definition response.
 type DefinitionResponse struct {
-	// READ-ONLY; KQL dashboard public definition object.
+	// READ-ONLY; KQL dashboard public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/kql-dashboard-definition]
+	// for more details on the structure of the KQL dashboard
+	// definition.
 	Definition *Definition
 }
 
@@ -74,6 +81,9 @@ type KQLDashboard struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
+
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
 
@@ -93,9 +103,26 @@ type KQLDashboards struct {
 	ContinuationURI *string
 }
 
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
 // UpdateKQLDashboardDefinitionRequest - Update KQL dashboard public definition request payload.
 type UpdateKQLDashboardDefinitionRequest struct {
-	// REQUIRED; KQL dashboard public definition object.
+	// REQUIRED; KQL dashboard public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/kql-dashboard-definition]
+	// for more details on the structure of the KQL dashboard
+	// definition.
 	Definition *Definition
 }
 

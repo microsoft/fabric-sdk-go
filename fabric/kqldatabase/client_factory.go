@@ -54,3 +54,11 @@ func (c *ClientFactory) NewItemsClient() *ItemsClient {
 		endpoint: c.endpoint,
 	}
 }
+
+// NewTableShortcutsClient creates a new instance of TableShortcutsClient.
+func (c *ClientFactory) NewTableShortcutsClient() *TableShortcutsClient {
+	return &TableShortcutsClient{
+		internal: c.internal.WithClientName("kqldatabase.TableShortcutsClient"),
+		endpoint: c.endpoint,
+	}
+}

@@ -71,6 +71,9 @@ func (testsuite *FakeTestSuite) TestItems_ListSQLDatabases() {
 				Description: to.Ptr("A SQLDatabase description."),
 				DisplayName: to.Ptr("SQLDatabase1"),
 				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				SensitivityLabel: &sqldatabase.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 				Properties: &sqldatabase.Properties{
 					ConnectionString: to.Ptr("Data Source=fvzeldvqgvce3b2hxvbg4hnjqu-nowrtjcsie2e3ny6v4ojbd3esa.database.fabric.microsoft.com,1433;Initial Catalog=SQLDatabase1-45c6e7cf-89b1-4a69-b4e1-5495271c7e45;MultipleActiveResultSets=False;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False"),
@@ -83,6 +86,9 @@ func (testsuite *FakeTestSuite) TestItems_ListSQLDatabases() {
 				Description: to.Ptr("A SQLDatabase description."),
 				DisplayName: to.Ptr("SQLDatabase2"),
 				ID:          to.Ptr("f697fb63-abd4-4399-9548-be7e3c3c0dac"),
+				SensitivityLabel: &sqldatabase.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 				Properties: &sqldatabase.Properties{
 					ConnectionString: to.Ptr("Data Source=x6eps4xrq2xudenlfv6naeo3i4-cfqmbux5lgvuzcoypz4jiwkqxq.database.fabric.microsoft.com,1433;Initial Catalog=SQLDatabase2-85fdf021-23ed-4307-be63-92e553a22d54;MultipleActiveResultSets=False;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False"),
@@ -100,7 +106,10 @@ func (testsuite *FakeTestSuite) TestItems_ListSQLDatabases() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	pager := client.NewListSQLDatabasesPager(exampleWorkspaceID, &sqldatabase.ItemsClientListSQLDatabasesOptions{ContinuationToken: nil})
+	pager := client.NewListSQLDatabasesPager(exampleWorkspaceID, &sqldatabase.ItemsClientListSQLDatabasesOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")
@@ -217,9 +226,13 @@ func (testsuite *FakeTestSuite) TestItems_GetSQLDatabase() {
 		Description: to.Ptr("A SQLDatabase description."),
 		DisplayName: to.Ptr("SQLDatabase1"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &sqldatabase.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		Properties: &sqldatabase.Properties{
 			BackupRetentionDays:  to.Ptr[int32](7),
+			Collation:            to.Ptr("Albanian_CI_AI_WS"),
 			ConnectionString:     to.Ptr("Data Source=fvzeldvqgvce3b2hxvbg4hnjqu-nowrtjcsie2e3ny6v4ojbd3esa.database.fabric.microsoft.com,1433;Initial Catalog=SQLDatabase1-45c6e7cf-89b1-4a69-b4e1-5495271c7e45;MultipleActiveResultSets=False;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False"),
 			DatabaseName:         to.Ptr("SQLDatabase1-45c6e7cf-89b1-4a69-b4e1-5495271c7e45"),
 			EarliestRestorePoint: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-12-01T00:00:00.000Z"); return t }()),
@@ -261,6 +274,9 @@ func (testsuite *FakeTestSuite) TestItems_UpdateSQLDatabase() {
 		Description: to.Ptr("SQLDatabase's New description"),
 		DisplayName: to.Ptr("SQLDatabase's name"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &sqldatabase.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	}
 
@@ -386,7 +402,32 @@ func (testsuite *FakeTestSuite) TestItems_UpdateSQLDatabasesDefinition() {
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
 
-func (testsuite *FakeTestSuite) TestSQLDatabase_StartMirroring() {
+func (testsuite *FakeTestSuite) TestItems_RevalidateCMK() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Revalidate CMK example"},
+	})
+	var exampleWorkspaceID string
+	var exampleSqlDatabaseID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleSqlDatabaseID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+
+	testsuite.serverFactory.ItemsServer.BeginRevalidateCMK = func(ctx context.Context, workspaceID string, sqlDatabaseID string, options *sqldatabase.ItemsClientBeginRevalidateCMKOptions) (resp azfake.PollerResponder[sqldatabase.ItemsClientRevalidateCMKResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleSqlDatabaseID, sqlDatabaseID)
+		resp = azfake.PollerResponder[sqldatabase.ItemsClientRevalidateCMKResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, sqldatabase.ItemsClientRevalidateCMKResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	poller, err := client.BeginRevalidateCMK(ctx, exampleWorkspaceID, exampleSqlDatabaseID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestMirroring_StartMirroring() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Start mirroring example"},
@@ -396,20 +437,20 @@ func (testsuite *FakeTestSuite) TestSQLDatabase_StartMirroring() {
 	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
 	exampleSqlDatabaseID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
 
-	testsuite.serverFactory.Server.StartMirroring = func(ctx context.Context, workspaceID string, sqlDatabaseID string, options *sqldatabase.ClientStartMirroringOptions) (resp azfake.Responder[sqldatabase.ClientStartMirroringResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.MirroringServer.StartMirroring = func(ctx context.Context, workspaceID string, sqlDatabaseID string, options *sqldatabase.MirroringClientStartMirroringOptions) (resp azfake.Responder[sqldatabase.MirroringClientStartMirroringResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleSqlDatabaseID, sqlDatabaseID)
-		resp = azfake.Responder[sqldatabase.ClientStartMirroringResponse]{}
-		resp.SetResponse(http.StatusOK, sqldatabase.ClientStartMirroringResponse{}, nil)
+		resp = azfake.Responder[sqldatabase.MirroringClientStartMirroringResponse]{}
+		resp.SetResponse(http.StatusOK, sqldatabase.MirroringClientStartMirroringResponse{}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewClient()
+	client := testsuite.clientFactory.NewMirroringClient()
 	_, err = client.StartMirroring(ctx, exampleWorkspaceID, exampleSqlDatabaseID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
-func (testsuite *FakeTestSuite) TestSQLDatabase_StopMirroring() {
+func (testsuite *FakeTestSuite) TestMirroring_StopMirroring() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Stop mirroring example"},
@@ -419,15 +460,92 @@ func (testsuite *FakeTestSuite) TestSQLDatabase_StopMirroring() {
 	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
 	exampleSqlDatabaseID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
 
-	testsuite.serverFactory.Server.StopMirroring = func(ctx context.Context, workspaceID string, sqlDatabaseID string, options *sqldatabase.ClientStopMirroringOptions) (resp azfake.Responder[sqldatabase.ClientStopMirroringResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.MirroringServer.StopMirroring = func(ctx context.Context, workspaceID string, sqlDatabaseID string, options *sqldatabase.MirroringClientStopMirroringOptions) (resp azfake.Responder[sqldatabase.MirroringClientStopMirroringResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleSqlDatabaseID, sqlDatabaseID)
-		resp = azfake.Responder[sqldatabase.ClientStopMirroringResponse]{}
-		resp.SetResponse(http.StatusOK, sqldatabase.ClientStopMirroringResponse{}, nil)
+		resp = azfake.Responder[sqldatabase.MirroringClientStopMirroringResponse]{}
+		resp.SetResponse(http.StatusOK, sqldatabase.MirroringClientStopMirroringResponse{}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewClient()
+	client := testsuite.clientFactory.NewMirroringClient()
 	_, err = client.StopMirroring(ctx, exampleWorkspaceID, exampleSqlDatabaseID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestSQLAuditSettings_GetSQLAuditSettings() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get SQL audit settings example"},
+	})
+	var exampleWorkspaceID string
+	var exampleSqlDatabaseID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleSqlDatabaseID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+
+	exampleRes := sqldatabase.AuditSettings{
+		AuditActionsAndGroups: []string{
+			"BATCH_COMPLETED_GROUP",
+			"FAILED_DATABASE_AUTHENTICATION_GROUP",
+			"SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP"},
+		PredicateExpression: to.Ptr("statement not like '[select ]%'"),
+		RetentionDays:       to.Ptr[int32](10),
+		State:               to.Ptr(sqldatabase.SQLAuditSettingsStateEnabled),
+		StorageEndpoint:     to.Ptr("https://onelake.blob.fabric.microsoft.com/f089354e-8366-4e18-aea3-4cb4a3a50b48/41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87/Audit/"),
+	}
+
+	testsuite.serverFactory.SQLAuditSettingsServer.GetSQLAuditSettings = func(ctx context.Context, workspaceID string, sqlDatabaseID string, options *sqldatabase.SQLAuditSettingsClientGetSQLAuditSettingsOptions) (resp azfake.Responder[sqldatabase.SQLAuditSettingsClientGetSQLAuditSettingsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleSqlDatabaseID, sqlDatabaseID)
+		resp = azfake.Responder[sqldatabase.SQLAuditSettingsClientGetSQLAuditSettingsResponse]{}
+		resp.SetResponse(http.StatusOK, sqldatabase.SQLAuditSettingsClientGetSQLAuditSettingsResponse{AuditSettings: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewSQLAuditSettingsClient()
+	res, err := client.GetSQLAuditSettings(ctx, exampleWorkspaceID, exampleSqlDatabaseID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.AuditSettings))
+}
+
+func (testsuite *FakeTestSuite) TestSQLAuditSettings_UpdateSQLAuditSettings() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update SQL audit settings example"},
+	})
+	var exampleWorkspaceID string
+	var exampleSqlDatabaseID string
+	var exampleUpdateAuditSettingsRequest sqldatabase.AuditSettingsUpdate
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleSqlDatabaseID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleUpdateAuditSettingsRequest = sqldatabase.AuditSettingsUpdate{
+		PredicateExpression: to.Ptr("statement not like '[select ]%'"),
+		RetentionDays:       to.Ptr[int32](10),
+		State:               to.Ptr(sqldatabase.SQLAuditSettingsStateEnabled),
+	}
+
+	exampleRes := sqldatabase.AuditSettings{
+		AuditActionsAndGroups: []string{
+			"BATCH_COMPLETED_GROUP",
+			"FAILED_DATABASE_AUTHENTICATION_GROUP",
+			"SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP"},
+		PredicateExpression: to.Ptr("statement not like '[select ]%'"),
+		RetentionDays:       to.Ptr[int32](10),
+		State:               to.Ptr(sqldatabase.SQLAuditSettingsStateEnabled),
+		StorageEndpoint:     to.Ptr("https://onelake.blob.fabric.microsoft.com/f089354e-8366-4e18-aea3-4cb4a3a50b48/41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87/Audit/"),
+	}
+
+	testsuite.serverFactory.SQLAuditSettingsServer.UpdateSQLAuditSettings = func(ctx context.Context, workspaceID string, sqlDatabaseID string, updateAuditSettingsRequest sqldatabase.AuditSettingsUpdate, options *sqldatabase.SQLAuditSettingsClientUpdateSQLAuditSettingsOptions) (resp azfake.Responder[sqldatabase.SQLAuditSettingsClientUpdateSQLAuditSettingsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleSqlDatabaseID, sqlDatabaseID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateAuditSettingsRequest, updateAuditSettingsRequest))
+		resp = azfake.Responder[sqldatabase.SQLAuditSettingsClientUpdateSQLAuditSettingsResponse]{}
+		resp.SetResponse(http.StatusOK, sqldatabase.SQLAuditSettingsClientUpdateSQLAuditSettingsResponse{AuditSettings: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewSQLAuditSettingsClient()
+	res, err := client.UpdateSQLAuditSettings(ctx, exampleWorkspaceID, exampleSqlDatabaseID, exampleUpdateAuditSettingsRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.AuditSettings))
 }

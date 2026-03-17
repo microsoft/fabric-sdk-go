@@ -373,7 +373,7 @@ func ExampleWorkspacesClient_AddWorkspaceRoleAssignment() {
 		log.Fatalf("failed to create client: %v", err)
 	}
 	_, err = clientFactory.NewWorkspacesClient().AddWorkspaceRoleAssignment(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff512", core.AddWorkspaceRoleAssignmentRequest{
-		Principal: &core.Principal{
+		Principal: &core.UserPrincipal{
 			Type: to.Ptr(core.PrincipalTypeUser),
 			ID:   to.Ptr("8eedb1b0-3af8-4b17-8e7e-663e61e12211"),
 		},
@@ -410,11 +410,11 @@ func ExampleWorkspacesClient_NewListWorkspaceRoleAssignmentsPager_getWorkspaceRo
 		// 	Value: []core.WorkspaceRoleAssignment{
 		// 		{
 		// 			ID: to.Ptr("81fac5e1-2a81-421b-a168-110b1c72fa11"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.UserPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				DisplayName: to.Ptr("Eric Solomon"),
 		// 				ID: to.Ptr("81fac5e1-2a81-421b-a168-110b1c72fa11"),
-		// 				UserDetails: &core.PrincipalUserDetails{
+		// 				UserDetails: &core.UserPrincipalUserDetails{
 		// 					UserPrincipalName: to.Ptr("eric@microsoft.com"),
 		// 				},
 		// 			},
@@ -422,11 +422,11 @@ func ExampleWorkspacesClient_NewListWorkspaceRoleAssignmentsPager_getWorkspaceRo
 		// 		},
 		// 		{
 		// 			ID: to.Ptr("dbc4f130-681f-46b9-b19a-ca19ea5daa31"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.ServicePrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeServicePrincipal),
 		// 				DisplayName: to.Ptr("ServicePrincipal"),
 		// 				ID: to.Ptr("dbc4f130-681f-46b9-b19a-ca19ea5daa31"),
-		// 				ServicePrincipalDetails: &core.PrincipalServicePrincipalDetails{
+		// 				ServicePrincipalDetails: &core.ServicePrincipalDetails{
 		// 					AADAppID: to.Ptr("7ac9c70b-69f1-48c5-bf5b-69ac50578a55"),
 		// 				},
 		// 			},
@@ -464,11 +464,11 @@ func ExampleWorkspacesClient_NewListWorkspaceRoleAssignmentsPager_getWorkspaceRo
 		// 	Value: []core.WorkspaceRoleAssignment{
 		// 		{
 		// 			ID: to.Ptr("81fac5e1-2a81-421b-a168-110b1c72fa11"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.UserPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				DisplayName: to.Ptr("Eric Solomon"),
 		// 				ID: to.Ptr("81fac5e1-2a81-421b-a168-110b1c72fa11"),
-		// 				UserDetails: &core.PrincipalUserDetails{
+		// 				UserDetails: &core.UserPrincipalUserDetails{
 		// 					UserPrincipalName: to.Ptr("eric@microsoft.com"),
 		// 				},
 		// 			},
@@ -476,11 +476,11 @@ func ExampleWorkspacesClient_NewListWorkspaceRoleAssignmentsPager_getWorkspaceRo
 		// 		},
 		// 		{
 		// 			ID: to.Ptr("dbc4f130-681f-46b9-b19a-ca19ea5daa31"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.ServicePrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeServicePrincipal),
 		// 				DisplayName: to.Ptr("ServicePrincipal"),
 		// 				ID: to.Ptr("dbc4f130-681f-46b9-b19a-ca19ea5daa31"),
-		// 				ServicePrincipalDetails: &core.PrincipalServicePrincipalDetails{
+		// 				ServicePrincipalDetails: &core.ServicePrincipalDetails{
 		// 					AADAppID: to.Ptr("7ac9c70b-69f1-48c5-bf5b-69ac50578a55"),
 		// 				},
 		// 			},
@@ -529,11 +529,11 @@ func ExampleWorkspacesClient_UpdateWorkspaceRoleAssignment() {
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
 	// res.WorkspaceRoleAssignment = core.WorkspaceRoleAssignment{
 	// 	ID: to.Ptr("0218b8c4-f5a2-4a1e-bbbd-a986dd8aeb81"),
-	// 	Principal: &core.Principal{
+	// 	Principal: &core.UserPrincipal{
 	// 		Type: to.Ptr(core.PrincipalTypeUser),
 	// 		DisplayName: to.Ptr("user1"),
 	// 		ID: to.Ptr("0218b8c4-f5a2-4a1e-bbbd-a986dd8aeb81"),
-	// 		UserDetails: &core.PrincipalUserDetails{
+	// 		UserDetails: &core.UserPrincipalUserDetails{
 	// 			UserPrincipalName: to.Ptr("user1@microsoft.com"),
 	// 		},
 	// 	},
@@ -561,7 +561,7 @@ func ExampleWorkspacesClient_GetWorkspaceRoleAssignment() {
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
 	// res.WorkspaceRoleAssignment = core.WorkspaceRoleAssignment{
 	// 	ID: to.Ptr("259b6674-74cf-4197-ac05-1bf391800ec2"),
-	// 	Principal: &core.Principal{
+	// 	Principal: &core.UserPrincipal{
 	// 		Type: to.Ptr(core.PrincipalTypeUser),
 	// 		ID: to.Ptr("259b6674-74cf-4197-ac05-1bf391800ec2"),
 	// 	},
@@ -753,7 +753,7 @@ func ExampleWorkspacesClient_GetOutboundCloudConnectionRules() {
 	// 		{
 	// 			AllowedEndpoints: []core.ConnectionRuleEndpointMetadata{
 	// 				{
-	// 					HostNamePattern: to.Ptr("*.microsoft.com"),
+	// 					HostnamePattern: to.Ptr("*.microsoft.com"),
 	// 			}},
 	// 			ConnectionType: to.Ptr("SQL"),
 	// 			DefaultAction: to.Ptr(core.ConnectionAccessActionTypeDeny),
@@ -790,7 +790,7 @@ func ExampleWorkspacesClient_SetOutboundCloudConnectionRules() {
 			{
 				AllowedEndpoints: []core.ConnectionRuleEndpointMetadata{
 					{
-						HostNamePattern: to.Ptr("*.microsoft.com"),
+						HostnamePattern: to.Ptr("*.microsoft.com"),
 					}},
 				ConnectionType: to.Ptr("SQL"),
 				DefaultAction:  to.Ptr(core.ConnectionAccessActionTypeDeny),

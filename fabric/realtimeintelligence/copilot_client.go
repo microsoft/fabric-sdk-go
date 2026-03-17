@@ -71,12 +71,12 @@ func (client *CopilotClient) NLToKQLBeta(ctx context.Context, workspaceID string
 
 // nlToKQLBetaCreateRequest creates the NLToKQLBeta request.
 func (client *CopilotClient) nlToKQLBetaCreateRequest(ctx context.Context, workspaceID string, beta bool, nlToKqlRequest NlToKqlRequest, _ *CopilotClientNLToKQLBetaOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/realtimeintelligence/nltokql"
+	urlPath := "/v1/workspaces/{workspaceId}/realTimeIntelligence/nltokql"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
 	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
-	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
 	}

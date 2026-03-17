@@ -44,11 +44,11 @@ func ExampleRestorePointsClient_NewListRestorePointsPager() {
 		// 			Description: to.Ptr("Restore point 1 description."),
 		// 			CreationDetails: &warehouse.RestorePointEventDetails{
 		// 				EventDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-10-18T22:17:09.000Z"); return t}()),
-		// 				EventInitiator: &warehouse.Principal{
+		// 				EventInitiator: &warehouse.UserPrincipal{
 		// 					Type: to.Ptr(warehouse.PrincipalTypeUser),
 		// 					DisplayName: to.Ptr("Jacob Hancock"),
 		// 					ID: to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-		// 					UserDetails: &warehouse.PrincipalUserDetails{
+		// 					UserDetails: &warehouse.UserPrincipalUserDetails{
 		// 						UserPrincipalName: to.Ptr("jacob@contoso.com"),
 		// 					},
 		// 				},
@@ -116,11 +116,11 @@ func ExampleRestorePointsClient_GetRestorePoint() {
 	// 	Description: to.Ptr("Restore point 1 description."),
 	// 	CreationDetails: &warehouse.RestorePointEventDetails{
 	// 		EventDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-10-18T22:17:09.000Z"); return t}()),
-	// 		EventInitiator: &warehouse.Principal{
+	// 		EventInitiator: &warehouse.UserPrincipal{
 	// 			Type: to.Ptr(warehouse.PrincipalTypeUser),
 	// 			DisplayName: to.Ptr("Jacob Hancock"),
 	// 			ID: to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-	// 			UserDetails: &warehouse.PrincipalUserDetails{
+	// 			UserDetails: &warehouse.UserPrincipalUserDetails{
 	// 				UserPrincipalName: to.Ptr("jacob@contoso.com"),
 	// 			},
 	// 		},
@@ -173,11 +173,11 @@ func ExampleRestorePointsClient_UpdateRestorePoint() {
 	// 	Description: to.Ptr("Restore point 3 description."),
 	// 	CreationDetails: &warehouse.RestorePointEventDetails{
 	// 		EventDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-10-18T22:17:09.000Z"); return t}()),
-	// 		EventInitiator: &warehouse.Principal{
+	// 		EventInitiator: &warehouse.UserPrincipal{
 	// 			Type: to.Ptr(warehouse.PrincipalTypeUser),
 	// 			DisplayName: to.Ptr("Jacob Hancock"),
 	// 			ID: to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-	// 			UserDetails: &warehouse.PrincipalUserDetails{
+	// 			UserDetails: &warehouse.UserPrincipalUserDetails{
 	// 				UserPrincipalName: to.Ptr("jacob@contoso.com"),
 	// 			},
 	// 		},

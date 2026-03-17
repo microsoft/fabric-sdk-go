@@ -9,8 +9,17 @@ package notebook
 // ItemReferenceClassification provides polymorphic access to related types.
 // Call the interface's GetItemReference() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
-// - *ItemReference, *ItemReferenceByID
+// - *ItemReference, *ItemReferenceByID, *ItemReferenceByVariable
 type ItemReferenceClassification interface {
 	// GetItemReference returns the ItemReference content of the underlying type.
 	GetItemReference() *ItemReference
+}
+
+// PrincipalClassification provides polymorphic access to related types.
+// Call the interface's GetPrincipal() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *EntireTenantPrincipal, *GroupPrincipal, *Principal, *ServicePrincipal, *ServicePrincipalProfilePrincipal, *UserPrincipal
+type PrincipalClassification interface {
+	// GetPrincipal returns the Principal content of the underlying type.
+	GetPrincipal() *Principal
 }

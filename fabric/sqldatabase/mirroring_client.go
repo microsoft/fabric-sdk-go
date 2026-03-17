@@ -20,15 +20,14 @@ import (
 	"github.com/microsoft/fabric-sdk-go/fabric/core"
 )
 
-// Client contains the methods for the SQLDatabase group.
+// MirroringClient contains the methods for the Mirroring group.
 // Don't use this type directly, use a constructor function instead.
-type Client struct {
+type MirroringClient struct {
 	internal *azcore.Client
 	endpoint string
 }
 
-// StartMirroring - > [!NOTE] SQL database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// PERMISSIONS The caller must have read and write permissions for the SQL database.
+// StartMirroring - PERMISSIONS The caller must have read and write permissions for the SQL database.
 // REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -41,31 +40,32 @@ type Client struct {
 // Generated from API version v1
 //   - workspaceID - The workspace identifier.
 //   - sqlDatabaseID - The SQL database ID.
-//   - options - ClientStartMirroringOptions contains the optional parameters for the Client.StartMirroring method.
-func (client *Client) StartMirroring(ctx context.Context, workspaceID string, sqlDatabaseID string, options *ClientStartMirroringOptions) (ClientStartMirroringResponse, error) {
+//   - options - MirroringClientStartMirroringOptions contains the optional parameters for the MirroringClient.StartMirroring
+//     method.
+func (client *MirroringClient) StartMirroring(ctx context.Context, workspaceID string, sqlDatabaseID string, options *MirroringClientStartMirroringOptions) (MirroringClientStartMirroringResponse, error) {
 	var err error
-	const operationName = "sqldatabase.Client.StartMirroring"
+	const operationName = "sqldatabase.MirroringClient.StartMirroring"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
 	req, err := client.startMirroringCreateRequest(ctx, workspaceID, sqlDatabaseID, options)
 	if err != nil {
-		return ClientStartMirroringResponse{}, err
+		return MirroringClientStartMirroringResponse{}, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return ClientStartMirroringResponse{}, err
+		return MirroringClientStartMirroringResponse{}, err
 	}
 	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
 		err = core.NewResponseError(httpResp)
-		return ClientStartMirroringResponse{}, err
+		return MirroringClientStartMirroringResponse{}, err
 	}
-	return ClientStartMirroringResponse{}, nil
+	return MirroringClientStartMirroringResponse{}, nil
 }
 
 // startMirroringCreateRequest creates the StartMirroring request.
-func (client *Client) startMirroringCreateRequest(ctx context.Context, workspaceID string, sqlDatabaseID string, _ *ClientStartMirroringOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/{SQLDatabaseId}/startMirroring"
+func (client *MirroringClient) startMirroringCreateRequest(ctx context.Context, workspaceID string, sqlDatabaseID string, _ *MirroringClientStartMirroringOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/{sqlDatabaseId}/startMirroring"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -73,7 +73,7 @@ func (client *Client) startMirroringCreateRequest(ctx context.Context, workspace
 	if sqlDatabaseID == "" {
 		return nil, errors.New("parameter sqlDatabaseID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{SQLDatabaseId}", url.PathEscape(sqlDatabaseID))
+	urlPath = strings.ReplaceAll(urlPath, "{sqlDatabaseId}", url.PathEscape(sqlDatabaseID))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -82,8 +82,7 @@ func (client *Client) startMirroringCreateRequest(ctx context.Context, workspace
 	return req, nil
 }
 
-// StopMirroring - > [!NOTE] SQL database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// PERMISSIONS The caller must have read and write permissions for the SQL database.
+// StopMirroring - PERMISSIONS The caller must have read and write permissions for the SQL database.
 // REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -96,31 +95,31 @@ func (client *Client) startMirroringCreateRequest(ctx context.Context, workspace
 // Generated from API version v1
 //   - workspaceID - The workspace identifier.
 //   - sqlDatabaseID - The SQL database ID.
-//   - options - ClientStopMirroringOptions contains the optional parameters for the Client.StopMirroring method.
-func (client *Client) StopMirroring(ctx context.Context, workspaceID string, sqlDatabaseID string, options *ClientStopMirroringOptions) (ClientStopMirroringResponse, error) {
+//   - options - MirroringClientStopMirroringOptions contains the optional parameters for the MirroringClient.StopMirroring method.
+func (client *MirroringClient) StopMirroring(ctx context.Context, workspaceID string, sqlDatabaseID string, options *MirroringClientStopMirroringOptions) (MirroringClientStopMirroringResponse, error) {
 	var err error
-	const operationName = "sqldatabase.Client.StopMirroring"
+	const operationName = "sqldatabase.MirroringClient.StopMirroring"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
 	req, err := client.stopMirroringCreateRequest(ctx, workspaceID, sqlDatabaseID, options)
 	if err != nil {
-		return ClientStopMirroringResponse{}, err
+		return MirroringClientStopMirroringResponse{}, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return ClientStopMirroringResponse{}, err
+		return MirroringClientStopMirroringResponse{}, err
 	}
 	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
 		err = core.NewResponseError(httpResp)
-		return ClientStopMirroringResponse{}, err
+		return MirroringClientStopMirroringResponse{}, err
 	}
-	return ClientStopMirroringResponse{}, nil
+	return MirroringClientStopMirroringResponse{}, nil
 }
 
 // stopMirroringCreateRequest creates the StopMirroring request.
-func (client *Client) stopMirroringCreateRequest(ctx context.Context, workspaceID string, sqlDatabaseID string, _ *ClientStopMirroringOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/{SQLDatabaseId}/stopMirroring"
+func (client *MirroringClient) stopMirroringCreateRequest(ctx context.Context, workspaceID string, sqlDatabaseID string, _ *MirroringClientStopMirroringOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/{sqlDatabaseId}/stopMirroring"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -128,7 +127,7 @@ func (client *Client) stopMirroringCreateRequest(ctx context.Context, workspaceI
 	if sqlDatabaseID == "" {
 		return nil, errors.New("parameter sqlDatabaseID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{SQLDatabaseId}", url.PathEscape(sqlDatabaseID))
+	urlPath = strings.ReplaceAll(urlPath, "{sqlDatabaseId}", url.PathEscape(sqlDatabaseID))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -136,3 +135,5 @@ func (client *Client) stopMirroringCreateRequest(ctx context.Context, workspaceI
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }
+
+// Custom code starts below

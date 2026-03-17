@@ -93,7 +93,7 @@ func (client *ItemsClient) createGraphQLAPI(ctx context.Context, workspaceID str
 
 // createGraphQLAPICreateRequest creates the CreateGraphQLAPI request.
 func (client *ItemsClient) createGraphQLAPICreateRequest(ctx context.Context, workspaceID string, createGraphQLAPIRequest CreateGraphQLAPIRequest, _ *ItemsClientBeginCreateGraphQLAPIOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphQLApis"
+	urlPath := "/v1/workspaces/{workspaceId}/graphQLApis"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -146,7 +146,7 @@ func (client *ItemsClient) DeleteGraphQLAPI(ctx context.Context, workspaceID str
 
 // deleteGraphQLAPICreateRequest creates the DeleteGraphQLAPI request.
 func (client *ItemsClient) deleteGraphQLAPICreateRequest(ctx context.Context, workspaceID string, graphQLAPIID string, _ *ItemsClientDeleteGraphQLAPIOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphQLApis/{GraphQLApiId}"
+	urlPath := "/v1/workspaces/{workspaceId}/graphQLApis/{graphQLApiId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -154,7 +154,7 @@ func (client *ItemsClient) deleteGraphQLAPICreateRequest(ctx context.Context, wo
 	if graphQLAPIID == "" {
 		return nil, errors.New("parameter graphQLAPIID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{GraphQLApiId}", url.PathEscape(graphQLAPIID))
+	urlPath = strings.ReplaceAll(urlPath, "{graphQLApiId}", url.PathEscape(graphQLAPIID))
 	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -201,7 +201,7 @@ func (client *ItemsClient) GetGraphQLAPI(ctx context.Context, workspaceID string
 
 // getGraphQLAPICreateRequest creates the GetGraphQLAPI request.
 func (client *ItemsClient) getGraphQLAPICreateRequest(ctx context.Context, workspaceID string, graphQLAPIID string, _ *ItemsClientGetGraphQLAPIOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphQLApis/{GraphQLApiId}"
+	urlPath := "/v1/workspaces/{workspaceId}/graphQLApis/{graphQLApiId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -209,7 +209,7 @@ func (client *ItemsClient) getGraphQLAPICreateRequest(ctx context.Context, works
 	if graphQLAPIID == "" {
 		return nil, errors.New("parameter graphQLAPIID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{GraphQLApiId}", url.PathEscape(graphQLAPIID))
+	urlPath = strings.ReplaceAll(urlPath, "{graphQLApiId}", url.PathEscape(graphQLAPIID))
 	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -288,7 +288,7 @@ func (client *ItemsClient) getGraphQLAPIDefinition(ctx context.Context, workspac
 
 // getGraphQLAPIDefinitionCreateRequest creates the GetGraphQLAPIDefinition request.
 func (client *ItemsClient) getGraphQLAPIDefinitionCreateRequest(ctx context.Context, workspaceID string, graphQLAPIID string, options *ItemsClientBeginGetGraphQLAPIDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphQLApis/{GraphQLApiId}/getDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/graphQLApis/{graphQLApiId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -296,7 +296,7 @@ func (client *ItemsClient) getGraphQLAPIDefinitionCreateRequest(ctx context.Cont
 	if graphQLAPIID == "" {
 		return nil, errors.New("parameter graphQLAPIID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{GraphQLApiId}", url.PathEscape(graphQLAPIID))
+	urlPath = strings.ReplaceAll(urlPath, "{graphQLApiId}", url.PathEscape(graphQLAPIID))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -349,7 +349,7 @@ func (client *ItemsClient) NewListGraphQLApisPager(workspaceID string, options *
 
 // listGraphQLApisCreateRequest creates the ListGraphQLApis request.
 func (client *ItemsClient) listGraphQLApisCreateRequest(ctx context.Context, workspaceID string, options *ItemsClientListGraphQLApisOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphQLApis"
+	urlPath := "/v1/workspaces/{workspaceId}/graphQLApis"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -361,6 +361,12 @@ func (client *ItemsClient) listGraphQLApisCreateRequest(ctx context.Context, wor
 	reqQP := req.Raw().URL.Query()
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	if options != nil && options.Recursive != nil {
+		reqQP.Set("recursive", strconv.FormatBool(*options.Recursive))
+	}
+	if options != nil && options.RootFolderID != nil {
+		reqQP.Set("rootFolderId", *options.RootFolderID)
 	}
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
@@ -415,7 +421,7 @@ func (client *ItemsClient) UpdateGraphQLAPI(ctx context.Context, workspaceID str
 
 // updateGraphQLAPICreateRequest creates the UpdateGraphQLAPI request.
 func (client *ItemsClient) updateGraphQLAPICreateRequest(ctx context.Context, workspaceID string, graphQLAPIID string, updateGraphQLAPIRequest UpdateGraphQLAPIRequest, _ *ItemsClientUpdateGraphQLAPIOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphQLApis/{GraphQLApiId}"
+	urlPath := "/v1/workspaces/{workspaceId}/graphQLApis/{graphQLApiId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -423,7 +429,7 @@ func (client *ItemsClient) updateGraphQLAPICreateRequest(ctx context.Context, wo
 	if graphQLAPIID == "" {
 		return nil, errors.New("parameter graphQLAPIID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{GraphQLApiId}", url.PathEscape(graphQLAPIID))
+	urlPath = strings.ReplaceAll(urlPath, "{graphQLApiId}", url.PathEscape(graphQLAPIID))
 	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -502,7 +508,7 @@ func (client *ItemsClient) updateGraphQLAPIDefinition(ctx context.Context, works
 
 // updateGraphQLAPIDefinitionCreateRequest creates the UpdateGraphQLAPIDefinition request.
 func (client *ItemsClient) updateGraphQLAPIDefinitionCreateRequest(ctx context.Context, workspaceID string, graphQLAPIID string, updateGraphQLAPIDefinitionRequest UpdateGraphQLAPIDefinitionRequest, options *ItemsClientBeginUpdateGraphQLAPIDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphQLApis/{GraphQLApiId}/updateDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/graphQLApis/{graphQLApiId}/updateDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -510,7 +516,7 @@ func (client *ItemsClient) updateGraphQLAPIDefinitionCreateRequest(ctx context.C
 	if graphQLAPIID == "" {
 		return nil, errors.New("parameter graphQLAPIID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{GraphQLApiId}", url.PathEscape(graphQLAPIID))
+	urlPath = strings.ReplaceAll(urlPath, "{graphQLApiId}", url.PathEscape(graphQLAPIID))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err

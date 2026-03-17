@@ -6,6 +6,18 @@
 
 package apacheairflowjob
 
+// ComputeClientGetApacheAirflowJobComputeBetaOptions contains the optional parameters for the ComputeClient.GetApacheAirflowJobComputeBeta
+// method.
+type ComputeClientGetApacheAirflowJobComputeBetaOptions struct {
+	// placeholder for future optional parameters
+}
+
+// EnvironmentClientGetApacheAirflowJobEnvironmentBetaOptions contains the optional parameters for the EnvironmentClient.GetApacheAirflowJobEnvironmentBeta
+// method.
+type EnvironmentClientGetApacheAirflowJobEnvironmentBetaOptions struct {
+	// placeholder for future optional parameters
+}
+
 // FilesClientCreateOrUpdateApacheAirflowJobFileBetaWithBinaryOptions contains the optional parameters for the FilesClient.CreateOrUpdateApacheAirflowJobFileBetaWithBinary
 // method.
 type FilesClientCreateOrUpdateApacheAirflowJobFileBetaWithBinaryOptions struct {
@@ -77,6 +89,15 @@ type ItemsClientGetApacheAirflowJobOptions struct {
 type ItemsClientListApacheAirflowJobsOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
+
+	// Lists items in a folder and its nested folders, or just a folder only. True - All items in the folder and its nested folders
+	// are listed, False - Only items in the folder are listed. The default value
+	// is true.
+	Recursive *bool
+
+	// This parameter allows users to filter items based on a specific root folder. If not provided, the workspace is used as
+	// the root folder.
+	RootFolderID *string
 }
 
 // ItemsClientUpdateApacheAirflowJobOptions contains the optional parameters for the ItemsClient.UpdateApacheAirflowJob method.
@@ -107,6 +128,19 @@ type PoolManagementClientGetAirflowPoolTemplateBetaOptions struct {
 type PoolManagementClientListAirflowPoolTemplatesBetaOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
+}
+
+// RequirementsClientListApacheAirflowJobLibrariesBetaOptions contains the optional parameters for the RequirementsClient.NewListApacheAirflowJobLibrariesBetaPager
+// method.
+type RequirementsClientListApacheAirflowJobLibrariesBetaOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// SettingsClientGetApacheAirflowJobSettingsBetaOptions contains the optional parameters for the SettingsClient.GetApacheAirflowJobSettingsBeta
+// method.
+type SettingsClientGetApacheAirflowJobSettingsBetaOptions struct {
+	// placeholder for future optional parameters
 }
 
 // WorkspaceSettingsClientGetAirflowWorkspaceSettingsBetaOptions contains the optional parameters for the WorkspaceSettingsClient.GetAirflowWorkspaceSettingsBeta

@@ -19,11 +19,16 @@ type CreateGraphQLAPIRequest struct {
 
 	// The folder ID. If not specified or null, the API for GraphQL is created with the workspace as its folder.
 	FolderID *string
+
+	// The sensitivity label settings for the API for GraphQL.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // DefinitionResponse - API for GraphQL public definition response.
 type DefinitionResponse struct {
-	// READ-ONLY; API for GraphQL public definition object. To create the definition, see GraphQLApi definition [/rest/api/fabric/articles/item-management/definitions/graphql-api-definition].
+	// READ-ONLY; GraphQL API public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/graphql-api-definition]
+	// for more details on the structure of the GraphQL API
+	// definition.
 	Definition *PublicDefinition
 }
 
@@ -43,6 +48,9 @@ type GraphQLAPI struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
 
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
@@ -72,7 +80,9 @@ type ItemTag struct {
 	ID *string
 }
 
-// PublicDefinition - API for GraphQL public definition object. To create the definition, see GraphQLApi definition [/rest/api/fabric/articles/item-management/definitions/graphql-api-definition].
+// PublicDefinition - GraphQL API public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/graphql-api-definition]
+// for more details on the structure of the GraphQL API
+// definition.
 type PublicDefinition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []PublicDefinitionPart
@@ -93,9 +103,26 @@ type PublicDefinitionPart struct {
 	PayloadType *PayloadType
 }
 
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
 // UpdateGraphQLAPIDefinitionRequest - Update API for GraphQL public definition request payload.
 type UpdateGraphQLAPIDefinitionRequest struct {
-	// REQUIRED; API for GraphQL public definition object. To create the definition, see GraphQLApi definition [/rest/api/fabric/articles/item-management/definitions/graphql-api-definition].
+	// REQUIRED; GraphQL API public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/graphql-api-definition]
+	// for more details on the structure of the GraphQL API
+	// definition.
 	Definition *PublicDefinition
 }
 

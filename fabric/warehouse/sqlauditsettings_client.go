@@ -20,9 +20,9 @@ import (
 	"github.com/microsoft/fabric-sdk-go/fabric/core"
 )
 
-// Client contains the methods for the Warehouse group.
+// SQLAuditSettingsClient contains the methods for the SQLAuditSettings group.
 // Don't use this type directly, use a constructor function instead.
-type Client struct {
+type SQLAuditSettingsClient struct {
 	internal *azcore.Client
 	endpoint string
 }
@@ -40,31 +40,32 @@ type Client struct {
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - itemID - The item ID.
-//   - options - ClientGetSQLAuditSettingsOptions contains the optional parameters for the Client.GetSQLAuditSettings method.
-func (client *Client) GetSQLAuditSettings(ctx context.Context, workspaceID string, itemID string, options *ClientGetSQLAuditSettingsOptions) (ClientGetSQLAuditSettingsResponse, error) {
+//   - options - SQLAuditSettingsClientGetSQLAuditSettingsOptions contains the optional parameters for the SQLAuditSettingsClient.GetSQLAuditSettings
+//     method.
+func (client *SQLAuditSettingsClient) GetSQLAuditSettings(ctx context.Context, workspaceID string, itemID string, options *SQLAuditSettingsClientGetSQLAuditSettingsOptions) (SQLAuditSettingsClientGetSQLAuditSettingsResponse, error) {
 	var err error
-	const operationName = "warehouse.Client.GetSQLAuditSettings"
+	const operationName = "warehouse.SQLAuditSettingsClient.GetSQLAuditSettings"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
 	req, err := client.getSQLAuditSettingsCreateRequest(ctx, workspaceID, itemID, options)
 	if err != nil {
-		return ClientGetSQLAuditSettingsResponse{}, err
+		return SQLAuditSettingsClientGetSQLAuditSettingsResponse{}, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return ClientGetSQLAuditSettingsResponse{}, err
+		return SQLAuditSettingsClientGetSQLAuditSettingsResponse{}, err
 	}
 	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
 		err = core.NewResponseError(httpResp)
-		return ClientGetSQLAuditSettingsResponse{}, err
+		return SQLAuditSettingsClientGetSQLAuditSettingsResponse{}, err
 	}
 	resp, err := client.getSQLAuditSettingsHandleResponse(httpResp)
 	return resp, err
 }
 
 // getSQLAuditSettingsCreateRequest creates the GetSQLAuditSettings request.
-func (client *Client) getSQLAuditSettingsCreateRequest(ctx context.Context, workspaceID string, itemID string, _ *ClientGetSQLAuditSettingsOptions) (*policy.Request, error) {
+func (client *SQLAuditSettingsClient) getSQLAuditSettingsCreateRequest(ctx context.Context, workspaceID string, itemID string, _ *SQLAuditSettingsClientGetSQLAuditSettingsOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/warehouses/{itemId}/settings/sqlAudit"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -83,10 +84,10 @@ func (client *Client) getSQLAuditSettingsCreateRequest(ctx context.Context, work
 }
 
 // getSQLAuditSettingsHandleResponse handles the GetSQLAuditSettings response.
-func (client *Client) getSQLAuditSettingsHandleResponse(resp *http.Response) (ClientGetSQLAuditSettingsResponse, error) {
-	result := ClientGetSQLAuditSettingsResponse{}
+func (client *SQLAuditSettingsClient) getSQLAuditSettingsHandleResponse(resp *http.Response) (SQLAuditSettingsClientGetSQLAuditSettingsResponse, error) {
+	result := SQLAuditSettingsClientGetSQLAuditSettingsResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.SQLAuditSettings); err != nil {
-		return ClientGetSQLAuditSettingsResponse{}, err
+		return SQLAuditSettingsClientGetSQLAuditSettingsResponse{}, err
 	}
 	return result, nil
 }
@@ -105,31 +106,31 @@ func (client *Client) getSQLAuditSettingsHandleResponse(resp *http.Response) (Cl
 //   - workspaceID - The workspace ID.
 //   - itemID - The item ID.
 //   - setAuditActionsAndGroupsRequest - Set audit actions and groups request payload.
-//   - options - ClientSetAuditActionsAndGroupsOptions contains the optional parameters for the Client.SetAuditActionsAndGroups
+//   - options - SQLAuditSettingsClientSetAuditActionsAndGroupsOptions contains the optional parameters for the SQLAuditSettingsClient.SetAuditActionsAndGroups
 //     method.
-func (client *Client) SetAuditActionsAndGroups(ctx context.Context, workspaceID string, itemID string, setAuditActionsAndGroupsRequest []string, options *ClientSetAuditActionsAndGroupsOptions) (ClientSetAuditActionsAndGroupsResponse, error) {
+func (client *SQLAuditSettingsClient) SetAuditActionsAndGroups(ctx context.Context, workspaceID string, itemID string, setAuditActionsAndGroupsRequest []string, options *SQLAuditSettingsClientSetAuditActionsAndGroupsOptions) (SQLAuditSettingsClientSetAuditActionsAndGroupsResponse, error) {
 	var err error
-	const operationName = "warehouse.Client.SetAuditActionsAndGroups"
+	const operationName = "warehouse.SQLAuditSettingsClient.SetAuditActionsAndGroups"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
 	req, err := client.setAuditActionsAndGroupsCreateRequest(ctx, workspaceID, itemID, setAuditActionsAndGroupsRequest, options)
 	if err != nil {
-		return ClientSetAuditActionsAndGroupsResponse{}, err
+		return SQLAuditSettingsClientSetAuditActionsAndGroupsResponse{}, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return ClientSetAuditActionsAndGroupsResponse{}, err
+		return SQLAuditSettingsClientSetAuditActionsAndGroupsResponse{}, err
 	}
 	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
 		err = core.NewResponseError(httpResp)
-		return ClientSetAuditActionsAndGroupsResponse{}, err
+		return SQLAuditSettingsClientSetAuditActionsAndGroupsResponse{}, err
 	}
-	return ClientSetAuditActionsAndGroupsResponse{}, nil
+	return SQLAuditSettingsClientSetAuditActionsAndGroupsResponse{}, nil
 }
 
 // setAuditActionsAndGroupsCreateRequest creates the SetAuditActionsAndGroups request.
-func (client *Client) setAuditActionsAndGroupsCreateRequest(ctx context.Context, workspaceID string, itemID string, setAuditActionsAndGroupsRequest []string, _ *ClientSetAuditActionsAndGroupsOptions) (*policy.Request, error) {
+func (client *SQLAuditSettingsClient) setAuditActionsAndGroupsCreateRequest(ctx context.Context, workspaceID string, itemID string, setAuditActionsAndGroupsRequest []string, _ *SQLAuditSettingsClientSetAuditActionsAndGroupsOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/warehouses/{itemId}/settings/sqlAudit/setAuditActionsAndGroups"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -164,31 +165,32 @@ func (client *Client) setAuditActionsAndGroupsCreateRequest(ctx context.Context,
 //   - workspaceID - The workspace ID.
 //   - itemID - The item ID.
 //   - updateAuditSettingsRequest - Update SQL audit settings request payload.
-//   - options - ClientUpdateSQLAuditSettingsOptions contains the optional parameters for the Client.UpdateSQLAuditSettings method.
-func (client *Client) UpdateSQLAuditSettings(ctx context.Context, workspaceID string, itemID string, updateAuditSettingsRequest SQLAuditSettingsUpdate, options *ClientUpdateSQLAuditSettingsOptions) (ClientUpdateSQLAuditSettingsResponse, error) {
+//   - options - SQLAuditSettingsClientUpdateSQLAuditSettingsOptions contains the optional parameters for the SQLAuditSettingsClient.UpdateSQLAuditSettings
+//     method.
+func (client *SQLAuditSettingsClient) UpdateSQLAuditSettings(ctx context.Context, workspaceID string, itemID string, updateAuditSettingsRequest SQLAuditSettingsUpdate, options *SQLAuditSettingsClientUpdateSQLAuditSettingsOptions) (SQLAuditSettingsClientUpdateSQLAuditSettingsResponse, error) {
 	var err error
-	const operationName = "warehouse.Client.UpdateSQLAuditSettings"
+	const operationName = "warehouse.SQLAuditSettingsClient.UpdateSQLAuditSettings"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
 	req, err := client.updateSQLAuditSettingsCreateRequest(ctx, workspaceID, itemID, updateAuditSettingsRequest, options)
 	if err != nil {
-		return ClientUpdateSQLAuditSettingsResponse{}, err
+		return SQLAuditSettingsClientUpdateSQLAuditSettingsResponse{}, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return ClientUpdateSQLAuditSettingsResponse{}, err
+		return SQLAuditSettingsClientUpdateSQLAuditSettingsResponse{}, err
 	}
 	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
 		err = core.NewResponseError(httpResp)
-		return ClientUpdateSQLAuditSettingsResponse{}, err
+		return SQLAuditSettingsClientUpdateSQLAuditSettingsResponse{}, err
 	}
 	resp, err := client.updateSQLAuditSettingsHandleResponse(httpResp)
 	return resp, err
 }
 
 // updateSQLAuditSettingsCreateRequest creates the UpdateSQLAuditSettings request.
-func (client *Client) updateSQLAuditSettingsCreateRequest(ctx context.Context, workspaceID string, itemID string, updateAuditSettingsRequest SQLAuditSettingsUpdate, _ *ClientUpdateSQLAuditSettingsOptions) (*policy.Request, error) {
+func (client *SQLAuditSettingsClient) updateSQLAuditSettingsCreateRequest(ctx context.Context, workspaceID string, itemID string, updateAuditSettingsRequest SQLAuditSettingsUpdate, _ *SQLAuditSettingsClientUpdateSQLAuditSettingsOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/warehouses/{itemId}/settings/sqlAudit"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -210,10 +212,12 @@ func (client *Client) updateSQLAuditSettingsCreateRequest(ctx context.Context, w
 }
 
 // updateSQLAuditSettingsHandleResponse handles the UpdateSQLAuditSettings response.
-func (client *Client) updateSQLAuditSettingsHandleResponse(resp *http.Response) (ClientUpdateSQLAuditSettingsResponse, error) {
-	result := ClientUpdateSQLAuditSettingsResponse{}
+func (client *SQLAuditSettingsClient) updateSQLAuditSettingsHandleResponse(resp *http.Response) (SQLAuditSettingsClientUpdateSQLAuditSettingsResponse, error) {
+	result := SQLAuditSettingsClientUpdateSQLAuditSettingsResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.SQLAuditSettings); err != nil {
-		return ClientUpdateSQLAuditSettingsResponse{}, err
+		return SQLAuditSettingsClientUpdateSQLAuditSettingsResponse{}, err
 	}
 	return result, nil
 }
+
+// Custom code starts below

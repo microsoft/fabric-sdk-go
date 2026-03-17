@@ -421,6 +421,12 @@ func (client *ItemsClient) listEnvironmentsCreateRequest(ctx context.Context, wo
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
 	}
+	if options != nil && options.Recursive != nil {
+		reqQP.Set("recursive", strconv.FormatBool(*options.Recursive))
+	}
+	if options != nil && options.RootFolderID != nil {
+		reqQP.Set("rootFolderId", *options.RootFolderID)
+	}
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
@@ -435,7 +441,7 @@ func (client *ItemsClient) listEnvironmentsHandleResponse(resp *http.Response) (
 	return result, nil
 }
 
-// BeginPublishEnvironment - > [!NOTE] This API is a release version of a beta version due to be deprecated on March 1, 2026.
+// BeginPublishEnvironment - > [!NOTE] This API is a release version of a beta version due to be deprecated on April 30, 2026.
 // When calling this API - callers must set the query parameter beta to the value false
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS Write permission for the environment item.
@@ -458,8 +464,8 @@ func (client *ItemsClient) BeginPublishEnvironment(ctx context.Context, workspac
 	return client.beginPublishEnvironment(ctx, workspaceID, environmentID, beta, options)
 }
 
-// PublishEnvironment - > [!NOTE] This API is a release version of a beta version due to be deprecated on March 1, 2026. When
-// calling this API - callers must set the query parameter beta to the value false
+// PublishEnvironment - > [!NOTE] This API is a release version of a beta version due to be deprecated on April 30, 2026.
+// When calling this API - callers must set the query parameter beta to the value false
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS Write permission for the environment item.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All or Environment.ReadWrite.All
@@ -515,9 +521,9 @@ func (client *ItemsClient) publishEnvironmentCreateRequest(ctx context.Context, 
 	return req, nil
 }
 
-// PublishEnvironmentPreview - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use. This beta API will
-// be deprecated on March 1, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/items/publish-environment].
+// PublishEnvironmentBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use. This beta API will
+// be deprecated on April 30, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/items/publish-environment].
 // The new version introduces breaking changes and is not
 // backward compatible. When calling this API, callers must specify true as the value for the query parameter beta (preview
 // query parameter has been replaced by beta. For backward compatibility, preview
@@ -525,7 +531,7 @@ func (client *ItemsClient) publishEnvironmentCreateRequest(ctx context.Context, 
 // DEPRECATION NOTICE A new query parameter beta has been introduced to facilitate this transition:
 // * The beta query parameter currently defaults to true.
 // * Set the value of the beta query parameter to false to use the stable Release version of this API.
-// * Starting March 1, 2026, the default value for beta will change to false.
+// * Starting April 30, 2026, the default value for beta will change to false.
 // It is recommended to migrate your integration to use the Release version as soon as possible by specifying false for the
 // beta query parameter (the default value for the beta query parameter will be
 // set to false on API's deprecation date).
@@ -547,34 +553,34 @@ func (client *ItemsClient) publishEnvironmentCreateRequest(ctx context.Context, 
 //   - environmentID - The environment ID.
 //   - beta - This parameter specifies which version of the API to use. Set to true to use the beta version described on this
 //     page, or to false to use the Release version detailed here
-//     [/rest/api/fabric/environment/items/publish-environment]. Starting March 1, 2026, the default value for beta will change
+//     [/rest/api/fabric/environment/items/publish-environment]. Starting April 30, 2026, the default value for beta will change
 //     to false.
-//   - options - ItemsClientPublishEnvironmentPreviewOptions contains the optional parameters for the ItemsClient.PublishEnvironmentPreview
+//   - options - ItemsClientPublishEnvironmentBetaOptions contains the optional parameters for the ItemsClient.PublishEnvironmentBeta
 //     method.
-func (client *ItemsClient) PublishEnvironmentPreview(ctx context.Context, workspaceID string, environmentID string, beta bool, options *ItemsClientPublishEnvironmentPreviewOptions) (ItemsClientPublishEnvironmentPreviewResponse, error) {
+func (client *ItemsClient) PublishEnvironmentBeta(ctx context.Context, workspaceID string, environmentID string, beta bool, options *ItemsClientPublishEnvironmentBetaOptions) (ItemsClientPublishEnvironmentBetaResponse, error) {
 	var err error
-	const operationName = "environment.ItemsClient.PublishEnvironmentPreview"
+	const operationName = "environment.ItemsClient.PublishEnvironmentBeta"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.publishEnvironmentPreviewCreateRequest(ctx, workspaceID, environmentID, beta, options)
+	req, err := client.publishEnvironmentBetaCreateRequest(ctx, workspaceID, environmentID, beta, options)
 	if err != nil {
-		return ItemsClientPublishEnvironmentPreviewResponse{}, err
+		return ItemsClientPublishEnvironmentBetaResponse{}, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return ItemsClientPublishEnvironmentPreviewResponse{}, err
+		return ItemsClientPublishEnvironmentBetaResponse{}, err
 	}
 	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
 		err = core.NewResponseError(httpResp)
-		return ItemsClientPublishEnvironmentPreviewResponse{}, err
+		return ItemsClientPublishEnvironmentBetaResponse{}, err
 	}
-	resp, err := client.publishEnvironmentPreviewHandleResponse(httpResp)
+	resp, err := client.publishEnvironmentBetaHandleResponse(httpResp)
 	return resp, err
 }
 
-// publishEnvironmentPreviewCreateRequest creates the PublishEnvironmentPreview request.
-func (client *ItemsClient) publishEnvironmentPreviewCreateRequest(ctx context.Context, workspaceID string, environmentID string, beta bool, _ *ItemsClientPublishEnvironmentPreviewOptions) (*policy.Request, error) {
+// publishEnvironmentBetaCreateRequest creates the PublishEnvironmentBeta request.
+func (client *ItemsClient) publishEnvironmentBetaCreateRequest(ctx context.Context, workspaceID string, environmentID string, beta bool, _ *ItemsClientPublishEnvironmentBetaOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/staging/publish"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -595,11 +601,11 @@ func (client *ItemsClient) publishEnvironmentPreviewCreateRequest(ctx context.Co
 	return req, nil
 }
 
-// publishEnvironmentPreviewHandleResponse handles the PublishEnvironmentPreview response.
-func (client *ItemsClient) publishEnvironmentPreviewHandleResponse(resp *http.Response) (ItemsClientPublishEnvironmentPreviewResponse, error) {
-	result := ItemsClientPublishEnvironmentPreviewResponse{}
+// publishEnvironmentBetaHandleResponse handles the PublishEnvironmentBeta response.
+func (client *ItemsClient) publishEnvironmentBetaHandleResponse(resp *http.Response) (ItemsClientPublishEnvironmentBetaResponse, error) {
+	result := ItemsClientPublishEnvironmentBetaResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.Properties); err != nil {
-		return ItemsClientPublishEnvironmentPreviewResponse{}, err
+		return ItemsClientPublishEnvironmentBetaResponse{}, err
 	}
 	return result, nil
 }
@@ -903,7 +909,7 @@ func (client *ItemsClient) beginGetEnvironmentDefinition(ctx context.Context, wo
 }
 
 // PublishEnvironment - returns ItemsClientPublishEnvironmentResponse in sync mode.
-// >  [!NOTE] This API is a release version of a beta version due to be deprecated on March 1, 2026. When calling this API - callers must set the query parameter beta to the value false
+// >  [!NOTE] This API is a release version of a beta version due to be deprecated on April 30, 2026. When calling this API - callers must set the query parameter beta to the value false
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //

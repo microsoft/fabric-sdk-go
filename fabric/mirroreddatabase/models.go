@@ -21,9 +21,14 @@ type CreateMirroredDatabaseRequest struct {
 
 	// The folder ID. If not specified or null, the mirrored database is created with the workspace as its folder.
 	FolderID *string
+
+	// The sensitivity label settings for the mirrored database.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
-// Definition - Mirrored database public definition object.
+// Definition - Mirrored database public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/mirrored-database-definition]
+// for more details on the structure of the Mirrored
+// database definition.
 type Definition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []DefinitionPart
@@ -43,7 +48,9 @@ type DefinitionPart struct {
 
 // DefinitionResponse - Mirrored database public definition response.
 type DefinitionResponse struct {
-	// READ-ONLY; Mirrored database public definition object.
+	// READ-ONLY; Mirrored database public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/mirrored-database-definition]
+	// for more details on the structure of the Mirrored
+	// database definition.
 	Definition *Definition
 }
 
@@ -117,6 +124,9 @@ type MirroredDatabase struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
+
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
 
@@ -170,6 +180,21 @@ type SQLEndpointProperties struct {
 	ID *string
 }
 
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
 // TableMirroringMetrics - Table mirroring metrics.
 type TableMirroringMetrics struct {
 	// REQUIRED; Last processed time of the table in in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
@@ -221,7 +246,9 @@ type TablesMirroringStatusResponse struct {
 
 // UpdateMirroredDatabaseDefinitionRequest - Update mirrored database public definition request payload.
 type UpdateMirroredDatabaseDefinitionRequest struct {
-	// REQUIRED; Mirrored database public definition object.
+	// REQUIRED; Mirrored database public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/mirrored-database-definition]
+	// for more details on the structure of the Mirrored
+	// database definition.
 	Definition *Definition
 }
 

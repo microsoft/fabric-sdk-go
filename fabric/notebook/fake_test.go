@@ -71,6 +71,9 @@ func (testsuite *FakeTestSuite) TestItems_ListNotebooks() {
 				Description: to.Ptr("A notebook description."),
 				DisplayName: to.Ptr("Notebook Name 1"),
 				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				SensitivityLabel: &notebook.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 			}},
 	}
@@ -83,7 +86,10 @@ func (testsuite *FakeTestSuite) TestItems_ListNotebooks() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	pager := client.NewListNotebooksPager(exampleWorkspaceID, &notebook.ItemsClientListNotebooksOptions{ContinuationToken: nil})
+	pager := client.NewListNotebooksPager(exampleWorkspaceID, &notebook.ItemsClientListNotebooksOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")
@@ -211,6 +217,9 @@ func (testsuite *FakeTestSuite) TestItems_GetNotebook() {
 		Description: to.Ptr("A notebook description."),
 		DisplayName: to.Ptr("Notebook 1"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &notebook.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	}
 
@@ -248,6 +257,9 @@ func (testsuite *FakeTestSuite) TestItems_UpdateNotebook() {
 		Description: to.Ptr("A new description for notebook."),
 		DisplayName: to.Ptr("Notebook's New name"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &notebook.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	}
 
@@ -504,7 +516,7 @@ func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessions() {
 				StartDateTime:      to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:34:11.000Z"); return t }()),
 				State:              to.Ptr(notebook.StateCancelled),
 				SubmittedDateTime:  to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:32:03.000Z"); return t }()),
-				Submitter: &notebook.Principal{
+				Submitter: &notebook.UserPrincipal{
 					Type: to.Ptr(notebook.PrincipalTypeUser),
 					ID:   to.Ptr("6f23a8a6-d954-4550-b91a-4df73ccd0311"),
 				},
@@ -594,7 +606,7 @@ func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessionsBeta() {
 				StartDateTime:      to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:34:11.000Z"); return t }()),
 				State:              to.Ptr(notebook.StateCancelled),
 				SubmittedDateTime:  to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:32:03.000Z"); return t }()),
-				Submitter: &notebook.Principal{
+				Submitter: &notebook.UserPrincipal{
 					Type: to.Ptr(notebook.PrincipalTypeUser),
 					ID:   to.Ptr("6f23a8a6-d954-4550-b91a-4df73ccd0311"),
 				},
@@ -688,7 +700,7 @@ func (testsuite *FakeTestSuite) TestLivySessions_GetLivySession() {
 		StartDateTime:      to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:34:11.000Z"); return t }()),
 		State:              to.Ptr(notebook.StateCancelled),
 		SubmittedDateTime:  to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:32:03.000Z"); return t }()),
-		Submitter: &notebook.Principal{
+		Submitter: &notebook.UserPrincipal{
 			Type: to.Ptr(notebook.PrincipalTypeUser),
 			ID:   to.Ptr("6f23a8a6-d954-4550-b91a-4df73ccd0311"),
 		},

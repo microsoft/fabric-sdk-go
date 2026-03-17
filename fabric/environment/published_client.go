@@ -83,7 +83,7 @@ func (client *PublishedClient) exportExternalLibrariesCreateRequest(ctx context.
 	return req, nil
 }
 
-// GetSparkCompute - > [!NOTE] This API is a release version of a beta version due to be deprecated on March 1, 2026. When
+// GetSparkCompute - > [!NOTE] This API is a release version of a beta version due to be deprecated on April 30, 2026. When
 // calling this API - callers must set the query parameter beta to the value false
 // PERMISSIONS Read permission for the environment item.
 // REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All or Environment.Read.All or Environment.ReadWrite.All
@@ -154,9 +154,9 @@ func (client *PublishedClient) getSparkComputeHandleResponse(resp *http.Response
 	return result, nil
 }
 
-// GetSparkComputePreview - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes
+// GetSparkComputeBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes
 // only. It may change based on feedback and is not recommended for production use. This beta API will
-// be deprecated on March 1, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/published/get-spark-compute].
+// be deprecated on April 30, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/published/get-spark-compute].
 // The new version introduces breaking changes and is not
 // backward compatible. When calling this API, callers must specify true as the value for the query parameter beta (preview
 // query parameter has been replaced by beta. For backward compatibility, preview
@@ -164,7 +164,7 @@ func (client *PublishedClient) getSparkComputeHandleResponse(resp *http.Response
 // DEPRECATION NOTICE A new query parameter beta has been introduced to facilitate this transition:
 // * The beta query parameter currently defaults to true.
 // * Set the value of the beta query parameter to false to use the stable Release version of this API.
-// * Starting March 1, 2026, the default value for beta will change to false.
+// * Starting April 30, 2026, the default value for beta will change to false.
 // To ensure compatibility, explicitly set the beta parameter to your desired value (true or false).
 // It is recommended to migrate your integration to use the Release version as soon as possible by specifying false for the
 // beta query parameter (the default value for the beta query parameter will be
@@ -186,34 +186,34 @@ func (client *PublishedClient) getSparkComputeHandleResponse(resp *http.Response
 //   - environmentID - The environment ID.
 //   - beta - This parameter specifies which version of the API to use. Set to true to use the beta version described on this
 //     page, or to false to use the Release version detailed here
-//     [/rest/api/fabric/environment/published/get-spark-compute]. Starting March 1, 2026, the default value for beta will change
+//     [/rest/api/fabric/environment/published/get-spark-compute]. Starting April 30, 2026, the default value for beta will change
 //     to false.
-//   - options - PublishedClientGetSparkComputePreviewOptions contains the optional parameters for the PublishedClient.GetSparkComputePreview
+//   - options - PublishedClientGetSparkComputeBetaOptions contains the optional parameters for the PublishedClient.GetSparkComputeBeta
 //     method.
-func (client *PublishedClient) GetSparkComputePreview(ctx context.Context, workspaceID string, environmentID string, beta bool, options *PublishedClientGetSparkComputePreviewOptions) (PublishedClientGetSparkComputePreviewResponse, error) {
+func (client *PublishedClient) GetSparkComputeBeta(ctx context.Context, workspaceID string, environmentID string, beta bool, options *PublishedClientGetSparkComputeBetaOptions) (PublishedClientGetSparkComputeBetaResponse, error) {
 	var err error
-	const operationName = "environment.PublishedClient.GetSparkComputePreview"
+	const operationName = "environment.PublishedClient.GetSparkComputeBeta"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.getSparkComputePreviewCreateRequest(ctx, workspaceID, environmentID, beta, options)
+	req, err := client.getSparkComputeBetaCreateRequest(ctx, workspaceID, environmentID, beta, options)
 	if err != nil {
-		return PublishedClientGetSparkComputePreviewResponse{}, err
+		return PublishedClientGetSparkComputeBetaResponse{}, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return PublishedClientGetSparkComputePreviewResponse{}, err
+		return PublishedClientGetSparkComputeBetaResponse{}, err
 	}
 	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
 		err = core.NewResponseError(httpResp)
-		return PublishedClientGetSparkComputePreviewResponse{}, err
+		return PublishedClientGetSparkComputeBetaResponse{}, err
 	}
-	resp, err := client.getSparkComputePreviewHandleResponse(httpResp)
+	resp, err := client.getSparkComputeBetaHandleResponse(httpResp)
 	return resp, err
 }
 
-// getSparkComputePreviewCreateRequest creates the GetSparkComputePreview request.
-func (client *PublishedClient) getSparkComputePreviewCreateRequest(ctx context.Context, workspaceID string, environmentID string, beta bool, _ *PublishedClientGetSparkComputePreviewOptions) (*policy.Request, error) {
+// getSparkComputeBetaCreateRequest creates the GetSparkComputeBeta request.
+func (client *PublishedClient) getSparkComputeBetaCreateRequest(ctx context.Context, workspaceID string, environmentID string, beta bool, _ *PublishedClientGetSparkComputeBetaOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/sparkcompute"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -234,16 +234,16 @@ func (client *PublishedClient) getSparkComputePreviewCreateRequest(ctx context.C
 	return req, nil
 }
 
-// getSparkComputePreviewHandleResponse handles the GetSparkComputePreview response.
-func (client *PublishedClient) getSparkComputePreviewHandleResponse(resp *http.Response) (PublishedClientGetSparkComputePreviewResponse, error) {
-	result := PublishedClientGetSparkComputePreviewResponse{}
+// getSparkComputeBetaHandleResponse handles the GetSparkComputeBeta response.
+func (client *PublishedClient) getSparkComputeBetaHandleResponse(resp *http.Response) (PublishedClientGetSparkComputeBetaResponse, error) {
+	result := PublishedClientGetSparkComputeBetaResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.SparkComputePreview); err != nil {
-		return PublishedClientGetSparkComputePreviewResponse{}, err
+		return PublishedClientGetSparkComputeBetaResponse{}, err
 	}
 	return result, nil
 }
 
-// NewListLibrariesPager - > [!NOTE] This API is a release version of a beta version due to be deprecated on March 1, 2026.
+// NewListLibrariesPager - > [!NOTE] This API is a release version of a beta version due to be deprecated on April 30, 2026.
 // When calling this API - callers must set the query parameter beta to the value false (preview query
 // parameter has been replaced by beta. For backward compatibility, preview is still supported and behaves the same as beta)
 // This API supports pagination [/rest/api/fabric/articles/pagination].
@@ -319,9 +319,9 @@ func (client *PublishedClient) listLibrariesHandleResponse(resp *http.Response) 
 	return result, nil
 }
 
-// ListLibrariesPreview - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes
+// ListLibrariesBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes
 // only. It may change based on feedback and is not recommended for production use. This beta API will
-// be deprecated on March 1, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/published/list-libraries].
+// be deprecated on April 30, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/published/list-libraries].
 // The new version introduces breaking changes and is not
 // backward compatible. When calling this API, callers must specify true as the value for the query parameter beta (preview
 // query parameter has been replaced by beta. For backward compatibility, preview
@@ -329,7 +329,7 @@ func (client *PublishedClient) listLibrariesHandleResponse(resp *http.Response) 
 // DEPRECATION NOTICE A new query parameter beta has been introduced to facilitate this transition:
 // * The beta query parameter currently defaults to true.
 // * Set the value of the beta query parameter to false to use the stable Release version of this API.
-// * Starting March 1, 2026, the default value for beta will change to false.
+// * Starting April 30, 2026, the default value for beta will change to false.
 // It is recommended to migrate your integration to use the Release version as soon as possible by specifying false for the
 // beta query parameter (the default value for the beta query parameter will be
 // set to false on API's deprecation date).
@@ -354,34 +354,34 @@ func (client *PublishedClient) listLibrariesHandleResponse(resp *http.Response) 
 //   - environmentID - The environment ID.
 //   - beta - This parameter specifies which version of the API to use. Set to true to use the beta version described on this
 //     page, or to false to use the Release version detailed here
-//     [/rest/api/fabric/environment/published/list-libraries]. Starting March 1, 2026, the default value for beta will change
+//     [/rest/api/fabric/environment/published/list-libraries]. Starting April 30, 2026, the default value for beta will change
 //     to false.
-//   - options - PublishedClientListLibrariesPreviewOptions contains the optional parameters for the PublishedClient.ListLibrariesPreview
+//   - options - PublishedClientListLibrariesBetaOptions contains the optional parameters for the PublishedClient.ListLibrariesBeta
 //     method.
-func (client *PublishedClient) ListLibrariesPreview(ctx context.Context, workspaceID string, environmentID string, beta bool, options *PublishedClientListLibrariesPreviewOptions) (PublishedClientListLibrariesPreviewResponse, error) {
+func (client *PublishedClient) ListLibrariesBeta(ctx context.Context, workspaceID string, environmentID string, beta bool, options *PublishedClientListLibrariesBetaOptions) (PublishedClientListLibrariesBetaResponse, error) {
 	var err error
-	const operationName = "environment.PublishedClient.ListLibrariesPreview"
+	const operationName = "environment.PublishedClient.ListLibrariesBeta"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.listLibrariesPreviewCreateRequest(ctx, workspaceID, environmentID, beta, options)
+	req, err := client.listLibrariesBetaCreateRequest(ctx, workspaceID, environmentID, beta, options)
 	if err != nil {
-		return PublishedClientListLibrariesPreviewResponse{}, err
+		return PublishedClientListLibrariesBetaResponse{}, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return PublishedClientListLibrariesPreviewResponse{}, err
+		return PublishedClientListLibrariesBetaResponse{}, err
 	}
 	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
 		err = core.NewResponseError(httpResp)
-		return PublishedClientListLibrariesPreviewResponse{}, err
+		return PublishedClientListLibrariesBetaResponse{}, err
 	}
-	resp, err := client.listLibrariesPreviewHandleResponse(httpResp)
+	resp, err := client.listLibrariesBetaHandleResponse(httpResp)
 	return resp, err
 }
 
-// listLibrariesPreviewCreateRequest creates the ListLibrariesPreview request.
-func (client *PublishedClient) listLibrariesPreviewCreateRequest(ctx context.Context, workspaceID string, environmentID string, beta bool, _ *PublishedClientListLibrariesPreviewOptions) (*policy.Request, error) {
+// listLibrariesBetaCreateRequest creates the ListLibrariesBeta request.
+func (client *PublishedClient) listLibrariesBetaCreateRequest(ctx context.Context, workspaceID string, environmentID string, beta bool, _ *PublishedClientListLibrariesBetaOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/libraries"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -402,11 +402,11 @@ func (client *PublishedClient) listLibrariesPreviewCreateRequest(ctx context.Con
 	return req, nil
 }
 
-// listLibrariesPreviewHandleResponse handles the ListLibrariesPreview response.
-func (client *PublishedClient) listLibrariesPreviewHandleResponse(resp *http.Response) (PublishedClientListLibrariesPreviewResponse, error) {
-	result := PublishedClientListLibrariesPreviewResponse{}
+// listLibrariesBetaHandleResponse handles the ListLibrariesBeta response.
+func (client *PublishedClient) listLibrariesBetaHandleResponse(resp *http.Response) (PublishedClientListLibrariesBetaResponse, error) {
+	result := PublishedClientListLibrariesBetaResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.LibrariesPreview); err != nil {
-		return PublishedClientListLibrariesPreviewResponse{}, err
+		return PublishedClientListLibrariesBetaResponse{}, err
 	}
 	return result, nil
 }
@@ -414,7 +414,7 @@ func (client *PublishedClient) listLibrariesPreviewHandleResponse(resp *http.Res
 // Custom code starts below
 
 // ListLibraries - returns array of LibraryClassification from all pages.
-// >  [!NOTE] This API is a release version of a beta version due to be deprecated on March 1, 2026. When calling this API - callers must set the query parameter beta to the value false (preview query
+// >  [!NOTE] This API is a release version of a beta version due to be deprecated on April 30, 2026. When calling this API - callers must set the query parameter beta to the value false (preview query
 // parameter has been replaced by beta. For backward compatibility, preview is still supported and behaves the same as beta)
 //
 // This API supports pagination [/rest/api/fabric/articles/pagination].

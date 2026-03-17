@@ -17,7 +17,7 @@ import (
 )
 
 // Generated from example definition
-func ExampleStagingClient_GetSparkComputePreview() {
+func ExampleStagingClient_GetSparkComputeBeta() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -27,7 +27,7 @@ func ExampleStagingClient_GetSparkComputePreview() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewStagingClient().GetSparkComputePreview(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "707cfd07-cbf1-41da-aad7-dd157ddb8c11", true, nil)
+	res, err := clientFactory.NewStagingClient().GetSparkComputeBeta(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "707cfd07-cbf1-41da-aad7-dd157ddb8c11", true, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -57,7 +57,7 @@ func ExampleStagingClient_GetSparkComputePreview() {
 }
 
 // Generated from example definition
-func ExampleStagingClient_UpdateSparkComputePreview() {
+func ExampleStagingClient_UpdateSparkComputeBeta() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -67,7 +67,7 @@ func ExampleStagingClient_UpdateSparkComputePreview() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewStagingClient().UpdateSparkComputePreview(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "707cfd07-cbf1-41da-aad7-dd157ddb8c11", true, environment.UpdateEnvironmentSparkComputeRequestPreview{
+	res, err := clientFactory.NewStagingClient().UpdateSparkComputeBeta(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "707cfd07-cbf1-41da-aad7-dd157ddb8c11", true, environment.UpdateEnvironmentSparkComputeRequestPreview{
 		DriverCores:  to.Ptr[int32](4),
 		DriverMemory: to.Ptr("56g"),
 		DynamicExecutorAllocation: &environment.DynamicExecutorAllocationProperties{
@@ -325,7 +325,7 @@ func ExampleStagingClient_NewListLibrariesPager() {
 }
 
 // Generated from example definition
-func ExampleStagingClient_UploadCustomLibraryPreview() {
+func ExampleStagingClient_UploadCustomLibraryBeta() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -335,14 +335,14 @@ func ExampleStagingClient_UploadCustomLibraryPreview() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewStagingClient().UploadCustomLibraryPreview(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", nil)
+	_, err = clientFactory.NewStagingClient().UploadCustomLibraryBeta(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
 }
 
 // Generated from example definition
-func ExampleStagingClient_DeleteCustomLibraryPreview() {
+func ExampleStagingClient_DeleteCustomLibraryBeta() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -352,14 +352,14 @@ func ExampleStagingClient_DeleteCustomLibraryPreview() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewStagingClient().DeleteCustomLibraryPreview(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", "samplelibrary.jar", nil)
+	_, err = clientFactory.NewStagingClient().DeleteCustomLibraryBeta(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", "samplelibrary.jar", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
 }
 
 // Generated from example definition
-func ExampleStagingClient_ListLibrariesPreview() {
+func ExampleStagingClient_ListLibrariesBeta() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -369,7 +369,7 @@ func ExampleStagingClient_ListLibrariesPreview() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewStagingClient().ListLibrariesPreview(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", true, nil)
+	res, err := clientFactory.NewStagingClient().ListLibrariesBeta(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", true, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

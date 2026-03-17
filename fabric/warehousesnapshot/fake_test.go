@@ -71,6 +71,9 @@ func (testsuite *FakeTestSuite) TestItems_ListWarehouseSnapshots() {
 				Description: to.Ptr("A WarehouseSnapshot description."),
 				DisplayName: to.Ptr("WarehouseSnapshot Name 1"),
 				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				SensitivityLabel: &warehousesnapshot.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 				Properties: &warehousesnapshot.Properties{
 					ConnectionString:  to.Ptr("qvrmbuxie7we7glrekxgy6npqu-6xgyei3x2xiejip4iime6knh5m.datawarehouse.fabric.microsoft.com"),
@@ -83,6 +86,9 @@ func (testsuite *FakeTestSuite) TestItems_ListWarehouseSnapshots() {
 				Description: to.Ptr("A WarehouseSnapshot description."),
 				DisplayName: to.Ptr("WarehouseSnapshot Name 2"),
 				ID:          to.Ptr("f697fb63-abd4-4399-9548-be7e3c3c0dac"),
+				SensitivityLabel: &warehousesnapshot.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 				Properties: &warehousesnapshot.Properties{
 					ConnectionString:  to.Ptr("qvrmbuxie7we7glrekxgy6npqu-6xgyei3x2xiejip4iime6knh5m.datawarehouse.fabric.microsoft.com"),
@@ -100,7 +106,10 @@ func (testsuite *FakeTestSuite) TestItems_ListWarehouseSnapshots() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	pager := client.NewListWarehouseSnapshotsPager(exampleWorkspaceID, &warehousesnapshot.ItemsClientListWarehouseSnapshotsOptions{ContinuationToken: nil})
+	pager := client.NewListWarehouseSnapshotsPager(exampleWorkspaceID, &warehousesnapshot.ItemsClientListWarehouseSnapshotsOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")
@@ -158,6 +167,9 @@ func (testsuite *FakeTestSuite) TestItems_GetWarehouseSnapshot() {
 		Description: to.Ptr("A WarehouseSnapshot description."),
 		DisplayName: to.Ptr("WarehouseSnapshot 1"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &warehousesnapshot.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		Properties: &warehousesnapshot.Properties{
 			ConnectionString:  to.Ptr("qvrmbuxie7we7glrekxgy6npqu-6xgyei3x2xiejip4iime6knh5m.datawarehouse.fabric.microsoft.com"),
@@ -203,6 +215,9 @@ func (testsuite *FakeTestSuite) TestItems_UpdateWarehouseSnapshot() {
 		Description: to.Ptr("WarehouseSnapshot's New description"),
 		DisplayName: to.Ptr("WarehouseSnapshot's New name"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &warehousesnapshot.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		Properties: &warehousesnapshot.Properties{
 			ConnectionString:  to.Ptr("qvrmbuxie7we7glrekxgy6npqu-6xgyei3x2xiejip4iime6knh5m.datawarehouse.fabric.microsoft.com"),

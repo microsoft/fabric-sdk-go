@@ -23,6 +23,9 @@ type CreateMirroredAzureDatabricksCatalogRequest struct {
 
 	// The MirroredAzureDatabricksCatalog description. Maximum length is 256 characters.
 	Description *string
+
+	// The sensitivity label settings for the MirroredAzureDatabricksCatalog.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // CreationPayload - MirroredAzureDatabricksCatalog create item payload.
@@ -132,9 +135,9 @@ type DatabricksTables struct {
 
 // DefinitionResponse - API for mirroredAzureDatabricksCatalog public definition response.
 type DefinitionResponse struct {
-	// READ-ONLY; MirroredAzureDatabricksCatalog public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/mirroredazuredatabrickscatalog-definition]
-	// for more details on how
-	// to craft a MirroredAzureDatabricksCatalog definition public definition.
+	// READ-ONLY; MirroredAzureDatabricksCatalog public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/mirrored-azuredatabricks-unitycatalog-definition]
+	// for more details
+	// on the structure of the MirroredAzureDatabricksCatalog definition.
 	Definition *PublicDefinition
 }
 
@@ -220,6 +223,9 @@ type MirroredAzureDatabricksCatalog struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
+
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
 
@@ -269,9 +275,9 @@ type Properties struct {
 	SyncDetails *SyncDetails
 }
 
-// PublicDefinition - MirroredAzureDatabricksCatalog public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/mirroredazuredatabrickscatalog-definition]
-// for more details on how
-// to craft a MirroredAzureDatabricksCatalog definition public definition.
+// PublicDefinition - MirroredAzureDatabricksCatalog public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/mirrored-azuredatabricks-unitycatalog-definition]
+// for more details
+// on the structure of the MirroredAzureDatabricksCatalog definition.
 type PublicDefinition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []PublicDefinitionPart
@@ -299,6 +305,21 @@ type SQLEndpointProperties struct {
 
 	// REQUIRED; SQL endpoint ID.
 	ID *string
+}
+
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
 }
 
 // SyncDetails - The MirroredAzureDatabricksCatalog mirroring status.
@@ -340,8 +361,8 @@ type UpdatePayload struct {
 // UpdatemirroredAzureDatabricksCatalogDefinitionRequest - Update MirroredAzureDatabricksCatalog public definition request
 // payload.
 type UpdatemirroredAzureDatabricksCatalogDefinitionRequest struct {
-	// REQUIRED; MirroredAzureDatabricksCatalog public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/mirroredazuredatabrickscatalog-definition]
-	// for more details on how
-	// to craft a MirroredAzureDatabricksCatalog definition public definition.
+	// REQUIRED; MirroredAzureDatabricksCatalog public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/mirrored-azuredatabricks-unitycatalog-definition]
+	// for more details
+	// on the structure of the MirroredAzureDatabricksCatalog definition.
 	Definition *PublicDefinition
 }

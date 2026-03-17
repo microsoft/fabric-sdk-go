@@ -75,7 +75,7 @@ func (client *BackgroundJobsClient) RunOnDemandApplyChanges(ctx context.Context,
 
 // runOnDemandApplyChangesCreateRequest creates the RunOnDemandApplyChanges request.
 func (client *BackgroundJobsClient) runOnDemandApplyChangesCreateRequest(ctx context.Context, workspaceID string, dataflowID string, _ *BackgroundJobsClientRunOnDemandApplyChangesOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/dataflows/{dataflowId}/jobs/ApplyChanges/instances"
+	urlPath := "/v1/workspaces/{workspaceId}/dataflows/{dataflowId}/jobs/applyChanges/instances"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -114,6 +114,9 @@ func (client *BackgroundJobsClient) runOnDemandApplyChangesHandleResponse(resp *
 // API has been updated to include the job type as part of the path, replacing the previous use of a query parameter. For
 // backward compatibility, invocations using the query parameter are still
 // supported.
+// PERMISSIONS
+// * The caller must have a member or higher workspace role.
+// * Access to all connections used by the dataflow
 // REQUIRED DELEGATED SCOPES For dataflows APIs use these scope types:
 // * Specific scope: Dataflow.Execute.All
 //
@@ -156,7 +159,7 @@ func (client *BackgroundJobsClient) RunOnDemandExecute(ctx context.Context, work
 
 // runOnDemandExecuteCreateRequest creates the RunOnDemandExecute request.
 func (client *BackgroundJobsClient) runOnDemandExecuteCreateRequest(ctx context.Context, workspaceID string, dataflowID string, options *BackgroundJobsClientRunOnDemandExecuteOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/dataflows/{dataflowId}/jobs/Execute/instances"
+	urlPath := "/v1/workspaces/{workspaceId}/dataflows/{dataflowId}/jobs/execute/instances"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -237,7 +240,7 @@ func (client *BackgroundJobsClient) ScheduleApplyChanges(ctx context.Context, wo
 
 // scheduleApplyChangesCreateRequest creates the ScheduleApplyChanges request.
 func (client *BackgroundJobsClient) scheduleApplyChangesCreateRequest(ctx context.Context, workspaceID string, dataflowID string, createScheduleRequest CreateDataflowApplyChangesScheduleRequest, _ *BackgroundJobsClientScheduleApplyChangesOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/dataflows/{dataflowId}/jobs/ApplyChanges/schedules"
+	urlPath := "/v1/workspaces/{workspaceId}/dataflows/{dataflowId}/jobs/applyChanges/schedules"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -271,6 +274,9 @@ func (client *BackgroundJobsClient) scheduleApplyChangesHandleResponse(resp *htt
 
 // ScheduleExecute - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
 // only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS
+// * The caller must have a member or higher workspace role.
+// * Access to all connections used by the dataflow
 // REQUIRED DELEGATED SCOPES: Dataflow.Execute.All and Dataflow.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -310,7 +316,7 @@ func (client *BackgroundJobsClient) ScheduleExecute(ctx context.Context, workspa
 
 // scheduleExecuteCreateRequest creates the ScheduleExecute request.
 func (client *BackgroundJobsClient) scheduleExecuteCreateRequest(ctx context.Context, workspaceID string, dataflowID string, createScheduleRequest CreateDataflowExecuteScheduleRequest, _ *BackgroundJobsClientScheduleExecuteOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/dataflows/{dataflowId}/jobs/Execute/schedules"
+	urlPath := "/v1/workspaces/{workspaceId}/dataflows/{dataflowId}/jobs/execute/schedules"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}

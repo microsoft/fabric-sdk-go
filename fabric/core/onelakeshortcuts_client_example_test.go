@@ -41,7 +41,8 @@ func ExampleOneLakeShortcutsClient_BeginCreatesShortcutsInBulk() {
 					},
 				},
 				Transform: &core.CSVToDeltaTransform{
-					Type: to.Ptr(core.TransformTypeCSVToDelta),
+					Type:              to.Ptr(core.TransformTypeCSVToDelta),
+					IncludeSubfolders: to.Ptr(true),
 					Properties: &core.CSVToDeltaTransformProperties{
 						Delimiter:           to.Ptr(","),
 						SkipFilesWithErrors: to.Ptr(true),
@@ -61,7 +62,8 @@ func ExampleOneLakeShortcutsClient_BeginCreatesShortcutsInBulk() {
 					},
 				},
 				Transform: &core.CSVToDeltaTransform{
-					Type: to.Ptr(core.TransformTypeCSVToDelta),
+					Type:              to.Ptr(core.TransformTypeCSVToDelta),
+					IncludeSubfolders: to.Ptr(false),
 					Properties: &core.CSVToDeltaTransformProperties{
 						Delimiter:           to.Ptr(","),
 						SkipFilesWithErrors: to.Ptr(true),
@@ -524,9 +526,10 @@ func ExampleOneLakeShortcutsClient_CreateShortcut_createShortcutOneDriveSharePoi
 		Path: to.Ptr("Files"),
 		Target: &core.CreatableShortcutTarget{
 			OneDriveSharePoint: &core.OneDriveSharePoint{
-				ConnectionID: to.Ptr("97e33458-1353-4911-96b1-6f4f4bbfd335"),
-				Location:     to.Ptr("https://microsoft.sharepoint.com"),
-				Subpath:      to.Ptr("/Shared Documents/Test Folder"),
+				ConnectionID:                to.Ptr("97e33458-1353-4911-96b1-6f4f4bbfd335"),
+				Location:                    to.Ptr("https://microsoft.sharepoint.com"),
+				Subpath:                     to.Ptr("/Shared Documents/Test Folder"),
+				UpdateFabricItemSensitivity: to.Ptr(false),
 			},
 		},
 	}, &core.OneLakeShortcutsClientCreateShortcutOptions{ShortcutConflictPolicy: nil})
@@ -758,6 +761,7 @@ func ExampleOneLakeShortcutsClient_GetShortcut_getShortcutOneDriveSharePointOrOn
 	// 			ConnectionID: to.Ptr("97e33458-1353-4911-96b1-6f4f4bbfd335"),
 	// 			Location: to.Ptr("https://microsoft.sharepoint.com"),
 	// 			Subpath: to.Ptr("/Shared Documents/Test Folder"),
+	// 			UpdateFabricItemSensitivity: to.Ptr(false),
 	// 		},
 	// 	},
 	// }
@@ -827,6 +831,7 @@ func ExampleOneLakeShortcutsClient_GetShortcut_getShortcutTransformWithOneLakeTa
 	// 	},
 	// 	Transform: &core.CSVToDeltaTransform{
 	// 		Type: to.Ptr(core.TransformTypeCSVToDelta),
+	// 		IncludeSubfolders: to.Ptr(true),
 	// 		Properties: &core.CSVToDeltaTransformProperties{
 	// 			Delimiter: to.Ptr(","),
 	// 			SkipFilesWithErrors: to.Ptr(true),

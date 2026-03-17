@@ -103,6 +103,27 @@ type DynamicExecutorAllocationProperties struct {
 	MinExecutors *int32
 }
 
+// EntireTenantPrincipal - Represents a tenant principal
+type EntireTenantPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type EntireTenantPrincipal.
+func (e *EntireTenantPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: e.DisplayName,
+		ID:          e.ID,
+		Type:        e.Type,
+	}
+}
+
 // EnvironmentProperties - Properties of an environment.
 type EnvironmentProperties struct {
 	// The name of the default environment. Empty string indicated there is no workspace default environment.
@@ -110,6 +131,36 @@ type EnvironmentProperties struct {
 
 	// Runtime [/fabric/data-engineering/runtime] version. For example: 1.3
 	RuntimeVersion *string
+}
+
+// GroupPrincipal - Represents a security group.
+type GroupPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// Group specific details. Applicable when the principal type is Group.
+	GroupDetails *GroupPrincipalGroupDetails
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type GroupPrincipal.
+func (g *GroupPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: g.DisplayName,
+		ID:          g.ID,
+		Type:        g.Type,
+	}
+}
+
+// GroupPrincipalGroupDetails - Group specific details. Applicable when the principal type is Group.
+type GroupPrincipalGroupDetails struct {
+	// The type of the group. Additional group types may be added over time.
+	GroupType *GroupType
 }
 
 // HighConcurrencyProperties - High Concurrency Properties.
@@ -160,6 +211,24 @@ func (i *ItemReferenceByID) GetItemReference() *ItemReference {
 	}
 }
 
+// ItemReferenceByVariable - An item reference by variable.
+type ItemReferenceByVariable struct {
+	// REQUIRED; The item reference type.
+	ReferenceType *ItemReferenceType
+
+	// REQUIRED; A variable reference string that specifies the Variable Library and the variable name inside it. Format: $(/**/_VarLibrary_/_VarName_)
+	// for a Variable Library named VarLibrary and a variable named
+	// VarName.
+	VariableReference *string
+}
+
+// GetItemReference implements the ItemReferenceClassification interface for type ItemReferenceByVariable.
+func (i *ItemReferenceByVariable) GetItemReference() *ItemReference {
+	return &ItemReference{
+		ReferenceType: i.ReferenceType,
+	}
+}
+
 // JobsProperties - Properties of a Spark job.
 type JobsProperties struct {
 	// Reserve maximum cores for active Spark jobs. When this setting is enabled, your Fabric capacity reserves the maximum number
@@ -186,7 +255,7 @@ type LivySession struct {
 	CapacityID *string
 
 	// ID of the consumer.
-	ConsumerID *Principal
+	ConsumerID PrincipalClassification
 
 	// ID of the item creator. When isHighConcurrency is set to true this value might be different than itemId.
 	CreatorItem *ItemReferenceByID
@@ -275,7 +344,7 @@ type LivySession struct {
 	SubmittedDateTime *time.Time
 
 	// ID of the submitter.
-	Submitter *Principal
+	Submitter PrincipalClassification
 
 	// Total duration of the job.
 	TotalDuration *Duration
@@ -313,44 +382,72 @@ type Principal struct {
 	// REQUIRED; The type of the principal. Additional principal types may be added over time.
 	Type *PrincipalType
 
-	// Group specific details. Applicable when the principal type is Group.
-	GroupDetails *PrincipalGroupDetails
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
 
-	// Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
-	ServicePrincipalProfileDetails *PrincipalServicePrincipalProfileDetails
+// GetPrincipal implements the PrincipalClassification interface for type Principal.
+func (p *Principal) GetPrincipal() *Principal { return p }
+
+// ServicePrincipal - Represents a Microsoft Entra service principal.
+type ServicePrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
 
 	// READ-ONLY; The principal's display name.
 	DisplayName *string
 
 	// READ-ONLY; Service principal specific details. Applicable when the principal type is ServicePrincipal.
-	ServicePrincipalDetails *PrincipalServicePrincipalDetails
-
-	// READ-ONLY; User principal specific details. Applicable when the principal type is User.
-	UserDetails *PrincipalUserDetails
+	ServicePrincipalDetails *ServicePrincipalDetails
 }
 
-// PrincipalGroupDetails - Group specific details. Applicable when the principal type is Group.
-type PrincipalGroupDetails struct {
-	// The type of the group. Additional group types may be added over time.
-	GroupType *GroupType
+// GetPrincipal implements the PrincipalClassification interface for type ServicePrincipal.
+func (s *ServicePrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: s.DisplayName,
+		ID:          s.ID,
+		Type:        s.Type,
+	}
 }
 
-// PrincipalServicePrincipalDetails - Service principal specific details. Applicable when the principal type is ServicePrincipal.
-type PrincipalServicePrincipalDetails struct {
+// ServicePrincipalDetails - Service principal specific details. Applicable when the principal type is ServicePrincipal.
+type ServicePrincipalDetails struct {
 	// READ-ONLY; The service principal's Microsoft Entra AppId.
 	AADAppID *string
 }
 
-// PrincipalServicePrincipalProfileDetails - Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
-type PrincipalServicePrincipalProfileDetails struct {
-	// The service principal profile's parent principal.
-	ParentPrincipal *Principal
+// ServicePrincipalProfilePrincipal - Represents a service principal profile.
+type ServicePrincipalProfilePrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
+	ServicePrincipalProfileDetails *ServicePrincipalProfilePrincipalServicePrincipalProfileDetails
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
 }
 
-// PrincipalUserDetails - User principal specific details. Applicable when the principal type is User.
-type PrincipalUserDetails struct {
-	// READ-ONLY; The user principal name.
-	UserPrincipalName *string
+// GetPrincipal implements the PrincipalClassification interface for type ServicePrincipalProfilePrincipal.
+func (s *ServicePrincipalProfilePrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: s.DisplayName,
+		ID:          s.ID,
+		Type:        s.Type,
+	}
+}
+
+// ServicePrincipalProfilePrincipalServicePrincipalProfileDetails - Service principal profile details. Applicable when the
+// principal type is ServicePrincipalProfile.
+type ServicePrincipalProfilePrincipalServicePrincipalProfileDetails struct {
+	// The service principal profile's parent principal.
+	ParentPrincipal PrincipalClassification
 }
 
 // StarterPoolProperties - Custom starter pool.
@@ -399,6 +496,36 @@ type UpdateWorkspaceSparkSettingsRequest struct {
 
 	// Pool settings.
 	Pool *PoolProperties
+}
+
+// UserPrincipal - Represents a Microsoft Entra user principal.
+type UserPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+
+	// READ-ONLY; User principal specific details. Applicable when the principal type is User.
+	UserDetails *UserPrincipalUserDetails
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type UserPrincipal.
+func (u *UserPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: u.DisplayName,
+		ID:          u.ID,
+		Type:        u.Type,
+	}
+}
+
+// UserPrincipalUserDetails - User principal specific details. Applicable when the principal type is User.
+type UserPrincipalUserDetails struct {
+	// READ-ONLY; The user principal name.
+	UserPrincipalName *string
 }
 
 // WorkspaceSparkSettings - Workspace Spark settings.

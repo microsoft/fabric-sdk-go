@@ -85,7 +85,7 @@ func ExampleLivySessionsClient_NewListLivySessionsPager() {
 		// 			StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:34:11.000Z"); return t}()),
 		// 			State: to.Ptr(sparkjobdefinition.StateCancelled),
 		// 			SubmittedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:32:03.000Z"); return t}()),
-		// 			Submitter: &sparkjobdefinition.Principal{
+		// 			Submitter: &sparkjobdefinition.UserPrincipal{
 		// 				Type: to.Ptr(sparkjobdefinition.PrincipalTypeUser),
 		// 				ID: to.Ptr("6f23a8a6-d954-4550-b91a-4df73ccd0311"),
 		// 			},
@@ -172,7 +172,7 @@ func ExampleLivySessionsClient_NewListLivySessionsBetaPager() {
 		// 			StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:34:11.000Z"); return t}()),
 		// 			State: to.Ptr(sparkjobdefinition.StateCancelled),
 		// 			SubmittedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:32:03.000Z"); return t}()),
-		// 			Submitter: &sparkjobdefinition.Principal{
+		// 			Submitter: &sparkjobdefinition.UserPrincipal{
 		// 				Type: to.Ptr(sparkjobdefinition.PrincipalTypeUser),
 		// 				ID: to.Ptr("6f23a8a6-d954-4550-b91a-4df73ccd0311"),
 		// 			},
@@ -248,7 +248,7 @@ func ExampleLivySessionsClient_GetLivySession() {
 	// 	StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:34:11.000Z"); return t}()),
 	// 	State: to.Ptr(sparkjobdefinition.StateCancelled),
 	// 	SubmittedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:32:03.000Z"); return t}()),
-	// 	Submitter: &sparkjobdefinition.Principal{
+	// 	Submitter: &sparkjobdefinition.UserPrincipal{
 	// 		Type: to.Ptr(sparkjobdefinition.PrincipalTypeUser),
 	// 		ID: to.Ptr("6f23a8a6-d954-4550-b91a-4df73ccd0311"),
 	// 	},

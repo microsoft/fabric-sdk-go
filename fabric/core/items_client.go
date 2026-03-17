@@ -29,6 +29,202 @@ type ItemsClient struct {
 	endpoint string
 }
 
+// BeginBulkExportItemDefinitionsBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use. When calling this
+// API, callers must specify true as the value for the query parameter beta.
+// Exports item definitions from multiple items in a workspace in a single operation. This API supports long running operations
+// (LRO) [/rest/api/fabric/articles/long-running-operation]. You can export
+// all supported item definitions or selectively export specific items from the specified workspace. To see the supported
+// item types, see Item definition overview
+// [/rest/api/fabric/articles/item-management/definitions/item-definition-overview].
+// PERMISSIONS The caller must have a contributor or higher role for the workspace.
+// When exporting all items in a workspace: Only the Items that the caller has both read and write permissions for are exported.
+// When exporting specific items: The caller must have read and write permissions for all specified items.
+// REQUIRED DELEGATED SCOPES Items.ReadWrite.All.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Only when all the items [/rest/api/fabric/articles/item-management/item-management-overview]
+// involved in the operation support service
+// principals |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
+//   - options - ItemsClientBeginBulkExportItemDefinitionsBetaOptions contains the optional parameters for the ItemsClient.BeginBulkExportItemDefinitionsBeta
+//     method.
+func (client *ItemsClient) BeginBulkExportItemDefinitionsBeta(ctx context.Context, workspaceID string, beta bool, options *ItemsClientBeginBulkExportItemDefinitionsBetaOptions) (*runtime.Poller[ItemsClientBulkExportItemDefinitionsBetaResponse], error) {
+	return client.beginBulkExportItemDefinitionsBeta(ctx, workspaceID, beta, options)
+}
+
+// BulkExportItemDefinitionsBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use. When calling this
+// API, callers must specify true as the value for the query parameter beta.
+// Exports item definitions from multiple items in a workspace in a single operation. This API supports long running operations
+// (LRO) [/rest/api/fabric/articles/long-running-operation]. You can export
+// all supported item definitions or selectively export specific items from the specified workspace. To see the supported
+// item types, see Item definition overview
+// [/rest/api/fabric/articles/item-management/definitions/item-definition-overview].
+// PERMISSIONS The caller must have a contributor or higher role for the workspace.
+// When exporting all items in a workspace: Only the Items that the caller has both read and write permissions for are exported.
+// When exporting specific items: The caller must have read and write permissions for all specified items.
+// REQUIRED DELEGATED SCOPES Items.ReadWrite.All.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Only when all the items [/rest/api/fabric/articles/item-management/item-management-overview]
+// involved in the operation support service
+// principals |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) bulkExportItemDefinitionsBeta(ctx context.Context, workspaceID string, beta bool, options *ItemsClientBeginBulkExportItemDefinitionsBetaOptions) (*http.Response, error) {
+	var err error
+	const operationName = "core.ItemsClient.BeginBulkExportItemDefinitionsBeta"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.bulkExportItemDefinitionsBetaCreateRequest(ctx, workspaceID, beta, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// bulkExportItemDefinitionsBetaCreateRequest creates the BulkExportItemDefinitionsBeta request.
+func (client *ItemsClient) bulkExportItemDefinitionsBetaCreateRequest(ctx context.Context, workspaceID string, beta bool, options *ItemsClientBeginBulkExportItemDefinitionsBetaOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/items/bulkExportDefinitions"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("beta", strconv.FormatBool(beta))
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if options != nil && options.BulkExportItemDefinitionsRequest != nil {
+		if err := runtime.MarshalAsJSON(req, *options.BulkExportItemDefinitionsRequest); err != nil {
+			return nil, err
+		}
+		return req, nil
+	}
+	return req, nil
+}
+
+// BeginBulkImportItemDefinitionsBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use. When calling this
+// API, callers must specify true as the value for the query parameter beta.
+// Imports item definitions for multiple items into a workspace in a single operation. This API supports long running operations
+// (LRO) [/rest/api/fabric/articles/long-running-operation]. Each item
+// definition in the request will be processed, creating new items or updating existing ones as determined by the system based
+// on whether the item already exists. To see the supported item types, see
+// Item definition overview [/rest/api/fabric/articles/item-management/definitions/item-definition-overview].
+// PERMISSIONS The caller must have a contributor or higher role for the workspace.
+// The caller must have read and write permissions for each item being updated.
+// REQUIRED DELEGATED SCOPES Items.ReadWrite.All.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Only when all the items [/rest/api/fabric/articles/item-management/item-management-overview]
+// involved in the operation support service
+// principals |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
+//   - options - ItemsClientBeginBulkImportItemDefinitionsBetaOptions contains the optional parameters for the ItemsClient.BeginBulkImportItemDefinitionsBeta
+//     method.
+func (client *ItemsClient) BeginBulkImportItemDefinitionsBeta(ctx context.Context, workspaceID string, beta bool, options *ItemsClientBeginBulkImportItemDefinitionsBetaOptions) (*runtime.Poller[ItemsClientBulkImportItemDefinitionsBetaResponse], error) {
+	return client.beginBulkImportItemDefinitionsBeta(ctx, workspaceID, beta, options)
+}
+
+// BulkImportItemDefinitionsBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use. When calling this
+// API, callers must specify true as the value for the query parameter beta.
+// Imports item definitions for multiple items into a workspace in a single operation. This API supports long running operations
+// (LRO) [/rest/api/fabric/articles/long-running-operation]. Each item
+// definition in the request will be processed, creating new items or updating existing ones as determined by the system based
+// on whether the item already exists. To see the supported item types, see
+// Item definition overview [/rest/api/fabric/articles/item-management/definitions/item-definition-overview].
+// PERMISSIONS The caller must have a contributor or higher role for the workspace.
+// The caller must have read and write permissions for each item being updated.
+// REQUIRED DELEGATED SCOPES Items.ReadWrite.All.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Only when all the items [/rest/api/fabric/articles/item-management/item-management-overview]
+// involved in the operation support service
+// principals |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) bulkImportItemDefinitionsBeta(ctx context.Context, workspaceID string, beta bool, options *ItemsClientBeginBulkImportItemDefinitionsBetaOptions) (*http.Response, error) {
+	var err error
+	const operationName = "core.ItemsClient.BeginBulkImportItemDefinitionsBeta"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.bulkImportItemDefinitionsBetaCreateRequest(ctx, workspaceID, beta, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// bulkImportItemDefinitionsBetaCreateRequest creates the BulkImportItemDefinitionsBeta request.
+func (client *ItemsClient) bulkImportItemDefinitionsBetaCreateRequest(ctx context.Context, workspaceID string, beta bool, options *ItemsClientBeginBulkImportItemDefinitionsBetaOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/items/bulkImportDefinitions"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("beta", strconv.FormatBool(beta))
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if options != nil && options.BulkImportItemDefinitionsRequest != nil {
+		if err := runtime.MarshalAsJSON(req, *options.BulkImportItemDefinitionsRequest); err != nil {
+			return nil, err
+		}
+		return req, nil
+	}
+	return req, nil
+}
+
 // BulkMoveItems - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
 // only. It may change based on feedback and is not recommended for production use.
 // PERMISSIONS The caller must have contributor or higher role on the workspace.
@@ -851,6 +1047,162 @@ func (client *ItemsClient) updateItemDefinitionCreateRequest(ctx context.Context
 }
 
 // Custom code starts below
+
+// BulkExportItemDefinitionsBeta - returns ItemsClientBulkExportItemDefinitionsBetaResponse in sync mode.
+// >  [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use. When calling this
+// API, callers must specify true as the value for the query parameter beta.
+//
+// Exports item definitions from multiple items in a workspace in a single operation. This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation]. You can export
+// all supported item definitions or selectively export specific items from the specified workspace. To see the supported item types, see Item definition overview
+// [/rest/api/fabric/articles/item-management/definitions/item-definition-overview].
+//
+// PERMISSIONS The caller must have a contributor or higher role for the workspace.
+//
+// When exporting all items in a workspace: Only the Items that the caller has both read and write permissions for are exported.
+//
+// When exporting specific items: The caller must have read and write permissions for all specified items.
+//
+// REQUIRED DELEGATED SCOPES Items.ReadWrite.All.
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Only when all the items [/rest/api/fabric/articles/item-management/item-management-overview] involved in the operation support service
+// principals |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
+//   - options - ItemsClientBeginBulkExportItemDefinitionsBetaOptions contains the optional parameters for the ItemsClient.BeginBulkExportItemDefinitionsBeta method.
+func (client *ItemsClient) BulkExportItemDefinitionsBeta(ctx context.Context, workspaceID string, beta bool, options *ItemsClientBeginBulkExportItemDefinitionsBetaOptions) (ItemsClientBulkExportItemDefinitionsBetaResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginBulkExportItemDefinitionsBeta(ctx, workspaceID, beta, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientBulkExportItemDefinitionsBetaResponse{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientBulkExportItemDefinitionsBetaResponse{}, err
+	}
+	return result, err
+}
+
+// beginBulkExportItemDefinitionsBeta creates the bulkExportItemDefinitionsBeta request.
+func (client *ItemsClient) beginBulkExportItemDefinitionsBeta(ctx context.Context, workspaceID string, beta bool, options *ItemsClientBeginBulkExportItemDefinitionsBetaOptions) (*runtime.Poller[ItemsClientBulkExportItemDefinitionsBetaResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.bulkExportItemDefinitionsBeta(ctx, workspaceID, beta, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientBulkExportItemDefinitionsBetaResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientBulkExportItemDefinitionsBetaResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientBulkExportItemDefinitionsBetaResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientBulkExportItemDefinitionsBetaResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// BulkImportItemDefinitionsBeta - returns ItemsClientBulkImportItemDefinitionsBetaResponse in sync mode.
+// >  [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use. When calling this
+// API, callers must specify true as the value for the query parameter beta.
+//
+// Imports item definitions for multiple items into a workspace in a single operation. This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation]. Each item
+// definition in the request will be processed, creating new items or updating existing ones as determined by the system based on whether the item already exists. To see the supported item types, see
+// Item definition overview [/rest/api/fabric/articles/item-management/definitions/item-definition-overview].
+//
+// PERMISSIONS The caller must have a contributor or higher role for the workspace.
+//
+// The caller must have read and write permissions for each item being updated.
+//
+// REQUIRED DELEGATED SCOPES Items.ReadWrite.All.
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Only when all the items [/rest/api/fabric/articles/item-management/item-management-overview] involved in the operation support service
+// principals |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
+//   - options - ItemsClientBeginBulkImportItemDefinitionsBetaOptions contains the optional parameters for the ItemsClient.BeginBulkImportItemDefinitionsBeta method.
+func (client *ItemsClient) BulkImportItemDefinitionsBeta(ctx context.Context, workspaceID string, beta bool, options *ItemsClientBeginBulkImportItemDefinitionsBetaOptions) (ItemsClientBulkImportItemDefinitionsBetaResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginBulkImportItemDefinitionsBeta(ctx, workspaceID, beta, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientBulkImportItemDefinitionsBetaResponse{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientBulkImportItemDefinitionsBetaResponse{}, err
+	}
+	return result, err
+}
+
+// beginBulkImportItemDefinitionsBeta creates the bulkImportItemDefinitionsBeta request.
+func (client *ItemsClient) beginBulkImportItemDefinitionsBeta(ctx context.Context, workspaceID string, beta bool, options *ItemsClientBeginBulkImportItemDefinitionsBetaOptions) (*runtime.Poller[ItemsClientBulkImportItemDefinitionsBetaResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.bulkImportItemDefinitionsBeta(ctx, workspaceID, beta, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientBulkImportItemDefinitionsBetaResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientBulkImportItemDefinitionsBetaResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientBulkImportItemDefinitionsBetaResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientBulkImportItemDefinitionsBetaResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
 
 // CreateItem - returns ItemsClientCreateItemResponse in sync mode.
 // This API is supported for a number of item types, find the supported item types in Item management overview [/rest/api/fabric/articles/item-management/item-management-overview]. You can use Get item

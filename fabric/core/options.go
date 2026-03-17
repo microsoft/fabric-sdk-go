@@ -412,6 +412,26 @@ type GitClientUpdateMyGitCredentialsOptions struct {
 	// placeholder for future optional parameters
 }
 
+// ItemsClientBeginBulkExportItemDefinitionsBetaOptions contains the optional parameters for the ItemsClient.BeginBulkExportItemDefinitionsBeta
+// method.
+type ItemsClientBeginBulkExportItemDefinitionsBetaOptions struct {
+	// The requested items to export their item definition.
+	BulkExportItemDefinitionsRequest *BulkExportItemDefinitionsRequest
+
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// ItemsClientBeginBulkImportItemDefinitionsBetaOptions contains the optional parameters for the ItemsClient.BeginBulkImportItemDefinitionsBeta
+// method.
+type ItemsClientBeginBulkImportItemDefinitionsBetaOptions struct {
+	// Import item definitions request payload.
+	BulkImportItemDefinitionsRequest *BulkImportItemDefinitionsRequest
+
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
 // ItemsClientBeginCreateItemOptions contains the optional parameters for the ItemsClient.BeginCreateItem method.
 type ItemsClientBeginCreateItemOptions struct {
 	// Resumes the long-running operation from the provided token.
@@ -588,6 +608,41 @@ type OneLakeDataAccessSecurityClientCreateOrUpdateDataAccessRolesOptions struct 
 	// - Will not trigger a dry run and roles will be updated.
 	DryRun *bool
 
+	// An ETag value. The ETag must be specified in quotes. If provided, the call will succeed only if the resource's ETag matches
+	// the provided ETag.
+	IfMatch *string
+
+	// An ETag value. The ETag must be specified in quotes. If provided, the call will succeed only if the resource's ETag doesn't
+	// match the provided ETag.
+	IfNoneMatch *string
+}
+
+// OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleOptions contains the optional parameters for the OneLakeDataAccessSecurityClient.CreateOrUpdateSingleDataAccessRole
+// method.
+type OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleOptions struct {
+	// Determines the behavior when there are conflicting data access role assignments. Overwrite means new assignments replace
+	// existing ones. Abort means the operation fails if there are conflicts.
+	// Additional dataAccessRoleConflictPolicy types may be added over time.
+	DataAccessRoleConflictPolicy *DataAccessRoleConflictPolicy
+
+	// An ETag value. The ETag must be specified in quotes. If provided, the call will succeed only if the resource's ETag matches
+	// the provided ETag.
+	IfMatch *string
+
+	// An ETag value. The ETag must be specified in quotes. If provided, the call will succeed only if the resource's ETag doesn't
+	// match the provided ETag.
+	IfNoneMatch *string
+}
+
+// OneLakeDataAccessSecurityClientDeleteDataAccessRoleOptions contains the optional parameters for the OneLakeDataAccessSecurityClient.DeleteDataAccessRole
+// method.
+type OneLakeDataAccessSecurityClientDeleteDataAccessRoleOptions struct {
+	// placeholder for future optional parameters
+}
+
+// OneLakeDataAccessSecurityClientGetDataAccessRoleOptions contains the optional parameters for the OneLakeDataAccessSecurityClient.GetDataAccessRole
+// method.
+type OneLakeDataAccessSecurityClientGetDataAccessRoleOptions struct {
 	// An ETag value. The ETag must be specified in quotes. If provided, the call will succeed only if the resource's ETag matches
 	// the provided ETag.
 	IfMatch *string

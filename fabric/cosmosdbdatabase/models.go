@@ -23,6 +23,9 @@ type CosmosDBDatabase struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
+
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
 
@@ -52,11 +55,14 @@ type CreateCosmosDBDatabaseRequest struct {
 
 	// The Cosmos DB database description. Maximum length is 256 characters.
 	Description *string
+
+	// The sensitivity label settings for the Cosmos DB database.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // Definition - The Cosmos DB database public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/cosmosdb-database-definition]
-// for more details on how to craft a Cosmos DB
-// database public definition.
+// for more details on the structure of the
+// Cosmos DB database definition.
 type Definition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []DefinitionPart
@@ -77,8 +83,8 @@ type DefinitionPart struct {
 // DefinitionResponse - The Cosmos DB database public definition response.
 type DefinitionResponse struct {
 	// READ-ONLY; The Cosmos DB database public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/cosmosdb-database-definition]
-	// for more details on how to craft a Cosmos DB
-	// database public definition.
+	// for more details on the structure of the
+	// Cosmos DB database definition.
 	Definition *Definition
 }
 
@@ -91,11 +97,26 @@ type ItemTag struct {
 	ID *string
 }
 
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
 // UpdateCosmosDBDatabaseDefinitionRequest - Update Cosmos DB database public definition request payload.
 type UpdateCosmosDBDatabaseDefinitionRequest struct {
 	// REQUIRED; The Cosmos DB database public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/cosmosdb-database-definition]
-	// for more details on how to craft a Cosmos DB
-	// database public definition.
+	// for more details on the structure of the
+	// Cosmos DB database definition.
 	Definition *Definition
 }
 

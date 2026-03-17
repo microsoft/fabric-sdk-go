@@ -278,6 +278,8 @@ func unmarshalSourceResponseClassification(rawMsg json.RawMessage) (SourceRespon
 		b = &AzureEventGridNamespaceSourceResponse{}
 	case string(SourceTypeAzureEventHub):
 		b = &AzureEventHubSourceResponse{}
+	case string(SourceTypeAzureEventHubExtended):
+		b = &AzureEventHubExtendedSourceResponse{}
 	case string(SourceTypeAzureIoTHub):
 		b = &AzureIoTHubSourceResponse{}
 	case string(SourceTypeAzureSQLDBCDC):
@@ -288,6 +290,8 @@ func unmarshalSourceResponseClassification(rawMsg json.RawMessage) (SourceRespon
 		b = &ConfluentCloudSourceResponse{}
 	case string(SourceTypeCustomEndpoint):
 		b = &CustomEndpointSourceResponse{}
+	case string(SourceTypeFabricCapacityOverviewEvents):
+		b = &FabricCapacityOverviewEventsSourceResponse{}
 	case string(SourceTypeFabricJobEvents):
 		b = &FabricJobEventsSourceResponse{}
 	case string(SourceTypeFabricOneLakeEvents):
@@ -296,6 +300,8 @@ func unmarshalSourceResponseClassification(rawMsg json.RawMessage) (SourceRespon
 		b = &FabricWorkspaceItemEventsSourceResponse{}
 	case string(SourceTypeGooglePubSub):
 		b = &GooglePubSubSourceResponse{}
+	case string(SourceTypeHTTP):
+		b = &HTTPSourceResponse{}
 	case string(SourceTypeMqtt):
 		b = &MqttSourceResponse{}
 	case string(SourceTypeMySQLCDC):

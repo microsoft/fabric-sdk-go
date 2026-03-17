@@ -70,6 +70,9 @@ func (testsuite *FakeTestSuite) TestItems_ListKQLDashboards() {
 				Description: to.Ptr("A KQL dashboard description."),
 				DisplayName: to.Ptr("KQLDashboard_1"),
 				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				SensitivityLabel: &kqldashboard.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 			},
 			{
@@ -77,6 +80,9 @@ func (testsuite *FakeTestSuite) TestItems_ListKQLDashboards() {
 				Description: to.Ptr("A KQL dashboard description."),
 				DisplayName: to.Ptr("KQLDashboard_2"),
 				ID:          to.Ptr("340d91b9-5a39-409c-b9c0-05ba832c476e"),
+				SensitivityLabel: &kqldashboard.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 			}},
 	}
@@ -89,7 +95,10 @@ func (testsuite *FakeTestSuite) TestItems_ListKQLDashboards() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	pager := client.NewListKQLDashboardsPager(exampleWorkspaceID, &kqldashboard.ItemsClientListKQLDashboardsOptions{ContinuationToken: nil})
+	pager := client.NewListKQLDashboardsPager(exampleWorkspaceID, &kqldashboard.ItemsClientListKQLDashboardsOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")
@@ -179,6 +188,9 @@ func (testsuite *FakeTestSuite) TestItems_GetKQLDashboard() {
 		Description: to.Ptr("A KQL dashboard description."),
 		DisplayName: to.Ptr("KQLDashboard_1"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &kqldashboard.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	}
 
@@ -216,6 +228,9 @@ func (testsuite *FakeTestSuite) TestItems_UpdateKQLDashboard() {
 		Description: to.Ptr("KQL dashboard new description"),
 		DisplayName: to.Ptr("KQL dashboard new name"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &kqldashboard.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	}
 

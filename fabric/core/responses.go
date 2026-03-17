@@ -388,6 +388,18 @@ type GitClientUpdateMyGitCredentialsResponse struct {
 	GitCredentialsConfigurationResponseClassification
 }
 
+// ItemsClientBulkExportItemDefinitionsBetaResponse contains the response from method ItemsClient.BeginBulkExportItemDefinitionsBeta.
+type ItemsClientBulkExportItemDefinitionsBetaResponse struct {
+	// Bulk export item definitions response by definitions' parts.
+	BulkExportItemDefinitionsResponse
+}
+
+// ItemsClientBulkImportItemDefinitionsBetaResponse contains the response from method ItemsClient.BeginBulkImportItemDefinitionsBeta.
+type ItemsClientBulkImportItemDefinitionsBetaResponse struct {
+	// Bulk import item definitions response payload.
+	BulkImportItemDefinitionsResponse
+}
+
 // ItemsClientBulkMoveItemsResponse contains the response from method ItemsClient.BulkMoveItems.
 type ItemsClientBulkMoveItemsResponse struct {
 	MovedItems
@@ -553,6 +565,30 @@ type ManagedPrivateEndpointsClientListWorkspaceManagedPrivateEndpointsResponse s
 type OneLakeDataAccessSecurityClientCreateOrUpdateDataAccessRolesResponse struct {
 	// Etag contains the information returned from the Etag header response.
 	Etag *string
+}
+
+// OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleResponse contains the response from method OneLakeDataAccessSecurityClient.CreateOrUpdateSingleDataAccessRole.
+type OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleResponse struct {
+	// ETag contains the information returned from the ETag header response.
+	ETag *string
+
+	// Location contains the information returned from the Location header response.
+	Location *string
+}
+
+// OneLakeDataAccessSecurityClientDeleteDataAccessRoleResponse contains the response from method OneLakeDataAccessSecurityClient.DeleteDataAccessRole.
+type OneLakeDataAccessSecurityClientDeleteDataAccessRoleResponse struct {
+	// placeholder for future response values
+}
+
+// OneLakeDataAccessSecurityClientGetDataAccessRoleResponse contains the response from method OneLakeDataAccessSecurityClient.GetDataAccessRole.
+type OneLakeDataAccessSecurityClientGetDataAccessRoleResponse struct {
+	// Base data access role object used for single-role operations (does not include id). Represents a set of permissions and
+	// permission scopes that define allowed actions for scoped data.
+	DataAccessRoleBase
+
+	// ETag contains the information returned from the ETag header response.
+	ETag *string
 }
 
 // OneLakeDataAccessSecurityClientListDataAccessRolesResponse contains the response from method OneLakeDataAccessSecurityClient.ListDataAccessRoles.

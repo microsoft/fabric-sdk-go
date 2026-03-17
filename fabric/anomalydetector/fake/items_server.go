@@ -142,7 +142,7 @@ func (i *ItemsServerTransport) dispatchBeginCreateAnomalyDetector(req *http.Requ
 	}
 	beginCreateAnomalyDetector := i.beginCreateAnomalyDetector.get(req)
 	if beginCreateAnomalyDetector == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/anomalydetectors`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/anomalyDetectors`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 2 {
@@ -184,7 +184,7 @@ func (i *ItemsServerTransport) dispatchDeleteAnomalyDetector(req *http.Request) 
 	if i.srv.DeleteAnomalyDetector == nil {
 		return nil, &nonRetriableError{errors.New("fake for method DeleteAnomalyDetector not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/anomalydetectors/(?P<anomalyDetectorId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/anomalyDetectors/(?P<anomalyDetectorId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -217,7 +217,7 @@ func (i *ItemsServerTransport) dispatchGetAnomalyDetector(req *http.Request) (*h
 	if i.srv.GetAnomalyDetector == nil {
 		return nil, &nonRetriableError{errors.New("fake for method GetAnomalyDetector not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/anomalydetectors/(?P<anomalyDetectorId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/anomalyDetectors/(?P<anomalyDetectorId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -252,7 +252,7 @@ func (i *ItemsServerTransport) dispatchBeginGetAnomalyDetectorDefinition(req *ht
 	}
 	beginGetAnomalyDetectorDefinition := i.beginGetAnomalyDetectorDefinition.get(req)
 	if beginGetAnomalyDetectorDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/anomalydetectors/(?P<anomalyDetectorId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/anomalyDetectors/(?P<anomalyDetectorId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
@@ -308,7 +308,7 @@ func (i *ItemsServerTransport) dispatchNewListAnomalyDetectorsPager(req *http.Re
 	}
 	newListAnomalyDetectorsPager := i.newListAnomalyDetectorsPager.get(req)
 	if newListAnomalyDetectorsPager == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/anomalydetectors`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/anomalyDetectors`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 2 {
@@ -319,14 +319,29 @@ func (i *ItemsServerTransport) dispatchNewListAnomalyDetectorsPager(req *http.Re
 		if err != nil {
 			return nil, err
 		}
+		recursiveUnescaped, err := url.QueryUnescape(qp.Get("recursive"))
+		if err != nil {
+			return nil, err
+		}
+		recursiveParam, err := parseOptional(recursiveUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDUnescaped, err := url.QueryUnescape(qp.Get("rootFolderId"))
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDParam := getOptional(rootFolderIDUnescaped)
 		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
 		if err != nil {
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
 		var options *anomalydetector.ItemsClientListAnomalyDetectorsOptions
-		if continuationTokenParam != nil {
+		if recursiveParam != nil || rootFolderIDParam != nil || continuationTokenParam != nil {
 			options = &anomalydetector.ItemsClientListAnomalyDetectorsOptions{
+				Recursive:         recursiveParam,
+				RootFolderID:      rootFolderIDParam,
 				ContinuationToken: continuationTokenParam,
 			}
 		}
@@ -355,7 +370,7 @@ func (i *ItemsServerTransport) dispatchUpdateAnomalyDetector(req *http.Request) 
 	if i.srv.UpdateAnomalyDetector == nil {
 		return nil, &nonRetriableError{errors.New("fake for method UpdateAnomalyDetector not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/anomalydetectors/(?P<anomalyDetectorId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/anomalyDetectors/(?P<anomalyDetectorId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -394,7 +409,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateAnomalyDetectorDefinition(req 
 	}
 	beginUpdateAnomalyDetectorDefinition := i.beginUpdateAnomalyDetectorDefinition.get(req)
 	if beginUpdateAnomalyDetectorDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/anomalydetectors/(?P<anomalyDetectorId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/anomalyDetectors/(?P<anomalyDetectorId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
