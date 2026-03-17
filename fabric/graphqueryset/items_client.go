@@ -97,7 +97,7 @@ func (client *ItemsClient) createGraphQuerySet(ctx context.Context, workspaceID 
 
 // createGraphQuerySetCreateRequest creates the CreateGraphQuerySet request.
 func (client *ItemsClient) createGraphQuerySetCreateRequest(ctx context.Context, workspaceID string, createGraphQuerySetRequest CreateGraphQuerySetRequest, _ *ItemsClientBeginCreateGraphQuerySetOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphQuerySets"
+	urlPath := "/v1/workspaces/{workspaceId}/graphQuerySets"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -151,7 +151,7 @@ func (client *ItemsClient) DeleteGraphQuerySet(ctx context.Context, workspaceID 
 
 // deleteGraphQuerySetCreateRequest creates the DeleteGraphQuerySet request.
 func (client *ItemsClient) deleteGraphQuerySetCreateRequest(ctx context.Context, workspaceID string, graphQuerySetID string, _ *ItemsClientDeleteGraphQuerySetOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphQuerySets/{GraphQuerySetId}"
+	urlPath := "/v1/workspaces/{workspaceId}/graphQuerySets/{graphQuerySetId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -159,7 +159,7 @@ func (client *ItemsClient) deleteGraphQuerySetCreateRequest(ctx context.Context,
 	if graphQuerySetID == "" {
 		return nil, errors.New("parameter graphQuerySetID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{GraphQuerySetId}", url.PathEscape(graphQuerySetID))
+	urlPath = strings.ReplaceAll(urlPath, "{graphQuerySetId}", url.PathEscape(graphQuerySetID))
 	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -206,7 +206,7 @@ func (client *ItemsClient) GetGraphQuerySet(ctx context.Context, workspaceID str
 
 // getGraphQuerySetCreateRequest creates the GetGraphQuerySet request.
 func (client *ItemsClient) getGraphQuerySetCreateRequest(ctx context.Context, workspaceID string, graphQuerySetID string, _ *ItemsClientGetGraphQuerySetOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphQuerySets/{GraphQuerySetId}"
+	urlPath := "/v1/workspaces/{workspaceId}/graphQuerySets/{graphQuerySetId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -214,7 +214,7 @@ func (client *ItemsClient) getGraphQuerySetCreateRequest(ctx context.Context, wo
 	if graphQuerySetID == "" {
 		return nil, errors.New("parameter graphQuerySetID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{GraphQuerySetId}", url.PathEscape(graphQuerySetID))
+	urlPath = strings.ReplaceAll(urlPath, "{graphQuerySetId}", url.PathEscape(graphQuerySetID))
 	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -289,7 +289,7 @@ func (client *ItemsClient) getGraphQuerySetDefinition(ctx context.Context, works
 
 // getGraphQuerySetDefinitionCreateRequest creates the GetGraphQuerySetDefinition request.
 func (client *ItemsClient) getGraphQuerySetDefinitionCreateRequest(ctx context.Context, workspaceID string, graphQuerySetID string, options *ItemsClientBeginGetGraphQuerySetDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphQuerySets/{GraphQuerySetId}/getDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/graphQuerySets/{graphQuerySetId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -297,7 +297,7 @@ func (client *ItemsClient) getGraphQuerySetDefinitionCreateRequest(ctx context.C
 	if graphQuerySetID == "" {
 		return nil, errors.New("parameter graphQuerySetID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{GraphQuerySetId}", url.PathEscape(graphQuerySetID))
+	urlPath = strings.ReplaceAll(urlPath, "{graphQuerySetId}", url.PathEscape(graphQuerySetID))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -350,7 +350,7 @@ func (client *ItemsClient) NewListGraphQuerySetsPager(workspaceID string, option
 
 // listGraphQuerySetsCreateRequest creates the ListGraphQuerySets request.
 func (client *ItemsClient) listGraphQuerySetsCreateRequest(ctx context.Context, workspaceID string, options *ItemsClientListGraphQuerySetsOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphQuerySets"
+	urlPath := "/v1/workspaces/{workspaceId}/graphQuerySets"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -362,6 +362,12 @@ func (client *ItemsClient) listGraphQuerySetsCreateRequest(ctx context.Context, 
 	reqQP := req.Raw().URL.Query()
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	if options != nil && options.Recursive != nil {
+		reqQP.Set("recursive", strconv.FormatBool(*options.Recursive))
+	}
+	if options != nil && options.RootFolderID != nil {
+		reqQP.Set("rootFolderId", *options.RootFolderID)
 	}
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
@@ -417,7 +423,7 @@ func (client *ItemsClient) UpdateGraphQuerySet(ctx context.Context, workspaceID 
 
 // updateGraphQuerySetCreateRequest creates the UpdateGraphQuerySet request.
 func (client *ItemsClient) updateGraphQuerySetCreateRequest(ctx context.Context, workspaceID string, graphQuerySetID string, updateGraphQuerySetRequest UpdateGraphQuerySetRequest, _ *ItemsClientUpdateGraphQuerySetOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphQuerySets/{GraphQuerySetId}"
+	urlPath := "/v1/workspaces/{workspaceId}/graphQuerySets/{graphQuerySetId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -425,7 +431,7 @@ func (client *ItemsClient) updateGraphQuerySetCreateRequest(ctx context.Context,
 	if graphQuerySetID == "" {
 		return nil, errors.New("parameter graphQuerySetID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{GraphQuerySetId}", url.PathEscape(graphQuerySetID))
+	urlPath = strings.ReplaceAll(urlPath, "{graphQuerySetId}", url.PathEscape(graphQuerySetID))
 	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -504,7 +510,7 @@ func (client *ItemsClient) updateGraphQuerySetDefinition(ctx context.Context, wo
 
 // updateGraphQuerySetDefinitionCreateRequest creates the UpdateGraphQuerySetDefinition request.
 func (client *ItemsClient) updateGraphQuerySetDefinitionCreateRequest(ctx context.Context, workspaceID string, graphQuerySetID string, updateGraphQuerySetDefinitionRequest UpdateGraphQuerySetDefinitionRequest, options *ItemsClientBeginUpdateGraphQuerySetDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphQuerySets/{GraphQuerySetId}/updateDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/graphQuerySets/{graphQuerySetId}/updateDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -512,7 +518,7 @@ func (client *ItemsClient) updateGraphQuerySetDefinitionCreateRequest(ctx contex
 	if graphQuerySetID == "" {
 		return nil, errors.New("parameter graphQuerySetID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{GraphQuerySetId}", url.PathEscape(graphQuerySetID))
+	urlPath = strings.ReplaceAll(urlPath, "{graphQuerySetId}", url.PathEscape(graphQuerySetID))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err

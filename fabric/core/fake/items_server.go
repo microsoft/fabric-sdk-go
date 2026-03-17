@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -26,6 +27,14 @@ import (
 
 // ItemsServer is a fake server for instances of the core.ItemsClient type.
 type ItemsServer struct {
+	// BeginBulkExportItemDefinitionsBeta is the fake for method ItemsClient.BeginBulkExportItemDefinitionsBeta
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	BeginBulkExportItemDefinitionsBeta func(ctx context.Context, workspaceID string, beta bool, options *core.ItemsClientBeginBulkExportItemDefinitionsBetaOptions) (resp azfake.PollerResponder[core.ItemsClientBulkExportItemDefinitionsBetaResponse], errResp azfake.ErrorResponder)
+
+	// BeginBulkImportItemDefinitionsBeta is the fake for method ItemsClient.BeginBulkImportItemDefinitionsBeta
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	BeginBulkImportItemDefinitionsBeta func(ctx context.Context, workspaceID string, beta bool, options *core.ItemsClientBeginBulkImportItemDefinitionsBetaOptions) (resp azfake.PollerResponder[core.ItemsClientBulkImportItemDefinitionsBetaResponse], errResp azfake.ErrorResponder)
+
 	// BulkMoveItems is the fake for method ItemsClient.BulkMoveItems
 	// HTTP status codes to indicate success: http.StatusOK
 	BulkMoveItems func(ctx context.Context, workspaceID string, bulkMoveItemsRequest core.BulkMoveItemsRequest, options *core.ItemsClientBulkMoveItemsOptions) (resp azfake.Responder[core.ItemsClientBulkMoveItemsResponse], errResp azfake.ErrorResponder)
@@ -72,24 +81,28 @@ type ItemsServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewItemsServerTransport(srv *ItemsServer) *ItemsServerTransport {
 	return &ItemsServerTransport{
-		srv:                         srv,
-		beginCreateItem:             newTracker[azfake.PollerResponder[core.ItemsClientCreateItemResponse]](),
-		beginGetItemDefinition:      newTracker[azfake.PollerResponder[core.ItemsClientGetItemDefinitionResponse]](),
-		newListItemConnectionsPager: newTracker[azfake.PagerResponder[core.ItemsClientListItemConnectionsResponse]](),
-		newListItemsPager:           newTracker[azfake.PagerResponder[core.ItemsClientListItemsResponse]](),
-		beginUpdateItemDefinition:   newTracker[azfake.PollerResponder[core.ItemsClientUpdateItemDefinitionResponse]](),
+		srv:                                srv,
+		beginBulkExportItemDefinitionsBeta: newTracker[azfake.PollerResponder[core.ItemsClientBulkExportItemDefinitionsBetaResponse]](),
+		beginBulkImportItemDefinitionsBeta: newTracker[azfake.PollerResponder[core.ItemsClientBulkImportItemDefinitionsBetaResponse]](),
+		beginCreateItem:                    newTracker[azfake.PollerResponder[core.ItemsClientCreateItemResponse]](),
+		beginGetItemDefinition:             newTracker[azfake.PollerResponder[core.ItemsClientGetItemDefinitionResponse]](),
+		newListItemConnectionsPager:        newTracker[azfake.PagerResponder[core.ItemsClientListItemConnectionsResponse]](),
+		newListItemsPager:                  newTracker[azfake.PagerResponder[core.ItemsClientListItemsResponse]](),
+		beginUpdateItemDefinition:          newTracker[azfake.PollerResponder[core.ItemsClientUpdateItemDefinitionResponse]](),
 	}
 }
 
 // ItemsServerTransport connects instances of core.ItemsClient to instances of ItemsServer.
 // Don't use this type directly, use NewItemsServerTransport instead.
 type ItemsServerTransport struct {
-	srv                         *ItemsServer
-	beginCreateItem             *tracker[azfake.PollerResponder[core.ItemsClientCreateItemResponse]]
-	beginGetItemDefinition      *tracker[azfake.PollerResponder[core.ItemsClientGetItemDefinitionResponse]]
-	newListItemConnectionsPager *tracker[azfake.PagerResponder[core.ItemsClientListItemConnectionsResponse]]
-	newListItemsPager           *tracker[azfake.PagerResponder[core.ItemsClientListItemsResponse]]
-	beginUpdateItemDefinition   *tracker[azfake.PollerResponder[core.ItemsClientUpdateItemDefinitionResponse]]
+	srv                                *ItemsServer
+	beginBulkExportItemDefinitionsBeta *tracker[azfake.PollerResponder[core.ItemsClientBulkExportItemDefinitionsBetaResponse]]
+	beginBulkImportItemDefinitionsBeta *tracker[azfake.PollerResponder[core.ItemsClientBulkImportItemDefinitionsBetaResponse]]
+	beginCreateItem                    *tracker[azfake.PollerResponder[core.ItemsClientCreateItemResponse]]
+	beginGetItemDefinition             *tracker[azfake.PollerResponder[core.ItemsClientGetItemDefinitionResponse]]
+	newListItemConnectionsPager        *tracker[azfake.PagerResponder[core.ItemsClientListItemConnectionsResponse]]
+	newListItemsPager                  *tracker[azfake.PagerResponder[core.ItemsClientListItemsResponse]]
+	beginUpdateItemDefinition          *tracker[azfake.PollerResponder[core.ItemsClientUpdateItemDefinitionResponse]]
 }
 
 // Do implements the policy.Transporter interface for ItemsServerTransport.
@@ -117,6 +130,10 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 		}
 		if !intercepted {
 			switch method {
+			case "ItemsClient.BeginBulkExportItemDefinitionsBeta":
+				res.resp, res.err = i.dispatchBeginBulkExportItemDefinitionsBeta(req)
+			case "ItemsClient.BeginBulkImportItemDefinitionsBeta":
+				res.resp, res.err = i.dispatchBeginBulkImportItemDefinitionsBeta(req)
 			case "ItemsClient.BulkMoveItems":
 				res.resp, res.err = i.dispatchBulkMoveItems(req)
 			case "ItemsClient.BeginCreateItem":
@@ -154,6 +171,124 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 	case res := <-resultChan:
 		return res.resp, res.err
 	}
+}
+
+func (i *ItemsServerTransport) dispatchBeginBulkExportItemDefinitionsBeta(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginBulkExportItemDefinitionsBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginBulkExportItemDefinitionsBeta not implemented")}
+	}
+	beginBulkExportItemDefinitionsBeta := i.beginBulkExportItemDefinitionsBeta.get(req)
+	if beginBulkExportItemDefinitionsBeta == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/items/bulkExportDefinitions`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		body, err := server.UnmarshalRequestAsJSON[core.BulkExportItemDefinitionsRequest](req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
+		if err != nil {
+			return nil, err
+		}
+		betaParam, err := strconv.ParseBool(betaUnescaped)
+		if err != nil {
+			return nil, err
+		}
+		var options *core.ItemsClientBeginBulkExportItemDefinitionsBetaOptions
+		if !reflect.ValueOf(body).IsZero() {
+			options = &core.ItemsClientBeginBulkExportItemDefinitionsBetaOptions{
+				BulkExportItemDefinitionsRequest: &body,
+			}
+		}
+		respr, errRespr := i.srv.BeginBulkExportItemDefinitionsBeta(req.Context(), workspaceIDParam, betaParam, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginBulkExportItemDefinitionsBeta = &respr
+		i.beginBulkExportItemDefinitionsBeta.add(req, beginBulkExportItemDefinitionsBeta)
+	}
+
+	resp, err := server.PollerResponderNext(beginBulkExportItemDefinitionsBeta, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+		i.beginBulkExportItemDefinitionsBeta.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginBulkExportItemDefinitionsBeta) {
+		i.beginBulkExportItemDefinitionsBeta.remove(req)
+	}
+
+	return resp, nil
+}
+
+func (i *ItemsServerTransport) dispatchBeginBulkImportItemDefinitionsBeta(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginBulkImportItemDefinitionsBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginBulkImportItemDefinitionsBeta not implemented")}
+	}
+	beginBulkImportItemDefinitionsBeta := i.beginBulkImportItemDefinitionsBeta.get(req)
+	if beginBulkImportItemDefinitionsBeta == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/items/bulkImportDefinitions`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		body, err := server.UnmarshalRequestAsJSON[core.BulkImportItemDefinitionsRequest](req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
+		if err != nil {
+			return nil, err
+		}
+		betaParam, err := strconv.ParseBool(betaUnescaped)
+		if err != nil {
+			return nil, err
+		}
+		var options *core.ItemsClientBeginBulkImportItemDefinitionsBetaOptions
+		if !reflect.ValueOf(body).IsZero() {
+			options = &core.ItemsClientBeginBulkImportItemDefinitionsBetaOptions{
+				BulkImportItemDefinitionsRequest: &body,
+			}
+		}
+		respr, errRespr := i.srv.BeginBulkImportItemDefinitionsBeta(req.Context(), workspaceIDParam, betaParam, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginBulkImportItemDefinitionsBeta = &respr
+		i.beginBulkImportItemDefinitionsBeta.add(req, beginBulkImportItemDefinitionsBeta)
+	}
+
+	resp, err := server.PollerResponderNext(beginBulkImportItemDefinitionsBeta, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+		i.beginBulkImportItemDefinitionsBeta.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginBulkImportItemDefinitionsBeta) {
+		i.beginBulkImportItemDefinitionsBeta.remove(req)
+	}
+
+	return resp, nil
 }
 
 func (i *ItemsServerTransport) dispatchBulkMoveItems(req *http.Request) (*http.Response, error) {

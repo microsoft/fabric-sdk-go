@@ -97,7 +97,7 @@ func (client *ItemsClient) createVariableLibrary(ctx context.Context, workspaceI
 
 // createVariableLibraryCreateRequest creates the CreateVariableLibrary request.
 func (client *ItemsClient) createVariableLibraryCreateRequest(ctx context.Context, workspaceID string, createVariableLibraryRequest CreateVariableLibraryRequest, _ *ItemsClientBeginCreateVariableLibraryOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/VariableLibraries"
+	urlPath := "/v1/workspaces/{workspaceId}/variableLibraries"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -151,7 +151,7 @@ func (client *ItemsClient) DeleteVariableLibrary(ctx context.Context, workspaceI
 
 // deleteVariableLibraryCreateRequest creates the DeleteVariableLibrary request.
 func (client *ItemsClient) deleteVariableLibraryCreateRequest(ctx context.Context, workspaceID string, variableLibraryID string, _ *ItemsClientDeleteVariableLibraryOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/VariableLibraries/{variableLibraryId}"
+	urlPath := "/v1/workspaces/{workspaceId}/variableLibraries/{variableLibraryId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -207,7 +207,7 @@ func (client *ItemsClient) GetVariableLibrary(ctx context.Context, workspaceID s
 
 // getVariableLibraryCreateRequest creates the GetVariableLibrary request.
 func (client *ItemsClient) getVariableLibraryCreateRequest(ctx context.Context, workspaceID string, variableLibraryID string, _ *ItemsClientGetVariableLibraryOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/VariableLibraries/{variableLibraryId}"
+	urlPath := "/v1/workspaces/{workspaceId}/variableLibraries/{variableLibraryId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -290,7 +290,7 @@ func (client *ItemsClient) getVariableLibraryDefinition(ctx context.Context, wor
 
 // getVariableLibraryDefinitionCreateRequest creates the GetVariableLibraryDefinition request.
 func (client *ItemsClient) getVariableLibraryDefinitionCreateRequest(ctx context.Context, workspaceID string, variableLibraryID string, options *ItemsClientBeginGetVariableLibraryDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/VariableLibraries/{variableLibraryId}/getDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/variableLibraries/{variableLibraryId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -351,7 +351,7 @@ func (client *ItemsClient) NewListVariableLibrariesPager(workspaceID string, opt
 
 // listVariableLibrariesCreateRequest creates the ListVariableLibraries request.
 func (client *ItemsClient) listVariableLibrariesCreateRequest(ctx context.Context, workspaceID string, options *ItemsClientListVariableLibrariesOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/VariableLibraries"
+	urlPath := "/v1/workspaces/{workspaceId}/variableLibraries"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -363,6 +363,12 @@ func (client *ItemsClient) listVariableLibrariesCreateRequest(ctx context.Contex
 	reqQP := req.Raw().URL.Query()
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	if options != nil && options.Recursive != nil {
+		reqQP.Set("recursive", strconv.FormatBool(*options.Recursive))
+	}
+	if options != nil && options.RootFolderID != nil {
+		reqQP.Set("rootFolderId", *options.RootFolderID)
 	}
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
@@ -418,7 +424,7 @@ func (client *ItemsClient) UpdateVariableLibrary(ctx context.Context, workspaceI
 
 // updateVariableLibraryCreateRequest creates the UpdateVariableLibrary request.
 func (client *ItemsClient) updateVariableLibraryCreateRequest(ctx context.Context, workspaceID string, variableLibraryID string, updateVariableLibraryRequest UpdateVariableLibraryRequest, _ *ItemsClientUpdateVariableLibraryOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/VariableLibraries/{variableLibraryId}"
+	urlPath := "/v1/workspaces/{workspaceId}/variableLibraries/{variableLibraryId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -505,7 +511,7 @@ func (client *ItemsClient) updateVariableLibraryDefinition(ctx context.Context, 
 
 // updateVariableLibraryDefinitionCreateRequest creates the UpdateVariableLibraryDefinition request.
 func (client *ItemsClient) updateVariableLibraryDefinitionCreateRequest(ctx context.Context, workspaceID string, variableLibraryID string, updateVariableLibraryDefinitionRequest UpdateVariableLibraryDefinitionRequest, options *ItemsClientBeginUpdateVariableLibraryDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/VariableLibraries/{variableLibraryId}/updateDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/variableLibraries/{variableLibraryId}/updateDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}

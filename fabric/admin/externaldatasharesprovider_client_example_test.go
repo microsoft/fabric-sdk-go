@@ -40,11 +40,11 @@ func ExampleExternalDataSharesProviderClient_NewListExternalDataSharesPager() {
 		// page.ExternalDataShares = admin.ExternalDataShares{
 		// 	Value: []admin.ExternalDataShare{
 		// 		{
-		// 			CreatorPrincipal: &admin.Principal{
+		// 			CreatorPrincipal: &admin.UserPrincipal{
 		// 				Type: to.Ptr(admin.PrincipalTypeUser),
 		// 				DisplayName: to.Ptr("Jacob Hancock"),
 		// 				ID: to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-		// 				UserDetails: &admin.PrincipalUserDetails{
+		// 				UserDetails: &admin.UserPrincipalUserDetails{
 		// 					UserPrincipalName: to.Ptr("jacob@contoso.com"),
 		// 				},
 		// 			},
@@ -62,11 +62,11 @@ func ExampleExternalDataSharesProviderClient_NewListExternalDataSharesPager() {
 		// 			},
 		// 			{
 		// 				AcceptedByTenantID: to.Ptr("c51dc03f-268a-4da0-a879-25f24947ab8b"),
-		// 				CreatorPrincipal: &admin.Principal{
+		// 				CreatorPrincipal: &admin.UserPrincipal{
 		// 					Type: to.Ptr(admin.PrincipalTypeUser),
 		// 					DisplayName: to.Ptr("Jacob Hancock"),
 		// 					ID: to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-		// 					UserDetails: &admin.PrincipalUserDetails{
+		// 					UserDetails: &admin.UserPrincipalUserDetails{
 		// 						UserPrincipalName: to.Ptr("jacob@contoso.com"),
 		// 					},
 		// 				},
@@ -83,11 +83,11 @@ func ExampleExternalDataSharesProviderClient_NewListExternalDataSharesPager() {
 		// 					WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 				},
 		// 				{
-		// 					CreatorPrincipal: &admin.Principal{
+		// 					CreatorPrincipal: &admin.UserPrincipal{
 		// 						Type: to.Ptr(admin.PrincipalTypeUser),
 		// 						DisplayName: to.Ptr("Eric Solomon"),
 		// 						ID: to.Ptr("81fac5e1-2a81-421b-a168-110b1c72fa11"),
-		// 						UserDetails: &admin.PrincipalUserDetails{
+		// 						UserDetails: &admin.UserPrincipalUserDetails{
 		// 							UserPrincipalName: to.Ptr("eric@contoso.com"),
 		// 						},
 		// 					},
@@ -105,11 +105,11 @@ func ExampleExternalDataSharesProviderClient_NewListExternalDataSharesPager() {
 		// 					},
 		// 					{
 		// 						AcceptedByTenantID: to.Ptr("c51dc03f-268a-4da0-a879-25f24947ab8b"),
-		// 						CreatorPrincipal: &admin.Principal{
+		// 						CreatorPrincipal: &admin.UserPrincipal{
 		// 							Type: to.Ptr(admin.PrincipalTypeUser),
 		// 							DisplayName: to.Ptr("Eric Solomon"),
 		// 							ID: to.Ptr("81fac5e1-2a81-421b-a168-110b1c72fa11"),
-		// 							UserDetails: &admin.PrincipalUserDetails{
+		// 							UserDetails: &admin.UserPrincipalUserDetails{
 		// 								UserPrincipalName: to.Ptr("eric@contoso.com"),
 		// 							},
 		// 						},

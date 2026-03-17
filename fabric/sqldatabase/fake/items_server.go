@@ -46,6 +46,10 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListSQLDatabasesPager func(workspaceID string, options *sqldatabase.ItemsClientListSQLDatabasesOptions) (resp azfake.PagerResponder[sqldatabase.ItemsClientListSQLDatabasesResponse])
 
+	// BeginRevalidateCMK is the fake for method ItemsClient.BeginRevalidateCMK
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
+	BeginRevalidateCMK func(ctx context.Context, workspaceID string, sqlDatabaseID string, options *sqldatabase.ItemsClientBeginRevalidateCMKOptions) (resp azfake.PollerResponder[sqldatabase.ItemsClientRevalidateCMKResponse], errResp azfake.ErrorResponder)
+
 	// UpdateSQLDatabase is the fake for method ItemsClient.UpdateSQLDatabase
 	// HTTP status codes to indicate success: http.StatusOK
 	UpdateSQLDatabase func(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseRequest sqldatabase.UpdateSQLDatabaseRequest, options *sqldatabase.ItemsClientUpdateSQLDatabaseOptions) (resp azfake.Responder[sqldatabase.ItemsClientUpdateSQLDatabaseResponse], errResp azfake.ErrorResponder)
@@ -64,6 +68,7 @@ func NewItemsServerTransport(srv *ItemsServer) *ItemsServerTransport {
 		beginCreateSQLDatabase:            newTracker[azfake.PollerResponder[sqldatabase.ItemsClientCreateSQLDatabaseResponse]](),
 		beginGetSQLDatabaseDefinition:     newTracker[azfake.PollerResponder[sqldatabase.ItemsClientGetSQLDatabaseDefinitionResponse]](),
 		newListSQLDatabasesPager:          newTracker[azfake.PagerResponder[sqldatabase.ItemsClientListSQLDatabasesResponse]](),
+		beginRevalidateCMK:                newTracker[azfake.PollerResponder[sqldatabase.ItemsClientRevalidateCMKResponse]](),
 		beginUpdateSQLDatabasesDefinition: newTracker[azfake.PollerResponder[sqldatabase.ItemsClientUpdateSQLDatabasesDefinitionResponse]](),
 	}
 }
@@ -75,6 +80,7 @@ type ItemsServerTransport struct {
 	beginCreateSQLDatabase            *tracker[azfake.PollerResponder[sqldatabase.ItemsClientCreateSQLDatabaseResponse]]
 	beginGetSQLDatabaseDefinition     *tracker[azfake.PollerResponder[sqldatabase.ItemsClientGetSQLDatabaseDefinitionResponse]]
 	newListSQLDatabasesPager          *tracker[azfake.PagerResponder[sqldatabase.ItemsClientListSQLDatabasesResponse]]
+	beginRevalidateCMK                *tracker[azfake.PollerResponder[sqldatabase.ItemsClientRevalidateCMKResponse]]
 	beginUpdateSQLDatabasesDefinition *tracker[azfake.PollerResponder[sqldatabase.ItemsClientUpdateSQLDatabasesDefinitionResponse]]
 }
 
@@ -113,6 +119,8 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 				res.resp, res.err = i.dispatchBeginGetSQLDatabaseDefinition(req)
 			case "ItemsClient.NewListSQLDatabasesPager":
 				res.resp, res.err = i.dispatchNewListSQLDatabasesPager(req)
+			case "ItemsClient.BeginRevalidateCMK":
+				res.resp, res.err = i.dispatchBeginRevalidateCMK(req)
 			case "ItemsClient.UpdateSQLDatabase":
 				res.resp, res.err = i.dispatchUpdateSQLDatabase(req)
 			case "ItemsClient.BeginUpdateSQLDatabasesDefinition":
@@ -184,7 +192,7 @@ func (i *ItemsServerTransport) dispatchDeleteSQLDatabase(req *http.Request) (*ht
 	if i.srv.DeleteSQLDatabase == nil {
 		return nil, &nonRetriableError{errors.New("fake for method DeleteSQLDatabase not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sqlDatabases/(?P<SQLDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sqlDatabases/(?P<sqlDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -194,7 +202,7 @@ func (i *ItemsServerTransport) dispatchDeleteSQLDatabase(req *http.Request) (*ht
 	if err != nil {
 		return nil, err
 	}
-	sqlDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("SQLDatabaseId")])
+	sqlDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("sqlDatabaseId")])
 	if err != nil {
 		return nil, err
 	}
@@ -217,7 +225,7 @@ func (i *ItemsServerTransport) dispatchGetSQLDatabase(req *http.Request) (*http.
 	if i.srv.GetSQLDatabase == nil {
 		return nil, &nonRetriableError{errors.New("fake for method GetSQLDatabase not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sqlDatabases/(?P<SQLDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sqlDatabases/(?P<sqlDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -227,7 +235,7 @@ func (i *ItemsServerTransport) dispatchGetSQLDatabase(req *http.Request) (*http.
 	if err != nil {
 		return nil, err
 	}
-	sqlDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("SQLDatabaseId")])
+	sqlDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("sqlDatabaseId")])
 	if err != nil {
 		return nil, err
 	}
@@ -252,7 +260,7 @@ func (i *ItemsServerTransport) dispatchBeginGetSQLDatabaseDefinition(req *http.R
 	}
 	beginGetSQLDatabaseDefinition := i.beginGetSQLDatabaseDefinition.get(req)
 	if beginGetSQLDatabaseDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sqlDatabases/(?P<SQLDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sqlDatabases/(?P<sqlDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
@@ -262,7 +270,7 @@ func (i *ItemsServerTransport) dispatchBeginGetSQLDatabaseDefinition(req *http.R
 		if err != nil {
 			return nil, err
 		}
-		sqlDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("SQLDatabaseId")])
+		sqlDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("sqlDatabaseId")])
 		if err != nil {
 			return nil, err
 		}
@@ -307,14 +315,29 @@ func (i *ItemsServerTransport) dispatchNewListSQLDatabasesPager(req *http.Reques
 		if err != nil {
 			return nil, err
 		}
+		recursiveUnescaped, err := url.QueryUnescape(qp.Get("recursive"))
+		if err != nil {
+			return nil, err
+		}
+		recursiveParam, err := parseOptional(recursiveUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDUnescaped, err := url.QueryUnescape(qp.Get("rootFolderId"))
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDParam := getOptional(rootFolderIDUnescaped)
 		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
 		if err != nil {
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
 		var options *sqldatabase.ItemsClientListSQLDatabasesOptions
-		if continuationTokenParam != nil {
+		if recursiveParam != nil || rootFolderIDParam != nil || continuationTokenParam != nil {
 			options = &sqldatabase.ItemsClientListSQLDatabasesOptions{
+				Recursive:         recursiveParam,
+				RootFolderID:      rootFolderIDParam,
 				ContinuationToken: continuationTokenParam,
 			}
 		}
@@ -339,11 +362,55 @@ func (i *ItemsServerTransport) dispatchNewListSQLDatabasesPager(req *http.Reques
 	return resp, nil
 }
 
+func (i *ItemsServerTransport) dispatchBeginRevalidateCMK(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginRevalidateCMK == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginRevalidateCMK not implemented")}
+	}
+	beginRevalidateCMK := i.beginRevalidateCMK.get(req)
+	if beginRevalidateCMK == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sqlDatabases/(?P<sqlDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/revalidateCMK`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 3 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		sqlDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("sqlDatabaseId")])
+		if err != nil {
+			return nil, err
+		}
+		respr, errRespr := i.srv.BeginRevalidateCMK(req.Context(), workspaceIDParam, sqlDatabaseIDParam, nil)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginRevalidateCMK = &respr
+		i.beginRevalidateCMK.add(req, beginRevalidateCMK)
+	}
+
+	resp, err := server.PollerResponderNext(beginRevalidateCMK, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
+		i.beginRevalidateCMK.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginRevalidateCMK) {
+		i.beginRevalidateCMK.remove(req)
+	}
+
+	return resp, nil
+}
+
 func (i *ItemsServerTransport) dispatchUpdateSQLDatabase(req *http.Request) (*http.Response, error) {
 	if i.srv.UpdateSQLDatabase == nil {
 		return nil, &nonRetriableError{errors.New("fake for method UpdateSQLDatabase not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sqlDatabases/(?P<SQLDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sqlDatabases/(?P<sqlDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -357,7 +424,7 @@ func (i *ItemsServerTransport) dispatchUpdateSQLDatabase(req *http.Request) (*ht
 	if err != nil {
 		return nil, err
 	}
-	sqlDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("SQLDatabaseId")])
+	sqlDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("sqlDatabaseId")])
 	if err != nil {
 		return nil, err
 	}
@@ -382,7 +449,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateSQLDatabasesDefinition(req *ht
 	}
 	beginUpdateSQLDatabasesDefinition := i.beginUpdateSQLDatabasesDefinition.get(req)
 	if beginUpdateSQLDatabasesDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sqlDatabases/(?P<SQLDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sqlDatabases/(?P<sqlDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
@@ -397,7 +464,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateSQLDatabasesDefinition(req *ht
 		if err != nil {
 			return nil, err
 		}
-		sqlDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("SQLDatabaseId")])
+		sqlDatabaseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("sqlDatabaseId")])
 		if err != nil {
 			return nil, err
 		}

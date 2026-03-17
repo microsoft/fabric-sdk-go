@@ -23,6 +23,9 @@ type Dashboard struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
+
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
 
@@ -48,5 +51,11 @@ type ItemTag struct {
 	DisplayName *string
 
 	// REQUIRED; The tag ID.
+	ID *string
+}
+
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
 	ID *string
 }

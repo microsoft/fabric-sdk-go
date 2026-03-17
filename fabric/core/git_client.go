@@ -348,7 +348,8 @@ func (client *GitClient) getMyGitCredentialsHandleResponse(resp *http.Response) 
 
 // BeginGetStatus - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // The status indicates changes to items since the last workspace and remote branch sync. If the remote and workspace items
-// were both modified, the API flags a conflict.
+// were both modified, the API flags a conflict. The API should not be called
+// while Update From Git [/rest/api/fabric/core/git/update-from-git] operation is executing.
 // To use this API, the caller's Git credentials must be configured using Update My Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials]
 // API. You can use the Get My Git Credentials
 // [/rest/api/fabric/core/git/get-my-git-credentials] API to check the Git credentials configuration.
@@ -371,7 +372,8 @@ func (client *GitClient) BeginGetStatus(ctx context.Context, workspaceID string,
 
 // GetStatus - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // The status indicates changes to items since the last workspace and remote branch sync. If the remote and workspace items
-// were both modified, the API flags a conflict.
+// were both modified, the API flags a conflict. The API should not be called
+// while Update From Git [/rest/api/fabric/core/git/update-from-git] operation is executing.
 // To use this API, the caller's Git credentials must be configured using Update My Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials]
 // API. You can use the Get My Git Credentials
 // [/rest/api/fabric/core/git/get-my-git-credentials] API to check the Git credentials configuration.
@@ -748,7 +750,8 @@ func (client *GitClient) beginCommitToGit(ctx context.Context, workspaceID strin
 // GetStatus - returns GitClientGetStatusResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// The status indicates changes to items since the last workspace and remote branch sync. If the remote and workspace items were both modified, the API flags a conflict.
+// The status indicates changes to items since the last workspace and remote branch sync. If the remote and workspace items were both modified, the API flags a conflict. The API should not be called
+// while Update From Git [/rest/api/fabric/core/git/update-from-git] operation is executing.
 //
 // To use this API, the caller's Git credentials must be configured using Update My Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials] API. You can use the Get My Git Credentials
 // [/rest/api/fabric/core/git/get-my-git-credentials] API to check the Git credentials configuration.

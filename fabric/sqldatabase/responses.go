@@ -6,16 +6,6 @@
 
 package sqldatabase
 
-// ClientStartMirroringResponse contains the response from method Client.StartMirroring.
-type ClientStartMirroringResponse struct {
-	// placeholder for future response values
-}
-
-// ClientStopMirroringResponse contains the response from method Client.StopMirroring.
-type ClientStopMirroringResponse struct {
-	// placeholder for future response values
-}
-
 // ItemsClientCreateSQLDatabaseResponse contains the response from method ItemsClient.BeginCreateSQLDatabase.
 type ItemsClientCreateSQLDatabaseResponse struct {
 	// A SQL database object.
@@ -45,6 +35,11 @@ type ItemsClientListSQLDatabasesResponse struct {
 	SQLDatabases
 }
 
+// ItemsClientRevalidateCMKResponse contains the response from method ItemsClient.BeginRevalidateCMK.
+type ItemsClientRevalidateCMKResponse struct {
+	// placeholder for future response values
+}
+
 // ItemsClientUpdateSQLDatabaseResponse contains the response from method ItemsClient.UpdateSQLDatabase.
 type ItemsClientUpdateSQLDatabaseResponse struct {
 	// A SQL database object.
@@ -54,4 +49,26 @@ type ItemsClientUpdateSQLDatabaseResponse struct {
 // ItemsClientUpdateSQLDatabasesDefinitionResponse contains the response from method ItemsClient.BeginUpdateSQLDatabasesDefinition.
 type ItemsClientUpdateSQLDatabasesDefinitionResponse struct {
 	// placeholder for future response values
+}
+
+// MirroringClientStartMirroringResponse contains the response from method MirroringClient.StartMirroring.
+type MirroringClientStartMirroringResponse struct {
+	// placeholder for future response values
+}
+
+// MirroringClientStopMirroringResponse contains the response from method MirroringClient.StopMirroring.
+type MirroringClientStopMirroringResponse struct {
+	// placeholder for future response values
+}
+
+// SQLAuditSettingsClientGetSQLAuditSettingsResponse contains the response from method SQLAuditSettingsClient.GetSQLAuditSettings.
+type SQLAuditSettingsClientGetSQLAuditSettingsResponse struct {
+	// The current state of audit settings for a database.
+	AuditSettings
+}
+
+// SQLAuditSettingsClientUpdateSQLAuditSettingsResponse contains the response from method SQLAuditSettingsClient.UpdateSQLAuditSettings.
+type SQLAuditSettingsClientUpdateSQLAuditSettingsResponse struct {
+	// The current state of audit settings for a database.
+	AuditSettings
 }

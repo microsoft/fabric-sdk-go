@@ -27,7 +27,10 @@ func ExampleItemsClient_NewListKQLDashboardsPager() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewItemsClient().NewListKQLDashboardsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &kqldashboard.ItemsClientListKQLDashboardsOptions{ContinuationToken: nil})
+	pager := clientFactory.NewItemsClient().NewListKQLDashboardsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &kqldashboard.ItemsClientListKQLDashboardsOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
 		if err != nil {
@@ -45,6 +48,9 @@ func ExampleItemsClient_NewListKQLDashboardsPager() {
 		// 			Description: to.Ptr("A KQL dashboard description."),
 		// 			DisplayName: to.Ptr("KQLDashboard_1"),
 		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+		// 			SensitivityLabel: &kqldashboard.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 		},
 		// 		{
@@ -52,6 +58,9 @@ func ExampleItemsClient_NewListKQLDashboardsPager() {
 		// 			Description: to.Ptr("A KQL dashboard description."),
 		// 			DisplayName: to.Ptr("KQLDashboard_2"),
 		// 			ID: to.Ptr("340d91b9-5a39-409c-b9c0-05ba832c476e"),
+		// 			SensitivityLabel: &kqldashboard.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 	}},
 		// }
@@ -142,6 +151,9 @@ func ExampleItemsClient_GetKQLDashboard() {
 	// 	Description: to.Ptr("A KQL dashboard description."),
 	// 	DisplayName: to.Ptr("KQLDashboard_1"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+	// 	SensitivityLabel: &kqldashboard.SensitivityLabel{
+	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// }
 }
@@ -172,6 +184,9 @@ func ExampleItemsClient_UpdateKQLDashboard() {
 	// 	Description: to.Ptr("KQL dashboard new description"),
 	// 	DisplayName: to.Ptr("KQL dashboard new name"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+	// 	SensitivityLabel: &kqldashboard.SensitivityLabel{
+	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// }
 }

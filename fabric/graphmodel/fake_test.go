@@ -70,6 +70,9 @@ func (testsuite *FakeTestSuite) TestItems_ListGraphModels() {
 				Description: to.Ptr("A GraphModel description."),
 				DisplayName: to.Ptr("GraphModel Name 1"),
 				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				SensitivityLabel: &graphmodel.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 			},
 			{
@@ -77,6 +80,9 @@ func (testsuite *FakeTestSuite) TestItems_ListGraphModels() {
 				Description: to.Ptr("A GraphModel description."),
 				DisplayName: to.Ptr("GraphModel Name 2"),
 				ID:          to.Ptr("f697fb63-abd4-4399-9548-be7e3c3c0dac"),
+				SensitivityLabel: &graphmodel.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 			}},
 	}
@@ -89,7 +95,10 @@ func (testsuite *FakeTestSuite) TestItems_ListGraphModels() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	pager := client.NewListGraphModelsPager(exampleWorkspaceID, &graphmodel.ItemsClientListGraphModelsOptions{ContinuationToken: nil})
+	pager := client.NewListGraphModelsPager(exampleWorkspaceID, &graphmodel.ItemsClientListGraphModelsOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")
@@ -195,6 +204,9 @@ func (testsuite *FakeTestSuite) TestItems_GetGraphModel() {
 		Description: to.Ptr("A GraphModel description."),
 		DisplayName: to.Ptr("GraphModel 1"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &graphmodel.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	}
 
@@ -389,7 +401,7 @@ func (testsuite *FakeTestSuite) TestItems_UpdateGraphModelDefinition() {
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
 
-func (testsuite *FakeTestSuite) TestItems_ExecuteQueryPreview() {
+func (testsuite *FakeTestSuite) TestItems_ExecuteQueryBeta() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Execute a graph query example"},
@@ -405,22 +417,22 @@ func (testsuite *FakeTestSuite) TestItems_ExecuteQueryPreview() {
 		Query: to.Ptr("MATCH (node_station:`station`) RETURN TO_JSON_STRING(node_station) AS `station` LIMIT 10;"),
 	}
 
-	testsuite.serverFactory.ItemsServer.ExecuteQueryPreview = func(ctx context.Context, workspaceID string, graphModelID string, beta bool, createQueryResultRequest graphmodel.ExecuteQueryRequest, options *graphmodel.ItemsClientExecuteQueryPreviewOptions) (resp azfake.Responder[graphmodel.ItemsClientExecuteQueryPreviewResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ItemsServer.ExecuteQueryBeta = func(ctx context.Context, workspaceID string, graphModelID string, beta bool, createQueryResultRequest graphmodel.ExecuteQueryRequest, options *graphmodel.ItemsClientExecuteQueryBetaOptions) (resp azfake.Responder[graphmodel.ItemsClientExecuteQueryBetaResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleGraphModelID, graphModelID)
 		testsuite.Require().Equal(exampleBeta, beta)
 		testsuite.Require().True(reflect.DeepEqual(exampleCreateQueryResultRequest, createQueryResultRequest))
-		resp = azfake.Responder[graphmodel.ItemsClientExecuteQueryPreviewResponse]{}
-		resp.SetResponse(http.StatusOK, graphmodel.ItemsClientExecuteQueryPreviewResponse{}, nil)
+		resp = azfake.Responder[graphmodel.ItemsClientExecuteQueryBetaResponse]{}
+		resp.SetResponse(http.StatusOK, graphmodel.ItemsClientExecuteQueryBetaResponse{}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.ExecuteQueryPreview(ctx, exampleWorkspaceID, exampleGraphModelID, exampleBeta, exampleCreateQueryResultRequest, nil)
+	_, err = client.ExecuteQueryBeta(ctx, exampleWorkspaceID, exampleGraphModelID, exampleBeta, exampleCreateQueryResultRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
-func (testsuite *FakeTestSuite) TestItems_GetQueryableGraphTypePreview() {
+func (testsuite *FakeTestSuite) TestItems_GetQueryableGraphTypeBeta() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Get queryable graph type example"},
@@ -513,17 +525,17 @@ func (testsuite *FakeTestSuite) TestItems_GetQueryableGraphTypePreview() {
 			}},
 	}
 
-	testsuite.serverFactory.ItemsServer.GetQueryableGraphTypePreview = func(ctx context.Context, workspaceID string, graphModelID string, beta bool, options *graphmodel.ItemsClientGetQueryableGraphTypePreviewOptions) (resp azfake.Responder[graphmodel.ItemsClientGetQueryableGraphTypePreviewResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.ItemsServer.GetQueryableGraphTypeBeta = func(ctx context.Context, workspaceID string, graphModelID string, beta bool, options *graphmodel.ItemsClientGetQueryableGraphTypeBetaOptions) (resp azfake.Responder[graphmodel.ItemsClientGetQueryableGraphTypeBetaResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleGraphModelID, graphModelID)
 		testsuite.Require().Equal(exampleBeta, beta)
-		resp = azfake.Responder[graphmodel.ItemsClientGetQueryableGraphTypePreviewResponse]{}
-		resp.SetResponse(http.StatusOK, graphmodel.ItemsClientGetQueryableGraphTypePreviewResponse{GraphType: exampleRes}, nil)
+		resp = azfake.Responder[graphmodel.ItemsClientGetQueryableGraphTypeBetaResponse]{}
+		resp.SetResponse(http.StatusOK, graphmodel.ItemsClientGetQueryableGraphTypeBetaResponse{GraphType: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	res, err := client.GetQueryableGraphTypePreview(ctx, exampleWorkspaceID, exampleGraphModelID, exampleBeta, nil)
+	res, err := client.GetQueryableGraphTypeBeta(ctx, exampleWorkspaceID, exampleGraphModelID, exampleBeta, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.GraphType))
 }

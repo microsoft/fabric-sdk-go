@@ -27,7 +27,10 @@ func ExampleItemsClient_NewListDataPipelinesPager() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewItemsClient().NewListDataPipelinesPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &datapipeline.ItemsClientListDataPipelinesOptions{ContinuationToken: nil})
+	pager := clientFactory.NewItemsClient().NewListDataPipelinesPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &datapipeline.ItemsClientListDataPipelinesOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
 		if err != nil {
@@ -45,6 +48,9 @@ func ExampleItemsClient_NewListDataPipelinesPager() {
 		// 			Description: to.Ptr("A data pipeline description."),
 		// 			DisplayName: to.Ptr("DataPipeline Name 1"),
 		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+		// 			SensitivityLabel: &datapipeline.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 	}},
 		// }
@@ -135,6 +141,9 @@ func ExampleItemsClient_GetDataPipeline() {
 	// 	Description: to.Ptr("A data pipeline description."),
 	// 	DisplayName: to.Ptr("DataPipeline 1"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+	// 	SensitivityLabel: &datapipeline.SensitivityLabel{
+	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// }
 }
@@ -165,6 +174,9 @@ func ExampleItemsClient_UpdateDataPipeline() {
 	// 	Description: to.Ptr("A new description for the data pipeline."),
 	// 	DisplayName: to.Ptr("A new name for the DataPipeline"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+	// 	SensitivityLabel: &datapipeline.SensitivityLabel{
+	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// }
 }

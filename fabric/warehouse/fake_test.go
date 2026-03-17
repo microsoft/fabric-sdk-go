@@ -71,6 +71,9 @@ func (testsuite *FakeTestSuite) TestItems_ListWarehouses() {
 				Description: to.Ptr("A warehouse description."),
 				DisplayName: to.Ptr("Warehouse Name 1"),
 				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				SensitivityLabel: &warehouse.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 				Properties: &warehouse.Properties{
 					CollationType:    to.Ptr(warehouse.CollationTypeLatin1General100CIASKSWSSCUTF8),
@@ -84,6 +87,9 @@ func (testsuite *FakeTestSuite) TestItems_ListWarehouses() {
 				Description: to.Ptr("A warehouse description."),
 				DisplayName: to.Ptr("Warehouse Name 2"),
 				ID:          to.Ptr("6281bf94-81b9-46b2-b8d3-79bb868fc822"),
+				SensitivityLabel: &warehouse.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 				Properties: &warehouse.Properties{
 					CollationType:    to.Ptr(warehouse.CollationTypeLatin1General100BIN2UTF8),
@@ -102,7 +108,10 @@ func (testsuite *FakeTestSuite) TestItems_ListWarehouses() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	pager := client.NewListWarehousesPager(exampleWorkspaceID, &warehouse.ItemsClientListWarehousesOptions{ContinuationToken: nil})
+	pager := client.NewListWarehousesPager(exampleWorkspaceID, &warehouse.ItemsClientListWarehousesOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")
@@ -182,6 +191,9 @@ func (testsuite *FakeTestSuite) TestItems_GetWarehouse() {
 		Description: to.Ptr("A warehouse description."),
 		DisplayName: to.Ptr("Warehouse 1"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &warehouse.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		Properties: &warehouse.Properties{
 			CollationType:    to.Ptr(warehouse.CollationTypeLatin1General100BIN2UTF8),
@@ -225,6 +237,9 @@ func (testsuite *FakeTestSuite) TestItems_UpdateWarehouse() {
 		Description: to.Ptr("A new description for warehouse."),
 		DisplayName: to.Ptr("Warehouse's New name"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &warehouse.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		Properties: &warehouse.Properties{
 			CollationType:    to.Ptr(warehouse.CollationTypeLatin1General100BIN2UTF8),
@@ -302,7 +317,7 @@ func (testsuite *FakeTestSuite) TestItems_GetConnectionString() {
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ConnectionStringResponse))
 }
 
-func (testsuite *FakeTestSuite) TestWarehouse_UpdateSQLAuditSettings() {
+func (testsuite *FakeTestSuite) TestSQLAuditSettings_UpdateSQLAuditSettings() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Update SQL Audit Settings"},
@@ -324,22 +339,22 @@ func (testsuite *FakeTestSuite) TestWarehouse_UpdateSQLAuditSettings() {
 		State:         to.Ptr(warehouse.AuditSettingsStateEnabled),
 	}
 
-	testsuite.serverFactory.Server.UpdateSQLAuditSettings = func(ctx context.Context, workspaceID string, itemID string, updateAuditSettingsRequest warehouse.SQLAuditSettingsUpdate, options *warehouse.ClientUpdateSQLAuditSettingsOptions) (resp azfake.Responder[warehouse.ClientUpdateSQLAuditSettingsResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.SQLAuditSettingsServer.UpdateSQLAuditSettings = func(ctx context.Context, workspaceID string, itemID string, updateAuditSettingsRequest warehouse.SQLAuditSettingsUpdate, options *warehouse.SQLAuditSettingsClientUpdateSQLAuditSettingsOptions) (resp azfake.Responder[warehouse.SQLAuditSettingsClientUpdateSQLAuditSettingsResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleItemID, itemID)
 		testsuite.Require().True(reflect.DeepEqual(exampleUpdateAuditSettingsRequest, updateAuditSettingsRequest))
-		resp = azfake.Responder[warehouse.ClientUpdateSQLAuditSettingsResponse]{}
-		resp.SetResponse(http.StatusOK, warehouse.ClientUpdateSQLAuditSettingsResponse{SQLAuditSettings: exampleRes}, nil)
+		resp = azfake.Responder[warehouse.SQLAuditSettingsClientUpdateSQLAuditSettingsResponse]{}
+		resp.SetResponse(http.StatusOK, warehouse.SQLAuditSettingsClientUpdateSQLAuditSettingsResponse{SQLAuditSettings: exampleRes}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewClient()
+	client := testsuite.clientFactory.NewSQLAuditSettingsClient()
 	res, err := client.UpdateSQLAuditSettings(ctx, exampleWorkspaceID, exampleItemID, exampleUpdateAuditSettingsRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.SQLAuditSettings))
 }
 
-func (testsuite *FakeTestSuite) TestWarehouse_GetSQLAuditSettings() {
+func (testsuite *FakeTestSuite) TestSQLAuditSettings_GetSQLAuditSettings() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Get SQL Audit Settings"},
@@ -356,21 +371,21 @@ func (testsuite *FakeTestSuite) TestWarehouse_GetSQLAuditSettings() {
 		State:         to.Ptr(warehouse.AuditSettingsStateEnabled),
 	}
 
-	testsuite.serverFactory.Server.GetSQLAuditSettings = func(ctx context.Context, workspaceID string, itemID string, options *warehouse.ClientGetSQLAuditSettingsOptions) (resp azfake.Responder[warehouse.ClientGetSQLAuditSettingsResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.SQLAuditSettingsServer.GetSQLAuditSettings = func(ctx context.Context, workspaceID string, itemID string, options *warehouse.SQLAuditSettingsClientGetSQLAuditSettingsOptions) (resp azfake.Responder[warehouse.SQLAuditSettingsClientGetSQLAuditSettingsResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleItemID, itemID)
-		resp = azfake.Responder[warehouse.ClientGetSQLAuditSettingsResponse]{}
-		resp.SetResponse(http.StatusOK, warehouse.ClientGetSQLAuditSettingsResponse{SQLAuditSettings: exampleRes}, nil)
+		resp = azfake.Responder[warehouse.SQLAuditSettingsClientGetSQLAuditSettingsResponse]{}
+		resp.SetResponse(http.StatusOK, warehouse.SQLAuditSettingsClientGetSQLAuditSettingsResponse{SQLAuditSettings: exampleRes}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewClient()
+	client := testsuite.clientFactory.NewSQLAuditSettingsClient()
 	res, err := client.GetSQLAuditSettings(ctx, exampleWorkspaceID, exampleItemID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.SQLAuditSettings))
 }
 
-func (testsuite *FakeTestSuite) TestWarehouse_SetAuditActionsAndGroups() {
+func (testsuite *FakeTestSuite) TestSQLAuditSettings_SetAuditActionsAndGroups() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Set SQL Audit Groups"},
@@ -385,16 +400,16 @@ func (testsuite *FakeTestSuite) TestWarehouse_SetAuditActionsAndGroups() {
 		"FAILED_DATABASE_AUTHENTICATION_GROUP",
 		"BATCH_COMPLETED_GROUP"}
 
-	testsuite.serverFactory.Server.SetAuditActionsAndGroups = func(ctx context.Context, workspaceID string, itemID string, setAuditActionsAndGroupsRequest []string, options *warehouse.ClientSetAuditActionsAndGroupsOptions) (resp azfake.Responder[warehouse.ClientSetAuditActionsAndGroupsResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.SQLAuditSettingsServer.SetAuditActionsAndGroups = func(ctx context.Context, workspaceID string, itemID string, setAuditActionsAndGroupsRequest []string, options *warehouse.SQLAuditSettingsClientSetAuditActionsAndGroupsOptions) (resp azfake.Responder[warehouse.SQLAuditSettingsClientSetAuditActionsAndGroupsResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleItemID, itemID)
 		testsuite.Require().Equal(exampleSetAuditActionsAndGroupsRequest, setAuditActionsAndGroupsRequest)
-		resp = azfake.Responder[warehouse.ClientSetAuditActionsAndGroupsResponse]{}
-		resp.SetResponse(http.StatusOK, warehouse.ClientSetAuditActionsAndGroupsResponse{}, nil)
+		resp = azfake.Responder[warehouse.SQLAuditSettingsClientSetAuditActionsAndGroupsResponse]{}
+		resp.SetResponse(http.StatusOK, warehouse.SQLAuditSettingsClientSetAuditActionsAndGroupsResponse{}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewClient()
+	client := testsuite.clientFactory.NewSQLAuditSettingsClient()
 	_, err = client.SetAuditActionsAndGroups(ctx, exampleWorkspaceID, exampleItemID, exampleSetAuditActionsAndGroupsRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
@@ -415,11 +430,11 @@ func (testsuite *FakeTestSuite) TestRestorePoints_ListRestorePoints() {
 				Description: to.Ptr("Restore point 1 description."),
 				CreationDetails: &warehouse.RestorePointEventDetails{
 					EventDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-10-18T22:17:09.000Z"); return t }()),
-					EventInitiator: &warehouse.Principal{
+					EventInitiator: &warehouse.UserPrincipal{
 						Type:        to.Ptr(warehouse.PrincipalTypeUser),
 						DisplayName: to.Ptr("Jacob Hancock"),
 						ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-						UserDetails: &warehouse.PrincipalUserDetails{
+						UserDetails: &warehouse.UserPrincipalUserDetails{
 							UserPrincipalName: to.Ptr("jacob@contoso.com"),
 						},
 					},
@@ -506,11 +521,11 @@ func (testsuite *FakeTestSuite) TestRestorePoints_GetRestorePoint() {
 		Description: to.Ptr("Restore point 1 description."),
 		CreationDetails: &warehouse.RestorePointEventDetails{
 			EventDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-10-18T22:17:09.000Z"); return t }()),
-			EventInitiator: &warehouse.Principal{
+			EventInitiator: &warehouse.UserPrincipal{
 				Type:        to.Ptr(warehouse.PrincipalTypeUser),
 				DisplayName: to.Ptr("Jacob Hancock"),
 				ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-				UserDetails: &warehouse.PrincipalUserDetails{
+				UserDetails: &warehouse.UserPrincipalUserDetails{
 					UserPrincipalName: to.Ptr("jacob@contoso.com"),
 				},
 			},
@@ -582,11 +597,11 @@ func (testsuite *FakeTestSuite) TestRestorePoints_UpdateRestorePoint() {
 		Description: to.Ptr("Restore point 3 description."),
 		CreationDetails: &warehouse.RestorePointEventDetails{
 			EventDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-10-18T22:17:09.000Z"); return t }()),
-			EventInitiator: &warehouse.Principal{
+			EventInitiator: &warehouse.UserPrincipal{
 				Type:        to.Ptr(warehouse.PrincipalTypeUser),
 				DisplayName: to.Ptr("Jacob Hancock"),
 				ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-				UserDetails: &warehouse.PrincipalUserDetails{
+				UserDetails: &warehouse.UserPrincipalUserDetails{
 					UserPrincipalName: to.Ptr("jacob@contoso.com"),
 				},
 			},

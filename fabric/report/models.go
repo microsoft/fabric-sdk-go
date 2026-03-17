@@ -19,10 +19,13 @@ type CreateReportRequest struct {
 
 	// The folder ID. If not specified or null, the report is created with the workspace as its folder.
 	FolderID *string
+
+	// The sensitivity label settings for the report.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // Definition - Report public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/report-definition]
-// for more details on how to craft a report public definition.
+// for more details on the structure of the Report definition.
 type Definition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []DefinitionPart
@@ -46,7 +49,7 @@ type DefinitionPart struct {
 // DefinitionResponse - Report public definition response.
 type DefinitionResponse struct {
 	// READ-ONLY; Report public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/report-definition]
-	// for more details on how to craft a report public definition.
+	// for more details on the structure of the Report definition.
 	Definition *Definition
 }
 
@@ -76,6 +79,9 @@ type Report struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
+
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
 
@@ -95,10 +101,25 @@ type Reports struct {
 	ContinuationURI *string
 }
 
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
 // UpdateReportDefinitionRequest - Update report public definition request payload.
 type UpdateReportDefinitionRequest struct {
 	// REQUIRED; Report public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/report-definition]
-	// for more details on how to craft a report public definition.
+	// for more details on the structure of the Report definition.
 	Definition *Definition
 }
 

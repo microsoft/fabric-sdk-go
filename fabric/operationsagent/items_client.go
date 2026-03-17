@@ -32,12 +32,12 @@ type ItemsClient struct {
 
 // BeginCreateOperationsAgent - > [!NOTE] OperationsAgent item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create OperationsAgent with a definition, refer to OperationsAgent [/rest/api/fabric/articles/item-management/definitions/operationsagent-definition]
+// To create an OperationsAgent with a definition, refer to OperationsAgent [/rest/api/fabric/articles/item-management/definitions/operations-agent-definition]
 // article.
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
-// * To create a OperationsAgent the workspace must be on a supported Fabric capacity. For more information see: Microsoft
+// * To create an OperationsAgent the workspace must be on a supported Fabric capacity. For more information see: Microsoft
 // Fabric license types
 // [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -59,12 +59,12 @@ func (client *ItemsClient) BeginCreateOperationsAgent(ctx context.Context, works
 
 // CreateOperationsAgent - > [!NOTE] OperationsAgent item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create OperationsAgent with a definition, refer to OperationsAgent [/rest/api/fabric/articles/item-management/definitions/operationsagent-definition]
+// To create an OperationsAgent with a definition, refer to OperationsAgent [/rest/api/fabric/articles/item-management/definitions/operations-agent-definition]
 // article.
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
-// * To create a OperationsAgent the workspace must be on a supported Fabric capacity. For more information see: Microsoft
+// * To create an OperationsAgent the workspace must be on a supported Fabric capacity. For more information see: Microsoft
 // Fabric license types
 // [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -99,7 +99,7 @@ func (client *ItemsClient) createOperationsAgent(ctx context.Context, workspaceI
 
 // createOperationsAgentCreateRequest creates the CreateOperationsAgent request.
 func (client *ItemsClient) createOperationsAgentCreateRequest(ctx context.Context, workspaceID string, createOperationsAgentRequest CreateOperationsAgentRequest, _ *ItemsClientBeginCreateOperationsAgentOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/OperationsAgents"
+	urlPath := "/v1/workspaces/{workspaceId}/operationsAgents"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -154,7 +154,7 @@ func (client *ItemsClient) DeleteOperationsAgent(ctx context.Context, workspaceI
 
 // deleteOperationsAgentCreateRequest creates the DeleteOperationsAgent request.
 func (client *ItemsClient) deleteOperationsAgentCreateRequest(ctx context.Context, workspaceID string, operationsAgentID string, _ *ItemsClientDeleteOperationsAgentOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/OperationsAgents/{OperationsAgentId}"
+	urlPath := "/v1/workspaces/{workspaceId}/operationsAgents/{operationsAgentId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -162,7 +162,7 @@ func (client *ItemsClient) deleteOperationsAgentCreateRequest(ctx context.Contex
 	if operationsAgentID == "" {
 		return nil, errors.New("parameter operationsAgentID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{OperationsAgentId}", url.PathEscape(operationsAgentID))
+	urlPath = strings.ReplaceAll(urlPath, "{operationsAgentId}", url.PathEscape(operationsAgentID))
 	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -211,7 +211,7 @@ func (client *ItemsClient) GetOperationsAgent(ctx context.Context, workspaceID s
 
 // getOperationsAgentCreateRequest creates the GetOperationsAgent request.
 func (client *ItemsClient) getOperationsAgentCreateRequest(ctx context.Context, workspaceID string, operationsAgentID string, _ *ItemsClientGetOperationsAgentOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/OperationsAgents/{OperationsAgentId}"
+	urlPath := "/v1/workspaces/{workspaceId}/operationsAgents/{operationsAgentId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -219,7 +219,7 @@ func (client *ItemsClient) getOperationsAgentCreateRequest(ctx context.Context, 
 	if operationsAgentID == "" {
 		return nil, errors.New("parameter operationsAgentID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{OperationsAgentId}", url.PathEscape(operationsAgentID))
+	urlPath = strings.ReplaceAll(urlPath, "{operationsAgentId}", url.PathEscape(operationsAgentID))
 	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -296,7 +296,7 @@ func (client *ItemsClient) getOperationsAgentDefinition(ctx context.Context, wor
 
 // getOperationsAgentDefinitionCreateRequest creates the GetOperationsAgentDefinition request.
 func (client *ItemsClient) getOperationsAgentDefinitionCreateRequest(ctx context.Context, workspaceID string, operationsAgentID string, options *ItemsClientBeginGetOperationsAgentDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/OperationsAgents/{OperationsAgentId}/getDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/operationsAgents/{operationsAgentId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -304,7 +304,7 @@ func (client *ItemsClient) getOperationsAgentDefinitionCreateRequest(ctx context
 	if operationsAgentID == "" {
 		return nil, errors.New("parameter operationsAgentID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{OperationsAgentId}", url.PathEscape(operationsAgentID))
+	urlPath = strings.ReplaceAll(urlPath, "{operationsAgentId}", url.PathEscape(operationsAgentID))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -358,7 +358,7 @@ func (client *ItemsClient) NewListOperationsAgentsPager(workspaceID string, opti
 
 // listOperationsAgentsCreateRequest creates the ListOperationsAgents request.
 func (client *ItemsClient) listOperationsAgentsCreateRequest(ctx context.Context, workspaceID string, options *ItemsClientListOperationsAgentsOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/OperationsAgents"
+	urlPath := "/v1/workspaces/{workspaceId}/operationsAgents"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -370,6 +370,12 @@ func (client *ItemsClient) listOperationsAgentsCreateRequest(ctx context.Context
 	reqQP := req.Raw().URL.Query()
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	if options != nil && options.Recursive != nil {
+		reqQP.Set("recursive", strconv.FormatBool(*options.Recursive))
+	}
+	if options != nil && options.RootFolderID != nil {
+		reqQP.Set("rootFolderId", *options.RootFolderID)
 	}
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
@@ -426,7 +432,7 @@ func (client *ItemsClient) UpdateOperationsAgent(ctx context.Context, workspaceI
 
 // updateOperationsAgentCreateRequest creates the UpdateOperationsAgent request.
 func (client *ItemsClient) updateOperationsAgentCreateRequest(ctx context.Context, workspaceID string, operationsAgentID string, updateOperationsAgentRequest UpdateOperationsAgentRequest, _ *ItemsClientUpdateOperationsAgentOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/OperationsAgents/{OperationsAgentId}"
+	urlPath := "/v1/workspaces/{workspaceId}/operationsAgents/{operationsAgentId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -434,7 +440,7 @@ func (client *ItemsClient) updateOperationsAgentCreateRequest(ctx context.Contex
 	if operationsAgentID == "" {
 		return nil, errors.New("parameter operationsAgentID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{OperationsAgentId}", url.PathEscape(operationsAgentID))
+	urlPath = strings.ReplaceAll(urlPath, "{operationsAgentId}", url.PathEscape(operationsAgentID))
 	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -515,7 +521,7 @@ func (client *ItemsClient) updateOperationsAgentDefinition(ctx context.Context, 
 
 // updateOperationsAgentDefinitionCreateRequest creates the UpdateOperationsAgentDefinition request.
 func (client *ItemsClient) updateOperationsAgentDefinitionCreateRequest(ctx context.Context, workspaceID string, operationsAgentID string, updateOperationsAgentDefinitionRequest UpdateOperationsAgentDefinitionRequest, options *ItemsClientBeginUpdateOperationsAgentDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/OperationsAgents/{OperationsAgentId}/updateDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/operationsAgents/{operationsAgentId}/updateDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -523,7 +529,7 @@ func (client *ItemsClient) updateOperationsAgentDefinitionCreateRequest(ctx cont
 	if operationsAgentID == "" {
 		return nil, errors.New("parameter operationsAgentID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{OperationsAgentId}", url.PathEscape(operationsAgentID))
+	urlPath = strings.ReplaceAll(urlPath, "{operationsAgentId}", url.PathEscape(operationsAgentID))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -547,14 +553,14 @@ func (client *ItemsClient) updateOperationsAgentDefinitionCreateRequest(ctx cont
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// To create OperationsAgent with a definition, refer to OperationsAgent [/rest/api/fabric/articles/item-management/definitions/operationsagent-definition] article.
+// To create an OperationsAgent with a definition, refer to OperationsAgent [/rest/api/fabric/articles/item-management/definitions/operations-agent-definition] article.
 //
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 //
 // LIMITATIONS
 //
-//   - To create a OperationsAgent the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric license types
+//   - To create an OperationsAgent the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric license types
 //     [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.

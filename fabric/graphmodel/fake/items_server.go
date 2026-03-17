@@ -34,9 +34,9 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	DeleteGraphModel func(ctx context.Context, workspaceID string, graphModelID string, options *graphmodel.ItemsClientDeleteGraphModelOptions) (resp azfake.Responder[graphmodel.ItemsClientDeleteGraphModelResponse], errResp azfake.ErrorResponder)
 
-	// ExecuteQueryPreview is the fake for method ItemsClient.ExecuteQueryPreview
+	// ExecuteQueryBeta is the fake for method ItemsClient.ExecuteQueryBeta
 	// HTTP status codes to indicate success: http.StatusOK
-	ExecuteQueryPreview func(ctx context.Context, workspaceID string, graphModelID string, beta bool, createQueryResultRequest graphmodel.ExecuteQueryRequest, options *graphmodel.ItemsClientExecuteQueryPreviewOptions) (resp azfake.Responder[graphmodel.ItemsClientExecuteQueryPreviewResponse], errResp azfake.ErrorResponder)
+	ExecuteQueryBeta func(ctx context.Context, workspaceID string, graphModelID string, beta bool, createQueryResultRequest graphmodel.ExecuteQueryRequest, options *graphmodel.ItemsClientExecuteQueryBetaOptions) (resp azfake.Responder[graphmodel.ItemsClientExecuteQueryBetaResponse], errResp azfake.ErrorResponder)
 
 	// GetGraphModel is the fake for method ItemsClient.GetGraphModel
 	// HTTP status codes to indicate success: http.StatusOK
@@ -46,9 +46,9 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
 	BeginGetGraphModelDefinition func(ctx context.Context, workspaceID string, graphModelID string, options *graphmodel.ItemsClientBeginGetGraphModelDefinitionOptions) (resp azfake.PollerResponder[graphmodel.ItemsClientGetGraphModelDefinitionResponse], errResp azfake.ErrorResponder)
 
-	// GetQueryableGraphTypePreview is the fake for method ItemsClient.GetQueryableGraphTypePreview
+	// GetQueryableGraphTypeBeta is the fake for method ItemsClient.GetQueryableGraphTypeBeta
 	// HTTP status codes to indicate success: http.StatusOK
-	GetQueryableGraphTypePreview func(ctx context.Context, workspaceID string, graphModelID string, beta bool, options *graphmodel.ItemsClientGetQueryableGraphTypePreviewOptions) (resp azfake.Responder[graphmodel.ItemsClientGetQueryableGraphTypePreviewResponse], errResp azfake.ErrorResponder)
+	GetQueryableGraphTypeBeta func(ctx context.Context, workspaceID string, graphModelID string, beta bool, options *graphmodel.ItemsClientGetQueryableGraphTypeBetaOptions) (resp azfake.Responder[graphmodel.ItemsClientGetQueryableGraphTypeBetaResponse], errResp azfake.ErrorResponder)
 
 	// NewListGraphModelsPager is the fake for method ItemsClient.NewListGraphModelsPager
 	// HTTP status codes to indicate success: http.StatusOK
@@ -115,14 +115,14 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 				res.resp, res.err = i.dispatchBeginCreateGraphModel(req)
 			case "ItemsClient.DeleteGraphModel":
 				res.resp, res.err = i.dispatchDeleteGraphModel(req)
-			case "ItemsClient.ExecuteQueryPreview":
-				res.resp, res.err = i.dispatchExecuteQueryPreview(req)
+			case "ItemsClient.ExecuteQueryBeta":
+				res.resp, res.err = i.dispatchExecuteQueryBeta(req)
 			case "ItemsClient.GetGraphModel":
 				res.resp, res.err = i.dispatchGetGraphModel(req)
 			case "ItemsClient.BeginGetGraphModelDefinition":
 				res.resp, res.err = i.dispatchBeginGetGraphModelDefinition(req)
-			case "ItemsClient.GetQueryableGraphTypePreview":
-				res.resp, res.err = i.dispatchGetQueryableGraphTypePreview(req)
+			case "ItemsClient.GetQueryableGraphTypeBeta":
+				res.resp, res.err = i.dispatchGetQueryableGraphTypeBeta(req)
 			case "ItemsClient.NewListGraphModelsPager":
 				res.resp, res.err = i.dispatchNewListGraphModelsPager(req)
 			case "ItemsClient.UpdateGraphModel":
@@ -154,7 +154,7 @@ func (i *ItemsServerTransport) dispatchBeginCreateGraphModel(req *http.Request) 
 	}
 	beginCreateGraphModel := i.beginCreateGraphModel.get(req)
 	if beginCreateGraphModel == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphModels`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphModels`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 2 {
@@ -196,7 +196,7 @@ func (i *ItemsServerTransport) dispatchDeleteGraphModel(req *http.Request) (*htt
 	if i.srv.DeleteGraphModel == nil {
 		return nil, &nonRetriableError{errors.New("fake for method DeleteGraphModel not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphModels/(?P<GraphModelId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphModels/(?P<graphModelId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -206,7 +206,7 @@ func (i *ItemsServerTransport) dispatchDeleteGraphModel(req *http.Request) (*htt
 	if err != nil {
 		return nil, err
 	}
-	graphModelIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("GraphModelId")])
+	graphModelIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("graphModelId")])
 	if err != nil {
 		return nil, err
 	}
@@ -225,11 +225,11 @@ func (i *ItemsServerTransport) dispatchDeleteGraphModel(req *http.Request) (*htt
 	return resp, nil
 }
 
-func (i *ItemsServerTransport) dispatchExecuteQueryPreview(req *http.Request) (*http.Response, error) {
-	if i.srv.ExecuteQueryPreview == nil {
-		return nil, &nonRetriableError{errors.New("fake for method ExecuteQueryPreview not implemented")}
+func (i *ItemsServerTransport) dispatchExecuteQueryBeta(req *http.Request) (*http.Response, error) {
+	if i.srv.ExecuteQueryBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method ExecuteQueryBeta not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphModels/(?P<GraphModelId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/executeQuery`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphModels/(?P<graphModelId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/executeQuery`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -244,7 +244,7 @@ func (i *ItemsServerTransport) dispatchExecuteQueryPreview(req *http.Request) (*
 	if err != nil {
 		return nil, err
 	}
-	graphModelIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("GraphModelId")])
+	graphModelIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("graphModelId")])
 	if err != nil {
 		return nil, err
 	}
@@ -256,7 +256,7 @@ func (i *ItemsServerTransport) dispatchExecuteQueryPreview(req *http.Request) (*
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := i.srv.ExecuteQueryPreview(req.Context(), workspaceIDParam, graphModelIDParam, betaParam, body, nil)
+	respr, errRespr := i.srv.ExecuteQueryBeta(req.Context(), workspaceIDParam, graphModelIDParam, betaParam, body, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -278,7 +278,7 @@ func (i *ItemsServerTransport) dispatchGetGraphModel(req *http.Request) (*http.R
 	if i.srv.GetGraphModel == nil {
 		return nil, &nonRetriableError{errors.New("fake for method GetGraphModel not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphModels/(?P<GraphModelId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphModels/(?P<graphModelId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -288,7 +288,7 @@ func (i *ItemsServerTransport) dispatchGetGraphModel(req *http.Request) (*http.R
 	if err != nil {
 		return nil, err
 	}
-	graphModelIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("GraphModelId")])
+	graphModelIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("graphModelId")])
 	if err != nil {
 		return nil, err
 	}
@@ -313,7 +313,7 @@ func (i *ItemsServerTransport) dispatchBeginGetGraphModelDefinition(req *http.Re
 	}
 	beginGetGraphModelDefinition := i.beginGetGraphModelDefinition.get(req)
 	if beginGetGraphModelDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphModels/(?P<GraphModelId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphModels/(?P<graphModelId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
@@ -324,7 +324,7 @@ func (i *ItemsServerTransport) dispatchBeginGetGraphModelDefinition(req *http.Re
 		if err != nil {
 			return nil, err
 		}
-		graphModelIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("GraphModelId")])
+		graphModelIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("graphModelId")])
 		if err != nil {
 			return nil, err
 		}
@@ -363,11 +363,11 @@ func (i *ItemsServerTransport) dispatchBeginGetGraphModelDefinition(req *http.Re
 	return resp, nil
 }
 
-func (i *ItemsServerTransport) dispatchGetQueryableGraphTypePreview(req *http.Request) (*http.Response, error) {
-	if i.srv.GetQueryableGraphTypePreview == nil {
-		return nil, &nonRetriableError{errors.New("fake for method GetQueryableGraphTypePreview not implemented")}
+func (i *ItemsServerTransport) dispatchGetQueryableGraphTypeBeta(req *http.Request) (*http.Response, error) {
+	if i.srv.GetQueryableGraphTypeBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetQueryableGraphTypeBeta not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphModels/(?P<GraphModelId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getQueryableGraphType`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphModels/(?P<graphModelId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getQueryableGraphType`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -378,7 +378,7 @@ func (i *ItemsServerTransport) dispatchGetQueryableGraphTypePreview(req *http.Re
 	if err != nil {
 		return nil, err
 	}
-	graphModelIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("GraphModelId")])
+	graphModelIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("graphModelId")])
 	if err != nil {
 		return nil, err
 	}
@@ -390,7 +390,7 @@ func (i *ItemsServerTransport) dispatchGetQueryableGraphTypePreview(req *http.Re
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := i.srv.GetQueryableGraphTypePreview(req.Context(), workspaceIDParam, graphModelIDParam, betaParam, nil)
+	respr, errRespr := i.srv.GetQueryableGraphTypeBeta(req.Context(), workspaceIDParam, graphModelIDParam, betaParam, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -411,7 +411,7 @@ func (i *ItemsServerTransport) dispatchNewListGraphModelsPager(req *http.Request
 	}
 	newListGraphModelsPager := i.newListGraphModelsPager.get(req)
 	if newListGraphModelsPager == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphModels`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphModels`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 2 {
@@ -422,14 +422,29 @@ func (i *ItemsServerTransport) dispatchNewListGraphModelsPager(req *http.Request
 		if err != nil {
 			return nil, err
 		}
+		recursiveUnescaped, err := url.QueryUnescape(qp.Get("recursive"))
+		if err != nil {
+			return nil, err
+		}
+		recursiveParam, err := parseOptional(recursiveUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDUnescaped, err := url.QueryUnescape(qp.Get("rootFolderId"))
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDParam := getOptional(rootFolderIDUnescaped)
 		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
 		if err != nil {
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
 		var options *graphmodel.ItemsClientListGraphModelsOptions
-		if continuationTokenParam != nil {
+		if recursiveParam != nil || rootFolderIDParam != nil || continuationTokenParam != nil {
 			options = &graphmodel.ItemsClientListGraphModelsOptions{
+				Recursive:         recursiveParam,
+				RootFolderID:      rootFolderIDParam,
 				ContinuationToken: continuationTokenParam,
 			}
 		}
@@ -458,7 +473,7 @@ func (i *ItemsServerTransport) dispatchUpdateGraphModel(req *http.Request) (*htt
 	if i.srv.UpdateGraphModel == nil {
 		return nil, &nonRetriableError{errors.New("fake for method UpdateGraphModel not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphModels/(?P<GraphModelId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphModels/(?P<graphModelId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -472,7 +487,7 @@ func (i *ItemsServerTransport) dispatchUpdateGraphModel(req *http.Request) (*htt
 	if err != nil {
 		return nil, err
 	}
-	graphModelIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("GraphModelId")])
+	graphModelIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("graphModelId")])
 	if err != nil {
 		return nil, err
 	}
@@ -497,7 +512,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateGraphModelDefinition(req *http
 	}
 	beginUpdateGraphModelDefinition := i.beginUpdateGraphModelDefinition.get(req)
 	if beginUpdateGraphModelDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphModels/(?P<GraphModelId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphModels/(?P<graphModelId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
@@ -512,7 +527,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateGraphModelDefinition(req *http
 		if err != nil {
 			return nil, err
 		}
-		graphModelIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("GraphModelId")])
+		graphModelIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("graphModelId")])
 		if err != nil {
 			return nil, err
 		}

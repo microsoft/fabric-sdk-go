@@ -32,12 +32,12 @@ type ItemsClient struct {
 
 // BeginCreateEventSchemaSet - > [!NOTE] EventSchemaSets item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create an EventSchemaSet with a public definition, refer to EventSchemaSet [/rest/api/fabric/articles/item-management/definitions/event-schema-set]
+// To create an EventSchemaSet with a public definition, refer to EventSchemaSet [/rest/api/fabric/articles/item-management/definitions/eventschemaset-definition]
 // article.
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
-// * To create a EventSchemaSet the workspace must be on a supported Fabric capacity. For more information see: Microsoft
+// * To create an EventSchemaSet the workspace must be on a supported Fabric capacity. For more information see: Microsoft
 // Fabric license types
 // [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -59,12 +59,12 @@ func (client *ItemsClient) BeginCreateEventSchemaSet(ctx context.Context, worksp
 
 // CreateEventSchemaSet - > [!NOTE] EventSchemaSets item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create an EventSchemaSet with a public definition, refer to EventSchemaSet [/rest/api/fabric/articles/item-management/definitions/event-schema-set]
+// To create an EventSchemaSet with a public definition, refer to EventSchemaSet [/rest/api/fabric/articles/item-management/definitions/eventschemaset-definition]
 // article.
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
-// * To create a EventSchemaSet the workspace must be on a supported Fabric capacity. For more information see: Microsoft
+// * To create an EventSchemaSet the workspace must be on a supported Fabric capacity. For more information see: Microsoft
 // Fabric license types
 // [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -154,7 +154,7 @@ func (client *ItemsClient) DeleteEventSchemaSet(ctx context.Context, workspaceID
 
 // deleteEventSchemaSetCreateRequest creates the DeleteEventSchemaSet request.
 func (client *ItemsClient) deleteEventSchemaSetCreateRequest(ctx context.Context, workspaceID string, eventSchemaSetID string, _ *ItemsClientDeleteEventSchemaSetOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/EventSchemaSets/{EventSchemaSetId}"
+	urlPath := "/v1/workspaces/{workspaceId}/eventSchemaSets/{eventSchemaSetId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -162,7 +162,7 @@ func (client *ItemsClient) deleteEventSchemaSetCreateRequest(ctx context.Context
 	if eventSchemaSetID == "" {
 		return nil, errors.New("parameter eventSchemaSetID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{EventSchemaSetId}", url.PathEscape(eventSchemaSetID))
+	urlPath = strings.ReplaceAll(urlPath, "{eventSchemaSetId}", url.PathEscape(eventSchemaSetID))
 	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -210,7 +210,7 @@ func (client *ItemsClient) GetEventSchemaSet(ctx context.Context, workspaceID st
 
 // getEventSchemaSetCreateRequest creates the GetEventSchemaSet request.
 func (client *ItemsClient) getEventSchemaSetCreateRequest(ctx context.Context, workspaceID string, eventSchemaSetID string, _ *ItemsClientGetEventSchemaSetOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/EventSchemaSets/{EventSchemaSetId}"
+	urlPath := "/v1/workspaces/{workspaceId}/eventSchemaSets/{eventSchemaSetId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -218,7 +218,7 @@ func (client *ItemsClient) getEventSchemaSetCreateRequest(ctx context.Context, w
 	if eventSchemaSetID == "" {
 		return nil, errors.New("parameter eventSchemaSetID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{EventSchemaSetId}", url.PathEscape(eventSchemaSetID))
+	urlPath = strings.ReplaceAll(urlPath, "{eventSchemaSetId}", url.PathEscape(eventSchemaSetID))
 	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -295,7 +295,7 @@ func (client *ItemsClient) getEventSchemaSetDefinition(ctx context.Context, work
 
 // getEventSchemaSetDefinitionCreateRequest creates the GetEventSchemaSetDefinition request.
 func (client *ItemsClient) getEventSchemaSetDefinitionCreateRequest(ctx context.Context, workspaceID string, eventSchemaSetID string, options *ItemsClientBeginGetEventSchemaSetDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/EventSchemaSets/{EventSchemaSetId}/getDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/eventSchemaSets/{eventSchemaSetId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -303,7 +303,7 @@ func (client *ItemsClient) getEventSchemaSetDefinitionCreateRequest(ctx context.
 	if eventSchemaSetID == "" {
 		return nil, errors.New("parameter eventSchemaSetID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{EventSchemaSetId}", url.PathEscape(eventSchemaSetID))
+	urlPath = strings.ReplaceAll(urlPath, "{eventSchemaSetId}", url.PathEscape(eventSchemaSetID))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -370,6 +370,12 @@ func (client *ItemsClient) listEventSchemaSetsCreateRequest(ctx context.Context,
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
 	}
+	if options != nil && options.Recursive != nil {
+		reqQP.Set("recursive", strconv.FormatBool(*options.Recursive))
+	}
+	if options != nil && options.RootFolderID != nil {
+		reqQP.Set("rootFolderId", *options.RootFolderID)
+	}
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
@@ -425,7 +431,7 @@ func (client *ItemsClient) UpdateEventSchemaSet(ctx context.Context, workspaceID
 
 // updateEventSchemaSetCreateRequest creates the UpdateEventSchemaSet request.
 func (client *ItemsClient) updateEventSchemaSetCreateRequest(ctx context.Context, workspaceID string, eventSchemaSetID string, updateEventSchemaSetRequest UpdateEventSchemaSetRequest, _ *ItemsClientUpdateEventSchemaSetOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/EventSchemaSets/{EventSchemaSetId}"
+	urlPath := "/v1/workspaces/{workspaceId}/eventSchemaSets/{eventSchemaSetId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -433,7 +439,7 @@ func (client *ItemsClient) updateEventSchemaSetCreateRequest(ctx context.Context
 	if eventSchemaSetID == "" {
 		return nil, errors.New("parameter eventSchemaSetID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{EventSchemaSetId}", url.PathEscape(eventSchemaSetID))
+	urlPath = strings.ReplaceAll(urlPath, "{eventSchemaSetId}", url.PathEscape(eventSchemaSetID))
 	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -514,7 +520,7 @@ func (client *ItemsClient) updateEventSchemaSetDefinition(ctx context.Context, w
 
 // updateEventSchemaSetDefinitionCreateRequest creates the UpdateEventSchemaSetDefinition request.
 func (client *ItemsClient) updateEventSchemaSetDefinitionCreateRequest(ctx context.Context, workspaceID string, eventSchemaSetID string, updateEventSchemaSetDefinitionRequest UpdateEventSchemaSetDefinitionRequest, options *ItemsClientBeginUpdateEventSchemaSetDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/EventSchemaSets/{EventSchemaSetId}/updateDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/eventSchemaSets/{eventSchemaSetId}/updateDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -522,7 +528,7 @@ func (client *ItemsClient) updateEventSchemaSetDefinitionCreateRequest(ctx conte
 	if eventSchemaSetID == "" {
 		return nil, errors.New("parameter eventSchemaSetID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{EventSchemaSetId}", url.PathEscape(eventSchemaSetID))
+	urlPath = strings.ReplaceAll(urlPath, "{eventSchemaSetId}", url.PathEscape(eventSchemaSetID))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -546,14 +552,14 @@ func (client *ItemsClient) updateEventSchemaSetDefinitionCreateRequest(ctx conte
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// To create an EventSchemaSet with a public definition, refer to EventSchemaSet [/rest/api/fabric/articles/item-management/definitions/event-schema-set] article.
+// To create an EventSchemaSet with a public definition, refer to EventSchemaSet [/rest/api/fabric/articles/item-management/definitions/eventschemaset-definition] article.
 //
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 //
 // LIMITATIONS
 //
-//   - To create a EventSchemaSet the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric license types
+//   - To create an EventSchemaSet the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric license types
 //     [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.

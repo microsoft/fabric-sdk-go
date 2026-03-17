@@ -27,7 +27,10 @@ func ExampleItemsClient_NewListPaginatedReportsPager() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewItemsClient().NewListPaginatedReportsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &paginatedreport.ItemsClientListPaginatedReportsOptions{ContinuationToken: nil})
+	pager := clientFactory.NewItemsClient().NewListPaginatedReportsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &paginatedreport.ItemsClientListPaginatedReportsOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
 		if err != nil {
@@ -45,6 +48,9 @@ func ExampleItemsClient_NewListPaginatedReportsPager() {
 		// 			Description: to.Ptr("A paginated report description."),
 		// 			DisplayName: to.Ptr("PaginatedReport Name 1"),
 		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+		// 			SensitivityLabel: &paginatedreport.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 	}},
 		// }

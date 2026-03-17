@@ -93,7 +93,7 @@ func (b *BackgroundJobsServerTransport) dispatchRunOnDemandRefreshGraph(req *htt
 	if b.srv.RunOnDemandRefreshGraph == nil {
 		return nil, &nonRetriableError{errors.New("fake for method RunOnDemandRefreshGraph not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphModels/(?P<GraphModelId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/RefreshGraph/instances`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphModels/(?P<graphModelId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/refreshGraph/instances`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -103,7 +103,7 @@ func (b *BackgroundJobsServerTransport) dispatchRunOnDemandRefreshGraph(req *htt
 	if err != nil {
 		return nil, err
 	}
-	graphModelIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("GraphModelId")])
+	graphModelIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("graphModelId")])
 	if err != nil {
 		return nil, err
 	}

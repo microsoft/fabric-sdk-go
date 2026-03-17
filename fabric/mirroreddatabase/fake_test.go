@@ -71,6 +71,9 @@ func (testsuite *FakeTestSuite) TestItems_ListMirroredDatabases() {
 				Description: to.Ptr("A mirrored database description."),
 				DisplayName: to.Ptr("Mirrored database 1"),
 				ID:          to.Ptr("b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2"),
+				SensitivityLabel: &mirroreddatabase.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"),
 				Properties: &mirroreddatabase.Properties{
 					DefaultSchema:     to.Ptr("dbo"),
@@ -92,7 +95,10 @@ func (testsuite *FakeTestSuite) TestItems_ListMirroredDatabases() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	pager := client.NewListMirroredDatabasesPager(exampleWorkspaceID, &mirroreddatabase.ItemsClientListMirroredDatabasesOptions{ContinuationToken: nil})
+	pager := client.NewListMirroredDatabasesPager(exampleWorkspaceID, &mirroreddatabase.ItemsClientListMirroredDatabasesOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")
@@ -152,6 +158,9 @@ func (testsuite *FakeTestSuite) TestItems_GetMirroredDatabase() {
 		Description: to.Ptr("A mirrored database description."),
 		DisplayName: to.Ptr("Mirrored database 1"),
 		ID:          to.Ptr("b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2"),
+		SensitivityLabel: &mirroreddatabase.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"),
 		Properties: &mirroreddatabase.Properties{
 			DefaultSchema:     to.Ptr("dbo"),

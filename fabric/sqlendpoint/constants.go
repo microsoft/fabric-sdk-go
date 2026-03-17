@@ -38,6 +38,8 @@ const (
 	ItemTypeCosmosDBDatabase ItemType = "CosmosDBDatabase"
 	// ItemTypeDashboard - PowerBI dashboard.
 	ItemTypeDashboard ItemType = "Dashboard"
+	// ItemTypeDataAgent - A DataAgent.
+	ItemTypeDataAgent ItemType = "DataAgent"
 	// ItemTypeDataPipeline - A data pipeline.
 	ItemTypeDataPipeline ItemType = "DataPipeline"
 	// ItemTypeDataflow - A Dataflow.
@@ -124,6 +126,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeCopyJob,
 		ItemTypeCosmosDBDatabase,
 		ItemTypeDashboard,
+		ItemTypeDataAgent,
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
 		ItemTypeDatamart,

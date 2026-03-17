@@ -646,7 +646,7 @@ func ExampleConnectionsClient_NewListConnectionRoleAssignmentsPager_listConnecti
 		// 	Value: []core.ConnectionRoleAssignment{
 		// 		{
 		// 			ID: to.Ptr("1c15c348-dd88-4065-8f25-57581c216bcf"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.UserPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				ID: to.Ptr("1c15c348-dd88-4065-8f25-57581c216bcf"),
 		// 			},
@@ -654,7 +654,7 @@ func ExampleConnectionsClient_NewListConnectionRoleAssignmentsPager_listConnecti
 		// 		},
 		// 		{
 		// 			ID: to.Ptr("d3a7dbf7-6641-48f2-851e-d71bbf9d90c4"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.GroupPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeGroup),
 		// 				ID: to.Ptr("d3a7dbf7-6641-48f2-851e-d71bbf9d90c4"),
 		// 			},
@@ -662,7 +662,7 @@ func ExampleConnectionsClient_NewListConnectionRoleAssignmentsPager_listConnecti
 		// 		},
 		// 		{
 		// 			ID: to.Ptr("48ba22da-4431-4da4-8b70-3401685bf9e5"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.GroupPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeGroup),
 		// 				ID: to.Ptr("48ba22da-4431-4da4-8b70-3401685bf9e5"),
 		// 			},
@@ -670,7 +670,7 @@ func ExampleConnectionsClient_NewListConnectionRoleAssignmentsPager_listConnecti
 		// 		},
 		// 		{
 		// 			ID: to.Ptr("1dfa1747-ce76-4caf-99c8-360b95f9f17a"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.UserPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				ID: to.Ptr("1dfa1747-ce76-4caf-99c8-360b95f9f17a"),
 		// 			},
@@ -708,7 +708,7 @@ func ExampleConnectionsClient_NewListConnectionRoleAssignmentsPager_listConnecti
 		// 	Value: []core.ConnectionRoleAssignment{
 		// 		{
 		// 			ID: to.Ptr("1c15c348-dd88-4065-8f25-57581c216bcf"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.UserPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				ID: to.Ptr("1c15c348-dd88-4065-8f25-57581c216bcf"),
 		// 			},
@@ -716,7 +716,7 @@ func ExampleConnectionsClient_NewListConnectionRoleAssignmentsPager_listConnecti
 		// 		},
 		// 		{
 		// 			ID: to.Ptr("d3a7dbf7-6641-48f2-851e-d71bbf9d90c4"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.GroupPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeGroup),
 		// 				ID: to.Ptr("d3a7dbf7-6641-48f2-851e-d71bbf9d90c4"),
 		// 			},
@@ -724,7 +724,7 @@ func ExampleConnectionsClient_NewListConnectionRoleAssignmentsPager_listConnecti
 		// 		},
 		// 		{
 		// 			ID: to.Ptr("48ba22da-4431-4da4-8b70-3401685bf9e5"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.GroupPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeGroup),
 		// 				ID: to.Ptr("48ba22da-4431-4da4-8b70-3401685bf9e5"),
 		// 			},
@@ -732,7 +732,7 @@ func ExampleConnectionsClient_NewListConnectionRoleAssignmentsPager_listConnecti
 		// 		},
 		// 		{
 		// 			ID: to.Ptr("1dfa1747-ce76-4caf-99c8-360b95f9f17a"),
-		// 			Principal: &core.Principal{
+		// 			Principal: &core.UserPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				ID: to.Ptr("1dfa1747-ce76-4caf-99c8-360b95f9f17a"),
 		// 			},
@@ -754,7 +754,7 @@ func ExampleConnectionsClient_AddConnectionRoleAssignment() {
 		log.Fatalf("failed to create client: %v", err)
 	}
 	_, err = clientFactory.NewConnectionsClient().AddConnectionRoleAssignment(ctx, "f3a2e6af-d048-4f85-94d9-b3d16140df05", core.AddConnectionRoleAssignmentRequest{
-		Principal: &core.Principal{
+		Principal: &core.UserPrincipal{
 			Type: to.Ptr(core.PrincipalTypeUser),
 			ID:   to.Ptr("6a002b3d-e4ec-43df-8c08-e8eb7547d9dd"),
 		},
@@ -785,7 +785,7 @@ func ExampleConnectionsClient_GetConnectionRoleAssignment() {
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
 	// res.ConnectionRoleAssignment = core.ConnectionRoleAssignment{
 	// 	ID: to.Ptr("43970761-afc9-4428-ae6e-3b08bef098ff"),
-	// 	Principal: &core.Principal{
+	// 	Principal: &core.UserPrincipal{
 	// 		Type: to.Ptr(core.PrincipalTypeUser),
 	// 		ID: to.Ptr("43970761-afc9-4428-ae6e-3b08bef098ff"),
 	// 	},
@@ -815,7 +815,7 @@ func ExampleConnectionsClient_UpdateConnectionRoleAssignment() {
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
 	// res.ConnectionRoleAssignment = core.ConnectionRoleAssignment{
 	// 	ID: to.Ptr("43970761-afc9-4428-ae6e-3b08bef098ff"),
-	// 	Principal: &core.Principal{
+	// 	Principal: &core.UserPrincipal{
 	// 		Type: to.Ptr(core.PrincipalTypeUser),
 	// 		ID: to.Ptr("43970761-afc9-4428-ae6e-3b08bef098ff"),
 	// 	},

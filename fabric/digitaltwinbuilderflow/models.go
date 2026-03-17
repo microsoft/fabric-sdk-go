@@ -19,6 +19,9 @@ type CreateDigitalTwinBuilderFlowRequest struct {
 
 	// The Digital Twin Builder Flow description. Maximum length is 256 characters.
 	Description *string
+
+	// The sensitivity label settings for the Digital Twin Builder Flow.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // CreationPayload - The Digital Twin Builder Flow creation payload.
@@ -30,8 +33,8 @@ type CreationPayload struct {
 // DefinitionResponse - The Digital Twin Builder Flow public definition response.
 type DefinitionResponse struct {
 	// READ-ONLY; The Digital Twin Builder Flow public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/digital-twin-builder-flow-definition]
-	// for more details on how to
-	// craft a Digital Twin Builder Flow public definition.
+	// for more details on the
+	// structure of the Digital Twin Builder Flow definition.
 	Definition *PublicDefinition
 }
 
@@ -54,6 +57,9 @@ type DigitalTwinBuilderFlow struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
 
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
@@ -102,6 +108,24 @@ func (i *ItemReferenceByID) GetItemReference() *ItemReference {
 	}
 }
 
+// ItemReferenceByVariable - An item reference by variable.
+type ItemReferenceByVariable struct {
+	// REQUIRED; The item reference type.
+	ReferenceType *ItemReferenceType
+
+	// REQUIRED; A variable reference string that specifies the Variable Library and the variable name inside it. Format: $(/**/_VarLibrary_/_VarName_)
+	// for a Variable Library named VarLibrary and a variable named
+	// VarName.
+	VariableReference *string
+}
+
+// GetItemReference implements the ItemReferenceClassification interface for type ItemReferenceByVariable.
+func (i *ItemReferenceByVariable) GetItemReference() *ItemReference {
+	return &ItemReference{
+		ReferenceType: i.ReferenceType,
+	}
+}
+
 // ItemTag - Represents a tag applied on an item.
 type ItemTag struct {
 	// REQUIRED; The name of the tag.
@@ -118,8 +142,8 @@ type Properties struct {
 }
 
 // PublicDefinition - The Digital Twin Builder Flow public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/digital-twin-builder-flow-definition]
-// for more details on how to
-// craft a Digital Twin Builder Flow public definition.
+// for more details on the
+// structure of the Digital Twin Builder Flow definition.
 type PublicDefinition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []PublicDefinitionPart
@@ -137,11 +161,26 @@ type PublicDefinitionPart struct {
 	PayloadType *PayloadType
 }
 
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
 // UpdateDigitalTwinBuilderFlowDefinitionRequest - Update Digital Twin Builder Flow public definition request payload.
 type UpdateDigitalTwinBuilderFlowDefinitionRequest struct {
 	// REQUIRED; The Digital Twin Builder Flow public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/digital-twin-builder-flow-definition]
-	// for more details on how to
-	// craft a Digital Twin Builder Flow public definition.
+	// for more details on the
+	// structure of the Digital Twin Builder Flow definition.
 	Definition *PublicDefinition
 }
 

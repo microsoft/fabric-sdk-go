@@ -11,6 +11,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -92,7 +93,7 @@ func (client *ItemsClient) createWarehouseSnapshot(ctx context.Context, workspac
 
 // createWarehouseSnapshotCreateRequest creates the CreateWarehouseSnapshot request.
 func (client *ItemsClient) createWarehouseSnapshotCreateRequest(ctx context.Context, workspaceID string, createWarehouseSnapshotRequest CreateWarehouseSnapshotRequest, _ *ItemsClientBeginCreateWarehouseSnapshotOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/warehousesnapshots"
+	urlPath := "/v1/workspaces/{workspaceId}/warehouseSnapshots"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -146,7 +147,7 @@ func (client *ItemsClient) DeleteWarehouseSnapshot(ctx context.Context, workspac
 
 // deleteWarehouseSnapshotCreateRequest creates the DeleteWarehouseSnapshot request.
 func (client *ItemsClient) deleteWarehouseSnapshotCreateRequest(ctx context.Context, workspaceID string, warehouseSnapshotID string, _ *ItemsClientDeleteWarehouseSnapshotOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/warehousesnapshots/{warehouseSnapshotId}"
+	urlPath := "/v1/workspaces/{workspaceId}/warehouseSnapshots/{warehouseSnapshotId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -202,7 +203,7 @@ func (client *ItemsClient) GetWarehouseSnapshot(ctx context.Context, workspaceID
 
 // getWarehouseSnapshotCreateRequest creates the GetWarehouseSnapshot request.
 func (client *ItemsClient) getWarehouseSnapshotCreateRequest(ctx context.Context, workspaceID string, warehouseSnapshotID string, _ *ItemsClientGetWarehouseSnapshotOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/warehousesnapshots/{warehouseSnapshotId}"
+	urlPath := "/v1/workspaces/{workspaceId}/warehouseSnapshots/{warehouseSnapshotId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -267,7 +268,7 @@ func (client *ItemsClient) NewListWarehouseSnapshotsPager(workspaceID string, op
 
 // listWarehouseSnapshotsCreateRequest creates the ListWarehouseSnapshots request.
 func (client *ItemsClient) listWarehouseSnapshotsCreateRequest(ctx context.Context, workspaceID string, options *ItemsClientListWarehouseSnapshotsOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/warehousesnapshots"
+	urlPath := "/v1/workspaces/{workspaceId}/warehouseSnapshots"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -279,6 +280,12 @@ func (client *ItemsClient) listWarehouseSnapshotsCreateRequest(ctx context.Conte
 	reqQP := req.Raw().URL.Query()
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	if options != nil && options.Recursive != nil {
+		reqQP.Set("recursive", strconv.FormatBool(*options.Recursive))
+	}
+	if options != nil && options.RootFolderID != nil {
+		reqQP.Set("rootFolderId", *options.RootFolderID)
 	}
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
@@ -334,7 +341,7 @@ func (client *ItemsClient) UpdateWarehouseSnapshot(ctx context.Context, workspac
 
 // updateWarehouseSnapshotCreateRequest creates the UpdateWarehouseSnapshot request.
 func (client *ItemsClient) updateWarehouseSnapshotCreateRequest(ctx context.Context, workspaceID string, warehouseSnapshotID string, updateWarehouseSnapshotRequest UpdateWarehouseSnapshotRequest, _ *ItemsClientUpdateWarehouseSnapshotOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/warehousesnapshots/{warehouseSnapshotId}"
+	urlPath := "/v1/workspaces/{workspaceId}/warehouseSnapshots/{warehouseSnapshotId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}

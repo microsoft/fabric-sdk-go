@@ -67,6 +67,9 @@ type CreateDataflowRequest struct {
 
 	// The folder ID. If not specified or null, the Dataflow is created with the workspace as its folder.
 	FolderID *string
+
+	// The sensitivity label settings for the Dataflow.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 type CronScheduleConfig struct {
@@ -143,6 +146,9 @@ type Dataflow struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
 
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
@@ -269,7 +275,7 @@ func (d *DayOfMonth) GetMonthlyOccurrence() *MonthlyOccurrence {
 }
 
 // Definition - Dataflow public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/dataflow-definition]
-// for more details on how to craft a Dataflow public definition.
+// for more details on the structure of the Dataflow definition.
 type Definition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []DefinitionPart
@@ -290,7 +296,7 @@ type DefinitionPart struct {
 // DefinitionResponse - Dataflow public definition response.
 type DefinitionResponse struct {
 	// READ-ONLY; Dataflow public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/dataflow-definition]
-	// for more details on how to craft a Dataflow public definition.
+	// for more details on the structure of the Dataflow definition.
 	Definition *Definition
 }
 
@@ -324,6 +330,27 @@ func (d *DurationParameter) GetParameter() *Parameter {
 	}
 }
 
+// EntireTenantPrincipal - Represents a tenant principal
+type EntireTenantPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type EntireTenantPrincipal.
+func (e *EntireTenantPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: e.DisplayName,
+		ID:          e.ID,
+		Type:        e.Type,
+	}
+}
+
 // ExecuteQueryRequest - Request payload for executing a query against a dataflow.
 type ExecuteQueryRequest struct {
 	// REQUIRED; The name of the query to execute from the dataflow (or from the custom mashup document if provided).
@@ -340,6 +367,36 @@ type ExecutionPayload struct {
 
 	// A list of parameters to override during execution.
 	Parameters []ItemJobParameter
+}
+
+// GroupPrincipal - Represents a security group.
+type GroupPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// Group specific details. Applicable when the principal type is Group.
+	GroupDetails *GroupPrincipalGroupDetails
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type GroupPrincipal.
+func (g *GroupPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: g.DisplayName,
+		ID:          g.ID,
+		Type:        g.Type,
+	}
+}
+
+// GroupPrincipalGroupDetails - Group specific details. Applicable when the principal type is Group.
+type GroupPrincipalGroupDetails struct {
+	// The type of the group. Additional group types may be added over time.
+	GroupType *GroupType
 }
 
 // IntegerParameter - A Dataflow parameter of type Long.
@@ -521,45 +578,12 @@ type Principal struct {
 	// REQUIRED; The type of the principal. Additional principal types may be added over time.
 	Type *PrincipalType
 
-	// Group specific details. Applicable when the principal type is Group.
-	GroupDetails *PrincipalGroupDetails
-
-	// Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
-	ServicePrincipalProfileDetails *PrincipalServicePrincipalProfileDetails
-
 	// READ-ONLY; The principal's display name.
 	DisplayName *string
-
-	// READ-ONLY; Service principal specific details. Applicable when the principal type is ServicePrincipal.
-	ServicePrincipalDetails *PrincipalServicePrincipalDetails
-
-	// READ-ONLY; User principal specific details. Applicable when the principal type is User.
-	UserDetails *PrincipalUserDetails
 }
 
-// PrincipalGroupDetails - Group specific details. Applicable when the principal type is Group.
-type PrincipalGroupDetails struct {
-	// The type of the group. Additional group types may be added over time.
-	GroupType *GroupType
-}
-
-// PrincipalServicePrincipalDetails - Service principal specific details. Applicable when the principal type is ServicePrincipal.
-type PrincipalServicePrincipalDetails struct {
-	// READ-ONLY; The service principal's Microsoft Entra AppId.
-	AADAppID *string
-}
-
-// PrincipalServicePrincipalProfileDetails - Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
-type PrincipalServicePrincipalProfileDetails struct {
-	// The service principal profile's parent principal.
-	ParentPrincipal *Principal
-}
-
-// PrincipalUserDetails - User principal specific details. Applicable when the principal type is User.
-type PrincipalUserDetails struct {
-	// READ-ONLY; The user principal name.
-	UserPrincipalName *string
-}
+// GetPrincipal implements the PrincipalClassification interface for type Principal.
+func (p *Principal) GetPrincipal() *Principal { return p }
 
 // RunOnDemandDataflowExecuteJobRequest - Run on demand execute dataflow job instance payload
 type RunOnDemandDataflowExecuteJobRequest struct {
@@ -582,7 +606,7 @@ type Schedule struct {
 	CreatedDateTime *time.Time
 
 	// The user identity that created this schedule or last modified.
-	Owner *Principal
+	Owner PrincipalClassification
 }
 
 // ScheduleConfig - Item schedule plan detail settings.
@@ -604,6 +628,82 @@ type ScheduleConfig struct {
 
 // GetScheduleConfig implements the ScheduleConfigClassification interface for type ScheduleConfig.
 func (s *ScheduleConfig) GetScheduleConfig() *ScheduleConfig { return s }
+
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
+// ServicePrincipal - Represents a Microsoft Entra service principal.
+type ServicePrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+
+	// READ-ONLY; Service principal specific details. Applicable when the principal type is ServicePrincipal.
+	ServicePrincipalDetails *ServicePrincipalDetails
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type ServicePrincipal.
+func (s *ServicePrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: s.DisplayName,
+		ID:          s.ID,
+		Type:        s.Type,
+	}
+}
+
+// ServicePrincipalDetails - Service principal specific details. Applicable when the principal type is ServicePrincipal.
+type ServicePrincipalDetails struct {
+	// READ-ONLY; The service principal's Microsoft Entra AppId.
+	AADAppID *string
+}
+
+// ServicePrincipalProfilePrincipal - Represents a service principal profile.
+type ServicePrincipalProfilePrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
+	ServicePrincipalProfileDetails *ServicePrincipalProfilePrincipalServicePrincipalProfileDetails
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type ServicePrincipalProfilePrincipal.
+func (s *ServicePrincipalProfilePrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: s.DisplayName,
+		ID:          s.ID,
+		Type:        s.Type,
+	}
+}
+
+// ServicePrincipalProfilePrincipalServicePrincipalProfileDetails - Service principal profile details. Applicable when the
+// principal type is ServicePrincipalProfile.
+type ServicePrincipalProfilePrincipalServicePrincipalProfileDetails struct {
+	// The service principal profile's parent principal.
+	ParentPrincipal PrincipalClassification
+}
 
 // StringParameter - A Dataflow parameter of type String.
 type StringParameter struct {
@@ -665,7 +765,7 @@ func (t *TimeParameter) GetParameter() *Parameter {
 // UpdateDataflowDefinitionRequest - Update Dataflow public definition request payload.
 type UpdateDataflowDefinitionRequest struct {
 	// REQUIRED; Dataflow public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/dataflow-definition]
-	// for more details on how to craft a Dataflow public definition.
+	// for more details on the structure of the Dataflow definition.
 	Definition *Definition
 }
 
@@ -676,6 +776,36 @@ type UpdateDataflowRequest struct {
 
 	// The Dataflow display name. The display name must follow naming rules according to item type.
 	DisplayName *string
+}
+
+// UserPrincipal - Represents a Microsoft Entra user principal.
+type UserPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+
+	// READ-ONLY; User principal specific details. Applicable when the principal type is User.
+	UserDetails *UserPrincipalUserDetails
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type UserPrincipal.
+func (u *UserPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: u.DisplayName,
+		ID:          u.ID,
+		Type:        u.Type,
+	}
+}
+
+// UserPrincipalUserDetails - User principal specific details. Applicable when the principal type is User.
+type UserPrincipalUserDetails struct {
+	// READ-ONLY; The user principal name.
+	UserPrincipalName *string
 }
 
 type WeeklyScheduleConfig struct {

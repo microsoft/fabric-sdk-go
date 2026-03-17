@@ -70,7 +70,7 @@ func (client *DiscoveryClient) NewDiscoverCatalogsPager(workspaceID string, data
 
 // discoverCatalogsCreateRequest creates the DiscoverCatalogs request.
 func (client *DiscoveryClient) discoverCatalogsCreateRequest(ctx context.Context, workspaceID string, databricksWorkspaceConnectionID string, options *DiscoveryClientDiscoverCatalogsOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/azuredatabricks/catalogs"
+	urlPath := "/v1/workspaces/{workspaceId}/azureDatabricks/catalogs"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -143,7 +143,7 @@ func (client *DiscoveryClient) NewDiscoverSchemasPager(workspaceID string, catal
 
 // discoverSchemasCreateRequest creates the DiscoverSchemas request.
 func (client *DiscoveryClient) discoverSchemasCreateRequest(ctx context.Context, workspaceID string, catalogName string, databricksWorkspaceConnectionID string, options *DiscoveryClientDiscoverSchemasOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/azuredatabricks/catalogs/{catalogName}/schemas"
+	urlPath := "/v1/workspaces/{workspaceId}/azureDatabricks/catalogs/{catalogName}/schemas"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -221,7 +221,7 @@ func (client *DiscoveryClient) NewDiscoverTablesPager(workspaceID string, catalo
 
 // discoverTablesCreateRequest creates the DiscoverTables request.
 func (client *DiscoveryClient) discoverTablesCreateRequest(ctx context.Context, workspaceID string, catalogName string, schemaName string, databricksWorkspaceConnectionID string, options *DiscoveryClientDiscoverTablesOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/azuredatabricks/catalogs/{catalogName}/schemas/{schemaName}/tables"
+	urlPath := "/v1/workspaces/{workspaceId}/azureDatabricks/catalogs/{catalogName}/schemas/{schemaName}/tables"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}

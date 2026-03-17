@@ -73,6 +73,15 @@ type ItemsClientGetMirroredAzureDatabricksCatalogOptions struct {
 type ItemsClientListMirroredAzureDatabricksCatalogsOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
+
+	// Lists items in a folder and its nested folders, or just a folder only. True - All items in the folder and its nested folders
+	// are listed, False - Only items in the folder are listed. The default value
+	// is true.
+	Recursive *bool
+
+	// This parameter allows users to filter items based on a specific root folder. If not provided, the workspace is used as
+	// the root folder.
+	RootFolderID *string
 }
 
 // ItemsClientUpdateMirroredAzureDatabricksCatalogOptions contains the optional parameters for the ItemsClient.UpdateMirroredAzureDatabricksCatalog

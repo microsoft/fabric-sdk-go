@@ -99,7 +99,7 @@ func ExampleLabelsClient_BulkSetLabels() {
 	}
 	res, err := clientFactory.NewLabelsClient().BulkSetLabels(ctx, admin.SetLabelsRequest{
 		AssignmentMethod: to.Ptr(admin.AssignmentMethodStandard),
-		DelegatedPrincipal: &admin.Principal{
+		DelegatedPrincipal: &admin.UserPrincipal{
 			Type: to.Ptr(admin.PrincipalTypeUser),
 			ID:   to.Ptr("796ce6ad-9163-4c16-9559-c68192a251de"),
 		},

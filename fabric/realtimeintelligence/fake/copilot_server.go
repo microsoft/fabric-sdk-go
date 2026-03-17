@@ -93,7 +93,7 @@ func (c *CopilotServerTransport) dispatchNLToKQLBeta(req *http.Request) (*http.R
 	if c.srv.NLToKQLBeta == nil {
 		return nil, &nonRetriableError{errors.New("fake for method NLToKQLBeta not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/realtimeintelligence/nltokql`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/realTimeIntelligence/nltokql`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 2 {

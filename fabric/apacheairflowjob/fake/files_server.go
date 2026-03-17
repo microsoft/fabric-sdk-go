@@ -117,7 +117,7 @@ func (f *FilesServerTransport) dispatchCreateOrUpdateApacheAirflowJobFileBetaWit
 	if f.srv.CreateOrUpdateApacheAirflowJobFileBetaWithBinary == nil {
 		return nil, &nonRetriableError{errors.New("fake for method CreateOrUpdateApacheAirflowJobFileBetaWithBinary not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/ApacheAirflowJobs/(?P<ApacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/files/(?P<filePath>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/apacheAirflowJobs/(?P<apacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/files/(?P<filePath>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 4 {
@@ -128,7 +128,7 @@ func (f *FilesServerTransport) dispatchCreateOrUpdateApacheAirflowJobFileBetaWit
 	if err != nil {
 		return nil, err
 	}
-	apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("ApacheAirflowJobId")])
+	apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("apacheAirflowJobId")])
 	if err != nil {
 		return nil, err
 	}
@@ -163,7 +163,7 @@ func (f *FilesServerTransport) dispatchDeleteApacheAirflowJobFileBeta(req *http.
 	if f.srv.DeleteApacheAirflowJobFileBeta == nil {
 		return nil, &nonRetriableError{errors.New("fake for method DeleteApacheAirflowJobFileBeta not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/ApacheAirflowJobs/(?P<ApacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/files/(?P<filePath>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/apacheAirflowJobs/(?P<apacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/files/(?P<filePath>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 4 {
@@ -174,7 +174,7 @@ func (f *FilesServerTransport) dispatchDeleteApacheAirflowJobFileBeta(req *http.
 	if err != nil {
 		return nil, err
 	}
-	apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("ApacheAirflowJobId")])
+	apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("apacheAirflowJobId")])
 	if err != nil {
 		return nil, err
 	}
@@ -209,7 +209,7 @@ func (f *FilesServerTransport) dispatchGetApacheAirflowJobFileBeta(req *http.Req
 	if f.srv.GetApacheAirflowJobFileBeta == nil {
 		return nil, &nonRetriableError{errors.New("fake for method GetApacheAirflowJobFileBeta not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/ApacheAirflowJobs/(?P<ApacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/files/(?P<filePath>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/apacheAirflowJobs/(?P<apacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/files/(?P<filePath>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 4 {
@@ -220,7 +220,7 @@ func (f *FilesServerTransport) dispatchGetApacheAirflowJobFileBeta(req *http.Req
 	if err != nil {
 		return nil, err
 	}
-	apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("ApacheAirflowJobId")])
+	apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("apacheAirflowJobId")])
 	if err != nil {
 		return nil, err
 	}
@@ -260,7 +260,7 @@ func (f *FilesServerTransport) dispatchNewListApacheAirflowJobFilesBetaPager(req
 	}
 	newListApacheAirflowJobFilesBetaPager := f.newListApacheAirflowJobFilesBetaPager.get(req)
 	if newListApacheAirflowJobFilesBetaPager == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/ApacheAirflowJobs/(?P<ApacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/files`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/apacheAirflowJobs/(?P<apacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/files`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
@@ -271,7 +271,7 @@ func (f *FilesServerTransport) dispatchNewListApacheAirflowJobFilesBetaPager(req
 		if err != nil {
 			return nil, err
 		}
-		apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("ApacheAirflowJobId")])
+		apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("apacheAirflowJobId")])
 		if err != nil {
 			return nil, err
 		}

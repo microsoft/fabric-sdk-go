@@ -43,6 +43,8 @@ func unmarshalItemReferenceClassification(rawMsg json.RawMessage) (ItemReference
 	switch m["referenceType"] {
 	case string(ItemReferenceTypeByID):
 		b = &ItemReferenceByID{}
+	case string(ItemReferenceTypeByVariable):
+		b = &ItemReferenceByVariable{}
 	default:
 		b = &ItemReference{}
 	}

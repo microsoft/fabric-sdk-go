@@ -180,7 +180,7 @@ func ExampleBackgroundJobsClient_UpdateRefreshMaterializedLakeViewsSchedule() {
 	// 	CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-05-28T05:35:20.536Z"); return t}()),
 	// 	Enabled: to.Ptr(false),
 	// 	ID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
-	// 	Owner: &lakehouse.Principal{
+	// 	Owner: &lakehouse.UserPrincipal{
 	// 		Type: to.Ptr(lakehouse.PrincipalTypeUser),
 	// 		ID: to.Ptr("33dd33dd-ee44-ff55-aa66-77bb77bb77bb"),
 	// 	},

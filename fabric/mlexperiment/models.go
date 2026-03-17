@@ -16,6 +16,9 @@ type CreateMLExperimentRequest struct {
 
 	// The folder ID. If not specified or null, the machine learning experiment is created with the workspace as its folder.
 	FolderID *string
+
+	// The sensitivity label settings for the machine learning experiment.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // ItemTag - Represents a tag applied on an item.
@@ -47,6 +50,9 @@ type MLExperiment struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
+
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
 
@@ -70,6 +76,21 @@ type MLExperiments struct {
 type Properties struct {
 	// READ-ONLY; The internal machine learning flow experiment ID.
 	MlFlowExperimentID *string
+}
+
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
 }
 
 // UpdateMLExperimentRequest - Update machine learning experiment request.

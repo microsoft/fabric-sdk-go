@@ -97,7 +97,7 @@ func (client *ItemsClient) createUserDataFunction(ctx context.Context, workspace
 
 // createUserDataFunctionCreateRequest creates the CreateUserDataFunction request.
 func (client *ItemsClient) createUserDataFunctionCreateRequest(ctx context.Context, workspaceID string, createUserDataFunctionRequest CreateUserDataFunctionRequest, _ *ItemsClientBeginCreateUserDataFunctionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/UserDataFunctions"
+	urlPath := "/v1/workspaces/{workspaceId}/userDataFunctions"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -151,7 +151,7 @@ func (client *ItemsClient) DeleteUserDataFunction(ctx context.Context, workspace
 
 // deleteUserDataFunctionCreateRequest creates the DeleteUserDataFunction request.
 func (client *ItemsClient) deleteUserDataFunctionCreateRequest(ctx context.Context, workspaceID string, userDataFunctionID string, _ *ItemsClientDeleteUserDataFunctionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/UserDataFunctions/{UserDataFunctionId}"
+	urlPath := "/v1/workspaces/{workspaceId}/userDataFunctions/{userDataFunctionId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -159,7 +159,7 @@ func (client *ItemsClient) deleteUserDataFunctionCreateRequest(ctx context.Conte
 	if userDataFunctionID == "" {
 		return nil, errors.New("parameter userDataFunctionID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{UserDataFunctionId}", url.PathEscape(userDataFunctionID))
+	urlPath = strings.ReplaceAll(urlPath, "{userDataFunctionId}", url.PathEscape(userDataFunctionID))
 	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -207,7 +207,7 @@ func (client *ItemsClient) GetUserDataFunction(ctx context.Context, workspaceID 
 
 // getUserDataFunctionCreateRequest creates the GetUserDataFunction request.
 func (client *ItemsClient) getUserDataFunctionCreateRequest(ctx context.Context, workspaceID string, userDataFunctionID string, _ *ItemsClientGetUserDataFunctionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/UserDataFunctions/{UserDataFunctionId}"
+	urlPath := "/v1/workspaces/{workspaceId}/userDataFunctions/{userDataFunctionId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -215,7 +215,7 @@ func (client *ItemsClient) getUserDataFunctionCreateRequest(ctx context.Context,
 	if userDataFunctionID == "" {
 		return nil, errors.New("parameter userDataFunctionID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{UserDataFunctionId}", url.PathEscape(userDataFunctionID))
+	urlPath = strings.ReplaceAll(urlPath, "{userDataFunctionId}", url.PathEscape(userDataFunctionID))
 	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -290,7 +290,7 @@ func (client *ItemsClient) getUserDataFunctionDefinition(ctx context.Context, wo
 
 // getUserDataFunctionDefinitionCreateRequest creates the GetUserDataFunctionDefinition request.
 func (client *ItemsClient) getUserDataFunctionDefinitionCreateRequest(ctx context.Context, workspaceID string, userDataFunctionID string, options *ItemsClientBeginGetUserDataFunctionDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/UserDataFunctions/{UserDataFunctionId}/getDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/userDataFunctions/{userDataFunctionId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -298,7 +298,7 @@ func (client *ItemsClient) getUserDataFunctionDefinitionCreateRequest(ctx contex
 	if userDataFunctionID == "" {
 		return nil, errors.New("parameter userDataFunctionID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{UserDataFunctionId}", url.PathEscape(userDataFunctionID))
+	urlPath = strings.ReplaceAll(urlPath, "{userDataFunctionId}", url.PathEscape(userDataFunctionID))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -351,7 +351,7 @@ func (client *ItemsClient) NewListUserDataFunctionsPager(workspaceID string, opt
 
 // listUserDataFunctionsCreateRequest creates the ListUserDataFunctions request.
 func (client *ItemsClient) listUserDataFunctionsCreateRequest(ctx context.Context, workspaceID string, options *ItemsClientListUserDataFunctionsOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/UserDataFunctions"
+	urlPath := "/v1/workspaces/{workspaceId}/userDataFunctions"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -363,6 +363,12 @@ func (client *ItemsClient) listUserDataFunctionsCreateRequest(ctx context.Contex
 	reqQP := req.Raw().URL.Query()
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	if options != nil && options.Recursive != nil {
+		reqQP.Set("recursive", strconv.FormatBool(*options.Recursive))
+	}
+	if options != nil && options.RootFolderID != nil {
+		reqQP.Set("rootFolderId", *options.RootFolderID)
 	}
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
@@ -418,7 +424,7 @@ func (client *ItemsClient) UpdateUserDataFunction(ctx context.Context, workspace
 
 // updateUserDataFunctionCreateRequest creates the UpdateUserDataFunction request.
 func (client *ItemsClient) updateUserDataFunctionCreateRequest(ctx context.Context, workspaceID string, userDataFunctionID string, updateUserDataFunctionRequest UpdateUserDataFunctionRequest, _ *ItemsClientUpdateUserDataFunctionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/UserDataFunctions/{UserDataFunctionId}"
+	urlPath := "/v1/workspaces/{workspaceId}/userDataFunctions/{userDataFunctionId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -426,7 +432,7 @@ func (client *ItemsClient) updateUserDataFunctionCreateRequest(ctx context.Conte
 	if userDataFunctionID == "" {
 		return nil, errors.New("parameter userDataFunctionID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{UserDataFunctionId}", url.PathEscape(userDataFunctionID))
+	urlPath = strings.ReplaceAll(urlPath, "{userDataFunctionId}", url.PathEscape(userDataFunctionID))
 	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -505,7 +511,7 @@ func (client *ItemsClient) updateUserDataFunctionDefinition(ctx context.Context,
 
 // updateUserDataFunctionDefinitionCreateRequest creates the UpdateUserDataFunctionDefinition request.
 func (client *ItemsClient) updateUserDataFunctionDefinitionCreateRequest(ctx context.Context, workspaceID string, userDataFunctionID string, updateUserDataFunctionDefinitionRequest UpdateUserDataFunctionDefinitionRequest, options *ItemsClientBeginUpdateUserDataFunctionDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/UserDataFunctions/{UserDataFunctionId}/updateDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/userDataFunctions/{userDataFunctionId}/updateDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -513,7 +519,7 @@ func (client *ItemsClient) updateUserDataFunctionDefinitionCreateRequest(ctx con
 	if userDataFunctionID == "" {
 		return nil, errors.New("parameter userDataFunctionID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{UserDataFunctionId}", url.PathEscape(userDataFunctionID))
+	urlPath = strings.ReplaceAll(urlPath, "{userDataFunctionId}", url.PathEscape(userDataFunctionID))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err

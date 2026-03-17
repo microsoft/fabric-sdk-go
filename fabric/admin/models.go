@@ -53,7 +53,7 @@ type AssignDomainWorkspacesByIDsRequest struct {
 // AssignDomainWorkspacesByPrincipalsRequest - The request payload for assigning workspaces to a domain by principal.
 type AssignDomainWorkspacesByPrincipalsRequest struct {
 	// The principals that are admins of the workspaces.
-	Principals []Principal
+	Principals []PrincipalClassification
 }
 
 // AzureDevOpsDetails - Azure DevOps provider details.
@@ -177,6 +177,27 @@ type CapacityTenantSettingsByCapacityIDResponse struct {
 	Value []CapacityTenantSetting
 }
 
+// ConnectionRuleEndpointMetadata - Represents a single endpoint-level exception rule that allows outbound communication to
+// a specific external domain or host. This object is used within the allowedEndpoints array of a connection rule
+// to explicitly authorize outbound access to trusted endpoints for a given connectionType. This is applicable only to connection
+// types that support endpoint-based filtering (e.g., SQL, MySQL, Web,
+// etc.).
+type ConnectionRuleEndpointMetadata struct {
+	// REQUIRED; A wildcard-supported pattern that defines the allowed external endpoint. Examples include *.microsoft.com, api.contoso.com,
+	// or data.partner.org.
+	HostnamePattern *string
+}
+
+// ConnectionRuleWorkspaceMetadata - Represents a workspace-level exception rule that allows outbound communication to a specific
+// workspace for a given connectionType. This object is used within the allowedWorkspaces array of a
+// connection rule to explicitly authorize cross-workspace access. This is applicable only to connection types that support
+// workspace-based filtering, such as Lakehouse, Warehouse, FabricSql, and
+// PowerPlatformDataflows.
+type ConnectionRuleWorkspaceMetadata struct {
+	// REQUIRED; The unique identifier (GUID) of the target workspace that is allowed to be connected from current workspace.
+	WorkspaceID *string
+}
+
 // CreateDomainRequest - The request payload for creating a domain or subdomain.
 type CreateDomainRequest struct {
 	// REQUIRED; The domain display name. The display name cannot contain more than 40 characters.
@@ -247,7 +268,7 @@ type DomainPreview struct {
 // DomainRoleAssignment - Represents a domain role assignment.
 type DomainRoleAssignment struct {
 	// REQUIRED; The principal.
-	Principal *Principal
+	Principal PrincipalClassification
 
 	// REQUIRED; The domain role of the principal.
 	Role *DomainRole
@@ -259,7 +280,7 @@ type DomainRoleAssignmentRequest struct {
 	Type *DomainRole
 
 	// The principals that will be assigned to the domain role.
-	Principals []Principal
+	Principals []PrincipalClassification
 }
 
 // DomainRoleAssignments - A response wrapper for a list of domain role assignments with a continuation token.
@@ -280,7 +301,7 @@ type DomainRoleUnassignmentRequest struct {
 	Type *DomainRole
 
 	// The principals that will be unassigned from the domain role.
-	Principals []Principal
+	Principals []PrincipalClassification
 }
 
 // DomainTagScope - Represents domain tag scope.
@@ -388,10 +409,31 @@ type DomainsResponsePreview struct {
 	Domains []DomainPreview
 }
 
+// EntireTenantPrincipal - Represents a tenant principal
+type EntireTenantPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type EntireTenantPrincipal.
+func (e *EntireTenantPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: e.DisplayName,
+		ID:          e.ID,
+		Type:        e.Type,
+	}
+}
+
 // ExternalDataShare - An external data share object.
 type ExternalDataShare struct {
 	// READ-ONLY; The principal that created the external data share.
-	CreatorPrincipal *Principal
+	CreatorPrincipal PrincipalClassification
 
 	// READ-ONLY; The external data share ID.
 	ID *string
@@ -440,6 +482,13 @@ type ExternalDataShares struct {
 
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
+}
+
+// GatewayAccessRuleMetadata - Represents a gateway that is allowed for outbound communication. This object is used within
+// the allowedGateways to explicitly authorize outbound access.
+type GatewayAccessRuleMetadata struct {
+	// REQUIRED; Gateway Id to be allowed.
+	ID *string
 }
 
 // GitConnectionDetails - Represents the details of a Git connection for a workspace.
@@ -514,6 +563,36 @@ type GitProviderDetails struct {
 // GetGitProviderDetails implements the GitProviderDetailsClassification interface for type GitProviderDetails.
 func (g *GitProviderDetails) GetGitProviderDetails() *GitProviderDetails { return g }
 
+// GroupPrincipal - Represents a security group.
+type GroupPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// Group specific details. Applicable when the principal type is Group.
+	GroupDetails *GroupPrincipalGroupDetails
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type GroupPrincipal.
+func (g *GroupPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: g.DisplayName,
+		ID:          g.ID,
+		Type:        g.Type,
+	}
+}
+
+// GroupPrincipalGroupDetails - Group specific details. Applicable when the principal type is Group.
+type GroupPrincipalGroupDetails struct {
+	// The type of the group. Additional group types may be added over time.
+	GroupType *GroupType
+}
+
 // Item details.
 type Item struct {
 	// READ-ONLY; The item ID.
@@ -532,7 +611,7 @@ type Item struct {
 	CapacityID *string
 
 	// READ-ONLY; The item's owner.
-	CreatorPrincipal *Principal
+	CreatorPrincipal PrincipalClassification
 
 	// READ-ONLY; The folder ID of the item.
 	FolderID *string
@@ -568,7 +647,7 @@ type ItemAccessDetails struct {
 	ItemAccessDetails *ItemAccessDetail
 
 	// READ-ONLY; Information regarding the user who has access to the entity.
-	Principal *Principal
+	Principal PrincipalClassification
 }
 
 // ItemAccessDetailsResponse - A list of users with access to a given entity.
@@ -639,6 +718,91 @@ type ItemsChangeLabelResponse struct {
 	ItemsChangeLabelStatus []ItemChangeLabelStatus
 }
 
+// NetworkCommunicationPolicies - Network communication policy settings for list of workspaces enabled with either Inbound
+// or Outbound Access Protection.
+type NetworkCommunicationPolicies struct {
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+
+	// Network communication policy settings for list of workspaces enabled with either Inbound or Outbound Access Protection.
+	Value []NetworkCommunicationPolicyDetails
+}
+
+// NetworkCommunicationPolicyDetails - Represents the details of Network communication policy settings for each workspace.
+type NetworkCommunicationPolicyDetails struct {
+	// REQUIRED; Defines the Inbound access protection settings.
+	Inbound *NetworkCommunicationPolicyInboundDetails
+
+	// REQUIRED; Defines the Outbound access protection settings.
+	Outbound *NetworkCommunicationPolicyOutboundDetails
+
+	// REQUIRED; The workspace ID.
+	WorkspaceID *string
+}
+
+// NetworkCommunicationPolicyInboundDetails - Represents the details of Network communication policy settings for each workspace.
+type NetworkCommunicationPolicyInboundDetails struct {
+	// REQUIRED; The policy for all inbound communications to a workspace
+	PublicAccessRules *NetworkRules
+}
+
+// NetworkCommunicationPolicyOutboundDetails - Represents the details of Network communication policy settings for each workspace.
+type NetworkCommunicationPolicyOutboundDetails struct {
+	// REQUIRED; Represents the complete set of outbound access protection cloud connection rules configured for a workspace as
+	// part of its networking communication policy. This object defines the connection rules
+	// that govern which external endpoints and workspaces are permitted or denied for outbound communication
+	Connections *WorkspaceOutboundConnections
+
+	// REQUIRED; Represents the complete set of gateway outbound access protection rules configured for a workspace as part of
+	// its networking communication policy. This object defines the gateway rules that govern
+	// outbound communication
+	Gateways *WorkspaceOutboundGateways
+
+	// REQUIRED; The policy for all outbound communications to a workspace
+	PublicAccessRules *NetworkRules
+
+	// Represents the Git Outbound policy for the specified as part of its networking communication policy.
+	Git *NetworkRules
+}
+
+// NetworkRules - The policy defining access to/from a workspace to/from public networks.
+type NetworkRules struct {
+	// Default policy for workspace access from public networks.
+	DefaultAction *NetworkAccessRule
+}
+
+// OutboundConnectionRule - Defines an outbound access rule for a specific cloud connection.
+type OutboundConnectionRule struct {
+	// REQUIRED; Specifies the cloud connection type to which the rule applies. The behavior and applicability of other rule properties
+	// (such as allowedEndpoints or allowedWorkspaces) may vary depending on the
+	// capabilities of connection type.
+	ConnectionType *string
+
+	// Defines a list of explicitly permitted external endpoints for the connectionType. Each entry in the array represents a
+	// hostname pattern that is allowed for outbound communication from the workspace.
+	// This field is applicable only to connection types that support endpoint-based filtering (e.g., SQL, MySQL, Web, etc.).
+	// If defaultAction is set to "Deny" for the connection type, only the endpoints
+	// listed here will be allowed; all others will be blocked.
+	AllowedEndpoints []ConnectionRuleEndpointMetadata
+
+	// Specifies a list of workspace IDs that are explicitly permitted for outbound communication for the given fabric connectionType.
+	// This field is applicable only to fabric connection types that support
+	// workspace-based filtering, limited to Lakehouse, Warehouse, FabricSql, and PowerPlatformDataflows. When defaultAction is
+	// set to "Deny" for a connection type, only the workspaces listed in
+	// allowedWorkspaces will be allowed for outbound access; all others will be blocked.
+	AllowedWorkspaces []ConnectionRuleWorkspaceMetadata
+
+	// Defines the default outbound access behavior for the connectionType. This field determines whether connections of this
+	// type are permitted or blocked by default, unless further refined by
+	// allowedEndpoints or allowedWorkspaces. If set to "Allow": All connections of this type are permitted unless explicitly
+	// denied by a more specific rule. This field provides fine-grained control over
+	// each connection type and complements the global fallback behavior defined by defaultAction.
+	DefaultAction *ConnectionAccessActionType
+}
+
 // Principal - Represents an identity or a Microsoft Entra group.
 type Principal struct {
 	// REQUIRED; The principal's ID.
@@ -647,45 +811,12 @@ type Principal struct {
 	// REQUIRED; The type of the principal. Additional principal types may be added over time.
 	Type *PrincipalType
 
-	// Group specific details. Applicable when the principal type is Group.
-	GroupDetails *PrincipalGroupDetails
-
-	// Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
-	ServicePrincipalProfileDetails *PrincipalServicePrincipalProfileDetails
-
 	// READ-ONLY; The principal's display name.
 	DisplayName *string
-
-	// READ-ONLY; Service principal specific details. Applicable when the principal type is ServicePrincipal.
-	ServicePrincipalDetails *PrincipalServicePrincipalDetails
-
-	// READ-ONLY; User principal specific details. Applicable when the principal type is User.
-	UserDetails *PrincipalUserDetails
 }
 
-// PrincipalGroupDetails - Group specific details. Applicable when the principal type is Group.
-type PrincipalGroupDetails struct {
-	// The type of the group. Additional group types may be added over time.
-	GroupType *GroupType
-}
-
-// PrincipalServicePrincipalDetails - Service principal specific details. Applicable when the principal type is ServicePrincipal.
-type PrincipalServicePrincipalDetails struct {
-	// READ-ONLY; The service principal's Microsoft Entra AppId.
-	AADAppID *string
-}
-
-// PrincipalServicePrincipalProfileDetails - Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
-type PrincipalServicePrincipalProfileDetails struct {
-	// The service principal profile's parent principal.
-	ParentPrincipal *Principal
-}
-
-// PrincipalUserDetails - User principal specific details. Applicable when the principal type is User.
-type PrincipalUserDetails struct {
-	// READ-ONLY; The user principal name.
-	UserPrincipalName *string
-}
+// GetPrincipal implements the PrincipalClassification interface for type Principal.
+func (p *Principal) GetPrincipal() *Principal { return p }
 
 // RemoveAllSharingLinksRequest - Accepts the type of sharing link to be removed for all Fabric items in organization.
 type RemoveAllSharingLinksRequest struct {
@@ -704,10 +835,71 @@ type RemoveLabelsRequest struct {
 // RestoreWorkspaceRequest - The request to restore a deleted workspace.
 type RestoreWorkspaceRequest struct {
 	// The workspace's admin.
-	NewWorkspaceAdminPrincipal *Principal
+	NewWorkspaceAdminPrincipal PrincipalClassification
 
 	// The name of the workspace. Mandatory if the restore request is for My workspace.
 	NewWorkspaceName *string
+}
+
+// ServicePrincipal - Represents a Microsoft Entra service principal.
+type ServicePrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+
+	// READ-ONLY; Service principal specific details. Applicable when the principal type is ServicePrincipal.
+	ServicePrincipalDetails *ServicePrincipalDetails
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type ServicePrincipal.
+func (s *ServicePrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: s.DisplayName,
+		ID:          s.ID,
+		Type:        s.Type,
+	}
+}
+
+// ServicePrincipalDetails - Service principal specific details. Applicable when the principal type is ServicePrincipal.
+type ServicePrincipalDetails struct {
+	// READ-ONLY; The service principal's Microsoft Entra AppId.
+	AADAppID *string
+}
+
+// ServicePrincipalProfilePrincipal - Represents a service principal profile.
+type ServicePrincipalProfilePrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
+	ServicePrincipalProfileDetails *ServicePrincipalProfilePrincipalServicePrincipalProfileDetails
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type ServicePrincipalProfilePrincipal.
+func (s *ServicePrincipalProfilePrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: s.DisplayName,
+		ID:          s.ID,
+		Type:        s.Type,
+	}
+}
+
+// ServicePrincipalProfilePrincipalServicePrincipalProfileDetails - Service principal profile details. Applicable when the
+// principal type is ServicePrincipalProfile.
+type ServicePrincipalProfilePrincipalServicePrincipalProfileDetails struct {
+	// The service principal profile's parent principal.
+	ParentPrincipal PrincipalClassification
 }
 
 // SetLabelsRequest - A composite of label information required to update an information protection label.
@@ -725,7 +917,7 @@ type SetLabelsRequest struct {
 	// Delegated user details. A delegated user is a user within an organization whose admin sets a label on behalf of the user.
 	// Although the admin sets the label, the delegated user is marked as the label
 	// issuer. Only principals of type 'User' are supported.
-	DelegatedPrincipal *Principal
+	DelegatedPrincipal PrincipalClassification
 }
 
 // SyncRoleAssignmentsToSubdomainsRequest - The request payload for syncing domain members to subdomains.
@@ -955,6 +1147,36 @@ type UpdateTenantSettingResponse struct {
 	TenantSettings []TenantSetting
 }
 
+// UserPrincipal - Represents a Microsoft Entra user principal.
+type UserPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+
+	// READ-ONLY; User principal specific details. Applicable when the principal type is User.
+	UserDetails *UserPrincipalUserDetails
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type UserPrincipal.
+func (u *UserPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: u.DisplayName,
+		ID:          u.ID,
+		Type:        u.Type,
+	}
+}
+
+// UserPrincipalUserDetails - User principal specific details. Applicable when the principal type is User.
+type UserPrincipalUserDetails struct {
+	// READ-ONLY; The user principal name.
+	UserPrincipalName *string
+}
+
 // Workspace.
 type Workspace struct {
 	// REQUIRED; The workspace name.
@@ -988,7 +1210,7 @@ type WorkspaceAccessDetail struct {
 // WorkspaceAccessDetails - User access details for the workspace.
 type WorkspaceAccessDetails struct {
 	// READ-ONLY; Information regarding the user who has access to the entity.
-	Principal *Principal
+	Principal PrincipalClassification
 
 	// READ-ONLY; Workspace permissions for the user.
 	WorkspaceAccessDetails *WorkspaceAccessDetail
@@ -998,6 +1220,35 @@ type WorkspaceAccessDetails struct {
 type WorkspaceAccessDetailsResponse struct {
 	// A list of users with access to an entity.
 	AccessDetails []WorkspaceAccessDetails
+}
+
+// WorkspaceOutboundConnections - Represents the complete set of outbound access protection cloud connection rules configured
+// for a workspace as part of its networking communication policy. This object defines the connection rules
+// that govern which external endpoints and workspaces are permitted or denied for outbound communication
+type WorkspaceOutboundConnections struct {
+	// Defines the default behavior for all cloud connection types that are not explicitly listed in the rules array. If set to
+	// "Allow", all unspecified connection types are permitted by default. If set to
+	// "Deny", all unspecified connection types are blocked by default unless explicitly allowed. This setting acts as a global
+	// fallback policy and is critical for enforcing a secure default posture in
+	// environments where only known and trusted connections should be permitted.
+	DefaultAction *ConnectionAccessActionType
+
+	// A list of rules that define outbound access behavior for specific cloud connection types. Each rule may include endpoint-based
+	// or workspace-based restrictions depending on supported connection types.
+	Rules []OutboundConnectionRule
+}
+
+// WorkspaceOutboundGateways - Represents the complete set of gateway outbound access protection rules configured for a workspace
+// as part of its networking communication policy. This object defines the gateway rules that govern
+// outbound communication
+type WorkspaceOutboundGateways struct {
+	// A list of rules that define outbound access behavior for gateways.
+	AllowedGateways []GatewayAccessRuleMetadata
+
+	// Defines the default behavior for all gateways that are not explicitly listed in the allowed list array. If set to "Allow",
+	// all unspecified gateways are permitted by default. If set to "Deny", all
+	// unspecified gateways are blocked.
+	DefaultAction *GatewayAccessActionType
 }
 
 // WorkspaceTenantSetting - Workspace tenant setting details.

@@ -23,6 +23,9 @@ type AnomalyDetector struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
+
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
 
@@ -55,10 +58,13 @@ type CreateAnomalyDetectorRequest struct {
 
 	// The folder ID. If not specified or null, the AnomalyDetector is created with the workspace as its folder.
 	FolderID *string
+
+	// The sensitivity label settings for the AnomalyDetector.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // Definition - AnomalyDetector definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/anomalydetector-definition]
-// for more details on how to craft a AnomalyDetector public
+// for more details on the structure of the AnomalyDetector
 // definition.
 type Definition struct {
 	// REQUIRED; A list of definition parts.
@@ -83,7 +89,7 @@ type DefinitionPart struct {
 // DefinitionResponse - AnomalyDetector definition response.
 type DefinitionResponse struct {
 	// READ-ONLY; AnomalyDetector definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/anomalydetector-definition]
-	// for more details on how to craft a AnomalyDetector public
+	// for more details on the structure of the AnomalyDetector
 	// definition.
 	Definition *Definition
 }
@@ -97,10 +103,25 @@ type ItemTag struct {
 	ID *string
 }
 
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
 // UpdateAnomalyDetectorDefinitionRequest - Update AnomalyDetector definition request payload.
 type UpdateAnomalyDetectorDefinitionRequest struct {
 	// REQUIRED; AnomalyDetector definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/anomalydetector-definition]
-	// for more details on how to craft a AnomalyDetector public
+	// for more details on the structure of the AnomalyDetector
 	// definition.
 	Definition *Definition
 }

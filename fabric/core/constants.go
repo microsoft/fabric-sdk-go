@@ -25,6 +25,25 @@ func PossibleAttributeNameValues() []AttributeName {
 	}
 }
 
+// BulkExportItemDefinitionsMode - Modes for the bulk export item definitions operation. Additional modes may be added over
+// time.
+type BulkExportItemDefinitionsMode string
+
+const (
+	// BulkExportItemDefinitionsModeAll - Export all supported items. The caller is not required to specify the list of items.
+	BulkExportItemDefinitionsModeAll BulkExportItemDefinitionsMode = "All"
+	// BulkExportItemDefinitionsModeSelective - Export the specified items' definitions.
+	BulkExportItemDefinitionsModeSelective BulkExportItemDefinitionsMode = "Selective"
+)
+
+// PossibleBulkExportItemDefinitionsModeValues returns the possible values for the BulkExportItemDefinitionsMode const type.
+func PossibleBulkExportItemDefinitionsModeValues() []BulkExportItemDefinitionsMode {
+	return []BulkExportItemDefinitionsMode{
+		BulkExportItemDefinitionsModeAll,
+		BulkExportItemDefinitionsModeSelective,
+	}
+}
+
 // CapacityAssignmentProgress - A Workspace assignment to capacity progress status. Additional capacity assignment progress
 // values may be added over time.
 type CapacityAssignmentProgress string
@@ -539,6 +558,23 @@ func PossibleCredentialTypeValues() []CredentialType {
 	}
 }
 
+type DataAccessRoleConflictPolicy string
+
+const (
+	// DataAccessRoleConflictPolicyAbort - Abort the operation when there is a conflict with an existing role.
+	DataAccessRoleConflictPolicyAbort DataAccessRoleConflictPolicy = "Abort"
+	// DataAccessRoleConflictPolicyOverwrite - Create a new role or overwrite existing role with the provided definition.
+	DataAccessRoleConflictPolicyOverwrite DataAccessRoleConflictPolicy = "Overwrite"
+)
+
+// PossibleDataAccessRoleConflictPolicyValues returns the possible values for the DataAccessRoleConflictPolicy const type.
+func PossibleDataAccessRoleConflictPolicyValues() []DataAccessRoleConflictPolicy {
+	return []DataAccessRoleConflictPolicy{
+		DataAccessRoleConflictPolicyAbort,
+		DataAccessRoleConflictPolicyOverwrite,
+	}
+}
+
 // DataType - The data type of the connection creation parameter value. Additional data type values may be added over time.
 type DataType string
 
@@ -902,6 +938,29 @@ func PossibleImmutabilityScopeValues() []ImmutabilityScope {
 	}
 }
 
+// ImportItemDefinitionOperationStatus - The status of the import item definition operation. Additional import item definition
+// statuses may be added over time.
+type ImportItemDefinitionOperationStatus string
+
+const (
+	// ImportItemDefinitionOperationStatusFailed - The import item definition operation failed.
+	ImportItemDefinitionOperationStatusFailed ImportItemDefinitionOperationStatus = "Failed"
+	// ImportItemDefinitionOperationStatusSucceeded - The import item definition operation completed successfully.
+	ImportItemDefinitionOperationStatusSucceeded ImportItemDefinitionOperationStatus = "Succeeded"
+	// ImportItemDefinitionOperationStatusSucceededDespiteFailures - The import item definition operation completed with partial
+	// success.
+	ImportItemDefinitionOperationStatusSucceededDespiteFailures ImportItemDefinitionOperationStatus = "SucceededDespiteFailures"
+)
+
+// PossibleImportItemDefinitionOperationStatusValues returns the possible values for the ImportItemDefinitionOperationStatus const type.
+func PossibleImportItemDefinitionOperationStatusValues() []ImportItemDefinitionOperationStatus {
+	return []ImportItemDefinitionOperationStatus{
+		ImportItemDefinitionOperationStatusFailed,
+		ImportItemDefinitionOperationStatusSucceeded,
+		ImportItemDefinitionOperationStatusSucceededDespiteFailures,
+	}
+}
+
 // InitializationStrategy - The strategy required for an initialization process when content exists on both the remote side
 // and the workspace side. Additional strategies may be added over time.
 type InitializationStrategy string
@@ -971,6 +1030,64 @@ func PossibleItemAccessValues() []ItemAccess {
 	}
 }
 
+// ItemDefinitionOperationType - An item definition operation type. Additional item definition operations may be added over
+// time.
+type ItemDefinitionOperationType string
+
+const (
+	// ItemDefinitionOperationTypeCreate - The item was created.
+	ItemDefinitionOperationTypeCreate ItemDefinitionOperationType = "Create"
+	// ItemDefinitionOperationTypeUpdate - The item was updated.
+	ItemDefinitionOperationTypeUpdate ItemDefinitionOperationType = "Update"
+)
+
+// PossibleItemDefinitionOperationTypeValues returns the possible values for the ItemDefinitionOperationType const type.
+func PossibleItemDefinitionOperationTypeValues() []ItemDefinitionOperationType {
+	return []ItemDefinitionOperationType{
+		ItemDefinitionOperationTypeCreate,
+		ItemDefinitionOperationTypeUpdate,
+	}
+}
+
+// ItemJobParameterType - A string that represents the parameter's type. Additional types may be added over time.
+type ItemJobParameterType string
+
+const (
+	// ItemJobParameterTypeAutomatic - The parameter type is automatically determined. Note: this type may not be supported for
+	// all item job types.
+	ItemJobParameterTypeAutomatic ItemJobParameterType = "Automatic"
+	// ItemJobParameterTypeBoolean - The type of parameter is a boolean.
+	ItemJobParameterTypeBoolean ItemJobParameterType = "Boolean"
+	// ItemJobParameterTypeDateTime - The type of parameter is a datetime in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	ItemJobParameterTypeDateTime ItemJobParameterType = "DateTime"
+	// ItemJobParameterTypeGUID - The parameter type is a string representation of a GUID, using 00000000-0000-0000-0000-000000000000
+	// format. See https://learn.microsoft.com/dotnet/api/system.guid.tostring for formatting details, and please use the default
+	// format: "D".
+	ItemJobParameterTypeGUID ItemJobParameterType = "Guid"
+	// ItemJobParameterTypeInteger - The type of parameter is an integer.
+	ItemJobParameterTypeInteger ItemJobParameterType = "Integer"
+	// ItemJobParameterTypeNumber - The type of parameter is a number, it accepts both integer and float values.
+	ItemJobParameterTypeNumber ItemJobParameterType = "Number"
+	// ItemJobParameterTypeText - The type of parameter is a text.
+	ItemJobParameterTypeText ItemJobParameterType = "Text"
+	// ItemJobParameterTypeVariableReference - The type of parameter is a variable reference.
+	ItemJobParameterTypeVariableReference ItemJobParameterType = "VariableReference"
+)
+
+// PossibleItemJobParameterTypeValues returns the possible values for the ItemJobParameterType const type.
+func PossibleItemJobParameterTypeValues() []ItemJobParameterType {
+	return []ItemJobParameterType{
+		ItemJobParameterTypeAutomatic,
+		ItemJobParameterTypeBoolean,
+		ItemJobParameterTypeDateTime,
+		ItemJobParameterTypeGUID,
+		ItemJobParameterTypeInteger,
+		ItemJobParameterTypeNumber,
+		ItemJobParameterTypeText,
+		ItemJobParameterTypeVariableReference,
+	}
+}
+
 // ItemJobStatus - The item job status. Additional statuses may be added over time.
 type ItemJobStatus string
 
@@ -1025,18 +1142,21 @@ func PossibleItemPreDeploymentDiffStateValues() []ItemPreDeploymentDiffState {
 	}
 }
 
-// ItemReferenceType - The Item reference type. Additional ItemReferenceType types may be added over time.
+// ItemReferenceType - The item reference type. Additional ItemReferenceType types may be added over time.
 type ItemReferenceType string
 
 const (
 	// ItemReferenceTypeByID - The item is referenced by its ID.
 	ItemReferenceTypeByID ItemReferenceType = "ById"
+	// ItemReferenceTypeByVariable - The item is referenced by a variable.
+	ItemReferenceTypeByVariable ItemReferenceType = "ByVariable"
 )
 
 // PossibleItemReferenceTypeValues returns the possible values for the ItemReferenceType const type.
 func PossibleItemReferenceTypeValues() []ItemReferenceType {
 	return []ItemReferenceType{
 		ItemReferenceTypeByID,
+		ItemReferenceTypeByVariable,
 	}
 }
 
@@ -1054,6 +1174,8 @@ const (
 	ItemTypeCosmosDBDatabase ItemType = "CosmosDBDatabase"
 	// ItemTypeDashboard - PowerBI dashboard.
 	ItemTypeDashboard ItemType = "Dashboard"
+	// ItemTypeDataAgent - A DataAgent.
+	ItemTypeDataAgent ItemType = "DataAgent"
 	// ItemTypeDataPipeline - A data pipeline.
 	ItemTypeDataPipeline ItemType = "DataPipeline"
 	// ItemTypeDataflow - A Dataflow.
@@ -1140,6 +1262,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeCopyJob,
 		ItemTypeCosmosDBDatabase,
 		ItemTypeDashboard,
+		ItemTypeDataAgent,
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
 		ItemTypeDatamart,
@@ -1427,6 +1550,26 @@ func PossibleScheduleTypeValues() []ScheduleType {
 		ScheduleTypeDaily,
 		ScheduleTypeMonthly,
 		ScheduleTypeWeekly,
+	}
+}
+
+// SensitivityLabelApplyStrategy - The strategy for applying the sensitivity label. The default value is ApplyOrFail. Additional
+// types may be added over time.
+type SensitivityLabelApplyStrategy string
+
+const (
+	// SensitivityLabelApplyStrategyApplyOrFail - Apply the sensitivity label or fail the operation if it cannot be applied.
+	SensitivityLabelApplyStrategyApplyOrFail SensitivityLabelApplyStrategy = "ApplyOrFail"
+	// SensitivityLabelApplyStrategyIgnore - Ignore the sensitivity label if it cannot be applied and proceed with the operation
+	// without applying the label.
+	SensitivityLabelApplyStrategyIgnore SensitivityLabelApplyStrategy = "Ignore"
+)
+
+// PossibleSensitivityLabelApplyStrategyValues returns the possible values for the SensitivityLabelApplyStrategy const type.
+func PossibleSensitivityLabelApplyStrategyValues() []SensitivityLabelApplyStrategy {
+	return []SensitivityLabelApplyStrategy{
+		SensitivityLabelApplyStrategyApplyOrFail,
+		SensitivityLabelApplyStrategyIgnore,
 	}
 }
 

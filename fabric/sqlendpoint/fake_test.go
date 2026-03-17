@@ -70,6 +70,9 @@ func (testsuite *FakeTestSuite) TestItems_ListSQLEndpoints() {
 				Description: to.Ptr("A SQL endpoint description."),
 				DisplayName: to.Ptr("SQLEndpoint Name 1"),
 				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				SensitivityLabel: &sqlendpoint.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 			}},
 	}
@@ -82,7 +85,10 @@ func (testsuite *FakeTestSuite) TestItems_ListSQLEndpoints() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	pager := client.NewListSQLEndpointsPager(exampleWorkspaceID, &sqlendpoint.ItemsClientListSQLEndpointsOptions{ContinuationToken: nil})
+	pager := client.NewListSQLEndpointsPager(exampleWorkspaceID, &sqlendpoint.ItemsClientListSQLEndpointsOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")
@@ -123,7 +129,7 @@ func (testsuite *FakeTestSuite) TestItems_GetConnectionString() {
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ConnectionStringResponse))
 }
 
-func (testsuite *FakeTestSuite) TestSQLEndpoint_UpdateSQLAuditSettings() {
+func (testsuite *FakeTestSuite) TestSQLAuditSettings_UpdateSQLAuditSettings() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Update SQL Audit Settings"},
@@ -138,21 +144,21 @@ func (testsuite *FakeTestSuite) TestSQLEndpoint_UpdateSQLAuditSettings() {
 		State:         to.Ptr(sqlendpoint.AuditSettingsStateEnabled),
 	}
 
-	testsuite.serverFactory.Server.UpdateSQLAuditSettings = func(ctx context.Context, workspaceID string, itemID string, updateAuditSettingsRequest sqlendpoint.SQLAuditSettingsUpdate, options *sqlendpoint.ClientUpdateSQLAuditSettingsOptions) (resp azfake.Responder[sqlendpoint.ClientUpdateSQLAuditSettingsResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.SQLAuditSettingsServer.UpdateSQLAuditSettings = func(ctx context.Context, workspaceID string, itemID string, updateAuditSettingsRequest sqlendpoint.SQLAuditSettingsUpdate, options *sqlendpoint.SQLAuditSettingsClientUpdateSQLAuditSettingsOptions) (resp azfake.Responder[sqlendpoint.SQLAuditSettingsClientUpdateSQLAuditSettingsResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleItemID, itemID)
 		testsuite.Require().True(reflect.DeepEqual(exampleUpdateAuditSettingsRequest, updateAuditSettingsRequest))
-		resp = azfake.Responder[sqlendpoint.ClientUpdateSQLAuditSettingsResponse]{}
-		resp.SetResponse(http.StatusOK, sqlendpoint.ClientUpdateSQLAuditSettingsResponse{}, nil)
+		resp = azfake.Responder[sqlendpoint.SQLAuditSettingsClientUpdateSQLAuditSettingsResponse]{}
+		resp.SetResponse(http.StatusOK, sqlendpoint.SQLAuditSettingsClientUpdateSQLAuditSettingsResponse{}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewClient()
+	client := testsuite.clientFactory.NewSQLAuditSettingsClient()
 	_, err = client.UpdateSQLAuditSettings(ctx, exampleWorkspaceID, exampleItemID, exampleUpdateAuditSettingsRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
-func (testsuite *FakeTestSuite) TestSQLEndpoint_GetSQLAuditSettings() {
+func (testsuite *FakeTestSuite) TestSQLAuditSettings_GetSQLAuditSettings() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Get SQL Audit Settings"},
@@ -169,21 +175,21 @@ func (testsuite *FakeTestSuite) TestSQLEndpoint_GetSQLAuditSettings() {
 		State:         to.Ptr(sqlendpoint.AuditSettingsStateEnabled),
 	}
 
-	testsuite.serverFactory.Server.GetSQLAuditSettings = func(ctx context.Context, workspaceID string, itemID string, options *sqlendpoint.ClientGetSQLAuditSettingsOptions) (resp azfake.Responder[sqlendpoint.ClientGetSQLAuditSettingsResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.SQLAuditSettingsServer.GetSQLAuditSettings = func(ctx context.Context, workspaceID string, itemID string, options *sqlendpoint.SQLAuditSettingsClientGetSQLAuditSettingsOptions) (resp azfake.Responder[sqlendpoint.SQLAuditSettingsClientGetSQLAuditSettingsResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleItemID, itemID)
-		resp = azfake.Responder[sqlendpoint.ClientGetSQLAuditSettingsResponse]{}
-		resp.SetResponse(http.StatusOK, sqlendpoint.ClientGetSQLAuditSettingsResponse{SQLAuditSettings: exampleRes}, nil)
+		resp = azfake.Responder[sqlendpoint.SQLAuditSettingsClientGetSQLAuditSettingsResponse]{}
+		resp.SetResponse(http.StatusOK, sqlendpoint.SQLAuditSettingsClientGetSQLAuditSettingsResponse{SQLAuditSettings: exampleRes}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewClient()
+	client := testsuite.clientFactory.NewSQLAuditSettingsClient()
 	res, err := client.GetSQLAuditSettings(ctx, exampleWorkspaceID, exampleItemID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.SQLAuditSettings))
 }
 
-func (testsuite *FakeTestSuite) TestSQLEndpoint_SetAuditActionsAndGroups() {
+func (testsuite *FakeTestSuite) TestSQLAuditSettings_SetAuditActionsAndGroups() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Set SQL Audit Groups"},
@@ -198,16 +204,16 @@ func (testsuite *FakeTestSuite) TestSQLEndpoint_SetAuditActionsAndGroups() {
 		"FAILED_DATABASE_AUTHENTICATION_GROUP",
 		"BATCH_COMPLETED_GROUP"}
 
-	testsuite.serverFactory.Server.SetAuditActionsAndGroups = func(ctx context.Context, workspaceID string, itemID string, setAuditActionsAndGroupsRequest []string, options *sqlendpoint.ClientSetAuditActionsAndGroupsOptions) (resp azfake.Responder[sqlendpoint.ClientSetAuditActionsAndGroupsResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.SQLAuditSettingsServer.SetAuditActionsAndGroups = func(ctx context.Context, workspaceID string, itemID string, setAuditActionsAndGroupsRequest []string, options *sqlendpoint.SQLAuditSettingsClientSetAuditActionsAndGroupsOptions) (resp azfake.Responder[sqlendpoint.SQLAuditSettingsClientSetAuditActionsAndGroupsResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleItemID, itemID)
 		testsuite.Require().Equal(exampleSetAuditActionsAndGroupsRequest, setAuditActionsAndGroupsRequest)
-		resp = azfake.Responder[sqlendpoint.ClientSetAuditActionsAndGroupsResponse]{}
-		resp.SetResponse(http.StatusOK, sqlendpoint.ClientSetAuditActionsAndGroupsResponse{}, nil)
+		resp = azfake.Responder[sqlendpoint.SQLAuditSettingsClientSetAuditActionsAndGroupsResponse]{}
+		resp.SetResponse(http.StatusOK, sqlendpoint.SQLAuditSettingsClientSetAuditActionsAndGroupsResponse{}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewClient()
+	client := testsuite.clientFactory.NewSQLAuditSettingsClient()
 	_, err = client.SetAuditActionsAndGroups(ctx, exampleWorkspaceID, exampleItemID, exampleSetAuditActionsAndGroupsRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }

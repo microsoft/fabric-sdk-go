@@ -142,7 +142,7 @@ func (i *ItemsServerTransport) dispatchBeginCreateApacheAirflowJob(req *http.Req
 	}
 	beginCreateApacheAirflowJob := i.beginCreateApacheAirflowJob.get(req)
 	if beginCreateApacheAirflowJob == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/ApacheAirflowJobs`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/apacheAirflowJobs`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 2 {
@@ -184,7 +184,7 @@ func (i *ItemsServerTransport) dispatchDeleteApacheAirflowJob(req *http.Request)
 	if i.srv.DeleteApacheAirflowJob == nil {
 		return nil, &nonRetriableError{errors.New("fake for method DeleteApacheAirflowJob not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/ApacheAirflowJobs/(?P<ApacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/apacheAirflowJobs/(?P<apacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -194,7 +194,7 @@ func (i *ItemsServerTransport) dispatchDeleteApacheAirflowJob(req *http.Request)
 	if err != nil {
 		return nil, err
 	}
-	apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("ApacheAirflowJobId")])
+	apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("apacheAirflowJobId")])
 	if err != nil {
 		return nil, err
 	}
@@ -217,7 +217,7 @@ func (i *ItemsServerTransport) dispatchGetApacheAirflowJob(req *http.Request) (*
 	if i.srv.GetApacheAirflowJob == nil {
 		return nil, &nonRetriableError{errors.New("fake for method GetApacheAirflowJob not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/ApacheAirflowJobs/(?P<ApacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/apacheAirflowJobs/(?P<apacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -227,7 +227,7 @@ func (i *ItemsServerTransport) dispatchGetApacheAirflowJob(req *http.Request) (*
 	if err != nil {
 		return nil, err
 	}
-	apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("ApacheAirflowJobId")])
+	apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("apacheAirflowJobId")])
 	if err != nil {
 		return nil, err
 	}
@@ -252,7 +252,7 @@ func (i *ItemsServerTransport) dispatchBeginGetApacheAirflowJobDefinition(req *h
 	}
 	beginGetApacheAirflowJobDefinition := i.beginGetApacheAirflowJobDefinition.get(req)
 	if beginGetApacheAirflowJobDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/ApacheAirflowJobs/(?P<ApacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/apacheAirflowJobs/(?P<apacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
@@ -263,7 +263,7 @@ func (i *ItemsServerTransport) dispatchBeginGetApacheAirflowJobDefinition(req *h
 		if err != nil {
 			return nil, err
 		}
-		apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("ApacheAirflowJobId")])
+		apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("apacheAirflowJobId")])
 		if err != nil {
 			return nil, err
 		}
@@ -308,7 +308,7 @@ func (i *ItemsServerTransport) dispatchNewListApacheAirflowJobsPager(req *http.R
 	}
 	newListApacheAirflowJobsPager := i.newListApacheAirflowJobsPager.get(req)
 	if newListApacheAirflowJobsPager == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/ApacheAirflowJobs`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/apacheAirflowJobs`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 2 {
@@ -319,14 +319,29 @@ func (i *ItemsServerTransport) dispatchNewListApacheAirflowJobsPager(req *http.R
 		if err != nil {
 			return nil, err
 		}
+		recursiveUnescaped, err := url.QueryUnescape(qp.Get("recursive"))
+		if err != nil {
+			return nil, err
+		}
+		recursiveParam, err := parseOptional(recursiveUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDUnescaped, err := url.QueryUnescape(qp.Get("rootFolderId"))
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDParam := getOptional(rootFolderIDUnescaped)
 		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
 		if err != nil {
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
 		var options *apacheairflowjob.ItemsClientListApacheAirflowJobsOptions
-		if continuationTokenParam != nil {
+		if recursiveParam != nil || rootFolderIDParam != nil || continuationTokenParam != nil {
 			options = &apacheairflowjob.ItemsClientListApacheAirflowJobsOptions{
+				Recursive:         recursiveParam,
+				RootFolderID:      rootFolderIDParam,
 				ContinuationToken: continuationTokenParam,
 			}
 		}
@@ -355,7 +370,7 @@ func (i *ItemsServerTransport) dispatchUpdateApacheAirflowJob(req *http.Request)
 	if i.srv.UpdateApacheAirflowJob == nil {
 		return nil, &nonRetriableError{errors.New("fake for method UpdateApacheAirflowJob not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/ApacheAirflowJobs/(?P<ApacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/apacheAirflowJobs/(?P<apacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -369,7 +384,7 @@ func (i *ItemsServerTransport) dispatchUpdateApacheAirflowJob(req *http.Request)
 	if err != nil {
 		return nil, err
 	}
-	apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("ApacheAirflowJobId")])
+	apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("apacheAirflowJobId")])
 	if err != nil {
 		return nil, err
 	}
@@ -394,7 +409,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateApacheAirflowJobDefinition(req
 	}
 	beginUpdateApacheAirflowJobDefinition := i.beginUpdateApacheAirflowJobDefinition.get(req)
 	if beginUpdateApacheAirflowJobDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/ApacheAirflowJobs/(?P<ApacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/apacheAirflowJobs/(?P<apacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
@@ -409,7 +424,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateApacheAirflowJobDefinition(req
 		if err != nil {
 			return nil, err
 		}
-		apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("ApacheAirflowJobId")])
+		apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("apacheAirflowJobId")])
 		if err != nil {
 			return nil, err
 		}

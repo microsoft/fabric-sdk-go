@@ -21,6 +21,9 @@ type CreateSparkJobDefinitionRequest struct {
 
 	// The folder ID. If not specified or null, the spark job definition is created with the workspace as its folder.
 	FolderID *string
+
+	// The sensitivity label settings for the spark job definition.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // Duration - A duration.
@@ -30,6 +33,27 @@ type Duration struct {
 
 	// REQUIRED; The number of timeUnits in the duration.
 	Value *float32
+}
+
+// EntireTenantPrincipal - Represents a tenant principal
+type EntireTenantPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type EntireTenantPrincipal.
+func (e *EntireTenantPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: e.DisplayName,
+		ID:          e.ID,
+		Type:        e.Type,
+	}
 }
 
 // ExecutionData for spark job definition run if customer wants to override default values.
@@ -51,6 +75,36 @@ type ExecutionData struct {
 
 	// Main class name to be used. This is not needed for python and r executable files.
 	MainClass *string
+}
+
+// GroupPrincipal - Represents a security group.
+type GroupPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// Group specific details. Applicable when the principal type is Group.
+	GroupDetails *GroupPrincipalGroupDetails
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type GroupPrincipal.
+func (g *GroupPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: g.DisplayName,
+		ID:          g.ID,
+		Type:        g.Type,
+	}
+}
+
+// GroupPrincipalGroupDetails - Group specific details. Applicable when the principal type is Group.
+type GroupPrincipalGroupDetails struct {
+	// The type of the group. Additional group types may be added over time.
+	GroupType *GroupType
 }
 
 // ItemReference - An item reference object.
@@ -81,6 +135,24 @@ func (i *ItemReferenceByID) GetItemReference() *ItemReference {
 	}
 }
 
+// ItemReferenceByVariable - An item reference by variable.
+type ItemReferenceByVariable struct {
+	// REQUIRED; The item reference type.
+	ReferenceType *ItemReferenceType
+
+	// REQUIRED; A variable reference string that specifies the Variable Library and the variable name inside it. Format: $(/**/_VarLibrary_/_VarName_)
+	// for a Variable Library named VarLibrary and a variable named
+	// VarName.
+	VariableReference *string
+}
+
+// GetItemReference implements the ItemReferenceClassification interface for type ItemReferenceByVariable.
+func (i *ItemReferenceByVariable) GetItemReference() *ItemReference {
+	return &ItemReference{
+		ReferenceType: i.ReferenceType,
+	}
+}
+
 // ItemTag - Represents a tag applied on an item.
 type ItemTag struct {
 	// REQUIRED; The name of the tag.
@@ -102,7 +174,7 @@ type LivySession struct {
 	CapacityID *string
 
 	// ID of the consumer.
-	ConsumerID *Principal
+	ConsumerID PrincipalClassification
 
 	// ID of the item creator. When isHighConcurrency is set to true this value might be different than itemId.
 	CreatorItem *ItemReferenceByID
@@ -191,7 +263,7 @@ type LivySession struct {
 	SubmittedDateTime *time.Time
 
 	// ID of the submitter.
-	Submitter *Principal
+	Submitter PrincipalClassification
 
 	// Total duration of the job.
 	TotalDuration *Duration
@@ -217,45 +289,12 @@ type Principal struct {
 	// REQUIRED; The type of the principal. Additional principal types may be added over time.
 	Type *PrincipalType
 
-	// Group specific details. Applicable when the principal type is Group.
-	GroupDetails *PrincipalGroupDetails
-
-	// Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
-	ServicePrincipalProfileDetails *PrincipalServicePrincipalProfileDetails
-
 	// READ-ONLY; The principal's display name.
 	DisplayName *string
-
-	// READ-ONLY; Service principal specific details. Applicable when the principal type is ServicePrincipal.
-	ServicePrincipalDetails *PrincipalServicePrincipalDetails
-
-	// READ-ONLY; User principal specific details. Applicable when the principal type is User.
-	UserDetails *PrincipalUserDetails
 }
 
-// PrincipalGroupDetails - Group specific details. Applicable when the principal type is Group.
-type PrincipalGroupDetails struct {
-	// The type of the group. Additional group types may be added over time.
-	GroupType *GroupType
-}
-
-// PrincipalServicePrincipalDetails - Service principal specific details. Applicable when the principal type is ServicePrincipal.
-type PrincipalServicePrincipalDetails struct {
-	// READ-ONLY; The service principal's Microsoft Entra AppId.
-	AADAppID *string
-}
-
-// PrincipalServicePrincipalProfileDetails - Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
-type PrincipalServicePrincipalProfileDetails struct {
-	// The service principal profile's parent principal.
-	ParentPrincipal *Principal
-}
-
-// PrincipalUserDetails - User principal specific details. Applicable when the principal type is User.
-type PrincipalUserDetails struct {
-	// READ-ONLY; The user principal name.
-	UserPrincipalName *string
-}
+// GetPrincipal implements the PrincipalClassification interface for type Principal.
+func (p *Principal) GetPrincipal() *Principal { return p }
 
 // Properties - The spark job definition properties.
 type Properties struct {
@@ -264,8 +303,8 @@ type Properties struct {
 }
 
 // PublicDefinition - Spark job definition public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/spark-job-definition]
-// for more details on how to craft a spark job
-// definition public definition.
+// for more details on the structure of the Spark job
+// definition.
 type PublicDefinition struct {
 	// REQUIRED; A list of definition parts.
 	Parts  []PublicDefinitionPart
@@ -287,8 +326,8 @@ type PublicDefinitionPart struct {
 // Response - Spark job definition public definition response.
 type Response struct {
 	// READ-ONLY; Spark job definition public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/spark-job-definition]
-	// for more details on how to craft a spark job
-	// definition public definition.
+	// for more details on the structure of the Spark job
+	// definition.
 	Definition *PublicDefinition
 }
 
@@ -296,6 +335,82 @@ type Response struct {
 type RunSparkJobDefinitionRequest struct {
 	// The spark job definition parameters to be used during execution if needed. By default no body is needed
 	ExecutionData *ExecutionData
+}
+
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
+// ServicePrincipal - Represents a Microsoft Entra service principal.
+type ServicePrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+
+	// READ-ONLY; Service principal specific details. Applicable when the principal type is ServicePrincipal.
+	ServicePrincipalDetails *ServicePrincipalDetails
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type ServicePrincipal.
+func (s *ServicePrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: s.DisplayName,
+		ID:          s.ID,
+		Type:        s.Type,
+	}
+}
+
+// ServicePrincipalDetails - Service principal specific details. Applicable when the principal type is ServicePrincipal.
+type ServicePrincipalDetails struct {
+	// READ-ONLY; The service principal's Microsoft Entra AppId.
+	AADAppID *string
+}
+
+// ServicePrincipalProfilePrincipal - Represents a service principal profile.
+type ServicePrincipalProfilePrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
+	ServicePrincipalProfileDetails *ServicePrincipalProfilePrincipalServicePrincipalProfileDetails
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type ServicePrincipalProfilePrincipal.
+func (s *ServicePrincipalProfilePrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: s.DisplayName,
+		ID:          s.ID,
+		Type:        s.Type,
+	}
+}
+
+// ServicePrincipalProfilePrincipalServicePrincipalProfileDetails - Service principal profile details. Applicable when the
+// principal type is ServicePrincipalProfile.
+type ServicePrincipalProfilePrincipalServicePrincipalProfileDetails struct {
+	// The service principal profile's parent principal.
+	ParentPrincipal PrincipalClassification
 }
 
 // SparkJobDefinition - A spark job definition object.
@@ -317,6 +432,9 @@ type SparkJobDefinition struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
 
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
@@ -340,8 +458,8 @@ type SparkJobDefinitions struct {
 // UpdateSparkJobDefinitionDefinitionRequest - Update spark job definition public definition request payload.
 type UpdateSparkJobDefinitionDefinitionRequest struct {
 	// REQUIRED; Spark job definition public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/spark-job-definition]
-	// for more details on how to craft a spark job
-	// definition public definition.
+	// for more details on the structure of the Spark job
+	// definition.
 	Definition *PublicDefinition
 }
 
@@ -352,4 +470,34 @@ type UpdateSparkJobDefinitionRequest struct {
 
 	// The spark job definition display name. The display name must follow naming rules according to item type.
 	DisplayName *string
+}
+
+// UserPrincipal - Represents a Microsoft Entra user principal.
+type UserPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+
+	// READ-ONLY; User principal specific details. Applicable when the principal type is User.
+	UserDetails *UserPrincipalUserDetails
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type UserPrincipal.
+func (u *UserPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: u.DisplayName,
+		ID:          u.ID,
+		Type:        u.Type,
+	}
+}
+
+// UserPrincipalUserDetails - User principal specific details. Applicable when the principal type is User.
+type UserPrincipalUserDetails struct {
+	// READ-ONLY; The user principal name.
+	UserPrincipalName *string
 }

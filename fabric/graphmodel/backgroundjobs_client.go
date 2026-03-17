@@ -34,7 +34,7 @@ type BackgroundJobsClient struct {
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | No |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -67,7 +67,7 @@ func (client *BackgroundJobsClient) RunOnDemandRefreshGraph(ctx context.Context,
 
 // runOnDemandRefreshGraphCreateRequest creates the RunOnDemandRefreshGraph request.
 func (client *BackgroundJobsClient) runOnDemandRefreshGraphCreateRequest(ctx context.Context, workspaceID string, graphModelID string, _ *BackgroundJobsClientRunOnDemandRefreshGraphOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/GraphModels/{GraphModelId}/jobs/RefreshGraph/instances"
+	urlPath := "/v1/workspaces/{workspaceId}/graphModels/{graphModelId}/jobs/refreshGraph/instances"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -75,7 +75,7 @@ func (client *BackgroundJobsClient) runOnDemandRefreshGraphCreateRequest(ctx con
 	if graphModelID == "" {
 		return nil, errors.New("parameter graphModelID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{GraphModelId}", url.PathEscape(graphModelID))
+	urlPath = strings.ReplaceAll(urlPath, "{graphModelId}", url.PathEscape(graphModelID))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err

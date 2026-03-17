@@ -6,21 +6,6 @@
 
 package warehouse
 
-// ClientGetSQLAuditSettingsOptions contains the optional parameters for the Client.GetSQLAuditSettings method.
-type ClientGetSQLAuditSettingsOptions struct {
-	// placeholder for future optional parameters
-}
-
-// ClientSetAuditActionsAndGroupsOptions contains the optional parameters for the Client.SetAuditActionsAndGroups method.
-type ClientSetAuditActionsAndGroupsOptions struct {
-	// placeholder for future optional parameters
-}
-
-// ClientUpdateSQLAuditSettingsOptions contains the optional parameters for the Client.UpdateSQLAuditSettings method.
-type ClientUpdateSQLAuditSettingsOptions struct {
-	// placeholder for future optional parameters
-}
-
 // ItemsClientBeginCreateWarehouseOptions contains the optional parameters for the ItemsClient.BeginCreateWarehouse method.
 type ItemsClientBeginCreateWarehouseOptions struct {
 	// Resumes the long-running operation from the provided token.
@@ -50,6 +35,15 @@ type ItemsClientGetWarehouseOptions struct {
 type ItemsClientListWarehousesOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
+
+	// Lists items in a folder and its nested folders, or just a folder only. True - All items in the folder and its nested folders
+	// are listed, False - Only items in the folder are listed. The default value
+	// is true.
+	Recursive *bool
+
+	// This parameter allows users to filter items based on a specific root folder. If not provided, the workspace is used as
+	// the root folder.
+	RootFolderID *string
 }
 
 // ItemsClientUpdateWarehouseOptions contains the optional parameters for the ItemsClient.UpdateWarehouse method.
@@ -93,5 +87,23 @@ type RestorePointsClientListRestorePointsOptions struct {
 // RestorePointsClientUpdateRestorePointOptions contains the optional parameters for the RestorePointsClient.UpdateRestorePoint
 // method.
 type RestorePointsClientUpdateRestorePointOptions struct {
+	// placeholder for future optional parameters
+}
+
+// SQLAuditSettingsClientGetSQLAuditSettingsOptions contains the optional parameters for the SQLAuditSettingsClient.GetSQLAuditSettings
+// method.
+type SQLAuditSettingsClientGetSQLAuditSettingsOptions struct {
+	// placeholder for future optional parameters
+}
+
+// SQLAuditSettingsClientSetAuditActionsAndGroupsOptions contains the optional parameters for the SQLAuditSettingsClient.SetAuditActionsAndGroups
+// method.
+type SQLAuditSettingsClientSetAuditActionsAndGroupsOptions struct {
+	// placeholder for future optional parameters
+}
+
+// SQLAuditSettingsClientUpdateSQLAuditSettingsOptions contains the optional parameters for the SQLAuditSettingsClient.UpdateSQLAuditSettings
+// method.
+type SQLAuditSettingsClientUpdateSQLAuditSettingsOptions struct {
 	// placeholder for future optional parameters
 }

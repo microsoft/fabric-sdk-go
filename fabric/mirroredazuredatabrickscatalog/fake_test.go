@@ -71,6 +71,9 @@ func (testsuite *FakeTestSuite) TestItems_ListMirroredAzureDatabricksCatalogs() 
 				Description: to.Ptr("A MirroredAzureDatabricksCatalog description."),
 				DisplayName: to.Ptr("MirroredAzureDatabricksCatalog_1"),
 				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				SensitivityLabel: &mirroredazuredatabrickscatalog.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 				Properties: &mirroredazuredatabrickscatalog.Properties{
 					AutoSync:                        to.Ptr(mirroredazuredatabrickscatalog.AutoSyncDisabled),
@@ -95,6 +98,9 @@ func (testsuite *FakeTestSuite) TestItems_ListMirroredAzureDatabricksCatalogs() 
 				Description: to.Ptr("A MirroredAzureDatabricksCatalog description."),
 				DisplayName: to.Ptr("MirroredAzureDatabricksCatalog_2"),
 				ID:          to.Ptr("a8a1bffa-7eea-49dc-a1d2-6281c1d031f1"),
+				SensitivityLabel: &mirroredazuredatabrickscatalog.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 				Properties: &mirroredazuredatabrickscatalog.Properties{
 					AutoSync:                        to.Ptr(mirroredazuredatabrickscatalog.AutoSyncDisabled),
@@ -124,7 +130,10 @@ func (testsuite *FakeTestSuite) TestItems_ListMirroredAzureDatabricksCatalogs() 
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	pager := client.NewListMirroredAzureDatabricksCatalogsPager(exampleWorkspaceID, &mirroredazuredatabrickscatalog.ItemsClientListMirroredAzureDatabricksCatalogsOptions{ContinuationToken: nil})
+	pager := client.NewListMirroredAzureDatabricksCatalogsPager(exampleWorkspaceID, &mirroredazuredatabrickscatalog.ItemsClientListMirroredAzureDatabricksCatalogsOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")
@@ -220,6 +229,9 @@ func (testsuite *FakeTestSuite) TestItems_GetMirroredAzureDatabricksCatalog() {
 		Description: to.Ptr("A MirroredAzureDatabricksCatalog description."),
 		DisplayName: to.Ptr("MirroredAzureDatabricksCatalog_1"),
 		ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+		SensitivityLabel: &mirroredazuredatabrickscatalog.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		Properties: &mirroredazuredatabrickscatalog.Properties{
 			AutoSync:                        to.Ptr(mirroredazuredatabrickscatalog.AutoSyncEnabled),

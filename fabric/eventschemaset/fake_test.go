@@ -70,6 +70,9 @@ func (testsuite *FakeTestSuite) TestItems_ListEventSchemaSets() {
 				Description: to.Ptr("A EventSchemaSet description."),
 				DisplayName: to.Ptr("EventSchemaSet Name 1"),
 				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				SensitivityLabel: &eventschemaset.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 				Properties: &eventschemaset.Properties{
 					OneLakeRootPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/f089354e-8366-4e18-aea3-4cb4a3a50b48/41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"),
@@ -80,6 +83,9 @@ func (testsuite *FakeTestSuite) TestItems_ListEventSchemaSets() {
 				Description: to.Ptr("A EventSchemaSet description."),
 				DisplayName: to.Ptr("EventSchemaSet Name 2"),
 				ID:          to.Ptr("f697fb63-abd4-4399-9548-be7e3c3c0dac"),
+				SensitivityLabel: &eventschemaset.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 				Properties: &eventschemaset.Properties{
 					OneLakeRootPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/f089354e-8366-4e18-aea3-4cb4a3a50b48/d8f6cf16-3aac-4440-9d76-a03d86b7ae3e"),
@@ -95,7 +101,10 @@ func (testsuite *FakeTestSuite) TestItems_ListEventSchemaSets() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	pager := client.NewListEventSchemaSetsPager(exampleWorkspaceID, &eventschemaset.ItemsClientListEventSchemaSetsOptions{ContinuationToken: nil})
+	pager := client.NewListEventSchemaSetsPager(exampleWorkspaceID, &eventschemaset.ItemsClientListEventSchemaSetsOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")
@@ -185,6 +194,9 @@ func (testsuite *FakeTestSuite) TestItems_GetEventSchemaSet() {
 		Description: to.Ptr("A EventSchemaSet description."),
 		DisplayName: to.Ptr("EventSchemaSet 1"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &eventschemaset.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	}
 

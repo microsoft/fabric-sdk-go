@@ -27,7 +27,10 @@ func ExampleItemsClient_NewListWarehousesPager() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewItemsClient().NewListWarehousesPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &warehouse.ItemsClientListWarehousesOptions{ContinuationToken: nil})
+	pager := clientFactory.NewItemsClient().NewListWarehousesPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &warehouse.ItemsClientListWarehousesOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
 		if err != nil {
@@ -45,6 +48,9 @@ func ExampleItemsClient_NewListWarehousesPager() {
 		// 			Description: to.Ptr("A warehouse description."),
 		// 			DisplayName: to.Ptr("Warehouse Name 1"),
 		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+		// 			SensitivityLabel: &warehouse.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 			Properties: &warehouse.Properties{
 		// 				CollationType: to.Ptr(warehouse.CollationTypeLatin1General100CIASKSWSSCUTF8),
@@ -58,6 +64,9 @@ func ExampleItemsClient_NewListWarehousesPager() {
 		// 			Description: to.Ptr("A warehouse description."),
 		// 			DisplayName: to.Ptr("Warehouse Name 2"),
 		// 			ID: to.Ptr("6281bf94-81b9-46b2-b8d3-79bb868fc822"),
+		// 			SensitivityLabel: &warehouse.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 			Properties: &warehouse.Properties{
 		// 				CollationType: to.Ptr(warehouse.CollationTypeLatin1General100BIN2UTF8),
@@ -144,6 +153,9 @@ func ExampleItemsClient_GetWarehouse() {
 	// 	Description: to.Ptr("A warehouse description."),
 	// 	DisplayName: to.Ptr("Warehouse 1"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+	// 	SensitivityLabel: &warehouse.SensitivityLabel{
+	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// 	Properties: &warehouse.Properties{
 	// 		CollationType: to.Ptr(warehouse.CollationTypeLatin1General100BIN2UTF8),
@@ -180,6 +192,9 @@ func ExampleItemsClient_UpdateWarehouse() {
 	// 	Description: to.Ptr("A new description for warehouse."),
 	// 	DisplayName: to.Ptr("Warehouse's New name"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+	// 	SensitivityLabel: &warehouse.SensitivityLabel{
+	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// 	Properties: &warehouse.Properties{
 	// 		CollationType: to.Ptr(warehouse.CollationTypeLatin1General100BIN2UTF8),

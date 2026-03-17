@@ -10,10 +10,10 @@ type Format string
 
 const (
 	// FormatSparkJobDefinitionV1 - The default format for spark job definitions. Does not support Main/Libs file parts. Refer
-	// to [SparkJobDefinitionV1](/rest/api/fabric/articles/item-management/definitions/spark-job-definition-v1) article for more
-	// details.
+	// to [SparkJobDefinitionV1](/rest/api/fabric/articles/item-management/definitions/spark-job-definition#sparkjobdefinitionv1)
+	// article for more details.
 	FormatSparkJobDefinitionV1 Format = "SparkJobDefinitionV1"
-	// FormatSparkJobDefinitionV2 - The new format for spark job definitions. Supports Main/Libs file parts. Refer to [SparkJobDefinitionV2](/rest/api/fabric/articles/item-management/definitions/spark-job-definition-v2)
+	// FormatSparkJobDefinitionV2 - The new format for spark job definitions. Supports Main/Libs file parts. Refer to [SparkJobDefinitionV2](/rest/api/fabric/articles/item-management/definitions/spark-job-definition#sparkjobdefinitionv2)
 	// article for more details.
 	FormatSparkJobDefinitionV2 Format = "SparkJobDefinitionV2"
 )
@@ -47,18 +47,21 @@ func PossibleGroupTypeValues() []GroupType {
 	}
 }
 
-// ItemReferenceType - The Item reference type. Additional ItemReferenceType types may be added over time.
+// ItemReferenceType - The item reference type. Additional ItemReferenceType types may be added over time.
 type ItemReferenceType string
 
 const (
 	// ItemReferenceTypeByID - The item is referenced by its ID.
 	ItemReferenceTypeByID ItemReferenceType = "ById"
+	// ItemReferenceTypeByVariable - The item is referenced by a variable.
+	ItemReferenceTypeByVariable ItemReferenceType = "ByVariable"
 )
 
 // PossibleItemReferenceTypeValues returns the possible values for the ItemReferenceType const type.
 func PossibleItemReferenceTypeValues() []ItemReferenceType {
 	return []ItemReferenceType{
 		ItemReferenceTypeByID,
+		ItemReferenceTypeByVariable,
 	}
 }
 
@@ -76,6 +79,8 @@ const (
 	ItemTypeCosmosDBDatabase ItemType = "CosmosDBDatabase"
 	// ItemTypeDashboard - PowerBI dashboard.
 	ItemTypeDashboard ItemType = "Dashboard"
+	// ItemTypeDataAgent - A DataAgent.
+	ItemTypeDataAgent ItemType = "DataAgent"
 	// ItemTypeDataPipeline - A data pipeline.
 	ItemTypeDataPipeline ItemType = "DataPipeline"
 	// ItemTypeDataflow - A Dataflow.
@@ -162,6 +167,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeCopyJob,
 		ItemTypeCosmosDBDatabase,
 		ItemTypeDashboard,
+		ItemTypeDataAgent,
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
 		ItemTypeDatamart,
@@ -308,6 +314,26 @@ func PossiblePrincipalTypeValues() []PrincipalType {
 		PrincipalTypeServicePrincipal,
 		PrincipalTypeServicePrincipalProfile,
 		PrincipalTypeUser,
+	}
+}
+
+// SensitivityLabelApplyStrategy - The strategy for applying the sensitivity label. The default value is ApplyOrFail. Additional
+// types may be added over time.
+type SensitivityLabelApplyStrategy string
+
+const (
+	// SensitivityLabelApplyStrategyApplyOrFail - Apply the sensitivity label or fail the operation if it cannot be applied.
+	SensitivityLabelApplyStrategyApplyOrFail SensitivityLabelApplyStrategy = "ApplyOrFail"
+	// SensitivityLabelApplyStrategyIgnore - Ignore the sensitivity label if it cannot be applied and proceed with the operation
+	// without applying the label.
+	SensitivityLabelApplyStrategyIgnore SensitivityLabelApplyStrategy = "Ignore"
+)
+
+// PossibleSensitivityLabelApplyStrategyValues returns the possible values for the SensitivityLabelApplyStrategy const type.
+func PossibleSensitivityLabelApplyStrategyValues() []SensitivityLabelApplyStrategy {
+	return []SensitivityLabelApplyStrategy{
+		SensitivityLabelApplyStrategyApplyOrFail,
+		SensitivityLabelApplyStrategyIgnore,
 	}
 }
 

@@ -70,6 +70,9 @@ func (testsuite *FakeTestSuite) TestItems_ListKQLQuerysets() {
 				Description: to.Ptr("A KQL queryset description."),
 				DisplayName: to.Ptr("KQLQueryset_1"),
 				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				SensitivityLabel: &kqlqueryset.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 			},
 			{
@@ -77,6 +80,9 @@ func (testsuite *FakeTestSuite) TestItems_ListKQLQuerysets() {
 				Description: to.Ptr("A KQL queryset description."),
 				DisplayName: to.Ptr("KQLQueryset_2"),
 				ID:          to.Ptr("4c9adc22-ffb1-491f-baaa-9c9987745591"),
+				SensitivityLabel: &kqlqueryset.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 			},
 			{
@@ -84,6 +90,9 @@ func (testsuite *FakeTestSuite) TestItems_ListKQLQuerysets() {
 				Description: to.Ptr("A KQL queryset description."),
 				DisplayName: to.Ptr("KQLQueryset_3"),
 				ID:          to.Ptr("8b681594-894d-4adf-8ae8-aed415dd1de6"),
+				SensitivityLabel: &kqlqueryset.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 			}},
 	}
@@ -96,7 +105,10 @@ func (testsuite *FakeTestSuite) TestItems_ListKQLQuerysets() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	pager := client.NewListKQLQuerysetsPager(exampleWorkspaceID, &kqlqueryset.ItemsClientListKQLQuerysetsOptions{ContinuationToken: nil})
+	pager := client.NewListKQLQuerysetsPager(exampleWorkspaceID, &kqlqueryset.ItemsClientListKQLQuerysetsOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")
@@ -181,6 +193,9 @@ func (testsuite *FakeTestSuite) TestItems_GetKQLQueryset() {
 		Description: to.Ptr("A KQL queryset description."),
 		DisplayName: to.Ptr("KQLQueryset_1"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &kqlqueryset.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	}
 
@@ -218,6 +233,9 @@ func (testsuite *FakeTestSuite) TestItems_UpdateKQLQueryset() {
 		Description: to.Ptr("A new description for KQL queryset."),
 		DisplayName: to.Ptr("KQLQueryset_New_Name"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &kqlqueryset.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	}
 

@@ -19,6 +19,9 @@ type CreateMapRequest struct {
 
 	// The folder ID. If not specified or null, the Map is created with the workspace as its folder.
 	FolderID *string
+
+	// The sensitivity label settings for the Map.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // ItemTag - Represents a tag applied on an item.
@@ -47,6 +50,9 @@ type Map struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
+
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
 
@@ -56,13 +62,13 @@ type Map struct {
 
 // MapDefinitionResponse - Map public definition response.
 type MapDefinitionResponse struct {
-	// READ-ONLY; Map public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/map]
-	// for more details on how to craft a Map public definition.
+	// READ-ONLY; Map public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/map-definition]
+	// for more details on the structure of the Map definition.
 	Definition *MapPublicDefinition
 }
 
-// MapPublicDefinition - Map public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/map]
-// for more details on how to craft a Map public definition.
+// MapPublicDefinition - Map public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/map-definition]
+// for more details on the structure of the Map definition.
 type MapPublicDefinition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []MapPublicDefinitionPart
@@ -95,10 +101,25 @@ type Maps struct {
 	ContinuationURI *string
 }
 
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
 // UpdateMapDefinitionRequest - Update Map public definition request payload.
 type UpdateMapDefinitionRequest struct {
-	// REQUIRED; Map public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/map]
-	// for more details on how to craft a Map public definition.
+	// REQUIRED; Map public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/map-definition]
+	// for more details on the structure of the Map definition.
 	Definition *MapPublicDefinition
 }
 

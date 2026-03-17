@@ -41,8 +41,8 @@ type ItemsClientListEnvironmentsResponse struct {
 	Environments
 }
 
-// ItemsClientPublishEnvironmentPreviewResponse contains the response from method ItemsClient.PublishEnvironmentPreview.
-type ItemsClientPublishEnvironmentPreviewResponse struct {
+// ItemsClientPublishEnvironmentBetaResponse contains the response from method ItemsClient.PublishEnvironmentBeta.
+type ItemsClientPublishEnvironmentBetaResponse struct {
 	// Environment properties.
 	Properties
 }
@@ -69,8 +69,8 @@ type PublishedClientExportExternalLibrariesResponse struct {
 	// placeholder for future response values
 }
 
-// PublishedClientGetSparkComputePreviewResponse contains the response from method PublishedClient.GetSparkComputePreview.
-type PublishedClientGetSparkComputePreviewResponse struct {
+// PublishedClientGetSparkComputeBetaResponse contains the response from method PublishedClient.GetSparkComputeBeta.
+type PublishedClientGetSparkComputeBetaResponse struct {
 	SparkComputePreview
 }
 
@@ -79,8 +79,8 @@ type PublishedClientGetSparkComputeResponse struct {
 	SparkCompute
 }
 
-// PublishedClientListLibrariesPreviewResponse contains the response from method PublishedClient.ListLibrariesPreview.
-type PublishedClientListLibrariesPreviewResponse struct {
+// PublishedClientListLibrariesBetaResponse contains the response from method PublishedClient.ListLibrariesBeta.
+type PublishedClientListLibrariesBetaResponse struct {
 	// Environment libraries.
 	LibrariesPreview
 }
@@ -91,8 +91,8 @@ type PublishedClientListLibrariesResponse struct {
 	Libraries
 }
 
-// StagingClientDeleteCustomLibraryPreviewResponse contains the response from method StagingClient.DeleteCustomLibraryPreview.
-type StagingClientDeleteCustomLibraryPreviewResponse struct {
+// StagingClientDeleteCustomLibraryBetaResponse contains the response from method StagingClient.DeleteCustomLibraryBeta.
+type StagingClientDeleteCustomLibraryBetaResponse struct {
 	// placeholder for future response values
 }
 
@@ -106,8 +106,8 @@ type StagingClientExportExternalLibrariesResponse struct {
 	// placeholder for future response values
 }
 
-// StagingClientGetSparkComputePreviewResponse contains the response from method StagingClient.GetSparkComputePreview.
-type StagingClientGetSparkComputePreviewResponse struct {
+// StagingClientGetSparkComputeBetaResponse contains the response from method StagingClient.GetSparkComputeBeta.
+type StagingClientGetSparkComputeBetaResponse struct {
 	SparkComputePreview
 }
 
@@ -121,8 +121,8 @@ type StagingClientImportExternalLibrariesResponse struct {
 	// placeholder for future response values
 }
 
-// StagingClientListLibrariesPreviewResponse contains the response from method StagingClient.ListLibrariesPreview.
-type StagingClientListLibrariesPreviewResponse struct {
+// StagingClientListLibrariesBetaResponse contains the response from method StagingClient.ListLibrariesBeta.
+type StagingClientListLibrariesBetaResponse struct {
 	// Environment libraries.
 	LibrariesPreview
 }
@@ -138,8 +138,8 @@ type StagingClientRemoveExternalLibraryResponse struct {
 	// placeholder for future response values
 }
 
-// StagingClientUpdateSparkComputePreviewResponse contains the response from method StagingClient.UpdateSparkComputePreview.
-type StagingClientUpdateSparkComputePreviewResponse struct {
+// StagingClientUpdateSparkComputeBetaResponse contains the response from method StagingClient.UpdateSparkComputeBeta.
+type StagingClientUpdateSparkComputeBetaResponse struct {
 	SparkComputePreview
 }
 
@@ -148,8 +148,8 @@ type StagingClientUpdateSparkComputeResponse struct {
 	SparkCompute
 }
 
-// StagingClientUploadCustomLibraryPreviewResponse contains the response from method StagingClient.UploadCustomLibraryPreview.
-type StagingClientUploadCustomLibraryPreviewResponse struct {
+// StagingClientUploadCustomLibraryBetaResponse contains the response from method StagingClient.UploadCustomLibraryBeta.
+type StagingClientUploadCustomLibraryBetaResponse struct {
 	// placeholder for future response values
 }
 

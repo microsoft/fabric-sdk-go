@@ -109,6 +109,237 @@ func (client *OneLakeDataAccessSecurityClient) createOrUpdateDataAccessRolesHand
 	return result, nil
 }
 
+// CreateOrUpdateSingleDataAccessRole - > [!NOTE] This API is part of a Preview release and is provided for evaluation and
+// development purposes only. It may change based on feedback and is not recommended for production use.
+// When calling this API, callers must specify true as the value for the query parameter preview.
+// PERMISSIONS The caller must have member or higher role on the workspace.
+// REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - itemID - The ID of the Fabric item to create or update the role on.
+//   - createOrUpdateSingleDataAccessRoleRequest - Wrapper containing exactly one data access role definition (without id).
+//   - options - OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleOptions contains the optional parameters for
+//     the OneLakeDataAccessSecurityClient.CreateOrUpdateSingleDataAccessRole method.
+func (client *OneLakeDataAccessSecurityClient) CreateOrUpdateSingleDataAccessRole(ctx context.Context, workspaceID string, itemID string, createOrUpdateSingleDataAccessRoleRequest CreateOrUpdateSingleDataAccessRoleRequest, options *OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleOptions) (OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleResponse, error) {
+	var err error
+	const operationName = "core.OneLakeDataAccessSecurityClient.CreateOrUpdateSingleDataAccessRole"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.createOrUpdateSingleDataAccessRoleCreateRequest(ctx, workspaceID, itemID, createOrUpdateSingleDataAccessRoleRequest, options)
+	if err != nil {
+		return OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusCreated) {
+		err = NewResponseError(httpResp)
+		return OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleResponse{}, err
+	}
+	resp, err := client.createOrUpdateSingleDataAccessRoleHandleResponse(httpResp)
+	return resp, err
+}
+
+// createOrUpdateSingleDataAccessRoleCreateRequest creates the CreateOrUpdateSingleDataAccessRole request.
+func (client *OneLakeDataAccessSecurityClient) createOrUpdateSingleDataAccessRoleCreateRequest(ctx context.Context, workspaceID string, itemID string, createOrUpdateSingleDataAccessRoleRequest CreateOrUpdateSingleDataAccessRoleRequest, options *OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/dataAccessRoles"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if itemID == "" {
+		return nil, errors.New("parameter itemID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{itemId}", url.PathEscape(itemID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.DataAccessRoleConflictPolicy != nil {
+		reqQP.Set("dataAccessRoleConflictPolicy", string(*options.DataAccessRoleConflictPolicy))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if options != nil && options.IfMatch != nil {
+		req.Raw().Header["If-Match"] = []string{*options.IfMatch}
+	}
+	if options != nil && options.IfNoneMatch != nil {
+		req.Raw().Header["If-None-Match"] = []string{*options.IfNoneMatch}
+	}
+	if err := runtime.MarshalAsJSON(req, createOrUpdateSingleDataAccessRoleRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// createOrUpdateSingleDataAccessRoleHandleResponse handles the CreateOrUpdateSingleDataAccessRole response.
+func (client *OneLakeDataAccessSecurityClient) createOrUpdateSingleDataAccessRoleHandleResponse(resp *http.Response) (OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleResponse, error) {
+	result := OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleResponse{}
+	if val := resp.Header.Get("ETag"); val != "" {
+		result.ETag = &val
+	}
+	if val := resp.Header.Get("Location"); val != "" {
+		result.Location = &val
+	}
+	return result, nil
+}
+
+// DeleteDataAccessRole - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// When calling this API, callers must specify true as the value for the query parameter preview.
+// PERMISSIONS The caller must have member or higher role on the workspace.
+// REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - itemID - The ID of the Fabric item to delete the role from.
+//   - roleName - The name of the role to delete.
+//   - options - OneLakeDataAccessSecurityClientDeleteDataAccessRoleOptions contains the optional parameters for the OneLakeDataAccessSecurityClient.DeleteDataAccessRole
+//     method.
+func (client *OneLakeDataAccessSecurityClient) DeleteDataAccessRole(ctx context.Context, workspaceID string, itemID string, roleName string, options *OneLakeDataAccessSecurityClientDeleteDataAccessRoleOptions) (OneLakeDataAccessSecurityClientDeleteDataAccessRoleResponse, error) {
+	var err error
+	const operationName = "core.OneLakeDataAccessSecurityClient.DeleteDataAccessRole"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.deleteDataAccessRoleCreateRequest(ctx, workspaceID, itemID, roleName, options)
+	if err != nil {
+		return OneLakeDataAccessSecurityClientDeleteDataAccessRoleResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return OneLakeDataAccessSecurityClientDeleteDataAccessRoleResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return OneLakeDataAccessSecurityClientDeleteDataAccessRoleResponse{}, err
+	}
+	return OneLakeDataAccessSecurityClientDeleteDataAccessRoleResponse{}, nil
+}
+
+// deleteDataAccessRoleCreateRequest creates the DeleteDataAccessRole request.
+func (client *OneLakeDataAccessSecurityClient) deleteDataAccessRoleCreateRequest(ctx context.Context, workspaceID string, itemID string, roleName string, _ *OneLakeDataAccessSecurityClientDeleteDataAccessRoleOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/dataAccessRoles/{roleName}"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if itemID == "" {
+		return nil, errors.New("parameter itemID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{itemId}", url.PathEscape(itemID))
+	if roleName == "" {
+		return nil, errors.New("parameter roleName cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{roleName}", url.PathEscape(roleName))
+	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// GetDataAccessRole - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// When calling this API, callers must specify true as the value for the query parameter preview.
+// PERMISSIONS The caller must have member or higher role on the workspace.
+// REQUIRED DELEGATED SCOPES OneLake.Read.All or OneLake.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - itemID - The ID of the Fabric item to get the role from.
+//   - roleName - The name of the role to retrieve.
+//   - options - OneLakeDataAccessSecurityClientGetDataAccessRoleOptions contains the optional parameters for the OneLakeDataAccessSecurityClient.GetDataAccessRole
+//     method.
+func (client *OneLakeDataAccessSecurityClient) GetDataAccessRole(ctx context.Context, workspaceID string, itemID string, roleName string, options *OneLakeDataAccessSecurityClientGetDataAccessRoleOptions) (OneLakeDataAccessSecurityClientGetDataAccessRoleResponse, error) {
+	var err error
+	const operationName = "core.OneLakeDataAccessSecurityClient.GetDataAccessRole"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getDataAccessRoleCreateRequest(ctx, workspaceID, itemID, roleName, options)
+	if err != nil {
+		return OneLakeDataAccessSecurityClientGetDataAccessRoleResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return OneLakeDataAccessSecurityClientGetDataAccessRoleResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return OneLakeDataAccessSecurityClientGetDataAccessRoleResponse{}, err
+	}
+	resp, err := client.getDataAccessRoleHandleResponse(httpResp)
+	return resp, err
+}
+
+// getDataAccessRoleCreateRequest creates the GetDataAccessRole request.
+func (client *OneLakeDataAccessSecurityClient) getDataAccessRoleCreateRequest(ctx context.Context, workspaceID string, itemID string, roleName string, options *OneLakeDataAccessSecurityClientGetDataAccessRoleOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/dataAccessRoles/{roleName}"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if itemID == "" {
+		return nil, errors.New("parameter itemID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{itemId}", url.PathEscape(itemID))
+	if roleName == "" {
+		return nil, errors.New("parameter roleName cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{roleName}", url.PathEscape(roleName))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if options != nil && options.IfMatch != nil {
+		req.Raw().Header["If-Match"] = []string{*options.IfMatch}
+	}
+	if options != nil && options.IfNoneMatch != nil {
+		req.Raw().Header["If-None-Match"] = []string{*options.IfNoneMatch}
+	}
+	return req, nil
+}
+
+// getDataAccessRoleHandleResponse handles the GetDataAccessRole response.
+func (client *OneLakeDataAccessSecurityClient) getDataAccessRoleHandleResponse(resp *http.Response) (OneLakeDataAccessSecurityClientGetDataAccessRoleResponse, error) {
+	result := OneLakeDataAccessSecurityClientGetDataAccessRoleResponse{}
+	if val := resp.Header.Get("ETag"); val != "" {
+		result.ETag = &val
+	}
+	if err := runtime.UnmarshalAsJSON(resp, &result.DataAccessRoleBase); err != nil {
+		return OneLakeDataAccessSecurityClientGetDataAccessRoleResponse{}, err
+	}
+	return result, nil
+}
+
 // ListDataAccessRoles - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
 // only. It may change based on feedback and is not recommended for production use.
 // REQUIRED DELEGATED SCOPES OneLake.Read.All or OneLake.ReadWrite.All

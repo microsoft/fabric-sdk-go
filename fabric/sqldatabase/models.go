@@ -8,6 +8,42 @@ package sqldatabase
 
 import "time"
 
+// AuditSettings - The current state of audit settings for a database.
+type AuditSettings struct {
+	// REQUIRED; Audit actions and groups.
+	AuditActionsAndGroups []string
+
+	// REQUIRED; The predicate expression used to filter audit logs.
+	PredicateExpression *string
+
+	// REQUIRED; Retention days. 0 indicates indefinite retention period.
+	RetentionDays *int32
+
+	// REQUIRED; Audit settings state type.
+	State *SQLAuditSettingsState
+
+	// REQUIRED; The storage endpoint where audit logs are stored.
+	StorageEndpoint *string
+}
+
+// AuditSettingsUpdate - Database audit settings update request.
+type AuditSettingsUpdate struct {
+	// Audit actions and groups. For the first time, when state is set to Enabled and this property is not provided, default audit
+	// actions and groups will be applied.
+	AuditActionsAndGroups []string
+
+	// The predicate expression used to filter audit logs. For the first time, when state is set to Enabled and this property
+	// is not provided, no predicate expression will be applied by default.
+	PredicateExpression *string
+
+	// Retention days. For the first time, when state is set to Enabled and this property is not provided, retentionDays will
+	// be set to 0 (indefinite retention period) by default.
+	RetentionDays *int32
+
+	// Audit settings state type.
+	State *SQLAuditSettingsState
+}
+
 // CreateSQLDatabaseRequest - Create SQL database request payload.
 type CreateSQLDatabaseRequest struct {
 	// REQUIRED; The SQL database display name. The display name must follow naming rules according to item type.
@@ -24,28 +60,22 @@ type CreateSQLDatabaseRequest struct {
 
 	// The folder ID. If not specified or null, the SQL database is created with the workspace as its folder.
 	FolderID *string
+
+	// The sensitivity label settings for the SQL database.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // CreationPayload - SQL database item payload.
 type CreationPayload struct {
 	// REQUIRED; The creation mode of the SQL database creation.
 	CreationMode *CreationMode
-
-	// Set the backup retention period in days. The minimum is 1 days. The maximum is 35 days.
-	BackupRetentionDays *int32
-
-	// Set the time to restore the source database in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
-	RestorePointInTime *time.Time
-
-	// Set the reference for the source database to be restored from.
-	SourceDatabaseReference ItemReferenceClassification
 }
 
 // GetCreationPayload implements the CreationPayloadClassification interface for type CreationPayload.
 func (c *CreationPayload) GetCreationPayload() *CreationPayload { return c }
 
 // Definition - The SQL database public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/sql-database-definition]
-// for more details on how to craft a SQL database public
+// for more details on the structure of the SQL database
 // definition.
 type Definition struct {
 	// REQUIRED; A list of definition parts.
@@ -55,7 +85,7 @@ type Definition struct {
 // DefinitionResponse - The SQL database public definition response.
 type DefinitionResponse struct {
 	// READ-ONLY; The SQL database public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/sql-database-definition]
-	// for more details on how to craft a SQL database public
+	// for more details on the structure of the SQL database
 	// definition.
 	Definition *Definition
 }
@@ -88,6 +118,24 @@ func (i *ItemReferenceByID) GetItemReference() *ItemReference {
 	}
 }
 
+// ItemReferenceByVariable - An item reference by variable.
+type ItemReferenceByVariable struct {
+	// REQUIRED; The item reference type.
+	ReferenceType *ItemReferenceType
+
+	// REQUIRED; A variable reference string that specifies the Variable Library and the variable name inside it. Format: $(/**/_VarLibrary_/_VarName_)
+	// for a Variable Library named VarLibrary and a variable named
+	// VarName.
+	VariableReference *string
+}
+
+// GetItemReference implements the ItemReferenceClassification interface for type ItemReferenceByVariable.
+func (i *ItemReferenceByVariable) GetItemReference() *ItemReference {
+	return &ItemReference{
+		ReferenceType: i.ReferenceType,
+	}
+}
+
 // ItemTag - Represents a tag applied on an item.
 type ItemTag struct {
 	// REQUIRED; The name of the tag.
@@ -105,20 +153,14 @@ type NewSQLDatabaseCreationPayload struct {
 	// Set the backup retention period in days. The minimum is 1 days. The maximum is 35 days.
 	BackupRetentionDays *int32
 
-	// Set the time to restore the source database in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
-	RestorePointInTime *time.Time
-
-	// Set the reference for the source database to be restored from.
-	SourceDatabaseReference ItemReferenceClassification
+	// Set the collation of the SQL database.
+	Collation *string
 }
 
 // GetCreationPayload implements the CreationPayloadClassification interface for type NewSQLDatabaseCreationPayload.
 func (n *NewSQLDatabaseCreationPayload) GetCreationPayload() *CreationPayload {
 	return &CreationPayload{
-		BackupRetentionDays:     n.BackupRetentionDays,
-		CreationMode:            n.CreationMode,
-		RestorePointInTime:      n.RestorePointInTime,
-		SourceDatabaseReference: n.SourceDatabaseReference,
+		CreationMode: n.CreationMode,
 	}
 }
 
@@ -135,6 +177,9 @@ type Properties struct {
 
 	// The backup retention period in days.
 	BackupRetentionDays *int32
+
+	// The collation of the SQL database.
+	Collation *string
 
 	// The earliest restore point of the database in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
 	EarliestRestorePoint *time.Time
@@ -160,9 +205,6 @@ type RestoreSQLDatabaseCreationPayload struct {
 	// REQUIRED; The creation mode of the SQL database creation.
 	CreationMode *CreationMode
 
-	// Set the backup retention period in days. The minimum is 1 days. The maximum is 35 days.
-	BackupRetentionDays *int32
-
 	// Set the time to restore the source database in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
 	RestorePointInTime *time.Time
 
@@ -173,10 +215,7 @@ type RestoreSQLDatabaseCreationPayload struct {
 // GetCreationPayload implements the CreationPayloadClassification interface for type RestoreSQLDatabaseCreationPayload.
 func (r *RestoreSQLDatabaseCreationPayload) GetCreationPayload() *CreationPayload {
 	return &CreationPayload{
-		BackupRetentionDays:     r.BackupRetentionDays,
-		CreationMode:            r.CreationMode,
-		RestorePointInTime:      r.RestorePointInTime,
-		SourceDatabaseReference: r.SourceDatabaseReference,
+		CreationMode: r.CreationMode,
 	}
 }
 
@@ -200,6 +239,9 @@ type SQLDatabase struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
+
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
 
@@ -219,10 +261,25 @@ type SQLDatabases struct {
 	ContinuationURI *string
 }
 
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
 // UpdateSQLDatabaseDefinitionRequest - Update SQL database public definition request payload.
 type UpdateSQLDatabaseDefinitionRequest struct {
 	// REQUIRED; The SQL database public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/sql-database-definition]
-	// for more details on how to craft a SQL database public
+	// for more details on the structure of the SQL database
 	// definition.
 	Definition *Definition
 }

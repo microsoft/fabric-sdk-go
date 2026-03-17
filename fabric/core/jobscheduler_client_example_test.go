@@ -53,7 +53,7 @@ func ExampleJobSchedulerClient_NewListItemSchedulesPager() {
 		// 			CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T05:35:20.536Z"); return t}()),
 		// 			Enabled: to.Ptr(true),
 		// 			ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
-		// 			Owner: &core.Principal{
+		// 			Owner: &core.UserPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				ID: to.Ptr("8eedb1b0-3af8-4b17-8e7e-663e61e12211"),
 		// 			},
@@ -74,7 +74,7 @@ func ExampleJobSchedulerClient_NewListItemSchedulesPager() {
 		// 					CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T05:35:20.536Z"); return t}()),
 		// 					Enabled: to.Ptr(true),
 		// 					ID: to.Ptr("96f3f0ff-4fe2-4712-b61b-05a456ba9357"),
-		// 					Owner: &core.Principal{
+		// 					Owner: &core.UserPrincipal{
 		// 						Type: to.Ptr(core.PrincipalTypeUser),
 		// 						ID: to.Ptr("8eedb1b0-3af8-4b17-8e7e-663e61e12211"),
 		// 					},
@@ -92,7 +92,7 @@ func ExampleJobSchedulerClient_NewListItemSchedulesPager() {
 		// 						CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T05:35:20.536Z"); return t}()),
 		// 						Enabled: to.Ptr(true),
 		// 						ID: to.Ptr("c0ed1d27-32dc-49e6-90ba-cac9b6248c7f"),
-		// 						Owner: &core.Principal{
+		// 						Owner: &core.UserPrincipal{
 		// 							Type: to.Ptr(core.PrincipalTypeUser),
 		// 							ID: to.Ptr("8eedb1b0-3af8-4b17-8e7e-663e61e12211"),
 		// 						},
@@ -156,7 +156,7 @@ func ExampleJobSchedulerClient_GetItemSchedule() {
 	// 	CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T05:35:20.536Z"); return t}()),
 	// 	Enabled: to.Ptr(true),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
-	// 	Owner: &core.Principal{
+	// 	Owner: &core.UserPrincipal{
 	// 		Type: to.Ptr(core.PrincipalTypeUser),
 	// 		ID: to.Ptr("8eedb1b0-3af8-4b17-8e7e-663e61e12211"),
 	// 	},
@@ -201,7 +201,7 @@ func ExampleJobSchedulerClient_UpdateItemSchedule() {
 	// 	CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T05:35:20.536Z"); return t}()),
 	// 	Enabled: to.Ptr(true),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
-	// 	Owner: &core.Principal{
+	// 	Owner: &core.UserPrincipal{
 	// 		Type: to.Ptr(core.PrincipalTypeUser),
 	// 		ID: to.Ptr("8eedb1b0-3af8-4b17-8e7e-663e61e12211"),
 	// 	},
@@ -371,6 +371,39 @@ func ExampleJobSchedulerClient_RunOnDemandItemJob_runItemJobInstanceWithNoReques
 }
 
 // Generated from example definition
+func ExampleJobSchedulerClient_RunOnDemandItemJob_runItemJobInstanceWithRequestBodyContainingBothExecutionDataAndParametersExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewJobSchedulerClient().RunOnDemandItemJob(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "dddddddd-9999-0000-1111-eeeeeeeeeeee", "Execute", &core.JobSchedulerClientRunOnDemandItemJobOptions{RunOnDemandItemJobRequest: &core.RunOnDemandItemJobRequest{
+		ExecutionData: map[string]any{
+			"executeOption": "ApplyChangesIfNeeded",
+		},
+		Parameters: []core.Parameter{
+			{
+				Name:  to.Ptr("Threshold"),
+				Type:  to.Ptr(core.ItemJobParameterTypeAutomatic),
+				Value: "start",
+			},
+			{
+				Name:  to.Ptr("OrderKey"),
+				Type:  to.Ptr(core.ItemJobParameterTypeAutomatic),
+				Value: float64(25),
+			}},
+	},
+	})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
 func ExampleJobSchedulerClient_RunOnDemandItemJob_runItemJobInstanceWithRequestBodyContainingExecutionDataExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -388,6 +421,41 @@ func ExampleJobSchedulerClient_RunOnDemandItemJob_runItemJobInstanceWithRequestB
 			},
 			"tableName": "Table1",
 		},
+	},
+	})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleJobSchedulerClient_RunOnDemandItemJob_runItemJobInstanceWithRequestBodyContainingParametersExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewJobSchedulerClient().RunOnDemandItemJob(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "dddddddd-9999-0000-1111-eeeeeeeeeeee", "Execute", &core.JobSchedulerClientRunOnDemandItemJobOptions{RunOnDemandItemJobRequest: &core.RunOnDemandItemJobRequest{
+		Parameters: []core.Parameter{
+			{
+				Name:  to.Ptr("param1"),
+				Type:  to.Ptr(core.ItemJobParameterTypeText),
+				Value: "value1",
+			},
+			{
+				Name:  to.Ptr("param2"),
+				Type:  to.Ptr(core.ItemJobParameterTypeBoolean),
+				Value: true,
+			},
+			{
+				Name:  to.Ptr("param3"),
+				Type:  to.Ptr(core.ItemJobParameterTypeNumber),
+				Value: float64(123),
+			}},
 	},
 	})
 	if err != nil {

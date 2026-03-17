@@ -16,6 +16,9 @@ type CreateMLModelRequest struct {
 
 	// The folder ID. If not specified or null, the machine learning model is created with the workspace as its folder.
 	FolderID *string
+
+	// The sensitivity label settings for the machine learning model.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // DataSchema - Machine learning model data schema.
@@ -125,6 +128,9 @@ type MLModel struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
+
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
 
@@ -168,6 +174,21 @@ type ScoreDataResponse struct {
 	// READ-ONLY; Machine learning predictions represented in the form of Pandas dataset arrays that can include strings, numbers,
 	// integers and booleans.
 	Predictions [][]any
+}
+
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
 }
 
 // UpdateMLModelEndpointRequest - Machine learning model endpoint request body to update Model Endpoint properties.

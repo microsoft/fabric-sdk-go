@@ -45,3 +45,25 @@ type ItemsClientUpdateKQLDatabaseResponse struct {
 	// A KQL database object.
 	KQLDatabase
 }
+
+// TableShortcutsClientCreateShortcutResponse contains the response from method TableShortcutsClient.BeginCreateShortcut.
+type TableShortcutsClientCreateShortcutResponse struct {
+	// Properties of a table shortcut.
+	TableShortcut
+}
+
+// TableShortcutsClientDeleteShortcutResponse contains the response from method TableShortcutsClient.DeleteShortcut.
+type TableShortcutsClientDeleteShortcutResponse struct {
+	// placeholder for future response values
+}
+
+// TableShortcutsClientGetShortcutResponse contains the response from method TableShortcutsClient.GetShortcut.
+type TableShortcutsClientGetShortcutResponse struct {
+	// Properties of a table shortcut.
+	TableShortcut
+}
+
+// TableShortcutsClientListShortcutsResponse contains the response from method TableShortcutsClient.NewListShortcutsPager.
+type TableShortcutsClientListShortcutsResponse struct {
+	TableShortcuts
+}

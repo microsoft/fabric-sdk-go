@@ -142,7 +142,7 @@ func (i *ItemsServerTransport) dispatchBeginCreateUserDataFunction(req *http.Req
 	}
 	beginCreateUserDataFunction := i.beginCreateUserDataFunction.get(req)
 	if beginCreateUserDataFunction == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/UserDataFunctions`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/userDataFunctions`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 2 {
@@ -184,7 +184,7 @@ func (i *ItemsServerTransport) dispatchDeleteUserDataFunction(req *http.Request)
 	if i.srv.DeleteUserDataFunction == nil {
 		return nil, &nonRetriableError{errors.New("fake for method DeleteUserDataFunction not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/UserDataFunctions/(?P<UserDataFunctionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/userDataFunctions/(?P<userDataFunctionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -194,7 +194,7 @@ func (i *ItemsServerTransport) dispatchDeleteUserDataFunction(req *http.Request)
 	if err != nil {
 		return nil, err
 	}
-	userDataFunctionIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("UserDataFunctionId")])
+	userDataFunctionIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("userDataFunctionId")])
 	if err != nil {
 		return nil, err
 	}
@@ -217,7 +217,7 @@ func (i *ItemsServerTransport) dispatchGetUserDataFunction(req *http.Request) (*
 	if i.srv.GetUserDataFunction == nil {
 		return nil, &nonRetriableError{errors.New("fake for method GetUserDataFunction not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/UserDataFunctions/(?P<UserDataFunctionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/userDataFunctions/(?P<userDataFunctionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -227,7 +227,7 @@ func (i *ItemsServerTransport) dispatchGetUserDataFunction(req *http.Request) (*
 	if err != nil {
 		return nil, err
 	}
-	userDataFunctionIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("UserDataFunctionId")])
+	userDataFunctionIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("userDataFunctionId")])
 	if err != nil {
 		return nil, err
 	}
@@ -252,7 +252,7 @@ func (i *ItemsServerTransport) dispatchBeginGetUserDataFunctionDefinition(req *h
 	}
 	beginGetUserDataFunctionDefinition := i.beginGetUserDataFunctionDefinition.get(req)
 	if beginGetUserDataFunctionDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/UserDataFunctions/(?P<UserDataFunctionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/userDataFunctions/(?P<userDataFunctionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
@@ -263,7 +263,7 @@ func (i *ItemsServerTransport) dispatchBeginGetUserDataFunctionDefinition(req *h
 		if err != nil {
 			return nil, err
 		}
-		userDataFunctionIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("UserDataFunctionId")])
+		userDataFunctionIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("userDataFunctionId")])
 		if err != nil {
 			return nil, err
 		}
@@ -308,7 +308,7 @@ func (i *ItemsServerTransport) dispatchNewListUserDataFunctionsPager(req *http.R
 	}
 	newListUserDataFunctionsPager := i.newListUserDataFunctionsPager.get(req)
 	if newListUserDataFunctionsPager == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/UserDataFunctions`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/userDataFunctions`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 2 {
@@ -319,14 +319,29 @@ func (i *ItemsServerTransport) dispatchNewListUserDataFunctionsPager(req *http.R
 		if err != nil {
 			return nil, err
 		}
+		recursiveUnescaped, err := url.QueryUnescape(qp.Get("recursive"))
+		if err != nil {
+			return nil, err
+		}
+		recursiveParam, err := parseOptional(recursiveUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDUnescaped, err := url.QueryUnescape(qp.Get("rootFolderId"))
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDParam := getOptional(rootFolderIDUnescaped)
 		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
 		if err != nil {
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
 		var options *userdatafunction.ItemsClientListUserDataFunctionsOptions
-		if continuationTokenParam != nil {
+		if recursiveParam != nil || rootFolderIDParam != nil || continuationTokenParam != nil {
 			options = &userdatafunction.ItemsClientListUserDataFunctionsOptions{
+				Recursive:         recursiveParam,
+				RootFolderID:      rootFolderIDParam,
 				ContinuationToken: continuationTokenParam,
 			}
 		}
@@ -355,7 +370,7 @@ func (i *ItemsServerTransport) dispatchUpdateUserDataFunction(req *http.Request)
 	if i.srv.UpdateUserDataFunction == nil {
 		return nil, &nonRetriableError{errors.New("fake for method UpdateUserDataFunction not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/UserDataFunctions/(?P<UserDataFunctionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/userDataFunctions/(?P<userDataFunctionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -369,7 +384,7 @@ func (i *ItemsServerTransport) dispatchUpdateUserDataFunction(req *http.Request)
 	if err != nil {
 		return nil, err
 	}
-	userDataFunctionIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("UserDataFunctionId")])
+	userDataFunctionIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("userDataFunctionId")])
 	if err != nil {
 		return nil, err
 	}
@@ -394,7 +409,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateUserDataFunctionDefinition(req
 	}
 	beginUpdateUserDataFunctionDefinition := i.beginUpdateUserDataFunctionDefinition.get(req)
 	if beginUpdateUserDataFunctionDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/UserDataFunctions/(?P<UserDataFunctionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/userDataFunctions/(?P<userDataFunctionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
@@ -409,7 +424,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateUserDataFunctionDefinition(req
 		if err != nil {
 			return nil, err
 		}
-		userDataFunctionIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("UserDataFunctionId")])
+		userDataFunctionIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("userDataFunctionId")])
 		if err != nil {
 			return nil, err
 		}

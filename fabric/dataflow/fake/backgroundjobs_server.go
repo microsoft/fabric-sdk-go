@@ -112,7 +112,7 @@ func (b *BackgroundJobsServerTransport) dispatchRunOnDemandApplyChanges(req *htt
 	if b.srv.RunOnDemandApplyChanges == nil {
 		return nil, &nonRetriableError{errors.New("fake for method RunOnDemandApplyChanges not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataflows/(?P<dataflowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/ApplyChanges/instances`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataflows/(?P<dataflowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/applyChanges/instances`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -151,7 +151,7 @@ func (b *BackgroundJobsServerTransport) dispatchRunOnDemandExecute(req *http.Req
 	if b.srv.RunOnDemandExecute == nil {
 		return nil, &nonRetriableError{errors.New("fake for method RunOnDemandExecute not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataflows/(?P<dataflowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/Execute/instances`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataflows/(?P<dataflowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/execute/instances`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -200,7 +200,7 @@ func (b *BackgroundJobsServerTransport) dispatchScheduleApplyChanges(req *http.R
 	if b.srv.ScheduleApplyChanges == nil {
 		return nil, &nonRetriableError{errors.New("fake for method ScheduleApplyChanges not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataflows/(?P<dataflowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/ApplyChanges/schedules`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataflows/(?P<dataflowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/applyChanges/schedules`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -240,7 +240,7 @@ func (b *BackgroundJobsServerTransport) dispatchScheduleExecute(req *http.Reques
 	if b.srv.ScheduleExecute == nil {
 		return nil, &nonRetriableError{errors.New("fake for method ScheduleExecute not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataflows/(?P<dataflowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/Execute/schedules`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataflows/(?P<dataflowId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/execute/schedules`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {

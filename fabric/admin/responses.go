@@ -245,6 +245,12 @@ type WorkspacesClientListGitConnectionsResponse struct {
 	GitConnections
 }
 
+// WorkspacesClientListNetworkingCommunicationPoliciesResponse contains the response from method WorkspacesClient.NewListNetworkingCommunicationPoliciesPager.
+type WorkspacesClientListNetworkingCommunicationPoliciesResponse struct {
+	// Network communication policy settings for list of workspaces enabled with either Inbound or Outbound Access Protection.
+	NetworkCommunicationPolicies
+}
+
 // WorkspacesClientListWorkspaceAccessDetailsResponse contains the response from method WorkspacesClient.ListWorkspaceAccessDetails.
 type WorkspacesClientListWorkspaceAccessDetailsResponse struct {
 	// A list of users with access to a given entity.

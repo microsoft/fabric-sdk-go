@@ -27,7 +27,10 @@ func ExampleItemsClient_NewListReportsPager() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewItemsClient().NewListReportsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &report.ItemsClientListReportsOptions{ContinuationToken: nil})
+	pager := clientFactory.NewItemsClient().NewListReportsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &report.ItemsClientListReportsOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
 		if err != nil {
@@ -45,6 +48,9 @@ func ExampleItemsClient_NewListReportsPager() {
 		// 			Description: to.Ptr("A report description."),
 		// 			DisplayName: to.Ptr("Report Name 1"),
 		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+		// 			SensitivityLabel: &report.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 	}},
 		// }
@@ -116,6 +122,9 @@ func ExampleItemsClient_GetReport() {
 	// 	Description: to.Ptr("A report description."),
 	// 	DisplayName: to.Ptr("Report 1"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+	// 	SensitivityLabel: &report.SensitivityLabel{
+	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// }
 }

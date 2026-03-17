@@ -97,7 +97,7 @@ func (client *ItemsClient) createApacheAirflowJob(ctx context.Context, workspace
 
 // createApacheAirflowJobCreateRequest creates the CreateApacheAirflowJob request.
 func (client *ItemsClient) createApacheAirflowJobCreateRequest(ctx context.Context, workspaceID string, createApacheAirflowJobRequest CreateApacheAirflowJobRequest, _ *ItemsClientBeginCreateApacheAirflowJobOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/ApacheAirflowJobs"
+	urlPath := "/v1/workspaces/{workspaceId}/apacheAirflowJobs"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -151,7 +151,7 @@ func (client *ItemsClient) DeleteApacheAirflowJob(ctx context.Context, workspace
 
 // deleteApacheAirflowJobCreateRequest creates the DeleteApacheAirflowJob request.
 func (client *ItemsClient) deleteApacheAirflowJobCreateRequest(ctx context.Context, workspaceID string, apacheAirflowJobID string, _ *ItemsClientDeleteApacheAirflowJobOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/ApacheAirflowJobs/{ApacheAirflowJobId}"
+	urlPath := "/v1/workspaces/{workspaceId}/apacheAirflowJobs/{apacheAirflowJobId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -159,7 +159,7 @@ func (client *ItemsClient) deleteApacheAirflowJobCreateRequest(ctx context.Conte
 	if apacheAirflowJobID == "" {
 		return nil, errors.New("parameter apacheAirflowJobID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{ApacheAirflowJobId}", url.PathEscape(apacheAirflowJobID))
+	urlPath = strings.ReplaceAll(urlPath, "{apacheAirflowJobId}", url.PathEscape(apacheAirflowJobID))
 	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -207,7 +207,7 @@ func (client *ItemsClient) GetApacheAirflowJob(ctx context.Context, workspaceID 
 
 // getApacheAirflowJobCreateRequest creates the GetApacheAirflowJob request.
 func (client *ItemsClient) getApacheAirflowJobCreateRequest(ctx context.Context, workspaceID string, apacheAirflowJobID string, _ *ItemsClientGetApacheAirflowJobOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/ApacheAirflowJobs/{ApacheAirflowJobId}"
+	urlPath := "/v1/workspaces/{workspaceId}/apacheAirflowJobs/{apacheAirflowJobId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -215,7 +215,7 @@ func (client *ItemsClient) getApacheAirflowJobCreateRequest(ctx context.Context,
 	if apacheAirflowJobID == "" {
 		return nil, errors.New("parameter apacheAirflowJobID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{ApacheAirflowJobId}", url.PathEscape(apacheAirflowJobID))
+	urlPath = strings.ReplaceAll(urlPath, "{apacheAirflowJobId}", url.PathEscape(apacheAirflowJobID))
 	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -288,7 +288,7 @@ func (client *ItemsClient) getApacheAirflowJobDefinition(ctx context.Context, wo
 
 // getApacheAirflowJobDefinitionCreateRequest creates the GetApacheAirflowJobDefinition request.
 func (client *ItemsClient) getApacheAirflowJobDefinitionCreateRequest(ctx context.Context, workspaceID string, apacheAirflowJobID string, options *ItemsClientBeginGetApacheAirflowJobDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/ApacheAirflowJobs/{ApacheAirflowJobId}/getDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/apacheAirflowJobs/{apacheAirflowJobId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -296,7 +296,7 @@ func (client *ItemsClient) getApacheAirflowJobDefinitionCreateRequest(ctx contex
 	if apacheAirflowJobID == "" {
 		return nil, errors.New("parameter apacheAirflowJobID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{ApacheAirflowJobId}", url.PathEscape(apacheAirflowJobID))
+	urlPath = strings.ReplaceAll(urlPath, "{apacheAirflowJobId}", url.PathEscape(apacheAirflowJobID))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -349,7 +349,7 @@ func (client *ItemsClient) NewListApacheAirflowJobsPager(workspaceID string, opt
 
 // listApacheAirflowJobsCreateRequest creates the ListApacheAirflowJobs request.
 func (client *ItemsClient) listApacheAirflowJobsCreateRequest(ctx context.Context, workspaceID string, options *ItemsClientListApacheAirflowJobsOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/ApacheAirflowJobs"
+	urlPath := "/v1/workspaces/{workspaceId}/apacheAirflowJobs"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -361,6 +361,12 @@ func (client *ItemsClient) listApacheAirflowJobsCreateRequest(ctx context.Contex
 	reqQP := req.Raw().URL.Query()
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	if options != nil && options.Recursive != nil {
+		reqQP.Set("recursive", strconv.FormatBool(*options.Recursive))
+	}
+	if options != nil && options.RootFolderID != nil {
+		reqQP.Set("rootFolderId", *options.RootFolderID)
 	}
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
@@ -416,7 +422,7 @@ func (client *ItemsClient) UpdateApacheAirflowJob(ctx context.Context, workspace
 
 // updateApacheAirflowJobCreateRequest creates the UpdateApacheAirflowJob request.
 func (client *ItemsClient) updateApacheAirflowJobCreateRequest(ctx context.Context, workspaceID string, apacheAirflowJobID string, updateApacheAirflowJobRequest UpdateApacheAirflowJobRequest, _ *ItemsClientUpdateApacheAirflowJobOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/ApacheAirflowJobs/{ApacheAirflowJobId}"
+	urlPath := "/v1/workspaces/{workspaceId}/apacheAirflowJobs/{apacheAirflowJobId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -424,7 +430,7 @@ func (client *ItemsClient) updateApacheAirflowJobCreateRequest(ctx context.Conte
 	if apacheAirflowJobID == "" {
 		return nil, errors.New("parameter apacheAirflowJobID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{ApacheAirflowJobId}", url.PathEscape(apacheAirflowJobID))
+	urlPath = strings.ReplaceAll(urlPath, "{apacheAirflowJobId}", url.PathEscape(apacheAirflowJobID))
 	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -503,7 +509,7 @@ func (client *ItemsClient) updateApacheAirflowJobDefinition(ctx context.Context,
 
 // updateApacheAirflowJobDefinitionCreateRequest creates the UpdateApacheAirflowJobDefinition request.
 func (client *ItemsClient) updateApacheAirflowJobDefinitionCreateRequest(ctx context.Context, workspaceID string, apacheAirflowJobID string, updateApacheAirflowJobDefinitionRequest UpdateApacheAirflowJobDefinitionRequest, options *ItemsClientBeginUpdateApacheAirflowJobDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/ApacheAirflowJobs/{ApacheAirflowJobId}/updateDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/apacheAirflowJobs/{apacheAirflowJobId}/updateDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -511,7 +517,7 @@ func (client *ItemsClient) updateApacheAirflowJobDefinitionCreateRequest(ctx con
 	if apacheAirflowJobID == "" {
 		return nil, errors.New("parameter apacheAirflowJobID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{ApacheAirflowJobId}", url.PathEscape(apacheAirflowJobID))
+	urlPath = strings.ReplaceAll(urlPath, "{apacheAirflowJobId}", url.PathEscape(apacheAirflowJobID))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err

@@ -66,6 +66,8 @@ const (
 	ItemTypeCosmosDBDatabase ItemType = "CosmosDBDatabase"
 	// ItemTypeDashboard - PowerBI dashboard.
 	ItemTypeDashboard ItemType = "Dashboard"
+	// ItemTypeDataAgent - A DataAgent.
+	ItemTypeDataAgent ItemType = "DataAgent"
 	// ItemTypeDataPipeline - A data pipeline.
 	ItemTypeDataPipeline ItemType = "DataPipeline"
 	// ItemTypeDataflow - A Dataflow.
@@ -152,6 +154,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeCopyJob,
 		ItemTypeCosmosDBDatabase,
 		ItemTypeDashboard,
+		ItemTypeDataAgent,
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
 		ItemTypeDatamart,
@@ -253,5 +256,25 @@ func PossibleEnvironmentPublishStateValues() []PublishState {
 		PublishStateRunning,
 		PublishStateSuccess,
 		PublishStateWaiting,
+	}
+}
+
+// SensitivityLabelApplyStrategy - The strategy for applying the sensitivity label. The default value is ApplyOrFail. Additional
+// types may be added over time.
+type SensitivityLabelApplyStrategy string
+
+const (
+	// SensitivityLabelApplyStrategyApplyOrFail - Apply the sensitivity label or fail the operation if it cannot be applied.
+	SensitivityLabelApplyStrategyApplyOrFail SensitivityLabelApplyStrategy = "ApplyOrFail"
+	// SensitivityLabelApplyStrategyIgnore - Ignore the sensitivity label if it cannot be applied and proceed with the operation
+	// without applying the label.
+	SensitivityLabelApplyStrategyIgnore SensitivityLabelApplyStrategy = "Ignore"
+)
+
+// PossibleSensitivityLabelApplyStrategyValues returns the possible values for the SensitivityLabelApplyStrategy const type.
+func PossibleSensitivityLabelApplyStrategyValues() []SensitivityLabelApplyStrategy {
+	return []SensitivityLabelApplyStrategy{
+		SensitivityLabelApplyStrategyApplyOrFail,
+		SensitivityLabelApplyStrategyIgnore,
 	}
 }

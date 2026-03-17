@@ -18,17 +18,19 @@ import (
 
 // ServerFactory is a fake server for instances of the sqldatabase.ClientFactory type.
 type ServerFactory struct {
-	Server      Server
-	ItemsServer ItemsServer
+	ItemsServer            ItemsServer
+	MirroringServer        MirroringServer
+	SQLAuditSettingsServer SQLAuditSettingsServer
 }
 
 // ServerFactoryTransport connects instances of sqldatabase.ClientFactory to instances of ServerFactory.
 // Don't use this type directly, use NewServerFactoryTransport instead.
 type ServerFactoryTransport struct {
-	srv           *ServerFactory
-	trMu          sync.Mutex
-	trServer      *ServerTransport
-	trItemsServer *ItemsServerTransport
+	srv                      *ServerFactory
+	trMu                     sync.Mutex
+	trItemsServer            *ItemsServerTransport
+	trMirroringServer        *MirroringServerTransport
+	trSQLAuditSettingsServer *SQLAuditSettingsServerTransport
 }
 
 // NewServerFactoryTransport creates a new instance of ServerFactoryTransport with the provided implementation.
@@ -54,12 +56,17 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	var err error
 
 	switch client {
-	case "Client":
-		initServer(s, &s.trServer, func() *ServerTransport { return NewServerTransport(&s.srv.Server) })
-		resp, err = s.trServer.Do(req)
 	case "ItemsClient":
 		initServer(s, &s.trItemsServer, func() *ItemsServerTransport { return NewItemsServerTransport(&s.srv.ItemsServer) })
 		resp, err = s.trItemsServer.Do(req)
+	case "MirroringClient":
+		initServer(s, &s.trMirroringServer, func() *MirroringServerTransport { return NewMirroringServerTransport(&s.srv.MirroringServer) })
+		resp, err = s.trMirroringServer.Do(req)
+	case "SQLAuditSettingsClient":
+		initServer(s, &s.trSQLAuditSettingsServer, func() *SQLAuditSettingsServerTransport {
+			return NewSQLAuditSettingsServerTransport(&s.srv.SQLAuditSettingsServer)
+		})
+		resp, err = s.trSQLAuditSettingsServer.Do(req)
 	default:
 		err = fmt.Errorf("unhandled client %s", client)
 	}

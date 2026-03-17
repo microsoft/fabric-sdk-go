@@ -71,6 +71,9 @@ func (testsuite *FakeTestSuite) TestItems_ListEventstreams() {
 				Description: to.Ptr("An eventstream description."),
 				DisplayName: to.Ptr("Eventstream_1"),
 				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				SensitivityLabel: &eventstream.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 			},
 			{
@@ -78,6 +81,9 @@ func (testsuite *FakeTestSuite) TestItems_ListEventstreams() {
 				Description: to.Ptr("An eventstream description."),
 				DisplayName: to.Ptr("Eventstream_2"),
 				ID:          to.Ptr("dc307e72-3e89-4425-97c3-a364d86dddfa"),
+				SensitivityLabel: &eventstream.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 			},
 			{
@@ -85,6 +91,9 @@ func (testsuite *FakeTestSuite) TestItems_ListEventstreams() {
 				Description: to.Ptr("An eventstream description."),
 				DisplayName: to.Ptr("Eventstream_3"),
 				ID:          to.Ptr("b48a1f80-862a-4b97-b672-7217bf064dc0"),
+				SensitivityLabel: &eventstream.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 			}},
 	}
@@ -97,7 +106,10 @@ func (testsuite *FakeTestSuite) TestItems_ListEventstreams() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	pager := client.NewListEventstreamsPager(exampleWorkspaceID, &eventstream.ItemsClientListEventstreamsOptions{ContinuationToken: nil})
+	pager := client.NewListEventstreamsPager(exampleWorkspaceID, &eventstream.ItemsClientListEventstreamsOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")
@@ -193,6 +205,9 @@ func (testsuite *FakeTestSuite) TestItems_GetEventstream() {
 		Description: to.Ptr("An eventstream description."),
 		DisplayName: to.Ptr("Eventstream_1"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &eventstream.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	}
 
@@ -230,6 +245,9 @@ func (testsuite *FakeTestSuite) TestItems_UpdateEventstream() {
 		Description: to.Ptr("A new description for eventstream."),
 		DisplayName: to.Ptr("Eventstream_New_Name"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &eventstream.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	}
 
@@ -776,6 +794,17 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 					},
 				},
 			},
+			&eventstream.AzureEventHubExtendedSourceResponse{
+				Name:   to.Ptr("AzureEventHubExtendedSource"),
+				ID:     to.Ptr("d1c9f8a2-8f3e-4c7c-b9b9-4e1b7b3a5f3f"),
+				Status: to.Ptr(eventstream.NodeStatusRunning),
+				Type:   to.Ptr(eventstream.SourceTypeAzureEventHubExtended),
+				Properties: &eventstream.AzureEventHubExtendedSourceProperties{
+					ConsumerGroupName: to.Ptr("$Default"),
+					DataConnectionID:  to.Ptr("7b0d2f83-1b3f-4f3b-a0f9-1d6b2f7b6c21"),
+					StartPosition:     to.Ptr(eventstream.StartPositionEarliest),
+				},
+			},
 			&eventstream.AzureIoTHubSourceResponse{
 				Name:   to.Ptr("AzureIoTHubSource"),
 				ID:     to.Ptr("e2886002-d696-4c05-969c-51361365cc24"),
@@ -809,6 +838,120 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 				Status:     to.Ptr(eventstream.NodeStatusRunning),
 				Type:       to.Ptr(eventstream.SourceTypeCustomEndpoint),
 				Properties: map[string]any{},
+			},
+			&eventstream.AzureBlobStorageEventsSourceResponse{
+				Name:   to.Ptr("AzureBlobStorageEventsSource"),
+				ID:     to.Ptr("8b6b1b8e-9b7f-4a7d-8f6b-6f2a8b7c4b15"),
+				Status: to.Ptr(eventstream.NodeStatusRunning),
+				Type:   to.Ptr(eventstream.SourceTypeAzureBlobStorageEvents),
+				Properties: &eventstream.AzureBlobStorageEventsSourceProperties{
+					AzureBlobStorageEvents: []eventstream.AzureBlobStorageEvents{
+						{
+							AzureResourceID: to.Ptr("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resourceGroupName/providers/Microsoft.Storage/storageAccounts/storageAccountName"),
+							ID:              to.Ptr("c1a7f10c-3b4a-4d1a-9f6f-1d2b3c4d5e6f"),
+							IncludedEventTypes: []eventstream.IncludedEventTypes{
+								eventstream.IncludedEventTypesMicrosoftStorageBlobCreated,
+								eventstream.IncludedEventTypesMicrosoftStorageBlobDeleted},
+						}},
+					StreamEvents: to.Ptr(true),
+				},
+			},
+			&eventstream.FabricCapacityOverviewEventsSourceResponse{
+				Name:   to.Ptr("FabricCapacityOverviewEventsSource"),
+				ID:     to.Ptr("2e7b7f0f-6f1a-4d38-8b12-67d0e2d3e0b9"),
+				Status: to.Ptr(eventstream.NodeStatusRunning),
+				Type:   to.Ptr(eventstream.SourceTypeFabricCapacityOverviewEvents),
+				Properties: &eventstream.FabricCapacityOverviewEventsSourceProperties{
+					CapacityID: to.Ptr("0b6d8e27-0b7b-4e18-9e5b-2e6b9d9d7e3a"),
+					EventScope: to.Ptr(eventstream.EventScopeCapacity),
+					Filters: []any{
+						map[string]any{
+							"key":          "data.counter",
+							"operatorType": "NumberIn",
+							"values": []any{
+								float64(5),
+								float64(1),
+							},
+						}},
+					IncludedEventTypes: []string{
+						"Microsoft.Fabric.Capacity.State",
+						"Microsoft.Fabric.Capacity.Summary"},
+				},
+			},
+			&eventstream.FabricJobEventsSourceResponse{
+				Name:   to.Ptr("FabricJobEventsSource"),
+				ID:     to.Ptr("f9c8c1e2-1c5b-4c2a-8f3a-1a2b3c4d5e6f"),
+				Status: to.Ptr(eventstream.NodeStatusRunning),
+				Type:   to.Ptr(eventstream.SourceTypeFabricJobEvents),
+				Properties: &eventstream.FabricJobEventsSourceProperties{
+					EventScope: to.Ptr(eventstream.EventScopeWorkspace),
+					Filters: []any{
+						map[string]any{
+							"key":          "data.jobType",
+							"operatorType": "StringIn",
+							"values": []any{
+								"Pipeline",
+								"Notebook",
+							},
+						},
+					},
+					IncludedEventTypes: []string{
+						"Microsoft.Fabric.Job.Started",
+						"Microsoft.Fabric.Job.Completed"},
+					ItemID:      to.Ptr("ee579458-85ea-4652-bd77-5c7d7c298b2a"),
+					WorkspaceID: to.Ptr("9625b495-17b3-4d6c-aeea-a81ae76ba369"),
+				},
+			},
+			&eventstream.FabricOneLakeEventsSourceResponse{
+				Name:   to.Ptr("FabricOneLakeEventsSource"),
+				ID:     to.Ptr("b7a6f5e4-3d2c-4b1a-9f8e-7d6c5b4a3f2e"),
+				Status: to.Ptr(eventstream.NodeStatusRunning),
+				Type:   to.Ptr(eventstream.SourceTypeFabricOneLakeEvents),
+				Properties: &eventstream.FabricOneLakeEventsSourceProperties{
+					Filters: []any{
+						map[string]any{
+							"key":          "data.path",
+							"operatorType": "StringEndsWith",
+							"values": []any{
+								".json",
+								".csv",
+							},
+						},
+					},
+					IncludedEventTypes: []string{
+						"Microsoft.Fabric.OneLake.FileCreated",
+						"Microsoft.Fabric.OneLake.FileDeleted"},
+					ItemID: to.Ptr("ee579458-85ea-4652-bd77-5c7d7c298b2a"),
+					OneLakePaths: []string{
+						"/Files/Events/",
+						"/Tables/Telemetry/"},
+					TenantID:    to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+					WorkspaceID: to.Ptr("9625b495-17b3-4d6c-aeea-a81ae76ba369"),
+				},
+			},
+			&eventstream.FabricWorkspaceItemEventsSourceResponse{
+				Name:   to.Ptr("FabricWorkspaceItemEventsSource"),
+				ID:     to.Ptr("e6d5c4b3-a2b1-4c5d-9e8f-7a6b5c4d3e2f"),
+				Status: to.Ptr(eventstream.NodeStatusRunning),
+				Type:   to.Ptr(eventstream.SourceTypeFabricWorkspaceItemEvents),
+				Properties: &eventstream.FabricWorkspaceItemEventsSourceProperties{
+					EventScope: to.Ptr(eventstream.EventScopeItem),
+					Filters: []any{
+						map[string]any{
+							"key":          "data.itemType",
+							"operatorType": "StringIn",
+							"values": []any{
+								"Lakehouse",
+								"Notebook",
+							},
+						},
+					},
+					IncludedEventTypes: []string{
+						"Microsoft.Fabric.Item.Created",
+						"Microsoft.Fabric.Item.Deleted"},
+					ItemID:      to.Ptr("4c8c3353-9652-4567-b8f3-eb585ef01ba9"),
+					WorkspaceID: to.Ptr("9625b495-17b3-4d6c-aeea-a81ae76ba369"),
+				},
 			},
 			&eventstream.SampleDataSourceResponse{
 				Name:   to.Ptr("SampleDataSource"),
@@ -942,6 +1085,31 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 				Type:   to.Ptr(eventstream.SourceTypeGooglePubSub),
 				Properties: &eventstream.GooglePubSubSourceProperties{
 					DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+				},
+			},
+			&eventstream.HTTPSourceResponse{
+				Name:   to.Ptr("HttpSource"),
+				ID:     to.Ptr("0d61c91a-6b1d-4f4f-8e9a-1a7ef0f4d4f1"),
+				Status: to.Ptr(eventstream.NodeStatusRunning),
+				Type:   to.Ptr(eventstream.SourceTypeHTTP),
+				Properties: &eventstream.HTTPSourceProperties{
+					Method:           to.Ptr(eventstream.HTTPMethodGET),
+					DataConnectionID: to.Ptr("9dfcf6c1-0b38-4d53-9a2f-7b7f7d3f1a4b"),
+					MaxRetries:       to.Ptr[int32](3),
+					PollIntervalMs:   to.Ptr[int32](60000),
+					RequestBody:      to.Ptr("{\"query\":\"sample\"}"),
+					RequestHeaders: []eventstream.KeyStringValuePair{
+						{
+							Key:   to.Ptr("Accept"),
+							Value: to.Ptr("application/json"),
+						}},
+					RequestParameters: []eventstream.KeyStringValuePair{
+						{
+							Key:   to.Ptr("country"),
+							Value: to.Ptr("US"),
+						}},
+					RetriableHTTPStatusCodes: to.Ptr("408,423,429"),
+					RetryBackoffMs:           to.Ptr[int32](2000),
 				},
 			},
 			&eventstream.MqttSourceResponse{

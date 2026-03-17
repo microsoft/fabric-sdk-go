@@ -37,7 +37,7 @@ func ExampleOneLakeDataAccessSecurityClient_ListDataAccessRoles_listDataAccessRo
 	// res.DataAccessRoles = core.DataAccessRoles{
 	// 	ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
 	// 	ContinuationURI: to.Ptr("https://api.fabric.microsoft.com/v1/workspaces/cfafbeb1-8037-4d0c-896e-a46fb27ff222/items/25bac802-080d-4f73-8a42-1b406eb1fceb/dataAccessRoles?continuationToken=LDEsMTAwMDAwLDA%3D"),
-	// 	Value: []core.DataAccessRole{
+	// 	Value: []core.DataAccessRoleListItem{
 	// 		{
 	// 			Name: to.Ptr("default_role_1"),
 	// 			DecisionRules: []core.DecisionRule{
@@ -63,6 +63,7 @@ func ExampleOneLakeDataAccessSecurityClient_ListDataAccessRoles_listDataAccessRo
 	// 									SourcePath: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff222/25bac802-080d-4f73-8a42-1b406eb1fceb"),
 	// 							}},
 	// 						},
+	// 						ETag: to.Ptr("33c64df551425fcc55e4d42a148795d9f25f89cc"),
 	// 				}},
 	// 			}
 }
@@ -86,7 +87,7 @@ func ExampleOneLakeDataAccessSecurityClient_ListDataAccessRoles_listDataAccessRo
 	_ = res
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
 	// res.DataAccessRoles = core.DataAccessRoles{
-	// 	Value: []core.DataAccessRole{
+	// 	Value: []core.DataAccessRoleListItem{
 	// 		{
 	// 			Name: to.Ptr("default_role_1"),
 	// 			DecisionRules: []core.DecisionRule{
@@ -112,6 +113,7 @@ func ExampleOneLakeDataAccessSecurityClient_ListDataAccessRoles_listDataAccessRo
 	// 									SourcePath: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff222/25bac802-080d-4f73-8a42-1b406eb1fceb"),
 	// 							}},
 	// 						},
+	// 						ETag: to.Ptr("11a64df551425fcc55e4d42a148795d9f25f89aa"),
 	// 				}},
 	// 			}
 }
@@ -135,7 +137,7 @@ func ExampleOneLakeDataAccessSecurityClient_ListDataAccessRoles_listDataAccessRo
 	_ = res
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
 	// res.DataAccessRoles = core.DataAccessRoles{
-	// 	Value: []core.DataAccessRole{
+	// 	Value: []core.DataAccessRoleListItem{
 	// 		{
 	// 			Name: to.Ptr("DefaultReader"),
 	// 			DecisionRules: []core.DecisionRule{
@@ -177,6 +179,7 @@ func ExampleOneLakeDataAccessSecurityClient_ListDataAccessRoles_listDataAccessRo
 	// 											SourcePath: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff222/25bac802-080d-4f73-8a42-1b406eb1fceb"),
 	// 									}},
 	// 								},
+	// 								ETag: to.Ptr("44d64df551425fcc55e4d42a148795d9f25f89dd"),
 	// 						}},
 	// 					}
 }
@@ -200,7 +203,7 @@ func ExampleOneLakeDataAccessSecurityClient_ListDataAccessRoles_listDefaultDataA
 	_ = res
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
 	// res.DataAccessRoles = core.DataAccessRoles{
-	// 	Value: []core.DataAccessRole{
+	// 	Value: []core.DataAccessRoleListItem{
 	// 		{
 	// 			Name: to.Ptr("DefaultReader"),
 	// 			DecisionRules: []core.DecisionRule{
@@ -226,6 +229,7 @@ func ExampleOneLakeDataAccessSecurityClient_ListDataAccessRoles_listDefaultDataA
 	// 									SourcePath: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff222/25bac802-080d-4f73-8a42-1b406eb1fceb"),
 	// 							}},
 	// 						},
+	// 						ETag: to.Ptr("22b64df551425fcc55e4d42a148795d9f25f89bb"),
 	// 				}},
 	// 			}
 }
@@ -386,6 +390,142 @@ func ExampleOneLakeDataAccessSecurityClient_CreateOrUpdateDataAccessRoles_create
 		IfMatch:     nil,
 		IfNoneMatch: nil,
 	})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleOneLakeDataAccessSecurityClient_CreateOrUpdateSingleDataAccessRole() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewOneLakeDataAccessSecurityClient().CreateOrUpdateSingleDataAccessRole(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff222", "25bac802-080d-4f73-8a42-1b406eb1fceb", core.CreateOrUpdateSingleDataAccessRoleRequest{
+		Value: []core.DataAccessRoleBase{
+			{
+				Name: to.Ptr("DefaultReader"),
+				DecisionRules: []core.DecisionRule{
+					{
+						Effect: to.Ptr(core.EffectPermit),
+						Permission: []core.PermissionScope{
+							{
+								AttributeName: to.Ptr(core.AttributeNamePath),
+								AttributeValueIncludedIn: []string{
+									"*"},
+							},
+							{
+								AttributeName: to.Ptr(core.AttributeNameAction),
+								AttributeValueIncludedIn: []string{
+									"Read"},
+							}},
+					}},
+				Members: &core.Members{
+					FabricItemMembers: []core.FabricItemMember{
+						{
+							ItemAccess: []core.ItemAccess{
+								core.ItemAccessReadAll},
+							SourcePath: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff222/25bac802-080d-4f73-8a42-1b406eb1fceb"),
+						}},
+				},
+			}},
+	}, &core.OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleOptions{DataAccessRoleConflictPolicy: to.Ptr(core.DataAccessRoleConflictPolicyOverwrite),
+		IfMatch:     nil,
+		IfNoneMatch: nil,
+	})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleOneLakeDataAccessSecurityClient_GetDataAccessRole() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewOneLakeDataAccessSecurityClient().GetDataAccessRole(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff222", "25bac802-080d-4f73-8a42-1b406eb1fceb", "DefaultReader", &core.OneLakeDataAccessSecurityClientGetDataAccessRoleOptions{IfMatch: nil,
+		IfNoneMatch: nil,
+	})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.DataAccessRoleBase = core.DataAccessRoleBase{
+	// 	Name: to.Ptr("DefaultReader"),
+	// 	DecisionRules: []core.DecisionRule{
+	// 		{
+	// 			Constraints: &core.DecisionRuleConstraints{
+	// 				Columns: []core.ColumnConstraint{
+	// 					{
+	// 						ColumnAction: []core.ColumnAction{
+	// 							core.ColumnActionRead},
+	// 							ColumnEffect: to.Ptr(core.ColumnEffectPermit),
+	// 							ColumnNames: []string{
+	// 								"*"},
+	// 								TablePath: to.Ptr("Tables/schema1/TableB"),
+	// 						}},
+	// 						Rows: []core.RowConstraint{
+	// 							{
+	// 								TablePath: to.Ptr("Tables/schema1/TableC"),
+	// 								Value: to.Ptr("select * from [schema1].[TableC] where name = 'Aaron' AND country = 'USA'"),
+	// 						}},
+	// 					},
+	// 					Effect: to.Ptr(core.EffectPermit),
+	// 					Permission: []core.PermissionScope{
+	// 						{
+	// 							AttributeName: to.Ptr(core.AttributeNamePath),
+	// 							AttributeValueIncludedIn: []string{
+	// 								"Tables/schema1",
+	// 								"Tables/schema2/TableB"},
+	// 							},
+	// 							{
+	// 								AttributeName: to.Ptr(core.AttributeNameAction),
+	// 								AttributeValueIncludedIn: []string{
+	// 									"Read",
+	// 									"ReadWrite"},
+	// 							}},
+	// 					}},
+	// 					Members: &core.Members{
+	// 						FabricItemMembers: []core.FabricItemMember{
+	// 							{
+	// 								ItemAccess: []core.ItemAccess{
+	// 									core.ItemAccessReadAll},
+	// 									SourcePath: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff222/25bac802-080d-4f73-8a42-1b406eb1fceb"),
+	// 							}},
+	// 							MicrosoftEntraMembers: []core.MicrosoftEntraMember{
+	// 								{
+	// 									ObjectID: to.Ptr("EAF3B3B8-524A-4EC6-A96F-3340748DF869"),
+	// 									TenantID: to.Ptr("72f988bf-86f1-41af-91ab-2d7cd011db47"),
+	// 							}},
+	// 						},
+	// 					}
+}
+
+// Generated from example definition
+func ExampleOneLakeDataAccessSecurityClient_DeleteDataAccessRole() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewOneLakeDataAccessSecurityClient().DeleteDataAccessRole(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff222", "25bac802-080d-4f73-8a42-1b406eb1fceb", "DefaultReader", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

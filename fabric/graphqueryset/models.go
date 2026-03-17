@@ -16,12 +16,16 @@ type CreateGraphQuerySetRequest struct {
 
 	// The GraphQuerySet description. Maximum length is 256 characters.
 	Description *string
+
+	// The sensitivity label settings for the GraphQuerySet.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // DefinitionResponse - GraphQuerySet public definition response.
 type DefinitionResponse struct {
-	// READ-ONLY; GraphQuerySet public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/graph-queryset]
-	// for more details on how to craft a GraphQuerySet public definition.
+	// READ-ONLY; GraphQuerySet public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/graph-queryset-definition]
+	// for more details on the structure of the GraphQuerySet
+	// definition.
 	Definition *PublicDefinition
 }
 
@@ -41,6 +45,9 @@ type GraphQuerySet struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
 
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
@@ -70,8 +77,9 @@ type ItemTag struct {
 	ID *string
 }
 
-// PublicDefinition - GraphQuerySet public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/graph-queryset]
-// for more details on how to craft a GraphQuerySet public definition.
+// PublicDefinition - GraphQuerySet public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/graph-queryset-definition]
+// for more details on the structure of the GraphQuerySet
+// definition.
 type PublicDefinition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []PublicDefinitionPart
@@ -92,10 +100,26 @@ type PublicDefinitionPart struct {
 	PayloadType *PayloadType
 }
 
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
 // UpdateGraphQuerySetDefinitionRequest - Update GraphQuerySet public definition request payload.
 type UpdateGraphQuerySetDefinitionRequest struct {
-	// REQUIRED; GraphQuerySet public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/graph-queryset]
-	// for more details on how to craft a GraphQuerySet public definition.
+	// REQUIRED; GraphQuerySet public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/graph-queryset-definition]
+	// for more details on the structure of the GraphQuerySet
+	// definition.
 	Definition *PublicDefinition
 }
 

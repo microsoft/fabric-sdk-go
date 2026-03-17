@@ -184,7 +184,7 @@ func (i *ItemsServerTransport) dispatchDeleteEventSchemaSet(req *http.Request) (
 	if i.srv.DeleteEventSchemaSet == nil {
 		return nil, &nonRetriableError{errors.New("fake for method DeleteEventSchemaSet not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/EventSchemaSets/(?P<EventSchemaSetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/eventSchemaSets/(?P<eventSchemaSetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -194,7 +194,7 @@ func (i *ItemsServerTransport) dispatchDeleteEventSchemaSet(req *http.Request) (
 	if err != nil {
 		return nil, err
 	}
-	eventSchemaSetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("EventSchemaSetId")])
+	eventSchemaSetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("eventSchemaSetId")])
 	if err != nil {
 		return nil, err
 	}
@@ -217,7 +217,7 @@ func (i *ItemsServerTransport) dispatchGetEventSchemaSet(req *http.Request) (*ht
 	if i.srv.GetEventSchemaSet == nil {
 		return nil, &nonRetriableError{errors.New("fake for method GetEventSchemaSet not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/EventSchemaSets/(?P<EventSchemaSetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/eventSchemaSets/(?P<eventSchemaSetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -227,7 +227,7 @@ func (i *ItemsServerTransport) dispatchGetEventSchemaSet(req *http.Request) (*ht
 	if err != nil {
 		return nil, err
 	}
-	eventSchemaSetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("EventSchemaSetId")])
+	eventSchemaSetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("eventSchemaSetId")])
 	if err != nil {
 		return nil, err
 	}
@@ -252,7 +252,7 @@ func (i *ItemsServerTransport) dispatchBeginGetEventSchemaSetDefinition(req *htt
 	}
 	beginGetEventSchemaSetDefinition := i.beginGetEventSchemaSetDefinition.get(req)
 	if beginGetEventSchemaSetDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/EventSchemaSets/(?P<EventSchemaSetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/eventSchemaSets/(?P<eventSchemaSetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
@@ -263,7 +263,7 @@ func (i *ItemsServerTransport) dispatchBeginGetEventSchemaSetDefinition(req *htt
 		if err != nil {
 			return nil, err
 		}
-		eventSchemaSetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("EventSchemaSetId")])
+		eventSchemaSetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("eventSchemaSetId")])
 		if err != nil {
 			return nil, err
 		}
@@ -319,14 +319,29 @@ func (i *ItemsServerTransport) dispatchNewListEventSchemaSetsPager(req *http.Req
 		if err != nil {
 			return nil, err
 		}
+		recursiveUnescaped, err := url.QueryUnescape(qp.Get("recursive"))
+		if err != nil {
+			return nil, err
+		}
+		recursiveParam, err := parseOptional(recursiveUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDUnescaped, err := url.QueryUnescape(qp.Get("rootFolderId"))
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDParam := getOptional(rootFolderIDUnescaped)
 		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
 		if err != nil {
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
 		var options *eventschemaset.ItemsClientListEventSchemaSetsOptions
-		if continuationTokenParam != nil {
+		if recursiveParam != nil || rootFolderIDParam != nil || continuationTokenParam != nil {
 			options = &eventschemaset.ItemsClientListEventSchemaSetsOptions{
+				Recursive:         recursiveParam,
+				RootFolderID:      rootFolderIDParam,
 				ContinuationToken: continuationTokenParam,
 			}
 		}
@@ -355,7 +370,7 @@ func (i *ItemsServerTransport) dispatchUpdateEventSchemaSet(req *http.Request) (
 	if i.srv.UpdateEventSchemaSet == nil {
 		return nil, &nonRetriableError{errors.New("fake for method UpdateEventSchemaSet not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/EventSchemaSets/(?P<EventSchemaSetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/eventSchemaSets/(?P<eventSchemaSetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -369,7 +384,7 @@ func (i *ItemsServerTransport) dispatchUpdateEventSchemaSet(req *http.Request) (
 	if err != nil {
 		return nil, err
 	}
-	eventSchemaSetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("EventSchemaSetId")])
+	eventSchemaSetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("eventSchemaSetId")])
 	if err != nil {
 		return nil, err
 	}
@@ -394,7 +409,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateEventSchemaSetDefinition(req *
 	}
 	beginUpdateEventSchemaSetDefinition := i.beginUpdateEventSchemaSetDefinition.get(req)
 	if beginUpdateEventSchemaSetDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/EventSchemaSets/(?P<EventSchemaSetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/eventSchemaSets/(?P<eventSchemaSetId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
@@ -409,7 +424,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateEventSchemaSetDefinition(req *
 		if err != nil {
 			return nil, err
 		}
-		eventSchemaSetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("EventSchemaSetId")])
+		eventSchemaSetIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("eventSchemaSetId")])
 		if err != nil {
 			return nil, err
 		}

@@ -53,6 +53,9 @@ type CreateLakehouseRequest struct {
 
 	// The folder ID. If not specified or null, the lakehouse is created with the workspace as its folder.
 	FolderID *string
+
+	// The sensitivity label settings for the lakehouse.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // CreationPayload - (Preview) Lakehouse item payload. This property is currently required due to the schema enabled lakehouse
@@ -139,7 +142,7 @@ func (d *DayOfMonth) GetMonthlyOccurrence() *MonthlyOccurrence {
 }
 
 // Definition - Lakehouse public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/lakehouse-definition]
-// for more details on how to craft a lakehouse definition.
+// for more details on the structure of the Lakehouse definition.
 type Definition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []DefinitionPart
@@ -163,7 +166,7 @@ type DefinitionPart struct {
 // DefinitionResponse - Lakehouse public definition response.
 type DefinitionResponse struct {
 	// READ-ONLY; Lakehouse public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/lakehouse-definition]
-	// for more details on how to craft a lakehouse definition.
+	// for more details on the structure of the Lakehouse definition.
 	Definition *Definition
 }
 
@@ -176,6 +179,27 @@ type Duration struct {
 	Value *float32
 }
 
+// EntireTenantPrincipal - Represents a tenant principal
+type EntireTenantPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type EntireTenantPrincipal.
+func (e *EntireTenantPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: e.DisplayName,
+		ID:          e.ID,
+		Type:        e.Type,
+	}
+}
+
 // FileFormatOptions - Abstract type of data file format options.
 type FileFormatOptions struct {
 	// REQUIRED; Data file format name. Additional file format types may be added over time.
@@ -184,6 +208,36 @@ type FileFormatOptions struct {
 
 // GetFileFormatOptions implements the FileFormatOptionsClassification interface for type FileFormatOptions.
 func (f *FileFormatOptions) GetFileFormatOptions() *FileFormatOptions { return f }
+
+// GroupPrincipal - Represents a security group.
+type GroupPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// Group specific details. Applicable when the principal type is Group.
+	GroupDetails *GroupPrincipalGroupDetails
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type GroupPrincipal.
+func (g *GroupPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: g.DisplayName,
+		ID:          g.ID,
+		Type:        g.Type,
+	}
+}
+
+// GroupPrincipalGroupDetails - Group specific details. Applicable when the principal type is Group.
+type GroupPrincipalGroupDetails struct {
+	// The type of the group. Additional group types may be added over time.
+	GroupType *GroupType
+}
 
 // ItemReference - An item reference object.
 type ItemReference struct {
@@ -208,6 +262,24 @@ type ItemReferenceByID struct {
 
 // GetItemReference implements the ItemReferenceClassification interface for type ItemReferenceByID.
 func (i *ItemReferenceByID) GetItemReference() *ItemReference {
+	return &ItemReference{
+		ReferenceType: i.ReferenceType,
+	}
+}
+
+// ItemReferenceByVariable - An item reference by variable.
+type ItemReferenceByVariable struct {
+	// REQUIRED; The item reference type.
+	ReferenceType *ItemReferenceType
+
+	// REQUIRED; A variable reference string that specifies the Variable Library and the variable name inside it. Format: $(/**/_VarLibrary_/_VarName_)
+	// for a Variable Library named VarLibrary and a variable named
+	// VarName.
+	VariableReference *string
+}
+
+// GetItemReference implements the ItemReferenceClassification interface for type ItemReferenceByVariable.
+func (i *ItemReferenceByVariable) GetItemReference() *ItemReference {
 	return &ItemReference{
 		ReferenceType: i.ReferenceType,
 	}
@@ -242,6 +314,9 @@ type Lakehouse struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
+
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
 
@@ -273,7 +348,7 @@ type LivySession struct {
 	CapacityID *string
 
 	// ID of the consumer.
-	ConsumerID *Principal
+	ConsumerID PrincipalClassification
 
 	// ID of the item creator. When isHighConcurrency is set to true this value might be different than itemId.
 	CreatorItem *ItemReferenceByID
@@ -362,7 +437,7 @@ type LivySession struct {
 	SubmittedDateTime *time.Time
 
 	// ID of the submitter.
-	Submitter *Principal
+	Submitter PrincipalClassification
 
 	// Total duration of the job.
 	TotalDuration *Duration
@@ -496,45 +571,12 @@ type Principal struct {
 	// REQUIRED; The type of the principal. Additional principal types may be added over time.
 	Type *PrincipalType
 
-	// Group specific details. Applicable when the principal type is Group.
-	GroupDetails *PrincipalGroupDetails
-
-	// Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
-	ServicePrincipalProfileDetails *PrincipalServicePrincipalProfileDetails
-
 	// READ-ONLY; The principal's display name.
 	DisplayName *string
-
-	// READ-ONLY; Service principal specific details. Applicable when the principal type is ServicePrincipal.
-	ServicePrincipalDetails *PrincipalServicePrincipalDetails
-
-	// READ-ONLY; User principal specific details. Applicable when the principal type is User.
-	UserDetails *PrincipalUserDetails
 }
 
-// PrincipalGroupDetails - Group specific details. Applicable when the principal type is Group.
-type PrincipalGroupDetails struct {
-	// The type of the group. Additional group types may be added over time.
-	GroupType *GroupType
-}
-
-// PrincipalServicePrincipalDetails - Service principal specific details. Applicable when the principal type is ServicePrincipal.
-type PrincipalServicePrincipalDetails struct {
-	// READ-ONLY; The service principal's Microsoft Entra AppId.
-	AADAppID *string
-}
-
-// PrincipalServicePrincipalProfileDetails - Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
-type PrincipalServicePrincipalProfileDetails struct {
-	// The service principal profile's parent principal.
-	ParentPrincipal *Principal
-}
-
-// PrincipalUserDetails - User principal specific details. Applicable when the principal type is User.
-type PrincipalUserDetails struct {
-	// READ-ONLY; The user principal name.
-	UserPrincipalName *string
-}
+// GetPrincipal implements the PrincipalClassification interface for type Principal.
+func (p *Principal) GetPrincipal() *Principal { return p }
 
 // Properties - The lakehouse properties.
 type Properties struct {
@@ -566,7 +608,7 @@ type RefreshMaterializedLakeViewsSchedule struct {
 	CreatedDateTime *time.Time
 
 	// The user identity that created this schedule or last modified.
-	Owner *Principal
+	Owner PrincipalClassification
 }
 
 // RunOnDemandTableMaintenanceRequest - Run on demand lakehouse table maintenance instance payload
@@ -606,6 +648,82 @@ type ScheduleConfig struct {
 
 // GetScheduleConfig implements the ScheduleConfigClassification interface for type ScheduleConfig.
 func (s *ScheduleConfig) GetScheduleConfig() *ScheduleConfig { return s }
+
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
+// ServicePrincipal - Represents a Microsoft Entra service principal.
+type ServicePrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+
+	// READ-ONLY; Service principal specific details. Applicable when the principal type is ServicePrincipal.
+	ServicePrincipalDetails *ServicePrincipalDetails
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type ServicePrincipal.
+func (s *ServicePrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: s.DisplayName,
+		ID:          s.ID,
+		Type:        s.Type,
+	}
+}
+
+// ServicePrincipalDetails - Service principal specific details. Applicable when the principal type is ServicePrincipal.
+type ServicePrincipalDetails struct {
+	// READ-ONLY; The service principal's Microsoft Entra AppId.
+	AADAppID *string
+}
+
+// ServicePrincipalProfilePrincipal - Represents a service principal profile.
+type ServicePrincipalProfilePrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
+	ServicePrincipalProfileDetails *ServicePrincipalProfilePrincipalServicePrincipalProfileDetails
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type ServicePrincipalProfilePrincipal.
+func (s *ServicePrincipalProfilePrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: s.DisplayName,
+		ID:          s.ID,
+		Type:        s.Type,
+	}
+}
+
+// ServicePrincipalProfilePrincipalServicePrincipalProfileDetails - Service principal profile details. Applicable when the
+// principal type is ServicePrincipalProfile.
+type ServicePrincipalProfilePrincipalServicePrincipalProfileDetails struct {
+	// The service principal profile's parent principal.
+	ParentPrincipal PrincipalClassification
+}
 
 // Table information.
 type Table struct {
@@ -654,7 +772,7 @@ type Tables struct {
 // UpdateLakehouseDefinitionRequest - Update Lakehouse public definition request payload.
 type UpdateLakehouseDefinitionRequest struct {
 	// REQUIRED; Lakehouse public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/lakehouse-definition]
-	// for more details on how to craft a lakehouse definition.
+	// for more details on the structure of the Lakehouse definition.
 	Definition *Definition
 }
 
@@ -675,6 +793,36 @@ type UpdateLakehouseRequest struct {
 
 	// The lakehouse display name. The display name must follow naming rules according to item type.
 	DisplayName *string
+}
+
+// UserPrincipal - Represents a Microsoft Entra user principal.
+type UserPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+
+	// READ-ONLY; User principal specific details. Applicable when the principal type is User.
+	UserDetails *UserPrincipalUserDetails
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type UserPrincipal.
+func (u *UserPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: u.DisplayName,
+		ID:          u.ID,
+		Type:        u.Type,
+	}
+}
+
+// UserPrincipalUserDetails - User principal specific details. Applicable when the principal type is User.
+type UserPrincipalUserDetails struct {
+	// READ-ONLY; The user principal name.
+	UserPrincipalName *string
 }
 
 // VacuumSettings - Table maintenance vacuum [/fabric/data-engineering/lakehouse-table-maintenance#table-maintenance-operations]

@@ -615,11 +615,11 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ListWorkspaceAccessDetails() {
 	exampleRes := admin.WorkspaceAccessDetailsResponse{
 		AccessDetails: []admin.WorkspaceAccessDetails{
 			{
-				Principal: &admin.Principal{
+				Principal: &admin.UserPrincipal{
 					Type:        to.Ptr(admin.PrincipalTypeUser),
 					DisplayName: to.Ptr("Jacob Hancock"),
 					ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-					UserDetails: &admin.PrincipalUserDetails{
+					UserDetails: &admin.UserPrincipalUserDetails{
 						UserPrincipalName: to.Ptr("jacob@example.com"),
 					},
 				},
@@ -629,11 +629,11 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ListWorkspaceAccessDetails() {
 				},
 			},
 			{
-				Principal: &admin.Principal{
+				Principal: &admin.UserPrincipal{
 					Type:        to.Ptr(admin.PrincipalTypeUser),
 					DisplayName: to.Ptr("Caleb Foster"),
 					ID:          to.Ptr("c7db8e03-c8cb-4d4c-9f64-1dcd327c9d3c"),
-					UserDetails: &admin.PrincipalUserDetails{
+					UserDetails: &admin.UserPrincipalUserDetails{
 						UserPrincipalName: to.Ptr("caleb@example.com"),
 					},
 				},
@@ -643,13 +643,13 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ListWorkspaceAccessDetails() {
 				},
 			},
 			{
-				Principal: &admin.Principal{
+				Principal: &admin.GroupPrincipal{
 					Type:        to.Ptr(admin.PrincipalTypeGroup),
 					DisplayName: to.Ptr("TestSecurityGroup"),
-					GroupDetails: &admin.PrincipalGroupDetails{
+					ID:          to.Ptr("f51b705f-a409-4d40-9197-c5d5f349e2f0"),
+					GroupDetails: &admin.GroupPrincipalGroupDetails{
 						GroupType: to.Ptr(admin.GroupTypeSecurityGroup),
 					},
-					ID: to.Ptr("f51b705f-a409-4d40-9197-c5d5f349e2f0"),
 				},
 				WorkspaceAccessDetails: &admin.WorkspaceAccessDetail{
 					Type:          to.Ptr(admin.WorkspaceTypeWorkspace),
@@ -680,7 +680,7 @@ func (testsuite *FakeTestSuite) TestWorkspaces_RestoreWorkspace() {
 	var exampleRestoreWorkspaceRequest admin.RestoreWorkspaceRequest
 	exampleWorkspaceID = "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f"
 	exampleRestoreWorkspaceRequest = admin.RestoreWorkspaceRequest{
-		NewWorkspaceAdminPrincipal: &admin.Principal{
+		NewWorkspaceAdminPrincipal: &admin.UserPrincipal{
 			Type: to.Ptr(admin.PrincipalTypeUser),
 			ID:   to.Ptr("17dd1e38-a4c6-41ed-bc4f-1e383f8ddd01"),
 		},
@@ -700,6 +700,83 @@ func (testsuite *FakeTestSuite) TestWorkspaces_RestoreWorkspace() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
+func (testsuite *FakeTestSuite) TestWorkspaces_ListNetworkingCommunicationPolicies() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get network communication policy settings for list of workspaces enabled with either Inbound or Outbound Access Protection for example"},
+	})
+
+	exampleRes := admin.NetworkCommunicationPolicies{
+		ContinuationToken: to.Ptr("eyJMYXN0U2VlbkNvbm5lY3Rpb25JZCI6NX0="),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/admin/workspaces/networking/communicationpolicies?continuationToken=eyJMYXN0U2VlbkNvbm5lY3Rpb25JZCI6NX0="),
+		Value: []admin.NetworkCommunicationPolicyDetails{
+			{
+				Inbound: &admin.NetworkCommunicationPolicyInboundDetails{
+					PublicAccessRules: &admin.NetworkRules{
+						DefaultAction: to.Ptr(admin.NetworkAccessRuleDeny),
+					},
+				},
+				Outbound: &admin.NetworkCommunicationPolicyOutboundDetails{
+					Connections: &admin.WorkspaceOutboundConnections{
+						DefaultAction: to.Ptr(admin.ConnectionAccessActionTypeDeny),
+						Rules: []admin.OutboundConnectionRule{
+							{
+								AllowedEndpoints: []admin.ConnectionRuleEndpointMetadata{
+									{
+										HostnamePattern: to.Ptr("*.microsoft.com"),
+									}},
+								ConnectionType: to.Ptr("SQL"),
+								DefaultAction:  to.Ptr(admin.ConnectionAccessActionTypeDeny),
+							},
+							{
+								AllowedWorkspaces: []admin.ConnectionRuleWorkspaceMetadata{
+									{
+										WorkspaceID: to.Ptr("91c5ae74-e82d-4dd3-bfeb-6b1814030123"),
+									}},
+								ConnectionType: to.Ptr("lakehouse"),
+								DefaultAction:  to.Ptr(admin.ConnectionAccessActionTypeDeny),
+							},
+							{
+								ConnectionType: to.Ptr("Maria DB"),
+								DefaultAction:  to.Ptr(admin.ConnectionAccessActionTypeAllow),
+							}},
+					},
+					Gateways: &admin.WorkspaceOutboundGateways{
+						AllowedGateways: []admin.GatewayAccessRuleMetadata{
+							{
+								ID: to.Ptr("17d8929d-ab32-46d1-858b-fdea74e93bf2"),
+							}},
+						DefaultAction: to.Ptr(admin.GatewayAccessActionTypeDeny),
+					},
+					Git: &admin.NetworkRules{
+						DefaultAction: to.Ptr(admin.NetworkAccessRuleDeny),
+					},
+					PublicAccessRules: &admin.NetworkRules{
+						DefaultAction: to.Ptr(admin.NetworkAccessRuleDeny),
+					},
+				},
+				WorkspaceID: to.Ptr("fa9ad228-3e6b-44d4-b5f4-e275f337afa9"),
+			}},
+	}
+
+	testsuite.serverFactory.WorkspacesServer.NewListNetworkingCommunicationPoliciesPager = func(options *admin.WorkspacesClientListNetworkingCommunicationPoliciesOptions) (resp azfake.PagerResponder[admin.WorkspacesClientListNetworkingCommunicationPoliciesResponse]) {
+		resp = azfake.PagerResponder[admin.WorkspacesClientListNetworkingCommunicationPoliciesResponse]{}
+		resp.AddPage(http.StatusOK, admin.WorkspacesClientListNetworkingCommunicationPoliciesResponse{NetworkCommunicationPolicies: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	pager := client.NewListNetworkingCommunicationPoliciesPager(&admin.WorkspacesClientListNetworkingCommunicationPoliciesOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.NetworkCommunicationPolicies))
+		if err == nil {
+			break
+		}
+	}
+}
+
 func (testsuite *FakeTestSuite) TestItems_ListItems() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -712,11 +789,11 @@ func (testsuite *FakeTestSuite) TestItems_ListItems() {
 				Name:       to.Ptr("Test Report"),
 				Type:       to.Ptr(admin.ItemTypeReport),
 				CapacityID: to.Ptr("D5E336D6-D919-4ECC-B424-1F771A506851"),
-				CreatorPrincipal: &admin.Principal{
+				CreatorPrincipal: &admin.UserPrincipal{
 					Type:        to.Ptr(admin.PrincipalTypeUser),
 					DisplayName: to.Ptr("Jacob Hancock"),
 					ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-					UserDetails: &admin.PrincipalUserDetails{
+					UserDetails: &admin.UserPrincipalUserDetails{
 						UserPrincipalName: to.Ptr("Jacob@example.com"),
 					},
 				},
@@ -772,11 +849,11 @@ func (testsuite *FakeTestSuite) TestItems_ListItems() {
 				Type:        to.Ptr(admin.ItemTypeNotebook),
 				Description: to.Ptr("Test notebook."),
 				CapacityID:  to.Ptr("D5E336D6-D919-4ECC-B424-1F771A506851"),
-				CreatorPrincipal: &admin.Principal{
+				CreatorPrincipal: &admin.UserPrincipal{
 					Type:        to.Ptr(admin.PrincipalTypeUser),
 					DisplayName: to.Ptr("Caleb Foster"),
 					ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-					UserDetails: &admin.PrincipalUserDetails{
+					UserDetails: &admin.UserPrincipalUserDetails{
 						UserPrincipalName: to.Ptr("caleb@example.com"),
 					},
 				},
@@ -799,11 +876,11 @@ func (testsuite *FakeTestSuite) TestItems_ListItems() {
 				Type:        to.Ptr(admin.ItemTypeKQLDatabase),
 				Description: to.Ptr("Test KQL database."),
 				CapacityID:  to.Ptr("D5E336D6-D919-4ECC-B424-1F881A506851"),
-				CreatorPrincipal: &admin.Principal{
+				CreatorPrincipal: &admin.UserPrincipal{
 					Type:        to.Ptr(admin.PrincipalTypeUser),
 					DisplayName: to.Ptr("Jacob Hancock"),
 					ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-					UserDetails: &admin.PrincipalUserDetails{
+					UserDetails: &admin.UserPrincipalUserDetails{
 						UserPrincipalName: to.Ptr("jacob@example.com"),
 					},
 				},
@@ -846,11 +923,11 @@ func (testsuite *FakeTestSuite) TestItems_ListItems() {
 				Name:       to.Ptr("Lakehouse 2022-03-16T21:42:38.442Z"),
 				Type:       to.Ptr(admin.ItemTypeLakehouse),
 				CapacityID: to.Ptr("D5E336D6-D919-4ECC-B424-1F771A506851"),
-				CreatorPrincipal: &admin.Principal{
+				CreatorPrincipal: &admin.UserPrincipal{
 					Type:        to.Ptr(admin.PrincipalTypeUser),
 					DisplayName: to.Ptr("Jacob Hancock"),
 					ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-					UserDetails: &admin.PrincipalUserDetails{
+					UserDetails: &admin.UserPrincipalUserDetails{
 						UserPrincipalName: to.Ptr("jacob@example.com"),
 					},
 				},
@@ -903,11 +980,11 @@ func (testsuite *FakeTestSuite) TestItems_GetItem() {
 		Type:        to.Ptr(admin.ItemTypeReport),
 		Description: to.Ptr("Test Jacob's Report,"),
 		CapacityID:  to.Ptr("D5E336D6-D919-4ECC-B424-1F771A506851"),
-		CreatorPrincipal: &admin.Principal{
+		CreatorPrincipal: &admin.UserPrincipal{
 			Type:        to.Ptr(admin.PrincipalTypeUser),
 			DisplayName: to.Ptr("Jacob Hancock"),
 			ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-			UserDetails: &admin.PrincipalUserDetails{
+			UserDetails: &admin.UserPrincipalUserDetails{
 				UserPrincipalName: to.Ptr("Jacob@example.com"),
 			},
 		},
@@ -942,11 +1019,11 @@ func (testsuite *FakeTestSuite) TestItems_GetItem() {
 		Type:        to.Ptr(admin.ItemType("Kusto")),
 		Description: to.Ptr("Test Jacob's notebook."),
 		CapacityID:  to.Ptr("D5E336D6-D919-4ECC-B424-1F771A506851"),
-		CreatorPrincipal: &admin.Principal{
+		CreatorPrincipal: &admin.UserPrincipal{
 			Type:        to.Ptr(admin.PrincipalTypeUser),
 			DisplayName: to.Ptr("Jacob Hancock"),
 			ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-			UserDetails: &admin.PrincipalUserDetails{
+			UserDetails: &admin.UserPrincipalUserDetails{
 				UserPrincipalName: to.Ptr("Jacob@example.com"),
 			},
 		},
@@ -990,11 +1067,11 @@ func (testsuite *FakeTestSuite) TestItems_ListItemAccessDetails() {
 						admin.ItemPermissionsRead,
 						admin.ItemPermissionsReshare},
 				},
-				Principal: &admin.Principal{
+				Principal: &admin.UserPrincipal{
 					Type:        to.Ptr(admin.PrincipalTypeUser),
 					DisplayName: to.Ptr("Jacob Hancock"),
 					ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-					UserDetails: &admin.PrincipalUserDetails{
+					UserDetails: &admin.UserPrincipalUserDetails{
 						UserPrincipalName: to.Ptr("jacob@example.com"),
 					},
 				},
@@ -1033,11 +1110,11 @@ func (testsuite *FakeTestSuite) TestItems_ListItemAccessDetails() {
 						admin.ItemPermissionsRead,
 						admin.ItemPermissionsReshare},
 				},
-				Principal: &admin.Principal{
+				Principal: &admin.UserPrincipal{
 					Type:        to.Ptr(admin.PrincipalTypeUser),
 					DisplayName: to.Ptr("Jacob Hancock"),
 					ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-					UserDetails: &admin.PrincipalUserDetails{
+					UserDetails: &admin.UserPrincipalUserDetails{
 						UserPrincipalName: to.Ptr("jacob@example.com"),
 					},
 				},
@@ -1052,11 +1129,11 @@ func (testsuite *FakeTestSuite) TestItems_ListItemAccessDetails() {
 						admin.ItemPermissionsReshare,
 						admin.ItemPermissionsExplore},
 				},
-				Principal: &admin.Principal{
+				Principal: &admin.UserPrincipal{
 					Type:        to.Ptr(admin.PrincipalTypeUser),
 					DisplayName: to.Ptr("Eric Solomon"),
 					ID:          to.Ptr("c7db8e03-c8cb-4d4c-9f64-1dcd327c9d3c"),
-					UserDetails: &admin.PrincipalUserDetails{
+					UserDetails: &admin.UserPrincipalUserDetails{
 						UserPrincipalName: to.Ptr("eric@example.com"),
 					},
 				},
@@ -1069,13 +1146,13 @@ func (testsuite *FakeTestSuite) TestItems_ListItemAccessDetails() {
 						admin.ItemPermissionsRead,
 						admin.ItemPermissionsReshare},
 				},
-				Principal: &admin.Principal{
+				Principal: &admin.GroupPrincipal{
 					Type:        to.Ptr(admin.PrincipalTypeGroup),
 					DisplayName: to.Ptr("TestSecurityGroup"),
-					GroupDetails: &admin.PrincipalGroupDetails{
+					ID:          to.Ptr("f51b705f-a409-4d40-9197-c5d5f349e2f0"),
+					GroupDetails: &admin.GroupPrincipalGroupDetails{
 						GroupType: to.Ptr(admin.GroupTypeSecurityGroup),
 					},
-					ID: to.Ptr("f51b705f-a409-4d40-9197-c5d5f349e2f0"),
 				},
 			}},
 	}
@@ -1735,24 +1812,24 @@ func (testsuite *FakeTestSuite) TestDomains_ListRoleAssignments() {
 	exampleRes := admin.DomainRoleAssignments{
 		Value: []admin.DomainRoleAssignment{
 			{
-				Principal: &admin.Principal{
+				Principal: &admin.UserPrincipal{
 					Type:        to.Ptr(admin.PrincipalTypeUser),
 					DisplayName: to.Ptr("Eric Solomon"),
 					ID:          to.Ptr("81fac5e1-2a81-421b-a168-110b1c72fa11"),
-					UserDetails: &admin.PrincipalUserDetails{
+					UserDetails: &admin.UserPrincipalUserDetails{
 						UserPrincipalName: to.Ptr("eric@microsoft.com"),
 					},
 				},
 				Role: to.Ptr(admin.DomainRoleAdmin),
 			},
 			{
-				Principal: &admin.Principal{
+				Principal: &admin.GroupPrincipal{
 					Type:        to.Ptr(admin.PrincipalTypeGroup),
 					DisplayName: to.Ptr("TestSecurityGroup"),
-					GroupDetails: &admin.PrincipalGroupDetails{
+					ID:          to.Ptr("f51b705f-a409-4d40-9197-c5d5f349e2f0"),
+					GroupDetails: &admin.GroupPrincipalGroupDetails{
 						GroupType: to.Ptr(admin.GroupTypeSecurityGroup),
 					},
-					ID: to.Ptr("f51b705f-a409-4d40-9197-c5d5f349e2f0"),
 				},
 				Role: to.Ptr(admin.DomainRoleContributor),
 			}},
@@ -1787,8 +1864,8 @@ func (testsuite *FakeTestSuite) TestDomains_RoleAssignmentsBulkAssign() {
 	exampleDomainID = "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f"
 	exampleDomainRoleAssignmentRequest = admin.DomainRoleAssignmentRequest{
 		Type: to.Ptr(admin.DomainRole("Admins")),
-		Principals: []admin.Principal{
-			{
+		Principals: []admin.PrincipalClassification{
+			&admin.UserPrincipal{
 				Type: to.Ptr(admin.PrincipalTypeUser),
 				ID:   to.Ptr("796ce6ad-9163-4c16-9559-c68192a251de"),
 			}},
@@ -1813,8 +1890,8 @@ func (testsuite *FakeTestSuite) TestDomains_RoleAssignmentsBulkAssign() {
 	exampleDomainID = "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f"
 	exampleDomainRoleAssignmentRequest = admin.DomainRoleAssignmentRequest{
 		Type: to.Ptr(admin.DomainRole("Contributors")),
-		Principals: []admin.Principal{
-			{
+		Principals: []admin.PrincipalClassification{
+			&admin.UserPrincipal{
 				Type: to.Ptr(admin.PrincipalTypeUser),
 				ID:   to.Ptr("796ce6ad-9163-4c16-9559-c68192a251de"),
 			}},
@@ -1842,8 +1919,8 @@ func (testsuite *FakeTestSuite) TestDomains_RoleAssignmentsBulkUnassign() {
 	exampleDomainID = "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f"
 	exampleDomainRoleUnassignmentRequest = admin.DomainRoleUnassignmentRequest{
 		Type: to.Ptr(admin.DomainRole("Admins")),
-		Principals: []admin.Principal{
-			{
+		Principals: []admin.PrincipalClassification{
+			&admin.UserPrincipal{
 				Type: to.Ptr(admin.PrincipalTypeUser),
 				ID:   to.Ptr("796ce6ad-9163-4c16-9559-c68192a251de"),
 			}},
@@ -1868,8 +1945,8 @@ func (testsuite *FakeTestSuite) TestDomains_RoleAssignmentsBulkUnassign() {
 	exampleDomainID = "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f"
 	exampleDomainRoleUnassignmentRequest = admin.DomainRoleUnassignmentRequest{
 		Type: to.Ptr(admin.DomainRole("Contributors")),
-		Principals: []admin.Principal{
-			{
+		Principals: []admin.PrincipalClassification{
+			&admin.UserPrincipal{
 				Type: to.Ptr(admin.PrincipalTypeUser),
 				ID:   to.Ptr("796ce6ad-9163-4c16-9559-c68192a251de"),
 			}},
@@ -2257,7 +2334,7 @@ func (testsuite *FakeTestSuite) TestLabels_BulkSetLabels() {
 	var exampleSetLabelsRequest admin.SetLabelsRequest
 	exampleSetLabelsRequest = admin.SetLabelsRequest{
 		AssignmentMethod: to.Ptr(admin.AssignmentMethodStandard),
-		DelegatedPrincipal: &admin.Principal{
+		DelegatedPrincipal: &admin.UserPrincipal{
 			Type: to.Ptr(admin.PrincipalTypeUser),
 			ID:   to.Ptr("796ce6ad-9163-4c16-9559-c68192a251de"),
 		},
@@ -2336,11 +2413,11 @@ func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_ListExternalDataS
 	exampleRes := admin.ExternalDataShares{
 		Value: []admin.ExternalDataShare{
 			{
-				CreatorPrincipal: &admin.Principal{
+				CreatorPrincipal: &admin.UserPrincipal{
 					Type:        to.Ptr(admin.PrincipalTypeUser),
 					DisplayName: to.Ptr("Jacob Hancock"),
 					ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-					UserDetails: &admin.PrincipalUserDetails{
+					UserDetails: &admin.UserPrincipalUserDetails{
 						UserPrincipalName: to.Ptr("jacob@contoso.com"),
 					},
 				},
@@ -2358,11 +2435,11 @@ func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_ListExternalDataS
 			},
 			{
 				AcceptedByTenantID: to.Ptr("c51dc03f-268a-4da0-a879-25f24947ab8b"),
-				CreatorPrincipal: &admin.Principal{
+				CreatorPrincipal: &admin.UserPrincipal{
 					Type:        to.Ptr(admin.PrincipalTypeUser),
 					DisplayName: to.Ptr("Jacob Hancock"),
 					ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-					UserDetails: &admin.PrincipalUserDetails{
+					UserDetails: &admin.UserPrincipalUserDetails{
 						UserPrincipalName: to.Ptr("jacob@contoso.com"),
 					},
 				},
@@ -2379,11 +2456,11 @@ func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_ListExternalDataS
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 			},
 			{
-				CreatorPrincipal: &admin.Principal{
+				CreatorPrincipal: &admin.UserPrincipal{
 					Type:        to.Ptr(admin.PrincipalTypeUser),
 					DisplayName: to.Ptr("Eric Solomon"),
 					ID:          to.Ptr("81fac5e1-2a81-421b-a168-110b1c72fa11"),
-					UserDetails: &admin.PrincipalUserDetails{
+					UserDetails: &admin.UserPrincipalUserDetails{
 						UserPrincipalName: to.Ptr("eric@contoso.com"),
 					},
 				},
@@ -2401,11 +2478,11 @@ func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_ListExternalDataS
 			},
 			{
 				AcceptedByTenantID: to.Ptr("c51dc03f-268a-4da0-a879-25f24947ab8b"),
-				CreatorPrincipal: &admin.Principal{
+				CreatorPrincipal: &admin.UserPrincipal{
 					Type:        to.Ptr(admin.PrincipalTypeUser),
 					DisplayName: to.Ptr("Eric Solomon"),
 					ID:          to.Ptr("81fac5e1-2a81-421b-a168-110b1c72fa11"),
-					UserDetails: &admin.PrincipalUserDetails{
+					UserDetails: &admin.UserPrincipalUserDetails{
 						UserPrincipalName: to.Ptr("eric@contoso.com"),
 					},
 				},

@@ -30,9 +30,8 @@ type ItemsClient struct {
 	endpoint string
 }
 
-// BeginCreateSQLDatabase - > [!NOTE] SQL Database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create a SQL database with a public definition, refer to SQLDatabase definition [/rest/api/fabric/articles/item-management/definitions/sql-database]
+// BeginCreateSQLDatabase - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// To create a SQL database with a public definition, refer to SQLDatabase definition [/rest/api/fabric/articles/item-management/definitions/sql-database-definition]
 // article.
 // PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
@@ -56,9 +55,8 @@ func (client *ItemsClient) BeginCreateSQLDatabase(ctx context.Context, workspace
 	return client.beginCreateSQLDatabase(ctx, workspaceID, createSQLDatabaseRequest, options)
 }
 
-// CreateSQLDatabase - > [!NOTE] SQL Database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create a SQL database with a public definition, refer to SQLDatabase definition [/rest/api/fabric/articles/item-management/definitions/sql-database]
+// CreateSQLDatabase - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// To create a SQL database with a public definition, refer to SQLDatabase definition [/rest/api/fabric/articles/item-management/definitions/sql-database-definition]
 // article.
 // PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
@@ -113,8 +111,7 @@ func (client *ItemsClient) createSQLDatabaseCreateRequest(ctx context.Context, w
 	return req, nil
 }
 
-// DeleteSQLDatabase - > [!NOTE] SQL Database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// PERMISSIONS The caller must have write permissions for the SQL database.
+// DeleteSQLDatabase - PERMISSIONS The caller must have write permissions for the SQL database.
 // REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -151,7 +148,7 @@ func (client *ItemsClient) DeleteSQLDatabase(ctx context.Context, workspaceID st
 
 // deleteSQLDatabaseCreateRequest creates the DeleteSQLDatabase request.
 func (client *ItemsClient) deleteSQLDatabaseCreateRequest(ctx context.Context, workspaceID string, sqlDatabaseID string, _ *ItemsClientDeleteSQLDatabaseOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/{SQLDatabaseId}"
+	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/{sqlDatabaseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -159,7 +156,7 @@ func (client *ItemsClient) deleteSQLDatabaseCreateRequest(ctx context.Context, w
 	if sqlDatabaseID == "" {
 		return nil, errors.New("parameter sqlDatabaseID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{SQLDatabaseId}", url.PathEscape(sqlDatabaseID))
+	urlPath = strings.ReplaceAll(urlPath, "{sqlDatabaseId}", url.PathEscape(sqlDatabaseID))
 	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -168,8 +165,7 @@ func (client *ItemsClient) deleteSQLDatabaseCreateRequest(ctx context.Context, w
 	return req, nil
 }
 
-// GetSQLDatabase - > [!NOTE] SQL Database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// PERMISSIONS The caller must have read permissions for the SQL database.
+// GetSQLDatabase - PERMISSIONS The caller must have read permissions for the SQL database.
 // REQUIRED DELEGATED SCOPES SQLDatabase.Read.All or SQLDatabase.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -207,7 +203,7 @@ func (client *ItemsClient) GetSQLDatabase(ctx context.Context, workspaceID strin
 
 // getSQLDatabaseCreateRequest creates the GetSQLDatabase request.
 func (client *ItemsClient) getSQLDatabaseCreateRequest(ctx context.Context, workspaceID string, sqlDatabaseID string, _ *ItemsClientGetSQLDatabaseOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/{SQLDatabaseId}"
+	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/{sqlDatabaseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -215,7 +211,7 @@ func (client *ItemsClient) getSQLDatabaseCreateRequest(ctx context.Context, work
 	if sqlDatabaseID == "" {
 		return nil, errors.New("parameter sqlDatabaseID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{SQLDatabaseId}", url.PathEscape(sqlDatabaseID))
+	urlPath = strings.ReplaceAll(urlPath, "{sqlDatabaseId}", url.PathEscape(sqlDatabaseID))
 	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -233,8 +229,7 @@ func (client *ItemsClient) getSQLDatabaseHandleResponse(resp *http.Response) (It
 	return result, nil
 }
 
-// BeginGetSQLDatabaseDefinition - > [!NOTE] SQL database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// BeginGetSQLDatabaseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a SQL database's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the SQL database.
 // REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
@@ -255,8 +250,7 @@ func (client *ItemsClient) BeginGetSQLDatabaseDefinition(ctx context.Context, wo
 	return client.beginGetSQLDatabaseDefinition(ctx, workspaceID, sqlDatabaseID, options)
 }
 
-// GetSQLDatabaseDefinition - > [!NOTE] SQL database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// GetSQLDatabaseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a SQL database's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the SQL database.
 // REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
@@ -292,7 +286,7 @@ func (client *ItemsClient) getSQLDatabaseDefinition(ctx context.Context, workspa
 
 // getSQLDatabaseDefinitionCreateRequest creates the GetSQLDatabaseDefinition request.
 func (client *ItemsClient) getSQLDatabaseDefinitionCreateRequest(ctx context.Context, workspaceID string, sqlDatabaseID string, _ *ItemsClientBeginGetSQLDatabaseDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/{SQLDatabaseId}/getDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/{sqlDatabaseId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -300,7 +294,7 @@ func (client *ItemsClient) getSQLDatabaseDefinitionCreateRequest(ctx context.Con
 	if sqlDatabaseID == "" {
 		return nil, errors.New("parameter sqlDatabaseID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{SQLDatabaseId}", url.PathEscape(sqlDatabaseID))
+	urlPath = strings.ReplaceAll(urlPath, "{sqlDatabaseId}", url.PathEscape(sqlDatabaseID))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -309,8 +303,7 @@ func (client *ItemsClient) getSQLDatabaseDefinitionCreateRequest(ctx context.Con
 	return req, nil
 }
 
-// NewListSQLDatabasesPager - > [!NOTE] SQL Database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API supports pagination [/rest/api/fabric/articles/pagination].
+// NewListSQLDatabasesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -362,6 +355,12 @@ func (client *ItemsClient) listSQLDatabasesCreateRequest(ctx context.Context, wo
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
 	}
+	if options != nil && options.Recursive != nil {
+		reqQP.Set("recursive", strconv.FormatBool(*options.Recursive))
+	}
+	if options != nil && options.RootFolderID != nil {
+		reqQP.Set("rootFolderId", *options.RootFolderID)
+	}
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
@@ -376,8 +375,85 @@ func (client *ItemsClient) listSQLDatabasesHandleResponse(resp *http.Response) (
 	return result, nil
 }
 
-// UpdateSQLDatabase - > [!NOTE] SQL Database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// BeginRevalidateCMK - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Revalidating Customer‑Managed Key (CMK) of the specified SQL database, which checks that the currently configured Azure
+// Key Vault (AKV) key is still accessible, valid, and authorized for encryption
+// operations.
 // PERMISSIONS The caller must have read and write permissions for the SQL database.
+// REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace identifier.
+//   - sqlDatabaseID - The SQL database ID.
+//   - options - ItemsClientBeginRevalidateCMKOptions contains the optional parameters for the ItemsClient.BeginRevalidateCMK
+//     method.
+func (client *ItemsClient) BeginRevalidateCMK(ctx context.Context, workspaceID string, sqlDatabaseID string, options *ItemsClientBeginRevalidateCMKOptions) (*runtime.Poller[ItemsClientRevalidateCMKResponse], error) {
+	return client.beginRevalidateCMK(ctx, workspaceID, sqlDatabaseID, options)
+}
+
+// RevalidateCMK - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Revalidating Customer‑Managed Key (CMK) of the specified SQL database, which checks that the currently configured Azure
+// Key Vault (AKV) key is still accessible, valid, and authorized for encryption
+// operations.
+// PERMISSIONS The caller must have read and write permissions for the SQL database.
+// REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) revalidateCMK(ctx context.Context, workspaceID string, sqlDatabaseID string, options *ItemsClientBeginRevalidateCMKOptions) (*http.Response, error) {
+	var err error
+	const operationName = "sqldatabase.ItemsClient.BeginRevalidateCMK"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.revalidateCMKCreateRequest(ctx, workspaceID, sqlDatabaseID, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// revalidateCMKCreateRequest creates the RevalidateCMK request.
+func (client *ItemsClient) revalidateCMKCreateRequest(ctx context.Context, workspaceID string, sqlDatabaseID string, _ *ItemsClientBeginRevalidateCMKOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/{sqlDatabaseId}/revalidateCMK"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if sqlDatabaseID == "" {
+		return nil, errors.New("parameter sqlDatabaseID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{sqlDatabaseId}", url.PathEscape(sqlDatabaseID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// UpdateSQLDatabase - PERMISSIONS The caller must have read and write permissions for the SQL database.
 // REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -416,7 +492,7 @@ func (client *ItemsClient) UpdateSQLDatabase(ctx context.Context, workspaceID st
 
 // updateSQLDatabaseCreateRequest creates the UpdateSQLDatabase request.
 func (client *ItemsClient) updateSQLDatabaseCreateRequest(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseRequest UpdateSQLDatabaseRequest, _ *ItemsClientUpdateSQLDatabaseOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/{SQLDatabaseId}"
+	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/{sqlDatabaseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -424,7 +500,7 @@ func (client *ItemsClient) updateSQLDatabaseCreateRequest(ctx context.Context, w
 	if sqlDatabaseID == "" {
 		return nil, errors.New("parameter sqlDatabaseID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{SQLDatabaseId}", url.PathEscape(sqlDatabaseID))
+	urlPath = strings.ReplaceAll(urlPath, "{sqlDatabaseId}", url.PathEscape(sqlDatabaseID))
 	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -445,8 +521,7 @@ func (client *ItemsClient) updateSQLDatabaseHandleResponse(resp *http.Response) 
 	return result, nil
 }
 
-// BeginUpdateSQLDatabasesDefinition - > [!NOTE] SQL database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// BeginUpdateSQLDatabasesDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the SQL database's definition, does not affect its sensitivity label.
 // PERMISSIONS The caller must have read and write permissions for the SQL database.
 // REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
@@ -468,8 +543,7 @@ func (client *ItemsClient) BeginUpdateSQLDatabasesDefinition(ctx context.Context
 	return client.beginUpdateSQLDatabasesDefinition(ctx, workspaceID, sqlDatabaseID, updateSQLDatabaseDefinitionRequest, options)
 }
 
-// UpdateSQLDatabasesDefinition - > [!NOTE] SQL database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// UpdateSQLDatabasesDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the SQL database's definition, does not affect its sensitivity label.
 // PERMISSIONS The caller must have read and write permissions for the SQL database.
 // REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
@@ -505,7 +579,7 @@ func (client *ItemsClient) updateSQLDatabasesDefinition(ctx context.Context, wor
 
 // updateSQLDatabasesDefinitionCreateRequest creates the UpdateSQLDatabasesDefinition request.
 func (client *ItemsClient) updateSQLDatabasesDefinitionCreateRequest(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseDefinitionRequest UpdateSQLDatabaseDefinitionRequest, options *ItemsClientBeginUpdateSQLDatabasesDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/{SQLDatabaseId}/updateDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/{sqlDatabaseId}/updateDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -513,7 +587,7 @@ func (client *ItemsClient) updateSQLDatabasesDefinitionCreateRequest(ctx context
 	if sqlDatabaseID == "" {
 		return nil, errors.New("parameter sqlDatabaseID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{SQLDatabaseId}", url.PathEscape(sqlDatabaseID))
+	urlPath = strings.ReplaceAll(urlPath, "{sqlDatabaseId}", url.PathEscape(sqlDatabaseID))
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err
@@ -533,11 +607,9 @@ func (client *ItemsClient) updateSQLDatabasesDefinitionCreateRequest(ctx context
 // Custom code starts below
 
 // CreateSQLDatabase - returns ItemsClientCreateSQLDatabaseResponse in sync mode.
-// >  [!NOTE] SQL Database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-//
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// To create a SQL database with a public definition, refer to SQLDatabase definition [/rest/api/fabric/articles/item-management/definitions/sql-database] article.
+// To create a SQL database with a public definition, refer to SQLDatabase definition [/rest/api/fabric/articles/item-management/definitions/sql-database-definition] article.
 //
 // PERMISSIONS The caller must have a contributor workspace role.
 //
@@ -610,8 +682,6 @@ func (client *ItemsClient) beginCreateSQLDatabase(ctx context.Context, workspace
 }
 
 // GetSQLDatabaseDefinition - returns ItemsClientGetSQLDatabaseDefinitionResponse in sync mode.
-// >  [!NOTE] SQL database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-//
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
 // When you get a SQL database's public definition, the sensitivity label is not a part of the definition.
@@ -682,9 +752,79 @@ func (client *ItemsClient) beginGetSQLDatabaseDefinition(ctx context.Context, wo
 	}
 }
 
-// UpdateSQLDatabasesDefinition - returns ItemsClientUpdateSQLDatabasesDefinitionResponse in sync mode.
-// >  [!NOTE] SQL database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// RevalidateCMK - returns ItemsClientRevalidateCMKResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
+// Revalidating Customer‑Managed Key (CMK) of the specified SQL database, which checks that the currently configured Azure Key Vault (AKV) key is still accessible, valid, and authorized for encryption
+// operations.
+//
+// PERMISSIONS The caller must have read and write permissions for the SQL database.
+//
+// # REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace identifier.
+//   - sqlDatabaseID - The SQL database ID.
+//   - options - ItemsClientBeginRevalidateCMKOptions contains the optional parameters for the ItemsClient.BeginRevalidateCMK method.
+func (client *ItemsClient) RevalidateCMK(ctx context.Context, workspaceID string, sqlDatabaseID string, options *ItemsClientBeginRevalidateCMKOptions) (ItemsClientRevalidateCMKResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginRevalidateCMK(ctx, workspaceID, sqlDatabaseID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientRevalidateCMKResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientRevalidateCMKResponse{}, err
+	}
+	return result, err
+}
+
+// beginRevalidateCMK creates the revalidateCMK request.
+func (client *ItemsClient) beginRevalidateCMK(ctx context.Context, workspaceID string, sqlDatabaseID string, options *ItemsClientBeginRevalidateCMKOptions) (*runtime.Poller[ItemsClientRevalidateCMKResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.revalidateCMK(ctx, workspaceID, sqlDatabaseID, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientRevalidateCMKResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientRevalidateCMKResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientRevalidateCMKResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientRevalidateCMKResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// UpdateSQLDatabasesDefinition - returns ItemsClientUpdateSQLDatabasesDefinitionResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
 // Updating the SQL database's definition, does not affect its sensitivity label.
@@ -757,8 +897,6 @@ func (client *ItemsClient) beginUpdateSQLDatabasesDefinition(ctx context.Context
 }
 
 // ListSQLDatabases - returns array of SQLDatabase from all pages.
-// >  [!NOTE] SQL Database item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-//
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
 // PERMISSIONS The caller must have a viewer workspace role.

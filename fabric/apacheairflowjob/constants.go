@@ -6,6 +6,57 @@
 
 package apacheairflowjob
 
+// AirflowEnvironmentStatus - Apache Airflow environment status. Additional statuses may be added over time.
+type AirflowEnvironmentStatus string
+
+const (
+	// AirflowEnvironmentStatusFailed - The environment for the Airflow encountered a failure.
+	AirflowEnvironmentStatusFailed AirflowEnvironmentStatus = "Failed"
+	// AirflowEnvironmentStatusInitial - The environment for the Airflow is initializing.
+	AirflowEnvironmentStatusInitial AirflowEnvironmentStatus = "Initial"
+	// AirflowEnvironmentStatusStarted - The environment for the Airflow is running.
+	AirflowEnvironmentStatusStarted AirflowEnvironmentStatus = "Started"
+	// AirflowEnvironmentStatusStarting - The environment for the Airflow is starting.
+	AirflowEnvironmentStatusStarting AirflowEnvironmentStatus = "Starting"
+	// AirflowEnvironmentStatusStopped - The environment for the Airflow is stopped.
+	AirflowEnvironmentStatusStopped AirflowEnvironmentStatus = "Stopped"
+	// AirflowEnvironmentStatusStopping - The environment for the Airflow is stopping.
+	AirflowEnvironmentStatusStopping AirflowEnvironmentStatus = "Stopping"
+	// AirflowEnvironmentStatusUpgrading - The environment for the Airflow is upgrading.
+	AirflowEnvironmentStatusUpgrading AirflowEnvironmentStatus = "Upgrading"
+)
+
+// PossibleAirflowEnvironmentStatusValues returns the possible values for the AirflowEnvironmentStatus const type.
+func PossibleAirflowEnvironmentStatusValues() []AirflowEnvironmentStatus {
+	return []AirflowEnvironmentStatus{
+		AirflowEnvironmentStatusFailed,
+		AirflowEnvironmentStatusInitial,
+		AirflowEnvironmentStatusStarted,
+		AirflowEnvironmentStatusStarting,
+		AirflowEnvironmentStatusStopped,
+		AirflowEnvironmentStatusStopping,
+		AirflowEnvironmentStatusUpgrading,
+	}
+}
+
+// AvailabilityZonesStatus - Availability zones status. Additional AvailabilityZonesStatus values may be added over time.
+type AvailabilityZonesStatus string
+
+const (
+	// AvailabilityZonesStatusDisabled - Availability zones are disabled.
+	AvailabilityZonesStatusDisabled AvailabilityZonesStatus = "Disabled"
+	// AvailabilityZonesStatusEnabled - Availability zones are enabled.
+	AvailabilityZonesStatusEnabled AvailabilityZonesStatus = "Enabled"
+)
+
+// PossibleAvailabilityZonesStatusValues returns the possible values for the AvailabilityZonesStatus const type.
+func PossibleAvailabilityZonesStatusValues() []AvailabilityZonesStatus {
+	return []AvailabilityZonesStatus{
+		AvailabilityZonesStatusDisabled,
+		AvailabilityZonesStatusEnabled,
+	}
+}
+
 // ItemType - The type of the item. Additional item types may be added over time.
 type ItemType string
 
@@ -20,6 +71,8 @@ const (
 	ItemTypeCosmosDBDatabase ItemType = "CosmosDBDatabase"
 	// ItemTypeDashboard - PowerBI dashboard.
 	ItemTypeDashboard ItemType = "Dashboard"
+	// ItemTypeDataAgent - A DataAgent.
+	ItemTypeDataAgent ItemType = "DataAgent"
 	// ItemTypeDataPipeline - A data pipeline.
 	ItemTypeDataPipeline ItemType = "DataPipeline"
 	// ItemTypeDataflow - A Dataflow.
@@ -106,6 +159,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeCopyJob,
 		ItemTypeCosmosDBDatabase,
 		ItemTypeDashboard,
+		ItemTypeDataAgent,
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
 		ItemTypeDatamart,
@@ -147,6 +201,42 @@ func PossibleItemTypeValues() []ItemType {
 	}
 }
 
+// LibrarySource - Library source. Additional LibrarySource values may be added over time.
+type LibrarySource string
+
+const (
+	// LibrarySourceInternal - Library sourced internally.
+	LibrarySourceInternal LibrarySource = "Internal"
+	// LibrarySourcePyPI - Library sourced from PyPI.
+	LibrarySourcePyPI LibrarySource = "PyPI"
+)
+
+// PossibleLibrarySourceValues returns the possible values for the LibrarySource const type.
+func PossibleLibrarySourceValues() []LibrarySource {
+	return []LibrarySource{
+		LibrarySourceInternal,
+		LibrarySourcePyPI,
+	}
+}
+
+// LibraryType - Library type. Additional LibraryType values may be added over time.
+type LibraryType string
+
+const (
+	// LibraryTypePrivate - A private library.
+	LibraryTypePrivate LibraryType = "Private"
+	// LibraryTypePublic - A public library.
+	LibraryTypePublic LibraryType = "Public"
+)
+
+// PossibleLibraryTypeValues returns the possible values for the LibraryType const type.
+func PossibleLibraryTypeValues() []LibraryType {
+	return []LibraryType{
+		LibraryTypePrivate,
+		LibraryTypePublic,
+	}
+}
+
 // NodeSize - Node size. Additional NodeSize types may be added over time.
 type NodeSize string
 
@@ -180,6 +270,26 @@ func PossiblePayloadTypeValues() []PayloadType {
 	}
 }
 
+// SensitivityLabelApplyStrategy - The strategy for applying the sensitivity label. The default value is ApplyOrFail. Additional
+// types may be added over time.
+type SensitivityLabelApplyStrategy string
+
+const (
+	// SensitivityLabelApplyStrategyApplyOrFail - Apply the sensitivity label or fail the operation if it cannot be applied.
+	SensitivityLabelApplyStrategyApplyOrFail SensitivityLabelApplyStrategy = "ApplyOrFail"
+	// SensitivityLabelApplyStrategyIgnore - Ignore the sensitivity label if it cannot be applied and proceed with the operation
+	// without applying the label.
+	SensitivityLabelApplyStrategyIgnore SensitivityLabelApplyStrategy = "Ignore"
+)
+
+// PossibleSensitivityLabelApplyStrategyValues returns the possible values for the SensitivityLabelApplyStrategy const type.
+func PossibleSensitivityLabelApplyStrategyValues() []SensitivityLabelApplyStrategy {
+	return []SensitivityLabelApplyStrategy{
+		SensitivityLabelApplyStrategyApplyOrFail,
+		SensitivityLabelApplyStrategyIgnore,
+	}
+}
+
 // ShutdownPolicy - Shutdown policy. Additional ShutdownPolicy types may be added over time.
 type ShutdownPolicy string
 
@@ -195,5 +305,23 @@ func PossibleShutdownPolicyValues() []ShutdownPolicy {
 	return []ShutdownPolicy{
 		ShutdownPolicyAlwaysOn,
 		ShutdownPolicyOneHourInactivity,
+	}
+}
+
+// TriggerersStatus - Triggerers status. Additional TriggerersStatus values may be added over time.
+type TriggerersStatus string
+
+const (
+	// TriggerersStatusDisabled - Triggerers are disabled.
+	TriggerersStatusDisabled TriggerersStatus = "Disabled"
+	// TriggerersStatusEnabled - Triggerers are enabled.
+	TriggerersStatusEnabled TriggerersStatus = "Enabled"
+)
+
+// PossibleTriggerersStatusValues returns the possible values for the TriggerersStatus const type.
+func PossibleTriggerersStatusValues() []TriggerersStatus {
+	return []TriggerersStatus{
+		TriggerersStatusDisabled,
+		TriggerersStatusEnabled,
 	}
 }

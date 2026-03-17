@@ -99,7 +99,7 @@ func (client *ItemsClient) createDigitalTwinBuilderFlow(ctx context.Context, wor
 
 // createDigitalTwinBuilderFlowCreateRequest creates the CreateDigitalTwinBuilderFlow request.
 func (client *ItemsClient) createDigitalTwinBuilderFlowCreateRequest(ctx context.Context, workspaceID string, createDigitalTwinBuilderFlowRequest CreateDigitalTwinBuilderFlowRequest, _ *ItemsClientBeginCreateDigitalTwinBuilderFlowOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/DigitalTwinBuilderFlows"
+	urlPath := "/v1/workspaces/{workspaceId}/digitalTwinBuilderFlows"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -154,7 +154,7 @@ func (client *ItemsClient) DeleteDigitalTwinBuilderFlow(ctx context.Context, wor
 
 // deleteDigitalTwinBuilderFlowCreateRequest creates the DeleteDigitalTwinBuilderFlow request.
 func (client *ItemsClient) deleteDigitalTwinBuilderFlowCreateRequest(ctx context.Context, workspaceID string, digitalTwinBuilderFlowID string, _ *ItemsClientDeleteDigitalTwinBuilderFlowOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/DigitalTwinBuilderFlows/{digitalTwinBuilderFlowId}"
+	urlPath := "/v1/workspaces/{workspaceId}/digitalTwinBuilderFlows/{digitalTwinBuilderFlowId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -211,7 +211,7 @@ func (client *ItemsClient) GetDigitalTwinBuilderFlow(ctx context.Context, worksp
 
 // getDigitalTwinBuilderFlowCreateRequest creates the GetDigitalTwinBuilderFlow request.
 func (client *ItemsClient) getDigitalTwinBuilderFlowCreateRequest(ctx context.Context, workspaceID string, digitalTwinBuilderFlowID string, _ *ItemsClientGetDigitalTwinBuilderFlowOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/DigitalTwinBuilderFlows/{digitalTwinBuilderFlowId}"
+	urlPath := "/v1/workspaces/{workspaceId}/digitalTwinBuilderFlows/{digitalTwinBuilderFlowId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -297,7 +297,7 @@ func (client *ItemsClient) getDigitalTwinBuilderFlowDefinition(ctx context.Conte
 
 // getDigitalTwinBuilderFlowDefinitionCreateRequest creates the GetDigitalTwinBuilderFlowDefinition request.
 func (client *ItemsClient) getDigitalTwinBuilderFlowDefinitionCreateRequest(ctx context.Context, workspaceID string, digitalTwinBuilderFlowID string, _ *ItemsClientBeginGetDigitalTwinBuilderFlowDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/DigitalTwinBuilderFlows/{digitalTwinBuilderFlowId}/getDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/digitalTwinBuilderFlows/{digitalTwinBuilderFlowId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -354,7 +354,7 @@ func (client *ItemsClient) NewListDigitalTwinBuilderFlowsPager(workspaceID strin
 
 // listDigitalTwinBuilderFlowsCreateRequest creates the ListDigitalTwinBuilderFlows request.
 func (client *ItemsClient) listDigitalTwinBuilderFlowsCreateRequest(ctx context.Context, workspaceID string, options *ItemsClientListDigitalTwinBuilderFlowsOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/DigitalTwinBuilderFlows"
+	urlPath := "/v1/workspaces/{workspaceId}/digitalTwinBuilderFlows"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -366,6 +366,12 @@ func (client *ItemsClient) listDigitalTwinBuilderFlowsCreateRequest(ctx context.
 	reqQP := req.Raw().URL.Query()
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	if options != nil && options.Recursive != nil {
+		reqQP.Set("recursive", strconv.FormatBool(*options.Recursive))
+	}
+	if options != nil && options.RootFolderID != nil {
+		reqQP.Set("rootFolderId", *options.RootFolderID)
 	}
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
@@ -422,7 +428,7 @@ func (client *ItemsClient) UpdateDigitalTwinBuilderFlow(ctx context.Context, wor
 
 // updateDigitalTwinBuilderFlowCreateRequest creates the UpdateDigitalTwinBuilderFlow request.
 func (client *ItemsClient) updateDigitalTwinBuilderFlowCreateRequest(ctx context.Context, workspaceID string, digitalTwinBuilderFlowID string, updateDigitalTwinBuilderFlowRequest UpdateDigitalTwinBuilderFlowRequest, _ *ItemsClientUpdateDigitalTwinBuilderFlowOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/DigitalTwinBuilderFlows/{digitalTwinBuilderFlowId}"
+	urlPath := "/v1/workspaces/{workspaceId}/digitalTwinBuilderFlows/{digitalTwinBuilderFlowId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -512,7 +518,7 @@ func (client *ItemsClient) updateDigitalTwinBuilderFlowDefinition(ctx context.Co
 
 // updateDigitalTwinBuilderFlowDefinitionCreateRequest creates the UpdateDigitalTwinBuilderFlowDefinition request.
 func (client *ItemsClient) updateDigitalTwinBuilderFlowDefinitionCreateRequest(ctx context.Context, workspaceID string, digitalTwinBuilderFlowID string, updateDigitalTwinBuilderFlowDefinitionRequest UpdateDigitalTwinBuilderFlowDefinitionRequest, options *ItemsClientBeginUpdateDigitalTwinBuilderFlowDefinitionOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/DigitalTwinBuilderFlows/{digitalTwinBuilderFlowId}/updateDefinition"
+	urlPath := "/v1/workspaces/{workspaceId}/digitalTwinBuilderFlows/{digitalTwinBuilderFlowId}/updateDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}

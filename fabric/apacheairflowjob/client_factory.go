@@ -47,6 +47,22 @@ func NewClientFactoryWithClient(client fabric.Client) *ClientFactory {
 	}
 }
 
+// NewComputeClient creates a new instance of ComputeClient.
+func (c *ClientFactory) NewComputeClient() *ComputeClient {
+	return &ComputeClient{
+		internal: c.internal.WithClientName("apacheairflowjob.ComputeClient"),
+		endpoint: c.endpoint,
+	}
+}
+
+// NewEnvironmentClient creates a new instance of EnvironmentClient.
+func (c *ClientFactory) NewEnvironmentClient() *EnvironmentClient {
+	return &EnvironmentClient{
+		internal: c.internal.WithClientName("apacheairflowjob.EnvironmentClient"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewFilesClient creates a new instance of FilesClient.
 func (c *ClientFactory) NewFilesClient() *FilesClient {
 	return &FilesClient{
@@ -67,6 +83,22 @@ func (c *ClientFactory) NewItemsClient() *ItemsClient {
 func (c *ClientFactory) NewPoolManagementClient() *PoolManagementClient {
 	return &PoolManagementClient{
 		internal: c.internal.WithClientName("apacheairflowjob.PoolManagementClient"),
+		endpoint: c.endpoint,
+	}
+}
+
+// NewRequirementsClient creates a new instance of RequirementsClient.
+func (c *ClientFactory) NewRequirementsClient() *RequirementsClient {
+	return &RequirementsClient{
+		internal: c.internal.WithClientName("apacheairflowjob.RequirementsClient"),
+		endpoint: c.endpoint,
+	}
+}
+
+// NewSettingsClient creates a new instance of SettingsClient.
+func (c *ClientFactory) NewSettingsClient() *SettingsClient {
+	return &SettingsClient{
+		internal: c.internal.WithClientName("apacheairflowjob.SettingsClient"),
 		endpoint: c.endpoint,
 	}
 }

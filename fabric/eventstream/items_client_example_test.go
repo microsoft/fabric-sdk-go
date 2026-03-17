@@ -27,7 +27,10 @@ func ExampleItemsClient_NewListEventstreamsPager() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewItemsClient().NewListEventstreamsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &eventstream.ItemsClientListEventstreamsOptions{ContinuationToken: nil})
+	pager := clientFactory.NewItemsClient().NewListEventstreamsPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &eventstream.ItemsClientListEventstreamsOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
 		if err != nil {
@@ -45,6 +48,9 @@ func ExampleItemsClient_NewListEventstreamsPager() {
 		// 			Description: to.Ptr("An eventstream description."),
 		// 			DisplayName: to.Ptr("Eventstream_1"),
 		// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+		// 			SensitivityLabel: &eventstream.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 		},
 		// 		{
@@ -52,6 +58,9 @@ func ExampleItemsClient_NewListEventstreamsPager() {
 		// 			Description: to.Ptr("An eventstream description."),
 		// 			DisplayName: to.Ptr("Eventstream_2"),
 		// 			ID: to.Ptr("dc307e72-3e89-4425-97c3-a364d86dddfa"),
+		// 			SensitivityLabel: &eventstream.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 		},
 		// 		{
@@ -59,6 +68,9 @@ func ExampleItemsClient_NewListEventstreamsPager() {
 		// 			Description: to.Ptr("An eventstream description."),
 		// 			DisplayName: to.Ptr("Eventstream_3"),
 		// 			ID: to.Ptr("b48a1f80-862a-4b97-b672-7217bf064dc0"),
+		// 			SensitivityLabel: &eventstream.SensitivityLabel{
+		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 	}},
 		// }
@@ -155,6 +167,9 @@ func ExampleItemsClient_GetEventstream() {
 	// 	Description: to.Ptr("An eventstream description."),
 	// 	DisplayName: to.Ptr("Eventstream_1"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+	// 	SensitivityLabel: &eventstream.SensitivityLabel{
+	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// }
 }
@@ -185,6 +200,9 @@ func ExampleItemsClient_UpdateEventstream() {
 	// 	Description: to.Ptr("A new description for eventstream."),
 	// 	DisplayName: to.Ptr("Eventstream_New_Name"),
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+	// 	SensitivityLabel: &eventstream.SensitivityLabel{
+	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	// }
 }

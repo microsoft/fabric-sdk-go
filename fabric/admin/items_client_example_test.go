@@ -49,11 +49,11 @@ func ExampleItemsClient_NewListItemsPager_getAListOfItemsUsingTypeQueryParameter
 		// 			Name: to.Ptr("Test Report"),
 		// 			Type: to.Ptr(admin.ItemTypeReport),
 		// 			CapacityID: to.Ptr("D5E336D6-D919-4ECC-B424-1F771A506851"),
-		// 			CreatorPrincipal: &admin.Principal{
+		// 			CreatorPrincipal: &admin.UserPrincipal{
 		// 				Type: to.Ptr(admin.PrincipalTypeUser),
 		// 				DisplayName: to.Ptr("Jacob Hancock"),
 		// 				ID: to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-		// 				UserDetails: &admin.PrincipalUserDetails{
+		// 				UserDetails: &admin.UserPrincipalUserDetails{
 		// 					UserPrincipalName: to.Ptr("Jacob@example.com"),
 		// 				},
 		// 			},
@@ -111,11 +111,11 @@ func ExampleItemsClient_NewListItemsPager_getAllItemsInTheTenantExample() {
 		// 			Type: to.Ptr(admin.ItemTypeNotebook),
 		// 			Description: to.Ptr("Test notebook."),
 		// 			CapacityID: to.Ptr("D5E336D6-D919-4ECC-B424-1F771A506851"),
-		// 			CreatorPrincipal: &admin.Principal{
+		// 			CreatorPrincipal: &admin.UserPrincipal{
 		// 				Type: to.Ptr(admin.PrincipalTypeUser),
 		// 				DisplayName: to.Ptr("Caleb Foster"),
 		// 				ID: to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-		// 				UserDetails: &admin.PrincipalUserDetails{
+		// 				UserDetails: &admin.UserPrincipalUserDetails{
 		// 					UserPrincipalName: to.Ptr("caleb@example.com"),
 		// 				},
 		// 			},
@@ -138,11 +138,11 @@ func ExampleItemsClient_NewListItemsPager_getAllItemsInTheTenantExample() {
 		// 			Type: to.Ptr(admin.ItemTypeKQLDatabase),
 		// 			Description: to.Ptr("Test KQL database."),
 		// 			CapacityID: to.Ptr("D5E336D6-D919-4ECC-B424-1F881A506851"),
-		// 			CreatorPrincipal: &admin.Principal{
+		// 			CreatorPrincipal: &admin.UserPrincipal{
 		// 				Type: to.Ptr(admin.PrincipalTypeUser),
 		// 				DisplayName: to.Ptr("Jacob Hancock"),
 		// 				ID: to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-		// 				UserDetails: &admin.PrincipalUserDetails{
+		// 				UserDetails: &admin.UserPrincipalUserDetails{
 		// 					UserPrincipalName: to.Ptr("jacob@example.com"),
 		// 				},
 		// 			},
@@ -188,11 +188,11 @@ func ExampleItemsClient_NewListItemsPager_getListOfDatamartsUsingTypeQueryParame
 		// 			Name: to.Ptr("Lakehouse 2022-03-16T21:42:38.442Z"),
 		// 			Type: to.Ptr(admin.ItemTypeLakehouse),
 		// 			CapacityID: to.Ptr("D5E336D6-D919-4ECC-B424-1F771A506851"),
-		// 			CreatorPrincipal: &admin.Principal{
+		// 			CreatorPrincipal: &admin.UserPrincipal{
 		// 				Type: to.Ptr(admin.PrincipalTypeUser),
 		// 				DisplayName: to.Ptr("Jacob Hancock"),
 		// 				ID: to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-		// 				UserDetails: &admin.PrincipalUserDetails{
+		// 				UserDetails: &admin.UserPrincipalUserDetails{
 		// 					UserPrincipalName: to.Ptr("jacob@example.com"),
 		// 				},
 		// 			},
@@ -233,11 +233,11 @@ func ExampleItemsClient_GetItem_getItemDetailsByIdAndTypeExample() {
 	// 	Type: to.Ptr(admin.ItemTypeReport),
 	// 	Description: to.Ptr("Test Jacob's Report,"),
 	// 	CapacityID: to.Ptr("D5E336D6-D919-4ECC-B424-1F771A506851"),
-	// 	CreatorPrincipal: &admin.Principal{
+	// 	CreatorPrincipal: &admin.UserPrincipal{
 	// 		Type: to.Ptr(admin.PrincipalTypeUser),
 	// 		DisplayName: to.Ptr("Jacob Hancock"),
 	// 		ID: to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-	// 		UserDetails: &admin.PrincipalUserDetails{
+	// 		UserDetails: &admin.UserPrincipalUserDetails{
 	// 			UserPrincipalName: to.Ptr("Jacob@example.com"),
 	// 		},
 	// 	},
@@ -271,11 +271,11 @@ func ExampleItemsClient_GetItem_getItemDetailsByIdExample() {
 	// 	Type: to.Ptr(admin.ItemType("Kusto")),
 	// 	Description: to.Ptr("Test Jacob's notebook."),
 	// 	CapacityID: to.Ptr("D5E336D6-D919-4ECC-B424-1F771A506851"),
-	// 	CreatorPrincipal: &admin.Principal{
+	// 	CreatorPrincipal: &admin.UserPrincipal{
 	// 		Type: to.Ptr(admin.PrincipalTypeUser),
 	// 		DisplayName: to.Ptr("Jacob Hancock"),
 	// 		ID: to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-	// 		UserDetails: &admin.PrincipalUserDetails{
+	// 		UserDetails: &admin.UserPrincipalUserDetails{
 	// 			UserPrincipalName: to.Ptr("Jacob@example.com"),
 	// 		},
 	// 	},
@@ -315,11 +315,11 @@ func ExampleItemsClient_ListItemAccessDetails_listOfUsersForGivenItemIdAndTypeEx
 	// 						admin.ItemPermissionsRead,
 	// 						admin.ItemPermissionsReshare},
 	// 					},
-	// 					Principal: &admin.Principal{
+	// 					Principal: &admin.UserPrincipal{
 	// 						Type: to.Ptr(admin.PrincipalTypeUser),
 	// 						DisplayName: to.Ptr("Jacob Hancock"),
 	// 						ID: to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-	// 						UserDetails: &admin.PrincipalUserDetails{
+	// 						UserDetails: &admin.UserPrincipalUserDetails{
 	// 							UserPrincipalName: to.Ptr("jacob@example.com"),
 	// 						},
 	// 					},
@@ -357,11 +357,11 @@ func ExampleItemsClient_ListItemAccessDetails_listOfUsersForGivenItemIdExample()
 	// 						admin.ItemPermissionsRead,
 	// 						admin.ItemPermissionsReshare},
 	// 					},
-	// 					Principal: &admin.Principal{
+	// 					Principal: &admin.UserPrincipal{
 	// 						Type: to.Ptr(admin.PrincipalTypeUser),
 	// 						DisplayName: to.Ptr("Jacob Hancock"),
 	// 						ID: to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
-	// 						UserDetails: &admin.PrincipalUserDetails{
+	// 						UserDetails: &admin.UserPrincipalUserDetails{
 	// 							UserPrincipalName: to.Ptr("jacob@example.com"),
 	// 						},
 	// 					},
@@ -376,11 +376,11 @@ func ExampleItemsClient_ListItemAccessDetails_listOfUsersForGivenItemIdExample()
 	// 								admin.ItemPermissionsReshare,
 	// 								admin.ItemPermissionsExplore},
 	// 							},
-	// 							Principal: &admin.Principal{
+	// 							Principal: &admin.UserPrincipal{
 	// 								Type: to.Ptr(admin.PrincipalTypeUser),
 	// 								DisplayName: to.Ptr("Eric Solomon"),
 	// 								ID: to.Ptr("c7db8e03-c8cb-4d4c-9f64-1dcd327c9d3c"),
-	// 								UserDetails: &admin.PrincipalUserDetails{
+	// 								UserDetails: &admin.UserPrincipalUserDetails{
 	// 									UserPrincipalName: to.Ptr("eric@example.com"),
 	// 								},
 	// 							},
@@ -394,13 +394,13 @@ func ExampleItemsClient_ListItemAccessDetails_listOfUsersForGivenItemIdExample()
 	// 									admin.ItemPermissionsRead,
 	// 									admin.ItemPermissionsReshare},
 	// 								},
-	// 								Principal: &admin.Principal{
+	// 								Principal: &admin.GroupPrincipal{
 	// 									Type: to.Ptr(admin.PrincipalTypeGroup),
 	// 									DisplayName: to.Ptr("TestSecurityGroup"),
-	// 									GroupDetails: &admin.PrincipalGroupDetails{
+	// 									ID: to.Ptr("f51b705f-a409-4d40-9197-c5d5f349e2f0"),
+	// 									GroupDetails: &admin.GroupPrincipalGroupDetails{
 	// 										GroupType: to.Ptr(admin.GroupTypeSecurityGroup),
 	// 									},
-	// 									ID: to.Ptr("f51b705f-a409-4d40-9197-c5d5f349e2f0"),
 	// 								},
 	// 						}},
 	// 					}

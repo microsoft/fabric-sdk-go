@@ -305,6 +305,13 @@ type WorkspacesClientListGitConnectionsOptions struct {
 	ContinuationToken *string
 }
 
+// WorkspacesClientListNetworkingCommunicationPoliciesOptions contains the optional parameters for the WorkspacesClient.NewListNetworkingCommunicationPoliciesPager
+// method.
+type WorkspacesClientListNetworkingCommunicationPoliciesOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
 // WorkspacesClientListWorkspaceAccessDetailsOptions contains the optional parameters for the WorkspacesClient.ListWorkspaceAccessDetails
 // method.
 type WorkspacesClientListWorkspaceAccessDetailsOptions struct {

@@ -142,7 +142,7 @@ func (i *ItemsServerTransport) dispatchBeginCreateGraphQLAPI(req *http.Request) 
 	}
 	beginCreateGraphQLAPI := i.beginCreateGraphQLAPI.get(req)
 	if beginCreateGraphQLAPI == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphQLApis`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphQLApis`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 2 {
@@ -184,7 +184,7 @@ func (i *ItemsServerTransport) dispatchDeleteGraphQLAPI(req *http.Request) (*htt
 	if i.srv.DeleteGraphQLAPI == nil {
 		return nil, &nonRetriableError{errors.New("fake for method DeleteGraphQLAPI not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphQLApis/(?P<GraphQLApiId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphQLApis/(?P<graphQLApiId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -194,7 +194,7 @@ func (i *ItemsServerTransport) dispatchDeleteGraphQLAPI(req *http.Request) (*htt
 	if err != nil {
 		return nil, err
 	}
-	graphQLAPIIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("GraphQLApiId")])
+	graphQLAPIIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("graphQLApiId")])
 	if err != nil {
 		return nil, err
 	}
@@ -217,7 +217,7 @@ func (i *ItemsServerTransport) dispatchGetGraphQLAPI(req *http.Request) (*http.R
 	if i.srv.GetGraphQLAPI == nil {
 		return nil, &nonRetriableError{errors.New("fake for method GetGraphQLAPI not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphQLApis/(?P<GraphQLApiId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphQLApis/(?P<graphQLApiId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -227,7 +227,7 @@ func (i *ItemsServerTransport) dispatchGetGraphQLAPI(req *http.Request) (*http.R
 	if err != nil {
 		return nil, err
 	}
-	graphQLAPIIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("GraphQLApiId")])
+	graphQLAPIIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("graphQLApiId")])
 	if err != nil {
 		return nil, err
 	}
@@ -252,7 +252,7 @@ func (i *ItemsServerTransport) dispatchBeginGetGraphQLAPIDefinition(req *http.Re
 	}
 	beginGetGraphQLAPIDefinition := i.beginGetGraphQLAPIDefinition.get(req)
 	if beginGetGraphQLAPIDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphQLApis/(?P<GraphQLApiId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphQLApis/(?P<graphQLApiId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
@@ -263,7 +263,7 @@ func (i *ItemsServerTransport) dispatchBeginGetGraphQLAPIDefinition(req *http.Re
 		if err != nil {
 			return nil, err
 		}
-		graphQLAPIIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("GraphQLApiId")])
+		graphQLAPIIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("graphQLApiId")])
 		if err != nil {
 			return nil, err
 		}
@@ -308,7 +308,7 @@ func (i *ItemsServerTransport) dispatchNewListGraphQLApisPager(req *http.Request
 	}
 	newListGraphQLApisPager := i.newListGraphQLApisPager.get(req)
 	if newListGraphQLApisPager == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphQLApis`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphQLApis`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 2 {
@@ -319,14 +319,29 @@ func (i *ItemsServerTransport) dispatchNewListGraphQLApisPager(req *http.Request
 		if err != nil {
 			return nil, err
 		}
+		recursiveUnescaped, err := url.QueryUnescape(qp.Get("recursive"))
+		if err != nil {
+			return nil, err
+		}
+		recursiveParam, err := parseOptional(recursiveUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDUnescaped, err := url.QueryUnescape(qp.Get("rootFolderId"))
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDParam := getOptional(rootFolderIDUnescaped)
 		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
 		if err != nil {
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
 		var options *graphqlapi.ItemsClientListGraphQLApisOptions
-		if continuationTokenParam != nil {
+		if recursiveParam != nil || rootFolderIDParam != nil || continuationTokenParam != nil {
 			options = &graphqlapi.ItemsClientListGraphQLApisOptions{
+				Recursive:         recursiveParam,
+				RootFolderID:      rootFolderIDParam,
 				ContinuationToken: continuationTokenParam,
 			}
 		}
@@ -355,7 +370,7 @@ func (i *ItemsServerTransport) dispatchUpdateGraphQLAPI(req *http.Request) (*htt
 	if i.srv.UpdateGraphQLAPI == nil {
 		return nil, &nonRetriableError{errors.New("fake for method UpdateGraphQLAPI not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphQLApis/(?P<GraphQLApiId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphQLApis/(?P<graphQLApiId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -369,7 +384,7 @@ func (i *ItemsServerTransport) dispatchUpdateGraphQLAPI(req *http.Request) (*htt
 	if err != nil {
 		return nil, err
 	}
-	graphQLAPIIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("GraphQLApiId")])
+	graphQLAPIIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("graphQLApiId")])
 	if err != nil {
 		return nil, err
 	}
@@ -394,7 +409,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateGraphQLAPIDefinition(req *http
 	}
 	beginUpdateGraphQLAPIDefinition := i.beginUpdateGraphQLAPIDefinition.get(req)
 	if beginUpdateGraphQLAPIDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/GraphQLApis/(?P<GraphQLApiId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/graphQLApis/(?P<graphQLApiId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
@@ -409,7 +424,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateGraphQLAPIDefinition(req *http
 		if err != nil {
 			return nil, err
 		}
-		graphQLAPIIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("GraphQLApiId")])
+		graphQLAPIIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("graphQLApiId")])
 		if err != nil {
 			return nil, err
 		}

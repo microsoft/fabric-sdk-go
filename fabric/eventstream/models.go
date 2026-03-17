@@ -500,6 +500,54 @@ func (a *AzureEventGridNamespaceSourceResponse) GetSourceResponse() *SourceRespo
 	}
 }
 
+// AzureEventHubExtendedSourceProperties - Azure Event Hub Extended source properties.
+type AzureEventHubExtendedSourceProperties struct {
+	// REQUIRED; The consumer group name.
+	ConsumerGroupName *string
+
+	// REQUIRED; The Azure Event Hub data connection identifier.
+	DataConnectionID *string
+
+	// REQUIRED; The start position in the Azure Event Hub stream.
+	StartPosition *StartPosition
+}
+
+// AzureEventHubExtendedSourceResponse - Azure Event Hub Extended source response.
+type AzureEventHubExtendedSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Azure Event Hub Extended source.
+	Properties *AzureEventHubExtendedSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type AzureEventHubExtendedSourceResponse.
+func (a *AzureEventHubExtendedSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        a.Error,
+		ID:           a.ID,
+		InputSchemas: a.InputSchemas,
+		Name:         a.Name,
+		Status:       a.Status,
+		Type:         a.Type,
+	}
+}
+
 // AzureEventHubSourceProperties - Azure Event Hub source properties.
 type AzureEventHubSourceProperties struct {
 	// REQUIRED; The consumer group name.
@@ -805,6 +853,9 @@ type CreateEventstreamRequest struct {
 
 	// The folder ID. If not specified or null, the eventstream is created with the workspace as its folder.
 	FolderID *string
+
+	// The sensitivity label settings for the eventstream.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // CustomEndpointDestinationResponse - Custom endpoint events destination response.
@@ -920,7 +971,9 @@ func (d *DefaultStreamResponse) GetStreamResponse() *StreamResponse {
 	}
 }
 
-// Definition - Eventstream public definition object.
+// Definition - Eventstream public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/eventstream-definition]
+// for more details on the structure of the Eventstream
+// definition.
 type Definition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []DefinitionPart
@@ -943,7 +996,9 @@ type DefinitionPart struct {
 
 // DefinitionResponse - Eventstream public definition response.
 type DefinitionResponse struct {
-	// READ-ONLY; Eventstream public definition object.
+	// READ-ONLY; Eventstream public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/eventstream-definition]
+	// for more details on the structure of the Eventstream
+	// definition.
 	Definition *Definition
 }
 
@@ -1169,6 +1224,9 @@ type Eventstream struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
+
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
 
@@ -1225,7 +1283,61 @@ type ExpandOperatorProperties struct {
 	IgnoreMissingOrEmpty *bool
 }
 
-// FabricJobEventsSourceProperties - Fabric Job events source properties.
+// FabricCapacityOverviewEventsSourceProperties - Fabric Capacity Overview Events source properties.
+type FabricCapacityOverviewEventsSourceProperties struct {
+	// REQUIRED; The capacity identifier.
+	CapacityID *string
+
+	// REQUIRED
+	EventScope *EventScope
+
+	// The Azure Event Grid advanced filters to apply. Each entry is an advanced filter object as defined by Azure Event Grid.
+	// For details, see
+	// https://learn.microsoft.com/azure/event-grid/event-filtering#advanced-filtering.
+	Filters []any
+
+	// The list of event types to include. Supported values: Microsoft.Fabric.Capacity.State, Microsoft.Fabric.Capacity.Summary.
+	// Additional event types may be added over time.
+	IncludedEventTypes []string
+}
+
+// FabricCapacityOverviewEventsSourceResponse - Fabric Capacity Overview Events source response.
+type FabricCapacityOverviewEventsSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Fabric Capacity Overview Events source.
+	Properties *FabricCapacityOverviewEventsSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type FabricCapacityOverviewEventsSourceResponse.
+func (f *FabricCapacityOverviewEventsSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        f.Error,
+		ID:           f.ID,
+		InputSchemas: f.InputSchemas,
+		Name:         f.Name,
+		Status:       f.Status,
+		Type:         f.Type,
+	}
+}
+
+// FabricJobEventsSourceProperties - Fabric Job Events source properties.
 type FabricJobEventsSourceProperties struct {
 	// REQUIRED
 	EventScope *EventScope
@@ -1239,16 +1351,18 @@ type FabricJobEventsSourceProperties struct {
 	// The advanced filters defined in https://learn.microsoft.com/en-us/azure/event-grid/event-filtering#advanced-filtering.
 	Filters any
 
-	// The included event types.
+	// The list of event types to include. Supported values: Microsoft.Fabric.JobEvents.ItemJobCreated, Microsoft.Fabric.JobEvents.ItemJobStatusChanged,
+	// Microsoft.Fabric.JobEvents.ItemJobSucceeded,
+	// Microsoft.Fabric.JobEvents.ItemJobFailed. Additional event types may be added over time.
 	IncludedEventTypes []string
 }
 
-// FabricJobEventsSourceResponse - Fabric Job events source response.
+// FabricJobEventsSourceResponse - Fabric Job Events source response.
 type FabricJobEventsSourceResponse struct {
 	// REQUIRED; The unique name of the source.
 	Name *string
 
-	// REQUIRED; The properties of the Fabric Job events source.
+	// REQUIRED; The properties of the Fabric Job Events source.
 	Properties *FabricJobEventsSourceProperties
 
 	// REQUIRED; The status of the node. Additional node status may be added over time.
@@ -1279,7 +1393,7 @@ func (f *FabricJobEventsSourceResponse) GetSourceResponse() *SourceResponse {
 	}
 }
 
-// FabricOneLakeEventsSourceProperties - Fabric OneLake events source properties.
+// FabricOneLakeEventsSourceProperties - Fabric OneLake Events source properties.
 type FabricOneLakeEventsSourceProperties struct {
 	// REQUIRED; The item identifier.
 	ItemID *string
@@ -1296,16 +1410,19 @@ type FabricOneLakeEventsSourceProperties struct {
 	// The advanced filters defined in https://learn.microsoft.com/en-us/azure/event-grid/event-filtering#advanced-filtering.
 	Filters any
 
-	// The included event types.
+	// The list of event types to include. Supported values: Microsoft.Fabric.OneLake.FileCreated, Microsoft.Fabric.OneLake.FileDeleted,
+	// Microsoft.Fabric.OneLake.FileRenamed,
+	// Microsoft.Fabric.OneLake.FolderCreated, Microsoft.Fabric.OneLake.FolderDeleted, Microsoft.Fabric.OneLake.FolderRenamed.
+	// Additional event types may be added over time.
 	IncludedEventTypes []string
 }
 
-// FabricOneLakeEventsSourceResponse - Fabric OneLake events source response.
+// FabricOneLakeEventsSourceResponse - Fabric OneLake Events source response.
 type FabricOneLakeEventsSourceResponse struct {
 	// REQUIRED; The unique name of the source.
 	Name *string
 
-	// REQUIRED; The properties of the Fabric OneLake events source.
+	// REQUIRED; The properties of the Fabric OneLake Events source.
 	Properties *FabricOneLakeEventsSourceProperties
 
 	// REQUIRED; The status of the node. Additional node status may be added over time.
@@ -1336,7 +1453,7 @@ func (f *FabricOneLakeEventsSourceResponse) GetSourceResponse() *SourceResponse 
 	}
 }
 
-// FabricWorkspaceItemEventsSourceProperties - Fabric Workspace Item events source properties.
+// FabricWorkspaceItemEventsSourceProperties - Fabric Workspace Item Events source properties.
 type FabricWorkspaceItemEventsSourceProperties struct {
 	// REQUIRED
 	EventScope *EventScope
@@ -1347,19 +1464,21 @@ type FabricWorkspaceItemEventsSourceProperties struct {
 	// The advanced filters defined in https://learn.microsoft.com/en-us/azure/event-grid/event-filtering#advanced-filtering.
 	Filters any
 
-	// The included event types.
+	// The list of event types to include. Supported values: Microsoft.Fabric.ItemCreateSucceeded, Microsoft.Fabric.ItemCreateFailed,
+	// Microsoft.Fabric.ItemUpdateSucceeded, Microsoft.Fabric.ItemUpdateFailed,
+	// Microsoft.Fabric.ItemDeleteSucceeded, Microsoft.Fabric.ItemDeleteFailed. Additional event types may be added over time.
 	IncludedEventTypes []string
 
 	// The item identifier.
 	ItemID *string
 }
 
-// FabricWorkspaceItemEventsSourceResponse - Fabric Workspace Item events source response.
+// FabricWorkspaceItemEventsSourceResponse - Fabric Workspace Item Events source response.
 type FabricWorkspaceItemEventsSourceResponse struct {
 	// REQUIRED; The unique name of the source.
 	Name *string
 
-	// REQUIRED; The properties of the Fabric Workspace Item events source.
+	// REQUIRED; The properties of the Fabric Workspace Item Events source.
 	Properties *FabricWorkspaceItemEventsSourceProperties
 
 	// REQUIRED; The status of the node. Additional node status may be added over time.
@@ -1536,6 +1655,72 @@ type GroupByWindow struct {
 // GetGroupByWindow implements the GroupByWindowClassification interface for type GroupByWindow.
 func (g *GroupByWindow) GetGroupByWindow() *GroupByWindow { return g }
 
+// HTTPSourceProperties - HTTP source properties.
+type HTTPSourceProperties struct {
+	// REQUIRED; The HTTP data connection identifier.
+	DataConnectionID *string
+
+	// REQUIRED; The HTTP method. Additional methods may be added over time.
+	Method *HTTPMethod
+
+	// The maximum number of retries for failed requests.
+	MaxRetries *int32
+
+	// The polling interval in milliseconds.
+	PollIntervalMs *int32
+
+	// The HTTP request body.
+	RequestBody *string
+
+	// The HTTP request headers.
+	RequestHeaders []KeyStringValuePair
+
+	// The HTTP request parameters.
+	RequestParameters []KeyStringValuePair
+
+	// The retriable HTTP status codes as a comma-separated string.
+	RetriableHTTPStatusCodes *string
+
+	// The retry backoff time in milliseconds.
+	RetryBackoffMs *int32
+}
+
+// HTTPSourceResponse - HTTP source response.
+type HTTPSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the HTTP source.
+	Properties *HTTPSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type HTTPSourceResponse.
+func (h *HTTPSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        h.Error,
+		ID:           h.ID,
+		InputSchemas: h.InputSchemas,
+		Name:         h.Name,
+		Status:       h.Status,
+		Type:         h.Type,
+	}
+}
+
 type HoppingWindow struct {
 	// REQUIRED; The properties for a hopping window.
 	Properties *HoppingWindowProperties
@@ -1671,6 +1856,14 @@ type JoinOperatorProperties struct {
 
 	// A list of the join conditions.
 	JoinOn []JoinOn
+}
+
+type KeyStringValuePair struct {
+	// REQUIRED; The key.
+	Key *string
+
+	// REQUIRED; The value.
+	Value *string
 }
 
 // LakehouseDestinationProperties - Lakehouse destination properties.
@@ -2190,6 +2383,21 @@ type Schema struct {
 	Columns []ColumnSchema
 }
 
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
 // SerializationInfo - Serialization information.
 type SerializationInfo struct {
 	// REQUIRED; The serialization type.
@@ -2511,7 +2719,9 @@ func (u *UnionOperator) GetOperator() *Operator {
 
 // UpdateEventstreamDefinitionRequest - Update eventstream public definition request payload.
 type UpdateEventstreamDefinitionRequest struct {
-	// REQUIRED; Eventstream public definition object.
+	// REQUIRED; Eventstream public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/eventstream-definition]
+	// for more details on the structure of the Eventstream
+	// definition.
 	Definition *Definition
 }
 

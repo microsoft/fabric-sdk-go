@@ -19,12 +19,15 @@ type CreateGraphModelRequest struct {
 
 	// The folder ID. If not specified or null, the GraphModel is created with the workspace as its folder.
 	FolderID *string
+
+	// The sensitivity label settings for the GraphModel.
+	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
 // DefinitionResponse - GraphModel public definition response.
 type DefinitionResponse struct {
 	// READ-ONLY; GraphModel public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/graph-model-definition]
-	// for more details on how to craft a GraphModel public
+	// for more details on the structure of the GraphModel
 	// definition.
 	Definition *PublicDefinition
 }
@@ -69,6 +72,9 @@ type GraphModel struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; The item sensitivity label.
+	SensitivityLabel *SensitivityLabel
 
 	// READ-ONLY; List of applied tags.
 	Tags []ItemTag
@@ -138,7 +144,7 @@ type Property struct {
 }
 
 // PublicDefinition - GraphModel public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/graph-model-definition]
-// for more details on how to craft a GraphModel public
+// for more details on the structure of the GraphModel
 // definition.
 type PublicDefinition struct {
 	// REQUIRED; A list of definition parts.
@@ -160,10 +166,25 @@ type PublicDefinitionPart struct {
 	PayloadType *PayloadType
 }
 
+// SensitivityLabel - Represents a sensitivity label applied to an item.
+type SensitivityLabel struct {
+	// REQUIRED; The sensitivity label ID.
+	ID *string
+}
+
+// SensitivityLabelSettings - The sensitivity label settings.
+type SensitivityLabelSettings struct {
+	// REQUIRED; The sensitivity label ID.
+	LabelID *string
+
+	// The strategy for applying the sensitivity label.
+	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
+}
+
 // UpdateGraphModelDefinitionRequest - Update GraphModel public definition request payload.
 type UpdateGraphModelDefinitionRequest struct {
 	// REQUIRED; GraphModel public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/graph-model-definition]
-	// for more details on how to craft a GraphModel public
+	// for more details on the structure of the GraphModel
 	// definition.
 	Definition *PublicDefinition
 }

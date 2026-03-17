@@ -34,17 +34,17 @@ type PublishedServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetSparkCompute func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.PublishedClientGetSparkComputeOptions) (resp azfake.Responder[environment.PublishedClientGetSparkComputeResponse], errResp azfake.ErrorResponder)
 
-	// GetSparkComputePreview is the fake for method PublishedClient.GetSparkComputePreview
+	// GetSparkComputeBeta is the fake for method PublishedClient.GetSparkComputeBeta
 	// HTTP status codes to indicate success: http.StatusOK
-	GetSparkComputePreview func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.PublishedClientGetSparkComputePreviewOptions) (resp azfake.Responder[environment.PublishedClientGetSparkComputePreviewResponse], errResp azfake.ErrorResponder)
+	GetSparkComputeBeta func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.PublishedClientGetSparkComputeBetaOptions) (resp azfake.Responder[environment.PublishedClientGetSparkComputeBetaResponse], errResp azfake.ErrorResponder)
 
 	// NewListLibrariesPager is the fake for method PublishedClient.NewListLibrariesPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListLibrariesPager func(workspaceID string, environmentID string, beta bool, options *environment.PublishedClientListLibrariesOptions) (resp azfake.PagerResponder[environment.PublishedClientListLibrariesResponse])
 
-	// ListLibrariesPreview is the fake for method PublishedClient.ListLibrariesPreview
+	// ListLibrariesBeta is the fake for method PublishedClient.ListLibrariesBeta
 	// HTTP status codes to indicate success: http.StatusOK
-	ListLibrariesPreview func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.PublishedClientListLibrariesPreviewOptions) (resp azfake.Responder[environment.PublishedClientListLibrariesPreviewResponse], errResp azfake.ErrorResponder)
+	ListLibrariesBeta func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.PublishedClientListLibrariesBetaOptions) (resp azfake.Responder[environment.PublishedClientListLibrariesBetaResponse], errResp azfake.ErrorResponder)
 }
 
 // NewPublishedServerTransport creates a new instance of PublishedServerTransport with the provided implementation.
@@ -93,12 +93,12 @@ func (p *PublishedServerTransport) dispatchToMethodFake(req *http.Request, metho
 				res.resp, res.err = p.dispatchExportExternalLibraries(req)
 			case "PublishedClient.GetSparkCompute":
 				res.resp, res.err = p.dispatchGetSparkCompute(req)
-			case "PublishedClient.GetSparkComputePreview":
-				res.resp, res.err = p.dispatchGetSparkComputePreview(req)
+			case "PublishedClient.GetSparkComputeBeta":
+				res.resp, res.err = p.dispatchGetSparkComputeBeta(req)
 			case "PublishedClient.NewListLibrariesPager":
 				res.resp, res.err = p.dispatchNewListLibrariesPager(req)
-			case "PublishedClient.ListLibrariesPreview":
-				res.resp, res.err = p.dispatchListLibrariesPreview(req)
+			case "PublishedClient.ListLibrariesBeta":
+				res.resp, res.err = p.dispatchListLibrariesBeta(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -193,9 +193,9 @@ func (p *PublishedServerTransport) dispatchGetSparkCompute(req *http.Request) (*
 	return resp, nil
 }
 
-func (p *PublishedServerTransport) dispatchGetSparkComputePreview(req *http.Request) (*http.Response, error) {
-	if p.srv.GetSparkComputePreview == nil {
-		return nil, &nonRetriableError{errors.New("fake for method GetSparkComputePreview not implemented")}
+func (p *PublishedServerTransport) dispatchGetSparkComputeBeta(req *http.Request) (*http.Response, error) {
+	if p.srv.GetSparkComputeBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetSparkComputeBeta not implemented")}
 	}
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sparkcompute`
 	regex := regexp.MustCompile(regexStr)
@@ -220,7 +220,7 @@ func (p *PublishedServerTransport) dispatchGetSparkComputePreview(req *http.Requ
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := p.srv.GetSparkComputePreview(req.Context(), workspaceIDParam, environmentIDParam, betaParam, nil)
+	respr, errRespr := p.srv.GetSparkComputeBeta(req.Context(), workspaceIDParam, environmentIDParam, betaParam, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -296,9 +296,9 @@ func (p *PublishedServerTransport) dispatchNewListLibrariesPager(req *http.Reque
 	return resp, nil
 }
 
-func (p *PublishedServerTransport) dispatchListLibrariesPreview(req *http.Request) (*http.Response, error) {
-	if p.srv.ListLibrariesPreview == nil {
-		return nil, &nonRetriableError{errors.New("fake for method ListLibrariesPreview not implemented")}
+func (p *PublishedServerTransport) dispatchListLibrariesBeta(req *http.Request) (*http.Response, error) {
+	if p.srv.ListLibrariesBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method ListLibrariesBeta not implemented")}
 	}
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/libraries`
 	regex := regexp.MustCompile(regexStr)
@@ -323,7 +323,7 @@ func (p *PublishedServerTransport) dispatchListLibrariesPreview(req *http.Reques
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := p.srv.ListLibrariesPreview(req.Context(), workspaceIDParam, environmentIDParam, betaParam, nil)
+	respr, errRespr := p.srv.ListLibrariesBeta(req.Context(), workspaceIDParam, environmentIDParam, betaParam, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}

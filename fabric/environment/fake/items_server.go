@@ -54,9 +54,9 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
 	BeginPublishEnvironment func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.ItemsClientBeginPublishEnvironmentOptions) (resp azfake.PollerResponder[environment.ItemsClientPublishEnvironmentResponse], errResp azfake.ErrorResponder)
 
-	// PublishEnvironmentPreview is the fake for method ItemsClient.PublishEnvironmentPreview
+	// PublishEnvironmentBeta is the fake for method ItemsClient.PublishEnvironmentBeta
 	// HTTP status codes to indicate success: http.StatusOK
-	PublishEnvironmentPreview func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.ItemsClientPublishEnvironmentPreviewOptions) (resp azfake.Responder[environment.ItemsClientPublishEnvironmentPreviewResponse], errResp azfake.ErrorResponder)
+	PublishEnvironmentBeta func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.ItemsClientPublishEnvironmentBetaOptions) (resp azfake.Responder[environment.ItemsClientPublishEnvironmentBetaResponse], errResp azfake.ErrorResponder)
 
 	// UpdateEnvironment is the fake for method ItemsClient.UpdateEnvironment
 	// HTTP status codes to indicate success: http.StatusOK
@@ -131,8 +131,8 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 				res.resp, res.err = i.dispatchNewListEnvironmentsPager(req)
 			case "ItemsClient.BeginPublishEnvironment":
 				res.resp, res.err = i.dispatchBeginPublishEnvironment(req)
-			case "ItemsClient.PublishEnvironmentPreview":
-				res.resp, res.err = i.dispatchPublishEnvironmentPreview(req)
+			case "ItemsClient.PublishEnvironmentBeta":
+				res.resp, res.err = i.dispatchPublishEnvironmentBeta(req)
 			case "ItemsClient.UpdateEnvironment":
 				res.resp, res.err = i.dispatchUpdateEnvironment(req)
 			case "ItemsClient.BeginUpdateEnvironmentDefinition":
@@ -372,14 +372,29 @@ func (i *ItemsServerTransport) dispatchNewListEnvironmentsPager(req *http.Reques
 		if err != nil {
 			return nil, err
 		}
+		recursiveUnescaped, err := url.QueryUnescape(qp.Get("recursive"))
+		if err != nil {
+			return nil, err
+		}
+		recursiveParam, err := parseOptional(recursiveUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDUnescaped, err := url.QueryUnescape(qp.Get("rootFolderId"))
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDParam := getOptional(rootFolderIDUnescaped)
 		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
 		if err != nil {
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
 		var options *environment.ItemsClientListEnvironmentsOptions
-		if continuationTokenParam != nil {
+		if recursiveParam != nil || rootFolderIDParam != nil || continuationTokenParam != nil {
 			options = &environment.ItemsClientListEnvironmentsOptions{
+				Recursive:         recursiveParam,
+				RootFolderID:      rootFolderIDParam,
 				ContinuationToken: continuationTokenParam,
 			}
 		}
@@ -457,9 +472,9 @@ func (i *ItemsServerTransport) dispatchBeginPublishEnvironment(req *http.Request
 	return resp, nil
 }
 
-func (i *ItemsServerTransport) dispatchPublishEnvironmentPreview(req *http.Request) (*http.Response, error) {
-	if i.srv.PublishEnvironmentPreview == nil {
-		return nil, &nonRetriableError{errors.New("fake for method PublishEnvironmentPreview not implemented")}
+func (i *ItemsServerTransport) dispatchPublishEnvironmentBeta(req *http.Request) (*http.Response, error) {
+	if i.srv.PublishEnvironmentBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method PublishEnvironmentBeta not implemented")}
 	}
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/staging/publish`
 	regex := regexp.MustCompile(regexStr)
@@ -484,7 +499,7 @@ func (i *ItemsServerTransport) dispatchPublishEnvironmentPreview(req *http.Reque
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := i.srv.PublishEnvironmentPreview(req.Context(), workspaceIDParam, environmentIDParam, betaParam, nil)
+	respr, errRespr := i.srv.PublishEnvironmentBeta(req.Context(), workspaceIDParam, environmentIDParam, betaParam, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}

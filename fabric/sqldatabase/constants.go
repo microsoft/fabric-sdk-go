@@ -10,10 +10,11 @@ package sqldatabase
 type CreationMode string
 
 const (
-	// CreationModeNew - The default creation mode. 'backupRetentionDays' object is accepted in this creation mode.
+	// CreationModeNew - The default creation mode. The 'backupRetentionDays' and 'collation' properties are accepted in this
+	// mode.
 	CreationModeNew CreationMode = "New"
-	// CreationModeRestore - The creation mode of restoring from a source database. 'sourceDatabaseReference' object and 'restorePointInTime'
-	// object are required for this creation mode. 'backupRetentionDays' object is not accepted.
+	// CreationModeRestore - The creation mode for restoring from a source database. The 'sourceDatabaseReference' and 'restorePointInTime'
+	// properties are required. No other properties are accepted.
 	CreationModeRestore CreationMode = "Restore"
 )
 
@@ -25,18 +26,21 @@ func PossibleCreationModeValues() []CreationMode {
 	}
 }
 
-// ItemReferenceType - The Item reference type. Additional ItemReferenceType types may be added over time.
+// ItemReferenceType - The item reference type. Additional ItemReferenceType types may be added over time.
 type ItemReferenceType string
 
 const (
 	// ItemReferenceTypeByID - The item is referenced by its ID.
 	ItemReferenceTypeByID ItemReferenceType = "ById"
+	// ItemReferenceTypeByVariable - The item is referenced by a variable.
+	ItemReferenceTypeByVariable ItemReferenceType = "ByVariable"
 )
 
 // PossibleItemReferenceTypeValues returns the possible values for the ItemReferenceType const type.
 func PossibleItemReferenceTypeValues() []ItemReferenceType {
 	return []ItemReferenceType{
 		ItemReferenceTypeByID,
+		ItemReferenceTypeByVariable,
 	}
 }
 
@@ -54,6 +58,8 @@ const (
 	ItemTypeCosmosDBDatabase ItemType = "CosmosDBDatabase"
 	// ItemTypeDashboard - PowerBI dashboard.
 	ItemTypeDashboard ItemType = "Dashboard"
+	// ItemTypeDataAgent - A DataAgent.
+	ItemTypeDataAgent ItemType = "DataAgent"
 	// ItemTypeDataPipeline - A data pipeline.
 	ItemTypeDataPipeline ItemType = "DataPipeline"
 	// ItemTypeDataflow - A Dataflow.
@@ -140,6 +146,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeCopyJob,
 		ItemTypeCosmosDBDatabase,
 		ItemTypeDashboard,
+		ItemTypeDataAgent,
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
 		ItemTypeDatamart,
@@ -193,5 +200,46 @@ const (
 func PossiblePayloadTypeValues() []PayloadType {
 	return []PayloadType{
 		PayloadTypeInlineBase64,
+	}
+}
+
+// SQLAuditSettingsState - Sql Audit settings state. When enabling the audit policy for the first time after database creation
+// (by setting state to 'Enabled' without other properties), default values are applied. For all
+// subsequent enable/disable operations, the previous policy settings are preserved. Additional SqlAuditSettingsState may
+// be added over time.
+type SQLAuditSettingsState string
+
+const (
+	// SQLAuditSettingsStateDisabled - Disable the SQL audit.
+	SQLAuditSettingsStateDisabled SQLAuditSettingsState = "Disabled"
+	// SQLAuditSettingsStateEnabled - Enable the SQL audit.
+	SQLAuditSettingsStateEnabled SQLAuditSettingsState = "Enabled"
+)
+
+// PossibleSQLAuditSettingsStateValues returns the possible values for the SQLAuditSettingsState const type.
+func PossibleSQLAuditSettingsStateValues() []SQLAuditSettingsState {
+	return []SQLAuditSettingsState{
+		SQLAuditSettingsStateDisabled,
+		SQLAuditSettingsStateEnabled,
+	}
+}
+
+// SensitivityLabelApplyStrategy - The strategy for applying the sensitivity label. The default value is ApplyOrFail. Additional
+// types may be added over time.
+type SensitivityLabelApplyStrategy string
+
+const (
+	// SensitivityLabelApplyStrategyApplyOrFail - Apply the sensitivity label or fail the operation if it cannot be applied.
+	SensitivityLabelApplyStrategyApplyOrFail SensitivityLabelApplyStrategy = "ApplyOrFail"
+	// SensitivityLabelApplyStrategyIgnore - Ignore the sensitivity label if it cannot be applied and proceed with the operation
+	// without applying the label.
+	SensitivityLabelApplyStrategyIgnore SensitivityLabelApplyStrategy = "Ignore"
+)
+
+// PossibleSensitivityLabelApplyStrategyValues returns the possible values for the SensitivityLabelApplyStrategy const type.
+func PossibleSensitivityLabelApplyStrategyValues() []SensitivityLabelApplyStrategy {
+	return []SensitivityLabelApplyStrategy{
+		SensitivityLabelApplyStrategyApplyOrFail,
+		SensitivityLabelApplyStrategyIgnore,
 	}
 }

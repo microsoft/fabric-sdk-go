@@ -71,6 +71,9 @@ func (testsuite *FakeTestSuite) TestItems_ListLakehouses() {
 				Description: to.Ptr("A lakehouse description."),
 				DisplayName: to.Ptr("Lakehouse_1"),
 				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				SensitivityLabel: &lakehouse.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 				Properties: &lakehouse.Properties{
 					OneLakeFilesPath:  to.Ptr("https://onelake.dfs.fabric.microsoft.com/2382cdf5-d577-44d0-a1fc-42184f29a7eb/e5fb215b-1934-413e-b33a-debaf844afde/Files"),
@@ -87,6 +90,9 @@ func (testsuite *FakeTestSuite) TestItems_ListLakehouses() {
 				Description: to.Ptr("A lakehouse description."),
 				DisplayName: to.Ptr("Lakehouse_2"),
 				ID:          to.Ptr("a8a1bffa-7eea-49dc-a1d2-6281c1d031f1"),
+				SensitivityLabel: &lakehouse.SensitivityLabel{
+					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 				Properties: &lakehouse.Properties{
 					OneLakeFilesPath:  to.Ptr("https://onelake.dfs.fabric.microsoft.com/fc5d0537-1b22-4de1-a5e9-9b8bb58ed1e1/6dc325f6-46f6-4a2a-930b-10b96a463566/Files"),
@@ -108,7 +114,10 @@ func (testsuite *FakeTestSuite) TestItems_ListLakehouses() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	pager := client.NewListLakehousesPager(exampleWorkspaceID, &lakehouse.ItemsClientListLakehousesOptions{ContinuationToken: nil})
+	pager := client.NewListLakehousesPager(exampleWorkspaceID, &lakehouse.ItemsClientListLakehousesOptions{Recursive: nil,
+		RootFolderID:      nil,
+		ContinuationToken: nil,
+	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")
@@ -240,6 +249,9 @@ func (testsuite *FakeTestSuite) TestItems_GetLakehouse() {
 		Description: to.Ptr("A lakehouse description."),
 		DisplayName: to.Ptr("Lakehouse_1"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &lakehouse.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		Properties: &lakehouse.Properties{
 			OneLakeFilesPath:  to.Ptr("https://onelake.dfs.fabric.microsoft.com/2382cdf5-d577-44d0-a1fc-42184f29a7eb/e5fb215b-1934-413e-b33a-debaf844afde/Files"),
@@ -277,6 +289,9 @@ func (testsuite *FakeTestSuite) TestItems_GetLakehouse() {
 		Description: to.Ptr("A schema enabled lakehouse."),
 		DisplayName: to.Ptr("Lakehouse_created_with_schema"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &lakehouse.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		Properties: &lakehouse.Properties{
 			DefaultSchema:     to.Ptr("dbo"),
@@ -323,6 +338,9 @@ func (testsuite *FakeTestSuite) TestItems_UpdateLakehouse() {
 		Description: to.Ptr("A new description for lakehouse."),
 		DisplayName: to.Ptr("Lakehouse_New_Name"),
 		ID:          to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+		SensitivityLabel: &lakehouse.SensitivityLabel{
+			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
+		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 	}
 
@@ -720,7 +738,7 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_UpdateRefreshMaterializedLake
 		CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-05-28T05:35:20.536Z"); return t }()),
 		Enabled:         to.Ptr(false),
 		ID:              to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
-		Owner: &lakehouse.Principal{
+		Owner: &lakehouse.UserPrincipal{
 			Type: to.Ptr(lakehouse.PrincipalTypeUser),
 			ID:   to.Ptr("33dd33dd-ee44-ff55-aa66-77bb77bb77bb"),
 		},
@@ -825,7 +843,7 @@ func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessions() {
 				StartDateTime:      to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:34:11.000Z"); return t }()),
 				State:              to.Ptr(lakehouse.StateCancelled),
 				SubmittedDateTime:  to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:32:03.000Z"); return t }()),
-				Submitter: &lakehouse.Principal{
+				Submitter: &lakehouse.UserPrincipal{
 					Type: to.Ptr(lakehouse.PrincipalTypeUser),
 					ID:   to.Ptr("6f23a8a6-d954-4550-b91a-4df73ccd0311"),
 				},
@@ -915,7 +933,7 @@ func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessionsBeta() {
 				StartDateTime:      to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:34:11.000Z"); return t }()),
 				State:              to.Ptr(lakehouse.StateCancelled),
 				SubmittedDateTime:  to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:32:03.000Z"); return t }()),
-				Submitter: &lakehouse.Principal{
+				Submitter: &lakehouse.UserPrincipal{
 					Type: to.Ptr(lakehouse.PrincipalTypeUser),
 					ID:   to.Ptr("6f23a8a6-d954-4550-b91a-4df73ccd0311"),
 				},
@@ -1009,7 +1027,7 @@ func (testsuite *FakeTestSuite) TestLivySessions_GetLivySession() {
 		StartDateTime:      to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:34:11.000Z"); return t }()),
 		State:              to.Ptr(lakehouse.StateCancelled),
 		SubmittedDateTime:  to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-01-31T15:32:03.000Z"); return t }()),
-		Submitter: &lakehouse.Principal{
+		Submitter: &lakehouse.UserPrincipal{
 			Type: to.Ptr(lakehouse.PrincipalTypeUser),
 			ID:   to.Ptr("6f23a8a6-d954-4550-b91a-4df73ccd0311"),
 		},

@@ -22,6 +22,7 @@ import (
 	corefake "github.com/microsoft/fabric-sdk-go/fabric/core/fake"
 	cosmosdbdatabasefake "github.com/microsoft/fabric-sdk-go/fabric/cosmosdbdatabase/fake"
 	dashboardfake "github.com/microsoft/fabric-sdk-go/fabric/dashboard/fake"
+	dataagentfake "github.com/microsoft/fabric-sdk-go/fabric/dataagent/fake"
 	dataflowfake "github.com/microsoft/fabric-sdk-go/fabric/dataflow/fake"
 	datamartfake "github.com/microsoft/fabric-sdk-go/fabric/datamart/fake"
 	datapipelinefake "github.com/microsoft/fabric-sdk-go/fabric/datapipeline/fake"
@@ -72,6 +73,7 @@ type ServerFactory struct {
 	Core                           corefake.ServerFactory
 	Cosmos                         cosmosdbdatabasefake.ServerFactory
 	Dashboard                      dashboardfake.ServerFactory
+	DataAgent                      dataagentfake.ServerFactory
 	Dataflow                       dataflowfake.ServerFactory
 	Datamart                       datamartfake.ServerFactory
 	DataPipeline                   datapipelinefake.ServerFactory
@@ -125,6 +127,7 @@ type ServerFactoryTransport struct {
 	trCore                           *corefake.ServerFactoryTransport
 	trCosmos                         *cosmosdbdatabasefake.ServerFactoryTransport
 	trDashboard                      *dashboardfake.ServerFactoryTransport
+	trDataAgent                      *dataagentfake.ServerFactoryTransport
 	trDataflow                       *dataflowfake.ServerFactoryTransport
 	trDatamart                       *datamartfake.ServerFactoryTransport
 	trDataPipeline                   *datapipelinefake.ServerFactoryTransport
@@ -220,6 +223,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return dashboardfake.NewServerFactoryTransport(&s.srv.Dashboard)
 		})
 		resp, err = s.trDashboard.Do(req)
+	case "dataagent":
+		initServer(s, &s.trDataAgent, func() *dataagentfake.ServerFactoryTransport {
+			return dataagentfake.NewServerFactoryTransport(&s.srv.DataAgent)
+		})
+		resp, err = s.trDataAgent.Do(req)
 	case "dataflow":
 		initServer(s, &s.trDataflow, func() *dataflowfake.ServerFactoryTransport {
 			return dataflowfake.NewServerFactoryTransport(&s.srv.Dataflow)

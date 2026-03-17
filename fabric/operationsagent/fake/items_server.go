@@ -142,7 +142,7 @@ func (i *ItemsServerTransport) dispatchBeginCreateOperationsAgent(req *http.Requ
 	}
 	beginCreateOperationsAgent := i.beginCreateOperationsAgent.get(req)
 	if beginCreateOperationsAgent == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/OperationsAgents`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/operationsAgents`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 2 {
@@ -184,7 +184,7 @@ func (i *ItemsServerTransport) dispatchDeleteOperationsAgent(req *http.Request) 
 	if i.srv.DeleteOperationsAgent == nil {
 		return nil, &nonRetriableError{errors.New("fake for method DeleteOperationsAgent not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/OperationsAgents/(?P<OperationsAgentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/operationsAgents/(?P<operationsAgentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -194,7 +194,7 @@ func (i *ItemsServerTransport) dispatchDeleteOperationsAgent(req *http.Request) 
 	if err != nil {
 		return nil, err
 	}
-	operationsAgentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("OperationsAgentId")])
+	operationsAgentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("operationsAgentId")])
 	if err != nil {
 		return nil, err
 	}
@@ -217,7 +217,7 @@ func (i *ItemsServerTransport) dispatchGetOperationsAgent(req *http.Request) (*h
 	if i.srv.GetOperationsAgent == nil {
 		return nil, &nonRetriableError{errors.New("fake for method GetOperationsAgent not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/OperationsAgents/(?P<OperationsAgentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/operationsAgents/(?P<operationsAgentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -227,7 +227,7 @@ func (i *ItemsServerTransport) dispatchGetOperationsAgent(req *http.Request) (*h
 	if err != nil {
 		return nil, err
 	}
-	operationsAgentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("OperationsAgentId")])
+	operationsAgentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("operationsAgentId")])
 	if err != nil {
 		return nil, err
 	}
@@ -252,7 +252,7 @@ func (i *ItemsServerTransport) dispatchBeginGetOperationsAgentDefinition(req *ht
 	}
 	beginGetOperationsAgentDefinition := i.beginGetOperationsAgentDefinition.get(req)
 	if beginGetOperationsAgentDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/OperationsAgents/(?P<OperationsAgentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/operationsAgents/(?P<operationsAgentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
@@ -263,7 +263,7 @@ func (i *ItemsServerTransport) dispatchBeginGetOperationsAgentDefinition(req *ht
 		if err != nil {
 			return nil, err
 		}
-		operationsAgentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("OperationsAgentId")])
+		operationsAgentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("operationsAgentId")])
 		if err != nil {
 			return nil, err
 		}
@@ -308,7 +308,7 @@ func (i *ItemsServerTransport) dispatchNewListOperationsAgentsPager(req *http.Re
 	}
 	newListOperationsAgentsPager := i.newListOperationsAgentsPager.get(req)
 	if newListOperationsAgentsPager == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/OperationsAgents`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/operationsAgents`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 2 {
@@ -319,14 +319,29 @@ func (i *ItemsServerTransport) dispatchNewListOperationsAgentsPager(req *http.Re
 		if err != nil {
 			return nil, err
 		}
+		recursiveUnescaped, err := url.QueryUnescape(qp.Get("recursive"))
+		if err != nil {
+			return nil, err
+		}
+		recursiveParam, err := parseOptional(recursiveUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDUnescaped, err := url.QueryUnescape(qp.Get("rootFolderId"))
+		if err != nil {
+			return nil, err
+		}
+		rootFolderIDParam := getOptional(rootFolderIDUnescaped)
 		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
 		if err != nil {
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
 		var options *operationsagent.ItemsClientListOperationsAgentsOptions
-		if continuationTokenParam != nil {
+		if recursiveParam != nil || rootFolderIDParam != nil || continuationTokenParam != nil {
 			options = &operationsagent.ItemsClientListOperationsAgentsOptions{
+				Recursive:         recursiveParam,
+				RootFolderID:      rootFolderIDParam,
 				ContinuationToken: continuationTokenParam,
 			}
 		}
@@ -355,7 +370,7 @@ func (i *ItemsServerTransport) dispatchUpdateOperationsAgent(req *http.Request) 
 	if i.srv.UpdateOperationsAgent == nil {
 		return nil, &nonRetriableError{errors.New("fake for method UpdateOperationsAgent not implemented")}
 	}
-	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/OperationsAgents/(?P<OperationsAgentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/operationsAgents/(?P<operationsAgentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
 	regex := regexp.MustCompile(regexStr)
 	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 	if len(matches) < 3 {
@@ -369,7 +384,7 @@ func (i *ItemsServerTransport) dispatchUpdateOperationsAgent(req *http.Request) 
 	if err != nil {
 		return nil, err
 	}
-	operationsAgentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("OperationsAgentId")])
+	operationsAgentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("operationsAgentId")])
 	if err != nil {
 		return nil, err
 	}
@@ -394,7 +409,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateOperationsAgentDefinition(req 
 	}
 	beginUpdateOperationsAgentDefinition := i.beginUpdateOperationsAgentDefinition.get(req)
 	if beginUpdateOperationsAgentDefinition == nil {
-		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/OperationsAgents/(?P<OperationsAgentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/operationsAgents/(?P<operationsAgentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
@@ -409,7 +424,7 @@ func (i *ItemsServerTransport) dispatchBeginUpdateOperationsAgentDefinition(req 
 		if err != nil {
 			return nil, err
 		}
-		operationsAgentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("OperationsAgentId")])
+		operationsAgentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("operationsAgentId")])
 		if err != nil {
 			return nil, err
 		}

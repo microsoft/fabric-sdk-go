@@ -16,7 +16,7 @@ import (
 )
 
 // Generated from example definition
-func ExamplePublishedClient_GetSparkComputePreview() {
+func ExamplePublishedClient_GetSparkComputeBeta() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -26,7 +26,7 @@ func ExamplePublishedClient_GetSparkComputePreview() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewPublishedClient().GetSparkComputePreview(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "707cfd07-cbf1-41da-aad7-dd157ddb8c11", true, nil)
+	res, err := clientFactory.NewPublishedClient().GetSparkComputeBeta(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "707cfd07-cbf1-41da-aad7-dd157ddb8c11", true, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -154,7 +154,7 @@ func ExamplePublishedClient_NewListLibrariesPager() {
 }
 
 // Generated from example definition
-func ExamplePublishedClient_ListLibrariesPreview() {
+func ExamplePublishedClient_ListLibrariesBeta() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -164,7 +164,7 @@ func ExamplePublishedClient_ListLibrariesPreview() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewPublishedClient().ListLibrariesPreview(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", true, nil)
+	res, err := clientFactory.NewPublishedClient().ListLibrariesBeta(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", true, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

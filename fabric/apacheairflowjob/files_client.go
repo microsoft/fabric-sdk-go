@@ -81,7 +81,7 @@ func (client *FilesClient) CreateOrUpdateApacheAirflowJobFileBetaWithBinary(ctx 
 
 // createOrUpdateApacheAirflowJobFileBetaWithBinaryCreateRequest creates the CreateOrUpdateApacheAirflowJobFileBetaWithBinary request.
 func (client *FilesClient) createOrUpdateApacheAirflowJobFileBetaWithBinaryCreateRequest(ctx context.Context, workspaceID string, apacheAirflowJobID string, filePath string, beta bool, fileContents io.ReadSeekCloser, _ *FilesClientCreateOrUpdateApacheAirflowJobFileBetaWithBinaryOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/ApacheAirflowJobs/{ApacheAirflowJobId}/files/{filePath}"
+	urlPath := "/v1/workspaces/{workspaceId}/apacheAirflowJobs/{apacheAirflowJobId}/files/{filePath}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -89,7 +89,7 @@ func (client *FilesClient) createOrUpdateApacheAirflowJobFileBetaWithBinaryCreat
 	if apacheAirflowJobID == "" {
 		return nil, errors.New("parameter apacheAirflowJobID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{ApacheAirflowJobId}", url.PathEscape(apacheAirflowJobID))
+	urlPath = strings.ReplaceAll(urlPath, "{apacheAirflowJobId}", url.PathEscape(apacheAirflowJobID))
 	if filePath == "" {
 		return nil, errors.New("parameter filePath cannot be empty")
 	}
@@ -155,7 +155,7 @@ func (client *FilesClient) DeleteApacheAirflowJobFileBeta(ctx context.Context, w
 
 // deleteApacheAirflowJobFileBetaCreateRequest creates the DeleteApacheAirflowJobFileBeta request.
 func (client *FilesClient) deleteApacheAirflowJobFileBetaCreateRequest(ctx context.Context, workspaceID string, apacheAirflowJobID string, filePath string, beta bool, _ *FilesClientDeleteApacheAirflowJobFileBetaOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/ApacheAirflowJobs/{ApacheAirflowJobId}/files/{filePath}"
+	urlPath := "/v1/workspaces/{workspaceId}/apacheAirflowJobs/{apacheAirflowJobId}/files/{filePath}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -163,7 +163,7 @@ func (client *FilesClient) deleteApacheAirflowJobFileBetaCreateRequest(ctx conte
 	if apacheAirflowJobID == "" {
 		return nil, errors.New("parameter apacheAirflowJobID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{ApacheAirflowJobId}", url.PathEscape(apacheAirflowJobID))
+	urlPath = strings.ReplaceAll(urlPath, "{apacheAirflowJobId}", url.PathEscape(apacheAirflowJobID))
 	if filePath == "" {
 		return nil, errors.New("parameter filePath cannot be empty")
 	}
@@ -228,7 +228,7 @@ func (client *FilesClient) GetApacheAirflowJobFileBeta(ctx context.Context, work
 
 // getApacheAirflowJobFileBetaCreateRequest creates the GetApacheAirflowJobFileBeta request.
 func (client *FilesClient) getApacheAirflowJobFileBetaCreateRequest(ctx context.Context, workspaceID string, apacheAirflowJobID string, filePath string, beta bool, _ *FilesClientGetApacheAirflowJobFileBetaOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/ApacheAirflowJobs/{ApacheAirflowJobId}/files/{filePath}"
+	urlPath := "/v1/workspaces/{workspaceId}/apacheAirflowJobs/{apacheAirflowJobId}/files/{filePath}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -236,7 +236,7 @@ func (client *FilesClient) getApacheAirflowJobFileBetaCreateRequest(ctx context.
 	if apacheAirflowJobID == "" {
 		return nil, errors.New("parameter apacheAirflowJobID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{ApacheAirflowJobId}", url.PathEscape(apacheAirflowJobID))
+	urlPath = strings.ReplaceAll(urlPath, "{apacheAirflowJobId}", url.PathEscape(apacheAirflowJobID))
 	if filePath == "" {
 		return nil, errors.New("parameter filePath cannot be empty")
 	}
@@ -301,7 +301,7 @@ func (client *FilesClient) NewListApacheAirflowJobFilesBetaPager(workspaceID str
 
 // listApacheAirflowJobFilesBetaCreateRequest creates the ListApacheAirflowJobFilesBeta request.
 func (client *FilesClient) listApacheAirflowJobFilesBetaCreateRequest(ctx context.Context, workspaceID string, apacheAirflowJobID string, beta bool, options *FilesClientListApacheAirflowJobFilesBetaOptions) (*policy.Request, error) {
-	urlPath := "/v1/workspaces/{workspaceId}/ApacheAirflowJobs/{ApacheAirflowJobId}/files"
+	urlPath := "/v1/workspaces/{workspaceId}/apacheAirflowJobs/{apacheAirflowJobId}/files"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
 	}
@@ -309,7 +309,7 @@ func (client *FilesClient) listApacheAirflowJobFilesBetaCreateRequest(ctx contex
 	if apacheAirflowJobID == "" {
 		return nil, errors.New("parameter apacheAirflowJobID cannot be empty")
 	}
-	urlPath = strings.ReplaceAll(urlPath, "{ApacheAirflowJobId}", url.PathEscape(apacheAirflowJobID))
+	urlPath = strings.ReplaceAll(urlPath, "{apacheAirflowJobId}", url.PathEscape(apacheAirflowJobID))
 	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
 		return nil, err

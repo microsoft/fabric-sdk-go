@@ -531,24 +531,24 @@ func ExampleDomainsClient_NewListRoleAssignmentsPager() {
 		// page.DomainRoleAssignments = admin.DomainRoleAssignments{
 		// 	Value: []admin.DomainRoleAssignment{
 		// 		{
-		// 			Principal: &admin.Principal{
+		// 			Principal: &admin.UserPrincipal{
 		// 				Type: to.Ptr(admin.PrincipalTypeUser),
 		// 				DisplayName: to.Ptr("Eric Solomon"),
 		// 				ID: to.Ptr("81fac5e1-2a81-421b-a168-110b1c72fa11"),
-		// 				UserDetails: &admin.PrincipalUserDetails{
+		// 				UserDetails: &admin.UserPrincipalUserDetails{
 		// 					UserPrincipalName: to.Ptr("eric@microsoft.com"),
 		// 				},
 		// 			},
 		// 			Role: to.Ptr(admin.DomainRoleAdmin),
 		// 		},
 		// 		{
-		// 			Principal: &admin.Principal{
+		// 			Principal: &admin.GroupPrincipal{
 		// 				Type: to.Ptr(admin.PrincipalTypeGroup),
 		// 				DisplayName: to.Ptr("TestSecurityGroup"),
-		// 				GroupDetails: &admin.PrincipalGroupDetails{
+		// 				ID: to.Ptr("f51b705f-a409-4d40-9197-c5d5f349e2f0"),
+		// 				GroupDetails: &admin.GroupPrincipalGroupDetails{
 		// 					GroupType: to.Ptr(admin.GroupTypeSecurityGroup),
 		// 				},
-		// 				ID: to.Ptr("f51b705f-a409-4d40-9197-c5d5f349e2f0"),
 		// 			},
 		// 			Role: to.Ptr(admin.DomainRoleContributor),
 		// 	}},
@@ -569,8 +569,8 @@ func ExampleDomainsClient_RoleAssignmentsBulkAssign_assignDomainAdminsExample() 
 	}
 	_, err = clientFactory.NewDomainsClient().RoleAssignmentsBulkAssign(ctx, "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f", admin.DomainRoleAssignmentRequest{
 		Type: to.Ptr(admin.DomainRole("Admins")),
-		Principals: []admin.Principal{
-			{
+		Principals: []admin.PrincipalClassification{
+			&admin.UserPrincipal{
 				Type: to.Ptr(admin.PrincipalTypeUser),
 				ID:   to.Ptr("796ce6ad-9163-4c16-9559-c68192a251de"),
 			}},
@@ -593,8 +593,8 @@ func ExampleDomainsClient_RoleAssignmentsBulkAssign_assignDomainContributorsExam
 	}
 	_, err = clientFactory.NewDomainsClient().RoleAssignmentsBulkAssign(ctx, "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f", admin.DomainRoleAssignmentRequest{
 		Type: to.Ptr(admin.DomainRole("Contributors")),
-		Principals: []admin.Principal{
-			{
+		Principals: []admin.PrincipalClassification{
+			&admin.UserPrincipal{
 				Type: to.Ptr(admin.PrincipalTypeUser),
 				ID:   to.Ptr("796ce6ad-9163-4c16-9559-c68192a251de"),
 			}},
@@ -617,8 +617,8 @@ func ExampleDomainsClient_RoleAssignmentsBulkUnassign_unassignDomainAdminsExampl
 	}
 	_, err = clientFactory.NewDomainsClient().RoleAssignmentsBulkUnassign(ctx, "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f", admin.DomainRoleUnassignmentRequest{
 		Type: to.Ptr(admin.DomainRole("Admins")),
-		Principals: []admin.Principal{
-			{
+		Principals: []admin.PrincipalClassification{
+			&admin.UserPrincipal{
 				Type: to.Ptr(admin.PrincipalTypeUser),
 				ID:   to.Ptr("796ce6ad-9163-4c16-9559-c68192a251de"),
 			}},
@@ -641,8 +641,8 @@ func ExampleDomainsClient_RoleAssignmentsBulkUnassign_unassignDomainContributors
 	}
 	_, err = clientFactory.NewDomainsClient().RoleAssignmentsBulkUnassign(ctx, "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f", admin.DomainRoleUnassignmentRequest{
 		Type: to.Ptr(admin.DomainRole("Contributors")),
-		Principals: []admin.Principal{
-			{
+		Principals: []admin.PrincipalClassification{
+			&admin.UserPrincipal{
 				Type: to.Ptr(admin.PrincipalTypeUser),
 				ID:   to.Ptr("796ce6ad-9163-4c16-9559-c68192a251de"),
 			}},

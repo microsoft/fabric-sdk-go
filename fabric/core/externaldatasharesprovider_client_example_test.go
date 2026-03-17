@@ -113,7 +113,7 @@ func ExampleExternalDataSharesProviderClient_NewListExternalDataSharesInItemPage
 		// page.ExternalDataShares = core.ExternalDataShares{
 		// 	Value: []core.ExternalDataShare{
 		// 		{
-		// 			CreatorPrincipal: &core.Principal{
+		// 			CreatorPrincipal: &core.UserPrincipal{
 		// 				Type: to.Ptr(core.PrincipalTypeUser),
 		// 				ID: to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
 		// 			},
@@ -131,7 +131,7 @@ func ExampleExternalDataSharesProviderClient_NewListExternalDataSharesInItemPage
 		// 			},
 		// 			{
 		// 				AcceptedByTenantID: to.Ptr("c51dc03f-268a-4da0-a879-25f24947ab8b"),
-		// 				CreatorPrincipal: &core.Principal{
+		// 				CreatorPrincipal: &core.UserPrincipal{
 		// 					Type: to.Ptr(core.PrincipalTypeUser),
 		// 					ID: to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
 		// 				},
@@ -148,7 +148,7 @@ func ExampleExternalDataSharesProviderClient_NewListExternalDataSharesInItemPage
 		// 					WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
 		// 				},
 		// 				{
-		// 					CreatorPrincipal: &core.Principal{
+		// 					CreatorPrincipal: &core.UserPrincipal{
 		// 						Type: to.Ptr(core.PrincipalTypeUser),
 		// 						ID: to.Ptr("81fac5e1-2a81-421b-a168-110b1c72fa11"),
 		// 					},
@@ -166,7 +166,7 @@ func ExampleExternalDataSharesProviderClient_NewListExternalDataSharesInItemPage
 		// 					},
 		// 					{
 		// 						AcceptedByTenantID: to.Ptr("c51dc03f-268a-4da0-a879-25f24947ab8b"),
-		// 						CreatorPrincipal: &core.Principal{
+		// 						CreatorPrincipal: &core.UserPrincipal{
 		// 							Type: to.Ptr(core.PrincipalTypeUser),
 		// 							ID: to.Ptr("81fac5e1-2a81-421b-a168-110b1c72fa11"),
 		// 						},
@@ -205,7 +205,7 @@ func ExampleExternalDataSharesProviderClient_GetExternalDataShare() {
 	_ = res
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
 	// res.ExternalDataShare = core.ExternalDataShare{
-	// 	CreatorPrincipal: &core.Principal{
+	// 	CreatorPrincipal: &core.UserPrincipal{
 	// 		Type: to.Ptr(core.PrincipalTypeUser),
 	// 		ID: to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
 	// 	},
