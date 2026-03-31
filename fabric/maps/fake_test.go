@@ -265,7 +265,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteMap() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteMap(ctx, exampleWorkspaceID, exampleMapID, nil)
+	_, err = client.DeleteMap(ctx, exampleWorkspaceID, exampleMapID, &maps.ItemsClientDeleteMapOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a Map example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleMapID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteMap = func(ctx context.Context, workspaceID string, mapID string, options *maps.ItemsClientDeleteMapOptions) (resp azfake.Responder[maps.ItemsClientDeleteMapResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleMapID, mapID)
+		resp = azfake.Responder[maps.ItemsClientDeleteMapResponse]{}
+		resp.SetResponse(http.StatusOK, maps.ItemsClientDeleteMapResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteMap(ctx, exampleWorkspaceID, exampleMapID, &maps.ItemsClientDeleteMapOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

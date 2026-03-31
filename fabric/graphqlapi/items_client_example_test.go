@@ -193,7 +193,7 @@ func ExampleItemsClient_UpdateGraphQLAPI() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_DeleteGraphQLAPI() {
+func ExampleItemsClient_DeleteGraphQLAPI_deleteAnApiForGraphQlExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -203,7 +203,24 @@ func ExampleItemsClient_DeleteGraphQLAPI() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewItemsClient().DeleteGraphQLAPI(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", nil)
+	_, err = clientFactory.NewItemsClient().DeleteGraphQLAPI(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", &graphqlapi.ItemsClientDeleteGraphQLAPIOptions{HardDelete: nil})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_DeleteGraphQLAPI_hardDeleteAnApiForGraphQlExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := graphqlapi.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewItemsClient().DeleteGraphQLAPI(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", &graphqlapi.ItemsClientDeleteGraphQLAPIOptions{HardDelete: to.Ptr(true)})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

@@ -13,6 +13,11 @@ type CapacitiesClientListCapacitiesOptions struct {
 	ContinuationToken *string
 }
 
+// CatalogClientSearchOptions contains the optional parameters for the CatalogClient.Search method.
+type CatalogClientSearchOptions struct {
+	// placeholder for future optional parameters
+}
+
 // ConnectionsClientAddConnectionRoleAssignmentOptions contains the optional parameters for the ConnectionsClient.AddConnectionRoleAssignment
 // method.
 type ConnectionsClientAddConnectionRoleAssignmentOptions struct {
@@ -465,7 +470,10 @@ type ItemsClientBulkMoveItemsOptions struct {
 
 // ItemsClientDeleteItemOptions contains the optional parameters for the ItemsClient.DeleteItem method.
 type ItemsClientDeleteItemOptions struct {
-	// placeholder for future optional parameters
+	// Specifies whether to perform a hard delete. When set to true, the item is permanently deleted and cannot be recovered.
+	// When set to false or not specified, the item is soft-deleted if the item type
+	// supports it.
+	HardDelete *bool
 }
 
 // ItemsClientGetItemOptions contains the optional parameters for the ItemsClient.GetItem method.
@@ -749,6 +757,12 @@ type WorkspacesClientAddWorkspaceRoleAssignmentOptions struct {
 	// placeholder for future optional parameters
 }
 
+// WorkspacesClientApplyWorkspaceTagsOptions contains the optional parameters for the WorkspacesClient.ApplyWorkspaceTags
+// method.
+type WorkspacesClientApplyWorkspaceTagsOptions struct {
+	// placeholder for future optional parameters
+}
+
 // WorkspacesClientAssignToCapacityOptions contains the optional parameters for the WorkspacesClient.AssignToCapacity method.
 type WorkspacesClientAssignToCapacityOptions struct {
 	// placeholder for future optional parameters
@@ -875,6 +889,12 @@ type WorkspacesClientSetOutboundCloudConnectionRulesOptions struct {
 // WorkspacesClientSetOutboundGatewayRulesOptions contains the optional parameters for the WorkspacesClient.SetOutboundGatewayRules
 // method.
 type WorkspacesClientSetOutboundGatewayRulesOptions struct {
+	// placeholder for future optional parameters
+}
+
+// WorkspacesClientUnapplyWorkspaceTagsOptions contains the optional parameters for the WorkspacesClient.UnapplyWorkspaceTags
+// method.
+type WorkspacesClientUnapplyWorkspaceTagsOptions struct {
 	// placeholder for future optional parameters
 }
 

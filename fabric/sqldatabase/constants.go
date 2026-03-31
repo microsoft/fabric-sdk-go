@@ -16,6 +16,9 @@ const (
 	// CreationModeRestore - The creation mode for restoring from a source database. The 'sourceDatabaseReference' and 'restorePointInTime'
 	// properties are required. No other properties are accepted.
 	CreationModeRestore CreationMode = "Restore"
+	// CreationModeRestoreDeletedDatabase - The creation mode for restoring from a restorable deleted database. The 'restorableDeletedDatabaseName'
+	// and 'restorePointInTime' properties are required. No other properties are accepted.
+	CreationModeRestoreDeletedDatabase CreationMode = "RestoreDeletedDatabase"
 )
 
 // PossibleCreationModeValues returns the possible values for the CreationMode const type.
@@ -23,6 +26,7 @@ func PossibleCreationModeValues() []CreationMode {
 	return []CreationMode{
 		CreationModeNew,
 		CreationModeRestore,
+		CreationModeRestoreDeletedDatabase,
 	}
 }
 

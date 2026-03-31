@@ -36,7 +36,10 @@ type ItemsClientBeginUpdateEventstreamDefinitionOptions struct {
 
 // ItemsClientDeleteEventstreamOptions contains the optional parameters for the ItemsClient.DeleteEventstream method.
 type ItemsClientDeleteEventstreamOptions struct {
-	// placeholder for future optional parameters
+	// Specifies whether to perform a hard delete. When set to true, the item is permanently deleted and cannot be recovered.
+	// When set to false or not specified, the item is soft-deleted if the item type
+	// supports it.
+	HardDelete *bool
 }
 
 // ItemsClientGetEventstreamOptions contains the optional parameters for the ItemsClient.GetEventstream method.

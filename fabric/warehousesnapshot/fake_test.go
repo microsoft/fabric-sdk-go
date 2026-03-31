@@ -260,6 +260,24 @@ func (testsuite *FakeTestSuite) TestItems_DeleteWarehouseSnapshot() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteWarehouseSnapshot(ctx, exampleWorkspaceID, exampleWarehouseSnapshotID, nil)
+	_, err = client.DeleteWarehouseSnapshot(ctx, exampleWorkspaceID, exampleWarehouseSnapshotID, &warehousesnapshot.ItemsClientDeleteWarehouseSnapshotOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a Warehouse snapshot example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleWarehouseSnapshotID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteWarehouseSnapshot = func(ctx context.Context, workspaceID string, warehouseSnapshotID string, options *warehousesnapshot.ItemsClientDeleteWarehouseSnapshotOptions) (resp azfake.Responder[warehousesnapshot.ItemsClientDeleteWarehouseSnapshotResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleWarehouseSnapshotID, warehouseSnapshotID)
+		resp = azfake.Responder[warehousesnapshot.ItemsClientDeleteWarehouseSnapshotResponse]{}
+		resp.SetResponse(http.StatusOK, warehousesnapshot.ItemsClientDeleteWarehouseSnapshotResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteWarehouseSnapshot(ctx, exampleWorkspaceID, exampleWarehouseSnapshotID, &warehousesnapshot.ItemsClientDeleteWarehouseSnapshotOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }

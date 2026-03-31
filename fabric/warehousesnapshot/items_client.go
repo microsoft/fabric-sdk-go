@@ -146,7 +146,7 @@ func (client *ItemsClient) DeleteWarehouseSnapshot(ctx context.Context, workspac
 }
 
 // deleteWarehouseSnapshotCreateRequest creates the DeleteWarehouseSnapshot request.
-func (client *ItemsClient) deleteWarehouseSnapshotCreateRequest(ctx context.Context, workspaceID string, warehouseSnapshotID string, _ *ItemsClientDeleteWarehouseSnapshotOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteWarehouseSnapshotCreateRequest(ctx context.Context, workspaceID string, warehouseSnapshotID string, options *ItemsClientDeleteWarehouseSnapshotOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/warehouseSnapshots/{warehouseSnapshotId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -160,6 +160,11 @@ func (client *ItemsClient) deleteWarehouseSnapshotCreateRequest(ctx context.Cont
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

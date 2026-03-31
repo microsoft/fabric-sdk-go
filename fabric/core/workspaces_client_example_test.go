@@ -670,6 +670,50 @@ func ExampleWorkspacesClient_BeginProvisionIdentity() {
 }
 
 // Generated from example definition
+func ExampleWorkspacesClient_ApplyWorkspaceTags() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewWorkspacesClient().ApplyWorkspaceTags(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", core.ApplyWorkspaceTagsRequest{
+		Tags: []string{
+			"97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f",
+			"41d5b790-76d9-4ebe-9f06-b34cc280a612",
+			"7b8e5ada-2dee-4b97-915e-0b9d3b416b1e"},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_UnapplyWorkspaceTags() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewWorkspacesClient().UnapplyWorkspaceTags(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", core.UnapplyWorkspaceTagsRequest{
+		Tags: []string{
+			"97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f",
+			"41d5b790-76d9-4ebe-9f06-b34cc280a612",
+			"7b8e5ada-2dee-4b97-915e-0b9d3b416b1e"},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
 func ExampleWorkspacesClient_GetNetworkCommunicationPolicy() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {

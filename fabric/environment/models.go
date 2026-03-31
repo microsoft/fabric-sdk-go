@@ -174,7 +174,7 @@ func (e *ExternalLibrary) GetLibrary() *Library {
 	}
 }
 
-// InstancePool - An instance of a pool.
+// InstancePool - The instance pool.
 type InstancePool struct {
 	// Instance pool ID.
 	ID *string

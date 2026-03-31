@@ -190,6 +190,7 @@ func (i *ItemsServerTransport) dispatchDeleteOperationsAgent(req *http.Request) 
 	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
+	qp := req.URL.Query()
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 	if err != nil {
 		return nil, err
@@ -198,7 +199,21 @@ func (i *ItemsServerTransport) dispatchDeleteOperationsAgent(req *http.Request) 
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := i.srv.DeleteOperationsAgent(req.Context(), workspaceIDParam, operationsAgentIDParam, nil)
+	hardDeleteUnescaped, err := url.QueryUnescape(qp.Get("hardDelete"))
+	if err != nil {
+		return nil, err
+	}
+	hardDeleteParam, err := parseOptional(hardDeleteUnescaped, strconv.ParseBool)
+	if err != nil {
+		return nil, err
+	}
+	var options *operationsagent.ItemsClientDeleteOperationsAgentOptions
+	if hardDeleteParam != nil {
+		options = &operationsagent.ItemsClientDeleteOperationsAgentOptions{
+			HardDelete: hardDeleteParam,
+		}
+	}
+	respr, errRespr := i.srv.DeleteOperationsAgent(req.Context(), workspaceIDParam, operationsAgentIDParam, options)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}

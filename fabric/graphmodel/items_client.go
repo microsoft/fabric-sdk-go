@@ -150,7 +150,7 @@ func (client *ItemsClient) DeleteGraphModel(ctx context.Context, workspaceID str
 }
 
 // deleteGraphModelCreateRequest creates the DeleteGraphModel request.
-func (client *ItemsClient) deleteGraphModelCreateRequest(ctx context.Context, workspaceID string, graphModelID string, _ *ItemsClientDeleteGraphModelOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteGraphModelCreateRequest(ctx context.Context, workspaceID string, graphModelID string, options *ItemsClientDeleteGraphModelOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/graphModels/{graphModelId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -164,6 +164,11 @@ func (client *ItemsClient) deleteGraphModelCreateRequest(ctx context.Context, wo
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

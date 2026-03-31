@@ -8,6 +8,19 @@ package notebook
 
 import "time"
 
+// BackgroundJobsClientGetNotebookJobInstanceBetaOptions contains the optional parameters for the BackgroundJobsClient.GetNotebookJobInstanceBeta
+// method.
+type BackgroundJobsClientGetNotebookJobInstanceBetaOptions struct {
+	// placeholder for future optional parameters
+}
+
+// BackgroundJobsClientRunOnDemandNotebookOptions contains the optional parameters for the BackgroundJobsClient.RunOnDemandNotebook
+// method.
+type BackgroundJobsClientRunOnDemandNotebookOptions struct {
+	// Run notebook request payload with parameters to use.
+	RunNotebookRequest *RunNotebookRequest
+}
+
 // ItemsClientBeginCreateNotebookOptions contains the optional parameters for the ItemsClient.BeginCreateNotebook method.
 type ItemsClientBeginCreateNotebookOptions struct {
 	// Resumes the long-running operation from the provided token.
@@ -38,7 +51,10 @@ type ItemsClientBeginUpdateNotebookDefinitionOptions struct {
 
 // ItemsClientDeleteNotebookOptions contains the optional parameters for the ItemsClient.DeleteNotebook method.
 type ItemsClientDeleteNotebookOptions struct {
-	// placeholder for future optional parameters
+	// Specifies whether to perform a hard delete. When set to true, the item is permanently deleted and cannot be recovered.
+	// When set to false or not specified, the item is soft-deleted if the item type
+	// supports it.
+	HardDelete *bool
 }
 
 // ItemsClientGetNotebookOptions contains the optional parameters for the ItemsClient.GetNotebook method.

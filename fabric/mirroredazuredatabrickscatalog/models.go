@@ -342,8 +342,8 @@ type UpdateMirroredAzureDatabricksCatalogRequest struct {
 	// The MirroredAzureDatabricksCatalog display name. The display name must follow naming rules according to item type.
 	DisplayName *string
 
-	// The MirroredAzureDatabricksCatalog updateable properties payload.
-	PublicUpdateableExtendedProperties *UpdatePayload
+	// The MirroredAzureDatabricksCatalog updatable properties payload.
+	Properties *UpdatePayload
 }
 
 // UpdatePayload - MirroredAzureDatabricksCatalog update item payload.

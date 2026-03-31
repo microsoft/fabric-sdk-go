@@ -716,6 +716,57 @@ func (a *AzureSQLMIDBCDCSourceResponse) GetSourceResponse() *SourceResponse {
 	}
 }
 
+// AzureServiceBusSourceProperties - Azure Service Bus source properties.
+type AzureServiceBusSourceProperties struct {
+	// REQUIRED; The Azure Service Bus data connection identifier.
+	DataConnectionID *string
+
+	// REQUIRED; The type of the Azure Service Bus source.
+	ServiceBusType *AzureServiceBusSourcePropertiesServiceBusType
+
+	// REQUIRED; The name of the Azure Service Bus topic or queue.
+	TopicOrQueueName *string
+
+	// The name of the Azure Service Bus subscription. This property is required when the entity type is Topic.
+	SubscriptionName *string
+}
+
+// AzureServiceBusSourceResponse - Azure Service Bus source response.
+type AzureServiceBusSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Azure Service Bus source.
+	Properties *AzureServiceBusSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type AzureServiceBusSourceResponse.
+func (a *AzureServiceBusSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        a.Error,
+		ID:           a.ID,
+		InputSchemas: a.InputSchemas,
+		Name:         a.Name,
+		Status:       a.Status,
+		Type:         a.Type,
+	}
+}
+
 // BaseKafkaSourceProperties - Base Kafka source properties.
 type BaseKafkaSourceProperties struct {
 	// REQUIRED; The auto offset reset property. Default is None.
@@ -2045,6 +2096,57 @@ func (m *ManageFieldsRenameOperation) GetManageFieldsOperation() *ManageFieldsOp
 	}
 }
 
+// MongoDBCDCSourceProperties - MongoDB CDC source properties.
+type MongoDBCDCSourceProperties struct {
+	// REQUIRED; The MongoDB CDC data connection identifier.
+	DataConnectionID *string
+
+	// REQUIRED; The comma-separated list of regular expressions that match collection names to include.
+	IncludedCollections *string
+
+	// REQUIRED; The comma-separated list of regular expressions that match database names to include.
+	IncludedDatabases *string
+
+	// The snapshot mode.
+	SnapshotMode *SnapshotMode
+}
+
+// MongoDBCDCSourceResponse - MongoDB CDC source response.
+type MongoDBCDCSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the MongoDB CDC source.
+	Properties *MongoDBCDCSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type MongoDBCDCSourceResponse.
+func (m *MongoDBCDCSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        m.Error,
+		ID:           m.ID,
+		InputSchemas: m.InputSchemas,
+		Name:         m.Name,
+		Status:       m.Status,
+		Type:         m.Type,
+	}
+}
+
 // MqttSourceProperties - MQTT source properties.
 type MqttSourceProperties struct {
 	// REQUIRED; The MQTT data connection identifier.
@@ -2093,13 +2195,28 @@ func (m *MqttSourceResponse) GetSourceResponse() *SourceResponse {
 	}
 }
 
+// MySQLCDCSourceProperties - MySQL CDC source properties.
+type MySQLCDCSourceProperties struct {
+	// REQUIRED; The SQL CDC data connection identifier.
+	DataConnectionID *string
+
+	// REQUIRED; The server identifier for the CDC connector.
+	ServerID *int32
+
+	// REQUIRED; The table name.
+	TableName *string
+
+	// The port number. Default is 3306.
+	Port *int32
+}
+
 // MySQLCDCSourceResponse - MySQL CDC source response.
 type MySQLCDCSourceResponse struct {
 	// REQUIRED; The unique name of the source.
 	Name *string
 
-	// REQUIRED; Anything
-	Properties any
+	// REQUIRED; The properties of the MySQL CDC source.
+	Properties *MySQLCDCSourceProperties
 
 	// REQUIRED; The status of the node. Additional node status may be added over time.
 	Status *NodeStatus

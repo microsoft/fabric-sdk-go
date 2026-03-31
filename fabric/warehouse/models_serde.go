@@ -142,6 +142,80 @@ func (c *CreationPayload) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type CustomSQLPool.
+func (c CustomSQLPool) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "classifier", c.Classifier)
+	populate(objectMap, "isDefault", c.IsDefault)
+	populate(objectMap, "maxResourcePercentage", c.MaxResourcePercentage)
+	populate(objectMap, "name", c.Name)
+	populate(objectMap, "optimizeForReads", c.OptimizeForReads)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CustomSQLPool.
+func (c *CustomSQLPool) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "classifier":
+			err = unpopulate(val, "Classifier", &c.Classifier)
+			delete(rawMsg, key)
+		case "isDefault":
+			err = unpopulate(val, "IsDefault", &c.IsDefault)
+			delete(rawMsg, key)
+		case "maxResourcePercentage":
+			err = unpopulate(val, "MaxResourcePercentage", &c.MaxResourcePercentage)
+			delete(rawMsg, key)
+		case "name":
+			err = unpopulate(val, "Name", &c.Name)
+			delete(rawMsg, key)
+		case "optimizeForReads":
+			err = unpopulate(val, "OptimizeForReads", &c.OptimizeForReads)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type CustomSQLPoolClassifier.
+func (c CustomSQLPoolClassifier) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "type", c.Type)
+	populate(objectMap, "value", c.Value)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CustomSQLPoolClassifier.
+func (c *CustomSQLPoolClassifier) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "type":
+			err = unpopulate(val, "Type", &c.Type)
+			delete(rawMsg, key)
+		case "value":
+			err = unpopulate(val, "Value", &c.Value)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type EntireTenantPrincipal.
 func (e EntireTenantPrincipal) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -523,6 +597,37 @@ func (s *SQLAuditSettingsUpdate) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type SQLPoolsConfigurationResponse.
+func (s SQLPoolsConfigurationResponse) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "customSQLPools", s.CustomSQLPools)
+	populate(objectMap, "customSQLPoolsEnabled", s.CustomSQLPoolsEnabled)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type SQLPoolsConfigurationResponse.
+func (s *SQLPoolsConfigurationResponse) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", s, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "customSQLPools":
+			err = unpopulate(val, "CustomSQLPools", &s.CustomSQLPools)
+			delete(rawMsg, key)
+		case "customSQLPoolsEnabled":
+			err = unpopulate(val, "CustomSQLPoolsEnabled", &s.CustomSQLPoolsEnabled)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", s, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type SensitivityLabel.
 func (s SensitivityLabel) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -735,6 +840,37 @@ func (u *UpdateRestorePointRequest) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "displayName":
 			err = unpopulate(val, "DisplayName", &u.DisplayName)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", u, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type UpdateSQLPoolsConfigurationRequest.
+func (u UpdateSQLPoolsConfigurationRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "customSQLPools", u.CustomSQLPools)
+	populate(objectMap, "customSQLPoolsEnabled", u.CustomSQLPoolsEnabled)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type UpdateSQLPoolsConfigurationRequest.
+func (u *UpdateSQLPoolsConfigurationRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", u, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "customSQLPools":
+			err = unpopulate(val, "CustomSQLPools", &u.CustomSQLPools)
+			delete(rawMsg, key)
+		case "customSQLPoolsEnabled":
+			err = unpopulate(val, "CustomSQLPoolsEnabled", &u.CustomSQLPoolsEnabled)
 			delete(rawMsg, key)
 		}
 		if err != nil {

@@ -380,7 +380,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteKQLDatabase() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteKQLDatabase(ctx, exampleWorkspaceID, exampleKqlDatabaseID, nil)
+	_, err = client.DeleteKQLDatabase(ctx, exampleWorkspaceID, exampleKqlDatabaseID, &kqldatabase.ItemsClientDeleteKQLDatabaseOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a KQL database example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleKqlDatabaseID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteKQLDatabase = func(ctx context.Context, workspaceID string, kqlDatabaseID string, options *kqldatabase.ItemsClientDeleteKQLDatabaseOptions) (resp azfake.Responder[kqldatabase.ItemsClientDeleteKQLDatabaseResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleKqlDatabaseID, kqlDatabaseID)
+		resp = azfake.Responder[kqldatabase.ItemsClientDeleteKQLDatabaseResponse]{}
+		resp.SetResponse(http.StatusOK, kqldatabase.ItemsClientDeleteKQLDatabaseResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteKQLDatabase(ctx, exampleWorkspaceID, exampleKqlDatabaseID, &kqldatabase.ItemsClientDeleteKQLDatabaseOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

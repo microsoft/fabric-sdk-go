@@ -331,7 +331,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteSparkJobDefinition() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteSparkJobDefinition(ctx, exampleWorkspaceID, exampleSparkJobDefinitionID, nil)
+	_, err = client.DeleteSparkJobDefinition(ctx, exampleWorkspaceID, exampleSparkJobDefinitionID, &sparkjobdefinition.ItemsClientDeleteSparkJobDefinitionOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a spark job definition example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleSparkJobDefinitionID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteSparkJobDefinition = func(ctx context.Context, workspaceID string, sparkJobDefinitionID string, options *sparkjobdefinition.ItemsClientDeleteSparkJobDefinitionOptions) (resp azfake.Responder[sparkjobdefinition.ItemsClientDeleteSparkJobDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleSparkJobDefinitionID, sparkJobDefinitionID)
+		resp = azfake.Responder[sparkjobdefinition.ItemsClientDeleteSparkJobDefinitionResponse]{}
+		resp.SetResponse(http.StatusOK, sparkjobdefinition.ItemsClientDeleteSparkJobDefinitionResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteSparkJobDefinition(ctx, exampleWorkspaceID, exampleSparkJobDefinitionID, &sparkjobdefinition.ItemsClientDeleteSparkJobDefinitionOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

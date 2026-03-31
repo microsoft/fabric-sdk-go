@@ -259,7 +259,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteReflex() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteReflex(ctx, exampleWorkspaceID, exampleReflexID, nil)
+	_, err = client.DeleteReflex(ctx, exampleWorkspaceID, exampleReflexID, &reflex.ItemsClientDeleteReflexOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a Reflex example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleReflexID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteReflex = func(ctx context.Context, workspaceID string, reflexID string, options *reflex.ItemsClientDeleteReflexOptions) (resp azfake.Responder[reflex.ItemsClientDeleteReflexResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleReflexID, reflexID)
+		resp = azfake.Responder[reflex.ItemsClientDeleteReflexResponse]{}
+		resp.SetResponse(http.StatusOK, reflex.ItemsClientDeleteReflexResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteReflex(ctx, exampleWorkspaceID, exampleReflexID, &reflex.ItemsClientDeleteReflexOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

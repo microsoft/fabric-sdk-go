@@ -202,6 +202,7 @@ func (i *ItemsServerTransport) dispatchDeleteGraphModel(req *http.Request) (*htt
 	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
+	qp := req.URL.Query()
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 	if err != nil {
 		return nil, err
@@ -210,7 +211,21 @@ func (i *ItemsServerTransport) dispatchDeleteGraphModel(req *http.Request) (*htt
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := i.srv.DeleteGraphModel(req.Context(), workspaceIDParam, graphModelIDParam, nil)
+	hardDeleteUnescaped, err := url.QueryUnescape(qp.Get("hardDelete"))
+	if err != nil {
+		return nil, err
+	}
+	hardDeleteParam, err := parseOptional(hardDeleteUnescaped, strconv.ParseBool)
+	if err != nil {
+		return nil, err
+	}
+	var options *graphmodel.ItemsClientDeleteGraphModelOptions
+	if hardDeleteParam != nil {
+		options = &graphmodel.ItemsClientDeleteGraphModelOptions{
+			HardDelete: hardDeleteParam,
+		}
+	}
+	respr, errRespr := i.srv.DeleteGraphModel(req.Context(), workspaceIDParam, graphModelIDParam, options)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}

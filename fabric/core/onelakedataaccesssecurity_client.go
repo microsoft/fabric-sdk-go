@@ -125,10 +125,10 @@ func (client *OneLakeDataAccessSecurityClient) createOrUpdateDataAccessRolesHand
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - itemID - The ID of the Fabric item to create or update the role on.
-//   - createOrUpdateSingleDataAccessRoleRequest - Wrapper containing exactly one data access role definition (without id).
+//   - createOrUpdateSingleDataAccessRoleRequest - A single data access role definition (without id).
 //   - options - OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleOptions contains the optional parameters for
 //     the OneLakeDataAccessSecurityClient.CreateOrUpdateSingleDataAccessRole method.
-func (client *OneLakeDataAccessSecurityClient) CreateOrUpdateSingleDataAccessRole(ctx context.Context, workspaceID string, itemID string, createOrUpdateSingleDataAccessRoleRequest CreateOrUpdateSingleDataAccessRoleRequest, options *OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleOptions) (OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleResponse, error) {
+func (client *OneLakeDataAccessSecurityClient) CreateOrUpdateSingleDataAccessRole(ctx context.Context, workspaceID string, itemID string, createOrUpdateSingleDataAccessRoleRequest DataAccessRoleBase, options *OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleOptions) (OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleResponse, error) {
 	var err error
 	const operationName = "core.OneLakeDataAccessSecurityClient.CreateOrUpdateSingleDataAccessRole"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
@@ -151,7 +151,7 @@ func (client *OneLakeDataAccessSecurityClient) CreateOrUpdateSingleDataAccessRol
 }
 
 // createOrUpdateSingleDataAccessRoleCreateRequest creates the CreateOrUpdateSingleDataAccessRole request.
-func (client *OneLakeDataAccessSecurityClient) createOrUpdateSingleDataAccessRoleCreateRequest(ctx context.Context, workspaceID string, itemID string, createOrUpdateSingleDataAccessRoleRequest CreateOrUpdateSingleDataAccessRoleRequest, options *OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleOptions) (*policy.Request, error) {
+func (client *OneLakeDataAccessSecurityClient) createOrUpdateSingleDataAccessRoleCreateRequest(ctx context.Context, workspaceID string, itemID string, createOrUpdateSingleDataAccessRoleRequest DataAccessRoleBase, options *OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/dataAccessRoles"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")

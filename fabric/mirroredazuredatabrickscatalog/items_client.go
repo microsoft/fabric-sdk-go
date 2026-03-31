@@ -144,7 +144,7 @@ func (client *ItemsClient) DeleteMirroredAzureDatabricksCatalog(ctx context.Cont
 }
 
 // deleteMirroredAzureDatabricksCatalogCreateRequest creates the DeleteMirroredAzureDatabricksCatalog request.
-func (client *ItemsClient) deleteMirroredAzureDatabricksCatalogCreateRequest(ctx context.Context, workspaceID string, mirroredAzureDatabricksCatalogID string, _ *ItemsClientDeleteMirroredAzureDatabricksCatalogOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteMirroredAzureDatabricksCatalogCreateRequest(ctx context.Context, workspaceID string, mirroredAzureDatabricksCatalogID string, options *ItemsClientDeleteMirroredAzureDatabricksCatalogOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/mirroredAzureDatabricksCatalogs/{mirroredAzureDatabricksCatalogId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -158,6 +158,11 @@ func (client *ItemsClient) deleteMirroredAzureDatabricksCatalogCreateRequest(ctx
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

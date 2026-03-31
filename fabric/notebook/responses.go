@@ -6,6 +6,21 @@
 
 package notebook
 
+// BackgroundJobsClientGetNotebookJobInstanceBetaResponse contains the response from method BackgroundJobsClient.GetNotebookJobInstanceBeta.
+type BackgroundJobsClientGetNotebookJobInstanceBetaResponse struct {
+	// An object representing notebook job instance.
+	JobInstance
+}
+
+// BackgroundJobsClientRunOnDemandNotebookResponse contains the response from method BackgroundJobsClient.RunOnDemandNotebook.
+type BackgroundJobsClientRunOnDemandNotebookResponse struct {
+	// Location contains the information returned from the Location header response.
+	Location *string
+
+	// RetryAfter contains the information returned from the Retry-After header response.
+	RetryAfter *int32
+}
+
 // ItemsClientCreateNotebookResponse contains the response from method ItemsClient.BeginCreateNotebook.
 type ItemsClientCreateNotebookResponse struct {
 	// A notebook object.

@@ -31,7 +31,7 @@ type ItemsClientGetDataAgentResponse struct {
 
 // ItemsClientListDataAgentsResponse contains the response from method ItemsClient.NewListDataAgentsPager.
 type ItemsClientListDataAgentsResponse struct {
-	// A list of Public Facing Collection Names.
+	// A list of data agents.
 	DataAgents
 }
 

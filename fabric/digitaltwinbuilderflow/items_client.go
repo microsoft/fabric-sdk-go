@@ -153,7 +153,7 @@ func (client *ItemsClient) DeleteDigitalTwinBuilderFlow(ctx context.Context, wor
 }
 
 // deleteDigitalTwinBuilderFlowCreateRequest creates the DeleteDigitalTwinBuilderFlow request.
-func (client *ItemsClient) deleteDigitalTwinBuilderFlowCreateRequest(ctx context.Context, workspaceID string, digitalTwinBuilderFlowID string, _ *ItemsClientDeleteDigitalTwinBuilderFlowOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteDigitalTwinBuilderFlowCreateRequest(ctx context.Context, workspaceID string, digitalTwinBuilderFlowID string, options *ItemsClientDeleteDigitalTwinBuilderFlowOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/digitalTwinBuilderFlows/{digitalTwinBuilderFlowId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -167,6 +167,11 @@ func (client *ItemsClient) deleteDigitalTwinBuilderFlowCreateRequest(ctx context
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

@@ -147,7 +147,7 @@ func (client *ItemsClient) DeleteSQLDatabase(ctx context.Context, workspaceID st
 }
 
 // deleteSQLDatabaseCreateRequest creates the DeleteSQLDatabase request.
-func (client *ItemsClient) deleteSQLDatabaseCreateRequest(ctx context.Context, workspaceID string, sqlDatabaseID string, _ *ItemsClientDeleteSQLDatabaseOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteSQLDatabaseCreateRequest(ctx context.Context, workspaceID string, sqlDatabaseID string, options *ItemsClientDeleteSQLDatabaseOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/{sqlDatabaseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -161,6 +161,11 @@ func (client *ItemsClient) deleteSQLDatabaseCreateRequest(ctx context.Context, w
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }
@@ -301,6 +306,76 @@ func (client *ItemsClient) getSQLDatabaseDefinitionCreateRequest(ctx context.Con
 	}
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
+}
+
+// ListRestorableDeletedDatabases - > [!NOTE] PITR from deleted databases is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// PERMISSIONS The caller must have a viewer workspace role.
+// The caller must have read and write permissions for the SQL database.
+// REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace identifier.
+//   - options - ItemsClientListRestorableDeletedDatabasesOptions contains the optional parameters for the ItemsClient.ListRestorableDeletedDatabases
+//     method.
+func (client *ItemsClient) ListRestorableDeletedDatabases(ctx context.Context, workspaceID string, options *ItemsClientListRestorableDeletedDatabasesOptions) (ItemsClientListRestorableDeletedDatabasesResponse, error) {
+	var err error
+	const operationName = "sqldatabase.ItemsClient.ListRestorableDeletedDatabases"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.listRestorableDeletedDatabasesCreateRequest(ctx, workspaceID, options)
+	if err != nil {
+		return ItemsClientListRestorableDeletedDatabasesResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return ItemsClientListRestorableDeletedDatabasesResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return ItemsClientListRestorableDeletedDatabasesResponse{}, err
+	}
+	resp, err := client.listRestorableDeletedDatabasesHandleResponse(httpResp)
+	return resp, err
+}
+
+// listRestorableDeletedDatabasesCreateRequest creates the ListRestorableDeletedDatabases request.
+func (client *ItemsClient) listRestorableDeletedDatabasesCreateRequest(ctx context.Context, workspaceID string, options *ItemsClientListRestorableDeletedDatabasesOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/restorableDeletedDatabases"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.Recursive != nil {
+		reqQP.Set("recursive", strconv.FormatBool(*options.Recursive))
+	}
+	if options != nil && options.RootFolderID != nil {
+		reqQP.Set("rootFolderId", *options.RootFolderID)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// listRestorableDeletedDatabasesHandleResponse handles the ListRestorableDeletedDatabases response.
+func (client *ItemsClient) listRestorableDeletedDatabasesHandleResponse(resp *http.Response) (ItemsClientListRestorableDeletedDatabasesResponse, error) {
+	result := ItemsClientListRestorableDeletedDatabasesResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.RestorableDeletedSQLDatabases); err != nil {
+		return ItemsClientListRestorableDeletedDatabasesResponse{}, err
+	}
+	return result, nil
 }
 
 // NewListSQLDatabasesPager - This API supports pagination [/rest/api/fabric/articles/pagination].

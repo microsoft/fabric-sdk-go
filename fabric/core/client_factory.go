@@ -55,6 +55,14 @@ func (c *ClientFactory) NewCapacitiesClient() *CapacitiesClient {
 	}
 }
 
+// NewCatalogClient creates a new instance of CatalogClient.
+func (c *ClientFactory) NewCatalogClient() *CatalogClient {
+	return &CatalogClient{
+		internal: c.internal.WithClientName("core.CatalogClient"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewConnectionsClient creates a new instance of ConnectionsClient.
 func (c *ClientFactory) NewConnectionsClient() *ConnectionsClient {
 	return &ConnectionsClient{

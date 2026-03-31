@@ -748,6 +748,10 @@ type TableMaintenanceExecutionData struct {
 	// Configures the optimization settings of the maintenance job. To skip table optimization, leave this parameter empty.
 	OptimizeSettings *OptimizeSettings
 
+	// When true, executes REORG TABLE APPLY (PURGE) to rewrite files with deletion vectors [https://docs.delta.io/latest/delta-deletion-vectors.html],
+	// physically removing deleted rows.
+	PurgeDeletionVectors *bool
+
 	// Name of the schema under which the table is created. This property is applicable only for a schema enabled Lakehouse. Max
 	// length of 128 character alphanumeric string with underscores.
 	SchemaName *string

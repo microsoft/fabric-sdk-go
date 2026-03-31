@@ -258,7 +258,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteDataPipeline() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteDataPipeline(ctx, exampleWorkspaceID, exampleDataPipelineID, nil)
+	_, err = client.DeleteDataPipeline(ctx, exampleWorkspaceID, exampleDataPipelineID, &datapipeline.ItemsClientDeleteDataPipelineOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a data pipeline example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleDataPipelineID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteDataPipeline = func(ctx context.Context, workspaceID string, dataPipelineID string, options *datapipeline.ItemsClientDeleteDataPipelineOptions) (resp azfake.Responder[datapipeline.ItemsClientDeleteDataPipelineResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataPipelineID, dataPipelineID)
+		resp = azfake.Responder[datapipeline.ItemsClientDeleteDataPipelineResponse]{}
+		resp.SetResponse(http.StatusOK, datapipeline.ItemsClientDeleteDataPipelineResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteDataPipeline(ctx, exampleWorkspaceID, exampleDataPipelineID, &datapipeline.ItemsClientDeleteDataPipelineOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

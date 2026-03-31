@@ -17,9 +17,11 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/streaming"
 
 	"github.com/microsoft/fabric-sdk-go/fabric/core"
 	"github.com/microsoft/fabric-sdk-go/internal/iruntime"
+	"github.com/microsoft/fabric-sdk-go/internal/pollers/locasync"
 )
 
 // RequirementsClient contains the methods for the Requirements group.
@@ -27,6 +29,106 @@ import (
 type RequirementsClient struct {
 	internal *azcore.Client
 	endpoint string
+}
+
+// BeginDeployApacheAirflowJobRequirementsBetaWithText - > [!NOTE] This API is part of a Beta release and is provided for
+// evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have write permissions for the Apache Airflow job.
+// REQUIRED DELEGATED SCOPES Airflow.Write.All or Item.Write.All
+// Set the beta query parameter to true to call this API.
+// When calling this API, callers must specify true as the value for the query parameter beta.
+// You can deploy requirements by either including the filePath query parameter pointing to an existing requirements file,
+// or by providing the requirements file content directly in the request body.
+// When calling this API, the Apache Airflow job must be in 'Started' state.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - apacheAirflowJobID - The Apache Airflow job ID.
+//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
+//   - options - RequirementsClientBeginDeployApacheAirflowJobRequirementsBetaWithTextOptions contains the optional parameters
+//     for the RequirementsClient.BeginDeployApacheAirflowJobRequirementsBetaWithText method.
+func (client *RequirementsClient) BeginDeployApacheAirflowJobRequirementsBetaWithText(ctx context.Context, workspaceID string, apacheAirflowJobID string, beta bool, options *RequirementsClientBeginDeployApacheAirflowJobRequirementsBetaWithTextOptions) (*runtime.Poller[RequirementsClientDeployApacheAirflowJobRequirementsBetaWithTextResponse], error) {
+	return client.beginDeployApacheAirflowJobRequirementsBetaWithText(ctx, workspaceID, apacheAirflowJobID, beta, options)
+}
+
+// DeployApacheAirflowJobRequirementsBetaWithText - > [!NOTE] This API is part of a Beta release and is provided for evaluation
+// and development purposes only. It may change based on feedback and is not recommended for production use.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have write permissions for the Apache Airflow job.
+// REQUIRED DELEGATED SCOPES Airflow.Write.All or Item.Write.All
+// Set the beta query parameter to true to call this API.
+// When calling this API, callers must specify true as the value for the query parameter beta.
+// You can deploy requirements by either including the filePath query parameter pointing to an existing requirements file,
+// or by providing the requirements file content directly in the request body.
+// When calling this API, the Apache Airflow job must be in 'Started' state.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *RequirementsClient) deployApacheAirflowJobRequirementsBetaWithText(ctx context.Context, workspaceID string, apacheAirflowJobID string, beta bool, options *RequirementsClientBeginDeployApacheAirflowJobRequirementsBetaWithTextOptions) (*http.Response, error) {
+	var err error
+	const operationName = "apacheairflowjob.RequirementsClient.BeginDeployApacheAirflowJobRequirementsBetaWithText"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.deployApacheAirflowJobRequirementsBetaWithTextCreateRequest(ctx, workspaceID, apacheAirflowJobID, beta, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// deployApacheAirflowJobRequirementsBetaWithTextCreateRequest creates the DeployApacheAirflowJobRequirementsBetaWithText request.
+func (client *RequirementsClient) deployApacheAirflowJobRequirementsBetaWithTextCreateRequest(ctx context.Context, workspaceID string, apacheAirflowJobID string, beta bool, options *RequirementsClientBeginDeployApacheAirflowJobRequirementsBetaWithTextOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/apacheAirflowJobs/{apacheAirflowJobId}/environment/deployRequirements"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if apacheAirflowJobID == "" {
+		return nil, errors.New("parameter apacheAirflowJobID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{apacheAirflowJobId}", url.PathEscape(apacheAirflowJobID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("beta", strconv.FormatBool(beta))
+	if options != nil && options.FilePath != nil {
+		reqQP.Set("filePath", *options.FilePath)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if options != nil && options.RequirementsContentRequest != nil {
+		body := streaming.NopCloser(strings.NewReader(*options.RequirementsContentRequest))
+		if err := req.SetBody(body, "text/plain"); err != nil {
+			return nil, err
+		}
+		return req, nil
+	}
+	return req, nil
 }
 
 // NewListApacheAirflowJobLibrariesBetaPager - > [!NOTE] This API is part of a Beta release and is provided for evaluation
@@ -107,6 +209,86 @@ func (client *RequirementsClient) listApacheAirflowJobLibrariesBetaHandleRespons
 }
 
 // Custom code starts below
+
+// DeployApacheAirflowJobRequirementsBetaWithText - returns RequirementsClientDeployApacheAirflowJobRequirementsBetaWithTextResponse in sync mode.
+// >  [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
+//
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS The caller must have write permissions for the Apache Airflow job.
+//
+// # REQUIRED DELEGATED SCOPES Airflow.Write.All or Item.Write.All
+//
+// Set the beta query parameter to true to call this API.
+//
+// When calling this API, callers must specify true as the value for the query parameter beta.
+//
+// You can deploy requirements by either including the filePath query parameter pointing to an existing requirements file, or by providing the requirements file content directly in the request body.
+//
+// When calling this API, the Apache Airflow job must be in 'Started' state.
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - apacheAirflowJobID - The Apache Airflow job ID.
+//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
+//   - options - RequirementsClientBeginDeployApacheAirflowJobRequirementsBetaWithTextOptions contains the optional parameters for the RequirementsClient.BeginDeployApacheAirflowJobRequirementsBetaWithText method.
+func (client *RequirementsClient) DeployApacheAirflowJobRequirementsBetaWithText(ctx context.Context, workspaceID string, apacheAirflowJobID string, beta bool, options *RequirementsClientBeginDeployApacheAirflowJobRequirementsBetaWithTextOptions) (RequirementsClientDeployApacheAirflowJobRequirementsBetaWithTextResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginDeployApacheAirflowJobRequirementsBetaWithText(ctx, workspaceID, apacheAirflowJobID, beta, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return RequirementsClientDeployApacheAirflowJobRequirementsBetaWithTextResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return RequirementsClientDeployApacheAirflowJobRequirementsBetaWithTextResponse{}, err
+	}
+	return result, err
+}
+
+// beginDeployApacheAirflowJobRequirementsBetaWithText creates the deployApacheAirflowJobRequirementsBetaWithText request.
+func (client *RequirementsClient) beginDeployApacheAirflowJobRequirementsBetaWithText(ctx context.Context, workspaceID string, apacheAirflowJobID string, beta bool, options *RequirementsClientBeginDeployApacheAirflowJobRequirementsBetaWithTextOptions) (*runtime.Poller[RequirementsClientDeployApacheAirflowJobRequirementsBetaWithTextResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.deployApacheAirflowJobRequirementsBetaWithText(ctx, workspaceID, apacheAirflowJobID, beta, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[RequirementsClientDeployApacheAirflowJobRequirementsBetaWithTextResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[RequirementsClientDeployApacheAirflowJobRequirementsBetaWithTextResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[RequirementsClientDeployApacheAirflowJobRequirementsBetaWithTextResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[RequirementsClientDeployApacheAirflowJobRequirementsBetaWithTextResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
 
 // ListApacheAirflowJobLibrariesBeta - returns array of AirflowLibrary from all pages.
 // >  [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.

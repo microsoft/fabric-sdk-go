@@ -144,7 +144,7 @@ func (client *ItemsClient) DeleteReport(ctx context.Context, workspaceID string,
 }
 
 // deleteReportCreateRequest creates the DeleteReport request.
-func (client *ItemsClient) deleteReportCreateRequest(ctx context.Context, workspaceID string, reportID string, _ *ItemsClientDeleteReportOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteReportCreateRequest(ctx context.Context, workspaceID string, reportID string, options *ItemsClientDeleteReportOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/reports/{reportId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -158,6 +158,11 @@ func (client *ItemsClient) deleteReportCreateRequest(ctx context.Context, worksp
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

@@ -41,7 +41,10 @@ type ItemsClientBeginUpdateGraphModelDefinitionOptions struct {
 
 // ItemsClientDeleteGraphModelOptions contains the optional parameters for the ItemsClient.DeleteGraphModel method.
 type ItemsClientDeleteGraphModelOptions struct {
-	// placeholder for future optional parameters
+	// Specifies whether to perform a hard delete. When set to true, the item is permanently deleted and cannot be recovered.
+	// When set to false or not specified, the item is soft-deleted if the item type
+	// supports it.
+	HardDelete *bool
 }
 
 // ItemsClientExecuteQueryBetaOptions contains the optional parameters for the ItemsClient.ExecuteQueryBeta method.

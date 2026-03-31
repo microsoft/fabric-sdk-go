@@ -265,7 +265,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteCopyJob() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteCopyJob(ctx, exampleWorkspaceID, exampleCopyJobID, nil)
+	_, err = client.DeleteCopyJob(ctx, exampleWorkspaceID, exampleCopyJobID, &copyjob.ItemsClientDeleteCopyJobOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a CopyJob example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCopyJobID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteCopyJob = func(ctx context.Context, workspaceID string, copyJobID string, options *copyjob.ItemsClientDeleteCopyJobOptions) (resp azfake.Responder[copyjob.ItemsClientDeleteCopyJobResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleCopyJobID, copyJobID)
+		resp = azfake.Responder[copyjob.ItemsClientDeleteCopyJobResponse]{}
+		resp.SetResponse(http.StatusOK, copyjob.ItemsClientDeleteCopyJobResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteCopyJob(ctx, exampleWorkspaceID, exampleCopyJobID, &copyjob.ItemsClientDeleteCopyJobOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

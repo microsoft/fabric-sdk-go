@@ -237,7 +237,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteSemanticModel() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteSemanticModel(ctx, exampleWorkspaceID, exampleSemanticModelID, nil)
+	_, err = client.DeleteSemanticModel(ctx, exampleWorkspaceID, exampleSemanticModelID, &semanticmodel.ItemsClientDeleteSemanticModelOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a semantic model example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleSemanticModelID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteSemanticModel = func(ctx context.Context, workspaceID string, semanticModelID string, options *semanticmodel.ItemsClientDeleteSemanticModelOptions) (resp azfake.Responder[semanticmodel.ItemsClientDeleteSemanticModelResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleSemanticModelID, semanticModelID)
+		resp = azfake.Responder[semanticmodel.ItemsClientDeleteSemanticModelResponse]{}
+		resp.SetResponse(http.StatusOK, semanticmodel.ItemsClientDeleteSemanticModelResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteSemanticModel(ctx, exampleWorkspaceID, exampleSemanticModelID, &semanticmodel.ItemsClientDeleteSemanticModelOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

@@ -19,6 +19,7 @@ import (
 // ServerFactory is a fake server for instances of the core.ClientFactory type.
 type ServerFactory struct {
 	CapacitiesServer                  CapacitiesServer
+	CatalogServer                     CatalogServer
 	ConnectionsServer                 ConnectionsServer
 	DeploymentPipelinesServer         DeploymentPipelinesServer
 	DomainsServer                     DomainsServer
@@ -44,6 +45,7 @@ type ServerFactoryTransport struct {
 	srv                                 *ServerFactory
 	trMu                                sync.Mutex
 	trCapacitiesServer                  *CapacitiesServerTransport
+	trCatalogServer                     *CatalogServerTransport
 	trConnectionsServer                 *ConnectionsServerTransport
 	trDeploymentPipelinesServer         *DeploymentPipelinesServerTransport
 	trDomainsServer                     *DomainsServerTransport
@@ -89,6 +91,9 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	case "CapacitiesClient":
 		initServer(s, &s.trCapacitiesServer, func() *CapacitiesServerTransport { return NewCapacitiesServerTransport(&s.srv.CapacitiesServer) })
 		resp, err = s.trCapacitiesServer.Do(req)
+	case "CatalogClient":
+		initServer(s, &s.trCatalogServer, func() *CatalogServerTransport { return NewCatalogServerTransport(&s.srv.CatalogServer) })
+		resp, err = s.trCatalogServer.Do(req)
 	case "ConnectionsClient":
 		initServer(s, &s.trConnectionsServer, func() *ConnectionsServerTransport { return NewConnectionsServerTransport(&s.srv.ConnectionsServer) })
 		resp, err = s.trConnectionsServer.Do(req)

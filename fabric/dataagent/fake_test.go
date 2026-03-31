@@ -74,9 +74,6 @@ func (testsuite *FakeTestSuite) TestItems_ListDataAgents() {
 					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
 				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
-				Properties: &dataagent.Properties{
-					OneLakeRootPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/f089354e-8366-4e18-aea3-4cb4a3a50b48/41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"),
-				},
 			},
 			{
 				Type:        to.Ptr(dataagent.ItemTypeDataAgent),
@@ -87,9 +84,6 @@ func (testsuite *FakeTestSuite) TestItems_ListDataAgents() {
 					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
 				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
-				Properties: &dataagent.Properties{
-					OneLakeRootPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/f089354e-8366-4e18-aea3-4cb4a3a50b48/d8f6cf16-3aac-4440-9d76-a03d86b7ae3e"),
-				},
 			}},
 	}
 
@@ -228,9 +222,6 @@ func (testsuite *FakeTestSuite) TestItems_GetDataAgent() {
 			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
 		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
-		Properties: &dataagent.Properties{
-			OneLakeRootPath: to.Ptr("https://onelake.dfs.fabric.microsoft.com/f089354e-8366-4e18-aea3-4cb4a3a50b48/41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"),
-		},
 	}
 
 	testsuite.serverFactory.ItemsServer.GetDataAgent = func(ctx context.Context, workspaceID string, dataAgentID string, options *dataagent.ItemsClientGetDataAgentOptions) (resp azfake.Responder[dataagent.ItemsClientGetDataAgentResponse], errResp azfake.ErrorResponder) {
@@ -304,7 +295,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteDataAgent() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteDataAgent(ctx, exampleWorkspaceID, exampleDataAgentID, nil)
+	_, err = client.DeleteDataAgent(ctx, exampleWorkspaceID, exampleDataAgentID, &dataagent.ItemsClientDeleteDataAgentOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a DataAgent example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleDataAgentID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteDataAgent = func(ctx context.Context, workspaceID string, dataAgentID string, options *dataagent.ItemsClientDeleteDataAgentOptions) (resp azfake.Responder[dataagent.ItemsClientDeleteDataAgentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		resp = azfake.Responder[dataagent.ItemsClientDeleteDataAgentResponse]{}
+		resp.SetResponse(http.StatusOK, dataagent.ItemsClientDeleteDataAgentResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteDataAgent(ctx, exampleWorkspaceID, exampleDataAgentID, &dataagent.ItemsClientDeleteDataAgentOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

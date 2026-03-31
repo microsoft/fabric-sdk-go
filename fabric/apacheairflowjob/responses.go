@@ -20,6 +20,16 @@ type EnvironmentClientGetApacheAirflowJobEnvironmentBetaResponse struct {
 	AirflowEnvironmentStatusResponse
 }
 
+// EnvironmentClientStartApacheAirflowJobEnvironmentBetaResponse contains the response from method EnvironmentClient.BeginStartApacheAirflowJobEnvironmentBeta.
+type EnvironmentClientStartApacheAirflowJobEnvironmentBetaResponse struct {
+	// placeholder for future response values
+}
+
+// EnvironmentClientStopApacheAirflowJobEnvironmentBetaResponse contains the response from method EnvironmentClient.BeginStopApacheAirflowJobEnvironmentBeta.
+type EnvironmentClientStopApacheAirflowJobEnvironmentBetaResponse struct {
+	// placeholder for future response values
+}
+
 // FilesClientCreateOrUpdateApacheAirflowJobFileBetaWithBinaryResponse contains the response from method FilesClient.CreateOrUpdateApacheAirflowJobFileBetaWithBinary.
 type FilesClientCreateOrUpdateApacheAirflowJobFileBetaWithBinaryResponse struct {
 	// placeholder for future response values
@@ -107,6 +117,11 @@ type PoolManagementClientListAirflowPoolTemplatesBetaResponse struct {
 	AirflowPoolTemplates
 }
 
+// RequirementsClientDeployApacheAirflowJobRequirementsBetaWithTextResponse contains the response from method RequirementsClient.BeginDeployApacheAirflowJobRequirementsBetaWithText.
+type RequirementsClientDeployApacheAirflowJobRequirementsBetaWithTextResponse struct {
+	// placeholder for future response values
+}
+
 // RequirementsClientListApacheAirflowJobLibrariesBetaResponse contains the response from method RequirementsClient.NewListApacheAirflowJobLibrariesBetaPager.
 type RequirementsClientListApacheAirflowJobLibrariesBetaResponse struct {
 	// Apache Airflow libraries response.
@@ -117,6 +132,11 @@ type RequirementsClientListApacheAirflowJobLibrariesBetaResponse struct {
 type SettingsClientGetApacheAirflowJobSettingsBetaResponse struct {
 	// Apache Airflow environment settings response.
 	AirflowEnvironmentSettingsResponse
+}
+
+// SettingsClientUpdateApacheAirflowJobSettingsBetaResponse contains the response from method SettingsClient.BeginUpdateApacheAirflowJobSettingsBeta.
+type SettingsClientUpdateApacheAirflowJobSettingsBetaResponse struct {
+	// placeholder for future response values
 }
 
 // WorkspaceSettingsClientGetAirflowWorkspaceSettingsBetaResponse contains the response from method WorkspaceSettingsClient.GetAirflowWorkspaceSettingsBeta.

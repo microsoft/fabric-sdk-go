@@ -228,7 +228,7 @@ func (testsuite *FakeTestSuite) TestItems_UpdateMirroredDatabase() {
 func (testsuite *FakeTestSuite) TestItems_DeleteMirroredDatabase() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Delete a mirroed database example"},
+		"example-id": {"Delete a mirrored database example"},
 	})
 	var exampleWorkspaceID string
 	var exampleMirroredDatabaseID string
@@ -244,7 +244,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteMirroredDatabase() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteMirroredDatabase(ctx, exampleWorkspaceID, exampleMirroredDatabaseID, nil)
+	_, err = client.DeleteMirroredDatabase(ctx, exampleWorkspaceID, exampleMirroredDatabaseID, &mirroreddatabase.ItemsClientDeleteMirroredDatabaseOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a mirrored database example"},
+	})
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleMirroredDatabaseID = "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2"
+
+	testsuite.serverFactory.ItemsServer.DeleteMirroredDatabase = func(ctx context.Context, workspaceID string, mirroredDatabaseID string, options *mirroreddatabase.ItemsClientDeleteMirroredDatabaseOptions) (resp azfake.Responder[mirroreddatabase.ItemsClientDeleteMirroredDatabaseResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleMirroredDatabaseID, mirroredDatabaseID)
+		resp = azfake.Responder[mirroreddatabase.ItemsClientDeleteMirroredDatabaseResponse]{}
+		resp.SetResponse(http.StatusOK, mirroreddatabase.ItemsClientDeleteMirroredDatabaseResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteMirroredDatabase(ctx, exampleWorkspaceID, exampleMirroredDatabaseID, &mirroreddatabase.ItemsClientDeleteMirroredDatabaseOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

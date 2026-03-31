@@ -143,7 +143,7 @@ func (client *ItemsClient) DeleteLakehouse(ctx context.Context, workspaceID stri
 }
 
 // deleteLakehouseCreateRequest creates the DeleteLakehouse request.
-func (client *ItemsClient) deleteLakehouseCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, _ *ItemsClientDeleteLakehouseOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteLakehouseCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, options *ItemsClientDeleteLakehouseOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -157,6 +157,11 @@ func (client *ItemsClient) deleteLakehouseCreateRequest(ctx context.Context, wor
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

@@ -406,34 +406,32 @@ func ExampleOneLakeDataAccessSecurityClient_CreateOrUpdateSingleDataAccessRole()
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewOneLakeDataAccessSecurityClient().CreateOrUpdateSingleDataAccessRole(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff222", "25bac802-080d-4f73-8a42-1b406eb1fceb", core.CreateOrUpdateSingleDataAccessRoleRequest{
-		Value: []core.DataAccessRoleBase{
+	_, err = clientFactory.NewOneLakeDataAccessSecurityClient().CreateOrUpdateSingleDataAccessRole(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff222", "25bac802-080d-4f73-8a42-1b406eb1fceb", core.DataAccessRoleBase{
+		Name: to.Ptr("DefaultReader"),
+		DecisionRules: []core.DecisionRule{
 			{
-				Name: to.Ptr("DefaultReader"),
-				DecisionRules: []core.DecisionRule{
+				Effect: to.Ptr(core.EffectPermit),
+				Permission: []core.PermissionScope{
 					{
-						Effect: to.Ptr(core.EffectPermit),
-						Permission: []core.PermissionScope{
-							{
-								AttributeName: to.Ptr(core.AttributeNamePath),
-								AttributeValueIncludedIn: []string{
-									"*"},
-							},
-							{
-								AttributeName: to.Ptr(core.AttributeNameAction),
-								AttributeValueIncludedIn: []string{
-									"Read"},
-							}},
+						AttributeName: to.Ptr(core.AttributeNamePath),
+						AttributeValueIncludedIn: []string{
+							"*"},
+					},
+					{
+						AttributeName: to.Ptr(core.AttributeNameAction),
+						AttributeValueIncludedIn: []string{
+							"Read"},
 					}},
-				Members: &core.Members{
-					FabricItemMembers: []core.FabricItemMember{
-						{
-							ItemAccess: []core.ItemAccess{
-								core.ItemAccessReadAll},
-							SourcePath: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff222/25bac802-080d-4f73-8a42-1b406eb1fceb"),
-						}},
-				},
 			}},
+		Kind: to.Ptr(core.DataAccessRoleKindPolicy),
+		Members: &core.Members{
+			FabricItemMembers: []core.FabricItemMember{
+				{
+					ItemAccess: []core.ItemAccess{
+						core.ItemAccessReadAll},
+					SourcePath: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff222/25bac802-080d-4f73-8a42-1b406eb1fceb"),
+				}},
+		},
 	}, &core.OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleOptions{DataAccessRoleConflictPolicy: to.Ptr(core.DataAccessRoleConflictPolicyOverwrite),
 		IfMatch:     nil,
 		IfNoneMatch: nil,

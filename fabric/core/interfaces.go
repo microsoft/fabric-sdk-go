@@ -6,6 +6,15 @@
 
 package core
 
+// CatalogEntryClassification provides polymorphic access to related types.
+// Call the interface's GetCatalogEntry() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *CatalogEntry, *ItemCatalogEntry
+type CatalogEntryClassification interface {
+	// GetCatalogEntry returns the CatalogEntry content of the underlying type.
+	GetCatalogEntry() *CatalogEntry
+}
+
 // ConnectionClassification provides polymorphic access to related types.
 // Call the interface's GetConnection() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:

@@ -91,3 +91,14 @@ type SQLAuditSettingsClientUpdateSQLAuditSettingsResponse struct {
 	// The current state of audit settings for an item.
 	SQLAuditSettings
 }
+
+// SQLPoolsClientGetSQLPoolsConfigurationBetaResponse contains the response from method SQLPoolsClient.GetSQLPoolsConfigurationBeta.
+type SQLPoolsClientGetSQLPoolsConfigurationBetaResponse struct {
+	// SQL pools configuration response.
+	SQLPoolsConfigurationResponse
+}
+
+// SQLPoolsClientUpdateSQLPoolsConfigurationBetaResponse contains the response from method SQLPoolsClient.UpdateSQLPoolsConfigurationBeta.
+type SQLPoolsClientUpdateSQLPoolsConfigurationBetaResponse struct {
+	// placeholder for future response values
+}

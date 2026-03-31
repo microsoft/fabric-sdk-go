@@ -147,7 +147,7 @@ func (client *ItemsClient) DeleteNotebook(ctx context.Context, workspaceID strin
 }
 
 // deleteNotebookCreateRequest creates the DeleteNotebook request.
-func (client *ItemsClient) deleteNotebookCreateRequest(ctx context.Context, workspaceID string, notebookID string, _ *ItemsClientDeleteNotebookOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteNotebookCreateRequest(ctx context.Context, workspaceID string, notebookID string, options *ItemsClientDeleteNotebookOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/notebooks/{notebookId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -161,6 +161,11 @@ func (client *ItemsClient) deleteNotebookCreateRequest(ctx context.Context, work
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

@@ -266,7 +266,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteUserDataFunction() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteUserDataFunction(ctx, exampleWorkspaceID, exampleUserDataFunctionID, nil)
+	_, err = client.DeleteUserDataFunction(ctx, exampleWorkspaceID, exampleUserDataFunctionID, &userdatafunction.ItemsClientDeleteUserDataFunctionOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a UserDataFunction example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleUserDataFunctionID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteUserDataFunction = func(ctx context.Context, workspaceID string, userDataFunctionID string, options *userdatafunction.ItemsClientDeleteUserDataFunctionOptions) (resp azfake.Responder[userdatafunction.ItemsClientDeleteUserDataFunctionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleUserDataFunctionID, userDataFunctionID)
+		resp = azfake.Responder[userdatafunction.ItemsClientDeleteUserDataFunctionResponse]{}
+		resp.SetResponse(http.StatusOK, userdatafunction.ItemsClientDeleteUserDataFunctionResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteUserDataFunction(ctx, exampleWorkspaceID, exampleUserDataFunctionID, &userdatafunction.ItemsClientDeleteUserDataFunctionOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

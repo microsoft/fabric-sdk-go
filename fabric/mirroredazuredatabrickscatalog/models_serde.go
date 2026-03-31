@@ -880,7 +880,7 @@ func (u UpdateMirroredAzureDatabricksCatalogRequest) MarshalJSON() ([]byte, erro
 	objectMap := make(map[string]any)
 	populate(objectMap, "description", u.Description)
 	populate(objectMap, "displayName", u.DisplayName)
-	populate(objectMap, "publicUpdateableExtendedProperties", u.PublicUpdateableExtendedProperties)
+	populate(objectMap, "properties", u.Properties)
 	return json.Marshal(objectMap)
 }
 
@@ -899,8 +899,8 @@ func (u *UpdateMirroredAzureDatabricksCatalogRequest) UnmarshalJSON(data []byte)
 		case "displayName":
 			err = unpopulate(val, "DisplayName", &u.DisplayName)
 			delete(rawMsg, key)
-		case "publicUpdateableExtendedProperties":
-			err = unpopulate(val, "PublicUpdateableExtendedProperties", &u.PublicUpdateableExtendedProperties)
+		case "properties":
+			err = unpopulate(val, "Properties", &u.Properties)
 			delete(rawMsg, key)
 		}
 		if err != nil {

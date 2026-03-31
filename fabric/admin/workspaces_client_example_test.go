@@ -54,6 +54,15 @@ func ExampleWorkspacesClient_NewListWorkspacesPager_getAListOfWorkspacesExample(
 		// 			DomainID: to.Ptr("039bd896-b39c-4540-93e3-e9926de135f9"),
 		// 			ID: to.Ptr("41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"),
 		// 			State: to.Ptr(admin.WorkspaceStateActive),
+		// 			Tags: []admin.WorkspaceAppliedTag{
+		// 				{
+		// 					DisplayName: to.Ptr("Finance"),
+		// 					ID: to.Ptr("b3f2c8e9-4d8e-4a7c-9a32-f8c1b2e4d6af"),
+		// 				},
+		// 				{
+		// 					DisplayName: to.Ptr("Production"),
+		// 					ID: to.Ptr("6f1a8d3b-92c4-4f67-8c2d-1e5a9b7f4a23"),
+		// 			}},
 		// 	}},
 		// }
 	}
@@ -186,6 +195,11 @@ func ExampleWorkspacesClient_GetWorkspace() {
 	// 	DomainID: to.Ptr("8badadb6-9945-4e07-8134-00e0defec00b"),
 	// 	ID: to.Ptr("41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"),
 	// 	State: to.Ptr(admin.WorkspaceStateActive),
+	// 	Tags: []admin.WorkspaceAppliedTag{
+	// 		{
+	// 			DisplayName: to.Ptr("Finance"),
+	// 			ID: to.Ptr("b3f2c8e9-4d8e-4a7c-9a32-f8c1b2e4d6af"),
+	// 	}},
 	// }
 }
 

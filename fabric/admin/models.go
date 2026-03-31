@@ -1196,6 +1196,9 @@ type Workspace struct {
 
 	// READ-ONLY; The domain ID of the workspace.
 	DomainID *string
+
+	// READ-ONLY; List of applied tags.
+	Tags []WorkspaceAppliedTag
 }
 
 // WorkspaceAccessDetail - Workspace permission details.
@@ -1220,6 +1223,15 @@ type WorkspaceAccessDetails struct {
 type WorkspaceAccessDetailsResponse struct {
 	// A list of users with access to an entity.
 	AccessDetails []WorkspaceAccessDetails
+}
+
+// WorkspaceAppliedTag - Represents an applied tag.
+type WorkspaceAppliedTag struct {
+	// REQUIRED; The name of the tag.
+	DisplayName *string
+
+	// REQUIRED; The tag ID.
+	ID *string
 }
 
 // WorkspaceOutboundConnections - Represents the complete set of outbound access protection cloud connection rules configured

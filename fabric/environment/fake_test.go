@@ -1126,7 +1126,7 @@ func (testsuite *FakeTestSuite) TestItems_UpdateEnvironment() {
 func (testsuite *FakeTestSuite) TestItems_DeleteEnvironment() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Delete a environment example"},
+		"example-id": {"Delete an environment example"},
 	})
 	var exampleWorkspaceID string
 	var exampleEnvironmentID string
@@ -1142,7 +1142,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteEnvironment() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteEnvironment(ctx, exampleWorkspaceID, exampleEnvironmentID, nil)
+	_, err = client.DeleteEnvironment(ctx, exampleWorkspaceID, exampleEnvironmentID, &environment.ItemsClientDeleteEnvironmentOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete an environment example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleEnvironmentID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteEnvironment = func(ctx context.Context, workspaceID string, environmentID string, options *environment.ItemsClientDeleteEnvironmentOptions) (resp azfake.Responder[environment.ItemsClientDeleteEnvironmentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
+		resp = azfake.Responder[environment.ItemsClientDeleteEnvironmentResponse]{}
+		resp.SetResponse(http.StatusOK, environment.ItemsClientDeleteEnvironmentResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteEnvironment(ctx, exampleWorkspaceID, exampleEnvironmentID, &environment.ItemsClientDeleteEnvironmentOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

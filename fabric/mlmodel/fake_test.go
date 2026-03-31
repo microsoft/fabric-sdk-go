@@ -231,7 +231,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteMLModel() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteMLModel(ctx, exampleWorkspaceID, exampleMlModelID, nil)
+	_, err = client.DeleteMLModel(ctx, exampleWorkspaceID, exampleMlModelID, &mlmodel.ItemsClientDeleteMLModelOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a machine learning model example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleMlModelID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteMLModel = func(ctx context.Context, workspaceID string, mlModelID string, options *mlmodel.ItemsClientDeleteMLModelOptions) (resp azfake.Responder[mlmodel.ItemsClientDeleteMLModelResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleMlModelID, mlModelID)
+		resp = azfake.Responder[mlmodel.ItemsClientDeleteMLModelResponse]{}
+		resp.SetResponse(http.StatusOK, mlmodel.ItemsClientDeleteMLModelResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteMLModel(ctx, exampleWorkspaceID, exampleMlModelID, &mlmodel.ItemsClientDeleteMLModelOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

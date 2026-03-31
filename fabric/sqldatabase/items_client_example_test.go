@@ -169,6 +169,35 @@ func ExampleItemsClient_BeginCreateSQLDatabase_createASqlDatabaseWithPayloadExam
 }
 
 // Generated from example definition
+func ExampleItemsClient_BeginCreateSQLDatabase_createASqlDatabaseWithPayloadOfRestoreDeletedDatabaseExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := sqldatabase.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginCreateSQLDatabase(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", sqldatabase.CreateSQLDatabaseRequest{
+		Description: to.Ptr("A SQLDatabase description."),
+		CreationPayload: &sqldatabase.RestoreDeletedDatabaseCreationPayload{
+			CreationMode:                  to.Ptr(sqldatabase.CreationModeRestoreDeletedDatabase),
+			RestorableDeletedDatabaseName: to.Ptr("deletedDatabaseName"),
+			RestorePointInTime:            to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-12-01T00:00:00.000Z"); return t }()),
+		},
+		DisplayName: to.Ptr("SQLDatabase1"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
 func ExampleItemsClient_GetSQLDatabase() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -240,7 +269,7 @@ func ExampleItemsClient_UpdateSQLDatabase() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_DeleteSQLDatabase() {
+func ExampleItemsClient_DeleteSQLDatabase_deleteASqlDatabaseExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -250,7 +279,24 @@ func ExampleItemsClient_DeleteSQLDatabase() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewItemsClient().DeleteSQLDatabase(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", nil)
+	_, err = clientFactory.NewItemsClient().DeleteSQLDatabase(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", &sqldatabase.ItemsClientDeleteSQLDatabaseOptions{HardDelete: nil})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_DeleteSQLDatabase_hardDeleteASqlDatabaseExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := sqldatabase.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewItemsClient().DeleteSQLDatabase(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", &sqldatabase.ItemsClientDeleteSQLDatabaseOptions{HardDelete: to.Ptr(true)})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -349,4 +395,47 @@ func ExampleItemsClient_BeginRevalidateCMK() {
 	if err != nil {
 		log.Fatalf("failed to pull the result: %v", err)
 	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_ListRestorableDeletedDatabases() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := sqldatabase.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewItemsClient().ListRestorableDeletedDatabases(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", &sqldatabase.ItemsClientListRestorableDeletedDatabasesOptions{Recursive: nil,
+		RootFolderID: nil,
+	})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.RestorableDeletedSQLDatabases = sqldatabase.RestorableDeletedSQLDatabases{
+	// 	Value: []sqldatabase.RestorableDeletedSQLDatabase{
+	// 		{
+	// 			DisplayName: to.Ptr("SQLDatabase1"),
+	// 			Properties: &sqldatabase.RestorableDeletedSQLDatabaseProperties{
+	// 				DeletionTimestamp: to.Ptr("2024-12-01T00:00:00.000Z"),
+	// 				EarliestRestorePoint: to.Ptr("2024-12-01T00:00:00.000Z"),
+	// 				LatestRestorePoint: to.Ptr("2024-12-02T00:00:00.000Z"),
+	// 				RestorableDeletedDatabaseName: to.Ptr("SQLDatabase1,134140258788170000"),
+	// 			},
+	// 		},
+	// 		{
+	// 			DisplayName: to.Ptr("SQLDatabase2"),
+	// 			Properties: &sqldatabase.RestorableDeletedSQLDatabaseProperties{
+	// 				DeletionTimestamp: to.Ptr("2024-12-01T00:00:00.000Z"),
+	// 				EarliestRestorePoint: to.Ptr("2024-12-01T00:00:00.000Z"),
+	// 				LatestRestorePoint: to.Ptr("2024-12-02T00:00:00.000Z"),
+	// 				RestorableDeletedDatabaseName: to.Ptr("SQLDatabase2,134140258788470000"),
+	// 			},
+	// 	}},
+	// }
 }

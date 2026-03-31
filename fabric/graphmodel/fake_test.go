@@ -281,7 +281,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteGraphModel() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteGraphModel(ctx, exampleWorkspaceID, exampleGraphModelID, nil)
+	_, err = client.DeleteGraphModel(ctx, exampleWorkspaceID, exampleGraphModelID, &graphmodel.ItemsClientDeleteGraphModelOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a GraphModel example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleGraphModelID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteGraphModel = func(ctx context.Context, workspaceID string, graphModelID string, options *graphmodel.ItemsClientDeleteGraphModelOptions) (resp azfake.Responder[graphmodel.ItemsClientDeleteGraphModelResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleGraphModelID, graphModelID)
+		resp = azfake.Responder[graphmodel.ItemsClientDeleteGraphModelResponse]{}
+		resp.SetResponse(http.StatusOK, graphmodel.ItemsClientDeleteGraphModelResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteGraphModel(ctx, exampleWorkspaceID, exampleGraphModelID, &graphmodel.ItemsClientDeleteGraphModelOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

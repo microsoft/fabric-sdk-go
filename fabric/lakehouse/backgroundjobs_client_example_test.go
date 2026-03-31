@@ -19,6 +19,28 @@ import (
 )
 
 // Generated from example definition
+func ExampleBackgroundJobsClient_RunOnDemandTableMaintenance_runTableMaintenanceWithDeletionVectorPurgeEnabled() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := lakehouse.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewBackgroundJobsClient().RunOnDemandTableMaintenance(ctx, "4b218778-e7a5-4d73-8187-f10824047715", "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7", lakehouse.RunOnDemandTableMaintenanceRequest{
+		ExecutionData: &lakehouse.TableMaintenanceExecutionData{
+			PurgeDeletionVectors: to.Ptr(true),
+			TableName:            to.Ptr("table1"),
+		},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
 func ExampleBackgroundJobsClient_RunOnDemandTableMaintenance_runTableMaintenanceWithOptimizeZOrderAndVacuumEnabledForSchemaEnabledLakehouse() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {

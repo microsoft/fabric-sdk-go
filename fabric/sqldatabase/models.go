@@ -181,10 +181,10 @@ type Properties struct {
 	// The collation of the SQL database.
 	Collation *string
 
-	// The earliest restore point of the database in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	// ISO 8601 timestamp for the earliest restore point of the database in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
 	EarliestRestorePoint *time.Time
 
-	// The latest restore point of the database in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	// ISO 8601 timestamp for the latest restore point of the database in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
 	LatestRestorePoint *time.Time
 }
 
@@ -198,6 +198,63 @@ type PublicDefinitionPart struct {
 
 	// The payload type.
 	PayloadType *PayloadType
+}
+
+// RestorableDeletedSQLDatabase - A restorable deleted SQL database object.
+type RestorableDeletedSQLDatabase struct {
+	// The Fabric display name of the restorable deleted SQL database.
+	DisplayName *string
+
+	// The restorable deleted SQL database properties.
+	Properties *RestorableDeletedSQLDatabaseProperties
+}
+
+// RestorableDeletedSQLDatabaseProperties - The restorable deleted SQL database properties.
+type RestorableDeletedSQLDatabaseProperties struct {
+	// REQUIRED; ISO 8601 timestamp for the deletion of the database in UTC (e.g., '2024-12-01T00:00:00Z').
+	DeletionTimestamp *string
+
+	// REQUIRED; ISO 8601 timestamp for the earliest restore point of the database in UTC (e.g., '2024-12-01T00:00:00Z').
+	EarliestRestorePoint *string
+
+	// REQUIRED; ISO 8601 timestamp for the latest restore point of the database in UTC (e.g., '2024-12-02T00:00:00Z').
+	LatestRestorePoint *string
+
+	// REQUIRED; The name of the restorable deleted SQL database. This is the name that will be used in the creation payload when
+	// restoring from this restorable deleted database.
+	RestorableDeletedDatabaseName *string
+}
+
+// RestorableDeletedSQLDatabases - A list of restorable deleted SQL databases.
+type RestorableDeletedSQLDatabases struct {
+	// REQUIRED; Properties of a restorable deleted SQL database.
+	Value []RestorableDeletedSQLDatabase
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
+// RestoreDeletedDatabaseCreationPayload - > [!NOTE] PITR from deleted databases is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// Creates a SQL database item by restoring from a restorable deleted database.
+type RestoreDeletedDatabaseCreationPayload struct {
+	// REQUIRED; The creation mode of the SQL database creation.
+	CreationMode *CreationMode
+
+	// REQUIRED; Set the name for the restorable deleted database to be restored.
+	RestorableDeletedDatabaseName *string
+
+	// REQUIRED; Set the time to restore the source database in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	RestorePointInTime *time.Time
+}
+
+// GetCreationPayload implements the CreationPayloadClassification interface for type RestoreDeletedDatabaseCreationPayload.
+func (r *RestoreDeletedDatabaseCreationPayload) GetCreationPayload() *CreationPayload {
+	return &CreationPayload{
+		CreationMode: r.CreationMode,
+	}
 }
 
 // RestoreSQLDatabaseCreationPayload - Create a SQL database item creation payload with restoring from a source database

@@ -70,3 +70,11 @@ func (c *ClientFactory) NewSQLAuditSettingsClient() *SQLAuditSettingsClient {
 		endpoint: c.endpoint,
 	}
 }
+
+// NewSQLPoolsClient creates a new instance of SQLPoolsClient.
+func (c *ClientFactory) NewSQLPoolsClient() *SQLPoolsClient {
+	return &SQLPoolsClient{
+		internal: c.internal.WithClientName("warehouse.SQLPoolsClient"),
+		endpoint: c.endpoint,
+	}
+}

@@ -28,19 +28,27 @@ type SettingsServer struct {
 	// GetApacheAirflowJobSettingsBeta is the fake for method SettingsClient.GetApacheAirflowJobSettingsBeta
 	// HTTP status codes to indicate success: http.StatusOK
 	GetApacheAirflowJobSettingsBeta func(ctx context.Context, workspaceID string, apacheAirflowJobID string, beta bool, options *apacheairflowjob.SettingsClientGetApacheAirflowJobSettingsBetaOptions) (resp azfake.Responder[apacheairflowjob.SettingsClientGetApacheAirflowJobSettingsBetaResponse], errResp azfake.ErrorResponder)
+
+	// BeginUpdateApacheAirflowJobSettingsBeta is the fake for method SettingsClient.BeginUpdateApacheAirflowJobSettingsBeta
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
+	BeginUpdateApacheAirflowJobSettingsBeta func(ctx context.Context, workspaceID string, apacheAirflowJobID string, beta bool, airflowEnvironmentSettingsRequest apacheairflowjob.AirflowEnvironmentSettingsRequest, options *apacheairflowjob.SettingsClientBeginUpdateApacheAirflowJobSettingsBetaOptions) (resp azfake.PollerResponder[apacheairflowjob.SettingsClientUpdateApacheAirflowJobSettingsBetaResponse], errResp azfake.ErrorResponder)
 }
 
 // NewSettingsServerTransport creates a new instance of SettingsServerTransport with the provided implementation.
 // The returned SettingsServerTransport instance is connected to an instance of apacheairflowjob.SettingsClient via the
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewSettingsServerTransport(srv *SettingsServer) *SettingsServerTransport {
-	return &SettingsServerTransport{srv: srv}
+	return &SettingsServerTransport{
+		srv:                                     srv,
+		beginUpdateApacheAirflowJobSettingsBeta: newTracker[azfake.PollerResponder[apacheairflowjob.SettingsClientUpdateApacheAirflowJobSettingsBetaResponse]](),
+	}
 }
 
 // SettingsServerTransport connects instances of apacheairflowjob.SettingsClient to instances of SettingsServer.
 // Don't use this type directly, use NewSettingsServerTransport instead.
 type SettingsServerTransport struct {
-	srv *SettingsServer
+	srv                                     *SettingsServer
+	beginUpdateApacheAirflowJobSettingsBeta *tracker[azfake.PollerResponder[apacheairflowjob.SettingsClientUpdateApacheAirflowJobSettingsBetaResponse]]
 }
 
 // Do implements the policy.Transporter interface for SettingsServerTransport.
@@ -70,6 +78,8 @@ func (s *SettingsServerTransport) dispatchToMethodFake(req *http.Request, method
 			switch method {
 			case "SettingsClient.GetApacheAirflowJobSettingsBeta":
 				res.resp, res.err = s.dispatchGetApacheAirflowJobSettingsBeta(req)
+			case "SettingsClient.BeginUpdateApacheAirflowJobSettingsBeta":
+				res.resp, res.err = s.dispatchBeginUpdateApacheAirflowJobSettingsBeta(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -128,6 +138,63 @@ func (s *SettingsServerTransport) dispatchGetApacheAirflowJobSettingsBeta(req *h
 	if err != nil {
 		return nil, err
 	}
+	return resp, nil
+}
+
+func (s *SettingsServerTransport) dispatchBeginUpdateApacheAirflowJobSettingsBeta(req *http.Request) (*http.Response, error) {
+	if s.srv.BeginUpdateApacheAirflowJobSettingsBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginUpdateApacheAirflowJobSettingsBeta not implemented")}
+	}
+	beginUpdateApacheAirflowJobSettingsBeta := s.beginUpdateApacheAirflowJobSettingsBeta.get(req)
+	if beginUpdateApacheAirflowJobSettingsBeta == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/apacheAirflowJobs/(?P<apacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environment/updateSettings`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 3 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		body, err := server.UnmarshalRequestAsJSON[apacheairflowjob.AirflowEnvironmentSettingsRequest](req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("apacheAirflowJobId")])
+		if err != nil {
+			return nil, err
+		}
+		betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
+		if err != nil {
+			return nil, err
+		}
+		betaParam, err := strconv.ParseBool(betaUnescaped)
+		if err != nil {
+			return nil, err
+		}
+		respr, errRespr := s.srv.BeginUpdateApacheAirflowJobSettingsBeta(req.Context(), workspaceIDParam, apacheAirflowJobIDParam, betaParam, body, nil)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginUpdateApacheAirflowJobSettingsBeta = &respr
+		s.beginUpdateApacheAirflowJobSettingsBeta.add(req, beginUpdateApacheAirflowJobSettingsBeta)
+	}
+
+	resp, err := server.PollerResponderNext(beginUpdateApacheAirflowJobSettingsBeta, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
+		s.beginUpdateApacheAirflowJobSettingsBeta.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginUpdateApacheAirflowJobSettingsBeta) {
+		s.beginUpdateApacheAirflowJobSettingsBeta.remove(req)
+	}
+
 	return resp, nil
 }
 

@@ -14,7 +14,10 @@ type ItemsClientBeginCreateWarehouseOptions struct {
 
 // ItemsClientDeleteWarehouseOptions contains the optional parameters for the ItemsClient.DeleteWarehouse method.
 type ItemsClientDeleteWarehouseOptions struct {
-	// placeholder for future optional parameters
+	// Specifies whether to perform a hard delete. When set to true, the item is permanently deleted and cannot be recovered.
+	// When set to false or not specified, the item is soft-deleted if the item type
+	// supports it.
+	HardDelete *bool
 }
 
 // ItemsClientGetConnectionStringOptions contains the optional parameters for the ItemsClient.GetConnectionString method.
@@ -105,5 +108,17 @@ type SQLAuditSettingsClientSetAuditActionsAndGroupsOptions struct {
 // SQLAuditSettingsClientUpdateSQLAuditSettingsOptions contains the optional parameters for the SQLAuditSettingsClient.UpdateSQLAuditSettings
 // method.
 type SQLAuditSettingsClientUpdateSQLAuditSettingsOptions struct {
+	// placeholder for future optional parameters
+}
+
+// SQLPoolsClientGetSQLPoolsConfigurationBetaOptions contains the optional parameters for the SQLPoolsClient.GetSQLPoolsConfigurationBeta
+// method.
+type SQLPoolsClientGetSQLPoolsConfigurationBetaOptions struct {
+	// placeholder for future optional parameters
+}
+
+// SQLPoolsClientUpdateSQLPoolsConfigurationBetaOptions contains the optional parameters for the SQLPoolsClient.UpdateSQLPoolsConfigurationBeta
+// method.
+type SQLPoolsClientUpdateSQLPoolsConfigurationBetaOptions struct {
 	// placeholder for future optional parameters
 }

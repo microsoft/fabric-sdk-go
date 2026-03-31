@@ -1604,6 +1604,7 @@ func (t *Table) UnmarshalJSON(data []byte) error {
 func (t TableMaintenanceExecutionData) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "optimizeSettings", t.OptimizeSettings)
+	populate(objectMap, "purgeDeletionVectors", t.PurgeDeletionVectors)
 	populate(objectMap, "schemaName", t.SchemaName)
 	populate(objectMap, "tableName", t.TableName)
 	populate(objectMap, "vacuumSettings", t.VacuumSettings)
@@ -1621,6 +1622,9 @@ func (t *TableMaintenanceExecutionData) UnmarshalJSON(data []byte) error {
 		switch key {
 		case "optimizeSettings":
 			err = unpopulate(val, "OptimizeSettings", &t.OptimizeSettings)
+			delete(rawMsg, key)
+		case "purgeDeletionVectors":
+			err = unpopulate(val, "PurgeDeletionVectors", &t.PurgeDeletionVectors)
 			delete(rawMsg, key)
 		case "schemaName":
 			err = unpopulate(val, "SchemaName", &t.SchemaName)

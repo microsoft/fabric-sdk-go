@@ -153,7 +153,7 @@ func (client *ItemsClient) DeleteEventSchemaSet(ctx context.Context, workspaceID
 }
 
 // deleteEventSchemaSetCreateRequest creates the DeleteEventSchemaSet request.
-func (client *ItemsClient) deleteEventSchemaSetCreateRequest(ctx context.Context, workspaceID string, eventSchemaSetID string, _ *ItemsClientDeleteEventSchemaSetOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteEventSchemaSetCreateRequest(ctx context.Context, workspaceID string, eventSchemaSetID string, options *ItemsClientDeleteEventSchemaSetOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/eventSchemaSets/{eventSchemaSetId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -167,6 +167,11 @@ func (client *ItemsClient) deleteEventSchemaSetCreateRequest(ctx context.Context
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

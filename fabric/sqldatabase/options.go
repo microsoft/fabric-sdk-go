@@ -38,12 +38,28 @@ type ItemsClientBeginUpdateSQLDatabasesDefinitionOptions struct {
 
 // ItemsClientDeleteSQLDatabaseOptions contains the optional parameters for the ItemsClient.DeleteSQLDatabase method.
 type ItemsClientDeleteSQLDatabaseOptions struct {
-	// placeholder for future optional parameters
+	// Specifies whether to perform a hard delete. When set to true, the item is permanently deleted and cannot be recovered.
+	// When set to false or not specified, the item is soft-deleted if the item type
+	// supports it.
+	HardDelete *bool
 }
 
 // ItemsClientGetSQLDatabaseOptions contains the optional parameters for the ItemsClient.GetSQLDatabase method.
 type ItemsClientGetSQLDatabaseOptions struct {
 	// placeholder for future optional parameters
+}
+
+// ItemsClientListRestorableDeletedDatabasesOptions contains the optional parameters for the ItemsClient.ListRestorableDeletedDatabases
+// method.
+type ItemsClientListRestorableDeletedDatabasesOptions struct {
+	// Lists items in a folder and its nested folders, or just a folder only. True - All items in the folder and its nested folders
+	// are listed, False - Only items in the folder are listed. The default value
+	// is true.
+	Recursive *bool
+
+	// This parameter allows users to filter items based on a specific root folder. If not provided, the workspace is used as
+	// the root folder.
+	RootFolderID *string
 }
 
 // ItemsClientListSQLDatabasesOptions contains the optional parameters for the ItemsClient.NewListSQLDatabasesPager method.

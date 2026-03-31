@@ -328,7 +328,7 @@ func (testsuite *FakeTestSuite) TestItems_UpdateMirroredAzureDatabricksCatalog()
 	exampleUpdateMirroredAzureDatabricksCatalogRequest = mirroredazuredatabrickscatalog.UpdateMirroredAzureDatabricksCatalogRequest{
 		Description: to.Ptr("A new description for mirroredAzureDatabricksCatalog."),
 		DisplayName: to.Ptr("MirroredAzureDatabricksCatalog_New_Name"),
-		PublicUpdateableExtendedProperties: &mirroredazuredatabrickscatalog.UpdatePayload{
+		Properties: &mirroredazuredatabrickscatalog.UpdatePayload{
 			AutoSync:            to.Ptr(mirroredazuredatabrickscatalog.AutoSyncEnabled),
 			MirroringMode:       to.Ptr(mirroredazuredatabrickscatalog.MirroringModesFull),
 			StorageConnectionID: to.Ptr("c1128f28-d84f-417c-8234-0feb91e35f87"),
@@ -393,7 +393,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteMirroredAzureDatabricksCatalog()
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteMirroredAzureDatabricksCatalog(ctx, exampleWorkspaceID, exampleMirroredAzureDatabricksCatalogID, nil)
+	_, err = client.DeleteMirroredAzureDatabricksCatalog(ctx, exampleWorkspaceID, exampleMirroredAzureDatabricksCatalogID, &mirroredazuredatabrickscatalog.ItemsClientDeleteMirroredAzureDatabricksCatalogOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a mirroredAzureDatabricksCatalog example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleMirroredAzureDatabricksCatalogID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteMirroredAzureDatabricksCatalog = func(ctx context.Context, workspaceID string, mirroredAzureDatabricksCatalogID string, options *mirroredazuredatabrickscatalog.ItemsClientDeleteMirroredAzureDatabricksCatalogOptions) (resp azfake.Responder[mirroredazuredatabrickscatalog.ItemsClientDeleteMirroredAzureDatabricksCatalogResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleMirroredAzureDatabricksCatalogID, mirroredAzureDatabricksCatalogID)
+		resp = azfake.Responder[mirroredazuredatabrickscatalog.ItemsClientDeleteMirroredAzureDatabricksCatalogResponse]{}
+		resp.SetResponse(http.StatusOK, mirroredazuredatabrickscatalog.ItemsClientDeleteMirroredAzureDatabricksCatalogResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteMirroredAzureDatabricksCatalog(ctx, exampleWorkspaceID, exampleMirroredAzureDatabricksCatalogID, &mirroredazuredatabrickscatalog.ItemsClientDeleteMirroredAzureDatabricksCatalogOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

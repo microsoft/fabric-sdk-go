@@ -294,7 +294,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteVariableLibrary() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteVariableLibrary(ctx, exampleWorkspaceID, exampleVariableLibraryID, nil)
+	_, err = client.DeleteVariableLibrary(ctx, exampleWorkspaceID, exampleVariableLibraryID, &variablelibrary.ItemsClientDeleteVariableLibraryOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a VariableLibrary example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleVariableLibraryID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteVariableLibrary = func(ctx context.Context, workspaceID string, variableLibraryID string, options *variablelibrary.ItemsClientDeleteVariableLibraryOptions) (resp azfake.Responder[variablelibrary.ItemsClientDeleteVariableLibraryResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleVariableLibraryID, variableLibraryID)
+		resp = azfake.Responder[variablelibrary.ItemsClientDeleteVariableLibraryResponse]{}
+		resp.SetResponse(http.StatusOK, variablelibrary.ItemsClientDeleteVariableLibraryResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteVariableLibrary(ctx, exampleWorkspaceID, exampleVariableLibraryID, &variablelibrary.ItemsClientDeleteVariableLibraryOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

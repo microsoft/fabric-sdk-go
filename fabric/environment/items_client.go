@@ -206,7 +206,7 @@ func (client *ItemsClient) DeleteEnvironment(ctx context.Context, workspaceID st
 }
 
 // deleteEnvironmentCreateRequest creates the DeleteEnvironment request.
-func (client *ItemsClient) deleteEnvironmentCreateRequest(ctx context.Context, workspaceID string, environmentID string, _ *ItemsClientDeleteEnvironmentOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteEnvironmentCreateRequest(ctx context.Context, workspaceID string, environmentID string, options *ItemsClientDeleteEnvironmentOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -220,6 +220,11 @@ func (client *ItemsClient) deleteEnvironmentCreateRequest(ctx context.Context, w
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

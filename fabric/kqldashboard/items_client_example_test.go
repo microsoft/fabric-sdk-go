@@ -192,7 +192,7 @@ func ExampleItemsClient_UpdateKQLDashboard() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_DeleteKQLDashboard() {
+func ExampleItemsClient_DeleteKQLDashboard_deleteAKqlDashboardExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -202,7 +202,24 @@ func ExampleItemsClient_DeleteKQLDashboard() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewItemsClient().DeleteKQLDashboard(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", nil)
+	_, err = clientFactory.NewItemsClient().DeleteKQLDashboard(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", &kqldashboard.ItemsClientDeleteKQLDashboardOptions{HardDelete: nil})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_DeleteKQLDashboard_hardDeleteAKqlDashboardExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := kqldashboard.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewItemsClient().DeleteKQLDashboard(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", &kqldashboard.ItemsClientDeleteKQLDashboardOptions{HardDelete: to.Ptr(true)})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

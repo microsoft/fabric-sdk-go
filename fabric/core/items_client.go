@@ -40,7 +40,7 @@ type ItemsClient struct {
 // PERMISSIONS The caller must have a contributor or higher role for the workspace.
 // When exporting all items in a workspace: Only the Items that the caller has both read and write permissions for are exported.
 // When exporting specific items: The caller must have read and write permissions for all specified items.
-// REQUIRED DELEGATED SCOPES Items.ReadWrite.All.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -71,7 +71,7 @@ func (client *ItemsClient) BeginBulkExportItemDefinitionsBeta(ctx context.Contex
 // PERMISSIONS The caller must have a contributor or higher role for the workspace.
 // When exporting all items in a workspace: Only the Items that the caller has both read and write permissions for are exported.
 // When exporting specific items: The caller must have read and write permissions for all specified items.
-// REQUIRED DELEGATED SCOPES Items.ReadWrite.All.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -138,7 +138,7 @@ func (client *ItemsClient) bulkExportItemDefinitionsBetaCreateRequest(ctx contex
 // Item definition overview [/rest/api/fabric/articles/item-management/definitions/item-definition-overview].
 // PERMISSIONS The caller must have a contributor or higher role for the workspace.
 // The caller must have read and write permissions for each item being updated.
-// REQUIRED DELEGATED SCOPES Items.ReadWrite.All.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -168,7 +168,7 @@ func (client *ItemsClient) BeginBulkImportItemDefinitionsBeta(ctx context.Contex
 // Item definition overview [/rest/api/fabric/articles/item-management/definitions/item-definition-overview].
 // PERMISSIONS The caller must have a contributor or higher role for the workspace.
 // The caller must have read and write permissions for each item being updated.
-// REQUIRED DELEGATED SCOPES Items.ReadWrite.All.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -399,8 +399,11 @@ func (client *ItemsClient) createItemCreateRequest(ctx context.Context, workspac
 
 // DeleteItem - This API is supported for a number of item types, find the supported item types and information about their
 // definition structure in Item management overview
-// [/rest/api/fabric/articles/item-management/item-management-overview].
-// PERMISSIONS The caller must have write permissions for the item.
+// [/rest/api/fabric/articles/item-management/item-management-overview]. The default behavior is to soft delete the item for
+// supported item types.
+// > [!NOTE] The soft-deleted items will be counted toward the maximum number of items allowed in each workspace.
+// PERMISSIONS The caller must have write permissions for the item for soft deletion. The caller must have workspace Admin
+// role assigned for hard/permanent deletion.
 // REQUIRED DELEGATED SCOPES For item APIs use these scope types:
 // * Generic scope: Item.ReadWrite.All
 //
@@ -444,7 +447,7 @@ func (client *ItemsClient) DeleteItem(ctx context.Context, workspaceID string, i
 }
 
 // deleteItemCreateRequest creates the DeleteItem request.
-func (client *ItemsClient) deleteItemCreateRequest(ctx context.Context, workspaceID string, itemID string, _ *ItemsClientDeleteItemOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteItemCreateRequest(ctx context.Context, workspaceID string, itemID string, options *ItemsClientDeleteItemOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -458,6 +461,11 @@ func (client *ItemsClient) deleteItemCreateRequest(ctx context.Context, workspac
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }
@@ -1062,7 +1070,7 @@ func (client *ItemsClient) updateItemDefinitionCreateRequest(ctx context.Context
 //
 // When exporting specific items: The caller must have read and write permissions for all specified items.
 //
-// REQUIRED DELEGATED SCOPES Items.ReadWrite.All.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All.
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
@@ -1139,7 +1147,7 @@ func (client *ItemsClient) beginBulkExportItemDefinitionsBeta(ctx context.Contex
 //
 // The caller must have read and write permissions for each item being updated.
 //
-// REQUIRED DELEGATED SCOPES Items.ReadWrite.All.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All.
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

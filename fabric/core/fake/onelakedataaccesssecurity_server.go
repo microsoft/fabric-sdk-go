@@ -31,7 +31,7 @@ type OneLakeDataAccessSecurityServer struct {
 
 	// CreateOrUpdateSingleDataAccessRole is the fake for method OneLakeDataAccessSecurityClient.CreateOrUpdateSingleDataAccessRole
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated
-	CreateOrUpdateSingleDataAccessRole func(ctx context.Context, workspaceID string, itemID string, createOrUpdateSingleDataAccessRoleRequest core.CreateOrUpdateSingleDataAccessRoleRequest, options *core.OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleOptions) (resp azfake.Responder[core.OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleResponse], errResp azfake.ErrorResponder)
+	CreateOrUpdateSingleDataAccessRole func(ctx context.Context, workspaceID string, itemID string, createOrUpdateSingleDataAccessRoleRequest core.DataAccessRoleBase, options *core.OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleOptions) (resp azfake.Responder[core.OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleResponse], errResp azfake.ErrorResponder)
 
 	// DeleteDataAccessRole is the fake for method OneLakeDataAccessSecurityClient.DeleteDataAccessRole
 	// HTTP status codes to indicate success: http.StatusOK
@@ -183,7 +183,7 @@ func (o *OneLakeDataAccessSecurityServerTransport) dispatchCreateOrUpdateSingleD
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
 	qp := req.URL.Query()
-	body, err := server.UnmarshalRequestAsJSON[core.CreateOrUpdateSingleDataAccessRoleRequest](req)
+	body, err := server.UnmarshalRequestAsJSON[core.DataAccessRoleBase](req)
 	if err != nil {
 		return nil, err
 	}

@@ -209,6 +209,34 @@ func (testsuite *FakeTestSuite) TestItems_CreateSQLDatabase() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a SQLDatabase with payload of restore deleted database example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCreateSQLDatabaseRequest = sqldatabase.CreateSQLDatabaseRequest{
+		Description: to.Ptr("A SQLDatabase description."),
+		CreationPayload: &sqldatabase.RestoreDeletedDatabaseCreationPayload{
+			CreationMode:                  to.Ptr(sqldatabase.CreationModeRestoreDeletedDatabase),
+			RestorableDeletedDatabaseName: to.Ptr("deletedDatabaseName"),
+			RestorePointInTime:            to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-12-01T00:00:00.000Z"); return t }()),
+		},
+		DisplayName: to.Ptr("SQLDatabase1"),
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginCreateSQLDatabase = func(ctx context.Context, workspaceID string, createSQLDatabaseRequest sqldatabase.CreateSQLDatabaseRequest, options *sqldatabase.ItemsClientBeginCreateSQLDatabaseOptions) (resp azfake.PollerResponder[sqldatabase.ItemsClientCreateSQLDatabaseResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateSQLDatabaseRequest, createSQLDatabaseRequest))
+		resp = azfake.PollerResponder[sqldatabase.ItemsClientCreateSQLDatabaseResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, sqldatabase.ItemsClientCreateSQLDatabaseResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateSQLDatabase(ctx, exampleWorkspaceID, exampleCreateSQLDatabaseRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestItems_GetSQLDatabase() {
@@ -314,7 +342,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteSQLDatabase() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteSQLDatabase(ctx, exampleWorkspaceID, exampleSqlDatabaseID, nil)
+	_, err = client.DeleteSQLDatabase(ctx, exampleWorkspaceID, exampleSqlDatabaseID, &sqldatabase.ItemsClientDeleteSQLDatabaseOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a SQLDatabase example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleSqlDatabaseID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteSQLDatabase = func(ctx context.Context, workspaceID string, sqlDatabaseID string, options *sqldatabase.ItemsClientDeleteSQLDatabaseOptions) (resp azfake.Responder[sqldatabase.ItemsClientDeleteSQLDatabaseResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleSqlDatabaseID, sqlDatabaseID)
+		resp = azfake.Responder[sqldatabase.ItemsClientDeleteSQLDatabaseResponse]{}
+		resp.SetResponse(http.StatusOK, sqldatabase.ItemsClientDeleteSQLDatabaseResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteSQLDatabase(ctx, exampleWorkspaceID, exampleSqlDatabaseID, &sqldatabase.ItemsClientDeleteSQLDatabaseOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
@@ -425,6 +471,51 @@ func (testsuite *FakeTestSuite) TestItems_RevalidateCMK() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestItems_ListRestorableDeletedDatabases() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get restorable deleted databases example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+
+	exampleRes := sqldatabase.RestorableDeletedSQLDatabases{
+		Value: []sqldatabase.RestorableDeletedSQLDatabase{
+			{
+				DisplayName: to.Ptr("SQLDatabase1"),
+				Properties: &sqldatabase.RestorableDeletedSQLDatabaseProperties{
+					DeletionTimestamp:             to.Ptr("2024-12-01T00:00:00.000Z"),
+					EarliestRestorePoint:          to.Ptr("2024-12-01T00:00:00.000Z"),
+					LatestRestorePoint:            to.Ptr("2024-12-02T00:00:00.000Z"),
+					RestorableDeletedDatabaseName: to.Ptr("SQLDatabase1,134140258788170000"),
+				},
+			},
+			{
+				DisplayName: to.Ptr("SQLDatabase2"),
+				Properties: &sqldatabase.RestorableDeletedSQLDatabaseProperties{
+					DeletionTimestamp:             to.Ptr("2024-12-01T00:00:00.000Z"),
+					EarliestRestorePoint:          to.Ptr("2024-12-01T00:00:00.000Z"),
+					LatestRestorePoint:            to.Ptr("2024-12-02T00:00:00.000Z"),
+					RestorableDeletedDatabaseName: to.Ptr("SQLDatabase2,134140258788470000"),
+				},
+			}},
+	}
+
+	testsuite.serverFactory.ItemsServer.ListRestorableDeletedDatabases = func(ctx context.Context, workspaceID string, options *sqldatabase.ItemsClientListRestorableDeletedDatabasesOptions) (resp azfake.Responder[sqldatabase.ItemsClientListRestorableDeletedDatabasesResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[sqldatabase.ItemsClientListRestorableDeletedDatabasesResponse]{}
+		resp.SetResponse(http.StatusOK, sqldatabase.ItemsClientListRestorableDeletedDatabasesResponse{RestorableDeletedSQLDatabases: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	res, err := client.ListRestorableDeletedDatabases(ctx, exampleWorkspaceID, &sqldatabase.ItemsClientListRestorableDeletedDatabasesOptions{Recursive: nil,
+		RootFolderID: nil,
+	})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.RestorableDeletedSQLDatabases))
 }
 
 func (testsuite *FakeTestSuite) TestMirroring_StartMirroring() {

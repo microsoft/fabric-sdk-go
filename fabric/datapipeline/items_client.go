@@ -142,7 +142,7 @@ func (client *ItemsClient) DeleteDataPipeline(ctx context.Context, workspaceID s
 }
 
 // deleteDataPipelineCreateRequest creates the DeleteDataPipeline request.
-func (client *ItemsClient) deleteDataPipelineCreateRequest(ctx context.Context, workspaceID string, dataPipelineID string, _ *ItemsClientDeleteDataPipelineOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteDataPipelineCreateRequest(ctx context.Context, workspaceID string, dataPipelineID string, options *ItemsClientDeleteDataPipelineOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/dataPipelines/{dataPipelineId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -156,6 +156,11 @@ func (client *ItemsClient) deleteDataPipelineCreateRequest(ctx context.Context, 
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

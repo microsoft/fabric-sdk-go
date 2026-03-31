@@ -143,7 +143,7 @@ func (client *ItemsClient) DeleteEventhouse(ctx context.Context, workspaceID str
 }
 
 // deleteEventhouseCreateRequest creates the DeleteEventhouse request.
-func (client *ItemsClient) deleteEventhouseCreateRequest(ctx context.Context, workspaceID string, eventhouseID string, _ *ItemsClientDeleteEventhouseOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteEventhouseCreateRequest(ctx context.Context, workspaceID string, eventhouseID string, options *ItemsClientDeleteEventhouseOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/eventhouses/{eventhouseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -157,6 +157,11 @@ func (client *ItemsClient) deleteEventhouseCreateRequest(ctx context.Context, wo
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

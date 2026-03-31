@@ -35,7 +35,10 @@ type ItemsClientBeginUpdateKQLDatabaseDefinitionOptions struct {
 
 // ItemsClientDeleteKQLDatabaseOptions contains the optional parameters for the ItemsClient.DeleteKQLDatabase method.
 type ItemsClientDeleteKQLDatabaseOptions struct {
-	// placeholder for future optional parameters
+	// Specifies whether to perform a hard delete. When set to true, the item is permanently deleted and cannot be recovered.
+	// When set to false or not specified, the item is soft-deleted if the item type
+	// supports it.
+	HardDelete *bool
 }
 
 // ItemsClientGetKQLDatabaseOptions contains the optional parameters for the ItemsClient.GetKQLDatabase method.

@@ -29,13 +29,12 @@ type QueryExecutionClient struct {
 	endpoint string
 }
 
-// BeginExecuteQuery - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
-// only. It may change based on feedback and is not recommended for production use.
-// Executes a specified query against a dataflow and streams the results in Apache Arrow format. Supports using custom mashup
-// documents for advanced scenarios.
+// BeginExecuteQuery - Executes a specified query against a dataflow and streams the results in Apache Arrow format. Supports
+// using custom mashup documents for advanced scenarios.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must have execute permissions for the dataflow.
 // REQUIRED DELEGATED SCOPES Dataflow.Execute.All or Item.Execute.All.
+// LIMITATIONS Queries can run for a maximum of 90 seconds.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -54,13 +53,12 @@ func (client *QueryExecutionClient) BeginExecuteQuery(ctx context.Context, works
 	return client.beginExecuteQuery(ctx, workspaceID, dataflowID, executeQueryRequest, options)
 }
 
-// ExecuteQuery - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
-// only. It may change based on feedback and is not recommended for production use.
-// Executes a specified query against a dataflow and streams the results in Apache Arrow format. Supports using custom mashup
-// documents for advanced scenarios.
+// ExecuteQuery - Executes a specified query against a dataflow and streams the results in Apache Arrow format. Supports using
+// custom mashup documents for advanced scenarios.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must have execute permissions for the dataflow.
 // REQUIRED DELEGATED SCOPES Dataflow.Execute.All or Item.Execute.All.
+// LIMITATIONS Queries can run for a maximum of 90 seconds.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -117,8 +115,6 @@ func (client *QueryExecutionClient) executeQueryCreateRequest(ctx context.Contex
 // Custom code starts below
 
 // ExecuteQuery - returns QueryExecutionClientExecuteQueryResponse in sync mode.
-// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
-//
 // Executes a specified query against a dataflow and streams the results in Apache Arrow format. Supports using custom mashup documents for advanced scenarios.
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
@@ -126,6 +122,8 @@ func (client *QueryExecutionClient) executeQueryCreateRequest(ctx context.Contex
 // PERMISSIONS The caller must have execute permissions for the dataflow.
 //
 // REQUIRED DELEGATED SCOPES Dataflow.Execute.All or Item.Execute.All.
+//
+// LIMITATIONS Queries can run for a maximum of 90 seconds.
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

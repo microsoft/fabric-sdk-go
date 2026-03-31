@@ -190,6 +190,7 @@ func (i *ItemsServerTransport) dispatchDeleteSparkJobDefinition(req *http.Reques
 	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
+	qp := req.URL.Query()
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 	if err != nil {
 		return nil, err
@@ -198,7 +199,21 @@ func (i *ItemsServerTransport) dispatchDeleteSparkJobDefinition(req *http.Reques
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := i.srv.DeleteSparkJobDefinition(req.Context(), workspaceIDParam, sparkJobDefinitionIDParam, nil)
+	hardDeleteUnescaped, err := url.QueryUnescape(qp.Get("hardDelete"))
+	if err != nil {
+		return nil, err
+	}
+	hardDeleteParam, err := parseOptional(hardDeleteUnescaped, strconv.ParseBool)
+	if err != nil {
+		return nil, err
+	}
+	var options *sparkjobdefinition.ItemsClientDeleteSparkJobDefinitionOptions
+	if hardDeleteParam != nil {
+		options = &sparkjobdefinition.ItemsClientDeleteSparkJobDefinitionOptions{
+			HardDelete: hardDeleteParam,
+		}
+	}
+	respr, errRespr := i.srv.DeleteSparkJobDefinition(req.Context(), workspaceIDParam, sparkJobDefinitionIDParam, options)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}

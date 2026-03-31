@@ -148,7 +148,7 @@ func (client *ItemsClient) DeleteMLExperiment(ctx context.Context, workspaceID s
 }
 
 // deleteMLExperimentCreateRequest creates the DeleteMLExperiment request.
-func (client *ItemsClient) deleteMLExperimentCreateRequest(ctx context.Context, workspaceID string, mlExperimentID string, _ *ItemsClientDeleteMLExperimentOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteMLExperimentCreateRequest(ctx context.Context, workspaceID string, mlExperimentID string, options *ItemsClientDeleteMLExperimentOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/mlExperiments/{mlExperimentId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -162,6 +162,11 @@ func (client *ItemsClient) deleteMLExperimentCreateRequest(ctx context.Context, 
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

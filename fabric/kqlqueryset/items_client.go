@@ -139,7 +139,7 @@ func (client *ItemsClient) DeleteKQLQueryset(ctx context.Context, workspaceID st
 }
 
 // deleteKQLQuerysetCreateRequest creates the DeleteKQLQueryset request.
-func (client *ItemsClient) deleteKQLQuerysetCreateRequest(ctx context.Context, workspaceID string, kqlQuerysetID string, _ *ItemsClientDeleteKQLQuerysetOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteKQLQuerysetCreateRequest(ctx context.Context, workspaceID string, kqlQuerysetID string, options *ItemsClientDeleteKQLQuerysetOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/kqlQuerysets/{kqlQuerysetId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -153,6 +153,11 @@ func (client *ItemsClient) deleteKQLQuerysetCreateRequest(ctx context.Context, w
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

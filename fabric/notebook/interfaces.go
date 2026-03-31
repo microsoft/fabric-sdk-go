@@ -15,6 +15,15 @@ type ItemReferenceClassification interface {
 	GetItemReference() *ItemReference
 }
 
+// JobInstancePropertiesClassification provides polymorphic access to related types.
+// Call the interface's GetJobInstanceProperties() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *DataWarehouseNotebookJobInstanceProperties, *JobInstanceProperties, *JupyterNotebookJobInstanceProperties, *SparkNotebookJobInstanceProperties
+type JobInstancePropertiesClassification interface {
+	// GetJobInstanceProperties returns the JobInstanceProperties content of the underlying type.
+	GetJobInstanceProperties() *JobInstanceProperties
+}
+
 // PrincipalClassification provides polymorphic access to related types.
 // Call the interface's GetPrincipal() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
@@ -22,4 +31,13 @@ type ItemReferenceClassification interface {
 type PrincipalClassification interface {
 	// GetPrincipal returns the Principal content of the underlying type.
 	GetPrincipal() *Principal
+}
+
+// RunNotebookExecutionDataClassification provides polymorphic access to related types.
+// Call the interface's GetRunNotebookExecutionData() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *RunDataWarehouseNotebookExecutionData, *RunJupyterNotebookExecutionData, *RunNotebookExecutionData, *RunSparkNotebookExecutionData
+type RunNotebookExecutionDataClassification interface {
+	// GetRunNotebookExecutionData returns the RunNotebookExecutionData content of the underlying type.
+	GetRunNotebookExecutionData() *RunNotebookExecutionData
 }

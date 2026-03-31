@@ -104,6 +104,62 @@ func (client *WorkspacesClient) addWorkspaceRoleAssignmentHandleResponse(resp *h
 	return result, nil
 }
 
+// ApplyWorkspaceTags - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must have admin permissions on the workspace.
+// REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - applyTagsRequest - The request payload for applying tags.
+//   - options - WorkspacesClientApplyWorkspaceTagsOptions contains the optional parameters for the WorkspacesClient.ApplyWorkspaceTags
+//     method.
+func (client *WorkspacesClient) ApplyWorkspaceTags(ctx context.Context, workspaceID string, applyTagsRequest ApplyWorkspaceTagsRequest, options *WorkspacesClientApplyWorkspaceTagsOptions) (WorkspacesClientApplyWorkspaceTagsResponse, error) {
+	var err error
+	const operationName = "core.WorkspacesClient.ApplyWorkspaceTags"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.applyWorkspaceTagsCreateRequest(ctx, workspaceID, applyTagsRequest, options)
+	if err != nil {
+		return WorkspacesClientApplyWorkspaceTagsResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientApplyWorkspaceTagsResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return WorkspacesClientApplyWorkspaceTagsResponse{}, err
+	}
+	return WorkspacesClientApplyWorkspaceTagsResponse{}, nil
+}
+
+// applyWorkspaceTagsCreateRequest creates the ApplyWorkspaceTags request.
+func (client *WorkspacesClient) applyWorkspaceTagsCreateRequest(ctx context.Context, workspaceID string, applyTagsRequest ApplyWorkspaceTagsRequest, _ *WorkspacesClientApplyWorkspaceTagsOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/applyTags"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, applyTagsRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // AssignToCapacity - PERMISSIONS
 // * The caller must have contributor permissions or be an capacity Admin.
 // * The caller must have admin workspace role.
@@ -1355,6 +1411,62 @@ func (client *WorkspacesClient) setOutboundGatewayRulesHandleResponse(resp *http
 		result.ETag = &val
 	}
 	return result, nil
+}
+
+// UnapplyWorkspaceTags - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
+// REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - unapplyTagsRequest - The request payload for unapplying tags.
+//   - options - WorkspacesClientUnapplyWorkspaceTagsOptions contains the optional parameters for the WorkspacesClient.UnapplyWorkspaceTags
+//     method.
+func (client *WorkspacesClient) UnapplyWorkspaceTags(ctx context.Context, workspaceID string, unapplyTagsRequest UnapplyWorkspaceTagsRequest, options *WorkspacesClientUnapplyWorkspaceTagsOptions) (WorkspacesClientUnapplyWorkspaceTagsResponse, error) {
+	var err error
+	const operationName = "core.WorkspacesClient.UnapplyWorkspaceTags"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.unapplyWorkspaceTagsCreateRequest(ctx, workspaceID, unapplyTagsRequest, options)
+	if err != nil {
+		return WorkspacesClientUnapplyWorkspaceTagsResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientUnapplyWorkspaceTagsResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return WorkspacesClientUnapplyWorkspaceTagsResponse{}, err
+	}
+	return WorkspacesClientUnapplyWorkspaceTagsResponse{}, nil
+}
+
+// unapplyWorkspaceTagsCreateRequest creates the UnapplyWorkspaceTags request.
+func (client *WorkspacesClient) unapplyWorkspaceTagsCreateRequest(ctx context.Context, workspaceID string, unapplyTagsRequest UnapplyWorkspaceTagsRequest, _ *WorkspacesClientUnapplyWorkspaceTagsOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/unapplyTags"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, unapplyTagsRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
 }
 
 // UnassignFromCapacity - PERMISSIONS The caller must have admin role on the workspace.

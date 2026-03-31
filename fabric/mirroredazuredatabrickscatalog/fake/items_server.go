@@ -190,6 +190,7 @@ func (i *ItemsServerTransport) dispatchDeleteMirroredAzureDatabricksCatalog(req 
 	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
+	qp := req.URL.Query()
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 	if err != nil {
 		return nil, err
@@ -198,7 +199,21 @@ func (i *ItemsServerTransport) dispatchDeleteMirroredAzureDatabricksCatalog(req 
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := i.srv.DeleteMirroredAzureDatabricksCatalog(req.Context(), workspaceIDParam, mirroredAzureDatabricksCatalogIDParam, nil)
+	hardDeleteUnescaped, err := url.QueryUnescape(qp.Get("hardDelete"))
+	if err != nil {
+		return nil, err
+	}
+	hardDeleteParam, err := parseOptional(hardDeleteUnescaped, strconv.ParseBool)
+	if err != nil {
+		return nil, err
+	}
+	var options *mirroredazuredatabrickscatalog.ItemsClientDeleteMirroredAzureDatabricksCatalogOptions
+	if hardDeleteParam != nil {
+		options = &mirroredazuredatabrickscatalog.ItemsClientDeleteMirroredAzureDatabricksCatalogOptions{
+			HardDelete: hardDeleteParam,
+		}
+	}
+	respr, errRespr := i.srv.DeleteMirroredAzureDatabricksCatalog(req.Context(), workspaceIDParam, mirroredAzureDatabricksCatalogIDParam, options)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
