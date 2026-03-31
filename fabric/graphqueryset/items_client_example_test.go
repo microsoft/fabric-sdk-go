@@ -185,7 +185,7 @@ func ExampleItemsClient_UpdateGraphQuerySet() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_DeleteGraphQuerySet() {
+func ExampleItemsClient_DeleteGraphQuerySet_deleteAGraphQuerySetExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -195,7 +195,24 @@ func ExampleItemsClient_DeleteGraphQuerySet() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewItemsClient().DeleteGraphQuerySet(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", nil)
+	_, err = clientFactory.NewItemsClient().DeleteGraphQuerySet(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", &graphqueryset.ItemsClientDeleteGraphQuerySetOptions{HardDelete: nil})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_DeleteGraphQuerySet_hardDeleteAGraphQuerySetExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := graphqueryset.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewItemsClient().DeleteGraphQuerySet(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", &graphqueryset.ItemsClientDeleteGraphQuerySetOptions{HardDelete: to.Ptr(true)})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

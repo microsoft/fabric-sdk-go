@@ -150,7 +150,7 @@ func (client *ItemsClient) DeleteGraphQuerySet(ctx context.Context, workspaceID 
 }
 
 // deleteGraphQuerySetCreateRequest creates the DeleteGraphQuerySet request.
-func (client *ItemsClient) deleteGraphQuerySetCreateRequest(ctx context.Context, workspaceID string, graphQuerySetID string, _ *ItemsClientDeleteGraphQuerySetOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteGraphQuerySetCreateRequest(ctx context.Context, workspaceID string, graphQuerySetID string, options *ItemsClientDeleteGraphQuerySetOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/graphQuerySets/{graphQuerySetId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -164,6 +164,11 @@ func (client *ItemsClient) deleteGraphQuerySetCreateRequest(ctx context.Context,
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

@@ -244,6 +244,24 @@ func (testsuite *FakeTestSuite) TestItems_DeleteMLExperiment() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteMLExperiment(ctx, exampleWorkspaceID, exampleMlExperimentID, nil)
+	_, err = client.DeleteMLExperiment(ctx, exampleWorkspaceID, exampleMlExperimentID, &mlexperiment.ItemsClientDeleteMLExperimentOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a machine learning experiment example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleMlExperimentID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteMLExperiment = func(ctx context.Context, workspaceID string, mlExperimentID string, options *mlexperiment.ItemsClientDeleteMLExperimentOptions) (resp azfake.Responder[mlexperiment.ItemsClientDeleteMLExperimentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleMlExperimentID, mlExperimentID)
+		resp = azfake.Responder[mlexperiment.ItemsClientDeleteMLExperimentResponse]{}
+		resp.SetResponse(http.StatusOK, mlexperiment.ItemsClientDeleteMLExperimentResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteMLExperiment(ctx, exampleWorkspaceID, exampleMlExperimentID, &mlexperiment.ItemsClientDeleteMLExperimentOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }

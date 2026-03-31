@@ -28,19 +28,33 @@ type EnvironmentServer struct {
 	// GetApacheAirflowJobEnvironmentBeta is the fake for method EnvironmentClient.GetApacheAirflowJobEnvironmentBeta
 	// HTTP status codes to indicate success: http.StatusOK
 	GetApacheAirflowJobEnvironmentBeta func(ctx context.Context, workspaceID string, apacheAirflowJobID string, beta bool, options *apacheairflowjob.EnvironmentClientGetApacheAirflowJobEnvironmentBetaOptions) (resp azfake.Responder[apacheairflowjob.EnvironmentClientGetApacheAirflowJobEnvironmentBetaResponse], errResp azfake.ErrorResponder)
+
+	// BeginStartApacheAirflowJobEnvironmentBeta is the fake for method EnvironmentClient.BeginStartApacheAirflowJobEnvironmentBeta
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
+	BeginStartApacheAirflowJobEnvironmentBeta func(ctx context.Context, workspaceID string, apacheAirflowJobID string, beta bool, options *apacheairflowjob.EnvironmentClientBeginStartApacheAirflowJobEnvironmentBetaOptions) (resp azfake.PollerResponder[apacheairflowjob.EnvironmentClientStartApacheAirflowJobEnvironmentBetaResponse], errResp azfake.ErrorResponder)
+
+	// BeginStopApacheAirflowJobEnvironmentBeta is the fake for method EnvironmentClient.BeginStopApacheAirflowJobEnvironmentBeta
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
+	BeginStopApacheAirflowJobEnvironmentBeta func(ctx context.Context, workspaceID string, apacheAirflowJobID string, beta bool, options *apacheairflowjob.EnvironmentClientBeginStopApacheAirflowJobEnvironmentBetaOptions) (resp azfake.PollerResponder[apacheairflowjob.EnvironmentClientStopApacheAirflowJobEnvironmentBetaResponse], errResp azfake.ErrorResponder)
 }
 
 // NewEnvironmentServerTransport creates a new instance of EnvironmentServerTransport with the provided implementation.
 // The returned EnvironmentServerTransport instance is connected to an instance of apacheairflowjob.EnvironmentClient via the
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewEnvironmentServerTransport(srv *EnvironmentServer) *EnvironmentServerTransport {
-	return &EnvironmentServerTransport{srv: srv}
+	return &EnvironmentServerTransport{
+		srv: srv,
+		beginStartApacheAirflowJobEnvironmentBeta: newTracker[azfake.PollerResponder[apacheairflowjob.EnvironmentClientStartApacheAirflowJobEnvironmentBetaResponse]](),
+		beginStopApacheAirflowJobEnvironmentBeta:  newTracker[azfake.PollerResponder[apacheairflowjob.EnvironmentClientStopApacheAirflowJobEnvironmentBetaResponse]](),
+	}
 }
 
 // EnvironmentServerTransport connects instances of apacheairflowjob.EnvironmentClient to instances of EnvironmentServer.
 // Don't use this type directly, use NewEnvironmentServerTransport instead.
 type EnvironmentServerTransport struct {
-	srv *EnvironmentServer
+	srv                                       *EnvironmentServer
+	beginStartApacheAirflowJobEnvironmentBeta *tracker[azfake.PollerResponder[apacheairflowjob.EnvironmentClientStartApacheAirflowJobEnvironmentBetaResponse]]
+	beginStopApacheAirflowJobEnvironmentBeta  *tracker[azfake.PollerResponder[apacheairflowjob.EnvironmentClientStopApacheAirflowJobEnvironmentBetaResponse]]
 }
 
 // Do implements the policy.Transporter interface for EnvironmentServerTransport.
@@ -70,6 +84,10 @@ func (e *EnvironmentServerTransport) dispatchToMethodFake(req *http.Request, met
 			switch method {
 			case "EnvironmentClient.GetApacheAirflowJobEnvironmentBeta":
 				res.resp, res.err = e.dispatchGetApacheAirflowJobEnvironmentBeta(req)
+			case "EnvironmentClient.BeginStartApacheAirflowJobEnvironmentBeta":
+				res.resp, res.err = e.dispatchBeginStartApacheAirflowJobEnvironmentBeta(req)
+			case "EnvironmentClient.BeginStopApacheAirflowJobEnvironmentBeta":
+				res.resp, res.err = e.dispatchBeginStopApacheAirflowJobEnvironmentBeta(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -128,6 +146,112 @@ func (e *EnvironmentServerTransport) dispatchGetApacheAirflowJobEnvironmentBeta(
 	if err != nil {
 		return nil, err
 	}
+	return resp, nil
+}
+
+func (e *EnvironmentServerTransport) dispatchBeginStartApacheAirflowJobEnvironmentBeta(req *http.Request) (*http.Response, error) {
+	if e.srv.BeginStartApacheAirflowJobEnvironmentBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginStartApacheAirflowJobEnvironmentBeta not implemented")}
+	}
+	beginStartApacheAirflowJobEnvironmentBeta := e.beginStartApacheAirflowJobEnvironmentBeta.get(req)
+	if beginStartApacheAirflowJobEnvironmentBeta == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/apacheAirflowJobs/(?P<apacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environment/start`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 3 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("apacheAirflowJobId")])
+		if err != nil {
+			return nil, err
+		}
+		betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
+		if err != nil {
+			return nil, err
+		}
+		betaParam, err := strconv.ParseBool(betaUnescaped)
+		if err != nil {
+			return nil, err
+		}
+		respr, errRespr := e.srv.BeginStartApacheAirflowJobEnvironmentBeta(req.Context(), workspaceIDParam, apacheAirflowJobIDParam, betaParam, nil)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginStartApacheAirflowJobEnvironmentBeta = &respr
+		e.beginStartApacheAirflowJobEnvironmentBeta.add(req, beginStartApacheAirflowJobEnvironmentBeta)
+	}
+
+	resp, err := server.PollerResponderNext(beginStartApacheAirflowJobEnvironmentBeta, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
+		e.beginStartApacheAirflowJobEnvironmentBeta.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginStartApacheAirflowJobEnvironmentBeta) {
+		e.beginStartApacheAirflowJobEnvironmentBeta.remove(req)
+	}
+
+	return resp, nil
+}
+
+func (e *EnvironmentServerTransport) dispatchBeginStopApacheAirflowJobEnvironmentBeta(req *http.Request) (*http.Response, error) {
+	if e.srv.BeginStopApacheAirflowJobEnvironmentBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginStopApacheAirflowJobEnvironmentBeta not implemented")}
+	}
+	beginStopApacheAirflowJobEnvironmentBeta := e.beginStopApacheAirflowJobEnvironmentBeta.get(req)
+	if beginStopApacheAirflowJobEnvironmentBeta == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/apacheAirflowJobs/(?P<apacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environment/stop`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 3 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("apacheAirflowJobId")])
+		if err != nil {
+			return nil, err
+		}
+		betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
+		if err != nil {
+			return nil, err
+		}
+		betaParam, err := strconv.ParseBool(betaUnescaped)
+		if err != nil {
+			return nil, err
+		}
+		respr, errRespr := e.srv.BeginStopApacheAirflowJobEnvironmentBeta(req.Context(), workspaceIDParam, apacheAirflowJobIDParam, betaParam, nil)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginStopApacheAirflowJobEnvironmentBeta = &respr
+		e.beginStopApacheAirflowJobEnvironmentBeta.add(req, beginStopApacheAirflowJobEnvironmentBeta)
+	}
+
+	resp, err := server.PollerResponderNext(beginStopApacheAirflowJobEnvironmentBeta, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
+		e.beginStopApacheAirflowJobEnvironmentBeta.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginStopApacheAirflowJobEnvironmentBeta) {
+		e.beginStopApacheAirflowJobEnvironmentBeta.remove(req)
+	}
+
 	return resp, nil
 }
 

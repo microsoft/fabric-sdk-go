@@ -261,7 +261,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteGraphQuerySet() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteGraphQuerySet(ctx, exampleWorkspaceID, exampleGraphQuerySetID, nil)
+	_, err = client.DeleteGraphQuerySet(ctx, exampleWorkspaceID, exampleGraphQuerySetID, &graphqueryset.ItemsClientDeleteGraphQuerySetOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a GraphQuerySet example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleGraphQuerySetID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteGraphQuerySet = func(ctx context.Context, workspaceID string, graphQuerySetID string, options *graphqueryset.ItemsClientDeleteGraphQuerySetOptions) (resp azfake.Responder[graphqueryset.ItemsClientDeleteGraphQuerySetResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleGraphQuerySetID, graphQuerySetID)
+		resp = azfake.Responder[graphqueryset.ItemsClientDeleteGraphQuerySetResponse]{}
+		resp.SetResponse(http.StatusOK, graphqueryset.ItemsClientDeleteGraphQuerySetResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteGraphQuerySet(ctx, exampleWorkspaceID, exampleGraphQuerySetID, &graphqueryset.ItemsClientDeleteGraphQuerySetOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

@@ -9,7 +9,7 @@ package sqldatabase
 // CreationPayloadClassification provides polymorphic access to related types.
 // Call the interface's GetCreationPayload() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
-// - *CreationPayload, *NewSQLDatabaseCreationPayload, *RestoreSQLDatabaseCreationPayload
+// - *CreationPayload, *NewSQLDatabaseCreationPayload, *RestoreDeletedDatabaseCreationPayload, *RestoreSQLDatabaseCreationPayload
 type CreationPayloadClassification interface {
 	// GetCreationPayload returns the CreationPayload content of the underlying type.
 	GetCreationPayload() *CreationPayload

@@ -33,6 +33,22 @@ type AirflowComputeResponse struct {
 	ShutdownPolicy *ShutdownPolicy
 }
 
+// AirflowEnvironmentSettingsRequest - The request payload for updating Apache Airflow environment settings.
+type AirflowEnvironmentSettingsRequest struct {
+	// Airflow configuration overrides. When updating, users must submit the complete set of desired values; existing values will
+	// be replaced.
+	AirflowConfigurationOverrides []NameValuePair
+
+	// Environment variables to configure for the Airflow environment. When updating, users must submit the complete set of desired
+	// values; existing values will be replaced.
+	EnvironmentVariables []NameValuePair
+
+	// The triggerers status for the Airflow environment. When set to Disabled, triggerers do not run. When set to Enabled, triggerers
+	// resume running. Disabling triggerers does not delete any environment
+	// settings.
+	Triggerers *TriggerersStatus
+}
+
 // AirflowEnvironmentSettingsResponse - Apache Airflow environment settings response.
 type AirflowEnvironmentSettingsResponse struct {
 	// READ-ONLY; Airflow configuration overrides.
@@ -41,7 +57,9 @@ type AirflowEnvironmentSettingsResponse struct {
 	// READ-ONLY; Environment variables configured for the Airflow environment.
 	EnvironmentVariables []NameValuePair
 
-	// READ-ONLY; The triggerers status.
+	// READ-ONLY; The triggerers status for the Airflow environment. When set to Disabled, triggerers do not run. When set to
+	// Enabled, triggerers resume running. Disabling triggerers does not delete any environment
+	// settings.
 	Triggerers *TriggerersStatus
 }
 

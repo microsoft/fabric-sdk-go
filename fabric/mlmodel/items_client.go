@@ -147,7 +147,7 @@ func (client *ItemsClient) DeleteMLModel(ctx context.Context, workspaceID string
 }
 
 // deleteMLModelCreateRequest creates the DeleteMLModel request.
-func (client *ItemsClient) deleteMLModelCreateRequest(ctx context.Context, workspaceID string, mlModelID string, _ *ItemsClientDeleteMLModelOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteMLModelCreateRequest(ctx context.Context, workspaceID string, mlModelID string, options *ItemsClientDeleteMLModelOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/mlModels/{mlModelId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -161,6 +161,11 @@ func (client *ItemsClient) deleteMLModelCreateRequest(ctx context.Context, works
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

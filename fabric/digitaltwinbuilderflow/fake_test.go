@@ -293,7 +293,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteDigitalTwinBuilderFlow() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteDigitalTwinBuilderFlow(ctx, exampleWorkspaceID, exampleDigitalTwinBuilderFlowID, nil)
+	_, err = client.DeleteDigitalTwinBuilderFlow(ctx, exampleWorkspaceID, exampleDigitalTwinBuilderFlowID, &digitaltwinbuilderflow.ItemsClientDeleteDigitalTwinBuilderFlowOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a Digital Twin Builder Flow example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleDigitalTwinBuilderFlowID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteDigitalTwinBuilderFlow = func(ctx context.Context, workspaceID string, digitalTwinBuilderFlowID string, options *digitaltwinbuilderflow.ItemsClientDeleteDigitalTwinBuilderFlowOptions) (resp azfake.Responder[digitaltwinbuilderflow.ItemsClientDeleteDigitalTwinBuilderFlowResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDigitalTwinBuilderFlowID, digitalTwinBuilderFlowID)
+		resp = azfake.Responder[digitaltwinbuilderflow.ItemsClientDeleteDigitalTwinBuilderFlowResponse]{}
+		resp.SetResponse(http.StatusOK, digitaltwinbuilderflow.ItemsClientDeleteDigitalTwinBuilderFlowResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteDigitalTwinBuilderFlow(ctx, exampleWorkspaceID, exampleDigitalTwinBuilderFlowID, &digitaltwinbuilderflow.ItemsClientDeleteDigitalTwinBuilderFlowOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

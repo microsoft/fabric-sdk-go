@@ -259,7 +259,7 @@ func (testsuite *FakeTestSuite) TestItems_UpdateOperationsAgent() {
 func (testsuite *FakeTestSuite) TestItems_DeleteOperationsAgent() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Delete a OperationsAgent example"},
+		"example-id": {"Delete an OperationsAgent example"},
 	})
 	var exampleWorkspaceID string
 	var exampleOperationsAgentID string
@@ -275,7 +275,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteOperationsAgent() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteOperationsAgent(ctx, exampleWorkspaceID, exampleOperationsAgentID, nil)
+	_, err = client.DeleteOperationsAgent(ctx, exampleWorkspaceID, exampleOperationsAgentID, &operationsagent.ItemsClientDeleteOperationsAgentOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete an OperationsAgent example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleOperationsAgentID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteOperationsAgent = func(ctx context.Context, workspaceID string, operationsAgentID string, options *operationsagent.ItemsClientDeleteOperationsAgentOptions) (resp azfake.Responder[operationsagent.ItemsClientDeleteOperationsAgentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleOperationsAgentID, operationsAgentID)
+		resp = azfake.Responder[operationsagent.ItemsClientDeleteOperationsAgentResponse]{}
+		resp.SetResponse(http.StatusOK, operationsagent.ItemsClientDeleteOperationsAgentResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteOperationsAgent(ctx, exampleWorkspaceID, exampleOperationsAgentID, &operationsagent.ItemsClientDeleteOperationsAgentOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

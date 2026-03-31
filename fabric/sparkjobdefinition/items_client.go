@@ -154,7 +154,7 @@ func (client *ItemsClient) DeleteSparkJobDefinition(ctx context.Context, workspa
 }
 
 // deleteSparkJobDefinitionCreateRequest creates the DeleteSparkJobDefinition request.
-func (client *ItemsClient) deleteSparkJobDefinitionCreateRequest(ctx context.Context, workspaceID string, sparkJobDefinitionID string, _ *ItemsClientDeleteSparkJobDefinitionOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteSparkJobDefinitionCreateRequest(ctx context.Context, workspaceID string, sparkJobDefinitionID string, options *ItemsClientDeleteSparkJobDefinitionOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/sparkJobDefinitions/{sparkJobDefinitionId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -168,6 +168,11 @@ func (client *ItemsClient) deleteSparkJobDefinitionCreateRequest(ctx context.Con
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

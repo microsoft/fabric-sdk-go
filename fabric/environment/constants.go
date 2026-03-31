@@ -38,9 +38,9 @@ func PossibleCustomPoolMemoryValues() []CustomPoolMemory {
 type CustomPoolType string
 
 const (
-	// CustomPoolTypeCapacity - Capacity custom pool
+	// CustomPoolTypeCapacity - Capacity level custom pool
 	CustomPoolTypeCapacity CustomPoolType = "Capacity"
-	// CustomPoolTypeWorkspace - Workspace custom pool
+	// CustomPoolTypeWorkspace - Workspace level custom pool
 	CustomPoolTypeWorkspace CustomPoolType = "Workspace"
 )
 

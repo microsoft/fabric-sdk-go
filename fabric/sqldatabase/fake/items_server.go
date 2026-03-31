@@ -42,6 +42,10 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
 	BeginGetSQLDatabaseDefinition func(ctx context.Context, workspaceID string, sqlDatabaseID string, options *sqldatabase.ItemsClientBeginGetSQLDatabaseDefinitionOptions) (resp azfake.PollerResponder[sqldatabase.ItemsClientGetSQLDatabaseDefinitionResponse], errResp azfake.ErrorResponder)
 
+	// ListRestorableDeletedDatabases is the fake for method ItemsClient.ListRestorableDeletedDatabases
+	// HTTP status codes to indicate success: http.StatusOK
+	ListRestorableDeletedDatabases func(ctx context.Context, workspaceID string, options *sqldatabase.ItemsClientListRestorableDeletedDatabasesOptions) (resp azfake.Responder[sqldatabase.ItemsClientListRestorableDeletedDatabasesResponse], errResp azfake.ErrorResponder)
+
 	// NewListSQLDatabasesPager is the fake for method ItemsClient.NewListSQLDatabasesPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListSQLDatabasesPager func(workspaceID string, options *sqldatabase.ItemsClientListSQLDatabasesOptions) (resp azfake.PagerResponder[sqldatabase.ItemsClientListSQLDatabasesResponse])
@@ -117,6 +121,8 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 				res.resp, res.err = i.dispatchGetSQLDatabase(req)
 			case "ItemsClient.BeginGetSQLDatabaseDefinition":
 				res.resp, res.err = i.dispatchBeginGetSQLDatabaseDefinition(req)
+			case "ItemsClient.ListRestorableDeletedDatabases":
+				res.resp, res.err = i.dispatchListRestorableDeletedDatabases(req)
 			case "ItemsClient.NewListSQLDatabasesPager":
 				res.resp, res.err = i.dispatchNewListSQLDatabasesPager(req)
 			case "ItemsClient.BeginRevalidateCMK":
@@ -198,6 +204,7 @@ func (i *ItemsServerTransport) dispatchDeleteSQLDatabase(req *http.Request) (*ht
 	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
+	qp := req.URL.Query()
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 	if err != nil {
 		return nil, err
@@ -206,7 +213,21 @@ func (i *ItemsServerTransport) dispatchDeleteSQLDatabase(req *http.Request) (*ht
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := i.srv.DeleteSQLDatabase(req.Context(), workspaceIDParam, sqlDatabaseIDParam, nil)
+	hardDeleteUnescaped, err := url.QueryUnescape(qp.Get("hardDelete"))
+	if err != nil {
+		return nil, err
+	}
+	hardDeleteParam, err := parseOptional(hardDeleteUnescaped, strconv.ParseBool)
+	if err != nil {
+		return nil, err
+	}
+	var options *sqldatabase.ItemsClientDeleteSQLDatabaseOptions
+	if hardDeleteParam != nil {
+		options = &sqldatabase.ItemsClientDeleteSQLDatabaseOptions{
+			HardDelete: hardDeleteParam,
+		}
+	}
+	respr, errRespr := i.srv.DeleteSQLDatabase(req.Context(), workspaceIDParam, sqlDatabaseIDParam, options)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -295,6 +316,56 @@ func (i *ItemsServerTransport) dispatchBeginGetSQLDatabaseDefinition(req *http.R
 		i.beginGetSQLDatabaseDefinition.remove(req)
 	}
 
+	return resp, nil
+}
+
+func (i *ItemsServerTransport) dispatchListRestorableDeletedDatabases(req *http.Request) (*http.Response, error) {
+	if i.srv.ListRestorableDeletedDatabases == nil {
+		return nil, &nonRetriableError{errors.New("fake for method ListRestorableDeletedDatabases not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sqlDatabases/restorableDeletedDatabases`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	qp := req.URL.Query()
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	recursiveUnescaped, err := url.QueryUnescape(qp.Get("recursive"))
+	if err != nil {
+		return nil, err
+	}
+	recursiveParam, err := parseOptional(recursiveUnescaped, strconv.ParseBool)
+	if err != nil {
+		return nil, err
+	}
+	rootFolderIDUnescaped, err := url.QueryUnescape(qp.Get("rootFolderId"))
+	if err != nil {
+		return nil, err
+	}
+	rootFolderIDParam := getOptional(rootFolderIDUnescaped)
+	var options *sqldatabase.ItemsClientListRestorableDeletedDatabasesOptions
+	if recursiveParam != nil || rootFolderIDParam != nil {
+		options = &sqldatabase.ItemsClientListRestorableDeletedDatabasesOptions{
+			Recursive:    recursiveParam,
+			RootFolderID: rootFolderIDParam,
+		}
+	}
+	respr, errRespr := i.srv.ListRestorableDeletedDatabases(req.Context(), workspaceIDParam, options)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).RestorableDeletedSQLDatabases, req)
+	if err != nil {
+		return nil, err
+	}
 	return resp, nil
 }
 

@@ -227,7 +227,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteEventhouse() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteEventhouse(ctx, exampleWorkspaceID, exampleEventhouseID, nil)
+	_, err = client.DeleteEventhouse(ctx, exampleWorkspaceID, exampleEventhouseID, &eventhouse.ItemsClientDeleteEventhouseOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete an eventhouse example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleEventhouseID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteEventhouse = func(ctx context.Context, workspaceID string, eventhouseID string, options *eventhouse.ItemsClientDeleteEventhouseOptions) (resp azfake.Responder[eventhouse.ItemsClientDeleteEventhouseResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEventhouseID, eventhouseID)
+		resp = azfake.Responder[eventhouse.ItemsClientDeleteEventhouseResponse]{}
+		resp.SetResponse(http.StatusOK, eventhouse.ItemsClientDeleteEventhouseResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteEventhouse(ctx, exampleWorkspaceID, exampleEventhouseID, &eventhouse.ItemsClientDeleteEventhouseOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

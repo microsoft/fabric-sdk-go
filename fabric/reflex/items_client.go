@@ -146,7 +146,7 @@ func (client *ItemsClient) DeleteReflex(ctx context.Context, workspaceID string,
 }
 
 // deleteReflexCreateRequest creates the DeleteReflex request.
-func (client *ItemsClient) deleteReflexCreateRequest(ctx context.Context, workspaceID string, reflexID string, _ *ItemsClientDeleteReflexOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteReflexCreateRequest(ctx context.Context, workspaceID string, reflexID string, options *ItemsClientDeleteReflexOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/reflexes/{reflexId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -160,6 +160,11 @@ func (client *ItemsClient) deleteReflexCreateRequest(ctx context.Context, worksp
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

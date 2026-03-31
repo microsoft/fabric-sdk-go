@@ -449,6 +449,15 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ListWorkspaces() {
 				DomainID:   to.Ptr("039bd896-b39c-4540-93e3-e9926de135f9"),
 				ID:         to.Ptr("41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"),
 				State:      to.Ptr(admin.WorkspaceStateActive),
+				Tags: []admin.WorkspaceAppliedTag{
+					{
+						DisplayName: to.Ptr("Finance"),
+						ID:          to.Ptr("b3f2c8e9-4d8e-4a7c-9a32-f8c1b2e4d6af"),
+					},
+					{
+						DisplayName: to.Ptr("Production"),
+						ID:          to.Ptr("6f1a8d3b-92c4-4f67-8c2d-1e5a9b7f4a23"),
+					}},
 			}},
 	}
 
@@ -589,6 +598,11 @@ func (testsuite *FakeTestSuite) TestWorkspaces_GetWorkspace() {
 		DomainID:   to.Ptr("8badadb6-9945-4e07-8134-00e0defec00b"),
 		ID:         to.Ptr("41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"),
 		State:      to.Ptr(admin.WorkspaceStateActive),
+		Tags: []admin.WorkspaceAppliedTag{
+			{
+				DisplayName: to.Ptr("Finance"),
+				ID:          to.Ptr("b3f2c8e9-4d8e-4a7c-9a32-f8c1b2e4d6af"),
+			}},
 	}
 
 	testsuite.serverFactory.WorkspacesServer.GetWorkspace = func(ctx context.Context, workspaceID string, options *admin.WorkspacesClientGetWorkspaceOptions) (resp azfake.Responder[admin.WorkspacesClientGetWorkspaceResponse], errResp azfake.ErrorResponder) {
@@ -2154,7 +2168,19 @@ func (testsuite *FakeTestSuite) TestTags_BulkCreateTags() {
 		"example-id": {"Create domain tags in bulk example"},
 	})
 	var exampleCreateTagsRequest admin.CreateTagsRequest
-	exampleCreateTagsRequest = admin.CreateTagsRequest{}
+	exampleCreateTagsRequest = admin.CreateTagsRequest{
+		CreateTagsRequest: []admin.CreateTagRequest{
+			{
+				DisplayName: to.Ptr("Finance 2024"),
+			},
+			{
+				DisplayName: to.Ptr("HR 2024"),
+			}},
+		Scope: &admin.DomainTagScope{
+			Type:     to.Ptr(admin.TagScopeTypeDomain),
+			DomainID: to.Ptr("e408a2ca-0e43-49d6-86d3-f2558508d32a"),
+		},
+	}
 
 	testsuite.serverFactory.TagsServer.BulkCreateTags = func(ctx context.Context, createTagsRequest admin.CreateTagsRequest, options *admin.TagsClientBulkCreateTagsOptions) (resp azfake.Responder[admin.TagsClientBulkCreateTagsResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().True(reflect.DeepEqual(exampleCreateTagsRequest, createTagsRequest))
@@ -2171,7 +2197,15 @@ func (testsuite *FakeTestSuite) TestTags_BulkCreateTags() {
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Create tenant tags in bulk example"},
 	})
-	exampleCreateTagsRequest = admin.CreateTagsRequest{}
+	exampleCreateTagsRequest = admin.CreateTagsRequest{
+		CreateTagsRequest: []admin.CreateTagRequest{
+			{
+				DisplayName: to.Ptr("Finance 2024"),
+			},
+			{
+				DisplayName: to.Ptr("HR 2024"),
+			}},
+	}
 
 	testsuite.serverFactory.TagsServer.BulkCreateTags = func(ctx context.Context, createTagsRequest admin.CreateTagsRequest, options *admin.TagsClientBulkCreateTagsOptions) (resp azfake.Responder[admin.TagsClientBulkCreateTagsResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().True(reflect.DeepEqual(exampleCreateTagsRequest, createTagsRequest))
@@ -2187,7 +2221,18 @@ func (testsuite *FakeTestSuite) TestTags_BulkCreateTags() {
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Create tenant tags in bulk example with explicit scope"},
 	})
-	exampleCreateTagsRequest = admin.CreateTagsRequest{}
+	exampleCreateTagsRequest = admin.CreateTagsRequest{
+		CreateTagsRequest: []admin.CreateTagRequest{
+			{
+				DisplayName: to.Ptr("Finance 2024"),
+			},
+			{
+				DisplayName: to.Ptr("HR 2024"),
+			}},
+		Scope: &admin.TenantTagScope{
+			Type: to.Ptr(admin.TagScopeTypeTenant),
+		},
+	}
 
 	testsuite.serverFactory.TagsServer.BulkCreateTags = func(ctx context.Context, createTagsRequest admin.CreateTagsRequest, options *admin.TagsClientBulkCreateTagsOptions) (resp azfake.Responder[admin.TagsClientBulkCreateTagsResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().True(reflect.DeepEqual(exampleCreateTagsRequest, createTagsRequest))

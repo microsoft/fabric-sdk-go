@@ -180,6 +180,7 @@ func (i *ItemsServerTransport) dispatchDeleteWarehouse(req *http.Request) (*http
 	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
+	qp := req.URL.Query()
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 	if err != nil {
 		return nil, err
@@ -188,7 +189,21 @@ func (i *ItemsServerTransport) dispatchDeleteWarehouse(req *http.Request) (*http
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := i.srv.DeleteWarehouse(req.Context(), workspaceIDParam, warehouseIDParam, nil)
+	hardDeleteUnescaped, err := url.QueryUnescape(qp.Get("hardDelete"))
+	if err != nil {
+		return nil, err
+	}
+	hardDeleteParam, err := parseOptional(hardDeleteUnescaped, strconv.ParseBool)
+	if err != nil {
+		return nil, err
+	}
+	var options *warehouse.ItemsClientDeleteWarehouseOptions
+	if hardDeleteParam != nil {
+		options = &warehouse.ItemsClientDeleteWarehouseOptions{
+			HardDelete: hardDeleteParam,
+		}
+	}
+	respr, errRespr := i.srv.DeleteWarehouse(req.Context(), workspaceIDParam, warehouseIDParam, options)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}

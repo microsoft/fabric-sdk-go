@@ -378,7 +378,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteLakehouse() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteLakehouse(ctx, exampleWorkspaceID, exampleLakehouseID, nil)
+	_, err = client.DeleteLakehouse(ctx, exampleWorkspaceID, exampleLakehouseID, &lakehouse.ItemsClientDeleteLakehouseOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a lakehouse example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleLakehouseID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteLakehouse = func(ctx context.Context, workspaceID string, lakehouseID string, options *lakehouse.ItemsClientDeleteLakehouseOptions) (resp azfake.Responder[lakehouse.ItemsClientDeleteLakehouseResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleLakehouseID, lakehouseID)
+		resp = azfake.Responder[lakehouse.ItemsClientDeleteLakehouseResponse]{}
+		resp.SetResponse(http.StatusOK, lakehouse.ItemsClientDeleteLakehouseResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteLakehouse(ctx, exampleWorkspaceID, exampleLakehouseID, &lakehouse.ItemsClientDeleteLakehouseOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
@@ -553,11 +571,37 @@ func (testsuite *FakeTestSuite) TestTables_ListTables() {
 func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandTableMaintenance() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Run table maintenance with optimize Z-Order and vacuum enabled for schema enabled lakehouse."},
+		"example-id": {"Run table maintenance with deletion vector purge enabled."},
 	})
 	var exampleWorkspaceID string
 	var exampleLakehouseID string
 	var exampleRunOnDemandTableMaintenanceRequest lakehouse.RunOnDemandTableMaintenanceRequest
+	exampleWorkspaceID = "4b218778-e7a5-4d73-8187-f10824047715"
+	exampleLakehouseID = "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"
+	exampleRunOnDemandTableMaintenanceRequest = lakehouse.RunOnDemandTableMaintenanceRequest{
+		ExecutionData: &lakehouse.TableMaintenanceExecutionData{
+			PurgeDeletionVectors: to.Ptr(true),
+			TableName:            to.Ptr("table1"),
+		},
+	}
+
+	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandTableMaintenance = func(ctx context.Context, workspaceID string, lakehouseID string, runOnDemandTableMaintenanceRequest lakehouse.RunOnDemandTableMaintenanceRequest, options *lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleLakehouseID, lakehouseID)
+		testsuite.Require().True(reflect.DeepEqual(exampleRunOnDemandTableMaintenanceRequest, runOnDemandTableMaintenanceRequest))
+		resp = azfake.Responder[lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceResponse]{}
+		resp.SetResponse(http.StatusAccepted, lakehouse.BackgroundJobsClientRunOnDemandTableMaintenanceResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewBackgroundJobsClient()
+	_, err = client.RunOnDemandTableMaintenance(ctx, exampleWorkspaceID, exampleLakehouseID, exampleRunOnDemandTableMaintenanceRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Run table maintenance with optimize Z-Order and vacuum enabled for schema enabled lakehouse."},
+	})
 	exampleWorkspaceID = "4b218778-e7a5-4d73-8187-f10824047715"
 	exampleLakehouseID = "431e8d7b-4a95-4c02-8ccd-6faef5ba1bd7"
 	exampleRunOnDemandTableMaintenanceRequest = lakehouse.RunOnDemandTableMaintenanceRequest{
@@ -584,7 +628,6 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandTableMaintenance()
 		return
 	}
 
-	client := testsuite.clientFactory.NewBackgroundJobsClient()
 	_, err = client.RunOnDemandTableMaintenance(ctx, exampleWorkspaceID, exampleLakehouseID, exampleRunOnDemandTableMaintenanceRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 

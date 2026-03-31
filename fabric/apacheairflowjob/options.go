@@ -12,6 +12,20 @@ type ComputeClientGetApacheAirflowJobComputeBetaOptions struct {
 	// placeholder for future optional parameters
 }
 
+// EnvironmentClientBeginStartApacheAirflowJobEnvironmentBetaOptions contains the optional parameters for the EnvironmentClient.BeginStartApacheAirflowJobEnvironmentBeta
+// method.
+type EnvironmentClientBeginStartApacheAirflowJobEnvironmentBetaOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// EnvironmentClientBeginStopApacheAirflowJobEnvironmentBetaOptions contains the optional parameters for the EnvironmentClient.BeginStopApacheAirflowJobEnvironmentBeta
+// method.
+type EnvironmentClientBeginStopApacheAirflowJobEnvironmentBetaOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
 // EnvironmentClientGetApacheAirflowJobEnvironmentBetaOptions contains the optional parameters for the EnvironmentClient.GetApacheAirflowJobEnvironmentBeta
 // method.
 type EnvironmentClientGetApacheAirflowJobEnvironmentBetaOptions struct {
@@ -76,7 +90,10 @@ type ItemsClientBeginUpdateApacheAirflowJobDefinitionOptions struct {
 
 // ItemsClientDeleteApacheAirflowJobOptions contains the optional parameters for the ItemsClient.DeleteApacheAirflowJob method.
 type ItemsClientDeleteApacheAirflowJobOptions struct {
-	// placeholder for future optional parameters
+	// Specifies whether to perform a hard delete. When set to true, the item is permanently deleted and cannot be recovered.
+	// When set to false or not specified, the item is soft-deleted if the item type
+	// supports it.
+	HardDelete *bool
 }
 
 // ItemsClientGetApacheAirflowJobOptions contains the optional parameters for the ItemsClient.GetApacheAirflowJob method.
@@ -130,11 +147,32 @@ type PoolManagementClientListAirflowPoolTemplatesBetaOptions struct {
 	ContinuationToken *string
 }
 
+// RequirementsClientBeginDeployApacheAirflowJobRequirementsBetaWithTextOptions contains the optional parameters for the RequirementsClient.BeginDeployApacheAirflowJobRequirementsBetaWithText
+// method.
+type RequirementsClientBeginDeployApacheAirflowJobRequirementsBetaWithTextOptions struct {
+	// The path to an existing requirements file to deploy. If not provided, the request body should contain the requirements
+	// file content.
+	FilePath *string
+
+	// The requirements file content (UTF-8 encoded text). Required if filePath is not provided.
+	RequirementsContentRequest *string
+
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
 // RequirementsClientListApacheAirflowJobLibrariesBetaOptions contains the optional parameters for the RequirementsClient.NewListApacheAirflowJobLibrariesBetaPager
 // method.
 type RequirementsClientListApacheAirflowJobLibrariesBetaOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
+}
+
+// SettingsClientBeginUpdateApacheAirflowJobSettingsBetaOptions contains the optional parameters for the SettingsClient.BeginUpdateApacheAirflowJobSettingsBeta
+// method.
+type SettingsClientBeginUpdateApacheAirflowJobSettingsBetaOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
 }
 
 // SettingsClientGetApacheAirflowJobSettingsBetaOptions contains the optional parameters for the SettingsClient.GetApacheAirflowJobSettingsBeta

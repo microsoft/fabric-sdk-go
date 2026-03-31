@@ -22,6 +22,8 @@ func unmarshalCreationPayloadClassification(rawMsg json.RawMessage) (CreationPay
 		b = &NewSQLDatabaseCreationPayload{}
 	case string(CreationModeRestore):
 		b = &RestoreSQLDatabaseCreationPayload{}
+	case string(CreationModeRestoreDeletedDatabase):
+		b = &RestoreDeletedDatabaseCreationPayload{}
 	default:
 		b = &CreationPayload{}
 	}

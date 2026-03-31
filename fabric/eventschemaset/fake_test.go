@@ -255,7 +255,7 @@ func (testsuite *FakeTestSuite) TestItems_UpdateEventSchemaSet() {
 func (testsuite *FakeTestSuite) TestItems_DeleteEventSchemaSet() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Delete a EventSchemaSet example"},
+		"example-id": {"Delete an EventSchemaSet example"},
 	})
 	var exampleWorkspaceID string
 	var exampleEventSchemaSetID string
@@ -271,7 +271,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteEventSchemaSet() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteEventSchemaSet(ctx, exampleWorkspaceID, exampleEventSchemaSetID, nil)
+	_, err = client.DeleteEventSchemaSet(ctx, exampleWorkspaceID, exampleEventSchemaSetID, &eventschemaset.ItemsClientDeleteEventSchemaSetOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete an EventSchemaSet set example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleEventSchemaSetID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteEventSchemaSet = func(ctx context.Context, workspaceID string, eventSchemaSetID string, options *eventschemaset.ItemsClientDeleteEventSchemaSetOptions) (resp azfake.Responder[eventschemaset.ItemsClientDeleteEventSchemaSetResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEventSchemaSetID, eventSchemaSetID)
+		resp = azfake.Responder[eventschemaset.ItemsClientDeleteEventSchemaSetResponse]{}
+		resp.SetResponse(http.StatusOK, eventschemaset.ItemsClientDeleteEventSchemaSetResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteEventSchemaSet(ctx, exampleWorkspaceID, exampleEventSchemaSetID, &eventschemaset.ItemsClientDeleteEventSchemaSetOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

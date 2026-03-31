@@ -8,6 +8,31 @@ package notebook
 
 import "encoding/json"
 
+func unmarshalJobInstancePropertiesClassification(rawMsg json.RawMessage) (JobInstancePropertiesClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b JobInstancePropertiesClassification
+	switch m["compute"] {
+	case string(ComputeTypeDataWarehouse):
+		b = &DataWarehouseNotebookJobInstanceProperties{}
+	case string(ComputeTypeJupyter):
+		b = &JupyterNotebookJobInstanceProperties{}
+	case string(ComputeTypeSpark):
+		b = &SparkNotebookJobInstanceProperties{}
+	default:
+		b = &JobInstanceProperties{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
 func unmarshalPrincipalClassification(rawMsg json.RawMessage) (PrincipalClassification, error) {
 	if rawMsg == nil || string(rawMsg) == "null" {
 		return nil, nil
@@ -30,6 +55,31 @@ func unmarshalPrincipalClassification(rawMsg json.RawMessage) (PrincipalClassifi
 		b = &UserPrincipal{}
 	default:
 		b = &Principal{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalRunNotebookExecutionDataClassification(rawMsg json.RawMessage) (RunNotebookExecutionDataClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b RunNotebookExecutionDataClassification
+	switch m["compute"] {
+	case string(ComputeTypeDataWarehouse):
+		b = &RunDataWarehouseNotebookExecutionData{}
+	case string(ComputeTypeJupyter):
+		b = &RunJupyterNotebookExecutionData{}
+	case string(ComputeTypeSpark):
+		b = &RunSparkNotebookExecutionData{}
+	default:
+		b = &RunNotebookExecutionData{}
 	}
 	if err := json.Unmarshal(rawMsg, b); err != nil {
 		return nil, err

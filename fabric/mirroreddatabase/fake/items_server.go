@@ -177,6 +177,7 @@ func (i *ItemsServerTransport) dispatchDeleteMirroredDatabase(req *http.Request)
 	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
+	qp := req.URL.Query()
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 	if err != nil {
 		return nil, err
@@ -185,7 +186,21 @@ func (i *ItemsServerTransport) dispatchDeleteMirroredDatabase(req *http.Request)
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := i.srv.DeleteMirroredDatabase(req.Context(), workspaceIDParam, mirroredDatabaseIDParam, nil)
+	hardDeleteUnescaped, err := url.QueryUnescape(qp.Get("hardDelete"))
+	if err != nil {
+		return nil, err
+	}
+	hardDeleteParam, err := parseOptional(hardDeleteUnescaped, strconv.ParseBool)
+	if err != nil {
+		return nil, err
+	}
+	var options *mirroreddatabase.ItemsClientDeleteMirroredDatabaseOptions
+	if hardDeleteParam != nil {
+		options = &mirroreddatabase.ItemsClientDeleteMirroredDatabaseOptions{
+			HardDelete: hardDeleteParam,
+		}
+	}
+	respr, errRespr := i.srv.DeleteMirroredDatabase(req.Context(), workspaceIDParam, mirroredDatabaseIDParam, options)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}

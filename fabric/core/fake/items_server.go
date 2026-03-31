@@ -378,6 +378,7 @@ func (i *ItemsServerTransport) dispatchDeleteItem(req *http.Request) (*http.Resp
 	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
+	qp := req.URL.Query()
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 	if err != nil {
 		return nil, err
@@ -386,7 +387,21 @@ func (i *ItemsServerTransport) dispatchDeleteItem(req *http.Request) (*http.Resp
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := i.srv.DeleteItem(req.Context(), workspaceIDParam, itemIDParam, nil)
+	hardDeleteUnescaped, err := url.QueryUnescape(qp.Get("hardDelete"))
+	if err != nil {
+		return nil, err
+	}
+	hardDeleteParam, err := parseOptional(hardDeleteUnescaped, strconv.ParseBool)
+	if err != nil {
+		return nil, err
+	}
+	var options *core.ItemsClientDeleteItemOptions
+	if hardDeleteParam != nil {
+		options = &core.ItemsClientDeleteItemOptions{
+			HardDelete: hardDeleteParam,
+		}
+	}
+	respr, errRespr := i.srv.DeleteItem(req.Context(), workspaceIDParam, itemIDParam, options)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}

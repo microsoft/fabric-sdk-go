@@ -145,7 +145,7 @@ func (client *ItemsClient) DeleteEventstream(ctx context.Context, workspaceID st
 }
 
 // deleteEventstreamCreateRequest creates the DeleteEventstream request.
-func (client *ItemsClient) deleteEventstreamCreateRequest(ctx context.Context, workspaceID string, eventstreamID string, _ *ItemsClientDeleteEventstreamOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteEventstreamCreateRequest(ctx context.Context, workspaceID string, eventstreamID string, options *ItemsClientDeleteEventstreamOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/eventstreams/{eventstreamId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -159,6 +159,11 @@ func (client *ItemsClient) deleteEventstreamCreateRequest(ctx context.Context, w
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

@@ -245,7 +245,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteMountedDataFactory() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteMountedDataFactory(ctx, exampleWorkspaceID, exampleMountedDataFactoryID, nil)
+	_, err = client.DeleteMountedDataFactory(ctx, exampleWorkspaceID, exampleMountedDataFactoryID, &mounteddatafactory.ItemsClientDeleteMountedDataFactoryOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a MountedDataFactory example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleMountedDataFactoryID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteMountedDataFactory = func(ctx context.Context, workspaceID string, mountedDataFactoryID string, options *mounteddatafactory.ItemsClientDeleteMountedDataFactoryOptions) (resp azfake.Responder[mounteddatafactory.ItemsClientDeleteMountedDataFactoryResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleMountedDataFactoryID, mountedDataFactoryID)
+		resp = azfake.Responder[mounteddatafactory.ItemsClientDeleteMountedDataFactoryResponse]{}
+		resp.SetResponse(http.StatusOK, mounteddatafactory.ItemsClientDeleteMountedDataFactoryResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteMountedDataFactory(ctx, exampleWorkspaceID, exampleMountedDataFactoryID, &mounteddatafactory.ItemsClientDeleteMountedDataFactoryOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

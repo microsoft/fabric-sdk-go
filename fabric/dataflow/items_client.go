@@ -147,7 +147,7 @@ func (client *ItemsClient) DeleteDataflow(ctx context.Context, workspaceID strin
 }
 
 // deleteDataflowCreateRequest creates the DeleteDataflow request.
-func (client *ItemsClient) deleteDataflowCreateRequest(ctx context.Context, workspaceID string, dataflowID string, _ *ItemsClientDeleteDataflowOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteDataflowCreateRequest(ctx context.Context, workspaceID string, dataflowID string, options *ItemsClientDeleteDataflowOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/dataflows/{dataflowId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -161,6 +161,11 @@ func (client *ItemsClient) deleteDataflowCreateRequest(ctx context.Context, work
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

@@ -106,9 +106,10 @@ func ExampleConnectionsClient_CreateConnection_cloudExample() {
 					Value:    to.Ptr("sales"),
 				}},
 		},
-		ConnectivityType: to.Ptr(core.ConnectivityTypeShareableCloud),
-		DisplayName:      to.Ptr("ContosoCloudConnection"),
-		PrivacyLevel:     to.Ptr(core.PrivacyLevelOrganizational),
+		ConnectivityType:               to.Ptr(core.ConnectivityTypeShareableCloud),
+		DisplayName:                    to.Ptr("ContosoCloudConnection"),
+		PrivacyLevel:                   to.Ptr(core.PrivacyLevelOrganizational),
+		AllowUsageInUserControlledCode: to.Ptr(true),
 		CredentialDetails: &core.CreateCredentialDetails{
 			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
 			SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
@@ -609,14 +610,19 @@ func ExampleConnectionsClient_NewListSupportedConnectionTypesPager() {
 		// 					}},
 		// 			}},
 		// 			SupportedConnectionEncryptionTypes: []core.ConnectionEncryption{
-		// 				core.ConnectionEncryptionEncrypted,
-		// 				core.ConnectionEncryptionNotEncrypted},
+		// 				core.ConnectionEncryptionNotEncrypted,
+		// 				core.ConnectionEncryptionEncrypted},
 		// 				SupportedCredentialTypes: []core.CredentialType{
 		// 					core.CredentialTypeBasic,
-		// 					core.CredentialTypeOAuth2},
-		// 					SupportsSkipTestConnection: to.Ptr(true),
-		// 			}},
-		// 		}
+		// 					core.CredentialTypeOAuth2,
+		// 					core.CredentialTypeServicePrincipal,
+		// 					core.CredentialTypeWorkspaceIdentity},
+		// 					SupportedCredentialTypesForUsageInUserControlledCode: []core.CredentialType{
+		// 						core.CredentialTypeBasic,
+		// 						core.CredentialTypeWorkspaceIdentity},
+		// 						SupportsSkipTestConnection: to.Ptr(false),
+		// 				}},
+		// 			}
 	}
 }
 

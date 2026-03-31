@@ -172,6 +172,7 @@ type HighConcurrencyProperties struct {
 	NotebookPipelineRunEnabled *bool
 }
 
+// InstancePool - The instance pool.
 type InstancePool struct {
 	// Instance pool ID.
 	ID *string

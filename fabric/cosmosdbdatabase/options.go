@@ -34,7 +34,10 @@ type ItemsClientBeginUpdateCosmosDBDatabaseDefinitionOptions struct {
 
 // ItemsClientDeleteCosmosDBDatabaseOptions contains the optional parameters for the ItemsClient.DeleteCosmosDBDatabase method.
 type ItemsClientDeleteCosmosDBDatabaseOptions struct {
-	// placeholder for future optional parameters
+	// Specifies whether to perform a hard delete. When set to true, the item is permanently deleted and cannot be recovered.
+	// When set to false or not specified, the item is soft-deleted if the item type
+	// supports it.
+	HardDelete *bool
 }
 
 // ItemsClientGetCosmosDBDatabaseOptions contains the optional parameters for the ItemsClient.GetCosmosDBDatabase method.

@@ -134,7 +134,7 @@ func (client *ItemsClient) DeleteMirroredDatabase(ctx context.Context, workspace
 }
 
 // deleteMirroredDatabaseCreateRequest creates the DeleteMirroredDatabase request.
-func (client *ItemsClient) deleteMirroredDatabaseCreateRequest(ctx context.Context, workspaceID string, mirroredDatabaseID string, _ *ItemsClientDeleteMirroredDatabaseOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteMirroredDatabaseCreateRequest(ctx context.Context, workspaceID string, mirroredDatabaseID string, options *ItemsClientDeleteMirroredDatabaseOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/mirroredDatabases/{mirroredDatabaseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -148,6 +148,11 @@ func (client *ItemsClient) deleteMirroredDatabaseCreateRequest(ctx context.Conte
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

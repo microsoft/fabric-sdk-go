@@ -147,7 +147,7 @@ func (client *ItemsClient) DeleteDataAgent(ctx context.Context, workspaceID stri
 }
 
 // deleteDataAgentCreateRequest creates the DeleteDataAgent request.
-func (client *ItemsClient) deleteDataAgentCreateRequest(ctx context.Context, workspaceID string, dataAgentID string, _ *ItemsClientDeleteDataAgentOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteDataAgentCreateRequest(ctx context.Context, workspaceID string, dataAgentID string, options *ItemsClientDeleteDataAgentOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/dataAgents/{dataAgentId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -161,6 +161,11 @@ func (client *ItemsClient) deleteDataAgentCreateRequest(ctx context.Context, wor
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

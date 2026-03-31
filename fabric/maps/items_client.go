@@ -30,8 +30,7 @@ type ItemsClient struct {
 	endpoint string
 }
 
-// BeginCreateMap - > [!NOTE] Map item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// BeginCreateMap - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create Map with a public definition, refer to Map [/rest/api/fabric/articles/item-management/definitions/map-definition]
 // article.
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
@@ -55,8 +54,7 @@ func (client *ItemsClient) BeginCreateMap(ctx context.Context, workspaceID strin
 	return client.beginCreateMap(ctx, workspaceID, createMapRequest, options)
 }
 
-// CreateMap - > [!NOTE] Map item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// CreateMap - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create Map with a public definition, refer to Map [/rest/api/fabric/articles/item-management/definitions/map-definition]
 // article.
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
@@ -112,8 +110,7 @@ func (client *ItemsClient) createMapCreateRequest(ctx context.Context, workspace
 	return req, nil
 }
 
-// DeleteMap - > [!NOTE] Map item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// PERMISSIONS The caller must have write permissions for the Map.
+// DeleteMap - PERMISSIONS The caller must have write permissions for the Map.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -149,7 +146,7 @@ func (client *ItemsClient) DeleteMap(ctx context.Context, workspaceID string, ma
 }
 
 // deleteMapCreateRequest creates the DeleteMap request.
-func (client *ItemsClient) deleteMapCreateRequest(ctx context.Context, workspaceID string, mapID string, _ *ItemsClientDeleteMapOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteMapCreateRequest(ctx context.Context, workspaceID string, mapID string, options *ItemsClientDeleteMapOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/maps/{mapId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -163,12 +160,16 @@ func (client *ItemsClient) deleteMapCreateRequest(ctx context.Context, workspace
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }
 
-// GetMap - > [!NOTE] Map item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// PERMISSIONS The caller must have read permissions for the Map.
+// GetMap - PERMISSIONS The caller must have read permissions for the Map.
 // REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -232,8 +233,7 @@ func (client *ItemsClient) getMapHandleResponse(resp *http.Response) (ItemsClien
 	return result, nil
 }
 
-// BeginGetMapDefinition - > [!NOTE] Map item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// BeginGetMapDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a Map's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the Map.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
@@ -254,8 +254,7 @@ func (client *ItemsClient) BeginGetMapDefinition(ctx context.Context, workspaceI
 	return client.beginGetMapDefinition(ctx, workspaceID, mapID, options)
 }
 
-// GetMapDefinition - > [!NOTE] Map item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// GetMapDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a Map's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the Map.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
@@ -313,8 +312,7 @@ func (client *ItemsClient) getMapDefinitionCreateRequest(ctx context.Context, wo
 	return req, nil
 }
 
-// NewListMapsPager - > [!NOTE] Map item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API supports pagination [/rest/api/fabric/articles/pagination].
+// NewListMapsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -385,8 +383,7 @@ func (client *ItemsClient) listMapsHandleResponse(resp *http.Response) (ItemsCli
 	return result, nil
 }
 
-// UpdateMap - > [!NOTE] Map item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// PERMISSIONS The caller must have read and write permissions for the Map.
+// UpdateMap - PERMISSIONS The caller must have read and write permissions for the Map.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -454,8 +451,7 @@ func (client *ItemsClient) updateMapHandleResponse(resp *http.Response) (ItemsCl
 	return result, nil
 }
 
-// BeginUpdateMapDefinition - > [!NOTE] Map item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// BeginUpdateMapDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the Map's definition, does not affect its sensitivity label.
 // PERMISSIONS The caller must have read and write permissions for the Map.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
@@ -477,8 +473,7 @@ func (client *ItemsClient) BeginUpdateMapDefinition(ctx context.Context, workspa
 	return client.beginUpdateMapDefinition(ctx, workspaceID, mapID, updateMapDefinitionRequest, options)
 }
 
-// UpdateMapDefinition - > [!NOTE] Map item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// UpdateMapDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the Map's definition, does not affect its sensitivity label.
 // PERMISSIONS The caller must have read and write permissions for the Map.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
@@ -542,8 +537,6 @@ func (client *ItemsClient) updateMapDefinitionCreateRequest(ctx context.Context,
 // Custom code starts below
 
 // CreateMap - returns ItemsClientCreateMapResponse in sync mode.
-// >  [!NOTE] Map item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-//
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
 // To create Map with a public definition, refer to Map [/rest/api/fabric/articles/item-management/definitions/map-definition] article.
@@ -618,8 +611,6 @@ func (client *ItemsClient) beginCreateMap(ctx context.Context, workspaceID strin
 }
 
 // GetMapDefinition - returns ItemsClientGetMapDefinitionResponse in sync mode.
-// >  [!NOTE] Map item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-//
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
 // When you get a Map's public definition, the sensitivity label is not a part of the definition.
@@ -691,8 +682,6 @@ func (client *ItemsClient) beginGetMapDefinition(ctx context.Context, workspaceI
 }
 
 // UpdateMapDefinition - returns ItemsClientUpdateMapDefinitionResponse in sync mode.
-// >  [!NOTE] Map item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-//
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
 // Updating the Map's definition, does not affect its sensitivity label.
@@ -765,8 +754,6 @@ func (client *ItemsClient) beginUpdateMapDefinition(ctx context.Context, workspa
 }
 
 // ListMaps - returns array of Map from all pages.
-// >  [!NOTE] Map item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-//
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
 // PERMISSIONS The caller must have a viewer workspace role.

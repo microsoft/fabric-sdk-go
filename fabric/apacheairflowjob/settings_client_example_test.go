@@ -10,6 +10,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 
 	"github.com/microsoft/fabric-sdk-go/fabric/apacheairflowjob"
@@ -46,4 +47,41 @@ func ExampleSettingsClient_GetApacheAirflowJobSettingsBeta() {
 	// 	}},
 	// 	Triggerers: to.Ptr(apacheairflowjob.TriggerersStatusDisabled),
 	// }
+}
+
+// Generated from example definition
+func ExampleSettingsClient_BeginUpdateApacheAirflowJobSettingsBeta() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := apacheairflowjob.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewSettingsClient().BeginUpdateApacheAirflowJobSettingsBeta(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", true, apacheairflowjob.AirflowEnvironmentSettingsRequest{
+		AirflowConfigurationOverrides: []apacheairflowjob.NameValuePair{
+			{
+				Name:  to.Ptr("core.parallelism"),
+				Value: to.Ptr("32"),
+			}},
+		EnvironmentVariables: []apacheairflowjob.NameValuePair{
+			{
+				Name:  to.Ptr("MY_ENV_VAR"),
+				Value: to.Ptr("my_value"),
+			},
+			{
+				Name:  to.Ptr("ANOTHER_VAR"),
+				Value: to.Ptr("another_value"),
+			}},
+		Triggerers: to.Ptr(apacheairflowjob.TriggerersStatusEnabled),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
 }

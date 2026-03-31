@@ -47,6 +47,37 @@ type CreationPayload struct {
 	CollationType *CollationType
 }
 
+// CustomSQLPool - Custom SQL pool element.
+type CustomSQLPool struct {
+	// This is an object that holds the classifier that is applied to the SQL pool.
+	Classifier *CustomSQLPoolClassifier
+
+	// Indicates that this is a default SQL pool. Only one pool can be marked as default. True - Sql Pool is the default, False
+	// - Sql Pool is not the default.
+	IsDefault *bool
+
+	// Maximum percentage of workspace resources that this SQL pool is allowed to consume. Value is an integer in the range 1-100.
+	// The sum of maxResourcePercentage values across all SQL pools must not exceed
+	// 100
+	MaxResourcePercentage *int32
+
+	// Friendly name for the SQL pool.
+	Name *string
+
+	// Optimizes the SQL pool for read-heavy workloads. True - the SQL pool will leverage enhanced caching to improve read performance.
+	// False - the SQL pool will not use enhanced caching. Default is true.
+	OptimizeForReads *bool
+}
+
+// CustomSQLPoolClassifier - A classifier element.
+type CustomSQLPoolClassifier struct {
+	// REQUIRED; Classifier element type.
+	Type *CustomSQLPoolClassifierType
+
+	// REQUIRED; List of strings.
+	Value []string
+}
+
 // EntireTenantPrincipal - Represents a tenant principal
 type EntireTenantPrincipal struct {
 	// REQUIRED; The principal's ID.
@@ -197,6 +228,16 @@ type SQLAuditSettingsUpdate struct {
 	State *AuditSettingsState
 }
 
+// SQLPoolsConfigurationResponse - SQL pools configuration response.
+type SQLPoolsConfigurationResponse struct {
+	// A list of SQL pool elements.
+	CustomSQLPools []CustomSQLPool
+
+	// Indicates whether the SQL pools configuration is enabled. When set to false, the configuration is disabled but preserved.
+	// Re-enabling it restores the previously saved configuration.
+	CustomSQLPoolsEnabled *bool
+}
+
 // SensitivityLabel - Represents a sensitivity label applied to an item.
 type SensitivityLabel struct {
 	// REQUIRED; The sensitivity label ID.
@@ -280,6 +321,17 @@ type UpdateRestorePointRequest struct {
 
 	// The restore point name. Maximum length is 128 characters.
 	DisplayName *string
+}
+
+// UpdateSQLPoolsConfigurationRequest - SQL pools configuration request payload.
+type UpdateSQLPoolsConfigurationRequest struct {
+	// A list of SQL pool elements. In update requests, you must explicitly specify the name of the pools to retain. Any SQL pool
+	// not included in the update request will be deleted.
+	CustomSQLPools []CustomSQLPool
+
+	// Indicates whether the SQL pools configuration is enabled. When set to false, the configuration is disabled but preserved.
+	// Re-enabling it restores the previously saved configuration.
+	CustomSQLPoolsEnabled *bool
 }
 
 // UpdateWarehouseRequest - Update warehouse request.

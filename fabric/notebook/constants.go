@@ -6,6 +6,73 @@
 
 package notebook
 
+// ComputeType - Represents the type of the compute. Additional ComputeType types may be added over time.
+type ComputeType string
+
+const (
+	// ComputeTypeDataWarehouse - Data Warehouse compute type.
+	ComputeTypeDataWarehouse ComputeType = "DataWarehouse"
+	// ComputeTypeJupyter - Jupyter compute type.
+	ComputeTypeJupyter ComputeType = "Jupyter"
+	// ComputeTypeSpark - Spark compute type.
+	ComputeTypeSpark ComputeType = "Spark"
+)
+
+// PossibleComputeTypeValues returns the possible values for the ComputeType const type.
+func PossibleComputeTypeValues() []ComputeType {
+	return []ComputeType{
+		ComputeTypeDataWarehouse,
+		ComputeTypeJupyter,
+		ComputeTypeSpark,
+	}
+}
+
+// CustomPoolMemory - Custom pool memory for Spark driver or Spark executor. Additional CustomPoolMemory types may be added
+// over time.
+type CustomPoolMemory string
+
+const (
+	// CustomPoolMemoryFiftySixG - 56G memory.
+	CustomPoolMemoryFiftySixG CustomPoolMemory = "56g"
+	// CustomPoolMemoryFourHundredG - 400G memory.
+	CustomPoolMemoryFourHundredG CustomPoolMemory = "400g"
+	// CustomPoolMemoryOneHundredTwelveG - 112G memory.
+	CustomPoolMemoryOneHundredTwelveG CustomPoolMemory = "112g"
+	// CustomPoolMemoryTwentyEightG - 28GB memory.
+	CustomPoolMemoryTwentyEightG CustomPoolMemory = "28g"
+	// CustomPoolMemoryTwoHundredTwentyFourG - 224G memory.
+	CustomPoolMemoryTwoHundredTwentyFourG CustomPoolMemory = "224g"
+)
+
+// PossibleCustomPoolMemoryValues returns the possible values for the CustomPoolMemory const type.
+func PossibleCustomPoolMemoryValues() []CustomPoolMemory {
+	return []CustomPoolMemory{
+		CustomPoolMemoryFiftySixG,
+		CustomPoolMemoryFourHundredG,
+		CustomPoolMemoryOneHundredTwelveG,
+		CustomPoolMemoryTwentyEightG,
+		CustomPoolMemoryTwoHundredTwentyFourG,
+	}
+}
+
+// CustomPoolType - Custom pool type. Additional CustomPoolType types may be added over time.
+type CustomPoolType string
+
+const (
+	// CustomPoolTypeCapacity - Capacity level custom pool
+	CustomPoolTypeCapacity CustomPoolType = "Capacity"
+	// CustomPoolTypeWorkspace - Workspace level custom pool
+	CustomPoolTypeWorkspace CustomPoolType = "Workspace"
+)
+
+// PossibleCustomPoolTypeValues returns the possible values for the CustomPoolType const type.
+func PossibleCustomPoolTypeValues() []CustomPoolType {
+	return []CustomPoolType{
+		CustomPoolTypeCapacity,
+		CustomPoolTypeWorkspace,
+	}
+}
+
 // GroupType - The type of the group. Additional group types may be added over time.
 type GroupType string
 
@@ -24,6 +91,93 @@ func PossibleGroupTypeValues() []GroupType {
 		GroupTypeDistributionList,
 		GroupTypeSecurityGroup,
 		GroupTypeUnknown,
+	}
+}
+
+// InvokeType - The item job invoke type. Additional invokeTypes may be added over time.
+type InvokeType string
+
+const (
+	// InvokeTypeManual - Job is invoked manually
+	InvokeTypeManual InvokeType = "Manual"
+	// InvokeTypeScheduled - Job is scheduled
+	InvokeTypeScheduled InvokeType = "Scheduled"
+)
+
+// PossibleInvokeTypeValues returns the possible values for the InvokeType const type.
+func PossibleInvokeTypeValues() []InvokeType {
+	return []InvokeType{
+		InvokeTypeManual,
+		InvokeTypeScheduled,
+	}
+}
+
+// ItemJobParameterType - A string that represents the parameter's type. Additional types may be added over time.
+type ItemJobParameterType string
+
+const (
+	// ItemJobParameterTypeAutomatic - The parameter type is automatically determined. Note: this type may not be supported for
+	// all item job types.
+	ItemJobParameterTypeAutomatic ItemJobParameterType = "Automatic"
+	// ItemJobParameterTypeBoolean - The type of parameter is a boolean.
+	ItemJobParameterTypeBoolean ItemJobParameterType = "Boolean"
+	// ItemJobParameterTypeDateTime - The type of parameter is a datetime in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	ItemJobParameterTypeDateTime ItemJobParameterType = "DateTime"
+	// ItemJobParameterTypeGUID - The parameter type is a string representation of a GUID, using 00000000-0000-0000-0000-000000000000
+	// format. See https://learn.microsoft.com/dotnet/api/system.guid.tostring for formatting details, and please use the default
+	// format: "D".
+	ItemJobParameterTypeGUID ItemJobParameterType = "Guid"
+	// ItemJobParameterTypeInteger - The type of parameter is an integer.
+	ItemJobParameterTypeInteger ItemJobParameterType = "Integer"
+	// ItemJobParameterTypeNumber - The type of parameter is a number, it accepts both integer and float values.
+	ItemJobParameterTypeNumber ItemJobParameterType = "Number"
+	// ItemJobParameterTypeText - The type of parameter is a text.
+	ItemJobParameterTypeText ItemJobParameterType = "Text"
+	// ItemJobParameterTypeVariableReference - The type of parameter is a variable reference.
+	ItemJobParameterTypeVariableReference ItemJobParameterType = "VariableReference"
+)
+
+// PossibleItemJobParameterTypeValues returns the possible values for the ItemJobParameterType const type.
+func PossibleItemJobParameterTypeValues() []ItemJobParameterType {
+	return []ItemJobParameterType{
+		ItemJobParameterTypeAutomatic,
+		ItemJobParameterTypeBoolean,
+		ItemJobParameterTypeDateTime,
+		ItemJobParameterTypeGUID,
+		ItemJobParameterTypeInteger,
+		ItemJobParameterTypeNumber,
+		ItemJobParameterTypeText,
+		ItemJobParameterTypeVariableReference,
+	}
+}
+
+// ItemJobStatus - The item job status. Additional statuses may be added over time.
+type ItemJobStatus string
+
+const (
+	// ItemJobStatusCancelled - Job cancelled
+	ItemJobStatusCancelled ItemJobStatus = "Cancelled"
+	// ItemJobStatusCompleted - Job completed
+	ItemJobStatusCompleted ItemJobStatus = "Completed"
+	// ItemJobStatusDeduped - A job instance of the same job type is already running and this job instance is skipped
+	ItemJobStatusDeduped ItemJobStatus = "Deduped"
+	// ItemJobStatusFailed - Job failed
+	ItemJobStatusFailed ItemJobStatus = "Failed"
+	// ItemJobStatusInProgress - Job in progress
+	ItemJobStatusInProgress ItemJobStatus = "InProgress"
+	// ItemJobStatusNotStarted - Job not started
+	ItemJobStatusNotStarted ItemJobStatus = "NotStarted"
+)
+
+// PossibleItemJobStatusValues returns the possible values for the ItemJobStatus const type.
+func PossibleItemJobStatusValues() []ItemJobStatus {
+	return []ItemJobStatus{
+		ItemJobStatusCancelled,
+		ItemJobStatusCompleted,
+		ItemJobStatusDeduped,
+		ItemJobStatusFailed,
+		ItemJobStatusInProgress,
+		ItemJobStatusNotStarted,
 	}
 }
 
@@ -314,6 +468,24 @@ func PossibleSensitivityLabelApplyStrategyValues() []SensitivityLabelApplyStrate
 	return []SensitivityLabelApplyStrategy{
 		SensitivityLabelApplyStrategyApplyOrFail,
 		SensitivityLabelApplyStrategyIgnore,
+	}
+}
+
+// SessionSource - Represents the session source. Additional source types may be added over time.
+type SessionSource string
+
+const (
+	// SessionSourceAttached - The current notebook job instance is attached to an existing session.
+	SessionSourceAttached SessionSource = "Attached"
+	// SessionSourceCreated - The session is created by the current notebook job instance.
+	SessionSourceCreated SessionSource = "Created"
+)
+
+// PossibleSessionSourceValues returns the possible values for the SessionSource const type.
+func PossibleSessionSourceValues() []SessionSource {
+	return []SessionSource{
+		SessionSourceAttached,
+		SessionSourceCreated,
 	}
 }
 

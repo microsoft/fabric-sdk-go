@@ -285,7 +285,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteEventstream() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteEventstream(ctx, exampleWorkspaceID, exampleEventstreamID, nil)
+	_, err = client.DeleteEventstream(ctx, exampleWorkspaceID, exampleEventstreamID, &eventstream.ItemsClientDeleteEventstreamOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete an eventstream example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleEventstreamID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteEventstream = func(ctx context.Context, workspaceID string, eventstreamID string, options *eventstream.ItemsClientDeleteEventstreamOptions) (resp azfake.Responder[eventstream.ItemsClientDeleteEventstreamResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEventstreamID, eventstreamID)
+		resp = azfake.Responder[eventstream.ItemsClientDeleteEventstreamResponse]{}
+		resp.SetResponse(http.StatusOK, eventstream.ItemsClientDeleteEventstreamResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteEventstream(ctx, exampleWorkspaceID, exampleEventstreamID, &eventstream.ItemsClientDeleteEventstreamOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
@@ -832,6 +850,18 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 					TableNames:       to.Ptr("tableName1,tableName2"),
 				},
 			},
+			&eventstream.AzureServiceBusSourceResponse{
+				Name:   to.Ptr("AzureServiceBusSource"),
+				ID:     to.Ptr("9fff8320-3e09-41b1-b417-d0d3879dd6f6"),
+				Status: to.Ptr(eventstream.NodeStatusRunning),
+				Type:   to.Ptr(eventstream.SourceTypeAzureServiceBus),
+				Properties: &eventstream.AzureServiceBusSourceProperties{
+					DataConnectionID: to.Ptr("765fd5a4-602c-4477-b0d5-918b416f94b4"),
+					ServiceBusType:   to.Ptr(eventstream.AzureServiceBusSourcePropertiesServiceBusTypeTopic),
+					SubscriptionName: to.Ptr("subscriptionExample"),
+					TopicOrQueueName: to.Ptr("topicName"),
+				},
+			},
 			&eventstream.CustomEndpointSourceResponse{
 				Name:       to.Ptr("CustomEndpointSource"),
 				ID:         to.Ptr("0d9bf4db-bc7f-4854-8579-6fdf244ed503"),
@@ -1059,11 +1089,11 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 				ID:     to.Ptr("9791cd2a-19fb-4991-b878-2b061420a460"),
 				Status: to.Ptr(eventstream.NodeStatusRunning),
 				Type:   to.Ptr(eventstream.SourceTypeMySQLCDC),
-				Properties: map[string]any{
-					"dataConnectionId": "2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37",
-					"port":             float64(3306),
-					"serverId":         float64(9),
-					"tableName":        "tableName",
+				Properties: &eventstream.MySQLCDCSourceProperties{
+					DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+					TableName:        to.Ptr("tableName"),
+					Port:             to.Ptr[int32](3306),
+					ServerID:         to.Ptr[int32](9),
 				},
 			},
 			&eventstream.PostgreSQLCDCSourceResponse{
@@ -1076,6 +1106,18 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 					TableName:        to.Ptr("tableName"),
 					Port:             to.Ptr[int32](5432),
 					SlotName:         to.Ptr("slotName"),
+				},
+			},
+			&eventstream.MongoDBCDCSourceResponse{
+				Name:   to.Ptr("MongoDBCDCSource"),
+				ID:     to.Ptr("a3c1d2e4-5f67-4890-abcd-ef1234567890"),
+				Status: to.Ptr(eventstream.NodeStatusRunning),
+				Type:   to.Ptr(eventstream.SourceTypeMongoDBCDC),
+				Properties: &eventstream.MongoDBCDCSourceProperties{
+					DataConnectionID:    to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+					IncludedCollections: to.Ptr("collection1,collection2"),
+					IncludedDatabases:   to.Ptr("db1,db2"),
+					SnapshotMode:        to.Ptr(eventstream.SnapshotModeInitial),
 				},
 			},
 			&eventstream.GooglePubSubSourceResponse{

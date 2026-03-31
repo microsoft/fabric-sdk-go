@@ -198,6 +198,7 @@ func (i *ItemsServerTransport) dispatchDeleteDataflow(req *http.Request) (*http.
 	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
+	qp := req.URL.Query()
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 	if err != nil {
 		return nil, err
@@ -206,7 +207,21 @@ func (i *ItemsServerTransport) dispatchDeleteDataflow(req *http.Request) (*http.
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := i.srv.DeleteDataflow(req.Context(), workspaceIDParam, dataflowIDParam, nil)
+	hardDeleteUnescaped, err := url.QueryUnescape(qp.Get("hardDelete"))
+	if err != nil {
+		return nil, err
+	}
+	hardDeleteParam, err := parseOptional(hardDeleteUnescaped, strconv.ParseBool)
+	if err != nil {
+		return nil, err
+	}
+	var options *dataflow.ItemsClientDeleteDataflowOptions
+	if hardDeleteParam != nil {
+		options = &dataflow.ItemsClientDeleteDataflowOptions{
+			HardDelete: hardDeleteParam,
+		}
+	}
+	respr, errRespr := i.srv.DeleteDataflow(req.Context(), workspaceIDParam, dataflowIDParam, options)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}

@@ -8,6 +8,46 @@ package core
 
 import "encoding/json"
 
+func unmarshalCatalogEntryClassification(rawMsg json.RawMessage) (CatalogEntryClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b CatalogEntryClassification
+	switch m["catalogEntryType"] {
+	case string(CatalogEntryTypeFabricItem):
+		b = &ItemCatalogEntry{}
+	default:
+		b = &CatalogEntry{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalCatalogEntryClassificationArray(rawMsg json.RawMessage) ([]CatalogEntryClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var rawMessages []json.RawMessage
+	if err := json.Unmarshal(rawMsg, &rawMessages); err != nil {
+		return nil, err
+	}
+	fArray := make([]CatalogEntryClassification, len(rawMessages))
+	for index, rawMessage := range rawMessages {
+		f, err := unmarshalCatalogEntryClassification(rawMessage)
+		if err != nil {
+			return nil, err
+		}
+		fArray[index] = f
+	}
+	return fArray, nil
+}
+
 func unmarshalConnectionClassification(rawMsg json.RawMessage) (ConnectionClassification, error) {
 	if rawMsg == nil || string(rawMsg) == "null" {
 		return nil, nil

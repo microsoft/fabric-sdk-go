@@ -297,7 +297,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteNotebook() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteNotebook(ctx, exampleWorkspaceID, exampleNotebookID, nil)
+	_, err = client.DeleteNotebook(ctx, exampleWorkspaceID, exampleNotebookID, &notebook.ItemsClientDeleteNotebookOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a notebook example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleNotebookID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteNotebook = func(ctx context.Context, workspaceID string, notebookID string, options *notebook.ItemsClientDeleteNotebookOptions) (resp azfake.Responder[notebook.ItemsClientDeleteNotebookResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleNotebookID, notebookID)
+		resp = azfake.Responder[notebook.ItemsClientDeleteNotebookResponse]{}
+		resp.SetResponse(http.StatusOK, notebook.ItemsClientDeleteNotebookResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteNotebook(ctx, exampleWorkspaceID, exampleNotebookID, &notebook.ItemsClientDeleteNotebookOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
@@ -723,4 +741,376 @@ func (testsuite *FakeTestSuite) TestLivySessions_GetLivySession() {
 	res, err := client.GetLivySession(ctx, exampleWorkspaceID, exampleNotebookID, exampleLivyID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.LivySession))
+}
+
+func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandNotebook() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Run Data Warehouse notebook with request body."},
+	})
+	var exampleWorkspaceID string
+	var exampleNotebookID string
+	var exampleBeta bool
+	exampleWorkspaceID = "d9438604-fdf3-472d-93d8-fcb832a1d2b6"
+	exampleNotebookID = "5171b288-8487-4d1e-82b3-693edfa14aee"
+	exampleBeta = false
+
+	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandNotebook = func(ctx context.Context, workspaceID string, notebookID string, beta bool, options *notebook.BackgroundJobsClientRunOnDemandNotebookOptions) (resp azfake.Responder[notebook.BackgroundJobsClientRunOnDemandNotebookResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleNotebookID, notebookID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.Responder[notebook.BackgroundJobsClientRunOnDemandNotebookResponse]{}
+		resp.SetResponse(http.StatusAccepted, notebook.BackgroundJobsClientRunOnDemandNotebookResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewBackgroundJobsClient()
+	_, err = client.RunOnDemandNotebook(ctx, exampleWorkspaceID, exampleNotebookID, exampleBeta, &notebook.BackgroundJobsClientRunOnDemandNotebookOptions{RunNotebookRequest: &notebook.RunNotebookRequest{
+		ExecutionData: &notebook.RunDataWarehouseNotebookExecutionData{
+			Compute: to.Ptr(notebook.ComputeTypeDataWarehouse),
+		},
+	},
+	})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Run Jupyter notebook with request body."},
+	})
+	exampleWorkspaceID = "d9438604-fdf3-472d-93d8-fcb832a1d2b6"
+	exampleNotebookID = "5171b288-8487-4d1e-82b3-693edfa14aee"
+	exampleBeta = false
+
+	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandNotebook = func(ctx context.Context, workspaceID string, notebookID string, beta bool, options *notebook.BackgroundJobsClientRunOnDemandNotebookOptions) (resp azfake.Responder[notebook.BackgroundJobsClientRunOnDemandNotebookResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleNotebookID, notebookID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.Responder[notebook.BackgroundJobsClientRunOnDemandNotebookResponse]{}
+		resp.SetResponse(http.StatusAccepted, notebook.BackgroundJobsClientRunOnDemandNotebookResponse{}, nil)
+		return
+	}
+
+	_, err = client.RunOnDemandNotebook(ctx, exampleWorkspaceID, exampleNotebookID, exampleBeta, &notebook.BackgroundJobsClientRunOnDemandNotebookOptions{RunNotebookRequest: &notebook.RunNotebookRequest{
+		ExecutionData: &notebook.RunJupyterNotebookExecutionData{
+			Compute: to.Ptr(notebook.ComputeTypeJupyter),
+			ComputeConfiguration: &notebook.JupyterNotebookComputeConfiguration{
+				Name: to.Ptr("mySessionName"),
+				AttachedEnvironment: &notebook.ItemReferenceByID{
+					ReferenceType: to.Ptr(notebook.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("39f73c18-9970-43a4-9c6e-72d22160493d"),
+					WorkspaceID:   to.Ptr("d9438604-fdf3-472d-93d8-fcb832a1d2b6"),
+				},
+				DefaultLakehouse: &notebook.ItemReferenceByID{
+					ReferenceType: to.Ptr(notebook.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("2434b3e1-d753-4438-8e72-00cb6703e83a"),
+					WorkspaceID:   to.Ptr("d9438604-fdf3-472d-93d8-fcb832a1d2b6"),
+				},
+				MountPoints: []notebook.MountPoint{
+					{
+						MountPointPath: to.Ptr("/myMountPoint"),
+						Source:         to.Ptr("abfss://myfilesystem@myaccount.dfs.core.windows.net/mypath"),
+					}},
+				NumCores: to.Ptr[int32](4),
+			},
+		},
+	},
+	})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Run Spark notebook with request body."},
+	})
+	exampleWorkspaceID = "d9438604-fdf3-472d-93d8-fcb832a1d2b6"
+	exampleNotebookID = "5171b288-8487-4d1e-82b3-693edfa14aee"
+	exampleBeta = false
+
+	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandNotebook = func(ctx context.Context, workspaceID string, notebookID string, beta bool, options *notebook.BackgroundJobsClientRunOnDemandNotebookOptions) (resp azfake.Responder[notebook.BackgroundJobsClientRunOnDemandNotebookResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleNotebookID, notebookID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.Responder[notebook.BackgroundJobsClientRunOnDemandNotebookResponse]{}
+		resp.SetResponse(http.StatusAccepted, notebook.BackgroundJobsClientRunOnDemandNotebookResponse{}, nil)
+		return
+	}
+
+	_, err = client.RunOnDemandNotebook(ctx, exampleWorkspaceID, exampleNotebookID, exampleBeta, &notebook.BackgroundJobsClientRunOnDemandNotebookOptions{RunNotebookRequest: &notebook.RunNotebookRequest{
+		ExecutionData: &notebook.RunSparkNotebookExecutionData{
+			Compute: to.Ptr(notebook.ComputeTypeSpark),
+			ComputeConfiguration: &notebook.SparkNotebookComputeConfiguration{
+				Name: to.Ptr("mySessionName"),
+				Archives: []string{
+					"abfss://myfilesystem@myaccount.dfs.core.windows.net/mypath/myzip.zip"},
+				AttachedEnvironment: &notebook.ItemReferenceByID{
+					ReferenceType: to.Ptr(notebook.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("39f73c18-9970-43a4-9c6e-72d22160493d"),
+					WorkspaceID:   to.Ptr("d9438604-fdf3-472d-93d8-fcb832a1d2b6"),
+				},
+				DefaultLakehouse: &notebook.ItemReferenceByID{
+					ReferenceType: to.Ptr(notebook.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("2434b3e1-d753-4438-8e72-00cb6703e83a"),
+					WorkspaceID:   to.Ptr("d9438604-fdf3-472d-93d8-fcb832a1d2b6"),
+				},
+				DriverCores:    to.Ptr[int32](4),
+				DriverMemory:   to.Ptr(notebook.CustomPoolMemoryTwentyEightG),
+				ExecutorCores:  to.Ptr[int32](4),
+				ExecutorMemory: to.Ptr(notebook.CustomPoolMemoryTwentyEightG),
+				Files: []string{
+					"abfss://myfilesystem@myaccount.dfs.core.windows.net/mypath/myfile.txt"},
+				HighConcurrencyModeOptions: &notebook.HighConcurrencyModeOptions{
+					Enabled:    to.Ptr(true),
+					SessionTag: to.Ptr("userInputSessionTag"),
+				},
+				InstancePool: &notebook.InstancePool{
+					Name: to.Ptr("poolName"),
+					Type: to.Ptr(notebook.CustomPoolTypeWorkspace),
+				},
+				Jars: []string{
+					"abfss://myfilesystem@myaccount.dfs.core.windows.net/mypath/myjar.jar"},
+				MountPoints: []notebook.MountPoint{
+					{
+						MountPointPath: to.Ptr("/myMountPoint"),
+						Source:         to.Ptr("abfss://myfilesystem@myaccount.dfs.core.windows.net/mypath"),
+					}},
+				NumExecutors: to.Ptr[int32](10),
+				PyFiles: []string{
+					"abfss://myfilesystem@myaccount.dfs.core.windows.net/mypath/mypy.py"},
+				SparkProperties: []notebook.SparkProperty{
+					{
+						Key:   to.Ptr("spark.key1"),
+						Value: to.Ptr("value1"),
+					}},
+			},
+		},
+	},
+	})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Run notebook with no request body."},
+	})
+	exampleWorkspaceID = "d9438604-fdf3-472d-93d8-fcb832a1d2b6"
+	exampleNotebookID = "5171b288-8487-4d1e-82b3-693edfa14aee"
+	exampleBeta = false
+
+	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandNotebook = func(ctx context.Context, workspaceID string, notebookID string, beta bool, options *notebook.BackgroundJobsClientRunOnDemandNotebookOptions) (resp azfake.Responder[notebook.BackgroundJobsClientRunOnDemandNotebookResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleNotebookID, notebookID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.Responder[notebook.BackgroundJobsClientRunOnDemandNotebookResponse]{}
+		resp.SetResponse(http.StatusAccepted, notebook.BackgroundJobsClientRunOnDemandNotebookResponse{}, nil)
+		return
+	}
+
+	_, err = client.RunOnDemandNotebook(ctx, exampleWorkspaceID, exampleNotebookID, exampleBeta, &notebook.BackgroundJobsClientRunOnDemandNotebookOptions{RunNotebookRequest: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Run notebook with parameters."},
+	})
+	exampleWorkspaceID = "d9438604-fdf3-472d-93d8-fcb832a1d2b6"
+	exampleNotebookID = "5171b288-8487-4d1e-82b3-693edfa14aee"
+	exampleBeta = false
+
+	testsuite.serverFactory.BackgroundJobsServer.RunOnDemandNotebook = func(ctx context.Context, workspaceID string, notebookID string, beta bool, options *notebook.BackgroundJobsClientRunOnDemandNotebookOptions) (resp azfake.Responder[notebook.BackgroundJobsClientRunOnDemandNotebookResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleNotebookID, notebookID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.Responder[notebook.BackgroundJobsClientRunOnDemandNotebookResponse]{}
+		resp.SetResponse(http.StatusAccepted, notebook.BackgroundJobsClientRunOnDemandNotebookResponse{}, nil)
+		return
+	}
+
+	_, err = client.RunOnDemandNotebook(ctx, exampleWorkspaceID, exampleNotebookID, exampleBeta, &notebook.BackgroundJobsClientRunOnDemandNotebookOptions{RunNotebookRequest: &notebook.RunNotebookRequest{
+		ExecutionData: &notebook.RunSparkNotebookExecutionData{
+			Compute: to.Ptr(notebook.ComputeTypeSpark),
+			ComputeConfiguration: &notebook.SparkNotebookComputeConfiguration{
+				HighConcurrencyModeOptions: &notebook.HighConcurrencyModeOptions{
+					Enabled:    to.Ptr(true),
+					SessionTag: to.Ptr("userInputSessionTag"),
+				},
+			},
+		},
+		Parameters: []notebook.Parameter{
+			{
+				Name:  to.Ptr("param1"),
+				Type:  to.Ptr(notebook.ItemJobParameterTypeText),
+				Value: "value1",
+			},
+			{
+				Name:  to.Ptr("param2"),
+				Type:  to.Ptr(notebook.ItemJobParameterTypeBoolean),
+				Value: true,
+			}},
+	},
+	})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestBackgroundJobs_GetNotebookJobInstanceBeta() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get Spark notebook job instance example"},
+	})
+	var exampleWorkspaceID string
+	var exampleNotebookID string
+	var exampleJobInstanceID string
+	var exampleBeta bool
+	exampleWorkspaceID = "1ede770b-e7b7-4b30-8acf-1c985425f4a7"
+	exampleNotebookID = "28ecef4f-a073-485e-be94-fd75c68bfd49"
+	exampleJobInstanceID = "f2d65699-dd22-4889-980c-15226deb0e1b"
+	exampleBeta = true
+
+	exampleRes := notebook.JobInstance{
+		EndTimeUTC:     to.Ptr("2023-04-22T06:35:00.8033333"),
+		ID:             to.Ptr("f2d65699-dd22-4889-980c-15226deb0e1b"),
+		InvokeType:     to.Ptr(notebook.InvokeTypeManual),
+		ItemID:         to.Ptr("28ecef4f-a073-485e-be94-fd75c68bfd49"),
+		JobType:        to.Ptr("Execute"),
+		RootActivityID: to.Ptr("8c2ee553-53a4-7edb-1042-0d8189a9e0ca"),
+		StartTimeUTC:   to.Ptr("2023-04-22T06:35:00.7812154"),
+		Status:         to.Ptr(notebook.ItemJobStatusCompleted),
+		Properties: &notebook.SparkNotebookJobInstanceProperties{
+			Compute: to.Ptr(notebook.ComputeTypeSpark),
+			ComputeDetails: &notebook.SparkNotebookComputeDetails{
+				HighConcurrencyModeStatus: &notebook.HighConcurrencyModeStatus{
+					SessionSource: to.Ptr(notebook.SessionSourceCreated),
+					SessionTag:    to.Ptr("tag1"),
+				},
+				LivyID: to.Ptr("60cfa752-457a-435e-bde2-b25f928ea647"),
+				MonitoringInfo: &notebook.SparkNotebookMonitoringInfo{
+					ActivityDetails: &notebook.SparkNotebookActivityDetails{
+						CancellationReason: to.Ptr("System stopped the Spark session upon completion of the notebook run"),
+						CapacityID:         to.Ptr("907376aa-279b-4c47-bc09-5000c9fca1b1"),
+						CreatorItem: &notebook.ItemReferenceByID{
+							ReferenceType: to.Ptr(notebook.ItemReferenceTypeByID),
+							ItemID:        to.Ptr("28ecef4f-a073-485e-be94-fd75c68bfd49"),
+							WorkspaceID:   to.Ptr("1ede770b-e7b7-4b30-8acf-1c985425f4a7"),
+						},
+						EndDateTime:        to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-03-25T06:44:03.762Z"); return t }()),
+						IsHighConcurrency:  to.Ptr(false),
+						ItemName:           to.Ptr("ref1"),
+						JobType:            to.Ptr(notebook.JobTypeSparkSession),
+						LivyName:           to.Ptr("ref1_60cfa752-457a-435e-bde2-b25f928ea647"),
+						OperationName:      to.Ptr("Notebook Scheduled Run"),
+						RuntimeVersion:     to.Ptr("1.3"),
+						SparkApplicationID: to.Ptr("application_1742884741239_0001"),
+						StartDateTime:      to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-03-25T06:39:22.311Z"); return t }()),
+						SubmittedDateTime:  to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2025-03-25T06:43:12.345Z"); return t }()),
+					},
+					DriverLogURL:         to.Ptr("https://sparkui.fabric.microsoft.com/sparkui/ed747705-47be-4ea4-8af5-963e5d81396b/api/v1/wt/datacloud/workspaces/1ede770b-e7b7-4b30-8acf-1c985425f4a7/activities/2ec5a60a-ad7f-416b-859f-ae35097488cd/applications/application_1743143839903_0001/driverlog/stderr"),
+					ExecutionSnapshotURL: to.Ptr("https://app.fabric.microsoft.com/groups/1ede770b-e7b7-4b30-8acf-1c985425f4a7/synapsenotebooks/28ecef4f-a073-485e-be94-fd75c68bfd49/snapshots/f2d65699-dd22-4889-980c-15226deb0e1b?experience=power-bi"),
+					SparkJobDetailsURL:   to.Ptr("https://app.fabric.microsoft.com/workloads/de-ds/sparkmonitor/28ecef4f-a073-485e-be94-fd75c68bfd49/60cfa752-457a-435e-bde2-b25f928ea647?experience=power-bi"),
+					SparkUIURL:           to.Ptr("https://sparkui.fabric.microsoft.com/sparkui/ed747705-47be-4ea4-8af5-963e5d81396b/workspaceTypes/datacloud/workspaces/1ede770b-e7b7-4b30-8acf-1c985425f4a7/activities/2ec5a60a-ad7f-416b-859f-ae35097488cd/applications/application_1743143839903_0001/jobs"),
+				},
+			},
+		},
+	}
+
+	testsuite.serverFactory.BackgroundJobsServer.GetNotebookJobInstanceBeta = func(ctx context.Context, workspaceID string, notebookID string, jobInstanceID string, beta bool, options *notebook.BackgroundJobsClientGetNotebookJobInstanceBetaOptions) (resp azfake.Responder[notebook.BackgroundJobsClientGetNotebookJobInstanceBetaResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleNotebookID, notebookID)
+		testsuite.Require().Equal(exampleJobInstanceID, jobInstanceID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.Responder[notebook.BackgroundJobsClientGetNotebookJobInstanceBetaResponse]{}
+		resp.SetResponse(http.StatusOK, notebook.BackgroundJobsClientGetNotebookJobInstanceBetaResponse{JobInstance: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewBackgroundJobsClient()
+	res, err := client.GetNotebookJobInstanceBeta(ctx, exampleWorkspaceID, exampleNotebookID, exampleJobInstanceID, exampleBeta, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.JobInstance))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get data warehouse notebook job instance example"},
+	})
+	exampleWorkspaceID = "1ede770b-e7b7-4b30-8acf-1c985425f4a7"
+	exampleNotebookID = "28ecef4f-a073-485e-be94-fd75c68bfd49"
+	exampleJobInstanceID = "f2d65699-dd22-4889-980c-15226deb0e1b"
+	exampleBeta = true
+
+	exampleRes = notebook.JobInstance{
+		EndTimeUTC:     to.Ptr("2023-04-22T06:35:00.8033333"),
+		ID:             to.Ptr("f2d65699-dd22-4889-980c-15226deb0e1b"),
+		InvokeType:     to.Ptr(notebook.InvokeTypeManual),
+		ItemID:         to.Ptr("28ecef4f-a073-485e-be94-fd75c68bfd49"),
+		JobType:        to.Ptr("Execute"),
+		RootActivityID: to.Ptr("8c2ee553-53a4-7edb-1042-0d8189a9e0ca"),
+		StartTimeUTC:   to.Ptr("2023-04-22T06:35:00.7812154"),
+		Status:         to.Ptr(notebook.ItemJobStatusCompleted),
+		Properties: &notebook.DataWarehouseNotebookJobInstanceProperties{
+			Compute: to.Ptr(notebook.ComputeTypeDataWarehouse),
+			ComputeDetails: &notebook.DataWarehouseNotebookComputeDetails{
+				MonitoringInfo: &notebook.DataWarehouseNotebookMonitoringInfo{
+					ExecutionSnapshotURL: to.Ptr("https://app.fabric.microsoft.com/groups/1ede770b-e7b7-4b30-8acf-1c985425f4a7/synapsenotebooks/28ecef4f-a073-485e-be94-fd75c68bfd49/snapshots/f2d65699-dd22-4889-980c-15226deb0e1b?experience=power-bi"),
+				},
+				PrimaryWarehouse: &notebook.ItemReferenceByID{
+					ReferenceType: to.Ptr(notebook.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("98b8ebff-757a-470c-858c-ffaf5a696f4f"),
+					WorkspaceID:   to.Ptr("1ede770b-e7b7-4b30-8acf-1c985425f4a7"),
+				},
+			},
+		},
+	}
+
+	testsuite.serverFactory.BackgroundJobsServer.GetNotebookJobInstanceBeta = func(ctx context.Context, workspaceID string, notebookID string, jobInstanceID string, beta bool, options *notebook.BackgroundJobsClientGetNotebookJobInstanceBetaOptions) (resp azfake.Responder[notebook.BackgroundJobsClientGetNotebookJobInstanceBetaResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleNotebookID, notebookID)
+		testsuite.Require().Equal(exampleJobInstanceID, jobInstanceID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.Responder[notebook.BackgroundJobsClientGetNotebookJobInstanceBetaResponse]{}
+		resp.SetResponse(http.StatusOK, notebook.BackgroundJobsClientGetNotebookJobInstanceBetaResponse{JobInstance: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.GetNotebookJobInstanceBeta(ctx, exampleWorkspaceID, exampleNotebookID, exampleJobInstanceID, exampleBeta, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.JobInstance))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get jupyter notebook job instance example"},
+	})
+	exampleWorkspaceID = "1ede770b-e7b7-4b30-8acf-1c985425f4a7"
+	exampleNotebookID = "28ecef4f-a073-485e-be94-fd75c68bfd49"
+	exampleJobInstanceID = "f2d65699-dd22-4889-980c-15226deb0e1b"
+	exampleBeta = true
+
+	exampleRes = notebook.JobInstance{
+		EndTimeUTC:     to.Ptr("2023-04-22T06:35:00.8033333"),
+		ID:             to.Ptr("f2d65699-dd22-4889-980c-15226deb0e1b"),
+		InvokeType:     to.Ptr(notebook.InvokeTypeManual),
+		ItemID:         to.Ptr("28ecef4f-a073-485e-be94-fd75c68bfd49"),
+		JobType:        to.Ptr("Execute"),
+		RootActivityID: to.Ptr("8c2ee553-53a4-7edb-1042-0d8189a9e0ca"),
+		StartTimeUTC:   to.Ptr("2023-04-22T06:35:00.7812154"),
+		Status:         to.Ptr(notebook.ItemJobStatusCompleted),
+		Properties: &notebook.JupyterNotebookJobInstanceProperties{
+			Compute: to.Ptr(notebook.ComputeTypeJupyter),
+			ComputeDetails: &notebook.JupyterNotebookComputeDetails{
+				ActivityID: to.Ptr("60cfa752-457a-435e-bde2-b25f928ea647"),
+				MonitoringInfo: &notebook.JupyterNotebookMonitoringInfo{
+					ExecutionSnapshotURL: to.Ptr("https://app.fabric.microsoft.com/groups/1ede770b-e7b7-4b30-8acf-1c985425f4a7/synapsenotebooks/28ecef4f-a073-485e-be94-fd75c68bfd49/snapshots/f2d65699-dd22-4889-980c-15226deb0e1b?experience=power-bi"),
+				},
+			},
+		},
+	}
+
+	testsuite.serverFactory.BackgroundJobsServer.GetNotebookJobInstanceBeta = func(ctx context.Context, workspaceID string, notebookID string, jobInstanceID string, beta bool, options *notebook.BackgroundJobsClientGetNotebookJobInstanceBetaOptions) (resp azfake.Responder[notebook.BackgroundJobsClientGetNotebookJobInstanceBetaResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleNotebookID, notebookID)
+		testsuite.Require().Equal(exampleJobInstanceID, jobInstanceID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.Responder[notebook.BackgroundJobsClientGetNotebookJobInstanceBetaResponse]{}
+		resp.SetResponse(http.StatusOK, notebook.BackgroundJobsClientGetNotebookJobInstanceBetaResponse{JobInstance: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.GetNotebookJobInstanceBeta(ctx, exampleWorkspaceID, exampleNotebookID, exampleJobInstanceID, exampleBeta, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.JobInstance))
 }

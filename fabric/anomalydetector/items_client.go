@@ -153,7 +153,7 @@ func (client *ItemsClient) DeleteAnomalyDetector(ctx context.Context, workspaceI
 }
 
 // deleteAnomalyDetectorCreateRequest creates the DeleteAnomalyDetector request.
-func (client *ItemsClient) deleteAnomalyDetectorCreateRequest(ctx context.Context, workspaceID string, anomalyDetectorID string, _ *ItemsClientDeleteAnomalyDetectorOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteAnomalyDetectorCreateRequest(ctx context.Context, workspaceID string, anomalyDetectorID string, options *ItemsClientDeleteAnomalyDetectorOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/anomalyDetectors/{anomalyDetectorId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -167,6 +167,11 @@ func (client *ItemsClient) deleteAnomalyDetectorCreateRequest(ctx context.Contex
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

@@ -21,6 +21,7 @@ type ServerFactory struct {
 	ItemsServer            ItemsServer
 	RestorePointsServer    RestorePointsServer
 	SQLAuditSettingsServer SQLAuditSettingsServer
+	SQLPoolsServer         SQLPoolsServer
 }
 
 // ServerFactoryTransport connects instances of warehouse.ClientFactory to instances of ServerFactory.
@@ -31,6 +32,7 @@ type ServerFactoryTransport struct {
 	trItemsServer            *ItemsServerTransport
 	trRestorePointsServer    *RestorePointsServerTransport
 	trSQLAuditSettingsServer *SQLAuditSettingsServerTransport
+	trSQLPoolsServer         *SQLPoolsServerTransport
 }
 
 // NewServerFactoryTransport creates a new instance of ServerFactoryTransport with the provided implementation.
@@ -69,6 +71,9 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return NewSQLAuditSettingsServerTransport(&s.srv.SQLAuditSettingsServer)
 		})
 		resp, err = s.trSQLAuditSettingsServer.Do(req)
+	case "SQLPoolsClient":
+		initServer(s, &s.trSQLPoolsServer, func() *SQLPoolsServerTransport { return NewSQLPoolsServerTransport(&s.srv.SQLPoolsServer) })
+		resp, err = s.trSQLPoolsServer.Do(req)
 	default:
 		err = fmt.Errorf("unhandled client %s", client)
 	}

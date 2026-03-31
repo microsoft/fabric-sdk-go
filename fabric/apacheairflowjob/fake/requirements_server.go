@@ -7,10 +7,12 @@
 package fake
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -25,6 +27,10 @@ import (
 
 // RequirementsServer is a fake server for instances of the apacheairflowjob.RequirementsClient type.
 type RequirementsServer struct {
+	// BeginDeployApacheAirflowJobRequirementsBetaWithText is the fake for method RequirementsClient.BeginDeployApacheAirflowJobRequirementsBetaWithText
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
+	BeginDeployApacheAirflowJobRequirementsBetaWithText func(ctx context.Context, workspaceID string, apacheAirflowJobID string, beta bool, options *apacheairflowjob.RequirementsClientBeginDeployApacheAirflowJobRequirementsBetaWithTextOptions) (resp azfake.PollerResponder[apacheairflowjob.RequirementsClientDeployApacheAirflowJobRequirementsBetaWithTextResponse], errResp azfake.ErrorResponder)
+
 	// NewListApacheAirflowJobLibrariesBetaPager is the fake for method RequirementsClient.NewListApacheAirflowJobLibrariesBetaPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListApacheAirflowJobLibrariesBetaPager func(workspaceID string, apacheAirflowJobID string, beta bool, options *apacheairflowjob.RequirementsClientListApacheAirflowJobLibrariesBetaOptions) (resp azfake.PagerResponder[apacheairflowjob.RequirementsClientListApacheAirflowJobLibrariesBetaResponse])
@@ -36,15 +42,17 @@ type RequirementsServer struct {
 func NewRequirementsServerTransport(srv *RequirementsServer) *RequirementsServerTransport {
 	return &RequirementsServerTransport{
 		srv: srv,
-		newListApacheAirflowJobLibrariesBetaPager: newTracker[azfake.PagerResponder[apacheairflowjob.RequirementsClientListApacheAirflowJobLibrariesBetaResponse]](),
+		beginDeployApacheAirflowJobRequirementsBetaWithText: newTracker[azfake.PollerResponder[apacheairflowjob.RequirementsClientDeployApacheAirflowJobRequirementsBetaWithTextResponse]](),
+		newListApacheAirflowJobLibrariesBetaPager:           newTracker[azfake.PagerResponder[apacheairflowjob.RequirementsClientListApacheAirflowJobLibrariesBetaResponse]](),
 	}
 }
 
 // RequirementsServerTransport connects instances of apacheairflowjob.RequirementsClient to instances of RequirementsServer.
 // Don't use this type directly, use NewRequirementsServerTransport instead.
 type RequirementsServerTransport struct {
-	srv                                       *RequirementsServer
-	newListApacheAirflowJobLibrariesBetaPager *tracker[azfake.PagerResponder[apacheairflowjob.RequirementsClientListApacheAirflowJobLibrariesBetaResponse]]
+	srv                                                 *RequirementsServer
+	beginDeployApacheAirflowJobRequirementsBetaWithText *tracker[azfake.PollerResponder[apacheairflowjob.RequirementsClientDeployApacheAirflowJobRequirementsBetaWithTextResponse]]
+	newListApacheAirflowJobLibrariesBetaPager           *tracker[azfake.PagerResponder[apacheairflowjob.RequirementsClientListApacheAirflowJobLibrariesBetaResponse]]
 }
 
 // Do implements the policy.Transporter interface for RequirementsServerTransport.
@@ -72,6 +80,8 @@ func (r *RequirementsServerTransport) dispatchToMethodFake(req *http.Request, me
 		}
 		if !intercepted {
 			switch method {
+			case "RequirementsClient.BeginDeployApacheAirflowJobRequirementsBetaWithText":
+				res.resp, res.err = r.dispatchBeginDeployApacheAirflowJobRequirementsBetaWithText(req)
 			case "RequirementsClient.NewListApacheAirflowJobLibrariesBetaPager":
 				res.resp, res.err = r.dispatchNewListApacheAirflowJobLibrariesBetaPager(req)
 			default:
@@ -91,6 +101,75 @@ func (r *RequirementsServerTransport) dispatchToMethodFake(req *http.Request, me
 	case res := <-resultChan:
 		return res.resp, res.err
 	}
+}
+
+func (r *RequirementsServerTransport) dispatchBeginDeployApacheAirflowJobRequirementsBetaWithText(req *http.Request) (*http.Response, error) {
+	if r.srv.BeginDeployApacheAirflowJobRequirementsBetaWithText == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginDeployApacheAirflowJobRequirementsBetaWithText not implemented")}
+	}
+	beginDeployApacheAirflowJobRequirementsBetaWithText := r.beginDeployApacheAirflowJobRequirementsBetaWithText.get(req)
+	if beginDeployApacheAirflowJobRequirementsBetaWithText == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/apacheAirflowJobs/(?P<apacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environment/deployRequirements`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 3 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		body, err := server.UnmarshalRequestAsText(req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("apacheAirflowJobId")])
+		if err != nil {
+			return nil, err
+		}
+		betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
+		if err != nil {
+			return nil, err
+		}
+		betaParam, err := strconv.ParseBool(betaUnescaped)
+		if err != nil {
+			return nil, err
+		}
+		filePathUnescaped, err := url.QueryUnescape(qp.Get("filePath"))
+		if err != nil {
+			return nil, err
+		}
+		filePathParam := getOptional(filePathUnescaped)
+		var options *apacheairflowjob.RequirementsClientBeginDeployApacheAirflowJobRequirementsBetaWithTextOptions
+		if filePathParam != nil || !reflect.ValueOf(body).IsZero() {
+			options = &apacheairflowjob.RequirementsClientBeginDeployApacheAirflowJobRequirementsBetaWithTextOptions{
+				FilePath:                   filePathParam,
+				RequirementsContentRequest: &body,
+			}
+		}
+		respr, errRespr := r.srv.BeginDeployApacheAirflowJobRequirementsBetaWithText(req.Context(), workspaceIDParam, apacheAirflowJobIDParam, betaParam, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginDeployApacheAirflowJobRequirementsBetaWithText = &respr
+		r.beginDeployApacheAirflowJobRequirementsBetaWithText.add(req, beginDeployApacheAirflowJobRequirementsBetaWithText)
+	}
+
+	resp, err := server.PollerResponderNext(beginDeployApacheAirflowJobRequirementsBetaWithText, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
+		r.beginDeployApacheAirflowJobRequirementsBetaWithText.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginDeployApacheAirflowJobRequirementsBetaWithText) {
+		r.beginDeployApacheAirflowJobRequirementsBetaWithText.remove(req)
+	}
+
+	return resp, nil
 }
 
 func (r *RequirementsServerTransport) dispatchNewListApacheAirflowJobLibrariesBetaPager(req *http.Request) (*http.Response, error) {

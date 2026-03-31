@@ -150,7 +150,7 @@ func (client *ItemsClient) DeleteMountedDataFactory(ctx context.Context, workspa
 }
 
 // deleteMountedDataFactoryCreateRequest creates the DeleteMountedDataFactory request.
-func (client *ItemsClient) deleteMountedDataFactoryCreateRequest(ctx context.Context, workspaceID string, mountedDataFactoryID string, _ *ItemsClientDeleteMountedDataFactoryOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteMountedDataFactoryCreateRequest(ctx context.Context, workspaceID string, mountedDataFactoryID string, options *ItemsClientDeleteMountedDataFactoryOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/mountedDataFactories/{mountedDataFactoryId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -164,6 +164,11 @@ func (client *ItemsClient) deleteMountedDataFactoryCreateRequest(ctx context.Con
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

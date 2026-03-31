@@ -77,10 +77,11 @@ type SolacePubSubSourcePropertiesClassification interface {
 // - *AmazonKinesisSourceResponse, *AmazonMSKKafkaSourceResponse, *ApacheKafkaSourceResponse, *AzureBlobStorageEventsSourceResponse,
 // - *AzureCosmosDBCDCSourceResponse, *AzureDataExplorerSourceResponse, *AzureEventGridNamespaceSourceResponse, *AzureEventHubExtendedSourceResponse,
 // - *AzureEventHubSourceResponse, *AzureIoTHubSourceResponse, *AzureSQLDBCDCSourceResponse, *AzureSQLMIDBCDCSourceResponse,
-// - *ConfluentCloudSourceResponse, *CustomEndpointSourceResponse, *FabricCapacityOverviewEventsSourceResponse, *FabricJobEventsSourceResponse,
-// - *FabricOneLakeEventsSourceResponse, *FabricWorkspaceItemEventsSourceResponse, *GooglePubSubSourceResponse, *HTTPSourceResponse,
-// - *MqttSourceResponse, *MySQLCDCSourceResponse, *PostgreSQLCDCSourceResponse, *RealTimeWeatherSourceResponse, *SQLServerOnVMDBCDCSourceResponse,
-// - *SampleDataSourceResponse, *SolacePubSubSourceResponse, *SourceResponse
+// - *AzureServiceBusSourceResponse, *ConfluentCloudSourceResponse, *CustomEndpointSourceResponse, *FabricCapacityOverviewEventsSourceResponse,
+// - *FabricJobEventsSourceResponse, *FabricOneLakeEventsSourceResponse, *FabricWorkspaceItemEventsSourceResponse, *GooglePubSubSourceResponse,
+// - *HTTPSourceResponse, *MongoDBCDCSourceResponse, *MqttSourceResponse, *MySQLCDCSourceResponse, *PostgreSQLCDCSourceResponse,
+// - *RealTimeWeatherSourceResponse, *SQLServerOnVMDBCDCSourceResponse, *SampleDataSourceResponse, *SolacePubSubSourceResponse,
+// - *SourceResponse
 type SourceResponseClassification interface {
 	// GetSourceResponse returns the SourceResponse content of the underlying type.
 	GetSourceResponse() *SourceResponse

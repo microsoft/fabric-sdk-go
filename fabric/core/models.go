@@ -121,6 +121,12 @@ type ApplyTagsRequest struct {
 	Tags []string
 }
 
+// ApplyWorkspaceTagsRequest - The request payload for applying tags.
+type ApplyWorkspaceTagsRequest struct {
+	// REQUIRED; An array of tag IDs to apply.
+	Tags []string
+}
+
 // AssignWorkspaceToCapacityRequest - A capacity assignment request.
 type AssignWorkspaceToCapacityRequest struct {
 	// REQUIRED; The ID of the capacity the workspace should be assigned to.
@@ -365,6 +371,60 @@ type Capacity struct {
 	State *CapacityState
 }
 
+// CatalogEntry - A catalog entry object.
+type CatalogEntry struct {
+	// REQUIRED; The catalog entry type.
+	CatalogEntryType *CatalogEntryType
+
+	// REQUIRED; The catalog entry display name.
+	DisplayName *string
+
+	// REQUIRED; The objectId of the catalog entry.
+	ID *string
+
+	// The description of the catalog entry.
+	Description *string
+}
+
+// GetCatalogEntry implements the CatalogEntryClassification interface for type CatalogEntry.
+func (c *CatalogEntry) GetCatalogEntry() *CatalogEntry { return c }
+
+// CatalogQueryRequest - The query for the search.
+type CatalogQueryRequest struct {
+	// The continuationToken for the next page.
+	ContinuationToken *string
+
+	// The filter for the search. Currently the filter supports filter by type of entries. Additional filter options may be added
+	// over time.
+	// The filter parameter supports the following operators to refine results:
+	// * eq : Equals; matches the exact value.
+	//
+	//
+	// * ne : Not Equals; excludes the specified value.
+	//
+	//
+	// * or : Logical OR; matches if any of the conditions are true.
+	//
+	//
+	// * ( ) : Parentheses; groups expressions to define logical hierarchy.
+	Filter *string
+
+	// The page size that needs to be returned. Page size must be between 1 and 1000.
+	PageSize *int32
+
+	// The text query for the search. This field supports searching across the display name and description of the CatalogEntry.
+	Search *string
+}
+
+// CatalogQueryResponse - The results of the search.
+type CatalogQueryResponse struct {
+	// REQUIRED; A list of catalog entries
+	Value []CatalogEntryClassification
+
+	// The continuationToken for the next page.
+	ContinuationToken *string
+}
+
 // ColumnConstraint indicates a constraint that determines the permissions and visibility a user has on columns within a table.
 type ColumnConstraint struct {
 	// REQUIRED; The array of actions applied to the columnNames. This determines which actions a user will be able to perform
@@ -478,6 +538,10 @@ type ConnectionCreationMetadata struct {
 
 	// REQUIRED; The type of the connection.
 	Type *string
+
+	// A list of credential type values that the connection supports for allowing with items that allow user-controlled code such
+	// as Notebook.
+	SupportedCredentialTypesForUsageInUserControlledCode []CredentialType
 }
 
 type ConnectionCreationMethod struct {
@@ -766,6 +830,9 @@ type CreateCloudConnectionRequest struct {
 	// Allow this connection to be utilized with either on-premises data gateways or VNet data gateways.
 	AllowConnectionUsageInGateway *bool
 
+	// Allow this connection to be used with items that allow user-controlled code such as Notebook
+	AllowUsageInUserControlledCode *bool
+
 	// (Optional) The privacy level of the connection. When no value is passed, this is set to 'Organizational'.
 	PrivacyLevel *PrivacyLevel
 }
@@ -997,13 +1064,6 @@ type CreateOrUpdateDataAccessRolesRequest struct {
 	Value []DataAccessRole
 }
 
-// CreateOrUpdateSingleDataAccessRoleRequest - Wrapper object for creating or updating a single data access role (without
-// id).
-type CreateOrUpdateSingleDataAccessRoleRequest struct {
-	// A single data access role definition (id is not included).
-	Value []DataAccessRoleBase
-}
-
 // CreateScheduleRequest - Create item schedule plan request payload.
 type CreateScheduleRequest struct {
 	// REQUIRED; The actual data contains the time/weekdays of this schedule.
@@ -1112,7 +1172,7 @@ type CreateVirtualNetworkGatewayRequest struct {
 	// values: 30, 60, 90, 120, 150, 240, 360, 480, 720, 1440.
 	InactivityMinutesBeforeSleep *int32
 
-	// REQUIRED; The number of member gateways. A number between 1 and 7.
+	// REQUIRED; The number of member gateways. A number between 1 and 9.
 	NumberOfMemberGateways *int32
 
 	// REQUIRED; The type of the gateway.
@@ -1223,6 +1283,10 @@ type DataAccessRole struct {
 	// REQUIRED; The name of the Data access role.
 	Name *string
 
+	// The kind of the Data access role. Currently, the only supported kind is Policy. Additional kind types may be added over
+	// time.
+	Kind *DataAccessRoleKind
+
 	// The members object which contains the members of the role as arrays of different member types.
 	Members *Members
 
@@ -1239,6 +1303,10 @@ type DataAccessRoleBase struct {
 	// REQUIRED; The name of the Data access role.
 	Name *string
 
+	// The kind of the Data access role. Currently, the only supported kind is Policy. Additional kind types may be added over
+	// time.
+	Kind *DataAccessRoleKind
+
 	// The members object which contains the members of the role as arrays of different member types.
 	Members *Members
 }
@@ -1254,6 +1322,10 @@ type DataAccessRoleListItem struct {
 
 	// Entity tag for the role, used for concurrency control.
 	ETag *string
+
+	// The kind of the Data access role. Currently, the only supported kind is Policy. Additional kind types may be added over
+	// time.
+	Kind *DataAccessRoleKind
 
 	// The members object which contains the members of the role as arrays of different member types.
 	Members *Members
@@ -2262,6 +2334,34 @@ type Item struct {
 
 	// READ-ONLY; The workspace ID.
 	WorkspaceID *string
+}
+
+// ItemCatalogEntry - A Fabric item type of catalog entry.
+type ItemCatalogEntry struct {
+	// REQUIRED; The catalog entry type.
+	CatalogEntryType *CatalogEntryType
+
+	// REQUIRED; The catalog entry display name.
+	DisplayName *string
+
+	// REQUIRED; The objectId of the catalog entry.
+	ID *string
+
+	// REQUIRED; The Fabric item type.
+	Type *ItemType
+
+	// The description of the catalog entry.
+	Description *string
+}
+
+// GetCatalogEntry implements the CatalogEntryClassification interface for type ItemCatalogEntry.
+func (i *ItemCatalogEntry) GetCatalogEntry() *CatalogEntry {
+	return &CatalogEntry{
+		CatalogEntryType: i.CatalogEntryType,
+		Description:      i.Description,
+		DisplayName:      i.DisplayName,
+		ID:               i.ID,
+	}
 }
 
 // ItemChange - Contains the item's change information.
@@ -3418,6 +3518,9 @@ type ShareableCloudConnection struct {
 	// Allow this connection to be utilized with either on-premises data gateways or VNet data gateways.
 	AllowConnectionUsageInGateway *bool
 
+	// Allow this connection to be used with items that allow user-controlled code such as Notebook.
+	AllowUsageInUserControlledCode *bool
+
 	// The credential details of the connection.
 	CredentialDetails *ListCredentialDetails
 
@@ -3636,6 +3739,12 @@ func (t *Transform) GetTransform() *Transform { return t }
 // UnapplyTagsRequest - The request payload for unapplying tags.
 type UnapplyTagsRequest struct {
 	// REQUIRED; The array of tag IDs.
+	Tags []string
+}
+
+// UnapplyWorkspaceTagsRequest - The request payload for unapplying tags.
+type UnapplyWorkspaceTagsRequest struct {
+	// REQUIRED; An array of tag IDs to unapply.
 	Tags []string
 }
 
@@ -4002,7 +4111,7 @@ type UpdateVirtualNetworkGatewayRequest struct {
 	// 30, 60, 90, 120, 150, 240, 360, 480, 720, 1440.
 	InactivityMinutesBeforeSleep *int32
 
-	// The number of member gateways. A number between 1 and 7.
+	// The number of member gateways. A number between 1 and 9.
 	NumberOfMemberGateways *int32
 }
 
@@ -4231,8 +4340,20 @@ type Workspace struct {
 	// READ-ONLY; The ID of the domain the workspace is assigned to.
 	DomainID *string
 
+	// READ-ONLY; List of applied tags.
+	Tags []WorkspaceAppliedTag
+
 	// READ-ONLY; The workspace type.
 	Type *WorkspaceType
+}
+
+// WorkspaceAppliedTag - Represents an applied tag.
+type WorkspaceAppliedTag struct {
+	// REQUIRED; The name of the tag.
+	DisplayName *string
+
+	// REQUIRED; The tag ID.
+	ID *string
 }
 
 // WorkspaceConflictResolution - The basic conflict resolution data.
@@ -4296,6 +4417,9 @@ type WorkspaceInfo struct {
 
 	// READ-ONLY; The OneLake API endpoints associated with this workspace.
 	OneLakeEndpoints *OneLakeEndpoints
+
+	// READ-ONLY; List of applied tags.
+	Tags []WorkspaceAppliedTag
 
 	// READ-ONLY; The workspace type.
 	Type *WorkspaceType

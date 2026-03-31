@@ -13,6 +13,12 @@ type CapacitiesClientListCapacitiesResponse struct {
 	Capacities
 }
 
+// CatalogClientSearchResponse contains the response from method CatalogClient.Search.
+type CatalogClientSearchResponse struct {
+	// The results of the search.
+	CatalogQueryResponse
+}
+
 // ConnectionsClientAddConnectionRoleAssignmentResponse contains the response from method ConnectionsClient.AddConnectionRoleAssignment.
 type ConnectionsClientAddConnectionRoleAssignmentResponse struct {
 	// The connection role assignment for a principal.
@@ -678,6 +684,11 @@ type WorkspacesClientAddWorkspaceRoleAssignmentResponse struct {
 	Location *string
 }
 
+// WorkspacesClientApplyWorkspaceTagsResponse contains the response from method WorkspacesClient.ApplyWorkspaceTags.
+type WorkspacesClientApplyWorkspaceTagsResponse struct {
+	// placeholder for future response values
+}
+
 // WorkspacesClientAssignToCapacityResponse contains the response from method WorkspacesClient.AssignToCapacity.
 type WorkspacesClientAssignToCapacityResponse struct {
 	// placeholder for future response values
@@ -803,6 +814,11 @@ type WorkspacesClientSetOutboundCloudConnectionRulesResponse struct {
 type WorkspacesClientSetOutboundGatewayRulesResponse struct {
 	// ETag contains the information returned from the ETag header response.
 	ETag *string
+}
+
+// WorkspacesClientUnapplyWorkspaceTagsResponse contains the response from method WorkspacesClient.UnapplyWorkspaceTags.
+type WorkspacesClientUnapplyWorkspaceTagsResponse struct {
+	// placeholder for future response values
 }
 
 // WorkspacesClientUnassignFromCapacityResponse contains the response from method WorkspacesClient.UnassignFromCapacity.

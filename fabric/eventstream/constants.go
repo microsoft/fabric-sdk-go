@@ -72,6 +72,22 @@ func PossibleAutoOffsetResetValues() []AutoOffsetReset {
 	}
 }
 
+// AzureServiceBusSourcePropertiesServiceBusType - The type of the Azure Service Bus source.
+type AzureServiceBusSourcePropertiesServiceBusType string
+
+const (
+	AzureServiceBusSourcePropertiesServiceBusTypeQueue AzureServiceBusSourcePropertiesServiceBusType = "Queue"
+	AzureServiceBusSourcePropertiesServiceBusTypeTopic AzureServiceBusSourcePropertiesServiceBusType = "Topic"
+)
+
+// PossibleAzureServiceBusSourcePropertiesServiceBusTypeValues returns the possible values for the AzureServiceBusSourcePropertiesServiceBusType const type.
+func PossibleAzureServiceBusSourcePropertiesServiceBusTypeValues() []AzureServiceBusSourcePropertiesServiceBusType {
+	return []AzureServiceBusSourcePropertiesServiceBusType{
+		AzureServiceBusSourcePropertiesServiceBusTypeQueue,
+		AzureServiceBusSourcePropertiesServiceBusTypeTopic,
+	}
+}
+
 // CompatibilityLevel - Represents the compatibility level of the Eventstream topology. Additional compatibility levels may
 // be added over time.
 type CompatibilityLevel string
@@ -865,6 +881,27 @@ func PossibleServerVersionValues() []ServerVersion {
 	}
 }
 
+// SnapshotMode - The snapshot mode.
+type SnapshotMode string
+
+const (
+	// SnapshotModeInitial - The snapshot mode is Initial.
+	SnapshotModeInitial SnapshotMode = "Initial"
+	// SnapshotModeInitialOnly - The snapshot mode is InitialOnly.
+	SnapshotModeInitialOnly SnapshotMode = "InitialOnly"
+	// SnapshotModeNoData - The snapshot mode is NoData.
+	SnapshotModeNoData SnapshotMode = "NoData"
+)
+
+// PossibleSnapshotModeValues returns the possible values for the SnapshotMode const type.
+func PossibleSnapshotModeValues() []SnapshotMode {
+	return []SnapshotMode{
+		SnapshotModeInitial,
+		SnapshotModeInitialOnly,
+		SnapshotModeNoData,
+	}
+}
+
 // SourceType - Represents the type of the source. Additional source types may be added over time.
 type SourceType string
 
@@ -893,6 +930,8 @@ const (
 	SourceTypeAzureSQLDBCDC SourceType = "AzureSQLDBCDC"
 	// SourceTypeAzureSQLMIDBCDC - The Azure SQL MI DB CDC source type.
 	SourceTypeAzureSQLMIDBCDC SourceType = "AzureSQLMIDBCDC"
+	// SourceTypeAzureServiceBus - The Azure Service Bus source type.
+	SourceTypeAzureServiceBus SourceType = "AzureServiceBus"
 	// SourceTypeConfluentCloud - The Confluent Cloud source type.
 	SourceTypeConfluentCloud SourceType = "ConfluentCloud"
 	// SourceTypeCustomEndpoint - The Custom Endpoint source type.
@@ -909,6 +948,8 @@ const (
 	SourceTypeGooglePubSub SourceType = "GooglePubSub"
 	// SourceTypeHTTP - The HTTP source type.
 	SourceTypeHTTP SourceType = "Http"
+	// SourceTypeMongoDBCDC - The MongoDB CDC source type.
+	SourceTypeMongoDBCDC SourceType = "MongoDBCDC"
 	// SourceTypeMqtt - The MQTT source type.
 	SourceTypeMqtt SourceType = "Mqtt"
 	// SourceTypeMySQLCDC - The MySQL CDC source type.
@@ -940,6 +981,7 @@ func PossibleSourceTypeValues() []SourceType {
 		SourceTypeAzureIoTHub,
 		SourceTypeAzureSQLDBCDC,
 		SourceTypeAzureSQLMIDBCDC,
+		SourceTypeAzureServiceBus,
 		SourceTypeConfluentCloud,
 		SourceTypeCustomEndpoint,
 		SourceTypeFabricCapacityOverviewEvents,
@@ -948,6 +990,7 @@ func PossibleSourceTypeValues() []SourceType {
 		SourceTypeFabricWorkspaceItemEvents,
 		SourceTypeGooglePubSub,
 		SourceTypeHTTP,
+		SourceTypeMongoDBCDC,
 		SourceTypeMqtt,
 		SourceTypeMySQLCDC,
 		SourceTypePostgreSQLCDC,

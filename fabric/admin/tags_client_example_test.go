@@ -189,7 +189,19 @@ func ExampleTagsClient_BulkCreateTags_createDomainTagsInBulkExample() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewTagsClient().BulkCreateTags(ctx, admin.CreateTagsRequest{}, nil)
+	_, err = clientFactory.NewTagsClient().BulkCreateTags(ctx, admin.CreateTagsRequest{
+		CreateTagsRequest: []admin.CreateTagRequest{
+			{
+				DisplayName: to.Ptr("Finance 2024"),
+			},
+			{
+				DisplayName: to.Ptr("HR 2024"),
+			}},
+		Scope: &admin.DomainTagScope{
+			Type:     to.Ptr(admin.TagScopeTypeDomain),
+			DomainID: to.Ptr("e408a2ca-0e43-49d6-86d3-f2558508d32a"),
+		},
+	}, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -206,7 +218,15 @@ func ExampleTagsClient_BulkCreateTags_createTenantTagsInBulkExample() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewTagsClient().BulkCreateTags(ctx, admin.CreateTagsRequest{}, nil)
+	_, err = clientFactory.NewTagsClient().BulkCreateTags(ctx, admin.CreateTagsRequest{
+		CreateTagsRequest: []admin.CreateTagRequest{
+			{
+				DisplayName: to.Ptr("Finance 2024"),
+			},
+			{
+				DisplayName: to.Ptr("HR 2024"),
+			}},
+	}, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -223,7 +243,18 @@ func ExampleTagsClient_BulkCreateTags_createTenantTagsInBulkExampleWithExplicitS
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewTagsClient().BulkCreateTags(ctx, admin.CreateTagsRequest{}, nil)
+	_, err = clientFactory.NewTagsClient().BulkCreateTags(ctx, admin.CreateTagsRequest{
+		CreateTagsRequest: []admin.CreateTagRequest{
+			{
+				DisplayName: to.Ptr("Finance 2024"),
+			},
+			{
+				DisplayName: to.Ptr("HR 2024"),
+			}},
+		Scope: &admin.TenantTagScope{
+			Type: to.Ptr(admin.TagScopeTypeTenant),
+		},
+	}, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

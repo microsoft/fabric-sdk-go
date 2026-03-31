@@ -208,7 +208,7 @@ func (client *ItemsClient) DeleteSemanticModel(ctx context.Context, workspaceID 
 }
 
 // deleteSemanticModelCreateRequest creates the DeleteSemanticModel request.
-func (client *ItemsClient) deleteSemanticModelCreateRequest(ctx context.Context, workspaceID string, semanticModelID string, _ *ItemsClientDeleteSemanticModelOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteSemanticModelCreateRequest(ctx context.Context, workspaceID string, semanticModelID string, options *ItemsClientDeleteSemanticModelOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/semanticModels/{semanticModelId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -222,6 +222,11 @@ func (client *ItemsClient) deleteSemanticModelCreateRequest(ctx context.Context,
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

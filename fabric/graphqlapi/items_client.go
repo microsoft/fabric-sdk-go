@@ -145,7 +145,7 @@ func (client *ItemsClient) DeleteGraphQLAPI(ctx context.Context, workspaceID str
 }
 
 // deleteGraphQLAPICreateRequest creates the DeleteGraphQLAPI request.
-func (client *ItemsClient) deleteGraphQLAPICreateRequest(ctx context.Context, workspaceID string, graphQLAPIID string, _ *ItemsClientDeleteGraphQLAPIOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteGraphQLAPICreateRequest(ctx context.Context, workspaceID string, graphQLAPIID string, options *ItemsClientDeleteGraphQLAPIOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/graphQLApis/{graphQLApiId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -159,6 +159,11 @@ func (client *ItemsClient) deleteGraphQLAPICreateRequest(ctx context.Context, wo
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

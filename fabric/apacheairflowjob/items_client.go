@@ -150,7 +150,7 @@ func (client *ItemsClient) DeleteApacheAirflowJob(ctx context.Context, workspace
 }
 
 // deleteApacheAirflowJobCreateRequest creates the DeleteApacheAirflowJob request.
-func (client *ItemsClient) deleteApacheAirflowJobCreateRequest(ctx context.Context, workspaceID string, apacheAirflowJobID string, _ *ItemsClientDeleteApacheAirflowJobOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteApacheAirflowJobCreateRequest(ctx context.Context, workspaceID string, apacheAirflowJobID string, options *ItemsClientDeleteApacheAirflowJobOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/apacheAirflowJobs/{apacheAirflowJobId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -164,6 +164,11 @@ func (client *ItemsClient) deleteApacheAirflowJobCreateRequest(ctx context.Conte
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

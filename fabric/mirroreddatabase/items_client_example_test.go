@@ -164,7 +164,7 @@ func ExampleItemsClient_UpdateMirroredDatabase() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_DeleteMirroredDatabase() {
+func ExampleItemsClient_DeleteMirroredDatabase_deleteAMirroredDatabaseExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -174,7 +174,24 @@ func ExampleItemsClient_DeleteMirroredDatabase() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewItemsClient().DeleteMirroredDatabase(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2", nil)
+	_, err = clientFactory.NewItemsClient().DeleteMirroredDatabase(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2", &mirroreddatabase.ItemsClientDeleteMirroredDatabaseOptions{HardDelete: nil})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_DeleteMirroredDatabase_hardDeleteAMirroredDatabaseExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := mirroreddatabase.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewItemsClient().DeleteMirroredDatabase(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2", &mirroreddatabase.ItemsClientDeleteMirroredDatabaseOptions{HardDelete: to.Ptr(true)})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

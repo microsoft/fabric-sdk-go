@@ -275,7 +275,7 @@ func ExampleItemsClient_UpdateMirroredAzureDatabricksCatalog_updateAMirroredAzur
 	res, err := clientFactory.NewItemsClient().UpdateMirroredAzureDatabricksCatalog(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", mirroredazuredatabrickscatalog.UpdateMirroredAzureDatabricksCatalogRequest{
 		Description: to.Ptr("A new description for mirroredAzureDatabricksCatalog."),
 		DisplayName: to.Ptr("MirroredAzureDatabricksCatalog_New_Name"),
-		PublicUpdateableExtendedProperties: &mirroredazuredatabrickscatalog.UpdatePayload{
+		Properties: &mirroredazuredatabrickscatalog.UpdatePayload{
 			AutoSync:            to.Ptr(mirroredazuredatabrickscatalog.AutoSyncEnabled),
 			MirroringMode:       to.Ptr(mirroredazuredatabrickscatalog.MirroringModesFull),
 			StorageConnectionID: to.Ptr("c1128f28-d84f-417c-8234-0feb91e35f87"),
@@ -314,7 +314,7 @@ func ExampleItemsClient_UpdateMirroredAzureDatabricksCatalog_updateAMirroredAzur
 }
 
 // Generated from example definition
-func ExampleItemsClient_DeleteMirroredAzureDatabricksCatalog() {
+func ExampleItemsClient_DeleteMirroredAzureDatabricksCatalog_deleteAMirroredAzureDatabricksCatalogExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -324,7 +324,24 @@ func ExampleItemsClient_DeleteMirroredAzureDatabricksCatalog() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewItemsClient().DeleteMirroredAzureDatabricksCatalog(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", nil)
+	_, err = clientFactory.NewItemsClient().DeleteMirroredAzureDatabricksCatalog(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", &mirroredazuredatabrickscatalog.ItemsClientDeleteMirroredAzureDatabricksCatalogOptions{HardDelete: nil})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_DeleteMirroredAzureDatabricksCatalog_hardDeleteAMirroredAzureDatabricksCatalogExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := mirroredazuredatabrickscatalog.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewItemsClient().DeleteMirroredAzureDatabricksCatalog(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", &mirroredazuredatabrickscatalog.ItemsClientDeleteMirroredAzureDatabricksCatalogOptions{HardDelete: to.Ptr(true)})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

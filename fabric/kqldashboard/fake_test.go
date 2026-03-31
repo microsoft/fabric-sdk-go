@@ -268,7 +268,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteKQLDashboard() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteKQLDashboard(ctx, exampleWorkspaceID, exampleKqlDashboardID, nil)
+	_, err = client.DeleteKQLDashboard(ctx, exampleWorkspaceID, exampleKqlDashboardID, &kqldashboard.ItemsClientDeleteKQLDashboardOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a KQL dashboard example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleKqlDashboardID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteKQLDashboard = func(ctx context.Context, workspaceID string, kqlDashboardID string, options *kqldashboard.ItemsClientDeleteKQLDashboardOptions) (resp azfake.Responder[kqldashboard.ItemsClientDeleteKQLDashboardResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleKqlDashboardID, kqlDashboardID)
+		resp = azfake.Responder[kqldashboard.ItemsClientDeleteKQLDashboardResponse]{}
+		resp.SetResponse(http.StatusOK, kqldashboard.ItemsClientDeleteKQLDashboardResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteKQLDashboard(ctx, exampleWorkspaceID, exampleKqlDashboardID, &kqldashboard.ItemsClientDeleteKQLDashboardOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

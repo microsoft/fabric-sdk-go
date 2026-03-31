@@ -146,7 +146,7 @@ func (client *ItemsClient) DeleteCosmosDBDatabase(ctx context.Context, workspace
 }
 
 // deleteCosmosDBDatabaseCreateRequest creates the DeleteCosmosDBDatabase request.
-func (client *ItemsClient) deleteCosmosDBDatabaseCreateRequest(ctx context.Context, workspaceID string, cosmosDbDatabaseID string, _ *ItemsClientDeleteCosmosDBDatabaseOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteCosmosDBDatabaseCreateRequest(ctx context.Context, workspaceID string, cosmosDbDatabaseID string, options *ItemsClientDeleteCosmosDBDatabaseOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/cosmosDbDatabases/{cosmosDbDatabaseId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -160,6 +160,11 @@ func (client *ItemsClient) deleteCosmosDBDatabaseCreateRequest(ctx context.Conte
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

@@ -756,6 +756,62 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ProvisionIdentity() {
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.WorkspaceIdentity))
 }
 
+func (testsuite *FakeTestSuite) TestWorkspaces_ApplyWorkspaceTags() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Apply workspace tags example"},
+	})
+	var exampleWorkspaceID string
+	var exampleApplyTagsRequest core.ApplyWorkspaceTagsRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleApplyTagsRequest = core.ApplyWorkspaceTagsRequest{
+		Tags: []string{
+			"97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f",
+			"41d5b790-76d9-4ebe-9f06-b34cc280a612",
+			"7b8e5ada-2dee-4b97-915e-0b9d3b416b1e"},
+	}
+
+	testsuite.serverFactory.WorkspacesServer.ApplyWorkspaceTags = func(ctx context.Context, workspaceID string, applyTagsRequest core.ApplyWorkspaceTagsRequest, options *core.WorkspacesClientApplyWorkspaceTagsOptions) (resp azfake.Responder[core.WorkspacesClientApplyWorkspaceTagsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleApplyTagsRequest, applyTagsRequest))
+		resp = azfake.Responder[core.WorkspacesClientApplyWorkspaceTagsResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientApplyWorkspaceTagsResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	_, err = client.ApplyWorkspaceTags(ctx, exampleWorkspaceID, exampleApplyTagsRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaces_UnapplyWorkspaceTags() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Unapply workspace tags example"},
+	})
+	var exampleWorkspaceID string
+	var exampleUnapplyTagsRequest core.UnapplyWorkspaceTagsRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleUnapplyTagsRequest = core.UnapplyWorkspaceTagsRequest{
+		Tags: []string{
+			"97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f",
+			"41d5b790-76d9-4ebe-9f06-b34cc280a612",
+			"7b8e5ada-2dee-4b97-915e-0b9d3b416b1e"},
+	}
+
+	testsuite.serverFactory.WorkspacesServer.UnapplyWorkspaceTags = func(ctx context.Context, workspaceID string, unapplyTagsRequest core.UnapplyWorkspaceTagsRequest, options *core.WorkspacesClientUnapplyWorkspaceTagsOptions) (resp azfake.Responder[core.WorkspacesClientUnapplyWorkspaceTagsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUnapplyTagsRequest, unapplyTagsRequest))
+		resp = azfake.Responder[core.WorkspacesClientUnapplyWorkspaceTagsResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientUnapplyWorkspaceTagsResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	_, err = client.UnapplyWorkspaceTags(ctx, exampleWorkspaceID, exampleUnapplyTagsRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
 func (testsuite *FakeTestSuite) TestWorkspaces_GetNetworkCommunicationPolicy() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -1459,7 +1515,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteItem() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteItem(ctx, exampleWorkspaceID, exampleItemID, nil)
+	_, err = client.DeleteItem(ctx, exampleWorkspaceID, exampleItemID, &core.ItemsClientDeleteItemOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete an item example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleItemID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteItem = func(ctx context.Context, workspaceID string, itemID string, options *core.ItemsClientDeleteItemOptions) (resp azfake.Responder[core.ItemsClientDeleteItemResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		resp = azfake.Responder[core.ItemsClientDeleteItemResponse]{}
+		resp.SetResponse(http.StatusOK, core.ItemsClientDeleteItemResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteItem(ctx, exampleWorkspaceID, exampleItemID, &core.ItemsClientDeleteItemOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
@@ -6753,40 +6827,38 @@ func (testsuite *FakeTestSuite) TestOneLakeDataAccessSecurity_CreateOrUpdateSing
 	})
 	var exampleWorkspaceID string
 	var exampleItemID string
-	var exampleCreateOrUpdateSingleDataAccessRoleRequest core.CreateOrUpdateSingleDataAccessRoleRequest
+	var exampleCreateOrUpdateSingleDataAccessRoleRequest core.DataAccessRoleBase
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff222"
 	exampleItemID = "25bac802-080d-4f73-8a42-1b406eb1fceb"
-	exampleCreateOrUpdateSingleDataAccessRoleRequest = core.CreateOrUpdateSingleDataAccessRoleRequest{
-		Value: []core.DataAccessRoleBase{
+	exampleCreateOrUpdateSingleDataAccessRoleRequest = core.DataAccessRoleBase{
+		Name: to.Ptr("DefaultReader"),
+		DecisionRules: []core.DecisionRule{
 			{
-				Name: to.Ptr("DefaultReader"),
-				DecisionRules: []core.DecisionRule{
+				Effect: to.Ptr(core.EffectPermit),
+				Permission: []core.PermissionScope{
 					{
-						Effect: to.Ptr(core.EffectPermit),
-						Permission: []core.PermissionScope{
-							{
-								AttributeName: to.Ptr(core.AttributeNamePath),
-								AttributeValueIncludedIn: []string{
-									"*"},
-							},
-							{
-								AttributeName: to.Ptr(core.AttributeNameAction),
-								AttributeValueIncludedIn: []string{
-									"Read"},
-							}},
+						AttributeName: to.Ptr(core.AttributeNamePath),
+						AttributeValueIncludedIn: []string{
+							"*"},
+					},
+					{
+						AttributeName: to.Ptr(core.AttributeNameAction),
+						AttributeValueIncludedIn: []string{
+							"Read"},
 					}},
-				Members: &core.Members{
-					FabricItemMembers: []core.FabricItemMember{
-						{
-							ItemAccess: []core.ItemAccess{
-								core.ItemAccessReadAll},
-							SourcePath: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff222/25bac802-080d-4f73-8a42-1b406eb1fceb"),
-						}},
-				},
 			}},
+		Kind: to.Ptr(core.DataAccessRoleKindPolicy),
+		Members: &core.Members{
+			FabricItemMembers: []core.FabricItemMember{
+				{
+					ItemAccess: []core.ItemAccess{
+						core.ItemAccessReadAll},
+					SourcePath: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff222/25bac802-080d-4f73-8a42-1b406eb1fceb"),
+				}},
+		},
 	}
 
-	testsuite.serverFactory.OneLakeDataAccessSecurityServer.CreateOrUpdateSingleDataAccessRole = func(ctx context.Context, workspaceID string, itemID string, createOrUpdateSingleDataAccessRoleRequest core.CreateOrUpdateSingleDataAccessRoleRequest, options *core.OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleOptions) (resp azfake.Responder[core.OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.OneLakeDataAccessSecurityServer.CreateOrUpdateSingleDataAccessRole = func(ctx context.Context, workspaceID string, itemID string, createOrUpdateSingleDataAccessRoleRequest core.DataAccessRoleBase, options *core.OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleOptions) (resp azfake.Responder[core.OneLakeDataAccessSecurityClientCreateOrUpdateSingleDataAccessRoleResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleItemID, itemID)
 		testsuite.Require().True(reflect.DeepEqual(exampleCreateOrUpdateSingleDataAccessRoleRequest, createOrUpdateSingleDataAccessRoleRequest))
@@ -7966,9 +8038,10 @@ func (testsuite *FakeTestSuite) TestConnections_CreateConnection() {
 					Value:    to.Ptr("sales"),
 				}},
 		},
-		ConnectivityType: to.Ptr(core.ConnectivityTypeShareableCloud),
-		DisplayName:      to.Ptr("ContosoCloudConnection"),
-		PrivacyLevel:     to.Ptr(core.PrivacyLevelOrganizational),
+		ConnectivityType:               to.Ptr(core.ConnectivityTypeShareableCloud),
+		DisplayName:                    to.Ptr("ContosoCloudConnection"),
+		PrivacyLevel:                   to.Ptr(core.PrivacyLevelOrganizational),
+		AllowUsageInUserControlledCode: to.Ptr(true),
 		CredentialDetails: &core.CreateCredentialDetails{
 			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
 			SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
@@ -8465,12 +8538,17 @@ func (testsuite *FakeTestSuite) TestConnections_ListSupportedConnectionTypes() {
 							}},
 					}},
 				SupportedConnectionEncryptionTypes: []core.ConnectionEncryption{
-					core.ConnectionEncryptionEncrypted,
-					core.ConnectionEncryptionNotEncrypted},
+					core.ConnectionEncryptionNotEncrypted,
+					core.ConnectionEncryptionEncrypted},
 				SupportedCredentialTypes: []core.CredentialType{
 					core.CredentialTypeBasic,
-					core.CredentialTypeOAuth2},
-				SupportsSkipTestConnection: to.Ptr(true),
+					core.CredentialTypeOAuth2,
+					core.CredentialTypeServicePrincipal,
+					core.CredentialTypeWorkspaceIdentity},
+				SupportedCredentialTypesForUsageInUserControlledCode: []core.CredentialType{
+					core.CredentialTypeBasic,
+					core.CredentialTypeWorkspaceIdentity},
+				SupportsSkipTestConnection: to.Ptr(false),
 			}},
 	}
 
@@ -9358,4 +9436,48 @@ func (testsuite *FakeTestSuite) TestGateways_DeleteGatewayRoleAssignment() {
 	client := testsuite.clientFactory.NewGatewaysClient()
 	_, err = client.DeleteGatewayRoleAssignment(ctx, exampleGatewayID, exampleGatewayRoleAssignmentID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestCatalog_Search() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Search example"},
+	})
+	var exampleCatalogQueryRequest core.CatalogQueryRequest
+	exampleCatalogQueryRequest = core.CatalogQueryRequest{
+		Filter:   to.Ptr("Type eq 'Report' or Type eq 'Lakehouse'"),
+		PageSize: to.Ptr[int32](2),
+		Search:   to.Ptr("Sales Revenue"),
+	}
+
+	exampleRes := core.CatalogQueryResponse{
+		ContinuationToken: to.Ptr("lyJ1257lksfdfG=="),
+		Value: []core.CatalogEntryClassification{
+			&core.ItemCatalogEntry{
+				Description:      to.Ptr("Consolidated revenue report for the current fiscal year."),
+				CatalogEntryType: to.Ptr(core.CatalogEntryTypeFabricItem),
+				DisplayName:      to.Ptr("Monthly Sales Revenue"),
+				ID:               to.Ptr("0acd697c-1550-43cd-b998-91bfb12347c6"),
+				Type:             to.Ptr(core.ItemTypeReport),
+			},
+			&core.ItemCatalogEntry{
+				Description:      to.Ptr("Consolidated revenue report for the current fiscal year."),
+				CatalogEntryType: to.Ptr(core.CatalogEntryTypeFabricItem),
+				DisplayName:      to.Ptr("Yeartly Sales Revenue"),
+				ID:               to.Ptr("123d697c-7848-77cd-b887-91bfb12347cc"),
+				Type:             to.Ptr(core.ItemTypeLakehouse),
+			}},
+	}
+
+	testsuite.serverFactory.CatalogServer.Search = func(ctx context.Context, catalogQueryRequest core.CatalogQueryRequest, options *core.CatalogClientSearchOptions) (resp azfake.Responder[core.CatalogClientSearchResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().True(reflect.DeepEqual(exampleCatalogQueryRequest, catalogQueryRequest))
+		resp = azfake.Responder[core.CatalogClientSearchResponse]{}
+		resp.SetResponse(http.StatusOK, core.CatalogClientSearchResponse{CatalogQueryResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewCatalogClient()
+	res, err := client.Search(ctx, exampleCatalogQueryRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.CatalogQueryResponse))
 }

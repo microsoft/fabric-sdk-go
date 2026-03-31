@@ -26,6 +26,42 @@ type CreateNotebookRequest struct {
 	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
+// DataWarehouseNotebookComputeDetails - Data warehouse notebook compute details.
+type DataWarehouseNotebookComputeDetails struct {
+	// The data warehouse notebook monitoring infomation.
+	MonitoringInfo *DataWarehouseNotebookMonitoringInfo
+
+	// The primary warehouse.
+	PrimaryWarehouse *ItemReferenceByID
+}
+
+// DataWarehouseNotebookJobInstanceProperties - Data warehouse notebook job instance properties.
+type DataWarehouseNotebookJobInstanceProperties struct {
+	// REQUIRED; The execution engine for the job instance.
+	Compute *ComputeType
+
+	// REQUIRED; The details of data warehouse notebook job instance.
+	ComputeDetails *DataWarehouseNotebookComputeDetails
+
+	// User defined exit value in notebook. Refer to this article [/fabric/data-engineering/notebook-utilities#exit-a-notebook]
+	// for more details on how to set the notebook exit value.
+	ExitValue *string
+}
+
+// GetJobInstanceProperties implements the JobInstancePropertiesClassification interface for type DataWarehouseNotebookJobInstanceProperties.
+func (d *DataWarehouseNotebookJobInstanceProperties) GetJobInstanceProperties() *JobInstanceProperties {
+	return &JobInstanceProperties{
+		Compute:   d.Compute,
+		ExitValue: d.ExitValue,
+	}
+}
+
+// DataWarehouseNotebookMonitoringInfo - Data Warehouse notebook monitoring information.
+type DataWarehouseNotebookMonitoringInfo struct {
+	// Notebook execution snapshot url.
+	ExecutionSnapshotURL *string
+}
+
 // Definition - Notebook public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/notebook-definition]
 // for more details on the structure of the Notebook definition.
 type Definition struct {
@@ -87,6 +123,47 @@ func (e *EntireTenantPrincipal) GetPrincipal() *Principal {
 	}
 }
 
+// ErrorRelatedResource - The error related resource details object.
+type ErrorRelatedResource struct {
+	// READ-ONLY; The resource ID that's involved in the error.
+	ResourceID *string
+
+	// READ-ONLY; The type of the resource that's involved in the error.
+	ResourceType *string
+}
+
+// ErrorResponse - The error response.
+type ErrorResponse struct {
+	// READ-ONLY; A specific identifier that provides information about an error condition, allowing for standardized communication
+	// between our service and its users.
+	ErrorCode *string
+
+	// READ-ONLY; A human readable representation of the error.
+	Message *string
+
+	// READ-ONLY; List of additional error details.
+	MoreDetails []ErrorResponseDetails
+
+	// READ-ONLY; The error related resource details.
+	RelatedResource *ErrorRelatedResource
+
+	// READ-ONLY; ID of the request associated with the error.
+	RequestID *string
+}
+
+// ErrorResponseDetails - The error response details.
+type ErrorResponseDetails struct {
+	// READ-ONLY; A specific identifier that provides information about an error condition, allowing for standardized communication
+	// between our service and its users.
+	ErrorCode *string
+
+	// READ-ONLY; A human readable representation of the error.
+	Message *string
+
+	// READ-ONLY; The error related resource details.
+	RelatedResource *ErrorRelatedResource
+}
+
 // GroupPrincipal - Represents a security group.
 type GroupPrincipal struct {
 	// REQUIRED; The principal's ID.
@@ -115,6 +192,38 @@ func (g *GroupPrincipal) GetPrincipal() *Principal {
 type GroupPrincipalGroupDetails struct {
 	// The type of the group. Additional group types may be added over time.
 	GroupType *GroupType
+}
+
+// HighConcurrencyModeOptions - High concurrency mode options.
+type HighConcurrencyModeOptions struct {
+	// REQUIRED; The status of the high concurrency mode. False - Disabled, true - Enabled.
+	Enabled *bool
+
+	// Setting the session tag instructs Spark to reuse existing Spark sessions which minimizes startup time. Arbitrary string
+	// values can be used for the session tag. If no session exists, a new session is
+	// created using the tag value.
+	SessionTag *string
+}
+
+// HighConcurrencyModeStatus - Spark notebook high concurrency mode status.
+type HighConcurrencyModeStatus struct {
+	// A new created session or attach to existing sessions.
+	SessionSource *SessionSource
+
+	// Session tag value to execute the notebook in a shared Spark session.
+	SessionTag *string
+}
+
+// InstancePool - The instance pool.
+type InstancePool struct {
+	// Instance pool ID.
+	ID *string
+
+	// Instance pool name.
+	Name *string
+
+	// Instance pool type.
+	Type *CustomPoolType
 }
 
 // ItemReference - An item reference object.
@@ -170,6 +279,106 @@ type ItemTag struct {
 
 	// REQUIRED; The tag ID.
 	ID *string
+}
+
+// JobInstance - An object representing notebook job instance.
+type JobInstance struct {
+	// Job end time in UTC
+	EndTimeUTC *string
+
+	// Job instance Id
+	ID *string
+
+	// The item job invoke type. Additional invokeTypes may be added over time.
+	InvokeType *InvokeType
+
+	// Item Id
+	ItemID *string
+
+	// Job type
+	JobType *string
+
+	// Notebook job instance properties.
+	Properties JobInstancePropertiesClassification
+
+	// Root activity id to trace requests across services
+	RootActivityID *string
+
+	// Job start time in UTC
+	StartTimeUTC *string
+
+	// The item job status. Additional statuses may be added over time.
+	Status *ItemJobStatus
+
+	// READ-ONLY; Error response when job is failed
+	FailureReason *ErrorResponse
+}
+
+// JobInstanceProperties - Notebook job instance properties.
+type JobInstanceProperties struct {
+	// REQUIRED; The execution engine for the job instance.
+	Compute *ComputeType
+
+	// User defined exit value in notebook. Refer to this article [/fabric/data-engineering/notebook-utilities#exit-a-notebook]
+	// for more details on how to set the notebook exit value.
+	ExitValue *string
+}
+
+// GetJobInstanceProperties implements the JobInstancePropertiesClassification interface for type JobInstanceProperties.
+func (j *JobInstanceProperties) GetJobInstanceProperties() *JobInstanceProperties { return j }
+
+// JupyterNotebookComputeConfiguration - Jupyter notebook compute configuration.
+type JupyterNotebookComputeConfiguration struct {
+	// Environment to be used in this session.
+	AttachedEnvironment *ItemReferenceByID
+
+	// Default lakehouse to be used in this session.
+	DefaultLakehouse *ItemReferenceByID
+
+	// Mount points to be used in this session.
+	MountPoints []MountPoint
+
+	// The name of this session.
+	Name *string
+
+	// The number of cores that this job can consume. Must be one of the following values: 2, 4, 8, 16, 32, 64.
+	NumCores *int32
+}
+
+// JupyterNotebookComputeDetails - Jupyter notebook compute details.
+type JupyterNotebookComputeDetails struct {
+	// The jupyter session id.
+	ActivityID *string
+
+	// The jupyter notebook monitoring infomation.
+	MonitoringInfo *JupyterNotebookMonitoringInfo
+}
+
+// JupyterNotebookJobInstanceProperties - Jupyter notebook job instance properties.
+type JupyterNotebookJobInstanceProperties struct {
+	// REQUIRED; The execution engine for the job instance.
+	Compute *ComputeType
+
+	// REQUIRED; The details of jupyter notebook job instance.
+	ComputeDetails *JupyterNotebookComputeDetails
+
+	// User defined exit value in notebook. Refer to this article [/fabric/data-engineering/notebook-utilities#exit-a-notebook]
+	// for more details on how to set the notebook exit value.
+	ExitValue *string
+}
+
+// GetJobInstanceProperties implements the JobInstancePropertiesClassification interface for type JupyterNotebookJobInstanceProperties.
+func (j *JupyterNotebookJobInstanceProperties) GetJobInstanceProperties() *JobInstanceProperties {
+	return &JobInstanceProperties{
+		Compute:   j.Compute,
+		ExitValue: j.ExitValue,
+	}
+}
+
+// JupyterNotebookMonitoringInfo - Jupyter notebook monitoring information.
+type JupyterNotebookMonitoringInfo struct {
+	// Notebook execution snapshot url.
+	ExecutionSnapshotURL *string
 }
 
 // LivySession - The livy session response
@@ -291,6 +500,15 @@ type LivySessions struct {
 	ContinuationURI *string
 }
 
+// MountPoint - The storage mount point.
+type MountPoint struct {
+	// REQUIRED; The local path that to mount the remote storage to.
+	MountPointPath *string
+
+	// REQUIRED; Source storage abfss path.
+	Source *string
+}
+
 // Notebook - A notebook object.
 type Notebook struct {
 	// REQUIRED; The item type.
@@ -330,6 +548,18 @@ type Notebooks struct {
 	ContinuationURI *string
 }
 
+// Parameter - An item job parameter.
+type Parameter struct {
+	// REQUIRED; The parameter name, specified by the caller, must be unique (case-insensitive check) and no longer than 256 characters.
+	Name *string
+
+	// REQUIRED; The parameter type.
+	Type *ItemJobParameterType
+
+	// REQUIRED; The parameter value based on the parameter type.
+	Value any
+}
+
 // Principal - Represents an identity or a Microsoft Entra group.
 type Principal struct {
 	// REQUIRED; The principal's ID.
@@ -344,6 +574,72 @@ type Principal struct {
 
 // GetPrincipal implements the PrincipalClassification interface for type Principal.
 func (p *Principal) GetPrincipal() *Principal { return p }
+
+// RunDataWarehouseNotebookExecutionData - Data Warehouse notebook execution data. This compute type does not support compute
+// configuration.
+type RunDataWarehouseNotebookExecutionData struct {
+	// REQUIRED; The execution engine for the job instance. This value needs to match the language of the notebook.
+	Compute *ComputeType
+}
+
+// GetRunNotebookExecutionData implements the RunNotebookExecutionDataClassification interface for type RunDataWarehouseNotebookExecutionData.
+func (r *RunDataWarehouseNotebookExecutionData) GetRunNotebookExecutionData() *RunNotebookExecutionData {
+	return &RunNotebookExecutionData{
+		Compute: r.Compute,
+	}
+}
+
+// RunJupyterNotebookExecutionData - Jupyter notebook execution data.
+type RunJupyterNotebookExecutionData struct {
+	// REQUIRED; The execution engine for the job instance. This value needs to match the language of the notebook.
+	Compute *ComputeType
+
+	// The Jupyter notebook execution configuration.
+	ComputeConfiguration *JupyterNotebookComputeConfiguration
+}
+
+// GetRunNotebookExecutionData implements the RunNotebookExecutionDataClassification interface for type RunJupyterNotebookExecutionData.
+func (r *RunJupyterNotebookExecutionData) GetRunNotebookExecutionData() *RunNotebookExecutionData {
+	return &RunNotebookExecutionData{
+		Compute: r.Compute,
+	}
+}
+
+// RunNotebookExecutionData - Execution data for the notebook run.
+type RunNotebookExecutionData struct {
+	// REQUIRED; The execution engine for the job instance. This value needs to match the language of the notebook.
+	Compute *ComputeType
+}
+
+// GetRunNotebookExecutionData implements the RunNotebookExecutionDataClassification interface for type RunNotebookExecutionData.
+func (r *RunNotebookExecutionData) GetRunNotebookExecutionData() *RunNotebookExecutionData { return r }
+
+// RunNotebookRequest - Run notebook request with executionData.
+type RunNotebookRequest struct {
+	// Optional. The notebook configurations used during execution.
+	ExecutionData RunNotebookExecutionDataClassification
+
+	// The parameter list for run on-demand job request. Per-run, user-defined inputs to tailor this invocation. Note: parameter
+	// names are case-insensitive, but the casing must match the parameter name used
+	// in the code cell.
+	Parameters []Parameter
+}
+
+// RunSparkNotebookExecutionData - Spark notebook execution data.
+type RunSparkNotebookExecutionData struct {
+	// REQUIRED; The execution engine for the job instance. This value needs to match the language of the notebook.
+	Compute *ComputeType
+
+	// The Spark notebook execution configuration.
+	ComputeConfiguration *SparkNotebookComputeConfiguration
+}
+
+// GetRunNotebookExecutionData implements the RunNotebookExecutionDataClassification interface for type RunSparkNotebookExecutionData.
+func (r *RunSparkNotebookExecutionData) GetRunNotebookExecutionData() *RunNotebookExecutionData {
+	return &RunNotebookExecutionData{
+		Compute: r.Compute,
+	}
+}
 
 // SensitivityLabel - Represents a sensitivity label applied to an item.
 type SensitivityLabel struct {
@@ -419,6 +715,163 @@ func (s *ServicePrincipalProfilePrincipal) GetPrincipal() *Principal {
 type ServicePrincipalProfilePrincipalServicePrincipalProfileDetails struct {
 	// The service principal profile's parent principal.
 	ParentPrincipal PrincipalClassification
+}
+
+// SparkNotebookActivityDetails - Spark notebook livy session details.
+type SparkNotebookActivityDetails struct {
+	// Reason for the job cancellation.
+	CancellationReason *string
+
+	// ID of the capacity.
+	CapacityID *string
+
+	// ID of the item creator. When isHighConcurrency is set to true this value might be different than itemId.
+	CreatorItem *ItemReferenceByID
+
+	// Timestamp when the job ended in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	EndDateTime *time.Time
+
+	// Flag indicating high concurrency.
+	IsHighConcurrency *bool
+
+	// Name of the item.
+	ItemName *string
+
+	// Current state of the job.
+	JobType *JobType
+
+	// Name of the Livy session.
+	LivyName *string
+
+	// Name of the operation. Possible values include: Notebook run, Notebook HC run and Notebook pipeline run.
+	OperationName *string
+
+	// The fabric runtime version.
+	RuntimeVersion *string
+
+	// A Spark application ID is a unique identifier assigned to each Apache Spark application. It also appears in the Spark UI.
+	SparkApplicationID *string
+
+	// Timestamp when the job started in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	StartDateTime *time.Time
+
+	// Timestamp when the job was submitted in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	SubmittedDateTime *time.Time
+}
+
+// SparkNotebookComputeConfiguration - Spark notebook compute configuration.
+type SparkNotebookComputeConfiguration struct {
+	// The list of abfs path of archives to be used in this session. Archives to be extracted into the working directory of each
+	// executor. .jar, .tar.gz, .tgz and .zip are supported. You can specify the
+	// directory name to unpack via adding # after the file name to unpack, for example, file.zip#directory.
+	Archives []string
+
+	// Environment to be used in this session.
+	AttachedEnvironment *ItemReferenceByID
+
+	// Default lakehouse to be used in this session.
+	DefaultLakehouse *ItemReferenceByID
+
+	// Spark driver core. Must be one of the following values: 4, 8, 16, 32, 64.
+	DriverCores *int32
+
+	// Spark driver memory.
+	DriverMemory *CustomPoolMemory
+
+	// Spark executor core. Must be one of the following values: 4, 8, 16, 32, 64.
+	ExecutorCores *int32
+
+	// Spark executor memory.
+	ExecutorMemory *CustomPoolMemory
+
+	// The list of abfs path of files to be used in this session. Files to be placed in the working directory of each executor.
+	Files []string
+
+	// High concurrency mode options.
+	HighConcurrencyModeOptions *HighConcurrencyModeOptions
+
+	// Instance pool used to run this notebook.
+	InstancePool *InstancePool
+
+	// The list of abfs path of jars to be used in this session. Jars to include on the driver and executor classpaths.
+	Jars []string
+
+	// Mount points to be used in this session.
+	MountPoints []MountPoint
+
+	// The name of this session.
+	Name *string
+
+	// Number of executors to launch for this session. The minimum value is 1, and the maximum value has to be lower than the
+	// instance pool maxNodeCount.
+	NumExecutors *int32
+
+	// The list of abfs path of python files to be used in this session. .zip, .egg, or .py files to place on the PYTHONPATH for
+	// Python apps.
+	PyFiles []string
+
+	// A dictionary of Spark property key to their value.
+	SparkProperties []SparkProperty
+}
+
+// SparkNotebookComputeDetails - Spark notebook compute details.
+type SparkNotebookComputeDetails struct {
+	// The high concurrency mode details.
+	HighConcurrencyModeStatus *HighConcurrencyModeStatus
+
+	// The livy id.
+	LivyID *string
+
+	// The spark notebook monitoring infomation.
+	MonitoringInfo *SparkNotebookMonitoringInfo
+}
+
+// SparkNotebookJobInstanceProperties - Spark notebook job instance properties.
+type SparkNotebookJobInstanceProperties struct {
+	// REQUIRED; The execution engine for the job instance.
+	Compute *ComputeType
+
+	// REQUIRED; The details of spark notebook job instance.
+	ComputeDetails *SparkNotebookComputeDetails
+
+	// User defined exit value in notebook. Refer to this article [/fabric/data-engineering/notebook-utilities#exit-a-notebook]
+	// for more details on how to set the notebook exit value.
+	ExitValue *string
+}
+
+// GetJobInstanceProperties implements the JobInstancePropertiesClassification interface for type SparkNotebookJobInstanceProperties.
+func (s *SparkNotebookJobInstanceProperties) GetJobInstanceProperties() *JobInstanceProperties {
+	return &JobInstanceProperties{
+		Compute:   s.Compute,
+		ExitValue: s.ExitValue,
+	}
+}
+
+// SparkNotebookMonitoringInfo - Spark notebook monitoring information.
+type SparkNotebookMonitoringInfo struct {
+	// Livy session details.
+	ActivityDetails *SparkNotebookActivityDetails
+
+	// Driver log url.
+	DriverLogURL *string
+
+	// Notebook execution snapshot url.
+	ExecutionSnapshotURL *string
+
+	// Spark job details url.
+	SparkJobDetailsURL *string
+
+	// Spark UI url.
+	SparkUIURL *string
+}
+
+// SparkProperty - A Spark property key and its value.
+type SparkProperty struct {
+	// The Spark property key.
+	Key *string
+
+	// The Spark property value.
+	Value *string
 }
 
 // UpdateNotebookDefinitionRequest - Update notebook public definition request payload.

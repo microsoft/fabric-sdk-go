@@ -286,6 +286,8 @@ func unmarshalSourceResponseClassification(rawMsg json.RawMessage) (SourceRespon
 		b = &AzureSQLDBCDCSourceResponse{}
 	case string(SourceTypeAzureSQLMIDBCDC):
 		b = &AzureSQLMIDBCDCSourceResponse{}
+	case string(SourceTypeAzureServiceBus):
+		b = &AzureServiceBusSourceResponse{}
 	case string(SourceTypeConfluentCloud):
 		b = &ConfluentCloudSourceResponse{}
 	case string(SourceTypeCustomEndpoint):
@@ -302,6 +304,8 @@ func unmarshalSourceResponseClassification(rawMsg json.RawMessage) (SourceRespon
 		b = &GooglePubSubSourceResponse{}
 	case string(SourceTypeHTTP):
 		b = &HTTPSourceResponse{}
+	case string(SourceTypeMongoDBCDC):
+		b = &MongoDBCDCSourceResponse{}
 	case string(SourceTypeMqtt):
 		b = &MqttSourceResponse{}
 	case string(SourceTypeMySQLCDC):

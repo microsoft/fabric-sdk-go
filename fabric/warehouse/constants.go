@@ -60,6 +60,25 @@ func PossibleCreationModeTypeValues() []CreationModeType {
 	}
 }
 
+// CustomSQLPoolClassifierType - Classifier element type. Additional classifier element types may be added over time.
+type CustomSQLPoolClassifierType string
+
+const (
+	// CustomSQLPoolClassifierTypeApplicationName - Refers to specific application names applied to the SQL pool.
+	CustomSQLPoolClassifierTypeApplicationName CustomSQLPoolClassifierType = "Application Name"
+	// CustomSQLPoolClassifierTypeApplicationNameRegex - Refers to a regular expression pattern used to match the application
+	// names applied to the SQL pool.
+	CustomSQLPoolClassifierTypeApplicationNameRegex CustomSQLPoolClassifierType = "Application Name Regex"
+)
+
+// PossibleCustomSQLPoolClassifierTypeValues returns the possible values for the CustomSQLPoolClassifierType const type.
+func PossibleCustomSQLPoolClassifierTypeValues() []CustomSQLPoolClassifierType {
+	return []CustomSQLPoolClassifierType{
+		CustomSQLPoolClassifierTypeApplicationName,
+		CustomSQLPoolClassifierTypeApplicationNameRegex,
+	}
+}
+
 // GroupType - The type of the group. Additional group types may be added over time.
 type GroupType string
 

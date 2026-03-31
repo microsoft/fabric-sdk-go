@@ -233,6 +233,7 @@ func (i *ItemsServerTransport) dispatchDeleteSemanticModel(req *http.Request) (*
 	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
+	qp := req.URL.Query()
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 	if err != nil {
 		return nil, err
@@ -241,7 +242,21 @@ func (i *ItemsServerTransport) dispatchDeleteSemanticModel(req *http.Request) (*
 	if err != nil {
 		return nil, err
 	}
-	respr, errRespr := i.srv.DeleteSemanticModel(req.Context(), workspaceIDParam, semanticModelIDParam, nil)
+	hardDeleteUnescaped, err := url.QueryUnescape(qp.Get("hardDelete"))
+	if err != nil {
+		return nil, err
+	}
+	hardDeleteParam, err := parseOptional(hardDeleteUnescaped, strconv.ParseBool)
+	if err != nil {
+		return nil, err
+	}
+	var options *semanticmodel.ItemsClientDeleteSemanticModelOptions
+	if hardDeleteParam != nil {
+		options = &semanticmodel.ItemsClientDeleteSemanticModelOptions{
+			HardDelete: hardDeleteParam,
+		}
+	}
+	respr, errRespr := i.srv.DeleteSemanticModel(req.Context(), workspaceIDParam, semanticModelIDParam, options)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}

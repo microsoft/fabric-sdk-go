@@ -266,6 +266,21 @@ func PossibleCapacityStateValues() []CapacityState {
 	}
 }
 
+// CatalogEntryType - The catalog entry type. Additional CatalogEntryType types may be added over time.
+type CatalogEntryType string
+
+const (
+	// CatalogEntryTypeFabricItem - A Fabric item catalog entry type.
+	CatalogEntryTypeFabricItem CatalogEntryType = "FabricItem"
+)
+
+// PossibleCatalogEntryTypeValues returns the possible values for the CatalogEntryType const type.
+func PossibleCatalogEntryTypeValues() []CatalogEntryType {
+	return []CatalogEntryType{
+		CatalogEntryTypeFabricItem,
+	}
+}
+
 // ChangeType - A change of an item. Additional changed types may be added over time.
 type ChangeType string
 
@@ -572,6 +587,22 @@ func PossibleDataAccessRoleConflictPolicyValues() []DataAccessRoleConflictPolicy
 	return []DataAccessRoleConflictPolicy{
 		DataAccessRoleConflictPolicyAbort,
 		DataAccessRoleConflictPolicyOverwrite,
+	}
+}
+
+// DataAccessRoleKind - The kind of the Data access role. Currently, the only supported kind is Policy. Additional kind types
+// may be added over time.
+type DataAccessRoleKind string
+
+const (
+	// DataAccessRoleKindPolicy - Policy-based data access role.
+	DataAccessRoleKindPolicy DataAccessRoleKind = "Policy"
+)
+
+// PossibleDataAccessRoleKindValues returns the possible values for the DataAccessRoleKind const type.
+func PossibleDataAccessRoleKindValues() []DataAccessRoleKind {
+	return []DataAccessRoleKind{
+		DataAccessRoleKindPolicy,
 	}
 }
 

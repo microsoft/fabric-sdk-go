@@ -30,6 +30,10 @@ type WorkspacesServer struct {
 	// HTTP status codes to indicate success: http.StatusCreated
 	AddWorkspaceRoleAssignment func(ctx context.Context, workspaceID string, workspaceRoleAssignmentRequest core.AddWorkspaceRoleAssignmentRequest, options *core.WorkspacesClientAddWorkspaceRoleAssignmentOptions) (resp azfake.Responder[core.WorkspacesClientAddWorkspaceRoleAssignmentResponse], errResp azfake.ErrorResponder)
 
+	// ApplyWorkspaceTags is the fake for method WorkspacesClient.ApplyWorkspaceTags
+	// HTTP status codes to indicate success: http.StatusOK
+	ApplyWorkspaceTags func(ctx context.Context, workspaceID string, applyTagsRequest core.ApplyWorkspaceTagsRequest, options *core.WorkspacesClientApplyWorkspaceTagsOptions) (resp azfake.Responder[core.WorkspacesClientApplyWorkspaceTagsResponse], errResp azfake.ErrorResponder)
+
 	// AssignToCapacity is the fake for method WorkspacesClient.AssignToCapacity
 	// HTTP status codes to indicate success: http.StatusAccepted
 	AssignToCapacity func(ctx context.Context, workspaceID string, assignWorkspaceToCapacityRequest core.AssignWorkspaceToCapacityRequest, options *core.WorkspacesClientAssignToCapacityOptions) (resp azfake.Responder[core.WorkspacesClientAssignToCapacityResponse], errResp azfake.ErrorResponder)
@@ -106,6 +110,10 @@ type WorkspacesServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	SetOutboundGatewayRules func(ctx context.Context, workspaceID string, workspaceOutboundGateways core.WorkspaceOutboundGateways, options *core.WorkspacesClientSetOutboundGatewayRulesOptions) (resp azfake.Responder[core.WorkspacesClientSetOutboundGatewayRulesResponse], errResp azfake.ErrorResponder)
 
+	// UnapplyWorkspaceTags is the fake for method WorkspacesClient.UnapplyWorkspaceTags
+	// HTTP status codes to indicate success: http.StatusOK
+	UnapplyWorkspaceTags func(ctx context.Context, workspaceID string, unapplyTagsRequest core.UnapplyWorkspaceTagsRequest, options *core.WorkspacesClientUnapplyWorkspaceTagsOptions) (resp azfake.Responder[core.WorkspacesClientUnapplyWorkspaceTagsResponse], errResp azfake.ErrorResponder)
+
 	// UnassignFromCapacity is the fake for method WorkspacesClient.UnassignFromCapacity
 	// HTTP status codes to indicate success: http.StatusAccepted
 	UnassignFromCapacity func(ctx context.Context, workspaceID string, options *core.WorkspacesClientUnassignFromCapacityOptions) (resp azfake.Responder[core.WorkspacesClientUnassignFromCapacityResponse], errResp azfake.ErrorResponder)
@@ -173,6 +181,8 @@ func (w *WorkspacesServerTransport) dispatchToMethodFake(req *http.Request, meth
 			switch method {
 			case "WorkspacesClient.AddWorkspaceRoleAssignment":
 				res.resp, res.err = w.dispatchAddWorkspaceRoleAssignment(req)
+			case "WorkspacesClient.ApplyWorkspaceTags":
+				res.resp, res.err = w.dispatchApplyWorkspaceTags(req)
 			case "WorkspacesClient.AssignToCapacity":
 				res.resp, res.err = w.dispatchAssignToCapacity(req)
 			case "WorkspacesClient.AssignToDomain":
@@ -211,6 +221,8 @@ func (w *WorkspacesServerTransport) dispatchToMethodFake(req *http.Request, meth
 				res.resp, res.err = w.dispatchSetOutboundCloudConnectionRules(req)
 			case "WorkspacesClient.SetOutboundGatewayRules":
 				res.resp, res.err = w.dispatchSetOutboundGatewayRules(req)
+			case "WorkspacesClient.UnapplyWorkspaceTags":
+				res.resp, res.err = w.dispatchUnapplyWorkspaceTags(req)
 			case "WorkspacesClient.UnassignFromCapacity":
 				res.resp, res.err = w.dispatchUnassignFromCapacity(req)
 			case "WorkspacesClient.UnassignFromDomain":
@@ -270,6 +282,39 @@ func (w *WorkspacesServerTransport) dispatchAddWorkspaceRoleAssignment(req *http
 	}
 	if val := server.GetResponse(respr).Location; val != nil {
 		resp.Header.Set("Location", *val)
+	}
+	return resp, nil
+}
+
+func (w *WorkspacesServerTransport) dispatchApplyWorkspaceTags(req *http.Request) (*http.Response, error) {
+	if w.srv.ApplyWorkspaceTags == nil {
+		return nil, &nonRetriableError{errors.New("fake for method ApplyWorkspaceTags not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/applyTags`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.ApplyWorkspaceTagsRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := w.srv.ApplyWorkspaceTags(req.Context(), workspaceIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
 	}
 	return resp, nil
 }
@@ -970,6 +1015,39 @@ func (w *WorkspacesServerTransport) dispatchSetOutboundGatewayRules(req *http.Re
 	}
 	if val := server.GetResponse(respr).ETag; val != nil {
 		resp.Header.Set("ETag", *val)
+	}
+	return resp, nil
+}
+
+func (w *WorkspacesServerTransport) dispatchUnapplyWorkspaceTags(req *http.Request) (*http.Response, error) {
+	if w.srv.UnapplyWorkspaceTags == nil {
+		return nil, &nonRetriableError{errors.New("fake for method UnapplyWorkspaceTags not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/unapplyTags`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.UnapplyWorkspaceTagsRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := w.srv.UnapplyWorkspaceTags(req.Context(), workspaceIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
 	}
 	return resp, nil
 }

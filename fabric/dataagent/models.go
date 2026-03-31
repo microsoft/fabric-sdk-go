@@ -35,9 +35,6 @@ type DataAgent struct {
 	// The item display name.
 	DisplayName *string
 
-	// The DataAgent properties.
-	Properties *Properties
-
 	// READ-ONLY; The folder ID.
 	FolderID *string
 
@@ -54,9 +51,9 @@ type DataAgent struct {
 	WorkspaceID *string
 }
 
-// DataAgents - A list of Public Facing Collection Names.
+// DataAgents - A list of data agents.
 type DataAgents struct {
-	// REQUIRED; A list of Public Facing Collection Names.
+	// REQUIRED; A list of data agents.
 	Value []DataAgent
 
 	// The token for the next result set batch. If there are no more records, it's removed from the response.
@@ -80,12 +77,6 @@ type ItemTag struct {
 
 	// REQUIRED; The tag ID.
 	ID *string
-}
-
-// Properties - The DataAgent properties.
-type Properties struct {
-	// REQUIRED; OneLake path to the DataAgent root directory.
-	OneLakeRootPath *string
 }
 
 // PublicDefinition - DataAgent public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/data-agent-definition]

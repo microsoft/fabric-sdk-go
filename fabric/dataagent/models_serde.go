@@ -64,7 +64,6 @@ func (d DataAgent) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", d.DisplayName)
 	populate(objectMap, "folderId", d.FolderID)
 	populate(objectMap, "id", d.ID)
-	populate(objectMap, "properties", d.Properties)
 	populate(objectMap, "sensitivityLabel", d.SensitivityLabel)
 	populate(objectMap, "tags", d.Tags)
 	populate(objectMap, "type", d.Type)
@@ -92,9 +91,6 @@ func (d *DataAgent) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &d.ID)
-			delete(rawMsg, key)
-		case "properties":
-			err = unpopulate(val, "Properties", &d.Properties)
 			delete(rawMsg, key)
 		case "sensitivityLabel":
 			err = unpopulate(val, "SensitivityLabel", &d.SensitivityLabel)
@@ -204,33 +200,6 @@ func (i *ItemTag) UnmarshalJSON(data []byte) error {
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", i, err)
-		}
-	}
-	return nil
-}
-
-// MarshalJSON implements the json.Marshaller interface for type Properties.
-func (p Properties) MarshalJSON() ([]byte, error) {
-	objectMap := make(map[string]any)
-	populate(objectMap, "oneLakeRootPath", p.OneLakeRootPath)
-	return json.Marshal(objectMap)
-}
-
-// UnmarshalJSON implements the json.Unmarshaller interface for type Properties.
-func (p *Properties) UnmarshalJSON(data []byte) error {
-	var rawMsg map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawMsg); err != nil {
-		return fmt.Errorf("unmarshalling type %T: %v", p, err)
-	}
-	for key, val := range rawMsg {
-		var err error
-		switch key {
-		case "oneLakeRootPath":
-			err = unpopulate(val, "OneLakeRootPath", &p.OneLakeRootPath)
-			delete(rawMsg, key)
-		}
-		if err != nil {
-			return fmt.Errorf("unmarshalling type %T: %v", p, err)
 		}
 	}
 	return nil

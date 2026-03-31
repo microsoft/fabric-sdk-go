@@ -237,7 +237,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteReport() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteReport(ctx, exampleWorkspaceID, exampleReportID, nil)
+	_, err = client.DeleteReport(ctx, exampleWorkspaceID, exampleReportID, &report.ItemsClientDeleteReportOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a report example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleReportID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteReport = func(ctx context.Context, workspaceID string, reportID string, options *report.ItemsClientDeleteReportOptions) (resp azfake.Responder[report.ItemsClientDeleteReportResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleReportID, reportID)
+		resp = azfake.Responder[report.ItemsClientDeleteReportResponse]{}
+		resp.SetResponse(http.StatusOK, report.ItemsClientDeleteReportResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteReport(ctx, exampleWorkspaceID, exampleReportID, &report.ItemsClientDeleteReportOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

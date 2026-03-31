@@ -29,6 +29,12 @@ type ItemsClientGetSQLDatabaseResponse struct {
 	SQLDatabase
 }
 
+// ItemsClientListRestorableDeletedDatabasesResponse contains the response from method ItemsClient.ListRestorableDeletedDatabases.
+type ItemsClientListRestorableDeletedDatabasesResponse struct {
+	// A list of restorable deleted SQL databases.
+	RestorableDeletedSQLDatabases
+}
+
 // ItemsClientListSQLDatabasesResponse contains the response from method ItemsClient.NewListSQLDatabasesPager.
 type ItemsClientListSQLDatabasesResponse struct {
 	// A list of SQL databases.

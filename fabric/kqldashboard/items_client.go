@@ -142,7 +142,7 @@ func (client *ItemsClient) DeleteKQLDashboard(ctx context.Context, workspaceID s
 }
 
 // deleteKQLDashboardCreateRequest creates the DeleteKQLDashboard request.
-func (client *ItemsClient) deleteKQLDashboardCreateRequest(ctx context.Context, workspaceID string, kqlDashboardID string, _ *ItemsClientDeleteKQLDashboardOptions) (*policy.Request, error) {
+func (client *ItemsClient) deleteKQLDashboardCreateRequest(ctx context.Context, workspaceID string, kqlDashboardID string, options *ItemsClientDeleteKQLDashboardOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/kqlDashboards/{kqlDashboardId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -156,6 +156,11 @@ func (client *ItemsClient) deleteKQLDashboardCreateRequest(ctx context.Context, 
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.HardDelete != nil {
+		reqQP.Set("hardDelete", strconv.FormatBool(*options.HardDelete))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

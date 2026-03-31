@@ -259,7 +259,25 @@ func (testsuite *FakeTestSuite) TestItems_DeleteCosmosDBDatabase() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	_, err = client.DeleteCosmosDBDatabase(ctx, exampleWorkspaceID, exampleCosmosDbDatabaseID, nil)
+	_, err = client.DeleteCosmosDBDatabase(ctx, exampleWorkspaceID, exampleCosmosDbDatabaseID, &cosmosdbdatabase.ItemsClientDeleteCosmosDBDatabaseOptions{HardDelete: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Hard delete a Cosmos DB database example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCosmosDbDatabaseID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.ItemsServer.DeleteCosmosDBDatabase = func(ctx context.Context, workspaceID string, cosmosDbDatabaseID string, options *cosmosdbdatabase.ItemsClientDeleteCosmosDBDatabaseOptions) (resp azfake.Responder[cosmosdbdatabase.ItemsClientDeleteCosmosDBDatabaseResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleCosmosDbDatabaseID, cosmosDbDatabaseID)
+		resp = azfake.Responder[cosmosdbdatabase.ItemsClientDeleteCosmosDBDatabaseResponse]{}
+		resp.SetResponse(http.StatusOK, cosmosdbdatabase.ItemsClientDeleteCosmosDBDatabaseResponse{}, nil)
+		return
+	}
+
+	_, err = client.DeleteCosmosDBDatabase(ctx, exampleWorkspaceID, exampleCosmosDbDatabaseID, &cosmosdbdatabase.ItemsClientDeleteCosmosDBDatabaseOptions{HardDelete: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
