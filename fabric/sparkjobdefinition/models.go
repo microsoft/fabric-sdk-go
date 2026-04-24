@@ -427,6 +427,9 @@ type SparkJobDefinition struct {
 	// The spark job definition properties.
 	Properties *Properties
 
+	// READ-ONLY; The item's default identity.
+	DefaultIdentity PrincipalClassification
+
 	// READ-ONLY; The folder ID.
 	FolderID *string
 

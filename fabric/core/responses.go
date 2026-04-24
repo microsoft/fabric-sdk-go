@@ -71,6 +71,11 @@ type ConnectionsClientListSupportedConnectionTypesResponse struct {
 	ListSupportedConnectionTypesResponse
 }
 
+// ConnectionsClientTestConnectionResponse contains the response from method ConnectionsClient.BeginTestConnection.
+type ConnectionsClientTestConnectionResponse struct {
+	ConnectionStatusResponse
+}
+
 // ConnectionsClientUpdateConnectionResponse contains the response from method ConnectionsClient.UpdateConnection.
 type ConnectionsClientUpdateConnectionResponse struct {
 	// The base object of a connection.
@@ -394,6 +399,12 @@ type GitClientUpdateMyGitCredentialsResponse struct {
 	GitCredentialsConfigurationResponseClassification
 }
 
+// ItemsClientAssociateIdentityBetaResponse contains the response from method ItemsClient.BeginAssociateIdentityBeta.
+type ItemsClientAssociateIdentityBetaResponse struct {
+	// Associate identity response.
+	UpdateItemIdentityResponse
+}
+
 // ItemsClientBulkExportItemDefinitionsBetaResponse contains the response from method ItemsClient.BeginBulkExportItemDefinitionsBeta.
 type ItemsClientBulkExportItemDefinitionsBetaResponse struct {
 	// Bulk export item definitions response by definitions' parts.
@@ -508,11 +519,7 @@ type JobSchedulerClientListItemSchedulesResponse struct {
 
 // JobSchedulerClientRunOnDemandItemJobResponse contains the response from method JobSchedulerClient.RunOnDemandItemJob.
 type JobSchedulerClientRunOnDemandItemJobResponse struct {
-	// Location contains the information returned from the Location header response.
-	Location *string
-
-	// RetryAfter contains the information returned from the Retry-After header response.
-	RetryAfter *int32
+	// placeholder for future response values
 }
 
 // JobSchedulerClientUpdateItemScheduleResponse contains the response from method JobSchedulerClient.UpdateItemSchedule.

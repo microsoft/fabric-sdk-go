@@ -73,6 +73,11 @@ func ExampleWorkspacesClient_NewListWorkspacesPager_listWorkspacesExample() {
 		// 			Description: to.Ptr("A  workspace used by the marketing team"),
 		// 			DisplayName: to.Ptr("Marketing"),
 		// 			ID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
+		// 			Tags: []core.WorkspaceAppliedTag{
+		// 				{
+		// 					DisplayName: to.Ptr("Marketing"),
+		// 					ID: to.Ptr("b3f2c8e9-4d8e-4a7c-9a32-f8c1b2e4d6af"),
+		// 			}},
 		// 		},
 		// 		{
 		// 			Type: to.Ptr(core.WorkspaceTypeWorkspace),
@@ -81,6 +86,15 @@ func ExampleWorkspacesClient_NewListWorkspacesPager_listWorkspacesExample() {
 		// 			DisplayName: to.Ptr("Finance"),
 		// 			DomainID: to.Ptr("7c889f28-999b-4945-840d-54da3e3b5a29"),
 		// 			ID: to.Ptr("f2d70dc6-8f3e-4f2c-b00e-e2d336d7d711"),
+		// 			Tags: []core.WorkspaceAppliedTag{
+		// 				{
+		// 					DisplayName: to.Ptr("Finance"),
+		// 					ID: to.Ptr("9b8c7d6e-5f4a-3b2c-1d0e-9f8a7b6c5d4e"),
+		// 				},
+		// 				{
+		// 					DisplayName: to.Ptr("Marketing"),
+		// 					ID: to.Ptr("b3f2c8e9-4d8e-4a7c-9a32-f8c1b2e4d6af"),
+		// 			}},
 		// 	}},
 		// }
 	}
@@ -263,6 +277,11 @@ func ExampleWorkspacesClient_GetWorkspace_getAWorkspaceExample() {
 	// 	DisplayName: to.Ptr("New workspace"),
 	// 	DomainID: to.Ptr("9ce364e0-8e9d-4605-887a-b599b3e8b123"),
 	// 	ID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
+	// 	Tags: []core.WorkspaceAppliedTag{
+	// 		{
+	// 			DisplayName: to.Ptr("Finance"),
+	// 			ID: to.Ptr("b3f2c8e9-4d8e-4a7c-9a32-f8c1b2e4d6af"),
+	// 	}},
 	// 	CapacityAssignmentProgress: to.Ptr(core.CapacityAssignmentProgressCompleted),
 	// 	CapacityRegion: to.Ptr(core.CapacityRegionEastUS),
 	// 	OneLakeEndpoints: &core.OneLakeEndpoints{

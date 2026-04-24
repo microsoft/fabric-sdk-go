@@ -613,8 +613,7 @@ func (client *JobSchedulerClient) RunOnDemandItemJob(ctx context.Context, worksp
 		err = NewResponseError(httpResp)
 		return JobSchedulerClientRunOnDemandItemJobResponse{}, err
 	}
-	resp, err := client.runOnDemandItemJobHandleResponse(httpResp)
-	return resp, err
+	return JobSchedulerClientRunOnDemandItemJobResponse{}, nil
 }
 
 // runOnDemandItemJobCreateRequest creates the RunOnDemandItemJob request.
@@ -644,23 +643,6 @@ func (client *JobSchedulerClient) runOnDemandItemJobCreateRequest(ctx context.Co
 		return req, nil
 	}
 	return req, nil
-}
-
-// runOnDemandItemJobHandleResponse handles the RunOnDemandItemJob response.
-func (client *JobSchedulerClient) runOnDemandItemJobHandleResponse(resp *http.Response) (JobSchedulerClientRunOnDemandItemJobResponse, error) {
-	result := JobSchedulerClientRunOnDemandItemJobResponse{}
-	if val := resp.Header.Get("Location"); val != "" {
-		result.Location = &val
-	}
-	if val := resp.Header.Get("Retry-After"); val != "" {
-		retryAfter32, err := strconv.ParseInt(val, 10, 32)
-		retryAfter := int32(retryAfter32)
-		if err != nil {
-			return JobSchedulerClientRunOnDemandItemJobResponse{}, err
-		}
-		result.RetryAfter = &retryAfter
-	}
-	return result, nil
 }
 
 // UpdateItemSchedule - REQUIRED DELEGATED SCOPES: Item.Execute.All and Item.ReadWrite.All

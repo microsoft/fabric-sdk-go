@@ -11,7 +11,6 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
-	"strconv"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -63,8 +62,7 @@ func (client *BackgroundJobsClient) RunOnDemandSparkJobDefinition(ctx context.Co
 		err = core.NewResponseError(httpResp)
 		return BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse{}, err
 	}
-	resp, err := client.runOnDemandSparkJobDefinitionHandleResponse(httpResp)
-	return resp, err
+	return BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse{}, nil
 }
 
 // runOnDemandSparkJobDefinitionCreateRequest creates the RunOnDemandSparkJobDefinition request.
@@ -90,23 +88,6 @@ func (client *BackgroundJobsClient) runOnDemandSparkJobDefinitionCreateRequest(c
 		return req, nil
 	}
 	return req, nil
-}
-
-// runOnDemandSparkJobDefinitionHandleResponse handles the RunOnDemandSparkJobDefinition response.
-func (client *BackgroundJobsClient) runOnDemandSparkJobDefinitionHandleResponse(resp *http.Response) (BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse, error) {
-	result := BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse{}
-	if val := resp.Header.Get("Location"); val != "" {
-		result.Location = &val
-	}
-	if val := resp.Header.Get("Retry-After"); val != "" {
-		retryAfter32, err := strconv.ParseInt(val, 10, 32)
-		retryAfter := int32(retryAfter32)
-		if err != nil {
-			return BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse{}, err
-		}
-		result.RetryAfter = &retryAfter
-	}
-	return result, nil
 }
 
 // Custom code starts below

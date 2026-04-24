@@ -131,6 +131,13 @@ type LivySessionsClientListLivySessionsOptions struct {
 	ContinuationToken *string
 }
 
+// TablesClientBeginLoadSchemaTableBetaOptions contains the optional parameters for the TablesClient.BeginLoadSchemaTableBeta
+// method.
+type TablesClientBeginLoadSchemaTableBetaOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
 // TablesClientBeginLoadTableOptions contains the optional parameters for the TablesClient.BeginLoadTable method.
 type TablesClientBeginLoadTableOptions struct {
 	// Resumes the long-running operation from the provided token.

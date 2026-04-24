@@ -9,6 +9,7 @@ package core
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -27,6 +28,114 @@ import (
 type ItemsClient struct {
 	internal *azcore.Client
 	endpoint string
+}
+
+// BeginAssociateIdentityBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use. When calling this
+// API, callers must specify true as the value for the query parameter beta.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// This API is supported for a number of item types, find the supported item types and information about their definition
+// structure in Item management overview
+// [/rest/api/fabric/articles/item-management/item-management-overview].
+// PERMISSIONS The caller must have read and write permissions for the item.
+// REQUIRED DELEGATED SCOPES For item APIs use these scope types:
+// * Generic scope: Item.ReadWrite.All
+//
+// * Specific scope: itemType.ReadWrite.All (for example: Notebook.ReadWrite.All)
+//
+// for more information about scopes, see: scopes article [/rest/api/fabric/articles/scopes].
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | When the item type in the call is supported. Check the
+// corresponding API for the item type you're calling, to see if your call is
+// supported.|
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - itemID - The item ID.
+//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
+//   - updateItemIdentityRequest - Associate identity request payload.
+//   - options - ItemsClientBeginAssociateIdentityBetaOptions contains the optional parameters for the ItemsClient.BeginAssociateIdentityBeta
+//     method.
+func (client *ItemsClient) BeginAssociateIdentityBeta(ctx context.Context, workspaceID string, itemID string, beta bool, updateItemIdentityRequest UpdateItemIdentityRequest, options *ItemsClientBeginAssociateIdentityBetaOptions) (*runtime.Poller[ItemsClientAssociateIdentityBetaResponse], error) {
+	return client.beginAssociateIdentityBeta(ctx, workspaceID, itemID, beta, updateItemIdentityRequest, options)
+}
+
+// AssociateIdentityBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use. When calling this
+// API, callers must specify true as the value for the query parameter beta.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// This API is supported for a number of item types, find the supported item types and information about their definition
+// structure in Item management overview
+// [/rest/api/fabric/articles/item-management/item-management-overview].
+// PERMISSIONS The caller must have read and write permissions for the item.
+// REQUIRED DELEGATED SCOPES For item APIs use these scope types:
+// * Generic scope: Item.ReadWrite.All
+//
+// * Specific scope: itemType.ReadWrite.All (for example: Notebook.ReadWrite.All)
+//
+// for more information about scopes, see: scopes article [/rest/api/fabric/articles/scopes].
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | When the item type in the call is supported. Check the
+// corresponding API for the item type you're calling, to see if your call is
+// supported.|
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) associateIdentityBeta(ctx context.Context, workspaceID string, itemID string, beta bool, updateItemIdentityRequest UpdateItemIdentityRequest, options *ItemsClientBeginAssociateIdentityBetaOptions) (*http.Response, error) {
+	var err error
+	const operationName = "core.ItemsClient.BeginAssociateIdentityBeta"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.associateIdentityBetaCreateRequest(ctx, workspaceID, itemID, beta, updateItemIdentityRequest, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// associateIdentityBetaCreateRequest creates the AssociateIdentityBeta request.
+func (client *ItemsClient) associateIdentityBetaCreateRequest(ctx context.Context, workspaceID string, itemID string, beta bool, updateItemIdentityRequest UpdateItemIdentityRequest, _ *ItemsClientBeginAssociateIdentityBetaOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/identities/default/assign"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if itemID == "" {
+		return nil, errors.New("parameter itemID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{itemId}", url.PathEscape(itemID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("beta", strconv.FormatBool(beta))
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateItemIdentityRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
 }
 
 // BeginBulkExportItemDefinitionsBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
@@ -515,7 +624,7 @@ func (client *ItemsClient) GetItem(ctx context.Context, workspaceID string, item
 }
 
 // getItemCreateRequest creates the GetItem request.
-func (client *ItemsClient) getItemCreateRequest(ctx context.Context, workspaceID string, itemID string, _ *ItemsClientGetItemOptions) (*policy.Request, error) {
+func (client *ItemsClient) getItemCreateRequest(ctx context.Context, workspaceID string, itemID string, options *ItemsClientGetItemOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -529,6 +638,11 @@ func (client *ItemsClient) getItemCreateRequest(ctx context.Context, workspaceID
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.Include != nil {
+		reqQP.Set("include", strings.Join(strings.Fields(strings.Trim(fmt.Sprint(options.Include), "[]")), ","))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }
@@ -776,6 +890,9 @@ func (client *ItemsClient) listItemsCreateRequest(ctx context.Context, workspace
 	reqQP := req.Raw().URL.Query()
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	if options != nil && options.Include != nil {
+		reqQP.Set("include", strings.Join(strings.Fields(strings.Trim(fmt.Sprint(options.Include), "[]")), ","))
 	}
 	if options != nil && options.Recursive != nil {
 		reqQP.Set("recursive", strconv.FormatBool(*options.Recursive))
@@ -1055,6 +1172,90 @@ func (client *ItemsClient) updateItemDefinitionCreateRequest(ctx context.Context
 }
 
 // Custom code starts below
+
+// AssociateIdentityBeta - returns ItemsClientAssociateIdentityBetaResponse in sync mode.
+// >  [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use. When calling this
+// API, callers must specify true as the value for the query parameter beta.
+//
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// This API is supported for a number of item types, find the supported item types and information about their definition structure in Item management overview
+// [/rest/api/fabric/articles/item-management/item-management-overview].
+//
+// PERMISSIONS The caller must have read and write permissions for the item.
+//
+// REQUIRED DELEGATED SCOPES For item APIs use these scope types:
+//
+//   - Generic scope: Item.ReadWrite.All
+//
+//   - Specific scope: itemType.ReadWrite.All (for example: Notebook.ReadWrite.All)
+//
+//     for more information about scopes, see: scopes article [/rest/api/fabric/articles/scopes].
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | When the item type in the call is supported. Check the corresponding API for the item type you're calling, to see if your call is
+// supported.|
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - itemID - The item ID.
+//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
+//   - updateItemIdentityRequest - Associate identity request payload.
+//   - options - ItemsClientBeginAssociateIdentityBetaOptions contains the optional parameters for the ItemsClient.BeginAssociateIdentityBeta method.
+func (client *ItemsClient) AssociateIdentityBeta(ctx context.Context, workspaceID string, itemID string, beta bool, updateItemIdentityRequest UpdateItemIdentityRequest, options *ItemsClientBeginAssociateIdentityBetaOptions) (ItemsClientAssociateIdentityBetaResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginAssociateIdentityBeta(ctx, workspaceID, itemID, beta, updateItemIdentityRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientAssociateIdentityBetaResponse{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientAssociateIdentityBetaResponse{}, err
+	}
+	return result, err
+}
+
+// beginAssociateIdentityBeta creates the associateIdentityBeta request.
+func (client *ItemsClient) beginAssociateIdentityBeta(ctx context.Context, workspaceID string, itemID string, beta bool, updateItemIdentityRequest UpdateItemIdentityRequest, options *ItemsClientBeginAssociateIdentityBetaOptions) (*runtime.Poller[ItemsClientAssociateIdentityBetaResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.associateIdentityBeta(ctx, workspaceID, itemID, beta, updateItemIdentityRequest, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientAssociateIdentityBetaResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientAssociateIdentityBetaResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientAssociateIdentityBetaResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientAssociateIdentityBetaResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
 
 // BulkExportItemDefinitionsBeta - returns ItemsClientBulkExportItemDefinitionsBetaResponse in sync mode.
 // >  [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use. When calling this

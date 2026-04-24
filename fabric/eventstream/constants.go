@@ -179,6 +179,27 @@ func PossibleDataTypeValues() []DataType {
 	}
 }
 
+// DecimalHandlingMode - Specifies how decimal values are represented by the connector (precise decimal, double, or string).
+type DecimalHandlingMode string
+
+const (
+	// DecimalHandlingModeDouble - The decimal handling mode is Double.
+	DecimalHandlingModeDouble DecimalHandlingMode = "Double"
+	// DecimalHandlingModePrecise - The decimal handling mode is Precise.
+	DecimalHandlingModePrecise DecimalHandlingMode = "Precise"
+	// DecimalHandlingModeString - The decimal handling mode is String.
+	DecimalHandlingModeString DecimalHandlingMode = "String"
+)
+
+// PossibleDecimalHandlingModeValues returns the possible values for the DecimalHandlingMode const type.
+func PossibleDecimalHandlingModeValues() []DecimalHandlingMode {
+	return []DecimalHandlingMode{
+		DecimalHandlingModeDouble,
+		DecimalHandlingModePrecise,
+		DecimalHandlingModeString,
+	}
+}
+
 // DestinationType - Represents the type of the destination. Additional destination types may be added over time.
 type DestinationType string
 
@@ -244,6 +265,25 @@ func PossibleEventScopeValues() []EventScope {
 	}
 }
 
+// EventsOutOfOrderPolicy - The policy for handling events that arrive out of order. Additional policies may be added over
+// time.
+type EventsOutOfOrderPolicy string
+
+const (
+	// EventsOutOfOrderPolicyAdjust - Adjust the timestamp of out-of-order events.
+	EventsOutOfOrderPolicyAdjust EventsOutOfOrderPolicy = "Adjust"
+	// EventsOutOfOrderPolicyDrop - Drop out-of-order events.
+	EventsOutOfOrderPolicyDrop EventsOutOfOrderPolicy = "Drop"
+)
+
+// PossibleEventsOutOfOrderPolicyValues returns the possible values for the EventsOutOfOrderPolicy const type.
+func PossibleEventsOutOfOrderPolicyValues() []EventsOutOfOrderPolicy {
+	return []EventsOutOfOrderPolicy{
+		EventsOutOfOrderPolicyAdjust,
+		EventsOutOfOrderPolicyDrop,
+	}
+}
+
 // Format - The format type.
 type Format string
 
@@ -286,6 +326,27 @@ func PossibleGroupByWindowTypeValues() []GroupByWindowType {
 		GroupByWindowTypeSliding,
 		GroupByWindowTypeSnapshot,
 		GroupByWindowTypeTumbling,
+	}
+}
+
+// GroupType - The type of the group. Additional group types may be added over time.
+type GroupType string
+
+const (
+	// GroupTypeDistributionList - Principal is a distribution list.
+	GroupTypeDistributionList GroupType = "DistributionList"
+	// GroupTypeSecurityGroup - Principal is a security group.
+	GroupTypeSecurityGroup GroupType = "SecurityGroup"
+	// GroupTypeUnknown - Principal group type is unknown.
+	GroupTypeUnknown GroupType = "Unknown"
+)
+
+// PossibleGroupTypeValues returns the possible values for the GroupType const type.
+func PossibleGroupTypeValues() []GroupType {
+	return []GroupType{
+		GroupTypeDistributionList,
+		GroupTypeSecurityGroup,
+		GroupTypeUnknown,
 	}
 }
 
@@ -651,6 +712,33 @@ func PossiblePayloadTypeValues() []PayloadType {
 	}
 }
 
+// PrincipalType - The type of the principal. Additional principal types may be added over time.
+type PrincipalType string
+
+const (
+	// PrincipalTypeEntireTenant - Principal represents all tenant users.
+	PrincipalTypeEntireTenant PrincipalType = "EntireTenant"
+	// PrincipalTypeGroup - Principal is a security group.
+	PrincipalTypeGroup PrincipalType = "Group"
+	// PrincipalTypeServicePrincipal - Principal is a Microsoft Entra service principal.
+	PrincipalTypeServicePrincipal PrincipalType = "ServicePrincipal"
+	// PrincipalTypeServicePrincipalProfile - Principal is a service principal profile.
+	PrincipalTypeServicePrincipalProfile PrincipalType = "ServicePrincipalProfile"
+	// PrincipalTypeUser - Principal is a Microsoft Entra user principal.
+	PrincipalTypeUser PrincipalType = "User"
+)
+
+// PossiblePrincipalTypeValues returns the possible values for the PrincipalType const type.
+func PossiblePrincipalTypeValues() []PrincipalType {
+	return []PrincipalType{
+		PrincipalTypeEntireTenant,
+		PrincipalTypeGroup,
+		PrincipalTypeServicePrincipal,
+		PrincipalTypeServicePrincipalProfile,
+		PrincipalTypeUser,
+	}
+}
+
 // PubSubType - The Solace PubSub type.
 type PubSubType string
 
@@ -669,7 +757,28 @@ func PossiblePubSubTypeValues() []PubSubType {
 	}
 }
 
-// Region - The Amazon Kinesis region name.
+// PublicationAutoCreateMode - The publication auto-create mode.
+type PublicationAutoCreateMode string
+
+const (
+	// PublicationAutoCreateModeAllTables - The publication auto-create mode is AllTables.
+	PublicationAutoCreateModeAllTables PublicationAutoCreateMode = "AllTables"
+	// PublicationAutoCreateModeDisabled - The publication auto-create mode is Disabled.
+	PublicationAutoCreateModeDisabled PublicationAutoCreateMode = "Disabled"
+	// PublicationAutoCreateModeFiltered - The publication auto-create mode is Filtered.
+	PublicationAutoCreateModeFiltered PublicationAutoCreateMode = "Filtered"
+)
+
+// PossiblePublicationAutoCreateModeValues returns the possible values for the PublicationAutoCreateMode const type.
+func PossiblePublicationAutoCreateModeValues() []PublicationAutoCreateMode {
+	return []PublicationAutoCreateMode{
+		PublicationAutoCreateModeAllTables,
+		PublicationAutoCreateModeDisabled,
+		PublicationAutoCreateModeFiltered,
+	}
+}
+
+// Region - The Amazon Kinesis region name. Additional regions may be added over time.
 type Region string
 
 const (
@@ -777,7 +886,7 @@ func PossibleRegionValues() []Region {
 	}
 }
 
-// SaslMechanism - The SASL mechanism.
+// SaslMechanism - The SASL mechanism. Additional SASL mechanisms may be added over time.
 type SaslMechanism string
 
 const (
@@ -842,7 +951,7 @@ func PossibleSensitivityLabelApplyStrategyValues() []SensitivityLabelApplyStrate
 	}
 }
 
-// SerializationType - The serialization type.
+// SerializationType - The serialization type. Additional serialization types may be added over time.
 type SerializationType string
 
 const (
@@ -878,6 +987,25 @@ func PossibleServerVersionValues() []ServerVersion {
 	return []ServerVersion{
 		ServerVersionV3,
 		ServerVersionV5,
+	}
+}
+
+// SnapshotLockingMode - Specifies the locking strategy used when taking the initial snapshot (for example, minimal locks
+// vs extended locking for stronger consistency).
+type SnapshotLockingMode string
+
+const (
+	// SnapshotLockingModeExtended - The snapshot locking mode is Extended.
+	SnapshotLockingModeExtended SnapshotLockingMode = "Extended"
+	// SnapshotLockingModeMinimal - The snapshot locking mode is Minimal.
+	SnapshotLockingModeMinimal SnapshotLockingMode = "Minimal"
+)
+
+// PossibleSnapshotLockingModeValues returns the possible values for the SnapshotLockingMode const type.
+func PossibleSnapshotLockingModeValues() []SnapshotLockingMode {
+	return []SnapshotLockingMode{
+		SnapshotLockingModeExtended,
+		SnapshotLockingModeMinimal,
 	}
 }
 

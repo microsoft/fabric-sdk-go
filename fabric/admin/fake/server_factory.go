@@ -26,6 +26,7 @@ type ServerFactory struct {
 	TagsServer                       TagsServer
 	TenantsServer                    TenantsServer
 	UsersServer                      UsersServer
+	WorkloadsServer                  WorkloadsServer
 	WorkspacesServer                 WorkspacesServer
 }
 
@@ -42,6 +43,7 @@ type ServerFactoryTransport struct {
 	trTagsServer                       *TagsServerTransport
 	trTenantsServer                    *TenantsServerTransport
 	trUsersServer                      *UsersServerTransport
+	trWorkloadsServer                  *WorkloadsServerTransport
 	trWorkspacesServer                 *WorkspacesServerTransport
 }
 
@@ -94,6 +96,9 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	case "UsersClient":
 		initServer(s, &s.trUsersServer, func() *UsersServerTransport { return NewUsersServerTransport(&s.srv.UsersServer) })
 		resp, err = s.trUsersServer.Do(req)
+	case "WorkloadsClient":
+		initServer(s, &s.trWorkloadsServer, func() *WorkloadsServerTransport { return NewWorkloadsServerTransport(&s.srv.WorkloadsServer) })
+		resp, err = s.trWorkloadsServer.Do(req)
 	case "WorkspacesClient":
 		initServer(s, &s.trWorkspacesServer, func() *WorkspacesServerTransport { return NewWorkspacesServerTransport(&s.srv.WorkspacesServer) })
 		resp, err = s.trWorkspacesServer.Do(req)

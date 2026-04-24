@@ -220,6 +220,41 @@ func (a *AzureDevOpsDetails) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type BaseWorkloadAssignment.
+func (b BaseWorkloadAssignment) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "id", b.ID)
+	objectMap["type"] = b.Type
+	populate(objectMap, "workloadId", b.WorkloadID)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type BaseWorkloadAssignment.
+func (b *BaseWorkloadAssignment) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", b, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "id":
+			err = unpopulate(val, "ID", &b.ID)
+			delete(rawMsg, key)
+		case "type":
+			err = unpopulate(val, "Type", &b.Type)
+			delete(rawMsg, key)
+		case "workloadId":
+			err = unpopulate(val, "WorkloadID", &b.WorkloadID)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", b, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type BulkRemoveSharingLinksRequest.
 func (b BulkRemoveSharingLinksRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -611,6 +646,138 @@ func (c *CreateTagsResponse) UnmarshalJSON(data []byte) error {
 		switch key {
 		case "tags":
 			err = unpopulate(val, "Tags", &c.Tags)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type CreateWorkloadBaseAssignmentRequest.
+func (c CreateWorkloadBaseAssignmentRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["type"] = c.Type
+	populate(objectMap, "workloadId", c.WorkloadID)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CreateWorkloadBaseAssignmentRequest.
+func (c *CreateWorkloadBaseAssignmentRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "type":
+			err = unpopulate(val, "Type", &c.Type)
+			delete(rawMsg, key)
+		case "workloadId":
+			err = unpopulate(val, "WorkloadID", &c.WorkloadID)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type CreateWorkloadCapacityAssignmentRequest.
+func (c CreateWorkloadCapacityAssignmentRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "capacityId", c.CapacityID)
+	objectMap["type"] = WorkloadAssignmentTypeCapacity
+	populate(objectMap, "workloadId", c.WorkloadID)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CreateWorkloadCapacityAssignmentRequest.
+func (c *CreateWorkloadCapacityAssignmentRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "capacityId":
+			err = unpopulate(val, "CapacityID", &c.CapacityID)
+			delete(rawMsg, key)
+		case "type":
+			err = unpopulate(val, "Type", &c.Type)
+			delete(rawMsg, key)
+		case "workloadId":
+			err = unpopulate(val, "WorkloadID", &c.WorkloadID)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type CreateWorkloadTenantAssignmentRequest.
+func (c CreateWorkloadTenantAssignmentRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["type"] = WorkloadAssignmentTypeTenant
+	populate(objectMap, "workloadId", c.WorkloadID)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CreateWorkloadTenantAssignmentRequest.
+func (c *CreateWorkloadTenantAssignmentRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "type":
+			err = unpopulate(val, "Type", &c.Type)
+			delete(rawMsg, key)
+		case "workloadId":
+			err = unpopulate(val, "WorkloadID", &c.WorkloadID)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type CreateWorkloadWorkspaceAssignmentRequest.
+func (c CreateWorkloadWorkspaceAssignmentRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["type"] = WorkloadAssignmentTypeWorkspace
+	populate(objectMap, "workloadId", c.WorkloadID)
+	populate(objectMap, "workspaceId", c.WorkspaceID)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CreateWorkloadWorkspaceAssignmentRequest.
+func (c *CreateWorkloadWorkspaceAssignmentRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "type":
+			err = unpopulate(val, "Type", &c.Type)
+			delete(rawMsg, key)
+		case "workloadId":
+			err = unpopulate(val, "WorkloadID", &c.WorkloadID)
+			delete(rawMsg, key)
+		case "workspaceId":
+			err = unpopulate(val, "WorkspaceID", &c.WorkspaceID)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -1528,6 +1695,7 @@ func (i Item) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "capacityId", i.CapacityID)
 	populate(objectMap, "creatorPrincipal", i.CreatorPrincipal)
+	populate(objectMap, "defaultIdentity", i.DefaultIdentity)
 	populate(objectMap, "description", i.Description)
 	populate(objectMap, "folderId", i.FolderID)
 	populate(objectMap, "id", i.ID)
@@ -1554,6 +1722,9 @@ func (i *Item) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "creatorPrincipal":
 			i.CreatorPrincipal, err = unmarshalPrincipalClassification(val)
+			delete(rawMsg, key)
+		case "defaultIdentity":
+			i.DefaultIdentity, err = unmarshalPrincipalClassification(val)
 			delete(rawMsg, key)
 		case "description":
 			err = unpopulate(val, "Description", &i.Description)
@@ -3053,6 +3224,248 @@ func (u *UserPrincipalUserDetails) UnmarshalJSON(data []byte) error {
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", u, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type WorkloadAssignmentInfo.
+func (w WorkloadAssignmentInfo) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "assignedCapacitiesCount", w.AssignedCapacitiesCount)
+	populate(objectMap, "assignedWorkspacesCount", w.AssignedWorkspacesCount)
+	populate(objectMap, "id", w.ID)
+	populate(objectMap, "isAssignable", w.IsAssignable)
+	populate(objectMap, "isAssignedToTenant", w.IsAssignedToTenant)
+	populate(objectMap, "name", w.Name)
+	populate(objectMap, "publisher", w.Publisher)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type WorkloadAssignmentInfo.
+func (w *WorkloadAssignmentInfo) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", w, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "assignedCapacitiesCount":
+			err = unpopulate(val, "AssignedCapacitiesCount", &w.AssignedCapacitiesCount)
+			delete(rawMsg, key)
+		case "assignedWorkspacesCount":
+			err = unpopulate(val, "AssignedWorkspacesCount", &w.AssignedWorkspacesCount)
+			delete(rawMsg, key)
+		case "id":
+			err = unpopulate(val, "ID", &w.ID)
+			delete(rawMsg, key)
+		case "isAssignable":
+			err = unpopulate(val, "IsAssignable", &w.IsAssignable)
+			delete(rawMsg, key)
+		case "isAssignedToTenant":
+			err = unpopulate(val, "IsAssignedToTenant", &w.IsAssignedToTenant)
+			delete(rawMsg, key)
+		case "name":
+			err = unpopulate(val, "Name", &w.Name)
+			delete(rawMsg, key)
+		case "publisher":
+			err = unpopulate(val, "Publisher", &w.Publisher)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", w, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type WorkloadAssignmentInfos.
+func (w WorkloadAssignmentInfos) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "continuationToken", w.ContinuationToken)
+	populate(objectMap, "continuationUri", w.ContinuationURI)
+	populate(objectMap, "value", w.Value)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type WorkloadAssignmentInfos.
+func (w *WorkloadAssignmentInfos) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", w, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "continuationToken":
+			err = unpopulate(val, "ContinuationToken", &w.ContinuationToken)
+			delete(rawMsg, key)
+		case "continuationUri":
+			err = unpopulate(val, "ContinuationURI", &w.ContinuationURI)
+			delete(rawMsg, key)
+		case "value":
+			err = unpopulate(val, "Value", &w.Value)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", w, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type WorkloadAssignments.
+func (w WorkloadAssignments) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "continuationToken", w.ContinuationToken)
+	populate(objectMap, "continuationUri", w.ContinuationURI)
+	populate(objectMap, "value", w.Value)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type WorkloadAssignments.
+func (w *WorkloadAssignments) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", w, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "continuationToken":
+			err = unpopulate(val, "ContinuationToken", &w.ContinuationToken)
+			delete(rawMsg, key)
+		case "continuationUri":
+			err = unpopulate(val, "ContinuationURI", &w.ContinuationURI)
+			delete(rawMsg, key)
+		case "value":
+			w.Value, err = unmarshalBaseWorkloadAssignmentClassificationArray(val)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", w, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type WorkloadCapacityAssignment.
+func (w WorkloadCapacityAssignment) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "capacityId", w.CapacityID)
+	populate(objectMap, "capacityName", w.CapacityName)
+	populate(objectMap, "id", w.ID)
+	objectMap["type"] = WorkloadAssignmentTypeCapacity
+	populate(objectMap, "workloadId", w.WorkloadID)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type WorkloadCapacityAssignment.
+func (w *WorkloadCapacityAssignment) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", w, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "capacityId":
+			err = unpopulate(val, "CapacityID", &w.CapacityID)
+			delete(rawMsg, key)
+		case "capacityName":
+			err = unpopulate(val, "CapacityName", &w.CapacityName)
+			delete(rawMsg, key)
+		case "id":
+			err = unpopulate(val, "ID", &w.ID)
+			delete(rawMsg, key)
+		case "type":
+			err = unpopulate(val, "Type", &w.Type)
+			delete(rawMsg, key)
+		case "workloadId":
+			err = unpopulate(val, "WorkloadID", &w.WorkloadID)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", w, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type WorkloadTenantAssignment.
+func (w WorkloadTenantAssignment) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "id", w.ID)
+	objectMap["type"] = WorkloadAssignmentTypeTenant
+	populate(objectMap, "workloadId", w.WorkloadID)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type WorkloadTenantAssignment.
+func (w *WorkloadTenantAssignment) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", w, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "id":
+			err = unpopulate(val, "ID", &w.ID)
+			delete(rawMsg, key)
+		case "type":
+			err = unpopulate(val, "Type", &w.Type)
+			delete(rawMsg, key)
+		case "workloadId":
+			err = unpopulate(val, "WorkloadID", &w.WorkloadID)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", w, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type WorkloadWorkspaceAssignment.
+func (w WorkloadWorkspaceAssignment) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "id", w.ID)
+	objectMap["type"] = WorkloadAssignmentTypeWorkspace
+	populate(objectMap, "workloadId", w.WorkloadID)
+	populate(objectMap, "workspaceId", w.WorkspaceID)
+	populate(objectMap, "workspaceName", w.WorkspaceName)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type WorkloadWorkspaceAssignment.
+func (w *WorkloadWorkspaceAssignment) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", w, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "id":
+			err = unpopulate(val, "ID", &w.ID)
+			delete(rawMsg, key)
+		case "type":
+			err = unpopulate(val, "Type", &w.Type)
+			delete(rawMsg, key)
+		case "workloadId":
+			err = unpopulate(val, "WorkloadID", &w.WorkloadID)
+			delete(rawMsg, key)
+		case "workspaceId":
+			err = unpopulate(val, "WorkspaceID", &w.WorkspaceID)
+			delete(rawMsg, key)
+		case "workspaceName":
+			err = unpopulate(val, "WorkspaceName", &w.WorkspaceName)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", w, err)
 		}
 	}
 	return nil

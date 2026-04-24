@@ -57,6 +57,27 @@ func PossibleDataSourceFormatValues() []DataSourceFormat {
 	}
 }
 
+// GroupType - The type of the group. Additional group types may be added over time.
+type GroupType string
+
+const (
+	// GroupTypeDistributionList - Principal is a distribution list.
+	GroupTypeDistributionList GroupType = "DistributionList"
+	// GroupTypeSecurityGroup - Principal is a security group.
+	GroupTypeSecurityGroup GroupType = "SecurityGroup"
+	// GroupTypeUnknown - Principal group type is unknown.
+	GroupTypeUnknown GroupType = "Unknown"
+)
+
+// PossibleGroupTypeValues returns the possible values for the GroupType const type.
+func PossibleGroupTypeValues() []GroupType {
+	return []GroupType{
+		GroupTypeDistributionList,
+		GroupTypeSecurityGroup,
+		GroupTypeUnknown,
+	}
+}
+
 // ItemType - The type of the item. Additional item types may be added over time.
 type ItemType string
 
@@ -252,6 +273,33 @@ const (
 func PossiblePayloadTypeValues() []PayloadType {
 	return []PayloadType{
 		PayloadTypeInlineBase64,
+	}
+}
+
+// PrincipalType - The type of the principal. Additional principal types may be added over time.
+type PrincipalType string
+
+const (
+	// PrincipalTypeEntireTenant - Principal represents all tenant users.
+	PrincipalTypeEntireTenant PrincipalType = "EntireTenant"
+	// PrincipalTypeGroup - Principal is a security group.
+	PrincipalTypeGroup PrincipalType = "Group"
+	// PrincipalTypeServicePrincipal - Principal is a Microsoft Entra service principal.
+	PrincipalTypeServicePrincipal PrincipalType = "ServicePrincipal"
+	// PrincipalTypeServicePrincipalProfile - Principal is a service principal profile.
+	PrincipalTypeServicePrincipalProfile PrincipalType = "ServicePrincipalProfile"
+	// PrincipalTypeUser - Principal is a Microsoft Entra user principal.
+	PrincipalTypeUser PrincipalType = "User"
+)
+
+// PossiblePrincipalTypeValues returns the possible values for the PrincipalType const type.
+func PossiblePrincipalTypeValues() []PrincipalType {
+	return []PrincipalType{
+		PrincipalTypeEntireTenant,
+		PrincipalTypeGroup,
+		PrincipalTypeServicePrincipal,
+		PrincipalTypeServicePrincipalProfile,
+		PrincipalTypeUser,
 	}
 }
 

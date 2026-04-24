@@ -11,7 +11,6 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
-	"strconv"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -61,8 +60,7 @@ func (client *BackgroundJobsClient) RunOnDemandRefreshGraph(ctx context.Context,
 		err = core.NewResponseError(httpResp)
 		return BackgroundJobsClientRunOnDemandRefreshGraphResponse{}, err
 	}
-	resp, err := client.runOnDemandRefreshGraphHandleResponse(httpResp)
-	return resp, err
+	return BackgroundJobsClientRunOnDemandRefreshGraphResponse{}, nil
 }
 
 // runOnDemandRefreshGraphCreateRequest creates the RunOnDemandRefreshGraph request.
@@ -82,23 +80,6 @@ func (client *BackgroundJobsClient) runOnDemandRefreshGraphCreateRequest(ctx con
 	}
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
-}
-
-// runOnDemandRefreshGraphHandleResponse handles the RunOnDemandRefreshGraph response.
-func (client *BackgroundJobsClient) runOnDemandRefreshGraphHandleResponse(resp *http.Response) (BackgroundJobsClientRunOnDemandRefreshGraphResponse, error) {
-	result := BackgroundJobsClientRunOnDemandRefreshGraphResponse{}
-	if val := resp.Header.Get("Location"); val != "" {
-		result.Location = &val
-	}
-	if val := resp.Header.Get("Retry-After"); val != "" {
-		retryAfter32, err := strconv.ParseInt(val, 10, 32)
-		retryAfter := int32(retryAfter32)
-		if err != nil {
-			return BackgroundJobsClientRunOnDemandRefreshGraphResponse{}, err
-		}
-		result.RetryAfter = &retryAfter
-	}
-	return result, nil
 }
 
 // Custom code starts below

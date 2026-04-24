@@ -6,6 +6,25 @@
 
 package admin
 
+// BaseWorkloadAssignmentClassification provides polymorphic access to related types.
+// Call the interface's GetBaseWorkloadAssignment() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *BaseWorkloadAssignment, *WorkloadCapacityAssignment, *WorkloadTenantAssignment, *WorkloadWorkspaceAssignment
+type BaseWorkloadAssignmentClassification interface {
+	// GetBaseWorkloadAssignment returns the BaseWorkloadAssignment content of the underlying type.
+	GetBaseWorkloadAssignment() *BaseWorkloadAssignment
+}
+
+// CreateWorkloadBaseAssignmentRequestClassification provides polymorphic access to related types.
+// Call the interface's GetCreateWorkloadBaseAssignmentRequest() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *CreateWorkloadBaseAssignmentRequest, *CreateWorkloadCapacityAssignmentRequest, *CreateWorkloadTenantAssignmentRequest,
+// - *CreateWorkloadWorkspaceAssignmentRequest
+type CreateWorkloadBaseAssignmentRequestClassification interface {
+	// GetCreateWorkloadBaseAssignmentRequest returns the CreateWorkloadBaseAssignmentRequest content of the underlying type.
+	GetCreateWorkloadBaseAssignmentRequest() *CreateWorkloadBaseAssignmentRequest
+}
+
 // GitProviderDetailsClassification provides polymorphic access to related types.
 // Call the interface's GetGitProviderDetails() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:

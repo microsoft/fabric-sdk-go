@@ -111,6 +111,14 @@ func (c *ClientFactory) NewUsersClient() *UsersClient {
 	}
 }
 
+// NewWorkloadsClient creates a new instance of WorkloadsClient.
+func (c *ClientFactory) NewWorkloadsClient() *WorkloadsClient {
+	return &WorkloadsClient{
+		internal: c.internal.WithClientName("admin.WorkloadsClient"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewWorkspacesClient creates a new instance of WorkspacesClient.
 func (c *ClientFactory) NewWorkspacesClient() *WorkspacesClient {
 	return &WorkspacesClient{

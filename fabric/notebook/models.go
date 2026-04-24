@@ -520,6 +520,9 @@ type Notebook struct {
 	// The item display name.
 	DisplayName *string
 
+	// READ-ONLY; The item's default identity.
+	DefaultIdentity PrincipalClassification
+
 	// READ-ONLY; The folder ID.
 	FolderID *string
 

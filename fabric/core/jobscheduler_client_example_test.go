@@ -102,7 +102,7 @@ func ExampleJobSchedulerClient_NewListItemSchedulesPager() {
 }
 
 // Generated from example definition
-func ExampleJobSchedulerClient_CreateItemSchedule() {
+func ExampleJobSchedulerClient_CreateItemSchedule_createItemScheduleExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -128,7 +128,41 @@ func ExampleJobSchedulerClient_CreateItemSchedule() {
 }
 
 // Generated from example definition
-func ExampleJobSchedulerClient_GetItemSchedule() {
+func ExampleJobSchedulerClient_CreateItemSchedule_createItemScheduleWithExecutionDataExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewJobSchedulerClient().CreateItemSchedule(ctx, "12345678-1234-1234-1234-123456789abc", "87654321-4321-4321-4321-abcdef123456", "DefaultJob", core.CreateScheduleRequest{
+		Configuration: &core.DailyScheduleConfig{
+			Type:            to.Ptr(core.ScheduleTypeDaily),
+			EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-30T23:59:00.000Z"); return t }()),
+			LocalTimeZoneID: to.Ptr("Central Standard Time"),
+			StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T00:00:00.000Z"); return t }()),
+			Times: []string{
+				"09:00",
+				"15:00"},
+		},
+		Enabled: to.Ptr(true),
+		ExecutionData: map[string]any{
+			"optimizeSettings": map[string]any{
+				"vOrder": true,
+			},
+			"tableName": "Table1",
+		},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleJobSchedulerClient_GetItemSchedule_getItemScheduleExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -164,7 +198,55 @@ func ExampleJobSchedulerClient_GetItemSchedule() {
 }
 
 // Generated from example definition
-func ExampleJobSchedulerClient_UpdateItemSchedule() {
+func ExampleJobSchedulerClient_GetItemSchedule_getItemScheduleWithExecutionDataExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewJobSchedulerClient().GetItemSchedule(ctx, "12345678-1234-1234-1234-123456789abc", "87654321-4321-4321-4321-abcdef123456", "DefaultJob", "11111111-2222-3333-4444-555555555555", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.ItemSchedule = core.ItemSchedule{
+	// 	Configuration: &core.WeeklyScheduleConfig{
+	// 		Type: to.Ptr(core.ScheduleTypeWeekly),
+	// 		EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-30T23:59:00.000Z"); return t}()),
+	// 		LocalTimeZoneID: to.Ptr("Central Standard Time"),
+	// 		StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T00:00:00.000Z"); return t}()),
+	// 		Times: []string{
+	// 			"10:00",
+	// 			"16:00"},
+	// 			Weekdays: []core.DayOfWeek{
+	// 				core.DayOfWeekMonday,
+	// 				core.DayOfWeekWednesday,
+	// 				core.DayOfWeekFriday},
+	// 			},
+	// 			CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T05:35:20.536Z"); return t}()),
+	// 			Enabled: to.Ptr(true),
+	// 			ExecutionData: map[string]any{
+	// 				"optimizeSettings":map[string]any{
+	// 					"vOrder": false,
+	// 				},
+	// 				"tableName": "Table2",
+	// 			},
+	// 			ID: to.Ptr("11111111-2222-3333-4444-555555555555"),
+	// 			Owner: &core.UserPrincipal{
+	// 				Type: to.Ptr(core.PrincipalTypeUser),
+	// 				ID: to.Ptr("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+	// 			},
+	// 		}
+}
+
+// Generated from example definition
+func ExampleJobSchedulerClient_UpdateItemSchedule_updateItemSchedulePlanExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -206,6 +288,75 @@ func ExampleJobSchedulerClient_UpdateItemSchedule() {
 	// 		ID: to.Ptr("8eedb1b0-3af8-4b17-8e7e-663e61e12211"),
 	// 	},
 	// }
+}
+
+// Generated from example definition
+func ExampleJobSchedulerClient_UpdateItemSchedule_updateItemScheduleWithExecutionDataExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewJobSchedulerClient().UpdateItemSchedule(ctx, "12345678-1234-1234-1234-123456789abc", "87654321-4321-4321-4321-abcdef123456", "DefaultJob", "11111111-2222-3333-4444-555555555555", core.UpdateScheduleRequest{
+		Configuration: &core.WeeklyScheduleConfig{
+			Type:            to.Ptr(core.ScheduleTypeWeekly),
+			EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-30T23:59:00.000Z"); return t }()),
+			LocalTimeZoneID: to.Ptr("Central Standard Time"),
+			StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T00:00:00.000Z"); return t }()),
+			Times: []string{
+				"10:00",
+				"16:00"},
+			Weekdays: []core.DayOfWeek{
+				core.DayOfWeekMonday,
+				core.DayOfWeekWednesday,
+				core.DayOfWeekFriday},
+		},
+		Enabled: to.Ptr(true),
+		ExecutionData: map[string]any{
+			"optimizeSettings": map[string]any{
+				"vOrder": false,
+			},
+			"tableName": "Table2",
+		},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.ItemSchedule = core.ItemSchedule{
+	// 	Configuration: &core.WeeklyScheduleConfig{
+	// 		Type: to.Ptr(core.ScheduleTypeWeekly),
+	// 		EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-30T23:59:00.000Z"); return t}()),
+	// 		LocalTimeZoneID: to.Ptr("Central Standard Time"),
+	// 		StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T00:00:00.000Z"); return t}()),
+	// 		Times: []string{
+	// 			"10:00",
+	// 			"16:00"},
+	// 			Weekdays: []core.DayOfWeek{
+	// 				core.DayOfWeekMonday,
+	// 				core.DayOfWeekWednesday,
+	// 				core.DayOfWeekFriday},
+	// 			},
+	// 			CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T05:35:20.536Z"); return t}()),
+	// 			Enabled: to.Ptr(true),
+	// 			ExecutionData: map[string]any{
+	// 				"optimizeSettings":map[string]any{
+	// 					"vOrder": false,
+	// 				},
+	// 				"tableName": "Table2",
+	// 			},
+	// 			ID: to.Ptr("11111111-2222-3333-4444-555555555555"),
+	// 			Owner: &core.UserPrincipal{
+	// 				Type: to.Ptr(core.PrincipalTypeUser),
+	// 				ID: to.Ptr("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+	// 			},
+	// 		}
 }
 
 // Generated from example definition

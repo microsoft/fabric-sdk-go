@@ -10,11 +10,7 @@ import "io"
 
 // BackgroundJobsClientRunOnDemandRefreshGraphResponse contains the response from method BackgroundJobsClient.RunOnDemandRefreshGraph.
 type BackgroundJobsClientRunOnDemandRefreshGraphResponse struct {
-	// Location contains the information returned from the Location header response.
-	Location *string
-
-	// RetryAfter contains the information returned from the Retry-After header response.
-	RetryAfter *int32
+	// placeholder for future response values
 }
 
 // ItemsClientCreateGraphModelResponse contains the response from method ItemsClient.BeginCreateGraphModel.

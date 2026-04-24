@@ -49,3 +49,32 @@ func unmarshalLibraryClassificationArray(rawMsg json.RawMessage) ([]LibraryClass
 	}
 	return fArray, nil
 }
+
+func unmarshalPrincipalClassification(rawMsg json.RawMessage) (PrincipalClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b PrincipalClassification
+	switch m["type"] {
+	case string(PrincipalTypeEntireTenant):
+		b = &EntireTenantPrincipal{}
+	case string(PrincipalTypeGroup):
+		b = &GroupPrincipal{}
+	case string(PrincipalTypeServicePrincipal):
+		b = &ServicePrincipal{}
+	case string(PrincipalTypeServicePrincipalProfile):
+		b = &ServicePrincipalProfilePrincipal{}
+	case string(PrincipalTypeUser):
+		b = &UserPrincipal{}
+	default:
+		b = &Principal{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
