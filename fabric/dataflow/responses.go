@@ -10,20 +10,12 @@ import "io"
 
 // BackgroundJobsClientRunOnDemandApplyChangesResponse contains the response from method BackgroundJobsClient.RunOnDemandApplyChanges.
 type BackgroundJobsClientRunOnDemandApplyChangesResponse struct {
-	// Location contains the information returned from the Location header response.
-	Location *string
-
-	// RetryAfter contains the information returned from the Retry-After header response.
-	RetryAfter *int32
+	// placeholder for future response values
 }
 
 // BackgroundJobsClientRunOnDemandExecuteResponse contains the response from method BackgroundJobsClient.RunOnDemandExecute.
 type BackgroundJobsClientRunOnDemandExecuteResponse struct {
-	// Location contains the information returned from the Location header response.
-	Location *string
-
-	// RetryAfter contains the information returned from the Retry-After header response.
-	RetryAfter *int32
+	// placeholder for future response values
 }
 
 // BackgroundJobsClientScheduleApplyChangesResponse contains the response from method BackgroundJobsClient.ScheduleApplyChanges.

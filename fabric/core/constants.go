@@ -954,6 +954,40 @@ func PossibleGroupTypeValues() []GroupType {
 	}
 }
 
+// IdentityAssignmentEntityType - Specifies the type of identity for an associate identity request. Additional identity assignment
+// types may be added over time.
+type IdentityAssignmentEntityType string
+
+const (
+	// IdentityAssignmentEntityTypeCaller - User or service principal who makes the associate identity request.
+	IdentityAssignmentEntityTypeCaller IdentityAssignmentEntityType = "Caller"
+)
+
+// PossibleIdentityAssignmentEntityTypeValues returns the possible values for the IdentityAssignmentEntityType const type.
+func PossibleIdentityAssignmentEntityTypeValues() []IdentityAssignmentEntityType {
+	return []IdentityAssignmentEntityType{
+		IdentityAssignmentEntityTypeCaller,
+	}
+}
+
+// IdentityAssignmentStatusType - The status of the identity assignment. Additional status may be added over time.
+type IdentityAssignmentStatusType string
+
+const (
+	// IdentityAssignmentStatusTypeFailed - The identity assignment failed.
+	IdentityAssignmentStatusTypeFailed IdentityAssignmentStatusType = "Failed"
+	// IdentityAssignmentStatusTypeSucceeded - The identity is successfully assigned to the item.
+	IdentityAssignmentStatusTypeSucceeded IdentityAssignmentStatusType = "Succeeded"
+)
+
+// PossibleIdentityAssignmentStatusTypeValues returns the possible values for the IdentityAssignmentStatusType const type.
+func PossibleIdentityAssignmentStatusTypeValues() []IdentityAssignmentStatusType {
+	return []IdentityAssignmentStatusType{
+		IdentityAssignmentStatusTypeFailed,
+		IdentityAssignmentStatusTypeSucceeded,
+	}
+}
+
 // ImmutabilityScope - The scope of immutability policy. Additional Immutability Scope types may be added over time.
 type ImmutabilityScope string
 
@@ -1077,6 +1111,20 @@ func PossibleItemDefinitionOperationTypeValues() []ItemDefinitionOperationType {
 	return []ItemDefinitionOperationType{
 		ItemDefinitionOperationTypeCreate,
 		ItemDefinitionOperationTypeUpdate,
+	}
+}
+
+type ItemIncludeOption string
+
+const (
+	// ItemIncludeOptionDefaultIdentity - Includes the default identity
+	ItemIncludeOptionDefaultIdentity ItemIncludeOption = "DefaultIdentity"
+)
+
+// PossibleItemIncludeOptionValues returns the possible values for the ItemIncludeOption const type.
+func PossibleItemIncludeOptionValues() []ItemIncludeOption {
+	return []ItemIncludeOption{
+		ItemIncludeOptionDefaultIdentity,
 	}
 }
 
@@ -1692,6 +1740,24 @@ func PossibleTagScopeTypeValues() []TagScopeType {
 	return []TagScopeType{
 		TagScopeTypeDomain,
 		TagScopeTypeTenant,
+	}
+}
+
+// TestConnectionStatus - The status of the connection. Additional statuses may be added over time.
+type TestConnectionStatus string
+
+const (
+	// TestConnectionStatusOffline - The connection is offline.
+	TestConnectionStatusOffline TestConnectionStatus = "Offline"
+	// TestConnectionStatusOnline - The connection is online.
+	TestConnectionStatusOnline TestConnectionStatus = "Online"
+)
+
+// PossibleTestConnectionStatusValues returns the possible values for the TestConnectionStatus const type.
+func PossibleTestConnectionStatusValues() []TestConnectionStatus {
+	return []TestConnectionStatus{
+		TestConnectionStatusOffline,
+		TestConnectionStatusOnline,
 	}
 }
 

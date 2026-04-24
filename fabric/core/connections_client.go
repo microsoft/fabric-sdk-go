@@ -19,6 +19,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 
 	"github.com/microsoft/fabric-sdk-go/internal/iruntime"
+	"github.com/microsoft/fabric-sdk-go/internal/pollers/locasync"
 )
 
 // ConnectionsClient contains the methods for the Connections group.
@@ -591,6 +592,75 @@ func (client *ConnectionsClient) listSupportedConnectionTypesHandleResponse(resp
 	return result, nil
 }
 
+// BeginTestConnection - Provides the status of the specified connection.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Required permissions: Permission to read the connection, or admin permission for the gateway that hosts the connection.Required
+// scopes: Connection.Read.All or Connection.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - connectionID - The ID of the connection.
+//   - options - ConnectionsClientBeginTestConnectionOptions contains the optional parameters for the ConnectionsClient.BeginTestConnection
+//     method.
+func (client *ConnectionsClient) BeginTestConnection(ctx context.Context, connectionID string, options *ConnectionsClientBeginTestConnectionOptions) (*runtime.Poller[ConnectionsClientTestConnectionResponse], error) {
+	return client.beginTestConnection(ctx, connectionID, options)
+}
+
+// TestConnection - Provides the status of the specified connection.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Required permissions: Permission to read the connection, or admin permission for the gateway that hosts the connection.Required
+// scopes: Connection.Read.All or Connection.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ConnectionsClient) testConnection(ctx context.Context, connectionID string, options *ConnectionsClientBeginTestConnectionOptions) (*http.Response, error) {
+	var err error
+	const operationName = "core.ConnectionsClient.BeginTestConnection"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.testConnectionCreateRequest(ctx, connectionID, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// testConnectionCreateRequest creates the TestConnection request.
+func (client *ConnectionsClient) testConnectionCreateRequest(ctx context.Context, connectionID string, _ *ConnectionsClientBeginTestConnectionOptions) (*policy.Request, error) {
+	urlPath := "/v1/connections/{connectionId}/testConnection"
+	if connectionID == "" {
+		return nil, errors.New("parameter connectionID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{connectionId}", url.PathEscape(connectionID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
 // UpdateConnection - To encrypt credentials, see Configure credentials programmatically [/power-bi/developer/embedded/configure-credentials].
 // PERMISSIONS The caller must have permission for the connection or admin permission for the gateway of the connection.
 // REQUIRED DELEGATED SCOPES Connection.ReadWrite.All
@@ -728,6 +798,74 @@ func (client *ConnectionsClient) updateConnectionRoleAssignmentHandleResponse(re
 }
 
 // Custom code starts below
+
+// TestConnection - returns ConnectionsClientTestConnectionResponse in sync mode.
+// Provides the status of the specified connection.
+//
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// Required permissions: Permission to read the connection, or admin permission for the gateway that hosts the connection.Required scopes: Connection.Read.All or Connection.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - connectionID - The ID of the connection.
+//   - options - ConnectionsClientBeginTestConnectionOptions contains the optional parameters for the ConnectionsClient.BeginTestConnection method.
+func (client *ConnectionsClient) TestConnection(ctx context.Context, connectionID string, options *ConnectionsClientBeginTestConnectionOptions) (ConnectionsClientTestConnectionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginTestConnection(ctx, connectionID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ConnectionsClientTestConnectionResponse{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ConnectionsClientTestConnectionResponse{}, err
+	}
+	return result, err
+}
+
+// beginTestConnection creates the testConnection request.
+func (client *ConnectionsClient) beginTestConnection(ctx context.Context, connectionID string, options *ConnectionsClientBeginTestConnectionOptions) (*runtime.Poller[ConnectionsClientTestConnectionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.testConnection(ctx, connectionID, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ConnectionsClientTestConnectionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ConnectionsClientTestConnectionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ConnectionsClientTestConnectionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ConnectionsClientTestConnectionResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
 
 // ListConnectionRoleAssignments - returns array of ConnectionRoleAssignment from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].

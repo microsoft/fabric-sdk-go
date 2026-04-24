@@ -14,3 +14,12 @@ type LibraryClassification interface {
 	// GetLibrary returns the Library content of the underlying type.
 	GetLibrary() *Library
 }
+
+// PrincipalClassification provides polymorphic access to related types.
+// Call the interface's GetPrincipal() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *EntireTenantPrincipal, *GroupPrincipal, *Principal, *ServicePrincipal, *ServicePrincipalProfilePrincipal, *UserPrincipal
+type PrincipalClassification interface {
+	// GetPrincipal returns the Principal content of the underlying type.
+	GetPrincipal() *Principal
+}

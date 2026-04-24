@@ -104,6 +104,102 @@ func (client *TablesClient) listTablesHandleResponse(resp *http.Response) (Table
 	return result, nil
 }
 
+// BeginLoadSchemaTableBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use. When calling this
+// API, callers must specify true as the value for the query parameter beta.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS Write permission to the lakehouse item.
+// REQUIRED DELEGATED SCOPES Lakehouse.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - lakehouseID - The lakehouse item ID.
+//   - schemaName - The schema name.
+//   - tableName - The table name.
+//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
+//   - loadTableRequest - The load table request payload.
+//   - options - TablesClientBeginLoadSchemaTableBetaOptions contains the optional parameters for the TablesClient.BeginLoadSchemaTableBeta
+//     method.
+func (client *TablesClient) BeginLoadSchemaTableBeta(ctx context.Context, workspaceID string, lakehouseID string, schemaName string, tableName string, beta bool, loadTableRequest LoadTableRequest, options *TablesClientBeginLoadSchemaTableBetaOptions) (*runtime.Poller[TablesClientLoadSchemaTableBetaResponse], error) {
+	return client.beginLoadSchemaTableBeta(ctx, workspaceID, lakehouseID, schemaName, tableName, beta, loadTableRequest, options)
+}
+
+// LoadSchemaTableBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use. When calling this
+// API, callers must specify true as the value for the query parameter beta.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS Write permission to the lakehouse item.
+// REQUIRED DELEGATED SCOPES Lakehouse.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *TablesClient) loadSchemaTableBeta(ctx context.Context, workspaceID string, lakehouseID string, schemaName string, tableName string, beta bool, loadTableRequest LoadTableRequest, options *TablesClientBeginLoadSchemaTableBetaOptions) (*http.Response, error) {
+	var err error
+	const operationName = "lakehouse.TablesClient.BeginLoadSchemaTableBeta"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.loadSchemaTableBetaCreateRequest(ctx, workspaceID, lakehouseID, schemaName, tableName, beta, loadTableRequest, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// loadSchemaTableBetaCreateRequest creates the LoadSchemaTableBeta request.
+func (client *TablesClient) loadSchemaTableBetaCreateRequest(ctx context.Context, workspaceID string, lakehouseID string, schemaName string, tableName string, beta bool, loadTableRequest LoadTableRequest, _ *TablesClientBeginLoadSchemaTableBetaOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}/schemas/{schemaName}/tables/{tableName}/load"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if lakehouseID == "" {
+		return nil, errors.New("parameter lakehouseID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{lakehouseId}", url.PathEscape(lakehouseID))
+	if schemaName == "" {
+		return nil, errors.New("parameter schemaName cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{schemaName}", url.PathEscape(schemaName))
+	if tableName == "" {
+		return nil, errors.New("parameter tableName cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{tableName}", url.PathEscape(tableName))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("beta", strconv.FormatBool(beta))
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, loadTableRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // BeginLoadTable - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
 // only. It may change based on feedback and is not recommended for production use.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
@@ -189,6 +285,82 @@ func (client *TablesClient) loadTableCreateRequest(ctx context.Context, workspac
 }
 
 // Custom code starts below
+
+// LoadSchemaTableBeta - returns TablesClientLoadSchemaTableBetaResponse in sync mode.
+// >  [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use. When calling this
+// API, callers must specify true as the value for the query parameter beta.
+//
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS Write permission to the lakehouse item.
+//
+// # REQUIRED DELEGATED SCOPES Lakehouse.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - lakehouseID - The lakehouse item ID.
+//   - schemaName - The schema name.
+//   - tableName - The table name.
+//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
+//   - loadTableRequest - The load table request payload.
+//   - options - TablesClientBeginLoadSchemaTableBetaOptions contains the optional parameters for the TablesClient.BeginLoadSchemaTableBeta method.
+func (client *TablesClient) LoadSchemaTableBeta(ctx context.Context, workspaceID string, lakehouseID string, schemaName string, tableName string, beta bool, loadTableRequest LoadTableRequest, options *TablesClientBeginLoadSchemaTableBetaOptions) (TablesClientLoadSchemaTableBetaResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginLoadSchemaTableBeta(ctx, workspaceID, lakehouseID, schemaName, tableName, beta, loadTableRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return TablesClientLoadSchemaTableBetaResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return TablesClientLoadSchemaTableBetaResponse{}, err
+	}
+	return result, err
+}
+
+// beginLoadSchemaTableBeta creates the loadSchemaTableBeta request.
+func (client *TablesClient) beginLoadSchemaTableBeta(ctx context.Context, workspaceID string, lakehouseID string, schemaName string, tableName string, beta bool, loadTableRequest LoadTableRequest, options *TablesClientBeginLoadSchemaTableBetaOptions) (*runtime.Poller[TablesClientLoadSchemaTableBetaResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.loadSchemaTableBeta(ctx, workspaceID, lakehouseID, schemaName, tableName, beta, loadTableRequest, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[TablesClientLoadSchemaTableBetaResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[TablesClientLoadSchemaTableBetaResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[TablesClientLoadSchemaTableBetaResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[TablesClientLoadSchemaTableBetaResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
 
 // LoadTable - returns TablesClientLoadTableResponse in sync mode.
 // >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.

@@ -11,7 +11,6 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
-	"strconv"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -202,8 +201,7 @@ func (client *BackgroundJobsClient) RunOnDemandRefreshMaterializedLakeViews(ctx 
 		err = core.NewResponseError(httpResp)
 		return BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse{}, err
 	}
-	resp, err := client.runOnDemandRefreshMaterializedLakeViewsHandleResponse(httpResp)
-	return resp, err
+	return BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse{}, nil
 }
 
 // runOnDemandRefreshMaterializedLakeViewsCreateRequest creates the RunOnDemandRefreshMaterializedLakeViews request.
@@ -223,23 +221,6 @@ func (client *BackgroundJobsClient) runOnDemandRefreshMaterializedLakeViewsCreat
 	}
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
-}
-
-// runOnDemandRefreshMaterializedLakeViewsHandleResponse handles the RunOnDemandRefreshMaterializedLakeViews response.
-func (client *BackgroundJobsClient) runOnDemandRefreshMaterializedLakeViewsHandleResponse(resp *http.Response) (BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse, error) {
-	result := BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse{}
-	if val := resp.Header.Get("Location"); val != "" {
-		result.Location = &val
-	}
-	if val := resp.Header.Get("Retry-After"); val != "" {
-		retryAfter32, err := strconv.ParseInt(val, 10, 32)
-		retryAfter := int32(retryAfter32)
-		if err != nil {
-			return BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse{}, err
-		}
-		result.RetryAfter = &retryAfter
-	}
-	return result, nil
 }
 
 // RunOnDemandTableMaintenance - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
@@ -280,8 +261,7 @@ func (client *BackgroundJobsClient) RunOnDemandTableMaintenance(ctx context.Cont
 		err = core.NewResponseError(httpResp)
 		return BackgroundJobsClientRunOnDemandTableMaintenanceResponse{}, err
 	}
-	resp, err := client.runOnDemandTableMaintenanceHandleResponse(httpResp)
-	return resp, err
+	return BackgroundJobsClientRunOnDemandTableMaintenanceResponse{}, nil
 }
 
 // runOnDemandTableMaintenanceCreateRequest creates the RunOnDemandTableMaintenance request.
@@ -304,23 +284,6 @@ func (client *BackgroundJobsClient) runOnDemandTableMaintenanceCreateRequest(ctx
 		return nil, err
 	}
 	return req, nil
-}
-
-// runOnDemandTableMaintenanceHandleResponse handles the RunOnDemandTableMaintenance response.
-func (client *BackgroundJobsClient) runOnDemandTableMaintenanceHandleResponse(resp *http.Response) (BackgroundJobsClientRunOnDemandTableMaintenanceResponse, error) {
-	result := BackgroundJobsClientRunOnDemandTableMaintenanceResponse{}
-	if val := resp.Header.Get("Location"); val != "" {
-		result.Location = &val
-	}
-	if val := resp.Header.Get("Retry-After"); val != "" {
-		retryAfter32, err := strconv.ParseInt(val, 10, 32)
-		retryAfter := int32(retryAfter32)
-		if err != nil {
-			return BackgroundJobsClientRunOnDemandTableMaintenanceResponse{}, err
-		}
-		result.RetryAfter = &retryAfter
-	}
-	return result, nil
 }
 
 // UpdateRefreshMaterializedLakeViewsSchedule - > [!NOTE] This API is part of a Preview release and is provided for evaluation

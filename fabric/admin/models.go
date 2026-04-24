@@ -87,6 +87,21 @@ func (a *AzureDevOpsDetails) GetGitProviderDetails() *GitProviderDetails {
 	}
 }
 
+// BaseWorkloadAssignment - Base workload assignment.
+type BaseWorkloadAssignment struct {
+	// READ-ONLY; The unique identifier of the assignment.
+	ID *string
+
+	// READ-ONLY; The type of assignment. Possible values: Capacity, Workspace, Tenant.
+	Type *WorkloadAssignmentType
+
+	// READ-ONLY; The unique identifier of the workload.
+	WorkloadID *string
+}
+
+// GetBaseWorkloadAssignment implements the BaseWorkloadAssignmentClassification interface for type BaseWorkloadAssignment.
+func (b *BaseWorkloadAssignment) GetBaseWorkloadAssignment() *BaseWorkloadAssignment { return b }
+
 // BulkRemoveSharingLinksRequest - A list of items for which all sharing links and related access is required to be removed.
 // Also accepts the type of sharing link to be removed.
 type BulkRemoveSharingLinksRequest struct {
@@ -229,6 +244,84 @@ type CreateTagsRequest struct {
 type CreateTagsResponse struct {
 	// REQUIRED; An array of tags
 	Tags []Tag
+}
+
+// CreateWorkloadBaseAssignmentRequest - Base request for creating workload assignments.
+type CreateWorkloadBaseAssignmentRequest struct {
+	// REQUIRED; The type of assignment to create. Possible values: Capacity, Workspace, Tenant.
+	Type *WorkloadAssignmentType
+
+	// REQUIRED; The unique identifier of the workload to assign.
+	WorkloadID *string
+}
+
+// GetCreateWorkloadBaseAssignmentRequest implements the CreateWorkloadBaseAssignmentRequestClassification interface for type
+// CreateWorkloadBaseAssignmentRequest.
+func (c *CreateWorkloadBaseAssignmentRequest) GetCreateWorkloadBaseAssignmentRequest() *CreateWorkloadBaseAssignmentRequest {
+	return c
+}
+
+// CreateWorkloadCapacityAssignmentRequest - Request for creating a capacity workload assignment. Assigns a workload to a
+// specific capacity.
+type CreateWorkloadCapacityAssignmentRequest struct {
+	// REQUIRED; The unique identifier of the capacity to assign the workload to.
+	CapacityID *string
+
+	// REQUIRED; The type of assignment to create. Possible values: Capacity, Workspace, Tenant.
+	Type *WorkloadAssignmentType
+
+	// REQUIRED; The unique identifier of the workload to assign.
+	WorkloadID *string
+}
+
+// GetCreateWorkloadBaseAssignmentRequest implements the CreateWorkloadBaseAssignmentRequestClassification interface for type
+// CreateWorkloadCapacityAssignmentRequest.
+func (c *CreateWorkloadCapacityAssignmentRequest) GetCreateWorkloadBaseAssignmentRequest() *CreateWorkloadBaseAssignmentRequest {
+	return &CreateWorkloadBaseAssignmentRequest{
+		Type:       c.Type,
+		WorkloadID: c.WorkloadID,
+	}
+}
+
+// CreateWorkloadTenantAssignmentRequest - Request for creating a tenant workload assignment. Assigns a workload to the entire
+// tenant scope.
+type CreateWorkloadTenantAssignmentRequest struct {
+	// REQUIRED; The type of assignment to create. Possible values: Capacity, Workspace, Tenant.
+	Type *WorkloadAssignmentType
+
+	// REQUIRED; The unique identifier of the workload to assign.
+	WorkloadID *string
+}
+
+// GetCreateWorkloadBaseAssignmentRequest implements the CreateWorkloadBaseAssignmentRequestClassification interface for type
+// CreateWorkloadTenantAssignmentRequest.
+func (c *CreateWorkloadTenantAssignmentRequest) GetCreateWorkloadBaseAssignmentRequest() *CreateWorkloadBaseAssignmentRequest {
+	return &CreateWorkloadBaseAssignmentRequest{
+		Type:       c.Type,
+		WorkloadID: c.WorkloadID,
+	}
+}
+
+// CreateWorkloadWorkspaceAssignmentRequest - Request for creating a workspace workload assignment. Assigns a workload to
+// a specific workspace.
+type CreateWorkloadWorkspaceAssignmentRequest struct {
+	// REQUIRED; The type of assignment to create. Possible values: Capacity, Workspace, Tenant.
+	Type *WorkloadAssignmentType
+
+	// REQUIRED; The unique identifier of the workload to assign.
+	WorkloadID *string
+
+	// REQUIRED; The unique identifier of the workspace to assign the workload to.
+	WorkspaceID *string
+}
+
+// GetCreateWorkloadBaseAssignmentRequest implements the CreateWorkloadBaseAssignmentRequestClassification interface for type
+// CreateWorkloadWorkspaceAssignmentRequest.
+func (c *CreateWorkloadWorkspaceAssignmentRequest) GetCreateWorkloadBaseAssignmentRequest() *CreateWorkloadBaseAssignmentRequest {
+	return &CreateWorkloadBaseAssignmentRequest{
+		Type:       c.Type,
+		WorkloadID: c.WorkloadID,
+	}
 }
 
 type Domain struct {
@@ -612,6 +705,9 @@ type Item struct {
 
 	// READ-ONLY; The item's owner.
 	CreatorPrincipal PrincipalClassification
+
+	// READ-ONLY; The item's default identity.
+	DefaultIdentity PrincipalClassification
 
 	// READ-ONLY; The folder ID of the item.
 	FolderID *string
@@ -1175,6 +1271,133 @@ func (u *UserPrincipal) GetPrincipal() *Principal {
 type UserPrincipalUserDetails struct {
 	// READ-ONLY; The user principal name.
 	UserPrincipalName *string
+}
+
+// WorkloadAssignmentInfo - Workload assignment information. Contains details about a workload and its assignment status across
+// the tenant, capacities, and workspaces.
+type WorkloadAssignmentInfo struct {
+	// READ-ONLY; The number of capacities to which the workload has been assigned.
+	AssignedCapacitiesCount *int32
+
+	// READ-ONLY; The number of workspaces to which the workload has been assigned.
+	AssignedWorkspacesCount *int32
+
+	// READ-ONLY; The unique identifier of the workload.
+	ID *string
+
+	// READ-ONLY; Specifies if the workload is assignable. When true, the workload can be assigned to tenant, capacities or workspaces.
+	IsAssignable *bool
+
+	// READ-ONLY; Specifies if the workload is assigned to the tenant scope. When true, the workload is available across the entire
+	// tenant.
+	IsAssignedToTenant *bool
+
+	// READ-ONLY; The display name of the workload.
+	Name *string
+
+	// READ-ONLY; The publisher of the workload.
+	Publisher *string
+}
+
+// WorkloadAssignmentInfos - A paginated list of workloads in the tenant. Contains workload information with assignment status
+// details.
+type WorkloadAssignmentInfos struct {
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+
+	// The list of workloads with their assignment information.
+	Value []WorkloadAssignmentInfo
+}
+
+// WorkloadAssignments - A paginated list of workload assignments. Contains assignments for workloads to capacities, workspaces,
+// or tenant.
+type WorkloadAssignments struct {
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+
+	// The list of workload assignments. Each item can be a Capacity, Workspace, or Tenant assignment.
+	Value []BaseWorkloadAssignmentClassification
+}
+
+// WorkloadCapacityAssignment - Capacity workload assignment. Represents an assignment of a workload to a specific capacity.
+type WorkloadCapacityAssignment struct {
+	// READ-ONLY; The unique identifier of the capacity to which the workload is assigned.
+	CapacityID *string
+
+	// READ-ONLY; The display name of the capacity to which the workload is assigned.
+	CapacityName *string
+
+	// READ-ONLY; The unique identifier of the assignment.
+	ID *string
+
+	// READ-ONLY; The type of assignment. Possible values: Capacity, Workspace, Tenant.
+	Type *WorkloadAssignmentType
+
+	// READ-ONLY; The unique identifier of the workload.
+	WorkloadID *string
+}
+
+// GetBaseWorkloadAssignment implements the BaseWorkloadAssignmentClassification interface for type WorkloadCapacityAssignment.
+func (w *WorkloadCapacityAssignment) GetBaseWorkloadAssignment() *BaseWorkloadAssignment {
+	return &BaseWorkloadAssignment{
+		ID:         w.ID,
+		Type:       w.Type,
+		WorkloadID: w.WorkloadID,
+	}
+}
+
+// WorkloadTenantAssignment - Tenant workload assignment. Represents an assignment of a workload to the entire tenant scope.
+type WorkloadTenantAssignment struct {
+	// READ-ONLY; The unique identifier of the assignment.
+	ID *string
+
+	// READ-ONLY; The type of assignment. Possible values: Capacity, Workspace, Tenant.
+	Type *WorkloadAssignmentType
+
+	// READ-ONLY; The unique identifier of the workload.
+	WorkloadID *string
+}
+
+// GetBaseWorkloadAssignment implements the BaseWorkloadAssignmentClassification interface for type WorkloadTenantAssignment.
+func (w *WorkloadTenantAssignment) GetBaseWorkloadAssignment() *BaseWorkloadAssignment {
+	return &BaseWorkloadAssignment{
+		ID:         w.ID,
+		Type:       w.Type,
+		WorkloadID: w.WorkloadID,
+	}
+}
+
+// WorkloadWorkspaceAssignment - Workspace workload assignment. Represents an assignment of a workload to a specific workspace.
+type WorkloadWorkspaceAssignment struct {
+	// READ-ONLY; The unique identifier of the assignment.
+	ID *string
+
+	// READ-ONLY; The type of assignment. Possible values: Capacity, Workspace, Tenant.
+	Type *WorkloadAssignmentType
+
+	// READ-ONLY; The unique identifier of the workload.
+	WorkloadID *string
+
+	// READ-ONLY; The unique identifier of the workspace to which the workload is assigned.
+	WorkspaceID *string
+
+	// READ-ONLY; The display name of the workspace to which the workload is assigned.
+	WorkspaceName *string
+}
+
+// GetBaseWorkloadAssignment implements the BaseWorkloadAssignmentClassification interface for type WorkloadWorkspaceAssignment.
+func (w *WorkloadWorkspaceAssignment) GetBaseWorkloadAssignment() *BaseWorkloadAssignment {
+	return &BaseWorkloadAssignment{
+		ID:         w.ID,
+		Type:       w.Type,
+		WorkloadID: w.WorkloadID,
+	}
 }
 
 // Workspace.

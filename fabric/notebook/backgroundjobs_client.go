@@ -139,8 +139,7 @@ func (client *BackgroundJobsClient) RunOnDemandNotebook(ctx context.Context, wor
 		err = core.NewResponseError(httpResp)
 		return BackgroundJobsClientRunOnDemandNotebookResponse{}, err
 	}
-	resp, err := client.runOnDemandNotebookHandleResponse(httpResp)
-	return resp, err
+	return BackgroundJobsClientRunOnDemandNotebookResponse{}, nil
 }
 
 // runOnDemandNotebookCreateRequest creates the RunOnDemandNotebook request.
@@ -169,23 +168,6 @@ func (client *BackgroundJobsClient) runOnDemandNotebookCreateRequest(ctx context
 		return req, nil
 	}
 	return req, nil
-}
-
-// runOnDemandNotebookHandleResponse handles the RunOnDemandNotebook response.
-func (client *BackgroundJobsClient) runOnDemandNotebookHandleResponse(resp *http.Response) (BackgroundJobsClientRunOnDemandNotebookResponse, error) {
-	result := BackgroundJobsClientRunOnDemandNotebookResponse{}
-	if val := resp.Header.Get("Location"); val != "" {
-		result.Location = &val
-	}
-	if val := resp.Header.Get("Retry-After"); val != "" {
-		retryAfter32, err := strconv.ParseInt(val, 10, 32)
-		retryAfter := int32(retryAfter32)
-		if err != nil {
-			return BackgroundJobsClientRunOnDemandNotebookResponse{}, err
-		}
-		result.RetryAfter = &retryAfter
-	}
-	return result, nil
 }
 
 // Custom code starts below

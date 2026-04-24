@@ -980,6 +980,7 @@ func (u *UserPrincipalUserDetails) UnmarshalJSON(data []byte) error {
 // MarshalJSON implements the json.Marshaller interface for type Warehouse.
 func (w Warehouse) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
+	populate(objectMap, "defaultIdentity", w.DefaultIdentity)
 	populate(objectMap, "description", w.Description)
 	populate(objectMap, "displayName", w.DisplayName)
 	populate(objectMap, "folderId", w.FolderID)
@@ -1001,6 +1002,9 @@ func (w *Warehouse) UnmarshalJSON(data []byte) error {
 	for key, val := range rawMsg {
 		var err error
 		switch key {
+		case "defaultIdentity":
+			w.DefaultIdentity, err = unmarshalPrincipalClassification(val)
+			delete(rawMsg, key)
 		case "description":
 			err = unpopulate(val, "Description", &w.Description)
 			delete(rawMsg, key)

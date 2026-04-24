@@ -293,6 +293,40 @@ type UsersClientListAccessEntitiesOptions struct {
 	Type *string
 }
 
+// WorkloadsClientCreateWorkloadAssignmentOptions contains the optional parameters for the WorkloadsClient.CreateWorkloadAssignment
+// method.
+type WorkloadsClientCreateWorkloadAssignmentOptions struct {
+	// placeholder for future optional parameters
+}
+
+// WorkloadsClientDeleteWorkloadAssignmentOptions contains the optional parameters for the WorkloadsClient.DeleteWorkloadAssignment
+// method.
+type WorkloadsClientDeleteWorkloadAssignmentOptions struct {
+	// placeholder for future optional parameters
+}
+
+// WorkloadsClientListWorkloadAssignmentsOptions contains the optional parameters for the WorkloadsClient.NewListWorkloadAssignmentsPager
+// method.
+type WorkloadsClientListWorkloadAssignmentsOptions struct {
+	// Continuation token. Used to get the next items in the list.
+	ContinuationToken *string
+
+	// Assignment type. Additional assignment types may be added over time.
+	Type *WorkloadAssignmentType
+
+	// WorkloadID filter.
+	WorkloadID *string
+}
+
+// WorkloadsClientListWorkloadsOptions contains the optional parameters for the WorkloadsClient.NewListWorkloadsPager method.
+type WorkloadsClientListWorkloadsOptions struct {
+	// Assignment status of workloads. Additional assignment statuses may be added over time.
+	AssignmentStatus *WorkloadAssignmentStatus
+
+	// Continuation token. Used to get the next items in the list.
+	ContinuationToken *string
+}
+
 // WorkspacesClientGetWorkspaceOptions contains the optional parameters for the WorkspacesClient.GetWorkspace method.
 type WorkspacesClientGetWorkspaceOptions struct {
 	// placeholder for future optional parameters

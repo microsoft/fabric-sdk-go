@@ -1163,6 +1163,7 @@ func (m *MountPoint) UnmarshalJSON(data []byte) error {
 // MarshalJSON implements the json.Marshaller interface for type Notebook.
 func (n Notebook) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
+	populate(objectMap, "defaultIdentity", n.DefaultIdentity)
 	populate(objectMap, "description", n.Description)
 	populate(objectMap, "displayName", n.DisplayName)
 	populate(objectMap, "folderId", n.FolderID)
@@ -1183,6 +1184,9 @@ func (n *Notebook) UnmarshalJSON(data []byte) error {
 	for key, val := range rawMsg {
 		var err error
 		switch key {
+		case "defaultIdentity":
+			n.DefaultIdentity, err = unmarshalPrincipalClassification(val)
+			delete(rawMsg, key)
 		case "description":
 			err = unpopulate(val, "Description", &n.Description)
 			delete(rawMsg, key)

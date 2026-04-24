@@ -54,6 +54,7 @@ import (
 	reflexfake "github.com/microsoft/fabric-sdk-go/fabric/reflex/fake"
 	reportfake "github.com/microsoft/fabric-sdk-go/fabric/report/fake"
 	semanticmodelfake "github.com/microsoft/fabric-sdk-go/fabric/semanticmodel/fake"
+	snowflakedatabasefake "github.com/microsoft/fabric-sdk-go/fabric/snowflakedatabase/fake"
 	sparkfake "github.com/microsoft/fabric-sdk-go/fabric/spark/fake"
 	sparkjobdefinitionfake "github.com/microsoft/fabric-sdk-go/fabric/sparkjobdefinition/fake"
 	sqldatabasefake "github.com/microsoft/fabric-sdk-go/fabric/sqldatabase/fake"
@@ -105,6 +106,7 @@ type ServerFactory struct {
 	Reflex                         reflexfake.ServerFactory
 	Report                         reportfake.ServerFactory
 	SemanticModel                  semanticmodelfake.ServerFactory
+	SnowflakeDatabase              snowflakedatabasefake.ServerFactory
 	Spark                          sparkfake.ServerFactory
 	SparkJobDefinition             sparkjobdefinitionfake.ServerFactory
 	SQLDatabase                    sqldatabasefake.ServerFactory
@@ -159,6 +161,7 @@ type ServerFactoryTransport struct {
 	trReflex                         *reflexfake.ServerFactoryTransport
 	trReport                         *reportfake.ServerFactoryTransport
 	trSemanticModel                  *semanticmodelfake.ServerFactoryTransport
+	trSnowflakeDatabase              *snowflakedatabasefake.ServerFactoryTransport
 	trSpark                          *sparkfake.ServerFactoryTransport
 	trSparkJobDefinition             *sparkjobdefinitionfake.ServerFactoryTransport
 	trSQLDatabase                    *sqldatabasefake.ServerFactoryTransport
@@ -377,6 +380,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return semanticmodelfake.NewServerFactoryTransport(&s.srv.SemanticModel)
 		})
 		resp, err = s.trSemanticModel.Do(req)
+	case "snowflakedatabase":
+		initServer(s, &s.trSnowflakeDatabase, func() *snowflakedatabasefake.ServerFactoryTransport {
+			return snowflakedatabasefake.NewServerFactoryTransport(&s.srv.SnowflakeDatabase)
+		})
+		resp, err = s.trSnowflakeDatabase.Do(req)
 	case "spark":
 		initServer(s, &s.trSpark, func() *sparkfake.ServerFactoryTransport { return sparkfake.NewServerFactoryTransport(&s.srv.Spark) })
 		resp, err = s.trSpark.Do(req)

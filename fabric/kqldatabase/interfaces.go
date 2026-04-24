@@ -14,3 +14,12 @@ type CreationPayloadClassification interface {
 	// GetCreationPayload returns the CreationPayload content of the underlying type.
 	GetCreationPayload() *CreationPayload
 }
+
+// PrincipalClassification provides polymorphic access to related types.
+// Call the interface's GetPrincipal() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *EntireTenantPrincipal, *GroupPrincipal, *Principal, *ServicePrincipal, *ServicePrincipalProfilePrincipal, *UserPrincipal
+type PrincipalClassification interface {
+	// GetPrincipal returns the Principal content of the underlying type.
+	GetPrincipal() *Principal
+}

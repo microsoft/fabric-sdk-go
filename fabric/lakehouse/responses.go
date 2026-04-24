@@ -22,20 +22,12 @@ type BackgroundJobsClientDeleteRefreshMaterializedLakeViewsScheduleResponse stru
 
 // BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse contains the response from method BackgroundJobsClient.RunOnDemandRefreshMaterializedLakeViews.
 type BackgroundJobsClientRunOnDemandRefreshMaterializedLakeViewsResponse struct {
-	// Location contains the information returned from the Location header response.
-	Location *string
-
-	// RetryAfter contains the information returned from the Retry-After header response.
-	RetryAfter *int32
+	// placeholder for future response values
 }
 
 // BackgroundJobsClientRunOnDemandTableMaintenanceResponse contains the response from method BackgroundJobsClient.RunOnDemandTableMaintenance.
 type BackgroundJobsClientRunOnDemandTableMaintenanceResponse struct {
-	// Location contains the information returned from the Location header response.
-	Location *string
-
-	// RetryAfter contains the information returned from the Retry-After header response.
-	RetryAfter *int32
+	// placeholder for future response values
 }
 
 // BackgroundJobsClientUpdateRefreshMaterializedLakeViewsScheduleResponse contains the response from method BackgroundJobsClient.UpdateRefreshMaterializedLakeViewsSchedule.
@@ -107,6 +99,11 @@ type LivySessionsClientListLivySessionsResponse struct {
 type TablesClientListTablesResponse struct {
 	// A paginated list of tables.
 	Tables
+}
+
+// TablesClientLoadSchemaTableBetaResponse contains the response from method TablesClient.BeginLoadSchemaTableBeta.
+type TablesClientLoadSchemaTableBetaResponse struct {
+	// placeholder for future response values
 }
 
 // TablesClientLoadTableResponse contains the response from method TablesClient.BeginLoadTable.

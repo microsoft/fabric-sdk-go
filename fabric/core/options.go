@@ -24,6 +24,13 @@ type ConnectionsClientAddConnectionRoleAssignmentOptions struct {
 	// placeholder for future optional parameters
 }
 
+// ConnectionsClientBeginTestConnectionOptions contains the optional parameters for the ConnectionsClient.BeginTestConnection
+// method.
+type ConnectionsClientBeginTestConnectionOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
 // ConnectionsClientCreateConnectionOptions contains the optional parameters for the ConnectionsClient.CreateConnection method.
 type ConnectionsClientCreateConnectionOptions struct {
 	// placeholder for future optional parameters
@@ -417,6 +424,13 @@ type GitClientUpdateMyGitCredentialsOptions struct {
 	// placeholder for future optional parameters
 }
 
+// ItemsClientBeginAssociateIdentityBetaOptions contains the optional parameters for the ItemsClient.BeginAssociateIdentityBeta
+// method.
+type ItemsClientBeginAssociateIdentityBetaOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
 // ItemsClientBeginBulkExportItemDefinitionsBetaOptions contains the optional parameters for the ItemsClient.BeginBulkExportItemDefinitionsBeta
 // method.
 type ItemsClientBeginBulkExportItemDefinitionsBetaOptions struct {
@@ -478,7 +492,9 @@ type ItemsClientDeleteItemOptions struct {
 
 // ItemsClientGetItemOptions contains the optional parameters for the ItemsClient.GetItem method.
 type ItemsClientGetItemOptions struct {
-	// placeholder for future optional parameters
+	// Specifies which item properties to include in the response as a comma-separated list. Additional values may be added over
+	// time.
+	Include []ItemIncludeOption
 }
 
 // ItemsClientListItemConnectionsOptions contains the optional parameters for the ItemsClient.NewListItemConnectionsPager
@@ -492,6 +508,10 @@ type ItemsClientListItemConnectionsOptions struct {
 type ItemsClientListItemsOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
+
+	// Specifies which item properties to include in the response as a comma-separated list. Additional values may be added over
+	// time.
+	Include []ItemIncludeOption
 
 	// Lists items in a folder and its nested folders, or just a folder only. True - All items in the folder and its nested folders
 	// are listed, False - Only items in the folder are listed. The default value

@@ -43,6 +43,9 @@ type CreateDataflowApplyChangesScheduleRequest struct {
 
 	// REQUIRED; Whether this schedule is enabled. True - Enabled, False - Disabled.
 	Enabled *bool
+
+	// The execution data for a scheduled job. This is fixed static data, defined by the specific item job type.
+	ExecutionData any
 }
 
 // CreateDataflowExecuteScheduleRequest - Create dataflow execute schedule plan request payload.
@@ -52,6 +55,9 @@ type CreateDataflowExecuteScheduleRequest struct {
 
 	// REQUIRED; Whether this schedule is enabled. True - Enabled, False - Disabled.
 	Enabled *bool
+
+	// The execution data for a scheduled job. This is fixed static data, defined by the specific item job type.
+	ExecutionData any
 }
 
 // CreateDataflowRequest - Create Dataflow request payload.
@@ -140,6 +146,9 @@ type Dataflow struct {
 
 	// The item display name.
 	DisplayName *string
+
+	// READ-ONLY; The item's default identity.
+	DefaultIdentity PrincipalClassification
 
 	// READ-ONLY; The folder ID.
 	FolderID *string
@@ -605,7 +614,10 @@ type Schedule struct {
 	// The created time stamp of this schedule in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
 	CreatedDateTime *time.Time
 
-	// The user identity that created this schedule or last modified.
+	// The execution data for a scheduled job. This is fixed static data, defined by the specific item job type.
+	ExecutionData any
+
+	// The user identity that created this schedule or last modified it.
 	Owner PrincipalClassification
 }
 

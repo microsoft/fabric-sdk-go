@@ -119,6 +119,14 @@ func ExampleItemsClient_NewListItemsPager_getAllItemsInTheTenantExample() {
 		// 					UserPrincipalName: to.Ptr("caleb@example.com"),
 		// 				},
 		// 			},
+		// 			DefaultIdentity: &admin.UserPrincipal{
+		// 				Type: to.Ptr(admin.PrincipalTypeUser),
+		// 				DisplayName: to.Ptr("Caleb Foster"),
+		// 				ID: to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
+		// 				UserDetails: &admin.UserPrincipalUserDetails{
+		// 					UserPrincipalName: to.Ptr("caleb@example.com"),
+		// 				},
+		// 			},
 		// 			ID: to.Ptr("17d8929d-ab32-46d1-858b-fdea74e93bff"),
 		// 			LastUpdatedDate: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2022-04-29T17:47:29.986Z"); return t}()),
 		// 			State: to.Ptr(admin.ItemStateActive),
@@ -139,6 +147,14 @@ func ExampleItemsClient_NewListItemsPager_getAllItemsInTheTenantExample() {
 		// 			Description: to.Ptr("Test KQL database."),
 		// 			CapacityID: to.Ptr("D5E336D6-D919-4ECC-B424-1F881A506851"),
 		// 			CreatorPrincipal: &admin.UserPrincipal{
+		// 				Type: to.Ptr(admin.PrincipalTypeUser),
+		// 				DisplayName: to.Ptr("Jacob Hancock"),
+		// 				ID: to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
+		// 				UserDetails: &admin.UserPrincipalUserDetails{
+		// 					UserPrincipalName: to.Ptr("jacob@example.com"),
+		// 				},
+		// 			},
+		// 			DefaultIdentity: &admin.UserPrincipal{
 		// 				Type: to.Ptr(admin.PrincipalTypeUser),
 		// 				DisplayName: to.Ptr("Jacob Hancock"),
 		// 				ID: to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
@@ -239,6 +255,14 @@ func ExampleItemsClient_GetItem_getItemDetailsByIdAndTypeExample() {
 	// 		ID: to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
 	// 		UserDetails: &admin.UserPrincipalUserDetails{
 	// 			UserPrincipalName: to.Ptr("Jacob@example.com"),
+	// 		},
+	// 	},
+	// 	DefaultIdentity: &admin.UserPrincipal{
+	// 		Type: to.Ptr(admin.PrincipalTypeUser),
+	// 		DisplayName: to.Ptr("Caleb Foster"),
+	// 		ID: to.Ptr("ff3c8689-591c-4298-a228-4ffcc77cb661"),
+	// 		UserDetails: &admin.UserPrincipalUserDetails{
+	// 			UserPrincipalName: to.Ptr("caleb@example.com"),
 	// 		},
 	// 	},
 	// 	ID: to.Ptr("17d8929d-ab32-46d1-858b-fdea74e93bf2"),

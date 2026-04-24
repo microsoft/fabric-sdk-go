@@ -54,6 +54,7 @@ func (c CreateLakehouseRefreshMaterializedLakeViewsScheduleRequest) MarshalJSON(
 	objectMap := make(map[string]any)
 	populate(objectMap, "configuration", c.Configuration)
 	populate(objectMap, "enabled", c.Enabled)
+	populateAny(objectMap, "executionData", c.ExecutionData)
 	return json.Marshal(objectMap)
 }
 
@@ -71,6 +72,9 @@ func (c *CreateLakehouseRefreshMaterializedLakeViewsScheduleRequest) UnmarshalJS
 			delete(rawMsg, key)
 		case "enabled":
 			err = unpopulate(val, "Enabled", &c.Enabled)
+			delete(rawMsg, key)
+		case "executionData":
+			err = unpopulate(val, "ExecutionData", &c.ExecutionData)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -650,6 +654,7 @@ func (i *ItemTag) UnmarshalJSON(data []byte) error {
 // MarshalJSON implements the json.Marshaller interface for type Lakehouse.
 func (l Lakehouse) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
+	populate(objectMap, "defaultIdentity", l.DefaultIdentity)
 	populate(objectMap, "description", l.Description)
 	populate(objectMap, "displayName", l.DisplayName)
 	populate(objectMap, "folderId", l.FolderID)
@@ -671,6 +676,9 @@ func (l *Lakehouse) UnmarshalJSON(data []byte) error {
 	for key, val := range rawMsg {
 		var err error
 		switch key {
+		case "defaultIdentity":
+			l.DefaultIdentity, err = unmarshalPrincipalClassification(val)
+			delete(rawMsg, key)
 		case "description":
 			err = unpopulate(val, "Description", &l.Description)
 			delete(rawMsg, key)
@@ -1233,6 +1241,7 @@ func (r RefreshMaterializedLakeViewsSchedule) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "configuration", r.Configuration)
 	populateDateTimeRFC3339(objectMap, "createdDateTime", r.CreatedDateTime)
 	populate(objectMap, "enabled", r.Enabled)
+	populateAny(objectMap, "executionData", r.ExecutionData)
 	populate(objectMap, "id", r.ID)
 	populate(objectMap, "owner", r.Owner)
 	return json.Marshal(objectMap)
@@ -1255,6 +1264,9 @@ func (r *RefreshMaterializedLakeViewsSchedule) UnmarshalJSON(data []byte) error 
 			delete(rawMsg, key)
 		case "enabled":
 			err = unpopulate(val, "Enabled", &r.Enabled)
+			delete(rawMsg, key)
+		case "executionData":
+			err = unpopulate(val, "ExecutionData", &r.ExecutionData)
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &r.ID)
@@ -1710,6 +1722,7 @@ func (u UpdateLakehouseRefreshMaterializedLakeViewsScheduleRequest) MarshalJSON(
 	objectMap := make(map[string]any)
 	populate(objectMap, "configuration", u.Configuration)
 	populate(objectMap, "enabled", u.Enabled)
+	populateAny(objectMap, "executionData", u.ExecutionData)
 	return json.Marshal(objectMap)
 }
 
@@ -1727,6 +1740,9 @@ func (u *UpdateLakehouseRefreshMaterializedLakeViewsScheduleRequest) UnmarshalJS
 			delete(rawMsg, key)
 		case "enabled":
 			err = unpopulate(val, "Enabled", &u.Enabled)
+			delete(rawMsg, key)
+		case "executionData":
+			err = unpopulate(val, "ExecutionData", &u.ExecutionData)
 			delete(rawMsg, key)
 		}
 		if err != nil {

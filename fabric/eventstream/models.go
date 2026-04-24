@@ -129,8 +129,14 @@ type AmazonKinesisSourceProperties struct {
 	// REQUIRED; The Amazon Kinesis data connection identifier.
 	DataConnectionID *string
 
-	// REQUIRED; The Amazon Kinesis region name.
+	// REQUIRED; The Amazon Kinesis region name. Additional regions may be added over time.
 	Region *Region
+
+	// The start position in the stream.
+	StartPosition *StartPosition
+
+	// The start timestamp in ISO 8601 format (for example, '2024-01-15T10:30:00Z'). Required when startPosition is AtTimestamp.
+	StartTimestamp *string
 }
 
 // AmazonKinesisSourceResponse - Amazon Kinesis source properties response.
@@ -180,7 +186,7 @@ type AmazonMSKKafkaSourceProperties struct {
 	// REQUIRED; The Kafka data connection identifier.
 	DataConnectionID *string
 
-	// REQUIRED; The SASL mechanism.
+	// REQUIRED; The SASL mechanism. Additional SASL mechanisms may be added over time.
 	SaslMechanism *SaslMechanism
 
 	// REQUIRED; The security protocol.
@@ -237,7 +243,7 @@ type ApacheKafkaSourceProperties struct {
 	// REQUIRED; The Kafka data connection identifier.
 	DataConnectionID *string
 
-	// REQUIRED; The SASL mechanism.
+	// REQUIRED; The SASL mechanism. Additional SASL mechanisms may be added over time.
 	SaslMechanism *SaslMechanism
 
 	// REQUIRED; The security protocol.
@@ -304,7 +310,7 @@ type AzureBlobStorageEvents struct {
 	// REQUIRED; The Azure resource identifier of the blob storage.
 	AzureResourceID *string
 
-	// REQUIRED; The included event types.
+	// REQUIRED; The included event types. Additional event types may be added over time.
 	IncludedEventTypes []IncludedEventTypes
 
 	// The unique identifier of the source.
@@ -789,6 +795,9 @@ type BaseSQLCDCSourceProperties struct {
 
 	// REQUIRED; The table name.
 	TableName *string
+
+	// Specifies how decimal values are represented by the connector (precise decimal, double, or string).
+	DecimalHandlingMode *DecimalHandlingMode
 }
 
 // CSVSerializationInfo - CSV serialization information.
@@ -1129,6 +1138,27 @@ type DestinationResponse struct {
 // GetDestinationResponse implements the DestinationResponseClassification interface for type DestinationResponse.
 func (d *DestinationResponse) GetDestinationResponse() *DestinationResponse { return d }
 
+// EntireTenantPrincipal - Represents a tenant principal
+type EntireTenantPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type EntireTenantPrincipal.
+func (e *EntireTenantPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: e.DisplayName,
+		ID:          e.ID,
+		Type:        e.Type,
+	}
+}
+
 // ErrorInfo - Represents the error information.
 type ErrorInfo struct {
 	// REQUIRED; The error message.
@@ -1268,6 +1298,9 @@ type Eventstream struct {
 
 	// The item display name.
 	DisplayName *string
+
+	// READ-ONLY; The item's default identity.
+	DefaultIdentity PrincipalClassification
 
 	// READ-ONLY; The folder ID.
 	FolderID *string
@@ -1705,6 +1738,36 @@ type GroupByWindow struct {
 
 // GetGroupByWindow implements the GroupByWindowClassification interface for type GroupByWindow.
 func (g *GroupByWindow) GetGroupByWindow() *GroupByWindow { return g }
+
+// GroupPrincipal - Represents a security group.
+type GroupPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// Group specific details. Applicable when the principal type is Group.
+	GroupDetails *GroupPrincipalGroupDetails
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type GroupPrincipal.
+func (g *GroupPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: g.DisplayName,
+		ID:          g.ID,
+		Type:        g.Type,
+	}
+}
+
+// GroupPrincipalGroupDetails - Group specific details. Applicable when the principal type is Group.
+type GroupPrincipalGroupDetails struct {
+	// The type of the group. Additional group types may be added over time.
+	GroupType *GroupType
+}
 
 // HTTPSourceProperties - HTTP source properties.
 type HTTPSourceProperties struct {
@@ -2206,8 +2269,15 @@ type MySQLCDCSourceProperties struct {
 	// REQUIRED; The table name.
 	TableName *string
 
+	// Specifies how decimal values are represented by the connector (precise decimal, double, or string).
+	DecimalHandlingMode *DecimalHandlingMode
+
 	// The port number. Default is 3306.
 	Port *int32
+
+	// Specifies the locking strategy used when taking the initial snapshot (for example, minimal locks vs extended locking for
+	// stronger consistency).
+	SnapshotLockingMode *SnapshotLockingMode
 }
 
 // MySQLCDCSourceResponse - MySQL CDC source response.
@@ -2290,8 +2360,17 @@ type PostgreSQLCDCSourceProperties struct {
 	// REQUIRED; The table name.
 	TableName *string
 
+	// Specifies how decimal values are represented by the connector (precise decimal, double, or string).
+	DecimalHandlingMode *DecimalHandlingMode
+
 	// The port number. Default is 5432.
 	Port *int32
+
+	// The publication auto-create mode.
+	PublicationAutoCreateMode *PublicationAutoCreateMode
+
+	// The publication name for the CDC connector.
+	PublicationName *string
 }
 
 // PostgreSQLCDCSourceResponse - PostgreSQL CDC source response.
@@ -2329,6 +2408,21 @@ func (p *PostgreSQLCDCSourceResponse) GetSourceResponse() *SourceResponse {
 		Type:         p.Type,
 	}
 }
+
+// Principal - Represents an identity or a Microsoft Entra group.
+type Principal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type Principal.
+func (p *Principal) GetPrincipal() *Principal { return p }
 
 // RealTimeWeatherSourceProperties - Real Time Weather source properties.
 type RealTimeWeatherSourceProperties struct {
@@ -2411,9 +2505,24 @@ func (s *SQLOperator) GetOperator() *Operator {
 
 // SQLOperatorProperties - SQL operator properties.
 type SQLOperatorProperties struct {
-	// REQUIRED; The Azure Stream Analytics & Eventstream Query to execute. Language reference documentation can be found here
+	// REQUIRED; The Azure Stream Analytics and Eventstream query to execute. Language reference documentation is available here
 	// [https://learn.microsoft.com/en-us/stream-analytics-query/stream-analytics-query-language-reference].
 	Query *string
+
+	// The advanced settings for the SQL operator.
+	AdvancedSettings *SQLOperatorPropertiesAdvancedSettings
+}
+
+// SQLOperatorPropertiesAdvancedSettings - The advanced settings for the SQL operator.
+type SQLOperatorPropertiesAdvancedSettings struct {
+	// The maximum delay in seconds for late arrival events. The value must be between 0 and 1814400.
+	EventsLateArrivalMaxDelayInSeconds *int32
+
+	// The maximum delay in seconds for out-of-order events. The value must be between 0 and 3600.
+	EventsOutOfOrderMaxDelayInSeconds *int32
+
+	// The policy for handling events that arrive out of order. Additional policies may be added over time.
+	EventsOutOfOrderPolicy *EventsOutOfOrderPolicy
 }
 
 // SQLServerOnVMDBCDCSourceResponse - Azure SQL Server on VM DB CDC source response.
@@ -2454,7 +2563,7 @@ func (s *SQLServerOnVMDBCDCSourceResponse) GetSourceResponse() *SourceResponse {
 
 // SampleDataSourceProperties - Sample data source properties.
 type SampleDataSourceProperties struct {
-	// REQUIRED; The sample data type.
+	// REQUIRED; The sample data type. Additional sample data types may be added over time.
 	Type *Type
 }
 
@@ -2523,6 +2632,67 @@ type SerializationInfo struct {
 
 // GetSerializationInfo implements the SerializationInfoClassification interface for type SerializationInfo.
 func (s *SerializationInfo) GetSerializationInfo() *SerializationInfo { return s }
+
+// ServicePrincipal - Represents a Microsoft Entra service principal.
+type ServicePrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+
+	// READ-ONLY; Service principal specific details. Applicable when the principal type is ServicePrincipal.
+	ServicePrincipalDetails *ServicePrincipalDetails
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type ServicePrincipal.
+func (s *ServicePrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: s.DisplayName,
+		ID:          s.ID,
+		Type:        s.Type,
+	}
+}
+
+// ServicePrincipalDetails - Service principal specific details. Applicable when the principal type is ServicePrincipal.
+type ServicePrincipalDetails struct {
+	// READ-ONLY; The service principal's Microsoft Entra AppId.
+	AADAppID *string
+}
+
+// ServicePrincipalProfilePrincipal - Represents a service principal profile.
+type ServicePrincipalProfilePrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
+	ServicePrincipalProfileDetails *ServicePrincipalProfilePrincipalServicePrincipalProfileDetails
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type ServicePrincipalProfilePrincipal.
+func (s *ServicePrincipalProfilePrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: s.DisplayName,
+		ID:          s.ID,
+		Type:        s.Type,
+	}
+}
+
+// ServicePrincipalProfilePrincipalServicePrincipalProfileDetails - Service principal profile details. Applicable when the
+// principal type is ServicePrincipalProfile.
+type ServicePrincipalProfilePrincipalServicePrincipalProfileDetails struct {
+	// The service principal profile's parent principal.
+	ParentPrincipal PrincipalClassification
+}
 
 type SessionWindow struct {
 	// REQUIRED; The properties for a session window.
@@ -2849,4 +3019,34 @@ type UpdateEventstreamRequest struct {
 
 	// The eventstream display name. The display name must follow naming rules according to item type.
 	DisplayName *string
+}
+
+// UserPrincipal - Represents a Microsoft Entra user principal.
+type UserPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+
+	// READ-ONLY; User principal specific details. Applicable when the principal type is User.
+	UserDetails *UserPrincipalUserDetails
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type UserPrincipal.
+func (u *UserPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: u.DisplayName,
+		ID:          u.ID,
+		Type:        u.Type,
+	}
+}
+
+// UserPrincipalUserDetails - User principal specific details. Applicable when the principal type is User.
+type UserPrincipalUserDetails struct {
+	// READ-ONLY; The user principal name.
+	UserPrincipalName *string
 }

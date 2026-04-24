@@ -8,6 +8,50 @@ package admin
 
 import "encoding/json"
 
+func unmarshalBaseWorkloadAssignmentClassification(rawMsg json.RawMessage) (BaseWorkloadAssignmentClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b BaseWorkloadAssignmentClassification
+	switch m["type"] {
+	case string(WorkloadAssignmentTypeCapacity):
+		b = &WorkloadCapacityAssignment{}
+	case string(WorkloadAssignmentTypeTenant):
+		b = &WorkloadTenantAssignment{}
+	case string(WorkloadAssignmentTypeWorkspace):
+		b = &WorkloadWorkspaceAssignment{}
+	default:
+		b = &BaseWorkloadAssignment{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalBaseWorkloadAssignmentClassificationArray(rawMsg json.RawMessage) ([]BaseWorkloadAssignmentClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var rawMessages []json.RawMessage
+	if err := json.Unmarshal(rawMsg, &rawMessages); err != nil {
+		return nil, err
+	}
+	fArray := make([]BaseWorkloadAssignmentClassification, len(rawMessages))
+	for index, rawMessage := range rawMessages {
+		f, err := unmarshalBaseWorkloadAssignmentClassification(rawMessage)
+		if err != nil {
+			return nil, err
+		}
+		fArray[index] = f
+	}
+	return fArray, nil
+}
+
 func unmarshalGitProviderDetailsClassification(rawMsg json.RawMessage) (GitProviderDetailsClassification, error) {
 	if rawMsg == nil || string(rawMsg) == "null" {
 		return nil, nil
