@@ -409,6 +409,11 @@ func ExampleTopologyClient_GetEventstreamTopology() {
 	// 							Name: to.Ptr("MyNode"),
 	// 					}},
 	// 					Properties: &eventstream.SQLOperatorProperties{
+	// 						AdvancedSettings: &eventstream.SQLOperatorPropertiesAdvancedSettings{
+	// 							EventsLateArrivalMaxDelayInSeconds: to.Ptr[int32](300),
+	// 							EventsOutOfOrderMaxDelayInSeconds: to.Ptr[int32](5),
+	// 							EventsOutOfOrderPolicy: to.Ptr(eventstream.EventsOutOfOrderPolicyAdjust),
+	// 						},
 	// 						Query: to.Ptr("SELECT * INTO [MyStream] FROM [MyNode]"),
 	// 					},
 	// 			}},
@@ -628,6 +633,8 @@ func ExampleTopologyClient_GetEventstreamTopology() {
 	// 											Properties: &eventstream.AmazonKinesisSourceProperties{
 	// 												DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
 	// 												Region: to.Ptr(eventstream.RegionUsEast1),
+	// 												StartPosition: to.Ptr(eventstream.StartPosition("AtTimestamp")),
+	// 												StartTimestamp: to.Ptr("2024-01-15T10:30:00Z"),
 	// 											},
 	// 										},
 	// 										&eventstream.AmazonMSKKafkaSourceResponse{
@@ -689,6 +696,7 @@ func ExampleTopologyClient_GetEventstreamTopology() {
 	// 											Type: to.Ptr(eventstream.SourceTypeAzureSQLDBCDC),
 	// 											Properties: &eventstream.BaseSQLCDCSourceProperties{
 	// 												DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 												DecimalHandlingMode: to.Ptr(eventstream.DecimalHandlingModePrecise),
 	// 												TableName: to.Ptr("tableName"),
 	// 											},
 	// 										},
@@ -699,6 +707,7 @@ func ExampleTopologyClient_GetEventstreamTopology() {
 	// 											Type: to.Ptr(eventstream.SourceTypeAzureSQLMIDBCDC),
 	// 											Properties: &eventstream.BaseSQLCDCSourceProperties{
 	// 												DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 												DecimalHandlingMode: to.Ptr(eventstream.DecimalHandlingModeDouble),
 	// 												TableName: to.Ptr("tableName"),
 	// 											},
 	// 										},
@@ -709,6 +718,7 @@ func ExampleTopologyClient_GetEventstreamTopology() {
 	// 											Type: to.Ptr(eventstream.SourceTypeSQLServerOnVMDBCDC),
 	// 											Properties: &eventstream.BaseSQLCDCSourceProperties{
 	// 												DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+	// 												DecimalHandlingMode: to.Ptr(eventstream.DecimalHandlingModeString),
 	// 												TableName: to.Ptr("tableName"),
 	// 											},
 	// 										},
@@ -722,6 +732,7 @@ func ExampleTopologyClient_GetEventstreamTopology() {
 	// 												TableName: to.Ptr("tableName"),
 	// 												Port: to.Ptr[int32](3306),
 	// 												ServerID: to.Ptr[int32](9),
+	// 												SnapshotLockingMode: to.Ptr(eventstream.SnapshotLockingModeMinimal),
 	// 											},
 	// 										},
 	// 										&eventstream.PostgreSQLCDCSourceResponse{
@@ -733,6 +744,8 @@ func ExampleTopologyClient_GetEventstreamTopology() {
 	// 												DataConnectionID: to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
 	// 												TableName: to.Ptr("tableName"),
 	// 												Port: to.Ptr[int32](5432),
+	// 												PublicationAutoCreateMode: to.Ptr(eventstream.PublicationAutoCreateModeFiltered),
+	// 												PublicationName: to.Ptr("my_publication"),
 	// 												SlotName: to.Ptr("slotName"),
 	// 											},
 	// 										},

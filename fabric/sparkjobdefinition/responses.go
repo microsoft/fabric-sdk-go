@@ -8,11 +8,7 @@ package sparkjobdefinition
 
 // BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse contains the response from method BackgroundJobsClient.RunOnDemandSparkJobDefinition.
 type BackgroundJobsClientRunOnDemandSparkJobDefinitionResponse struct {
-	// Location contains the information returned from the Location header response.
-	Location *string
-
-	// RetryAfter contains the information returned from the Retry-After header response.
-	RetryAfter *int32
+	// placeholder for future response values
 }
 
 // ItemsClientCreateSparkJobDefinitionResponse contains the response from method ItemsClient.BeginCreateSparkJobDefinition.

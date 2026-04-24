@@ -871,6 +871,14 @@ func (testsuite *FakeTestSuite) TestItems_ListItems() {
 						UserPrincipalName: to.Ptr("caleb@example.com"),
 					},
 				},
+				DefaultIdentity: &admin.UserPrincipal{
+					Type:        to.Ptr(admin.PrincipalTypeUser),
+					DisplayName: to.Ptr("Caleb Foster"),
+					ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
+					UserDetails: &admin.UserPrincipalUserDetails{
+						UserPrincipalName: to.Ptr("caleb@example.com"),
+					},
+				},
 				ID:              to.Ptr("17d8929d-ab32-46d1-858b-fdea74e93bff"),
 				LastUpdatedDate: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2022-04-29T17:47:29.986Z"); return t }()),
 				State:           to.Ptr(admin.ItemStateActive),
@@ -891,6 +899,14 @@ func (testsuite *FakeTestSuite) TestItems_ListItems() {
 				Description: to.Ptr("Test KQL database."),
 				CapacityID:  to.Ptr("D5E336D6-D919-4ECC-B424-1F881A506851"),
 				CreatorPrincipal: &admin.UserPrincipal{
+					Type:        to.Ptr(admin.PrincipalTypeUser),
+					DisplayName: to.Ptr("Jacob Hancock"),
+					ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
+					UserDetails: &admin.UserPrincipalUserDetails{
+						UserPrincipalName: to.Ptr("jacob@example.com"),
+					},
+				},
+				DefaultIdentity: &admin.UserPrincipal{
 					Type:        to.Ptr(admin.PrincipalTypeUser),
 					DisplayName: to.Ptr("Jacob Hancock"),
 					ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
@@ -1000,6 +1016,14 @@ func (testsuite *FakeTestSuite) TestItems_GetItem() {
 			ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
 			UserDetails: &admin.UserPrincipalUserDetails{
 				UserPrincipalName: to.Ptr("Jacob@example.com"),
+			},
+		},
+		DefaultIdentity: &admin.UserPrincipal{
+			Type:        to.Ptr(admin.PrincipalTypeUser),
+			DisplayName: to.Ptr("Caleb Foster"),
+			ID:          to.Ptr("ff3c8689-591c-4298-a228-4ffcc77cb661"),
+			UserDetails: &admin.UserPrincipalUserDetails{
+				UserPrincipalName: to.Ptr("caleb@example.com"),
 			},
 		},
 		ID:              to.Ptr("17d8929d-ab32-46d1-858b-fdea74e93bf2"),
@@ -2678,4 +2702,333 @@ func (testsuite *FakeTestSuite) TestSharingLinks_BulkRemoveSharingLinks() {
 	res, err := poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.BulkRemoveSharingLinksResponse))
+}
+
+func (testsuite *FakeTestSuite) TestWorkloads_ListWorkloads() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List all workloads example"},
+	})
+
+	exampleRes := admin.WorkloadAssignmentInfos{
+		ContinuationToken: to.Ptr("MSwxMDAwMCww"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/admin/workloads?continuationToken=MSwxMDAwMCww"),
+		Value: []admin.WorkloadAssignmentInfo{
+			{
+				Name:                    to.Ptr("Test Workload"),
+				AssignedCapacitiesCount: to.Ptr[int32](2),
+				AssignedWorkspacesCount: to.Ptr[int32](0),
+				ID:                      to.Ptr("Fabric.TestWorkload"),
+				IsAssignable:            to.Ptr(true),
+				IsAssignedToTenant:      to.Ptr(true),
+				Publisher:               to.Ptr("Contoso"),
+			},
+			{
+				Name:                    to.Ptr("Awesome Workload"),
+				AssignedCapacitiesCount: to.Ptr[int32](0),
+				AssignedWorkspacesCount: to.Ptr[int32](0),
+				ID:                      to.Ptr("Fabric.TestWorkloadV2"),
+				IsAssignable:            to.Ptr(true),
+				IsAssignedToTenant:      to.Ptr(false),
+				Publisher:               to.Ptr("Contoso"),
+			},
+			{
+				Name:                    to.Ptr("Sample Workload"),
+				AssignedCapacitiesCount: to.Ptr[int32](0),
+				AssignedWorkspacesCount: to.Ptr[int32](0),
+				ID:                      to.Ptr("Fabric.SampleWorkload"),
+				IsAssignable:            to.Ptr(true),
+				IsAssignedToTenant:      to.Ptr(false),
+				Publisher:               to.Ptr("SampleOrganization"),
+			}},
+	}
+
+	testsuite.serverFactory.WorkloadsServer.NewListWorkloadsPager = func(options *admin.WorkloadsClientListWorkloadsOptions) (resp azfake.PagerResponder[admin.WorkloadsClientListWorkloadsResponse]) {
+		resp = azfake.PagerResponder[admin.WorkloadsClientListWorkloadsResponse]{}
+		resp.AddPage(http.StatusOK, admin.WorkloadsClientListWorkloadsResponse{WorkloadAssignmentInfos: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkloadsClient()
+	pager := client.NewListWorkloadsPager(&admin.WorkloadsClientListWorkloadsOptions{AssignmentStatus: nil,
+		ContinuationToken: nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.WorkloadAssignmentInfos))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List workloads with assigned status example"},
+	})
+
+	exampleRes = admin.WorkloadAssignmentInfos{
+		ContinuationToken: to.Ptr("MSwxMDAwMCww"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/admin/workloads?assignmentStatus=assigned&continuationToken=MSwxMDAwMCww"),
+		Value: []admin.WorkloadAssignmentInfo{
+			{
+				Name:                    to.Ptr("Sample Workload"),
+				AssignedCapacitiesCount: to.Ptr[int32](2),
+				AssignedWorkspacesCount: to.Ptr[int32](3),
+				ID:                      to.Ptr("Fabric.SampleWorkloadV2"),
+				IsAssignable:            to.Ptr(true),
+				IsAssignedToTenant:      to.Ptr(true),
+				Publisher:               to.Ptr("Contoso"),
+			},
+			{
+				Name:                    to.Ptr("Test Workload"),
+				AssignedCapacitiesCount: to.Ptr[int32](0),
+				AssignedWorkspacesCount: to.Ptr[int32](0),
+				ID:                      to.Ptr("Fabric.TestWorkload"),
+				IsAssignable:            to.Ptr(true),
+				IsAssignedToTenant:      to.Ptr(true),
+				Publisher:               to.Ptr("Contoso"),
+			},
+			{
+				Name:                    to.Ptr("Corp Workload"),
+				AssignedCapacitiesCount: to.Ptr[int32](0),
+				AssignedWorkspacesCount: to.Ptr[int32](0),
+				ID:                      to.Ptr("Org.TestWorkloadV2"),
+				IsAssignable:            to.Ptr(false),
+				IsAssignedToTenant:      to.Ptr(true),
+				Publisher:               to.Ptr("Corp"),
+			}},
+	}
+
+	testsuite.serverFactory.WorkloadsServer.NewListWorkloadsPager = func(options *admin.WorkloadsClientListWorkloadsOptions) (resp azfake.PagerResponder[admin.WorkloadsClientListWorkloadsResponse]) {
+		resp = azfake.PagerResponder[admin.WorkloadsClientListWorkloadsResponse]{}
+		resp.AddPage(http.StatusOK, admin.WorkloadsClientListWorkloadsResponse{WorkloadAssignmentInfos: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListWorkloadsPager(&admin.WorkloadsClientListWorkloadsOptions{AssignmentStatus: to.Ptr(admin.WorkloadAssignmentStatusAssigned),
+		ContinuationToken: nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.WorkloadAssignmentInfos))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestWorkloads_ListWorkloadAssignments() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List all workload assignments example"},
+	})
+
+	exampleRes := admin.WorkloadAssignments{
+		ContinuationToken: to.Ptr("MSwxMDAwMCww"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/admin/workloads/assignments?continuationToken=MSwxMDAwMCww"),
+		Value: []admin.BaseWorkloadAssignmentClassification{
+			&admin.WorkloadCapacityAssignment{
+				Type:         to.Ptr(admin.WorkloadAssignmentTypeCapacity),
+				ID:           to.Ptr("46c90afa-1f07-4c85-822e-7da41987a0cc"),
+				WorkloadID:   to.Ptr("Fabric.SampleWorkloadV2"),
+				CapacityID:   to.Ptr("a7b12741-80ce-444a-a493-ecf92fed4ffd"),
+				CapacityName: to.Ptr("F4 Capacity"),
+			},
+			&admin.WorkloadWorkspaceAssignment{
+				Type:          to.Ptr(admin.WorkloadAssignmentTypeWorkspace),
+				ID:            to.Ptr("007b57fd-126b-423c-9cfb-f5ec51e2de4d"),
+				WorkloadID:    to.Ptr("Fabric.SampleWorkloadV2"),
+				WorkspaceID:   to.Ptr("67605640-97d3-47ab-8600-010d482f4c54"),
+				WorkspaceName: to.Ptr("My workspace"),
+			},
+			&admin.WorkloadTenantAssignment{
+				Type:       to.Ptr(admin.WorkloadAssignmentTypeTenant),
+				ID:         to.Ptr("5e9ad558-a1f3-416c-9c4c-363846b2b670"),
+				WorkloadID: to.Ptr("Fabric.TestWorkload"),
+			}},
+	}
+
+	testsuite.serverFactory.WorkloadsServer.NewListWorkloadAssignmentsPager = func(options *admin.WorkloadsClientListWorkloadAssignmentsOptions) (resp azfake.PagerResponder[admin.WorkloadsClientListWorkloadAssignmentsResponse]) {
+		resp = azfake.PagerResponder[admin.WorkloadsClientListWorkloadAssignmentsResponse]{}
+		resp.AddPage(http.StatusOK, admin.WorkloadsClientListWorkloadAssignmentsResponse{WorkloadAssignments: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkloadsClient()
+	pager := client.NewListWorkloadAssignmentsPager(&admin.WorkloadsClientListWorkloadAssignmentsOptions{ContinuationToken: nil,
+		Type:       nil,
+		WorkloadID: nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.WorkloadAssignments))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List capacity assignments for a specific workload example"},
+	})
+
+	exampleRes = admin.WorkloadAssignments{
+		ContinuationToken: to.Ptr("MSwxMDAwMCww"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/admin/workloads/assignments?type=capacity&workloadId=Fabric.SampleWorkloadV2&continuationToken=MSwxMDAwMCww"),
+		Value: []admin.BaseWorkloadAssignmentClassification{
+			&admin.WorkloadCapacityAssignment{
+				Type:         to.Ptr(admin.WorkloadAssignmentTypeCapacity),
+				ID:           to.Ptr("489eef53-adca-4191-9437-a665e8ada1e7"),
+				WorkloadID:   to.Ptr("Fabric.SampleWorkloadV2"),
+				CapacityID:   to.Ptr("a7b12741-80ce-444a-a493-ecf92fed4ffd"),
+				CapacityName: to.Ptr("F4 Capacity"),
+			},
+			&admin.WorkloadCapacityAssignment{
+				Type:         to.Ptr(admin.WorkloadAssignmentTypeCapacity),
+				ID:           to.Ptr("0c76b9d4-0ddc-4ff2-8b6e-23eded9b92cd"),
+				WorkloadID:   to.Ptr("Fabric.SampleWorkloadV2"),
+				CapacityID:   to.Ptr("67605640-97d3-47ab-8600-010d482f4c54"),
+				CapacityName: to.Ptr("F8 Capacity"),
+			}},
+	}
+
+	testsuite.serverFactory.WorkloadsServer.NewListWorkloadAssignmentsPager = func(options *admin.WorkloadsClientListWorkloadAssignmentsOptions) (resp azfake.PagerResponder[admin.WorkloadsClientListWorkloadAssignmentsResponse]) {
+		resp = azfake.PagerResponder[admin.WorkloadsClientListWorkloadAssignmentsResponse]{}
+		resp.AddPage(http.StatusOK, admin.WorkloadsClientListWorkloadAssignmentsResponse{WorkloadAssignments: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListWorkloadAssignmentsPager(&admin.WorkloadsClientListWorkloadAssignmentsOptions{ContinuationToken: nil,
+		Type:       to.Ptr(admin.WorkloadAssignmentTypeCapacity),
+		WorkloadID: to.Ptr("Fabric.SampleWorkloadV2"),
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.WorkloadAssignments))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List tenant assignments example"},
+	})
+
+	exampleRes = admin.WorkloadAssignments{
+		ContinuationToken: to.Ptr("MSwxMDAwMCww"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/admin/workloads/assignments?type=tenant&continuationToken=MSwxMDAwMCww"),
+		Value: []admin.BaseWorkloadAssignmentClassification{
+			&admin.WorkloadTenantAssignment{
+				Type:       to.Ptr(admin.WorkloadAssignmentTypeTenant),
+				ID:         to.Ptr("c77c4d09-3240-42a3-a72c-a76e1615c12a"),
+				WorkloadID: to.Ptr("Fabric.TestWorkload"),
+			}},
+	}
+
+	testsuite.serverFactory.WorkloadsServer.NewListWorkloadAssignmentsPager = func(options *admin.WorkloadsClientListWorkloadAssignmentsOptions) (resp azfake.PagerResponder[admin.WorkloadsClientListWorkloadAssignmentsResponse]) {
+		resp = azfake.PagerResponder[admin.WorkloadsClientListWorkloadAssignmentsResponse]{}
+		resp.AddPage(http.StatusOK, admin.WorkloadsClientListWorkloadAssignmentsResponse{WorkloadAssignments: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListWorkloadAssignmentsPager(&admin.WorkloadsClientListWorkloadAssignmentsOptions{ContinuationToken: nil,
+		Type:       to.Ptr(admin.WorkloadAssignmentTypeTenant),
+		WorkloadID: nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.WorkloadAssignments))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestWorkloads_CreateWorkloadAssignment() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create capacity assignment example"},
+	})
+	var exampleCreateWorkloadAssignmentRequest admin.CreateWorkloadBaseAssignmentRequestClassification
+	exampleCreateWorkloadAssignmentRequest = &admin.CreateWorkloadCapacityAssignmentRequest{
+		Type:       to.Ptr(admin.WorkloadAssignmentTypeCapacity),
+		WorkloadID: to.Ptr("Fabric.SampleWorkloadV2"),
+		CapacityID: to.Ptr("a7b12741-80ce-444a-a493-ecf92fed4ffd"),
+	}
+
+	testsuite.serverFactory.WorkloadsServer.CreateWorkloadAssignment = func(ctx context.Context, createWorkloadAssignmentRequest admin.CreateWorkloadBaseAssignmentRequestClassification, options *admin.WorkloadsClientCreateWorkloadAssignmentOptions) (resp azfake.Responder[admin.WorkloadsClientCreateWorkloadAssignmentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateWorkloadAssignmentRequest, createWorkloadAssignmentRequest))
+		resp = azfake.Responder[admin.WorkloadsClientCreateWorkloadAssignmentResponse]{}
+		resp.SetResponse(http.StatusCreated, admin.WorkloadsClientCreateWorkloadAssignmentResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkloadsClient()
+	_, err = client.CreateWorkloadAssignment(ctx, exampleCreateWorkloadAssignmentRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create tenant assignment example"},
+	})
+	exampleCreateWorkloadAssignmentRequest = &admin.CreateWorkloadTenantAssignmentRequest{
+		Type:       to.Ptr(admin.WorkloadAssignmentTypeTenant),
+		WorkloadID: to.Ptr("Fabric.SampleWorkloadV2"),
+	}
+
+	testsuite.serverFactory.WorkloadsServer.CreateWorkloadAssignment = func(ctx context.Context, createWorkloadAssignmentRequest admin.CreateWorkloadBaseAssignmentRequestClassification, options *admin.WorkloadsClientCreateWorkloadAssignmentOptions) (resp azfake.Responder[admin.WorkloadsClientCreateWorkloadAssignmentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateWorkloadAssignmentRequest, createWorkloadAssignmentRequest))
+		resp = azfake.Responder[admin.WorkloadsClientCreateWorkloadAssignmentResponse]{}
+		resp.SetResponse(http.StatusCreated, admin.WorkloadsClientCreateWorkloadAssignmentResponse{}, nil)
+		return
+	}
+
+	_, err = client.CreateWorkloadAssignment(ctx, exampleCreateWorkloadAssignmentRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create workspace assignment example"},
+	})
+	exampleCreateWorkloadAssignmentRequest = &admin.CreateWorkloadWorkspaceAssignmentRequest{
+		Type:        to.Ptr(admin.WorkloadAssignmentTypeWorkspace),
+		WorkloadID:  to.Ptr("Fabric.SampleWorkloadV2"),
+		WorkspaceID: to.Ptr("a7b12741-80ce-444a-a493-ecf92fed4ffd"),
+	}
+
+	testsuite.serverFactory.WorkloadsServer.CreateWorkloadAssignment = func(ctx context.Context, createWorkloadAssignmentRequest admin.CreateWorkloadBaseAssignmentRequestClassification, options *admin.WorkloadsClientCreateWorkloadAssignmentOptions) (resp azfake.Responder[admin.WorkloadsClientCreateWorkloadAssignmentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateWorkloadAssignmentRequest, createWorkloadAssignmentRequest))
+		resp = azfake.Responder[admin.WorkloadsClientCreateWorkloadAssignmentResponse]{}
+		resp.SetResponse(http.StatusCreated, admin.WorkloadsClientCreateWorkloadAssignmentResponse{}, nil)
+		return
+	}
+
+	_, err = client.CreateWorkloadAssignment(ctx, exampleCreateWorkloadAssignmentRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestWorkloads_DeleteWorkloadAssignment() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete workload assignment example"},
+	})
+	var exampleAssignmentID string
+	exampleAssignmentID = "830f18e9-e7e5-43c7-88de-197bfe0b457e"
+
+	testsuite.serverFactory.WorkloadsServer.DeleteWorkloadAssignment = func(ctx context.Context, assignmentID string, options *admin.WorkloadsClientDeleteWorkloadAssignmentOptions) (resp azfake.Responder[admin.WorkloadsClientDeleteWorkloadAssignmentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleAssignmentID, assignmentID)
+		resp = azfake.Responder[admin.WorkloadsClientDeleteWorkloadAssignmentResponse]{}
+		resp.SetResponse(http.StatusOK, admin.WorkloadsClientDeleteWorkloadAssignmentResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkloadsClient()
+	_, err = client.DeleteWorkloadAssignment(ctx, exampleAssignmentID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
 }

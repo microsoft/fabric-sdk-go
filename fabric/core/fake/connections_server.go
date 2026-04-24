@@ -62,6 +62,10 @@ type ConnectionsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListSupportedConnectionTypesPager func(options *core.ConnectionsClientListSupportedConnectionTypesOptions) (resp azfake.PagerResponder[core.ConnectionsClientListSupportedConnectionTypesResponse])
 
+	// BeginTestConnection is the fake for method ConnectionsClient.BeginTestConnection
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	BeginTestConnection func(ctx context.Context, connectionID string, options *core.ConnectionsClientBeginTestConnectionOptions) (resp azfake.PollerResponder[core.ConnectionsClientTestConnectionResponse], errResp azfake.ErrorResponder)
+
 	// UpdateConnection is the fake for method ConnectionsClient.UpdateConnection
 	// HTTP status codes to indicate success: http.StatusOK
 	UpdateConnection func(ctx context.Context, connectionID string, updateConnectionRequest core.UpdateConnectionRequestClassification, options *core.ConnectionsClientUpdateConnectionOptions) (resp azfake.Responder[core.ConnectionsClientUpdateConnectionResponse], errResp azfake.ErrorResponder)
@@ -80,6 +84,7 @@ func NewConnectionsServerTransport(srv *ConnectionsServer) *ConnectionsServerTra
 		newListConnectionRoleAssignmentsPager: newTracker[azfake.PagerResponder[core.ConnectionsClientListConnectionRoleAssignmentsResponse]](),
 		newListConnectionsPager:               newTracker[azfake.PagerResponder[core.ConnectionsClientListConnectionsResponse]](),
 		newListSupportedConnectionTypesPager:  newTracker[azfake.PagerResponder[core.ConnectionsClientListSupportedConnectionTypesResponse]](),
+		beginTestConnection:                   newTracker[azfake.PollerResponder[core.ConnectionsClientTestConnectionResponse]](),
 	}
 }
 
@@ -90,6 +95,7 @@ type ConnectionsServerTransport struct {
 	newListConnectionRoleAssignmentsPager *tracker[azfake.PagerResponder[core.ConnectionsClientListConnectionRoleAssignmentsResponse]]
 	newListConnectionsPager               *tracker[azfake.PagerResponder[core.ConnectionsClientListConnectionsResponse]]
 	newListSupportedConnectionTypesPager  *tracker[azfake.PagerResponder[core.ConnectionsClientListSupportedConnectionTypesResponse]]
+	beginTestConnection                   *tracker[azfake.PollerResponder[core.ConnectionsClientTestConnectionResponse]]
 }
 
 // Do implements the policy.Transporter interface for ConnectionsServerTransport.
@@ -135,6 +141,8 @@ func (c *ConnectionsServerTransport) dispatchToMethodFake(req *http.Request, met
 				res.resp, res.err = c.dispatchNewListConnectionsPager(req)
 			case "ConnectionsClient.NewListSupportedConnectionTypesPager":
 				res.resp, res.err = c.dispatchNewListSupportedConnectionTypesPager(req)
+			case "ConnectionsClient.BeginTestConnection":
+				res.resp, res.err = c.dispatchBeginTestConnection(req)
 			case "ConnectionsClient.UpdateConnection":
 				res.resp, res.err = c.dispatchUpdateConnection(req)
 			case "ConnectionsClient.UpdateConnectionRoleAssignment":
@@ -484,6 +492,46 @@ func (c *ConnectionsServerTransport) dispatchNewListSupportedConnectionTypesPage
 	if !server.PagerResponderMore(newListSupportedConnectionTypesPager) {
 		c.newListSupportedConnectionTypesPager.remove(req)
 	}
+	return resp, nil
+}
+
+func (c *ConnectionsServerTransport) dispatchBeginTestConnection(req *http.Request) (*http.Response, error) {
+	if c.srv.BeginTestConnection == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginTestConnection not implemented")}
+	}
+	beginTestConnection := c.beginTestConnection.get(req)
+	if beginTestConnection == nil {
+		const regexStr = `/v1/connections/(?P<connectionId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/testConnection`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		connectionIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("connectionId")])
+		if err != nil {
+			return nil, err
+		}
+		respr, errRespr := c.srv.BeginTestConnection(req.Context(), connectionIDParam, nil)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginTestConnection = &respr
+		c.beginTestConnection.add(req, beginTestConnection)
+	}
+
+	resp, err := server.PollerResponderNext(beginTestConnection, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+		c.beginTestConnection.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginTestConnection) {
+		c.beginTestConnection.remove(req)
+	}
+
 	return resp, nil
 }
 

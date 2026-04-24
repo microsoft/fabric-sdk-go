@@ -387,6 +387,9 @@ type Warehouse struct {
 	// The warehouse properties.
 	Properties *Properties
 
+	// READ-ONLY; The item's default identity.
+	DefaultIdentity PrincipalClassification
+
 	// READ-ONLY; The folder ID.
 	FolderID *string
 

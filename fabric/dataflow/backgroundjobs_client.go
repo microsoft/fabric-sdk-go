@@ -11,7 +11,6 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
-	"strconv"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -69,8 +68,7 @@ func (client *BackgroundJobsClient) RunOnDemandApplyChanges(ctx context.Context,
 		err = core.NewResponseError(httpResp)
 		return BackgroundJobsClientRunOnDemandApplyChangesResponse{}, err
 	}
-	resp, err := client.runOnDemandApplyChangesHandleResponse(httpResp)
-	return resp, err
+	return BackgroundJobsClientRunOnDemandApplyChangesResponse{}, nil
 }
 
 // runOnDemandApplyChangesCreateRequest creates the RunOnDemandApplyChanges request.
@@ -90,23 +88,6 @@ func (client *BackgroundJobsClient) runOnDemandApplyChangesCreateRequest(ctx con
 	}
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
-}
-
-// runOnDemandApplyChangesHandleResponse handles the RunOnDemandApplyChanges response.
-func (client *BackgroundJobsClient) runOnDemandApplyChangesHandleResponse(resp *http.Response) (BackgroundJobsClientRunOnDemandApplyChangesResponse, error) {
-	result := BackgroundJobsClientRunOnDemandApplyChangesResponse{}
-	if val := resp.Header.Get("Location"); val != "" {
-		result.Location = &val
-	}
-	if val := resp.Header.Get("Retry-After"); val != "" {
-		retryAfter32, err := strconv.ParseInt(val, 10, 32)
-		retryAfter := int32(retryAfter32)
-		if err != nil {
-			return BackgroundJobsClientRunOnDemandApplyChangesResponse{}, err
-		}
-		result.RetryAfter = &retryAfter
-	}
-	return result, nil
 }
 
 // RunOnDemandExecute - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
@@ -153,8 +134,7 @@ func (client *BackgroundJobsClient) RunOnDemandExecute(ctx context.Context, work
 		err = core.NewResponseError(httpResp)
 		return BackgroundJobsClientRunOnDemandExecuteResponse{}, err
 	}
-	resp, err := client.runOnDemandExecuteHandleResponse(httpResp)
-	return resp, err
+	return BackgroundJobsClientRunOnDemandExecuteResponse{}, nil
 }
 
 // runOnDemandExecuteCreateRequest creates the RunOnDemandExecute request.
@@ -180,23 +160,6 @@ func (client *BackgroundJobsClient) runOnDemandExecuteCreateRequest(ctx context.
 		return req, nil
 	}
 	return req, nil
-}
-
-// runOnDemandExecuteHandleResponse handles the RunOnDemandExecute response.
-func (client *BackgroundJobsClient) runOnDemandExecuteHandleResponse(resp *http.Response) (BackgroundJobsClientRunOnDemandExecuteResponse, error) {
-	result := BackgroundJobsClientRunOnDemandExecuteResponse{}
-	if val := resp.Header.Get("Location"); val != "" {
-		result.Location = &val
-	}
-	if val := resp.Header.Get("Retry-After"); val != "" {
-		retryAfter32, err := strconv.ParseInt(val, 10, 32)
-		retryAfter := int32(retryAfter32)
-		if err != nil {
-			return BackgroundJobsClientRunOnDemandExecuteResponse{}, err
-		}
-		result.RetryAfter = &retryAfter
-	}
-	return result, nil
 }
 
 // ScheduleApplyChanges - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes

@@ -555,6 +555,48 @@ func PossibleTenantSettingPropertyTypeValues() []TenantSettingPropertyType {
 	}
 }
 
+type WorkloadAssignmentStatus string
+
+const (
+	// WorkloadAssignmentStatusAny - Workloads that are assigned or unassigned.
+	WorkloadAssignmentStatusAny WorkloadAssignmentStatus = "Any"
+	// WorkloadAssignmentStatusAssigned - Workloads that are assigned to the tenant or to at least one workspace or capacity in
+	// the tenant.
+	WorkloadAssignmentStatusAssigned WorkloadAssignmentStatus = "Assigned"
+	// WorkloadAssignmentStatusUnassigned - Workloads that are not assigned to the tenant, any workspace, or any capacity in the
+	// tenant.
+	WorkloadAssignmentStatusUnassigned WorkloadAssignmentStatus = "Unassigned"
+)
+
+// PossibleWorkloadAssignmentStatusValues returns the possible values for the WorkloadAssignmentStatus const type.
+func PossibleWorkloadAssignmentStatusValues() []WorkloadAssignmentStatus {
+	return []WorkloadAssignmentStatus{
+		WorkloadAssignmentStatusAny,
+		WorkloadAssignmentStatusAssigned,
+		WorkloadAssignmentStatusUnassigned,
+	}
+}
+
+type WorkloadAssignmentType string
+
+const (
+	// WorkloadAssignmentTypeCapacity - Capacity assignment type.
+	WorkloadAssignmentTypeCapacity WorkloadAssignmentType = "Capacity"
+	// WorkloadAssignmentTypeTenant - Tenant assignment type.
+	WorkloadAssignmentTypeTenant WorkloadAssignmentType = "Tenant"
+	// WorkloadAssignmentTypeWorkspace - Workspace assignment type.
+	WorkloadAssignmentTypeWorkspace WorkloadAssignmentType = "Workspace"
+)
+
+// PossibleWorkloadAssignmentTypeValues returns the possible values for the WorkloadAssignmentType const type.
+func PossibleWorkloadAssignmentTypeValues() []WorkloadAssignmentType {
+	return []WorkloadAssignmentType{
+		WorkloadAssignmentTypeCapacity,
+		WorkloadAssignmentTypeTenant,
+		WorkloadAssignmentTypeWorkspace,
+	}
+}
+
 // WorkspaceRole - A Workspace role. Additional workspace roles may be added over time.
 type WorkspaceRole string
 

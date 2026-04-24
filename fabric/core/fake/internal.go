@@ -10,6 +10,7 @@ import (
 	"io"
 	"net/http"
 	"reflect"
+	"strings"
 	"sync"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/fake/server"
@@ -73,6 +74,13 @@ func readRequestBody(req *http.Request) ([]byte, error) {
 	}
 	req.Body.Close()
 	return body, nil
+}
+
+func splitHelper(s, sep string) []string {
+	if s == "" {
+		return nil
+	}
+	return strings.Split(s, sep)
 }
 
 func newTracker[T any]() *tracker[T] {

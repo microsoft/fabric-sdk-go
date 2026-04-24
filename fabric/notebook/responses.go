@@ -14,11 +14,7 @@ type BackgroundJobsClientGetNotebookJobInstanceBetaResponse struct {
 
 // BackgroundJobsClientRunOnDemandNotebookResponse contains the response from method BackgroundJobsClient.RunOnDemandNotebook.
 type BackgroundJobsClientRunOnDemandNotebookResponse struct {
-	// Location contains the information returned from the Location header response.
-	Location *string
-
-	// RetryAfter contains the information returned from the Retry-After header response.
-	RetryAfter *int32
+	// placeholder for future response values
 }
 
 // ItemsClientCreateNotebookResponse contains the response from method ItemsClient.BeginCreateNotebook.

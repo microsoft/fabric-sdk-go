@@ -294,6 +294,7 @@ type BulkImportItemDefinitionsRequestOptions struct {
 
 // BulkImportItemDefinitionsResponse - Bulk import item definitions response payload.
 type BulkImportItemDefinitionsResponse struct {
+	// A list of the item's definition operation details
 	ImportItemDefinitionsDetails []ImportItemDefinitionsDetails
 }
 
@@ -786,6 +787,20 @@ type ConnectionRuleWorkspaceMetadata struct {
 	WorkspaceID *string
 }
 
+type ConnectionStatusError struct {
+	// REQUIRED; The error code that caused the connection to be offline.
+	ErrorCode *string
+
+	// REQUIRED; The message that explains why the connection is offline.
+	Message *string
+}
+
+type ConnectionStatusResponse struct {
+	// REQUIRED; The status of the connection. Additional statuses may be added over time.
+	Status *TestConnectionStatus
+	Errors []ConnectionStatusError
+}
+
 // CreatableShortcutTarget - An object that contains the target datasource, and must specify exactly one of the supported
 // destinations as described in the table below.
 type CreatableShortcutTarget struct {
@@ -1071,6 +1086,9 @@ type CreateScheduleRequest struct {
 
 	// REQUIRED; Whether this schedule is enabled. True - Enabled, False - Disabled.
 	Enabled *bool
+
+	// The execution data for a scheduled job. This is fixed static data, defined by the specific item job type.
+	ExecutionData any
 }
 
 // CreateShortcutRequest - A shortcut creation request with an object representing a reference to another storage location.
@@ -2320,6 +2338,9 @@ type Item struct {
 	// The item display name.
 	DisplayName *string
 
+	// READ-ONLY; The item's default identity.
+	DefaultIdentity PrincipalClassification
+
 	// READ-ONLY; The folder ID.
 	FolderID *string
 
@@ -2334,6 +2355,21 @@ type Item struct {
 
 	// READ-ONLY; The workspace ID.
 	WorkspaceID *string
+}
+
+// ItemAssignmentStatus - The status of an identity assignment to an item.
+type ItemAssignmentStatus struct {
+	// REQUIRED; The ID of the item.
+	ItemID *string
+
+	// REQUIRED; The status of the identity assignment. Additional status may be added over time.
+	Status *IdentityAssignmentStatusType
+
+	// The error information if the identity assignment failed.
+	ErrorInfo *ErrorResponseDetails
+
+	// The ID of the parent item.
+	ParentItemID *string
 }
 
 // ItemCatalogEntry - A Fabric item type of catalog entry.
@@ -2577,7 +2613,10 @@ type ItemSchedule struct {
 	// The created time stamp of this schedule in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
 	CreatedDateTime *time.Time
 
-	// The user identity that created this schedule or last modified.
+	// The execution data for a scheduled job. This is fixed static data, defined by the specific item job type.
+	ExecutionData any
+
+	// The user identity that created this schedule or last modified it.
 	Owner PrincipalClassification
 }
 
@@ -3353,7 +3392,7 @@ type RowConstraint struct {
 
 // RunOnDemandItemJobRequest - Run on demand item job instance payload
 type RunOnDemandItemJobRequest struct {
-	// The execution data for an on-demand job. This is fixed static data defined by the specific item job type.
+	// The execution data for an on-demand job. This is fixed static data, defined by the specific item job type.
 	ExecutionData any
 
 	// The parameter list for an on-demand job. These are per-run, user-defined inputs that tailor this invocation. Note: This
@@ -3904,6 +3943,18 @@ type UpdateItemDefinitionRequest struct {
 	Definition *ItemDefinition
 }
 
+// UpdateItemIdentityRequest - Associate identity request payload.
+type UpdateItemIdentityRequest struct {
+	// REQUIRED; The type of subject that makes an associaste identity request.
+	AssignmentType *IdentityAssignmentEntityType
+}
+
+// UpdateItemIdentityResponse - Associate identity response.
+type UpdateItemIdentityResponse struct {
+	// REQUIRED; The identity assigned to the item after update.
+	AssignmentStatus []ItemAssignmentStatus
+}
+
 // UpdateItemRequest - Update item request.
 type UpdateItemRequest struct {
 	// The item description. Maximum length is 256 characters.
@@ -4048,6 +4099,9 @@ type UpdateScheduleRequest struct {
 
 	// REQUIRED; Whether this schedule is enabled. True - Enabled, False - Disabled.
 	Enabled *bool
+
+	// The execution data for a scheduled job. This is fixed static data, defined by the specific item job type.
+	ExecutionData any
 }
 
 type UpdateShareableCloudConnectionRequest struct {

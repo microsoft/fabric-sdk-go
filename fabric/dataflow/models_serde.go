@@ -62,6 +62,7 @@ func (c CreateDataflowApplyChangesScheduleRequest) MarshalJSON() ([]byte, error)
 	objectMap := make(map[string]any)
 	populate(objectMap, "configuration", c.Configuration)
 	populate(objectMap, "enabled", c.Enabled)
+	populateAny(objectMap, "executionData", c.ExecutionData)
 	return json.Marshal(objectMap)
 }
 
@@ -80,6 +81,9 @@ func (c *CreateDataflowApplyChangesScheduleRequest) UnmarshalJSON(data []byte) e
 		case "enabled":
 			err = unpopulate(val, "Enabled", &c.Enabled)
 			delete(rawMsg, key)
+		case "executionData":
+			err = unpopulate(val, "ExecutionData", &c.ExecutionData)
+			delete(rawMsg, key)
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", c, err)
@@ -93,6 +97,7 @@ func (c CreateDataflowExecuteScheduleRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "configuration", c.Configuration)
 	populate(objectMap, "enabled", c.Enabled)
+	populateAny(objectMap, "executionData", c.ExecutionData)
 	return json.Marshal(objectMap)
 }
 
@@ -110,6 +115,9 @@ func (c *CreateDataflowExecuteScheduleRequest) UnmarshalJSON(data []byte) error 
 			delete(rawMsg, key)
 		case "enabled":
 			err = unpopulate(val, "Enabled", &c.Enabled)
+			delete(rawMsg, key)
+		case "executionData":
+			err = unpopulate(val, "ExecutionData", &c.ExecutionData)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -251,6 +259,7 @@ func (d *DailyScheduleConfig) UnmarshalJSON(data []byte) error {
 // MarshalJSON implements the json.Marshaller interface for type Dataflow.
 func (d Dataflow) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
+	populate(objectMap, "defaultIdentity", d.DefaultIdentity)
 	populate(objectMap, "description", d.Description)
 	populate(objectMap, "displayName", d.DisplayName)
 	populate(objectMap, "folderId", d.FolderID)
@@ -271,6 +280,9 @@ func (d *Dataflow) UnmarshalJSON(data []byte) error {
 	for key, val := range rawMsg {
 		var err error
 		switch key {
+		case "defaultIdentity":
+			d.DefaultIdentity, err = unmarshalPrincipalClassification(val)
+			delete(rawMsg, key)
 		case "description":
 			err = unpopulate(val, "Description", &d.Description)
 			delete(rawMsg, key)
@@ -1200,6 +1212,7 @@ func (s Schedule) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "configuration", s.Configuration)
 	populateDateTimeRFC3339(objectMap, "createdDateTime", s.CreatedDateTime)
 	populate(objectMap, "enabled", s.Enabled)
+	populateAny(objectMap, "executionData", s.ExecutionData)
 	populate(objectMap, "id", s.ID)
 	populate(objectMap, "owner", s.Owner)
 	return json.Marshal(objectMap)
@@ -1222,6 +1235,9 @@ func (s *Schedule) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "enabled":
 			err = unpopulate(val, "Enabled", &s.Enabled)
+			delete(rawMsg, key)
+		case "executionData":
+			err = unpopulate(val, "ExecutionData", &s.ExecutionData)
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &s.ID)

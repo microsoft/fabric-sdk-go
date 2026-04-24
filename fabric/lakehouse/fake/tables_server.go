@@ -30,6 +30,10 @@ type TablesServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListTablesPager func(workspaceID string, lakehouseID string, options *lakehouse.TablesClientListTablesOptions) (resp azfake.PagerResponder[lakehouse.TablesClientListTablesResponse])
 
+	// BeginLoadSchemaTableBeta is the fake for method TablesClient.BeginLoadSchemaTableBeta
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
+	BeginLoadSchemaTableBeta func(ctx context.Context, workspaceID string, lakehouseID string, schemaName string, tableName string, beta bool, loadTableRequest lakehouse.LoadTableRequest, options *lakehouse.TablesClientBeginLoadSchemaTableBetaOptions) (resp azfake.PollerResponder[lakehouse.TablesClientLoadSchemaTableBetaResponse], errResp azfake.ErrorResponder)
+
 	// BeginLoadTable is the fake for method TablesClient.BeginLoadTable
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
 	BeginLoadTable func(ctx context.Context, workspaceID string, lakehouseID string, tableName string, loadTableRequest lakehouse.LoadTableRequest, options *lakehouse.TablesClientBeginLoadTableOptions) (resp azfake.PollerResponder[lakehouse.TablesClientLoadTableResponse], errResp azfake.ErrorResponder)
@@ -40,18 +44,20 @@ type TablesServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewTablesServerTransport(srv *TablesServer) *TablesServerTransport {
 	return &TablesServerTransport{
-		srv:                srv,
-		newListTablesPager: newTracker[azfake.PagerResponder[lakehouse.TablesClientListTablesResponse]](),
-		beginLoadTable:     newTracker[azfake.PollerResponder[lakehouse.TablesClientLoadTableResponse]](),
+		srv:                      srv,
+		newListTablesPager:       newTracker[azfake.PagerResponder[lakehouse.TablesClientListTablesResponse]](),
+		beginLoadSchemaTableBeta: newTracker[azfake.PollerResponder[lakehouse.TablesClientLoadSchemaTableBetaResponse]](),
+		beginLoadTable:           newTracker[azfake.PollerResponder[lakehouse.TablesClientLoadTableResponse]](),
 	}
 }
 
 // TablesServerTransport connects instances of lakehouse.TablesClient to instances of TablesServer.
 // Don't use this type directly, use NewTablesServerTransport instead.
 type TablesServerTransport struct {
-	srv                *TablesServer
-	newListTablesPager *tracker[azfake.PagerResponder[lakehouse.TablesClientListTablesResponse]]
-	beginLoadTable     *tracker[azfake.PollerResponder[lakehouse.TablesClientLoadTableResponse]]
+	srv                      *TablesServer
+	newListTablesPager       *tracker[azfake.PagerResponder[lakehouse.TablesClientListTablesResponse]]
+	beginLoadSchemaTableBeta *tracker[azfake.PollerResponder[lakehouse.TablesClientLoadSchemaTableBetaResponse]]
+	beginLoadTable           *tracker[azfake.PollerResponder[lakehouse.TablesClientLoadTableResponse]]
 }
 
 // Do implements the policy.Transporter interface for TablesServerTransport.
@@ -81,6 +87,8 @@ func (t *TablesServerTransport) dispatchToMethodFake(req *http.Request, method s
 			switch method {
 			case "TablesClient.NewListTablesPager":
 				res.resp, res.err = t.dispatchNewListTablesPager(req)
+			case "TablesClient.BeginLoadSchemaTableBeta":
+				res.resp, res.err = t.dispatchBeginLoadSchemaTableBeta(req)
 			case "TablesClient.BeginLoadTable":
 				res.resp, res.err = t.dispatchBeginLoadTable(req)
 			default:
@@ -167,6 +175,71 @@ func (t *TablesServerTransport) dispatchNewListTablesPager(req *http.Request) (*
 	if !server.PagerResponderMore(newListTablesPager) {
 		t.newListTablesPager.remove(req)
 	}
+	return resp, nil
+}
+
+func (t *TablesServerTransport) dispatchBeginLoadSchemaTableBeta(req *http.Request) (*http.Response, error) {
+	if t.srv.BeginLoadSchemaTableBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginLoadSchemaTableBeta not implemented")}
+	}
+	beginLoadSchemaTableBeta := t.beginLoadSchemaTableBeta.get(req)
+	if beginLoadSchemaTableBeta == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/lakehouses/(?P<lakehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/schemas/(?P<schemaName>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/tables/(?P<tableName>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/load`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 5 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		body, err := server.UnmarshalRequestAsJSON[lakehouse.LoadTableRequest](req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		lakehouseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("lakehouseId")])
+		if err != nil {
+			return nil, err
+		}
+		schemaNameParam, err := url.PathUnescape(matches[regex.SubexpIndex("schemaName")])
+		if err != nil {
+			return nil, err
+		}
+		tableNameParam, err := url.PathUnescape(matches[regex.SubexpIndex("tableName")])
+		if err != nil {
+			return nil, err
+		}
+		betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
+		if err != nil {
+			return nil, err
+		}
+		betaParam, err := strconv.ParseBool(betaUnescaped)
+		if err != nil {
+			return nil, err
+		}
+		respr, errRespr := t.srv.BeginLoadSchemaTableBeta(req.Context(), workspaceIDParam, lakehouseIDParam, schemaNameParam, tableNameParam, betaParam, body, nil)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginLoadSchemaTableBeta = &respr
+		t.beginLoadSchemaTableBeta.add(req, beginLoadSchemaTableBeta)
+	}
+
+	resp, err := server.PollerResponderNext(beginLoadSchemaTableBeta, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
+		t.beginLoadSchemaTableBeta.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginLoadSchemaTableBeta) {
+		t.beginLoadSchemaTableBeta.remove(req)
+	}
+
 	return resp, nil
 }
 

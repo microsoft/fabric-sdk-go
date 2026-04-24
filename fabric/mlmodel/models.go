@@ -93,6 +93,27 @@ type EndpointVersions struct {
 	ContinuationURI *string
 }
 
+// EntireTenantPrincipal - Represents a tenant principal
+type EntireTenantPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type EntireTenantPrincipal.
+func (e *EntireTenantPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: e.DisplayName,
+		ID:          e.ID,
+		Type:        e.Type,
+	}
+}
+
 // ErrorRelatedResource - The error related resource details object.
 type ErrorRelatedResource struct {
 	// READ-ONLY; The resource ID that's involved in the error.
@@ -100,6 +121,36 @@ type ErrorRelatedResource struct {
 
 	// READ-ONLY; The type of the resource that's involved in the error.
 	ResourceType *string
+}
+
+// GroupPrincipal - Represents a security group.
+type GroupPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// Group specific details. Applicable when the principal type is Group.
+	GroupDetails *GroupPrincipalGroupDetails
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type GroupPrincipal.
+func (g *GroupPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: g.DisplayName,
+		ID:          g.ID,
+		Type:        g.Type,
+	}
+}
+
+// GroupPrincipalGroupDetails - Group specific details. Applicable when the principal type is Group.
+type GroupPrincipalGroupDetails struct {
+	// The type of the group. Additional group types may be added over time.
+	GroupType *GroupType
 }
 
 // ItemTag - Represents a tag applied on an item.
@@ -121,6 +172,9 @@ type MLModel struct {
 
 	// The item display name.
 	DisplayName *string
+
+	// READ-ONLY; The item's default identity.
+	DefaultIdentity PrincipalClassification
 
 	// READ-ONLY; The folder ID.
 	FolderID *string
@@ -149,6 +203,21 @@ type MLModels struct {
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
 }
+
+// Principal - Represents an identity or a Microsoft Entra group.
+type Principal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type Principal.
+func (p *Principal) GetPrincipal() *Principal { return p }
 
 // ScoreDataRequest - Machine learning model endpoint request to score the given input data.
 type ScoreDataRequest struct {
@@ -191,6 +260,67 @@ type SensitivityLabelSettings struct {
 	SensitivityLabelApplyStrategy *SensitivityLabelApplyStrategy
 }
 
+// ServicePrincipal - Represents a Microsoft Entra service principal.
+type ServicePrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+
+	// READ-ONLY; Service principal specific details. Applicable when the principal type is ServicePrincipal.
+	ServicePrincipalDetails *ServicePrincipalDetails
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type ServicePrincipal.
+func (s *ServicePrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: s.DisplayName,
+		ID:          s.ID,
+		Type:        s.Type,
+	}
+}
+
+// ServicePrincipalDetails - Service principal specific details. Applicable when the principal type is ServicePrincipal.
+type ServicePrincipalDetails struct {
+	// READ-ONLY; The service principal's Microsoft Entra AppId.
+	AADAppID *string
+}
+
+// ServicePrincipalProfilePrincipal - Represents a service principal profile.
+type ServicePrincipalProfilePrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// Service principal profile details. Applicable when the principal type is ServicePrincipalProfile.
+	ServicePrincipalProfileDetails *ServicePrincipalProfilePrincipalServicePrincipalProfileDetails
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type ServicePrincipalProfilePrincipal.
+func (s *ServicePrincipalProfilePrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: s.DisplayName,
+		ID:          s.ID,
+		Type:        s.Type,
+	}
+}
+
+// ServicePrincipalProfilePrincipalServicePrincipalProfileDetails - Service principal profile details. Applicable when the
+// principal type is ServicePrincipalProfile.
+type ServicePrincipalProfilePrincipalServicePrincipalProfileDetails struct {
+	// The service principal profile's parent principal.
+	ParentPrincipal PrincipalClassification
+}
+
 // UpdateMLModelEndpointRequest - Machine learning model endpoint request body to update Model Endpoint properties.
 type UpdateMLModelEndpointRequest struct {
 	// The default version assignment behavior of a given machine learning model endpoint. Additional EndpointDefaultVersionConfigurationPolicy
@@ -211,4 +341,34 @@ type UpdateMLModelEndpointVersionRequest struct {
 type UpdateMLModelRequest struct {
 	// The machine learning model description. Maximum length is 256 characters.
 	Description *string
+}
+
+// UserPrincipal - Represents a Microsoft Entra user principal.
+type UserPrincipal struct {
+	// REQUIRED; The principal's ID.
+	ID *string
+
+	// REQUIRED; The type of the principal. Additional principal types may be added over time.
+	Type *PrincipalType
+
+	// READ-ONLY; The principal's display name.
+	DisplayName *string
+
+	// READ-ONLY; User principal specific details. Applicable when the principal type is User.
+	UserDetails *UserPrincipalUserDetails
+}
+
+// GetPrincipal implements the PrincipalClassification interface for type UserPrincipal.
+func (u *UserPrincipal) GetPrincipal() *Principal {
+	return &Principal{
+		DisplayName: u.DisplayName,
+		ID:          u.ID,
+		Type:        u.Type,
+	}
+}
+
+// UserPrincipalUserDetails - User principal specific details. Applicable when the principal type is User.
+type UserPrincipalUserDetails struct {
+	// READ-ONLY; The user principal name.
+	UserPrincipalName *string
 }

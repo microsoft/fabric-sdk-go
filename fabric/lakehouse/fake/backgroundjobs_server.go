@@ -13,7 +13,6 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
-	"strconv"
 	"strings"
 
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
@@ -220,12 +219,6 @@ func (b *BackgroundJobsServerTransport) dispatchRunOnDemandRefreshMaterializedLa
 	if err != nil {
 		return nil, err
 	}
-	if val := server.GetResponse(respr).Location; val != nil {
-		resp.Header.Set("Location", *val)
-	}
-	if val := server.GetResponse(respr).RetryAfter; val != nil {
-		resp.Header.Set("Retry-After", strconv.FormatInt(int64(*val), 10))
-	}
 	return resp, nil
 }
 
@@ -262,12 +255,6 @@ func (b *BackgroundJobsServerTransport) dispatchRunOnDemandTableMaintenance(req 
 	resp, err := server.NewResponse(respContent, req, nil)
 	if err != nil {
 		return nil, err
-	}
-	if val := server.GetResponse(respr).Location; val != nil {
-		resp.Header.Set("Location", *val)
-	}
-	if val := server.GetResponse(respr).RetryAfter; val != nil {
-		resp.Header.Set("Retry-After", strconv.FormatInt(int64(*val), 10))
 	}
 	return resp, nil
 }

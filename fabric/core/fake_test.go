@@ -97,6 +97,11 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ListWorkspaces() {
 				Description: to.Ptr("A  workspace used by the marketing team"),
 				DisplayName: to.Ptr("Marketing"),
 				ID:          to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
+				Tags: []core.WorkspaceAppliedTag{
+					{
+						DisplayName: to.Ptr("Marketing"),
+						ID:          to.Ptr("b3f2c8e9-4d8e-4a7c-9a32-f8c1b2e4d6af"),
+					}},
 			},
 			{
 				Type:        to.Ptr(core.WorkspaceTypeWorkspace),
@@ -105,6 +110,15 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ListWorkspaces() {
 				DisplayName: to.Ptr("Finance"),
 				DomainID:    to.Ptr("7c889f28-999b-4945-840d-54da3e3b5a29"),
 				ID:          to.Ptr("f2d70dc6-8f3e-4f2c-b00e-e2d336d7d711"),
+				Tags: []core.WorkspaceAppliedTag{
+					{
+						DisplayName: to.Ptr("Finance"),
+						ID:          to.Ptr("9b8c7d6e-5f4a-3b2c-1d0e-9f8a7b6c5d4e"),
+					},
+					{
+						DisplayName: to.Ptr("Marketing"),
+						ID:          to.Ptr("b3f2c8e9-4d8e-4a7c-9a32-f8c1b2e4d6af"),
+					}},
 			}},
 	}
 
@@ -281,12 +295,17 @@ func (testsuite *FakeTestSuite) TestWorkspaces_GetWorkspace() {
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
 
 	exampleRes := core.WorkspaceInfo{
-		Type:                       to.Ptr(core.WorkspaceTypeWorkspace),
-		Description:                to.Ptr("New workspace description"),
-		CapacityID:                 to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
-		DisplayName:                to.Ptr("New workspace"),
-		DomainID:                   to.Ptr("9ce364e0-8e9d-4605-887a-b599b3e8b123"),
-		ID:                         to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
+		Type:        to.Ptr(core.WorkspaceTypeWorkspace),
+		Description: to.Ptr("New workspace description"),
+		CapacityID:  to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
+		DisplayName: to.Ptr("New workspace"),
+		DomainID:    to.Ptr("9ce364e0-8e9d-4605-887a-b599b3e8b123"),
+		ID:          to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
+		Tags: []core.WorkspaceAppliedTag{
+			{
+				DisplayName: to.Ptr("Finance"),
+				ID:          to.Ptr("b3f2c8e9-4d8e-4a7c-9a32-f8c1b2e4d6af"),
+			}},
 		CapacityAssignmentProgress: to.Ptr(core.CapacityAssignmentProgressCompleted),
 		CapacityRegion:             to.Ptr(core.CapacityRegionEastUS),
 		OneLakeEndpoints: &core.OneLakeEndpoints{
@@ -1123,6 +1142,7 @@ func (testsuite *FakeTestSuite) TestItems_ListItems() {
 		Recursive:         nil,
 		RootFolderID:      to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
 		ContinuationToken: nil,
+		Include:           []core.ItemIncludeOption{},
 	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
@@ -1161,6 +1181,7 @@ func (testsuite *FakeTestSuite) TestItems_ListItems() {
 		Recursive:         nil,
 		RootFolderID:      nil,
 		ContinuationToken: nil,
+		Include:           []core.ItemIncludeOption{},
 	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
@@ -1206,6 +1227,7 @@ func (testsuite *FakeTestSuite) TestItems_ListItems() {
 		Recursive:         nil,
 		RootFolderID:      nil,
 		ContinuationToken: nil,
+		Include:           []core.ItemIncludeOption{},
 	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
@@ -1245,6 +1267,7 @@ func (testsuite *FakeTestSuite) TestItems_ListItems() {
 		Recursive:         to.Ptr(false),
 		RootFolderID:      to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
 		ContinuationToken: nil,
+		Include:           []core.ItemIncludeOption{},
 	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
@@ -1283,6 +1306,7 @@ func (testsuite *FakeTestSuite) TestItems_ListItems() {
 		Recursive:         to.Ptr(false),
 		RootFolderID:      nil,
 		ContinuationToken: nil,
+		Include:           []core.ItemIncludeOption{},
 	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
@@ -1330,6 +1354,71 @@ func (testsuite *FakeTestSuite) TestItems_ListItems() {
 		Recursive:         nil,
 		RootFolderID:      nil,
 		ContinuationToken: nil,
+		Include:           []core.ItemIncludeOption{},
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Items))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List items with include option example"},
+	})
+	exampleWorkspaceID = "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"
+
+	exampleRes = core.Items{
+		Value: []core.Item{
+			{
+				Type:        to.Ptr(core.ItemTypeLakehouse),
+				Description: to.Ptr("A lakehouse used by the sales team."),
+				DefaultIdentity: &core.UserPrincipal{
+					Type:        to.Ptr(core.PrincipalTypeUser),
+					DisplayName: to.Ptr("Caleb Foster"),
+					ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
+					UserDetails: &core.UserPrincipalUserDetails{
+						UserPrincipalName: to.Ptr("caleb@example.com"),
+					},
+				},
+				DisplayName: to.Ptr("Lakehouse"),
+				FolderID:    to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+				ID:          to.Ptr("cccccccc-2222-3333-4444-dddddddddddd"),
+				WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			},
+			{
+				Type:        to.Ptr(core.ItemTypeNotebook),
+				Description: to.Ptr("A notebook for refining Q1 of year 2024 sales data analysis through machine learning algorithms."),
+				DefaultIdentity: &core.UserPrincipal{
+					Type:        to.Ptr(core.PrincipalTypeUser),
+					DisplayName: to.Ptr("Caleb Foster"),
+					ID:          to.Ptr("f3052d1c-61a9-46fb-8df9-0d78916ae041"),
+					UserDetails: &core.UserPrincipalUserDetails{
+						UserPrincipalName: to.Ptr("caleb@example.com"),
+					},
+				},
+				DisplayName: to.Ptr("Notebook"),
+				FolderID:    to.Ptr("cccccccc-8888-9999-0000-dddddddddddd"),
+				ID:          to.Ptr("dddddddd-3333-4444-5555-eeeeeeeeeeee"),
+				WorkspaceID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+			}},
+	}
+
+	testsuite.serverFactory.ItemsServer.NewListItemsPager = func(workspaceID string, options *core.ItemsClientListItemsOptions) (resp azfake.PagerResponder[core.ItemsClientListItemsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.PagerResponder[core.ItemsClientListItemsResponse]{}
+		resp.AddPage(http.StatusOK, core.ItemsClientListItemsResponse{Items: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListItemsPager(exampleWorkspaceID, &core.ItemsClientListItemsOptions{Type: nil,
+		Recursive:         nil,
+		RootFolderID:      to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+		ContinuationToken: nil,
+		Include:           []core.ItemIncludeOption{},
 	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
@@ -1450,7 +1539,42 @@ func (testsuite *FakeTestSuite) TestItems_GetItem() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	res, err := client.GetItem(ctx, exampleWorkspaceID, exampleItemID, nil)
+	res, err := client.GetItem(ctx, exampleWorkspaceID, exampleItemID, &core.ItemsClientGetItemOptions{Include: []core.ItemIncludeOption{}})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Item))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get an item with include default Identity option example"},
+	})
+	exampleWorkspaceID = "0c7ac00e-7b1a-4b7f-ac0f-95636b0c6081"
+	exampleItemID = "56f028cd-fa09-46e6-b9b6-82b14185216d"
+
+	exampleRes = core.Item{
+		Type:        to.Ptr(core.ItemTypeLakehouse),
+		Description: to.Ptr("Item 1 description"),
+		DefaultIdentity: &core.UserPrincipal{
+			Type:        to.Ptr(core.PrincipalTypeUser),
+			DisplayName: to.Ptr("Caleb Foster"),
+			ID:          to.Ptr("ce44af2b-7f4b-4975-979b-4d4d8c43c117"),
+			UserDetails: &core.UserPrincipalUserDetails{
+				UserPrincipalName: to.Ptr("caleb@example.com"),
+			},
+		},
+		DisplayName: to.Ptr("Item 1"),
+		ID:          to.Ptr("56f028cd-fa09-46e6-b9b6-82b14185216d"),
+		WorkspaceID: to.Ptr("0c7ac00e-7b1a-4b7f-ac0f-95636b0c6081"),
+	}
+
+	testsuite.serverFactory.ItemsServer.GetItem = func(ctx context.Context, workspaceID string, itemID string, options *core.ItemsClientGetItemOptions) (resp azfake.Responder[core.ItemsClientGetItemResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		resp = azfake.Responder[core.ItemsClientGetItemResponse]{}
+		resp.SetResponse(http.StatusOK, core.ItemsClientGetItemResponse{Item: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.GetItem(ctx, exampleWorkspaceID, exampleItemID, &core.ItemsClientGetItemOptions{Include: []core.ItemIncludeOption{}})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Item))
 }
@@ -2340,6 +2464,62 @@ func (testsuite *FakeTestSuite) TestItems_MoveItem() {
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.MovedItems))
 }
 
+func (testsuite *FakeTestSuite) TestItems_AssociateIdentityBeta() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Associate identity example"},
+	})
+	var exampleWorkspaceID string
+	var exampleItemID string
+	var exampleBeta bool
+	var exampleUpdateItemIdentityRequest core.UpdateItemIdentityRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleItemID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleBeta = true
+	exampleUpdateItemIdentityRequest = core.UpdateItemIdentityRequest{
+		AssignmentType: to.Ptr(core.IdentityAssignmentEntityTypeCaller),
+	}
+
+	exampleRes := core.UpdateItemIdentityResponse{
+		AssignmentStatus: []core.ItemAssignmentStatus{
+			{
+				ItemID: to.Ptr("eab1679a-8cab-40d6-9ba6-5c2a07a7ce81"),
+				Status: to.Ptr(core.IdentityAssignmentStatusTypeSucceeded),
+			},
+			{
+				ItemID:       to.Ptr("8eedb1b0-3af8-4b17-8e7e-663e61e12211"),
+				ParentItemID: to.Ptr("eab1679a-8cab-40d6-9ba6-5c2a07a7ce81"),
+				Status:       to.Ptr(core.IdentityAssignmentStatusTypeSucceeded),
+			},
+			{
+				ErrorInfo: &core.ErrorResponseDetails{
+					ErrorCode: to.Ptr("AssignmentFailed"),
+					Message:   to.Ptr("The assignment operation failed due to insufficient permissions."),
+				},
+				ItemID:       to.Ptr("83b128a3-f58f-4eee-ab0b-e7e25a748f54"),
+				ParentItemID: to.Ptr("eab1679a-8cab-40d6-9ba6-5c2a07a7ce81"),
+				Status:       to.Ptr(core.IdentityAssignmentStatusTypeFailed),
+			}},
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginAssociateIdentityBeta = func(ctx context.Context, workspaceID string, itemID string, beta bool, updateItemIdentityRequest core.UpdateItemIdentityRequest, options *core.ItemsClientBeginAssociateIdentityBetaOptions) (resp azfake.PollerResponder[core.ItemsClientAssociateIdentityBetaResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateItemIdentityRequest, updateItemIdentityRequest))
+		resp = azfake.PollerResponder[core.ItemsClientAssociateIdentityBetaResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, core.ItemsClientAssociateIdentityBetaResponse{UpdateItemIdentityResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	poller, err := client.BeginAssociateIdentityBeta(ctx, exampleWorkspaceID, exampleItemID, exampleBeta, exampleUpdateItemIdentityRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.UpdateItemIdentityResponse))
+}
+
 func (testsuite *FakeTestSuite) TestJobScheduler_ListItemSchedules() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -2468,6 +2648,45 @@ func (testsuite *FakeTestSuite) TestJobScheduler_CreateItemSchedule() {
 	client := testsuite.clientFactory.NewJobSchedulerClient()
 	_, err = client.CreateItemSchedule(ctx, exampleWorkspaceID, exampleItemID, exampleJobType, exampleCreateScheduleRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"create item schedule with execution data example"},
+	})
+	exampleWorkspaceID = "12345678-1234-1234-1234-123456789abc"
+	exampleItemID = "87654321-4321-4321-4321-abcdef123456"
+	exampleJobType = "DefaultJob"
+	exampleCreateScheduleRequest = core.CreateScheduleRequest{
+		Configuration: &core.DailyScheduleConfig{
+			Type:            to.Ptr(core.ScheduleTypeDaily),
+			EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-30T23:59:00.000Z"); return t }()),
+			LocalTimeZoneID: to.Ptr("Central Standard Time"),
+			StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T00:00:00.000Z"); return t }()),
+			Times: []string{
+				"09:00",
+				"15:00"},
+		},
+		Enabled: to.Ptr(true),
+		ExecutionData: map[string]any{
+			"optimizeSettings": map[string]any{
+				"vOrder": true,
+			},
+			"tableName": "Table1",
+		},
+	}
+
+	testsuite.serverFactory.JobSchedulerServer.CreateItemSchedule = func(ctx context.Context, workspaceID string, itemID string, jobType string, createScheduleRequest core.CreateScheduleRequest, options *core.JobSchedulerClientCreateItemScheduleOptions) (resp azfake.Responder[core.JobSchedulerClientCreateItemScheduleResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().Equal(exampleJobType, jobType)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateScheduleRequest, createScheduleRequest))
+		resp = azfake.Responder[core.JobSchedulerClientCreateItemScheduleResponse]{}
+		resp.SetResponse(http.StatusCreated, core.JobSchedulerClientCreateItemScheduleResponse{}, nil)
+		return
+	}
+
+	_, err = client.CreateItemSchedule(ctx, exampleWorkspaceID, exampleItemID, exampleJobType, exampleCreateScheduleRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestJobScheduler_GetItemSchedule() {
@@ -2513,6 +2732,58 @@ func (testsuite *FakeTestSuite) TestJobScheduler_GetItemSchedule() {
 
 	client := testsuite.clientFactory.NewJobSchedulerClient()
 	res, err := client.GetItemSchedule(ctx, exampleWorkspaceID, exampleItemID, exampleJobType, exampleScheduleID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ItemSchedule))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"get item schedule with execution data example"},
+	})
+	exampleWorkspaceID = "12345678-1234-1234-1234-123456789abc"
+	exampleItemID = "87654321-4321-4321-4321-abcdef123456"
+	exampleJobType = "DefaultJob"
+	exampleScheduleID = "11111111-2222-3333-4444-555555555555"
+
+	exampleRes = core.ItemSchedule{
+		Configuration: &core.WeeklyScheduleConfig{
+			Type:            to.Ptr(core.ScheduleTypeWeekly),
+			EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-30T23:59:00.000Z"); return t }()),
+			LocalTimeZoneID: to.Ptr("Central Standard Time"),
+			StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T00:00:00.000Z"); return t }()),
+			Times: []string{
+				"10:00",
+				"16:00"},
+			Weekdays: []core.DayOfWeek{
+				core.DayOfWeekMonday,
+				core.DayOfWeekWednesday,
+				core.DayOfWeekFriday},
+		},
+		CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T05:35:20.536Z"); return t }()),
+		Enabled:         to.Ptr(true),
+		ExecutionData: map[string]any{
+			"optimizeSettings": map[string]any{
+				"vOrder": false,
+			},
+			"tableName": "Table2",
+		},
+		ID: to.Ptr("11111111-2222-3333-4444-555555555555"),
+		Owner: &core.UserPrincipal{
+			Type: to.Ptr(core.PrincipalTypeUser),
+			ID:   to.Ptr("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+		},
+	}
+
+	testsuite.serverFactory.JobSchedulerServer.GetItemSchedule = func(ctx context.Context, workspaceID string, itemID string, jobType string, scheduleID string, options *core.JobSchedulerClientGetItemScheduleOptions) (resp azfake.Responder[core.JobSchedulerClientGetItemScheduleResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().Equal(exampleJobType, jobType)
+		testsuite.Require().Equal(exampleScheduleID, scheduleID)
+		resp = azfake.Responder[core.JobSchedulerClientGetItemScheduleResponse]{}
+		resp.SetResponse(http.StatusOK, core.JobSchedulerClientGetItemScheduleResponse{ItemSchedule: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.GetItemSchedule(ctx, exampleWorkspaceID, exampleItemID, exampleJobType, exampleScheduleID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ItemSchedule))
 }
@@ -2572,6 +2843,81 @@ func (testsuite *FakeTestSuite) TestJobScheduler_UpdateItemSchedule() {
 
 	client := testsuite.clientFactory.NewJobSchedulerClient()
 	res, err := client.UpdateItemSchedule(ctx, exampleWorkspaceID, exampleItemID, exampleJobType, exampleScheduleID, exampleUpdateScheduleRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ItemSchedule))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"update item schedule with execution data example"},
+	})
+	exampleWorkspaceID = "12345678-1234-1234-1234-123456789abc"
+	exampleItemID = "87654321-4321-4321-4321-abcdef123456"
+	exampleJobType = "DefaultJob"
+	exampleScheduleID = "11111111-2222-3333-4444-555555555555"
+	exampleUpdateScheduleRequest = core.UpdateScheduleRequest{
+		Configuration: &core.WeeklyScheduleConfig{
+			Type:            to.Ptr(core.ScheduleTypeWeekly),
+			EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-30T23:59:00.000Z"); return t }()),
+			LocalTimeZoneID: to.Ptr("Central Standard Time"),
+			StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T00:00:00.000Z"); return t }()),
+			Times: []string{
+				"10:00",
+				"16:00"},
+			Weekdays: []core.DayOfWeek{
+				core.DayOfWeekMonday,
+				core.DayOfWeekWednesday,
+				core.DayOfWeekFriday},
+		},
+		Enabled: to.Ptr(true),
+		ExecutionData: map[string]any{
+			"optimizeSettings": map[string]any{
+				"vOrder": false,
+			},
+			"tableName": "Table2",
+		},
+	}
+
+	exampleRes = core.ItemSchedule{
+		Configuration: &core.WeeklyScheduleConfig{
+			Type:            to.Ptr(core.ScheduleTypeWeekly),
+			EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-30T23:59:00.000Z"); return t }()),
+			LocalTimeZoneID: to.Ptr("Central Standard Time"),
+			StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T00:00:00.000Z"); return t }()),
+			Times: []string{
+				"10:00",
+				"16:00"},
+			Weekdays: []core.DayOfWeek{
+				core.DayOfWeekMonday,
+				core.DayOfWeekWednesday,
+				core.DayOfWeekFriday},
+		},
+		CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T05:35:20.536Z"); return t }()),
+		Enabled:         to.Ptr(true),
+		ExecutionData: map[string]any{
+			"optimizeSettings": map[string]any{
+				"vOrder": false,
+			},
+			"tableName": "Table2",
+		},
+		ID: to.Ptr("11111111-2222-3333-4444-555555555555"),
+		Owner: &core.UserPrincipal{
+			Type: to.Ptr(core.PrincipalTypeUser),
+			ID:   to.Ptr("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+		},
+	}
+
+	testsuite.serverFactory.JobSchedulerServer.UpdateItemSchedule = func(ctx context.Context, workspaceID string, itemID string, jobType string, scheduleID string, updateScheduleRequest core.UpdateScheduleRequest, options *core.JobSchedulerClientUpdateItemScheduleOptions) (resp azfake.Responder[core.JobSchedulerClientUpdateItemScheduleResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().Equal(exampleJobType, jobType)
+		testsuite.Require().Equal(exampleScheduleID, scheduleID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateScheduleRequest, updateScheduleRequest))
+		resp = azfake.Responder[core.JobSchedulerClientUpdateItemScheduleResponse]{}
+		resp.SetResponse(http.StatusOK, core.JobSchedulerClientUpdateItemScheduleResponse{ItemSchedule: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.UpdateItemSchedule(ctx, exampleWorkspaceID, exampleItemID, exampleJobType, exampleScheduleID, exampleUpdateScheduleRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ItemSchedule))
 }
@@ -8508,6 +8854,62 @@ func (testsuite *FakeTestSuite) TestConnections_DeleteConnection() {
 	client := testsuite.clientFactory.NewConnectionsClient()
 	_, err = client.DeleteConnection(ctx, exampleConnectionID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestConnections_TestConnection() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"OfflineExample"},
+	})
+	var exampleConnectionID string
+	exampleConnectionID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+
+	exampleRes := core.ConnectionStatusResponse{
+		Errors: []core.ConnectionStatusError{
+			{
+				ErrorCode: to.Ptr("DM_GWPipeline_UnknownError"),
+				Message:   to.Ptr("Error response with StatusCode: BadRequest, ErrorCode: GatewayNotFound, ErrorMessage: 'GatewayContainer does not exist'"),
+			}},
+		Status: to.Ptr(core.TestConnectionStatusOffline),
+	}
+
+	testsuite.serverFactory.ConnectionsServer.BeginTestConnection = func(ctx context.Context, connectionID string, options *core.ConnectionsClientBeginTestConnectionOptions) (resp azfake.PollerResponder[core.ConnectionsClientTestConnectionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		resp = azfake.PollerResponder[core.ConnectionsClientTestConnectionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, core.ConnectionsClientTestConnectionResponse{ConnectionStatusResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewConnectionsClient()
+	poller, err := client.BeginTestConnection(ctx, exampleConnectionID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ConnectionStatusResponse))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"OnlineExample"},
+	})
+	exampleConnectionID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+
+	exampleRes = core.ConnectionStatusResponse{
+		Errors: []core.ConnectionStatusError{},
+		Status: to.Ptr(core.TestConnectionStatusOnline),
+	}
+
+	testsuite.serverFactory.ConnectionsServer.BeginTestConnection = func(ctx context.Context, connectionID string, options *core.ConnectionsClientBeginTestConnectionOptions) (resp azfake.PollerResponder[core.ConnectionsClientTestConnectionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		resp = azfake.PollerResponder[core.ConnectionsClientTestConnectionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, core.ConnectionsClientTestConnectionResponse{ConnectionStatusResponse: exampleRes}, nil)
+		return
+	}
+
+	poller, err = client.BeginTestConnection(ctx, exampleConnectionID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ConnectionStatusResponse))
 }
 
 func (testsuite *FakeTestSuite) TestConnections_ListSupportedConnectionTypes() {

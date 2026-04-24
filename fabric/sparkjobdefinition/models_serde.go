@@ -929,6 +929,7 @@ func (s *ServicePrincipalProfilePrincipalServicePrincipalProfileDetails) Unmarsh
 // MarshalJSON implements the json.Marshaller interface for type SparkJobDefinition.
 func (s SparkJobDefinition) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
+	populate(objectMap, "defaultIdentity", s.DefaultIdentity)
 	populate(objectMap, "description", s.Description)
 	populate(objectMap, "displayName", s.DisplayName)
 	populate(objectMap, "folderId", s.FolderID)
@@ -950,6 +951,9 @@ func (s *SparkJobDefinition) UnmarshalJSON(data []byte) error {
 	for key, val := range rawMsg {
 		var err error
 		switch key {
+		case "defaultIdentity":
+			s.DefaultIdentity, err = unmarshalPrincipalClassification(val)
+			delete(rawMsg, key)
 		case "description":
 			err = unpopulate(val, "Description", &s.Description)
 			delete(rawMsg, key)

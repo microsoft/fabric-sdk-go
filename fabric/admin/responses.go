@@ -233,6 +233,29 @@ type UsersClientListAccessEntitiesResponse struct {
 	AccessEntityResponse
 }
 
+// WorkloadsClientCreateWorkloadAssignmentResponse contains the response from method WorkloadsClient.CreateWorkloadAssignment.
+type WorkloadsClientCreateWorkloadAssignmentResponse struct {
+	// Base workload assignment.
+	BaseWorkloadAssignmentClassification
+}
+
+// WorkloadsClientDeleteWorkloadAssignmentResponse contains the response from method WorkloadsClient.DeleteWorkloadAssignment.
+type WorkloadsClientDeleteWorkloadAssignmentResponse struct {
+	// placeholder for future response values
+}
+
+// WorkloadsClientListWorkloadAssignmentsResponse contains the response from method WorkloadsClient.NewListWorkloadAssignmentsPager.
+type WorkloadsClientListWorkloadAssignmentsResponse struct {
+	// A paginated list of workload assignments. Contains assignments for workloads to capacities, workspaces, or tenant.
+	WorkloadAssignments
+}
+
+// WorkloadsClientListWorkloadsResponse contains the response from method WorkloadsClient.NewListWorkloadsPager.
+type WorkloadsClientListWorkloadsResponse struct {
+	// A paginated list of workloads in the tenant. Contains workload information with assignment status details.
+	WorkloadAssignmentInfos
+}
+
 // WorkspacesClientGetWorkspaceResponse contains the response from method WorkspacesClient.GetWorkspace.
 type WorkspacesClientGetWorkspaceResponse struct {
 	// Workspace.
