@@ -6,6 +6,15 @@
 
 package admin
 
+// BaseExternalDataShareRecipientClassification provides polymorphic access to related types.
+// Call the interface's GetBaseExternalDataShareRecipient() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *BaseExternalDataShareRecipient, *ExternalDataShareSPRecipient, *ExternalDataShareUserRecipient
+type BaseExternalDataShareRecipientClassification interface {
+	// GetBaseExternalDataShareRecipient returns the BaseExternalDataShareRecipient content of the underlying type.
+	GetBaseExternalDataShareRecipient() *BaseExternalDataShareRecipient
+}
+
 // BaseWorkloadAssignmentClassification provides polymorphic access to related types.
 // Call the interface's GetBaseWorkloadAssignment() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:

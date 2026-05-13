@@ -288,6 +288,9 @@ func (d *DayOfMonth) GetMonthlyOccurrence() *MonthlyOccurrence {
 type Definition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []DefinitionPart
+
+	// The format of the data flow definition.
+	Format *string
 }
 
 // DefinitionPart - Dataflow definition part object.

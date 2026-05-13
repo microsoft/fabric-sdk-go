@@ -588,6 +588,68 @@ func (client *WorkspacesClient) getGitOutboundPolicyHandleResponse(resp *http.Re
 	return result, nil
 }
 
+// GetInboundAzureResourceRules - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must have viewer or higher workspace role.
+// REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - options - WorkspacesClientGetInboundAzureResourceRulesOptions contains the optional parameters for the WorkspacesClient.GetInboundAzureResourceRules
+//     method.
+func (client *WorkspacesClient) GetInboundAzureResourceRules(ctx context.Context, workspaceID string, options *WorkspacesClientGetInboundAzureResourceRulesOptions) (WorkspacesClientGetInboundAzureResourceRulesResponse, error) {
+	var err error
+	const operationName = "core.WorkspacesClient.GetInboundAzureResourceRules"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getInboundAzureResourceRulesCreateRequest(ctx, workspaceID, options)
+	if err != nil {
+		return WorkspacesClientGetInboundAzureResourceRulesResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientGetInboundAzureResourceRulesResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return WorkspacesClientGetInboundAzureResourceRulesResponse{}, err
+	}
+	resp, err := client.getInboundAzureResourceRulesHandleResponse(httpResp)
+	return resp, err
+}
+
+// getInboundAzureResourceRulesCreateRequest creates the GetInboundAzureResourceRules request.
+func (client *WorkspacesClient) getInboundAzureResourceRulesCreateRequest(ctx context.Context, workspaceID string, _ *WorkspacesClientGetInboundAzureResourceRulesOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/networking/communicationPolicy/inbound/azureResources"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getInboundAzureResourceRulesHandleResponse handles the GetInboundAzureResourceRules response.
+func (client *WorkspacesClient) getInboundAzureResourceRulesHandleResponse(resp *http.Response) (WorkspacesClientGetInboundAzureResourceRulesResponse, error) {
+	result := WorkspacesClientGetInboundAzureResourceRulesResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.WorkspaceInboundAzureResourceRules); err != nil {
+		return WorkspacesClientGetInboundAzureResourceRulesResponse{}, err
+	}
+	return result, nil
+}
+
 // GetNetworkCommunicationPolicy - PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -656,8 +718,6 @@ func (client *WorkspacesClient) getNetworkCommunicationPolicyHandleResponse(resp
 // workspace’s network communication policy has outbound.publicAccessRules.defaultAction set to Deny. If OAP is not enabled
 // for the workspace, the API fails because outbound connections are not being
 // restricted.
-// > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change
-// based on feedback and is not recommended for production use.
 // PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -726,8 +786,6 @@ func (client *WorkspacesClient) getOutboundCloudConnectionRulesHandleResponse(re
 // workspace’s network communication policy has outbound.publicAccessRules.defaultAction set to Deny. If OAP is not enabled
 // for the workspace, the API fails because outbound connections are not being
 // restricted.
-// > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change
-// based on feedback and is not recommended for production use.
 // PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -1121,11 +1179,14 @@ func (client *WorkspacesClient) provisionIdentityCreateRequest(ctx context.Conte
 	return req, nil
 }
 
-// SetGitOutboundPolicy - This API uses the PUT method and will overwrite all settings. In cases the workspace restrict outbound
-// policy, a workspace admin needs to allow the use of Git integration on the specified workspace.
-// When there's no outbound restriction on the workspace, changing this property will fail and it will not impact Git integration
-// setting. Always run Get Git outbound Policy first and provide full policy
-// in the request body.
+// SetGitOutboundPolicy - This API uses the PUT method and overwrites all settings. When the workspace restricts outbound
+// policy, a workspace admin needs to allow the use of Git integration on the specified workspace. When
+// there's no outbound restriction on the workspace, changing this property will fail and will not impact the Git integration
+// setting. Always call the Get Git Outbound Policy operation first and provide
+// the full policy in the request body.
+// > [!NOTE] If defaultAction is omitted from the request body, it defaults to Allow, which may unintentionally permit Git
+// integration when outbound access should be restricted. Always explicitly specify
+// defaultAction in every PUT request body.
 // PERMISSIONS The caller must have admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -1193,9 +1254,69 @@ func (client *WorkspacesClient) setGitOutboundPolicyHandleResponse(resp *http.Re
 	return result, nil
 }
 
-// SetNetworkCommunicationPolicy - This API uses the PUT method and will overwrite all settings. Remaining policy will be
-// set to default value if only partial policy is provided in the request body. Always run Get Network Communication
-// Policy first and provide full policy in the request body.
+// SetInboundAzureResourceRules - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must have admin workspace role.
+// REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - workspaceInboundAzureResourceRules - The request payload containing the list of inbound Azure resource instance rules to
+//     set for the workspace.
+//   - options - WorkspacesClientSetInboundAzureResourceRulesOptions contains the optional parameters for the WorkspacesClient.SetInboundAzureResourceRules
+//     method.
+func (client *WorkspacesClient) SetInboundAzureResourceRules(ctx context.Context, workspaceID string, workspaceInboundAzureResourceRules WorkspaceInboundAzureResourceRules, options *WorkspacesClientSetInboundAzureResourceRulesOptions) (WorkspacesClientSetInboundAzureResourceRulesResponse, error) {
+	var err error
+	const operationName = "core.WorkspacesClient.SetInboundAzureResourceRules"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.setInboundAzureResourceRulesCreateRequest(ctx, workspaceID, workspaceInboundAzureResourceRules, options)
+	if err != nil {
+		return WorkspacesClientSetInboundAzureResourceRulesResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientSetInboundAzureResourceRulesResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return WorkspacesClientSetInboundAzureResourceRulesResponse{}, err
+	}
+	return WorkspacesClientSetInboundAzureResourceRulesResponse{}, nil
+}
+
+// setInboundAzureResourceRulesCreateRequest creates the SetInboundAzureResourceRules request.
+func (client *WorkspacesClient) setInboundAzureResourceRulesCreateRequest(ctx context.Context, workspaceID string, workspaceInboundAzureResourceRules WorkspaceInboundAzureResourceRules, _ *WorkspacesClientSetInboundAzureResourceRulesOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/networking/communicationPolicy/inbound/azureResources"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPut, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, workspaceInboundAzureResourceRules); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// SetNetworkCommunicationPolicy - This API uses the PUT method and overwrites all settings. If only a partial policy is provided
+// in the request body, remaining settings are set to the default values. Always call the Get Network
+// Communication Policy operation first and provide the full policy in the request body.
+// > [!NOTE] If defaultAction is omitted from the request body, it defaults to Allow, which may unintentionally open inbound
+// and outbound network access. Always explicitly specify defaultAction in every
+// PUT request body.
 // PERMISSIONS The caller must have admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -1266,14 +1387,15 @@ func (client *WorkspacesClient) setNetworkCommunicationPolicyHandleResponse(resp
 // SetOutboundCloudConnectionRules - This API enables workspace administrators to set a collection of outbound network communication
 // rules that control which cloud connection types and, where applicable, their external
 // endpoints/workspaces are allowed from the workspace.
-// > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change
-// based on feedback and is not recommended for production use.
-// [!NOTE] Outbound access protection rules are only enforced if the workspace's network communication policy has outbound.publicAccessRules.defaultAction
+// > [!NOTE] Outbound access protection rules are only enforced if the workspace's network communication policy has outbound.publicAccessRules.defaultAction
 // set to Deny. If OAP is not enabled on the
 // workspace, the API fails because outbound connections are not restricted.
-// [!NOTE] This API uses the PUT method and will overwrite all outbound access connections for the workspace. Any omitted
-// settings are set to their default values. Always call Get first and provide the
-// full policy in the request body.
+// [!NOTE] This API uses the PUT method and overwrites all outbound access connections for the workspace. Always call the
+// Get Outbound Cloud Connection Rules operation first and provide the full policy
+// in the request body.
+// [!NOTE] If defaultAction is omitted from the request body, it defaults to Allow, which may unintentionally permit all outbound
+// cloud connections. Always explicitly specify defaultAction in every PUT
+// request body.
 // PERMISSIONS The caller must have admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -1339,16 +1461,16 @@ func (client *WorkspacesClient) setOutboundCloudConnectionRulesHandleResponse(re
 }
 
 // SetOutboundGatewayRules - This API enables workspace administrators to define, replace, or override the set of outbound
-// network communication policies that control which on-prem /Vnet Data Gateways are to be allowed from
+// network communication policies that control which on-prem /Vnet Data Gateways are to be allowed from the
 // current workspace.
-// > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change
-// based on feedback and is not recommended for production use.
-// [!NOTE] Outbound access protection rules are only enforced if the workspace’s network communication policy has outbound.publicAccessRules.defaultAction
-// set to Deny. If OAP is not enabled on workspace,
-// API fails as outbound connections are not being restricted.
-// [!NOTE] This API uses the PUT method and will overwrite all outbound access gateways for the workspace. Remaining policy
-// will be set to default value if partial policy is provided in the request body.
-// Always run Get first and provide full policy in the request body.
+// > [!NOTE] Outbound access protection rules are only enforced if the workspace’s network communication policy has outbound.publicAccessRules.defaultAction
+// set to Deny. If OAP is not enabled on the
+// workspace, the API fails because outbound connections are not restricted.
+// [!NOTE] This API uses the PUT method and overwrites all outbound access gateways for the workspace. Always call the Get
+// Gateway Rules operation first and provide the full policy in the request body.
+// [!NOTE] If defaultAction is omitted from the request body, it defaults to Allow, which may unintentionally permit all outbound
+// gateway connections. Always explicitly specify defaultAction in every PUT
+// request body.
 // PERMISSIONS The caller must have admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]

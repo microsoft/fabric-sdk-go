@@ -350,7 +350,7 @@ func (testsuite *FakeTestSuite) TestItems_GetDigitalTwinBuilderFlowDefinition() 
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	poller, err := client.BeginGetDigitalTwinBuilderFlowDefinition(ctx, exampleWorkspaceID, exampleDigitalTwinBuilderFlowID, nil)
+	poller, err := client.BeginGetDigitalTwinBuilderFlowDefinition(ctx, exampleWorkspaceID, exampleDigitalTwinBuilderFlowID, &digitaltwinbuilderflow.ItemsClientBeginGetDigitalTwinBuilderFlowDefinitionOptions{Format: nil})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	res, err := poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")

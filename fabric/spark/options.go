@@ -8,9 +8,33 @@ package spark
 
 import "time"
 
+// CapacitySettingsClientGetSparkSettingsBetaOptions contains the optional parameters for the CapacitySettingsClient.GetSparkSettingsBeta
+// method.
+type CapacitySettingsClientGetSparkSettingsBetaOptions struct {
+	// placeholder for future optional parameters
+}
+
+// CapacitySettingsClientUpdateSparkSettingsBetaOptions contains the optional parameters for the CapacitySettingsClient.UpdateSparkSettingsBeta
+// method.
+type CapacitySettingsClientUpdateSparkSettingsBetaOptions struct {
+	// placeholder for future optional parameters
+}
+
+// CustomPoolsClientCreateCapacityCustomPoolBetaOptions contains the optional parameters for the CustomPoolsClient.CreateCapacityCustomPoolBeta
+// method.
+type CustomPoolsClientCreateCapacityCustomPoolBetaOptions struct {
+	// placeholder for future optional parameters
+}
+
 // CustomPoolsClientCreateWorkspaceCustomPoolOptions contains the optional parameters for the CustomPoolsClient.CreateWorkspaceCustomPool
 // method.
 type CustomPoolsClientCreateWorkspaceCustomPoolOptions struct {
+	// placeholder for future optional parameters
+}
+
+// CustomPoolsClientDeleteCapacityCustomPoolBetaOptions contains the optional parameters for the CustomPoolsClient.DeleteCapacityCustomPoolBeta
+// method.
+type CustomPoolsClientDeleteCapacityCustomPoolBetaOptions struct {
 	// placeholder for future optional parameters
 }
 
@@ -20,10 +44,23 @@ type CustomPoolsClientDeleteWorkspaceCustomPoolOptions struct {
 	// placeholder for future optional parameters
 }
 
+// CustomPoolsClientGetCapacityCustomPoolBetaOptions contains the optional parameters for the CustomPoolsClient.GetCapacityCustomPoolBeta
+// method.
+type CustomPoolsClientGetCapacityCustomPoolBetaOptions struct {
+	// placeholder for future optional parameters
+}
+
 // CustomPoolsClientGetWorkspaceCustomPoolOptions contains the optional parameters for the CustomPoolsClient.GetWorkspaceCustomPool
 // method.
 type CustomPoolsClientGetWorkspaceCustomPoolOptions struct {
 	// placeholder for future optional parameters
+}
+
+// CustomPoolsClientListCapacityCustomPoolsBetaOptions contains the optional parameters for the CustomPoolsClient.NewListCapacityCustomPoolsBetaPager
+// method.
+type CustomPoolsClientListCapacityCustomPoolsBetaOptions struct {
+	// Continuation token. Used to get the next items in the list.
+	ContinuationToken *string
 }
 
 // CustomPoolsClientListWorkspaceCustomPoolsOptions contains the optional parameters for the CustomPoolsClient.NewListWorkspaceCustomPoolsPager
@@ -31,6 +68,12 @@ type CustomPoolsClientGetWorkspaceCustomPoolOptions struct {
 type CustomPoolsClientListWorkspaceCustomPoolsOptions struct {
 	// Continuation token. Used to get the next items in the list.
 	ContinuationToken *string
+}
+
+// CustomPoolsClientUpdateCapacityCustomPoolBetaOptions contains the optional parameters for the CustomPoolsClient.UpdateCapacityCustomPoolBeta
+// method.
+type CustomPoolsClientUpdateCapacityCustomPoolBetaOptions struct {
+	// placeholder for future optional parameters
 }
 
 // CustomPoolsClientUpdateWorkspaceCustomPoolOptions contains the optional parameters for the CustomPoolsClient.UpdateWorkspaceCustomPool

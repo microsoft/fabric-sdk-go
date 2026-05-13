@@ -69,6 +69,9 @@ type CreateCosmosDBDatabaseRequest struct {
 type Definition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []DefinitionPart
+
+	// The format of the Cosmos DB database definition.
+	Format *string
 }
 
 // DefinitionPart - Cosmos DB database definition part object.

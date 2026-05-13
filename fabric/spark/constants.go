@@ -24,6 +24,24 @@ func PossibleCustomPoolTypeValues() []CustomPoolType {
 	}
 }
 
+// Enablement - Feature enablement. Additional Enablement types may be added over time.
+type Enablement string
+
+const (
+	// EnablementDisabled - Feature is disabled.
+	EnablementDisabled Enablement = "Disabled"
+	// EnablementEnabled - Feature is enabled.
+	EnablementEnabled Enablement = "Enabled"
+)
+
+// PossibleEnablementValues returns the possible values for the Enablement const type.
+func PossibleEnablementValues() []Enablement {
+	return []Enablement{
+		EnablementDisabled,
+		EnablementEnabled,
+	}
+}
+
 // GroupType - The type of the group. Additional group types may be added over time.
 type GroupType string
 

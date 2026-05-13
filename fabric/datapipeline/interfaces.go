@@ -6,6 +6,15 @@
 
 package datapipeline
 
+// MonthlyOccurrenceClassification provides polymorphic access to related types.
+// Call the interface's GetMonthlyOccurrence() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *DayOfMonth, *MonthlyOccurrence, *OrdinalWeekday
+type MonthlyOccurrenceClassification interface {
+	// GetMonthlyOccurrence returns the MonthlyOccurrence content of the underlying type.
+	GetMonthlyOccurrence() *MonthlyOccurrence
+}
+
 // PrincipalClassification provides polymorphic access to related types.
 // Call the interface's GetPrincipal() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
@@ -13,4 +22,13 @@ package datapipeline
 type PrincipalClassification interface {
 	// GetPrincipal returns the Principal content of the underlying type.
 	GetPrincipal() *Principal
+}
+
+// ScheduleConfigClassification provides polymorphic access to related types.
+// Call the interface's GetScheduleConfig() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *CronScheduleConfig, *DailyScheduleConfig, *MonthlyScheduleConfig, *ScheduleConfig, *WeeklyScheduleConfig
+type ScheduleConfigClassification interface {
+	// GetScheduleConfig returns the ScheduleConfig content of the underlying type.
+	GetScheduleConfig() *ScheduleConfig
 }

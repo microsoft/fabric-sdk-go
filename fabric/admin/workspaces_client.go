@@ -90,6 +90,57 @@ func (client *WorkspacesClient) getWorkspaceHandleResponse(resp *http.Response) 
 	return result, nil
 }
 
+// GrantAdminTemporaryAccess - PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
+// REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All
+// LIMITATIONS Maximum 25 requests per minute.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - options - WorkspacesClientGrantAdminTemporaryAccessOptions contains the optional parameters for the WorkspacesClient.GrantAdminTemporaryAccess
+//     method.
+func (client *WorkspacesClient) GrantAdminTemporaryAccess(ctx context.Context, workspaceID string, options *WorkspacesClientGrantAdminTemporaryAccessOptions) (WorkspacesClientGrantAdminTemporaryAccessResponse, error) {
+	var err error
+	const operationName = "admin.WorkspacesClient.GrantAdminTemporaryAccess"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.grantAdminTemporaryAccessCreateRequest(ctx, workspaceID, options)
+	if err != nil {
+		return WorkspacesClientGrantAdminTemporaryAccessResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientGrantAdminTemporaryAccessResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return WorkspacesClientGrantAdminTemporaryAccessResponse{}, err
+	}
+	return WorkspacesClientGrantAdminTemporaryAccessResponse{}, nil
+}
+
+// grantAdminTemporaryAccessCreateRequest creates the GrantAdminTemporaryAccess request.
+func (client *WorkspacesClient) grantAdminTemporaryAccessCreateRequest(ctx context.Context, workspaceID string, _ *WorkspacesClientGrantAdminTemporaryAccessOptions) (*policy.Request, error) {
+	urlPath := "/v1/admin/workspaces/{workspaceId}/grantAdminTemporaryAccess"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
 // NewListGitConnectionsPager - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
 // purposes only. It may change based on feedback and is not recommended for production use.
 // This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 1,000 records can be returned per request.
@@ -357,6 +408,57 @@ func (client *WorkspacesClient) listWorkspacesHandleResponse(resp *http.Response
 		return WorkspacesClientListWorkspacesResponse{}, err
 	}
 	return result, nil
+}
+
+// RemoveAdminTemporaryAccess - PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
+// REQUIRED DELEGATED SCOPES Tenant.ReadWrite.All
+// LIMITATIONS Maximum 25 requests per minute.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - options - WorkspacesClientRemoveAdminTemporaryAccessOptions contains the optional parameters for the WorkspacesClient.RemoveAdminTemporaryAccess
+//     method.
+func (client *WorkspacesClient) RemoveAdminTemporaryAccess(ctx context.Context, workspaceID string, options *WorkspacesClientRemoveAdminTemporaryAccessOptions) (WorkspacesClientRemoveAdminTemporaryAccessResponse, error) {
+	var err error
+	const operationName = "admin.WorkspacesClient.RemoveAdminTemporaryAccess"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.removeAdminTemporaryAccessCreateRequest(ctx, workspaceID, options)
+	if err != nil {
+		return WorkspacesClientRemoveAdminTemporaryAccessResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientRemoveAdminTemporaryAccessResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return WorkspacesClientRemoveAdminTemporaryAccessResponse{}, err
+	}
+	return WorkspacesClientRemoveAdminTemporaryAccessResponse{}, nil
+}
+
+// removeAdminTemporaryAccessCreateRequest creates the RemoveAdminTemporaryAccess request.
+func (client *WorkspacesClient) removeAdminTemporaryAccessCreateRequest(ctx context.Context, workspaceID string, _ *WorkspacesClientRemoveAdminTemporaryAccessOptions) (*policy.Request, error) {
+	urlPath := "/v1/admin/workspaces/{workspaceId}/removeAdminTemporaryAccess"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
 }
 
 // RestoreWorkspace - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes

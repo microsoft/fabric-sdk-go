@@ -151,10 +151,10 @@ func (e *ExecutionData) UnmarshalJSON(data []byte) error {
 			err = unpopulate(val, "CommandLineArguments", &e.CommandLineArguments)
 			delete(rawMsg, key)
 		case "defaultLakehouseId":
-			e.DefaultLakehouseID, err = unmarshalItemReferenceClassification(val)
+			err = unpopulate(val, "DefaultLakehouseID", &e.DefaultLakehouseID)
 			delete(rawMsg, key)
 		case "environmentId":
-			e.EnvironmentID, err = unmarshalItemReferenceClassification(val)
+			err = unpopulate(val, "EnvironmentID", &e.EnvironmentID)
 			delete(rawMsg, key)
 		case "executableFile":
 			err = unpopulate(val, "ExecutableFile", &e.ExecutableFile)

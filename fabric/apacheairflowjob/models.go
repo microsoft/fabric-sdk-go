@@ -222,6 +222,9 @@ type CreateApacheAirflowJobRequest struct {
 type Definition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []DefinitionPart
+
+	// The format of the Apache Airflow job definition.
+	Format *string
 }
 
 // DefinitionPart - Apache Airflow job public definition part object.

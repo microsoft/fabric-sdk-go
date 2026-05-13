@@ -260,6 +260,7 @@ func (i *ItemsServerTransport) dispatchBeginGetMirroredDatabaseDefinition(req *h
 		if len(matches) < 3 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
+		qp := req.URL.Query()
 		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 		if err != nil {
 			return nil, err
@@ -268,7 +269,18 @@ func (i *ItemsServerTransport) dispatchBeginGetMirroredDatabaseDefinition(req *h
 		if err != nil {
 			return nil, err
 		}
-		respr, errRespr := i.srv.BeginGetMirroredDatabaseDefinition(req.Context(), workspaceIDParam, mirroredDatabaseIDParam, nil)
+		formatUnescaped, err := url.QueryUnescape(qp.Get("format"))
+		if err != nil {
+			return nil, err
+		}
+		formatParam := getOptional(formatUnescaped)
+		var options *mirroreddatabase.ItemsClientBeginGetMirroredDatabaseDefinitionOptions
+		if formatParam != nil {
+			options = &mirroreddatabase.ItemsClientBeginGetMirroredDatabaseDefinitionOptions{
+				Format: formatParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginGetMirroredDatabaseDefinition(req.Context(), workspaceIDParam, mirroredDatabaseIDParam, options)
 		if respErr := server.GetError(errRespr, req); respErr != nil {
 			return nil, respErr
 		}

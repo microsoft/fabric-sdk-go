@@ -60,6 +60,7 @@ func (c *CreateMirroredDatabaseRequest) UnmarshalJSON(data []byte) error {
 // MarshalJSON implements the json.Marshaller interface for type Definition.
 func (d Definition) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
+	populate(objectMap, "format", d.Format)
 	populate(objectMap, "parts", d.Parts)
 	return json.Marshal(objectMap)
 }
@@ -73,6 +74,9 @@ func (d *Definition) UnmarshalJSON(data []byte) error {
 	for key, val := range rawMsg {
 		var err error
 		switch key {
+		case "format":
+			err = unpopulate(val, "Format", &d.Format)
+			delete(rawMsg, key)
 		case "parts":
 			err = unpopulate(val, "Parts", &d.Parts)
 			delete(rawMsg, key)
@@ -216,6 +220,7 @@ func (e *ErrorRelatedResource) UnmarshalJSON(data []byte) error {
 func (e ErrorResponse) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "errorCode", e.ErrorCode)
+	populate(objectMap, "isRetriable", e.IsRetriable)
 	populate(objectMap, "message", e.Message)
 	populate(objectMap, "moreDetails", e.MoreDetails)
 	populate(objectMap, "relatedResource", e.RelatedResource)
@@ -234,6 +239,9 @@ func (e *ErrorResponse) UnmarshalJSON(data []byte) error {
 		switch key {
 		case "errorCode":
 			err = unpopulate(val, "ErrorCode", &e.ErrorCode)
+			delete(rawMsg, key)
+		case "isRetriable":
+			err = unpopulate(val, "IsRetriable", &e.IsRetriable)
 			delete(rawMsg, key)
 		case "message":
 			err = unpopulate(val, "Message", &e.Message)

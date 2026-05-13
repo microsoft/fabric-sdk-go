@@ -127,7 +127,7 @@ type MapPublicDefinition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []MapPublicDefinitionPart
 
-	// The format of the item definition. Additional format types may be added over time.
+	// The format of the map definition. Additional format types may be added over time.
 	Format *string
 }
 

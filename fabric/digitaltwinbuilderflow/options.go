@@ -16,6 +16,9 @@ type ItemsClientBeginCreateDigitalTwinBuilderFlowOptions struct {
 // ItemsClientBeginGetDigitalTwinBuilderFlowDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetDigitalTwinBuilderFlowDefinition
 // method.
 type ItemsClientBeginGetDigitalTwinBuilderFlowDefinitionOptions struct {
+	// The format of the Digital Twin Builder Flow public definition.
+	Format *string
+
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }

@@ -276,7 +276,7 @@ func (client *ItemsClient) getMirroredDatabaseDefinition(ctx context.Context, wo
 }
 
 // getMirroredDatabaseDefinitionCreateRequest creates the GetMirroredDatabaseDefinition request.
-func (client *ItemsClient) getMirroredDatabaseDefinitionCreateRequest(ctx context.Context, workspaceID string, mirroredDatabaseID string, _ *ItemsClientBeginGetMirroredDatabaseDefinitionOptions) (*policy.Request, error) {
+func (client *ItemsClient) getMirroredDatabaseDefinitionCreateRequest(ctx context.Context, workspaceID string, mirroredDatabaseID string, options *ItemsClientBeginGetMirroredDatabaseDefinitionOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/mirroredDatabases/{mirroredDatabaseId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -290,6 +290,11 @@ func (client *ItemsClient) getMirroredDatabaseDefinitionCreateRequest(ctx contex
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.Format != nil {
+		reqQP.Set("format", *options.Format)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

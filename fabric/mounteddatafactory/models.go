@@ -31,7 +31,7 @@ type Definition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []DefinitionPart
 
-	// The format of the item definition. Supported format: MountedDataFactoryV1.
+	// The format of the mounted data factory definition. Supported format: MountedDataFactoryV1.
 	Format *string
 }
 

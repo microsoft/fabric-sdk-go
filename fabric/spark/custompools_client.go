@@ -11,6 +11,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -26,6 +27,77 @@ import (
 type CustomPoolsClient struct {
 	internal *azcore.Client
 	endpoint string
+}
+
+// CreateCapacityCustomPoolBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use. When calling this
+// API, callers must specify true as the value for the query parameter beta.
+// PERMISSIONS The caller must be a capacity admin.
+// REQUIRED DELEGATED SCOPES Capacity.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
+//   - createCustomPoolRequest - Create custom pool request payload.
+//   - options - CustomPoolsClientCreateCapacityCustomPoolBetaOptions contains the optional parameters for the CustomPoolsClient.CreateCapacityCustomPoolBeta
+//     method.
+func (client *CustomPoolsClient) CreateCapacityCustomPoolBeta(ctx context.Context, capacityID string, beta bool, createCustomPoolRequest CreateCustomPoolRequest, options *CustomPoolsClientCreateCapacityCustomPoolBetaOptions) (CustomPoolsClientCreateCapacityCustomPoolBetaResponse, error) {
+	var err error
+	const operationName = "spark.CustomPoolsClient.CreateCapacityCustomPoolBeta"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.createCapacityCustomPoolBetaCreateRequest(ctx, capacityID, beta, createCustomPoolRequest, options)
+	if err != nil {
+		return CustomPoolsClientCreateCapacityCustomPoolBetaResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return CustomPoolsClientCreateCapacityCustomPoolBetaResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusCreated) {
+		err = core.NewResponseError(httpResp)
+		return CustomPoolsClientCreateCapacityCustomPoolBetaResponse{}, err
+	}
+	resp, err := client.createCapacityCustomPoolBetaHandleResponse(httpResp)
+	return resp, err
+}
+
+// createCapacityCustomPoolBetaCreateRequest creates the CreateCapacityCustomPoolBeta request.
+func (client *CustomPoolsClient) createCapacityCustomPoolBetaCreateRequest(ctx context.Context, capacityID string, beta bool, createCustomPoolRequest CreateCustomPoolRequest, _ *CustomPoolsClientCreateCapacityCustomPoolBetaOptions) (*policy.Request, error) {
+	urlPath := "/v1/capacities/{capacityId}/spark/pools"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("beta", strconv.FormatBool(beta))
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, createCustomPoolRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// createCapacityCustomPoolBetaHandleResponse handles the CreateCapacityCustomPoolBeta response.
+func (client *CustomPoolsClient) createCapacityCustomPoolBetaHandleResponse(resp *http.Response) (CustomPoolsClientCreateCapacityCustomPoolBetaResponse, error) {
+	result := CustomPoolsClientCreateCapacityCustomPoolBetaResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.CustomPool); err != nil {
+		return CustomPoolsClientCreateCapacityCustomPoolBetaResponse{}, err
+	}
+	return result, nil
 }
 
 // CreateWorkspaceCustomPool - PERMISSIONS The caller must have admin workspace role.
@@ -95,6 +167,68 @@ func (client *CustomPoolsClient) createWorkspaceCustomPoolHandleResponse(resp *h
 	return result, nil
 }
 
+// DeleteCapacityCustomPoolBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use. When calling this
+// API, callers must specify true as the value for the query parameter beta.
+// PERMISSIONS The caller must be a capacity admin.
+// REQUIRED DELEGATED SCOPES Capacity.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - poolID - The custom pool ID.
+//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
+//   - options - CustomPoolsClientDeleteCapacityCustomPoolBetaOptions contains the optional parameters for the CustomPoolsClient.DeleteCapacityCustomPoolBeta
+//     method.
+func (client *CustomPoolsClient) DeleteCapacityCustomPoolBeta(ctx context.Context, capacityID string, poolID string, beta bool, options *CustomPoolsClientDeleteCapacityCustomPoolBetaOptions) (CustomPoolsClientDeleteCapacityCustomPoolBetaResponse, error) {
+	var err error
+	const operationName = "spark.CustomPoolsClient.DeleteCapacityCustomPoolBeta"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.deleteCapacityCustomPoolBetaCreateRequest(ctx, capacityID, poolID, beta, options)
+	if err != nil {
+		return CustomPoolsClientDeleteCapacityCustomPoolBetaResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return CustomPoolsClientDeleteCapacityCustomPoolBetaResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return CustomPoolsClientDeleteCapacityCustomPoolBetaResponse{}, err
+	}
+	return CustomPoolsClientDeleteCapacityCustomPoolBetaResponse{}, nil
+}
+
+// deleteCapacityCustomPoolBetaCreateRequest creates the DeleteCapacityCustomPoolBeta request.
+func (client *CustomPoolsClient) deleteCapacityCustomPoolBetaCreateRequest(ctx context.Context, capacityID string, poolID string, beta bool, _ *CustomPoolsClientDeleteCapacityCustomPoolBetaOptions) (*policy.Request, error) {
+	urlPath := "/v1/capacities/{capacityId}/spark/pools/{poolId}"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	if poolID == "" {
+		return nil, errors.New("parameter poolID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{poolId}", url.PathEscape(poolID))
+	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("beta", strconv.FormatBool(beta))
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
 // DeleteWorkspaceCustomPool - PERMISSIONS The caller must have admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -148,6 +282,78 @@ func (client *CustomPoolsClient) deleteWorkspaceCustomPoolCreateRequest(ctx cont
 	}
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
+}
+
+// GetCapacityCustomPoolBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use. When calling this
+// API, callers must specify true as the value for the query parameter beta.
+// PERMISSIONS The caller must be a capacity contributor or a capacity admin.
+// REQUIRED DELEGATED SCOPES Capacity.Read.All or Capacity.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - poolID - The custom pool ID.
+//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
+//   - options - CustomPoolsClientGetCapacityCustomPoolBetaOptions contains the optional parameters for the CustomPoolsClient.GetCapacityCustomPoolBeta
+//     method.
+func (client *CustomPoolsClient) GetCapacityCustomPoolBeta(ctx context.Context, capacityID string, poolID string, beta bool, options *CustomPoolsClientGetCapacityCustomPoolBetaOptions) (CustomPoolsClientGetCapacityCustomPoolBetaResponse, error) {
+	var err error
+	const operationName = "spark.CustomPoolsClient.GetCapacityCustomPoolBeta"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getCapacityCustomPoolBetaCreateRequest(ctx, capacityID, poolID, beta, options)
+	if err != nil {
+		return CustomPoolsClientGetCapacityCustomPoolBetaResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return CustomPoolsClientGetCapacityCustomPoolBetaResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return CustomPoolsClientGetCapacityCustomPoolBetaResponse{}, err
+	}
+	resp, err := client.getCapacityCustomPoolBetaHandleResponse(httpResp)
+	return resp, err
+}
+
+// getCapacityCustomPoolBetaCreateRequest creates the GetCapacityCustomPoolBeta request.
+func (client *CustomPoolsClient) getCapacityCustomPoolBetaCreateRequest(ctx context.Context, capacityID string, poolID string, beta bool, _ *CustomPoolsClientGetCapacityCustomPoolBetaOptions) (*policy.Request, error) {
+	urlPath := "/v1/capacities/{capacityId}/spark/pools/{poolId}"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	if poolID == "" {
+		return nil, errors.New("parameter poolID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{poolId}", url.PathEscape(poolID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("beta", strconv.FormatBool(beta))
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getCapacityCustomPoolBetaHandleResponse handles the GetCapacityCustomPoolBeta response.
+func (client *CustomPoolsClient) getCapacityCustomPoolBetaHandleResponse(resp *http.Response) (CustomPoolsClientGetCapacityCustomPoolBetaResponse, error) {
+	result := CustomPoolsClientGetCapacityCustomPoolBetaResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.CustomPool); err != nil {
+		return CustomPoolsClientGetCapacityCustomPoolBetaResponse{}, err
+	}
+	return result, nil
 }
 
 // GetWorkspaceCustomPool - PERMISSIONS The caller must have viewer or higher workspace role.
@@ -215,6 +421,76 @@ func (client *CustomPoolsClient) getWorkspaceCustomPoolHandleResponse(resp *http
 	return result, nil
 }
 
+// NewListCapacityCustomPoolsBetaPager - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use. When calling this
+// API, callers must specify true as the value for the query parameter beta.
+// PERMISSIONS The caller must be a capacity contributor or a capacity admin.
+// REQUIRED DELEGATED SCOPES Capacity.Read.All or Capacity.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
+//   - options - CustomPoolsClientListCapacityCustomPoolsBetaOptions contains the optional parameters for the CustomPoolsClient.NewListCapacityCustomPoolsBetaPager
+//     method.
+func (client *CustomPoolsClient) NewListCapacityCustomPoolsBetaPager(capacityID string, beta bool, options *CustomPoolsClientListCapacityCustomPoolsBetaOptions) *runtime.Pager[CustomPoolsClientListCapacityCustomPoolsBetaResponse] {
+	return runtime.NewPager(runtime.PagingHandler[CustomPoolsClientListCapacityCustomPoolsBetaResponse]{
+		More: func(page CustomPoolsClientListCapacityCustomPoolsBetaResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *CustomPoolsClientListCapacityCustomPoolsBetaResponse) (CustomPoolsClientListCapacityCustomPoolsBetaResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "spark.CustomPoolsClient.NewListCapacityCustomPoolsBetaPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.listCapacityCustomPoolsBetaCreateRequest(ctx, capacityID, beta, options)
+			}, nil)
+			if err != nil {
+				return CustomPoolsClientListCapacityCustomPoolsBetaResponse{}, err
+			}
+			return client.listCapacityCustomPoolsBetaHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
+}
+
+// listCapacityCustomPoolsBetaCreateRequest creates the ListCapacityCustomPoolsBeta request.
+func (client *CustomPoolsClient) listCapacityCustomPoolsBetaCreateRequest(ctx context.Context, capacityID string, beta bool, options *CustomPoolsClientListCapacityCustomPoolsBetaOptions) (*policy.Request, error) {
+	urlPath := "/v1/capacities/{capacityId}/spark/pools"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("beta", strconv.FormatBool(beta))
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// listCapacityCustomPoolsBetaHandleResponse handles the ListCapacityCustomPoolsBeta response.
+func (client *CustomPoolsClient) listCapacityCustomPoolsBetaHandleResponse(resp *http.Response) (CustomPoolsClientListCapacityCustomPoolsBetaResponse, error) {
+	result := CustomPoolsClientListCapacityCustomPoolsBetaResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.CustomPools); err != nil {
+		return CustomPoolsClientListCapacityCustomPoolsBetaResponse{}, err
+	}
+	return result, nil
+}
+
 // NewListWorkspaceCustomPoolsPager - PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -276,6 +552,82 @@ func (client *CustomPoolsClient) listWorkspaceCustomPoolsHandleResponse(resp *ht
 	result := CustomPoolsClientListWorkspaceCustomPoolsResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.CustomPools); err != nil {
 		return CustomPoolsClientListWorkspaceCustomPoolsResponse{}, err
+	}
+	return result, nil
+}
+
+// UpdateCapacityCustomPoolBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use. When calling this
+// API, callers must specify true as the value for the query parameter beta.
+// PERMISSIONS The caller must be a capacity admin.
+// REQUIRED DELEGATED SCOPES Capacity.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - poolID - The custom pool ID.
+//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
+//   - updateCustomPoolRequest - Update custom pool request payload.
+//   - options - CustomPoolsClientUpdateCapacityCustomPoolBetaOptions contains the optional parameters for the CustomPoolsClient.UpdateCapacityCustomPoolBeta
+//     method.
+func (client *CustomPoolsClient) UpdateCapacityCustomPoolBeta(ctx context.Context, capacityID string, poolID string, beta bool, updateCustomPoolRequest UpdateCustomPoolRequest, options *CustomPoolsClientUpdateCapacityCustomPoolBetaOptions) (CustomPoolsClientUpdateCapacityCustomPoolBetaResponse, error) {
+	var err error
+	const operationName = "spark.CustomPoolsClient.UpdateCapacityCustomPoolBeta"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateCapacityCustomPoolBetaCreateRequest(ctx, capacityID, poolID, beta, updateCustomPoolRequest, options)
+	if err != nil {
+		return CustomPoolsClientUpdateCapacityCustomPoolBetaResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return CustomPoolsClientUpdateCapacityCustomPoolBetaResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return CustomPoolsClientUpdateCapacityCustomPoolBetaResponse{}, err
+	}
+	resp, err := client.updateCapacityCustomPoolBetaHandleResponse(httpResp)
+	return resp, err
+}
+
+// updateCapacityCustomPoolBetaCreateRequest creates the UpdateCapacityCustomPoolBeta request.
+func (client *CustomPoolsClient) updateCapacityCustomPoolBetaCreateRequest(ctx context.Context, capacityID string, poolID string, beta bool, updateCustomPoolRequest UpdateCustomPoolRequest, _ *CustomPoolsClientUpdateCapacityCustomPoolBetaOptions) (*policy.Request, error) {
+	urlPath := "/v1/capacities/{capacityId}/spark/pools/{poolId}"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	if poolID == "" {
+		return nil, errors.New("parameter poolID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{poolId}", url.PathEscape(poolID))
+	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("beta", strconv.FormatBool(beta))
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateCustomPoolRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// updateCapacityCustomPoolBetaHandleResponse handles the UpdateCapacityCustomPoolBeta response.
+func (client *CustomPoolsClient) updateCapacityCustomPoolBetaHandleResponse(resp *http.Response) (CustomPoolsClientUpdateCapacityCustomPoolBetaResponse, error) {
+	result := CustomPoolsClientUpdateCapacityCustomPoolBetaResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.CustomPool); err != nil {
+		return CustomPoolsClientUpdateCapacityCustomPoolBetaResponse{}, err
 	}
 	return result, nil
 }
@@ -350,6 +702,40 @@ func (client *CustomPoolsClient) updateWorkspaceCustomPoolHandleResponse(resp *h
 }
 
 // Custom code starts below
+
+// ListCapacityCustomPoolsBeta - returns array of CustomPool from all pages.
+// >  [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use. When calling this
+// API, callers must specify true as the value for the query parameter beta.
+//
+// PERMISSIONS The caller must be a capacity contributor or a capacity admin.
+//
+// # REQUIRED DELEGATED SCOPES Capacity.Read.All or Capacity.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
+//   - options - CustomPoolsClientListCapacityCustomPoolsBetaOptions contains the optional parameters for the CustomPoolsClient.NewListCapacityCustomPoolsBetaPager method.
+func (client *CustomPoolsClient) ListCapacityCustomPoolsBeta(ctx context.Context, capacityID string, beta bool, options *CustomPoolsClientListCapacityCustomPoolsBetaOptions) ([]CustomPool, error) {
+	pager := client.NewListCapacityCustomPoolsBetaPager(capacityID, beta, options)
+	mapper := func(resp CustomPoolsClientListCapacityCustomPoolsBetaResponse) []CustomPool {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []CustomPool{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []CustomPool{}, err
+	}
+	return list, nil
+}
 
 // ListWorkspaceCustomPools - returns array of CustomPool from all pages.
 // PERMISSIONS The caller must have viewer or higher workspace role.

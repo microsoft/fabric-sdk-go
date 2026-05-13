@@ -332,6 +332,12 @@ type WorkspacesClientGetWorkspaceOptions struct {
 	// placeholder for future optional parameters
 }
 
+// WorkspacesClientGrantAdminTemporaryAccessOptions contains the optional parameters for the WorkspacesClient.GrantAdminTemporaryAccess
+// method.
+type WorkspacesClientGrantAdminTemporaryAccessOptions struct {
+	// placeholder for future optional parameters
+}
+
 // WorkspacesClientListGitConnectionsOptions contains the optional parameters for the WorkspacesClient.NewListGitConnectionsPager
 // method.
 type WorkspacesClientListGitConnectionsOptions struct {
@@ -369,6 +375,12 @@ type WorkspacesClientListWorkspacesOptions struct {
 
 	// The workspace type. Supported types are personal, workspace, adminworkspace.
 	Type *string
+}
+
+// WorkspacesClientRemoveAdminTemporaryAccessOptions contains the optional parameters for the WorkspacesClient.RemoveAdminTemporaryAccess
+// method.
+type WorkspacesClientRemoveAdminTemporaryAccessOptions struct {
+	// placeholder for future optional parameters
 }
 
 // WorkspacesClientRestoreWorkspaceOptions contains the optional parameters for the WorkspacesClient.RestoreWorkspace method.

@@ -273,6 +273,7 @@ func (i *ItemsServerTransport) dispatchBeginGetSnowflakeDatabaseDefinition(req *
 		if len(matches) < 3 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
+		qp := req.URL.Query()
 		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 		if err != nil {
 			return nil, err
@@ -281,7 +282,18 @@ func (i *ItemsServerTransport) dispatchBeginGetSnowflakeDatabaseDefinition(req *
 		if err != nil {
 			return nil, err
 		}
-		respr, errRespr := i.srv.BeginGetSnowflakeDatabaseDefinition(req.Context(), workspaceIDParam, snowflakeDatabaseIDParam, nil)
+		formatUnescaped, err := url.QueryUnescape(qp.Get("format"))
+		if err != nil {
+			return nil, err
+		}
+		formatParam := getOptional(formatUnescaped)
+		var options *snowflakedatabase.ItemsClientBeginGetSnowflakeDatabaseDefinitionOptions
+		if formatParam != nil {
+			options = &snowflakedatabase.ItemsClientBeginGetSnowflakeDatabaseDefinitionOptions{
+				Format: formatParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginGetSnowflakeDatabaseDefinition(req.Context(), workspaceIDParam, snowflakeDatabaseIDParam, options)
 		if respErr := server.GetError(errRespr, req); respErr != nil {
 			return nil, respErr
 		}

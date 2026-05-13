@@ -293,7 +293,7 @@ func (client *ItemsClient) getMirroredAzureDatabricksCatalogDefinition(ctx conte
 }
 
 // getMirroredAzureDatabricksCatalogDefinitionCreateRequest creates the GetMirroredAzureDatabricksCatalogDefinition request.
-func (client *ItemsClient) getMirroredAzureDatabricksCatalogDefinitionCreateRequest(ctx context.Context, workspaceID string, mirroredAzureDatabricksCatalogID string, _ *ItemsClientBeginGetMirroredAzureDatabricksCatalogDefinitionOptions) (*policy.Request, error) {
+func (client *ItemsClient) getMirroredAzureDatabricksCatalogDefinitionCreateRequest(ctx context.Context, workspaceID string, mirroredAzureDatabricksCatalogID string, options *ItemsClientBeginGetMirroredAzureDatabricksCatalogDefinitionOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/mirroredAzureDatabricksCatalogs/{mirroredAzureDatabricksCatalogId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -307,6 +307,11 @@ func (client *ItemsClient) getMirroredAzureDatabricksCatalogDefinitionCreateRequ
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.Format != nil {
+		reqQP.Set("format", *options.Format)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

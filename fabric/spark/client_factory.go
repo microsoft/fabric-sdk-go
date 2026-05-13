@@ -47,6 +47,14 @@ func NewClientFactoryWithClient(client fabric.Client) *ClientFactory {
 	}
 }
 
+// NewCapacitySettingsClient creates a new instance of CapacitySettingsClient.
+func (c *ClientFactory) NewCapacitySettingsClient() *CapacitySettingsClient {
+	return &CapacitySettingsClient{
+		internal: c.internal.WithClientName("spark.CapacitySettingsClient"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewCustomPoolsClient creates a new instance of CustomPoolsClient.
 func (c *ClientFactory) NewCustomPoolsClient() *CustomPoolsClient {
 	return &CustomPoolsClient{

@@ -510,6 +510,345 @@ func (testsuite *FakeTestSuite) TestCustomPools_UpdateWorkspaceCustomPool() {
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.CustomPool))
 }
 
+func (testsuite *FakeTestSuite) TestCustomPools_ListCapacityCustomPoolsBeta() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List custom pools example"},
+	})
+	var exampleCapacityID string
+	var exampleBeta bool
+	exampleCapacityID = "ce6db599-0877-4fb1-aa1f-9b1b8d99dc40"
+	exampleBeta = true
+
+	exampleRes := spark.CustomPools{
+		Value: []spark.CustomPool{
+			{
+				Name: to.Ptr("pool1"),
+				Type: to.Ptr(spark.CustomPoolTypeCapacity),
+				AutoScale: &spark.AutoScaleProperties{
+					Enabled:      to.Ptr(true),
+					MaxNodeCount: to.Ptr[int32](4),
+					MinNodeCount: to.Ptr[int32](1),
+				},
+				DynamicExecutorAllocation: &spark.DynamicExecutorAllocationProperties{
+					Enabled:      to.Ptr(true),
+					MaxExecutors: to.Ptr[int32](2),
+					MinExecutors: to.Ptr[int32](1),
+				},
+				ID:         to.Ptr("2367293d-b70b-4b33-97f2-161b8d04a8d7"),
+				NodeFamily: to.Ptr(spark.NodeFamilyMemoryOptimized),
+				NodeSize:   to.Ptr(spark.NodeSizeSmall),
+			}},
+	}
+
+	testsuite.serverFactory.CustomPoolsServer.NewListCapacityCustomPoolsBetaPager = func(capacityID string, beta bool, options *spark.CustomPoolsClientListCapacityCustomPoolsBetaOptions) (resp azfake.PagerResponder[spark.CustomPoolsClientListCapacityCustomPoolsBetaResponse]) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.PagerResponder[spark.CustomPoolsClientListCapacityCustomPoolsBetaResponse]{}
+		resp.AddPage(http.StatusOK, spark.CustomPoolsClientListCapacityCustomPoolsBetaResponse{CustomPools: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewCustomPoolsClient()
+	pager := client.NewListCapacityCustomPoolsBetaPager(exampleCapacityID, exampleBeta, &spark.CustomPoolsClientListCapacityCustomPoolsBetaOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.CustomPools))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List custom pools with continuation example"},
+	})
+	exampleCapacityID = "ce6db599-0877-4fb1-aa1f-9b1b8d99dc40"
+	exampleBeta = true
+
+	exampleRes = spark.CustomPools{
+		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/capacities/ce6db599-0877-4fb1-aa1f-9b1b8d99dc40/spark/pools?beta=true&continuationToken=LDEsMTAwMDAwLDA%3D"),
+		Value: []spark.CustomPool{
+			{
+				Name: to.Ptr("pool1"),
+				Type: to.Ptr(spark.CustomPoolTypeCapacity),
+				AutoScale: &spark.AutoScaleProperties{
+					Enabled:      to.Ptr(true),
+					MaxNodeCount: to.Ptr[int32](4),
+					MinNodeCount: to.Ptr[int32](1),
+				},
+				DynamicExecutorAllocation: &spark.DynamicExecutorAllocationProperties{
+					Enabled:      to.Ptr(true),
+					MaxExecutors: to.Ptr[int32](2),
+					MinExecutors: to.Ptr[int32](1),
+				},
+				ID:         to.Ptr("2367293d-b70b-4b33-97f2-161b8d04a8d7"),
+				NodeFamily: to.Ptr(spark.NodeFamilyMemoryOptimized),
+				NodeSize:   to.Ptr(spark.NodeSizeSmall),
+			}},
+	}
+
+	testsuite.serverFactory.CustomPoolsServer.NewListCapacityCustomPoolsBetaPager = func(capacityID string, beta bool, options *spark.CustomPoolsClientListCapacityCustomPoolsBetaOptions) (resp azfake.PagerResponder[spark.CustomPoolsClientListCapacityCustomPoolsBetaResponse]) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.PagerResponder[spark.CustomPoolsClientListCapacityCustomPoolsBetaResponse]{}
+		resp.AddPage(http.StatusOK, spark.CustomPoolsClientListCapacityCustomPoolsBetaResponse{CustomPools: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListCapacityCustomPoolsBetaPager(exampleCapacityID, exampleBeta, &spark.CustomPoolsClientListCapacityCustomPoolsBetaOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.CustomPools))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestCustomPools_CreateCapacityCustomPoolBeta() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create custom pool example"},
+	})
+	var exampleCapacityID string
+	var exampleBeta bool
+	var exampleCreateCustomPoolRequest spark.CreateCustomPoolRequest
+	exampleCapacityID = "ce6db599-0877-4fb1-aa1f-9b1b8d99dc40"
+	exampleBeta = true
+	exampleCreateCustomPoolRequest = spark.CreateCustomPoolRequest{
+		Name: to.Ptr("pool1"),
+		AutoScale: &spark.AutoScaleProperties{
+			Enabled:      to.Ptr(true),
+			MaxNodeCount: to.Ptr[int32](2),
+			MinNodeCount: to.Ptr[int32](1),
+		},
+		DynamicExecutorAllocation: &spark.DynamicExecutorAllocationProperties{
+			Enabled:      to.Ptr(true),
+			MaxExecutors: to.Ptr[int32](1),
+			MinExecutors: to.Ptr[int32](1),
+		},
+		NodeFamily: to.Ptr(spark.NodeFamilyMemoryOptimized),
+		NodeSize:   to.Ptr(spark.NodeSizeSmall),
+	}
+
+	testsuite.serverFactory.CustomPoolsServer.CreateCapacityCustomPoolBeta = func(ctx context.Context, capacityID string, beta bool, createCustomPoolRequest spark.CreateCustomPoolRequest, options *spark.CustomPoolsClientCreateCapacityCustomPoolBetaOptions) (resp azfake.Responder[spark.CustomPoolsClientCreateCapacityCustomPoolBetaResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateCustomPoolRequest, createCustomPoolRequest))
+		resp = azfake.Responder[spark.CustomPoolsClientCreateCapacityCustomPoolBetaResponse]{}
+		resp.SetResponse(http.StatusCreated, spark.CustomPoolsClientCreateCapacityCustomPoolBetaResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewCustomPoolsClient()
+	_, err = client.CreateCapacityCustomPoolBeta(ctx, exampleCapacityID, exampleBeta, exampleCreateCustomPoolRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestCustomPools_GetCapacityCustomPoolBeta() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get custom pool example"},
+	})
+	var exampleCapacityID string
+	var examplePoolID string
+	var exampleBeta bool
+	exampleCapacityID = "ce6db599-0877-4fb1-aa1f-9b1b8d99dc40"
+	examplePoolID = "2367293d-b70b-4b33-97f2-161b8d04a8d7"
+	exampleBeta = true
+
+	exampleRes := spark.CustomPool{
+		Name: to.Ptr("pool1"),
+		Type: to.Ptr(spark.CustomPoolTypeCapacity),
+		AutoScale: &spark.AutoScaleProperties{
+			Enabled:      to.Ptr(true),
+			MaxNodeCount: to.Ptr[int32](4),
+			MinNodeCount: to.Ptr[int32](1),
+		},
+		DynamicExecutorAllocation: &spark.DynamicExecutorAllocationProperties{
+			Enabled:      to.Ptr(true),
+			MaxExecutors: to.Ptr[int32](2),
+			MinExecutors: to.Ptr[int32](1),
+		},
+		ID:         to.Ptr("2367293d-b70b-4b33-97f2-161b8d04a8d7"),
+		NodeFamily: to.Ptr(spark.NodeFamilyMemoryOptimized),
+		NodeSize:   to.Ptr(spark.NodeSizeSmall),
+	}
+
+	testsuite.serverFactory.CustomPoolsServer.GetCapacityCustomPoolBeta = func(ctx context.Context, capacityID string, poolID string, beta bool, options *spark.CustomPoolsClientGetCapacityCustomPoolBetaOptions) (resp azfake.Responder[spark.CustomPoolsClientGetCapacityCustomPoolBetaResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().Equal(examplePoolID, poolID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.Responder[spark.CustomPoolsClientGetCapacityCustomPoolBetaResponse]{}
+		resp.SetResponse(http.StatusOK, spark.CustomPoolsClientGetCapacityCustomPoolBetaResponse{CustomPool: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewCustomPoolsClient()
+	res, err := client.GetCapacityCustomPoolBeta(ctx, exampleCapacityID, examplePoolID, exampleBeta, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.CustomPool))
+}
+
+func (testsuite *FakeTestSuite) TestCustomPools_DeleteCapacityCustomPoolBeta() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete custom pool example"},
+	})
+	var exampleCapacityID string
+	var examplePoolID string
+	var exampleBeta bool
+	exampleCapacityID = "ce6db599-0877-4fb1-aa1f-9b1b8d99dc40"
+	examplePoolID = "2367293d-b70b-4b33-97f2-161b8d04a8d7"
+	exampleBeta = true
+
+	testsuite.serverFactory.CustomPoolsServer.DeleteCapacityCustomPoolBeta = func(ctx context.Context, capacityID string, poolID string, beta bool, options *spark.CustomPoolsClientDeleteCapacityCustomPoolBetaOptions) (resp azfake.Responder[spark.CustomPoolsClientDeleteCapacityCustomPoolBetaResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().Equal(examplePoolID, poolID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.Responder[spark.CustomPoolsClientDeleteCapacityCustomPoolBetaResponse]{}
+		resp.SetResponse(http.StatusOK, spark.CustomPoolsClientDeleteCapacityCustomPoolBetaResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewCustomPoolsClient()
+	_, err = client.DeleteCapacityCustomPoolBeta(ctx, exampleCapacityID, examplePoolID, exampleBeta, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestCustomPools_UpdateCapacityCustomPoolBeta() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update custom pool example"},
+	})
+	var exampleCapacityID string
+	var examplePoolID string
+	var exampleBeta bool
+	var exampleUpdateCustomPoolRequest spark.UpdateCustomPoolRequest
+	exampleCapacityID = "ce6db599-0877-4fb1-aa1f-9b1b8d99dc40"
+	examplePoolID = "2367293d-b70b-4b33-97f2-161b8d04a8d7"
+	exampleBeta = true
+	exampleUpdateCustomPoolRequest = spark.UpdateCustomPoolRequest{
+		Name: to.Ptr("pool1"),
+		AutoScale: &spark.AutoScaleProperties{
+			Enabled:      to.Ptr(true),
+			MaxNodeCount: to.Ptr[int32](2),
+			MinNodeCount: to.Ptr[int32](1),
+		},
+		DynamicExecutorAllocation: &spark.DynamicExecutorAllocationProperties{
+			Enabled:      to.Ptr(true),
+			MaxExecutors: to.Ptr[int32](1),
+			MinExecutors: to.Ptr[int32](1),
+		},
+		NodeFamily: to.Ptr(spark.NodeFamilyMemoryOptimized),
+		NodeSize:   to.Ptr(spark.NodeSizeSmall),
+	}
+
+	exampleRes := spark.CustomPool{
+		Name: to.Ptr("pool1"),
+		Type: to.Ptr(spark.CustomPoolTypeCapacity),
+		AutoScale: &spark.AutoScaleProperties{
+			Enabled:      to.Ptr(true),
+			MaxNodeCount: to.Ptr[int32](2),
+			MinNodeCount: to.Ptr[int32](1),
+		},
+		DynamicExecutorAllocation: &spark.DynamicExecutorAllocationProperties{
+			Enabled:      to.Ptr(true),
+			MaxExecutors: to.Ptr[int32](1),
+			MinExecutors: to.Ptr[int32](1),
+		},
+		ID:         to.Ptr("2367293d-b70b-4b33-97f2-161b8d04a8d7"),
+		NodeFamily: to.Ptr(spark.NodeFamilyMemoryOptimized),
+		NodeSize:   to.Ptr(spark.NodeSizeSmall),
+	}
+
+	testsuite.serverFactory.CustomPoolsServer.UpdateCapacityCustomPoolBeta = func(ctx context.Context, capacityID string, poolID string, beta bool, updateCustomPoolRequest spark.UpdateCustomPoolRequest, options *spark.CustomPoolsClientUpdateCapacityCustomPoolBetaOptions) (resp azfake.Responder[spark.CustomPoolsClientUpdateCapacityCustomPoolBetaResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().Equal(examplePoolID, poolID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateCustomPoolRequest, updateCustomPoolRequest))
+		resp = azfake.Responder[spark.CustomPoolsClientUpdateCapacityCustomPoolBetaResponse]{}
+		resp.SetResponse(http.StatusOK, spark.CustomPoolsClientUpdateCapacityCustomPoolBetaResponse{CustomPool: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewCustomPoolsClient()
+	res, err := client.UpdateCapacityCustomPoolBeta(ctx, exampleCapacityID, examplePoolID, exampleBeta, exampleUpdateCustomPoolRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.CustomPool))
+}
+
+func (testsuite *FakeTestSuite) TestCapacitySettings_GetSparkSettingsBeta() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get capacity Spark settings example"},
+	})
+	var exampleCapacityID string
+	var exampleBeta bool
+	exampleCapacityID = "ce6db599-0877-4fb1-aa1f-9b1b8d99dc40"
+	exampleBeta = true
+
+	exampleRes := spark.CapacitySparkSettings{
+		JobBurstSupport:             to.Ptr(spark.EnablementEnabled),
+		WorkspaceCustomPoolsSupport: to.Ptr(spark.EnablementEnabled),
+		WorkspaceStarterPoolStatus:  to.Ptr(spark.EnablementDisabled),
+	}
+
+	testsuite.serverFactory.CapacitySettingsServer.GetSparkSettingsBeta = func(ctx context.Context, capacityID string, beta bool, options *spark.CapacitySettingsClientGetSparkSettingsBetaOptions) (resp azfake.Responder[spark.CapacitySettingsClientGetSparkSettingsBetaResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.Responder[spark.CapacitySettingsClientGetSparkSettingsBetaResponse]{}
+		resp.SetResponse(http.StatusOK, spark.CapacitySettingsClientGetSparkSettingsBetaResponse{CapacitySparkSettings: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewCapacitySettingsClient()
+	res, err := client.GetSparkSettingsBeta(ctx, exampleCapacityID, exampleBeta, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.CapacitySparkSettings))
+}
+
+func (testsuite *FakeTestSuite) TestCapacitySettings_UpdateSparkSettingsBeta() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update capacity Spark settings example"},
+	})
+	var exampleCapacityID string
+	var exampleBeta bool
+	var exampleUpdateCapacitySettingsRequest spark.UpdateCapacitySparkSettingsRequest
+	exampleCapacityID = "ce6db599-0877-4fb1-aa1f-9b1b8d99dc40"
+	exampleBeta = true
+	exampleUpdateCapacitySettingsRequest = spark.UpdateCapacitySparkSettingsRequest{
+		JobBurstSupport:             to.Ptr(spark.EnablementEnabled),
+		WorkspaceCustomPoolsSupport: to.Ptr(spark.EnablementEnabled),
+		WorkspaceStarterPoolStatus:  to.Ptr(spark.EnablementDisabled),
+	}
+
+	exampleRes := spark.CapacitySparkSettings{
+		JobBurstSupport:             to.Ptr(spark.EnablementEnabled),
+		WorkspaceCustomPoolsSupport: to.Ptr(spark.EnablementEnabled),
+		WorkspaceStarterPoolStatus:  to.Ptr(spark.EnablementDisabled),
+	}
+
+	testsuite.serverFactory.CapacitySettingsServer.UpdateSparkSettingsBeta = func(ctx context.Context, capacityID string, beta bool, updateCapacitySettingsRequest spark.UpdateCapacitySparkSettingsRequest, options *spark.CapacitySettingsClientUpdateSparkSettingsBetaOptions) (resp azfake.Responder[spark.CapacitySettingsClientUpdateSparkSettingsBetaResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateCapacitySettingsRequest, updateCapacitySettingsRequest))
+		resp = azfake.Responder[spark.CapacitySettingsClientUpdateSparkSettingsBetaResponse]{}
+		resp.SetResponse(http.StatusOK, spark.CapacitySettingsClientUpdateSparkSettingsBetaResponse{CapacitySparkSettings: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewCapacitySettingsClient()
+	res, err := client.UpdateSparkSettingsBeta(ctx, exampleCapacityID, exampleBeta, exampleUpdateCapacitySettingsRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.CapacitySparkSettings))
+}
+
 func (testsuite *FakeTestSuite) TestLivySessions_ListLivySessions() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{

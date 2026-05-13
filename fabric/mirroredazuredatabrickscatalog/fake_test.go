@@ -450,7 +450,7 @@ func (testsuite *FakeTestSuite) TestItems_GetMirroredAzureDatabricksCatalogDefin
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	poller, err := client.BeginGetMirroredAzureDatabricksCatalogDefinition(ctx, exampleWorkspaceID, exampleMirroredAzureDatabricksCatalogID, nil)
+	poller, err := client.BeginGetMirroredAzureDatabricksCatalogDefinition(ctx, exampleWorkspaceID, exampleMirroredAzureDatabricksCatalogID, &mirroredazuredatabrickscatalog.ItemsClientBeginGetMirroredAzureDatabricksCatalogDefinitionOptions{Format: nil})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	res, err := poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")

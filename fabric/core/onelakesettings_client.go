@@ -89,6 +89,72 @@ func (client *OneLakeSettingsClient) getSettingsHandleResponse(resp *http.Respon
 	return result, nil
 }
 
+// ModifyDefaultTier - All files without an explicitly set tier will be moved to the new default tier. You will be billed
+// for any transactions resulting from movement between tiers.
+// PERMISSIONS The caller must have an admin workspace role.
+// REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - defaultTier - The new default access tier for the workspace. Additional access tier values may be added over time.
+//   - options - OneLakeSettingsClientModifyDefaultTierOptions contains the optional parameters for the OneLakeSettingsClient.ModifyDefaultTier
+//     method.
+func (client *OneLakeSettingsClient) ModifyDefaultTier(ctx context.Context, workspaceID string, defaultTier OneLakeAccessTier, options *OneLakeSettingsClientModifyDefaultTierOptions) (OneLakeSettingsClientModifyDefaultTierResponse, error) {
+	var err error
+	const operationName = "core.OneLakeSettingsClient.ModifyDefaultTier"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.modifyDefaultTierCreateRequest(ctx, workspaceID, defaultTier, options)
+	if err != nil {
+		return OneLakeSettingsClientModifyDefaultTierResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return OneLakeSettingsClientModifyDefaultTierResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return OneLakeSettingsClientModifyDefaultTierResponse{}, err
+	}
+	resp, err := client.modifyDefaultTierHandleResponse(httpResp)
+	return resp, err
+}
+
+// modifyDefaultTierCreateRequest creates the ModifyDefaultTier request.
+func (client *OneLakeSettingsClient) modifyDefaultTierCreateRequest(ctx context.Context, workspaceID string, defaultTier OneLakeAccessTier, _ *OneLakeSettingsClientModifyDefaultTierOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/onelake/settings/modifyDefaultTier"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("defaultTier", string(defaultTier))
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// modifyDefaultTierHandleResponse handles the ModifyDefaultTier response.
+func (client *OneLakeSettingsClient) modifyDefaultTierHandleResponse(resp *http.Response) (OneLakeSettingsClientModifyDefaultTierResponse, error) {
+	result := OneLakeSettingsClientModifyDefaultTierResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.ModifyOneLakeWorkspaceDefaultTierResponse); err != nil {
+		return OneLakeSettingsClientModifyDefaultTierResponse{}, err
+	}
+	return result, nil
+}
+
 // BeginModifyDiagnostics - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS
 // * The caller must have an admin workspace role on the source workspace.

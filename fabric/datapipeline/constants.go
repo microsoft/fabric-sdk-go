@@ -6,6 +6,39 @@
 
 package datapipeline
 
+// DayOfWeek - Days of the week
+type DayOfWeek string
+
+const (
+	// DayOfWeekFriday - Friday
+	DayOfWeekFriday DayOfWeek = "Friday"
+	// DayOfWeekMonday - Monday
+	DayOfWeekMonday DayOfWeek = "Monday"
+	// DayOfWeekSaturday - Saturday
+	DayOfWeekSaturday DayOfWeek = "Saturday"
+	// DayOfWeekSunday - Sunday
+	DayOfWeekSunday DayOfWeek = "Sunday"
+	// DayOfWeekThursday - Thursday
+	DayOfWeekThursday DayOfWeek = "Thursday"
+	// DayOfWeekTuesday - Tuesday
+	DayOfWeekTuesday DayOfWeek = "Tuesday"
+	// DayOfWeekWednesday - Wednesday
+	DayOfWeekWednesday DayOfWeek = "Wednesday"
+)
+
+// PossibleDayOfWeekValues returns the possible values for the DayOfWeek const type.
+func PossibleDayOfWeekValues() []DayOfWeek {
+	return []DayOfWeek{
+		DayOfWeekFriday,
+		DayOfWeekMonday,
+		DayOfWeekSaturday,
+		DayOfWeekSunday,
+		DayOfWeekThursday,
+		DayOfWeekTuesday,
+		DayOfWeekWednesday,
+	}
+}
+
 // GroupType - The type of the group. Additional group types may be added over time.
 type GroupType string
 
@@ -83,6 +116,8 @@ const (
 	ItemTypeMap ItemType = "Map"
 	// ItemTypeMirroredAzureDatabricksCatalog - A mirrored azure databricks catalog.
 	ItemTypeMirroredAzureDatabricksCatalog ItemType = "MirroredAzureDatabricksCatalog"
+	// ItemTypeMirroredCatalog - A MirroredCatalog.
+	ItemTypeMirroredCatalog ItemType = "MirroredCatalog"
 	// ItemTypeMirroredDatabase - A mirrored database.
 	ItemTypeMirroredDatabase ItemType = "MirroredDatabase"
 	// ItemTypeMirroredWarehouse - A mirrored warehouse.
@@ -150,6 +185,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeMLModel,
 		ItemTypeMap,
 		ItemTypeMirroredAzureDatabricksCatalog,
+		ItemTypeMirroredCatalog,
 		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
 		ItemTypeMountedDataFactory,
@@ -168,6 +204,24 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeVariableLibrary,
 		ItemTypeWarehouse,
 		ItemTypeWarehouseSnapshot,
+	}
+}
+
+// OccurrenceType - An enumerator that lists the day for triggering jobs. Additional types may be added over time.
+type OccurrenceType string
+
+const (
+	// OccurrenceTypeDayOfMonth - A date.
+	OccurrenceTypeDayOfMonth OccurrenceType = "DayOfMonth"
+	// OccurrenceTypeOrdinalWeekday - A day.
+	OccurrenceTypeOrdinalWeekday OccurrenceType = "OrdinalWeekday"
+)
+
+// PossibleOccurrenceTypeValues returns the possible values for the OccurrenceType const type.
+func PossibleOccurrenceTypeValues() []OccurrenceType {
+	return []OccurrenceType{
+		OccurrenceTypeDayOfMonth,
+		OccurrenceTypeOrdinalWeekday,
 	}
 }
 
@@ -213,6 +267,30 @@ func PossiblePrincipalTypeValues() []PrincipalType {
 	}
 }
 
+// ScheduleType - The type of schedule configuration. Additional types may be added over time.
+type ScheduleType string
+
+const (
+	// ScheduleTypeCron - Triggers a job periodically.
+	ScheduleTypeCron ScheduleType = "Cron"
+	// ScheduleTypeDaily - Triggers a job daily.
+	ScheduleTypeDaily ScheduleType = "Daily"
+	// ScheduleTypeMonthly - Triggers a job monthly.
+	ScheduleTypeMonthly ScheduleType = "Monthly"
+	// ScheduleTypeWeekly - Triggers a job weekly.
+	ScheduleTypeWeekly ScheduleType = "Weekly"
+)
+
+// PossibleScheduleTypeValues returns the possible values for the ScheduleType const type.
+func PossibleScheduleTypeValues() []ScheduleType {
+	return []ScheduleType{
+		ScheduleTypeCron,
+		ScheduleTypeDaily,
+		ScheduleTypeMonthly,
+		ScheduleTypeWeekly,
+	}
+}
+
 // SensitivityLabelApplyStrategy - The strategy for applying the sensitivity label. The default value is ApplyOrFail. Additional
 // types may be added over time.
 type SensitivityLabelApplyStrategy string
@@ -230,5 +308,32 @@ func PossibleSensitivityLabelApplyStrategyValues() []SensitivityLabelApplyStrate
 	return []SensitivityLabelApplyStrategy{
 		SensitivityLabelApplyStrategyApplyOrFail,
 		SensitivityLabelApplyStrategyIgnore,
+	}
+}
+
+// WeekIndex - The week of the month.
+type WeekIndex string
+
+const (
+	// WeekIndexFifth - Fifth.
+	WeekIndexFifth WeekIndex = "Fifth"
+	// WeekIndexFirst - First.
+	WeekIndexFirst WeekIndex = "First"
+	// WeekIndexFourth - Fourth.
+	WeekIndexFourth WeekIndex = "Fourth"
+	// WeekIndexSecond - Second.
+	WeekIndexSecond WeekIndex = "Second"
+	// WeekIndexThird - Third.
+	WeekIndexThird WeekIndex = "Third"
+)
+
+// PossibleWeekIndexValues returns the possible values for the WeekIndex const type.
+func PossibleWeekIndexValues() []WeekIndex {
+	return []WeekIndex{
+		WeekIndexFifth,
+		WeekIndexFirst,
+		WeekIndexFourth,
+		WeekIndexSecond,
+		WeekIndexThird,
 	}
 }

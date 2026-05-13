@@ -685,6 +685,46 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ListWorkspaceAccessDetails() {
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.WorkspaceAccessDetailsResponse))
 }
 
+func (testsuite *FakeTestSuite) TestWorkspaces_GrantAdminTemporaryAccess() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Grant admin temporary access to workspace example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+
+	testsuite.serverFactory.WorkspacesServer.GrantAdminTemporaryAccess = func(ctx context.Context, workspaceID string, options *admin.WorkspacesClientGrantAdminTemporaryAccessOptions) (resp azfake.Responder[admin.WorkspacesClientGrantAdminTemporaryAccessResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[admin.WorkspacesClientGrantAdminTemporaryAccessResponse]{}
+		resp.SetResponse(http.StatusOK, admin.WorkspacesClientGrantAdminTemporaryAccessResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	_, err = client.GrantAdminTemporaryAccess(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaces_RemoveAdminTemporaryAccess() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Remove admin temporary access from workspace example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+
+	testsuite.serverFactory.WorkspacesServer.RemoveAdminTemporaryAccess = func(ctx context.Context, workspaceID string, options *admin.WorkspacesClientRemoveAdminTemporaryAccessOptions) (resp azfake.Responder[admin.WorkspacesClientRemoveAdminTemporaryAccessResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[admin.WorkspacesClientRemoveAdminTemporaryAccessResponse]{}
+		resp.SetResponse(http.StatusOK, admin.WorkspacesClientRemoveAdminTemporaryAccessResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	_, err = client.RemoveAdminTemporaryAccess(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
 func (testsuite *FakeTestSuite) TestWorkspaces_RestoreWorkspace() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -2496,7 +2536,8 @@ func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_ListExternalDataS
 				ItemID:            to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 				Paths: []string{
 					"Files/Sales/Contoso_Sales_2023"},
-				Recipient: &admin.ExternalDataShareRecipient{
+				Recipient: &admin.ExternalDataShareUserRecipient{
+					Type:              to.Ptr(admin.ExternalDataShareRecipientTypeUser),
 					UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
 				},
 				Status:      to.Ptr(admin.ExternalDataShareStatusPending),
@@ -2518,7 +2559,8 @@ func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_ListExternalDataS
 				ItemID:            to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 				Paths: []string{
 					"Files/Sales/Contoso_Sales_2023"},
-				Recipient: &admin.ExternalDataShareRecipient{
+				Recipient: &admin.ExternalDataShareUserRecipient{
+					Type:              to.Ptr(admin.ExternalDataShareRecipientTypeUser),
 					UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
 				},
 				Status:      to.Ptr(admin.ExternalDataShareStatusActive),
@@ -2539,7 +2581,8 @@ func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_ListExternalDataS
 				ItemID:            to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 				Paths: []string{
 					"Files/Sales/Contoso_Sales_2023"},
-				Recipient: &admin.ExternalDataShareRecipient{
+				Recipient: &admin.ExternalDataShareUserRecipient{
+					Type:              to.Ptr(admin.ExternalDataShareRecipientTypeUser),
 					UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
 				},
 				Status:      to.Ptr(admin.ExternalDataShareStatusInvitationExpired),
@@ -2561,8 +2604,10 @@ func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_ListExternalDataS
 				ItemID:            to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 				Paths: []string{
 					"Files/Sales/Contoso_Sales_2023"},
-				Recipient: &admin.ExternalDataShareRecipient{
-					UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
+				Recipient: &admin.ExternalDataShareSPRecipient{
+					Type:        to.Ptr(admin.ExternalDataShareRecipientTypeServicePrincipal),
+					PrincipalID: to.Ptr("a1b2c3d4-e5f6-7890-abcd-ef1234567890"),
+					TenantID:    to.Ptr("c51dc03f-268a-4da0-a879-25f24947ab8b"),
 				},
 				Status:      to.Ptr(admin.ExternalDataShareStatusRevoked),
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),

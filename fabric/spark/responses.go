@@ -6,6 +6,24 @@
 
 package spark
 
+// CapacitySettingsClientGetSparkSettingsBetaResponse contains the response from method CapacitySettingsClient.GetSparkSettingsBeta.
+type CapacitySettingsClientGetSparkSettingsBetaResponse struct {
+	// Capacity Spark settings.
+	CapacitySparkSettings
+}
+
+// CapacitySettingsClientUpdateSparkSettingsBetaResponse contains the response from method CapacitySettingsClient.UpdateSparkSettingsBeta.
+type CapacitySettingsClientUpdateSparkSettingsBetaResponse struct {
+	// Capacity Spark settings.
+	CapacitySparkSettings
+}
+
+// CustomPoolsClientCreateCapacityCustomPoolBetaResponse contains the response from method CustomPoolsClient.CreateCapacityCustomPoolBeta.
+type CustomPoolsClientCreateCapacityCustomPoolBetaResponse struct {
+	// Custom pool.
+	CustomPool
+}
+
 // CustomPoolsClientCreateWorkspaceCustomPoolResponse contains the response from method CustomPoolsClient.CreateWorkspaceCustomPool.
 type CustomPoolsClientCreateWorkspaceCustomPoolResponse struct {
 	// Custom pool.
@@ -15,9 +33,20 @@ type CustomPoolsClientCreateWorkspaceCustomPoolResponse struct {
 	Location *string
 }
 
+// CustomPoolsClientDeleteCapacityCustomPoolBetaResponse contains the response from method CustomPoolsClient.DeleteCapacityCustomPoolBeta.
+type CustomPoolsClientDeleteCapacityCustomPoolBetaResponse struct {
+	// placeholder for future response values
+}
+
 // CustomPoolsClientDeleteWorkspaceCustomPoolResponse contains the response from method CustomPoolsClient.DeleteWorkspaceCustomPool.
 type CustomPoolsClientDeleteWorkspaceCustomPoolResponse struct {
 	// placeholder for future response values
+}
+
+// CustomPoolsClientGetCapacityCustomPoolBetaResponse contains the response from method CustomPoolsClient.GetCapacityCustomPoolBeta.
+type CustomPoolsClientGetCapacityCustomPoolBetaResponse struct {
+	// Custom pool.
+	CustomPool
 }
 
 // CustomPoolsClientGetWorkspaceCustomPoolResponse contains the response from method CustomPoolsClient.GetWorkspaceCustomPool.
@@ -26,9 +55,20 @@ type CustomPoolsClientGetWorkspaceCustomPoolResponse struct {
 	CustomPool
 }
 
+// CustomPoolsClientListCapacityCustomPoolsBetaResponse contains the response from method CustomPoolsClient.NewListCapacityCustomPoolsBetaPager.
+type CustomPoolsClientListCapacityCustomPoolsBetaResponse struct {
+	CustomPools
+}
+
 // CustomPoolsClientListWorkspaceCustomPoolsResponse contains the response from method CustomPoolsClient.NewListWorkspaceCustomPoolsPager.
 type CustomPoolsClientListWorkspaceCustomPoolsResponse struct {
 	CustomPools
+}
+
+// CustomPoolsClientUpdateCapacityCustomPoolBetaResponse contains the response from method CustomPoolsClient.UpdateCapacityCustomPoolBeta.
+type CustomPoolsClientUpdateCapacityCustomPoolBetaResponse struct {
+	// Custom pool.
+	CustomPool
 }
 
 // CustomPoolsClientUpdateWorkspaceCustomPoolResponse contains the response from method CustomPoolsClient.UpdateWorkspaceCustomPool.

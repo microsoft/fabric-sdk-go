@@ -54,7 +54,8 @@ func ExampleExternalDataSharesProviderClient_NewListExternalDataSharesPager() {
 		// 			ItemID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 		// 			Paths: []string{
 		// 				"Files/Sales/Contoso_Sales_2023"},
-		// 				Recipient: &admin.ExternalDataShareRecipient{
+		// 				Recipient: &admin.ExternalDataShareUserRecipient{
+		// 					Type: to.Ptr(admin.ExternalDataShareRecipientTypeUser),
 		// 					UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
 		// 				},
 		// 				Status: to.Ptr(admin.ExternalDataShareStatusPending),
@@ -76,7 +77,8 @@ func ExampleExternalDataSharesProviderClient_NewListExternalDataSharesPager() {
 		// 				ItemID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 		// 				Paths: []string{
 		// 					"Files/Sales/Contoso_Sales_2023"},
-		// 					Recipient: &admin.ExternalDataShareRecipient{
+		// 					Recipient: &admin.ExternalDataShareUserRecipient{
+		// 						Type: to.Ptr(admin.ExternalDataShareRecipientTypeUser),
 		// 						UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
 		// 					},
 		// 					Status: to.Ptr(admin.ExternalDataShareStatusActive),
@@ -97,7 +99,8 @@ func ExampleExternalDataSharesProviderClient_NewListExternalDataSharesPager() {
 		// 					ItemID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 		// 					Paths: []string{
 		// 						"Files/Sales/Contoso_Sales_2023"},
-		// 						Recipient: &admin.ExternalDataShareRecipient{
+		// 						Recipient: &admin.ExternalDataShareUserRecipient{
+		// 							Type: to.Ptr(admin.ExternalDataShareRecipientTypeUser),
 		// 							UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
 		// 						},
 		// 						Status: to.Ptr(admin.ExternalDataShareStatusInvitationExpired),
@@ -119,8 +122,10 @@ func ExampleExternalDataSharesProviderClient_NewListExternalDataSharesPager() {
 		// 						ItemID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 		// 						Paths: []string{
 		// 							"Files/Sales/Contoso_Sales_2023"},
-		// 							Recipient: &admin.ExternalDataShareRecipient{
-		// 								UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
+		// 							Recipient: &admin.ExternalDataShareSPRecipient{
+		// 								Type: to.Ptr(admin.ExternalDataShareRecipientTypeServicePrincipal),
+		// 								PrincipalID: to.Ptr("a1b2c3d4-e5f6-7890-abcd-ef1234567890"),
+		// 								TenantID: to.Ptr("c51dc03f-268a-4da0-a879-25f24947ab8b"),
 		// 							},
 		// 							Status: to.Ptr(admin.ExternalDataShareStatusRevoked),
 		// 							WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),

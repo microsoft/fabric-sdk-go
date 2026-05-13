@@ -45,6 +45,9 @@ type ItemsClientBeginCreateMirroredAzureDatabricksCatalogOptions struct {
 // ItemsClientBeginGetMirroredAzureDatabricksCatalogDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetMirroredAzureDatabricksCatalogDefinition
 // method.
 type ItemsClientBeginGetMirroredAzureDatabricksCatalogDefinitionOptions struct {
+	// The format of the Mirrored Azure Databricks Catalog public definition.
+	Format *string
+
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }

@@ -30,7 +30,7 @@ type Definition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []DefinitionPart
 
-	// The format of the item definition. Supported format: json.
+	// The format of the reflex definition. Supported format: json.
 	Format *string
 }
 

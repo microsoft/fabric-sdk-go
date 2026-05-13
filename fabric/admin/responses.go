@@ -262,6 +262,11 @@ type WorkspacesClientGetWorkspaceResponse struct {
 	Workspace
 }
 
+// WorkspacesClientGrantAdminTemporaryAccessResponse contains the response from method WorkspacesClient.GrantAdminTemporaryAccess.
+type WorkspacesClientGrantAdminTemporaryAccessResponse struct {
+	// placeholder for future response values
+}
+
 // WorkspacesClientListGitConnectionsResponse contains the response from method WorkspacesClient.NewListGitConnectionsPager.
 type WorkspacesClientListGitConnectionsResponse struct {
 	// A response wrapper for a list of all the Git connections for a given tenant with a continuous token.
@@ -284,6 +289,11 @@ type WorkspacesClientListWorkspaceAccessDetailsResponse struct {
 type WorkspacesClientListWorkspacesResponse struct {
 	// A list of workspaces.
 	Workspaces
+}
+
+// WorkspacesClientRemoveAdminTemporaryAccessResponse contains the response from method WorkspacesClient.RemoveAdminTemporaryAccess.
+type WorkspacesClientRemoveAdminTemporaryAccessResponse struct {
+	// placeholder for future response values
 }
 
 // WorkspacesClientRestoreWorkspaceResponse contains the response from method WorkspacesClient.RestoreWorkspace.

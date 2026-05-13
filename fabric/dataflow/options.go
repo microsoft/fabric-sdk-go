@@ -40,6 +40,9 @@ type ItemsClientBeginCreateDataflowOptions struct {
 // ItemsClientBeginGetDataflowDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetDataflowDefinition
 // method.
 type ItemsClientBeginGetDataflowDefinitionOptions struct {
+	// The format of the dataflow public definition.
+	Format *string
+
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }

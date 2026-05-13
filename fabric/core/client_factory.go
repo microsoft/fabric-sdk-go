@@ -167,6 +167,14 @@ func (c *ClientFactory) NewOneLakeDataAccessSecurityClient() *OneLakeDataAccessS
 	}
 }
 
+// NewOneLakeLifecyclePolicyClient creates a new instance of OneLakeLifecyclePolicyClient.
+func (c *ClientFactory) NewOneLakeLifecyclePolicyClient() *OneLakeLifecyclePolicyClient {
+	return &OneLakeLifecyclePolicyClient{
+		internal: c.internal.WithClientName("core.OneLakeLifecyclePolicyClient"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewOneLakeSettingsClient creates a new instance of OneLakeSettingsClient.
 func (c *ClientFactory) NewOneLakeSettingsClient() *OneLakeSettingsClient {
 	return &OneLakeSettingsClient{

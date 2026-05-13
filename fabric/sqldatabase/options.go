@@ -15,6 +15,10 @@ type ItemsClientBeginCreateSQLDatabaseOptions struct {
 // ItemsClientBeginGetSQLDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetSQLDatabaseDefinition
 // method.
 type ItemsClientBeginGetSQLDatabaseDefinitionOptions struct {
+	// The format of the SQL database public definition. Supported format: dacpac and sqlproj. If no format is provided, dacpac
+	// is used.
+	Format *string
+
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }

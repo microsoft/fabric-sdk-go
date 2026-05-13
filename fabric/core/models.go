@@ -218,6 +218,20 @@ func (a *AzureDevOpsDetails) GetGitProviderDetails() *GitProviderDetails {
 	}
 }
 
+// BaseExternalDataShareRecipient - The recipient of an external data share. Use 'ExternalDataShareUserRecipient' to share
+// with a user by email, or 'ExternalDataShareSPRecipient' to share with a service principal by object ID. If 'type'
+// is not specified, it defaults to 'User'.
+type BaseExternalDataShareRecipient struct {
+	// REQUIRED; The type of the external data share recipient. Defaults to 'User' if not provided. Additional recipient types
+	// may be added over time.
+	Type *ExternalDataShareRecipientType
+}
+
+// GetBaseExternalDataShareRecipient implements the BaseExternalDataShareRecipientClassification interface for type BaseExternalDataShareRecipient.
+func (b *BaseExternalDataShareRecipient) GetBaseExternalDataShareRecipient() *BaseExternalDataShareRecipient {
+	return b
+}
+
 // BasicCredentials - Credentials for Basic CredentialType.
 type BasicCredentials struct {
 	// REQUIRED; The credential type of the connection.
@@ -413,7 +427,8 @@ type CatalogQueryRequest struct {
 	// The page size that needs to be returned. Page size must be between 1 and 1000.
 	PageSize *int32
 
-	// The text query for the search. This field supports searching across the display name and description of the CatalogEntry.
+	// The text query for the search. This field supports searching across the display name, workspace display name and description
+	// of the CatalogEntry.
 	Search *string
 }
 
@@ -424,6 +439,15 @@ type CatalogQueryResponse struct {
 
 	// The continuationToken for the next page.
 	ContinuationToken *string
+}
+
+// CatalogWorkspace - The workspace for the catalog entry.
+type CatalogWorkspace struct {
+	// The display name of the workspace.
+	DisplayName *string
+
+	// The ID of the workspace.
+	ID *string
 }
 
 // ColumnConstraint indicates a constraint that determines the permissions and visibility a user has on columns within a table.
@@ -787,6 +811,7 @@ type ConnectionRuleWorkspaceMetadata struct {
 	WorkspaceID *string
 }
 
+// ConnectionStatusError - The error information when the connection is offline.
 type ConnectionStatusError struct {
 	// REQUIRED; The error code that caused the connection to be offline.
 	ErrorCode *string
@@ -795,6 +820,8 @@ type ConnectionStatusError struct {
 	Message *string
 }
 
+// ConnectionStatusResponse - The connection status response returned when testing a connection. Includes the status and any
+// errors encountered.
 type ConnectionStatusResponse struct {
 	// REQUIRED; The status of the connection. Additional statuses may be added over time.
 	Status *TestConnectionStatus
@@ -942,7 +969,7 @@ type CreateExternalDataShareRequest struct {
 	Paths []string
 
 	// REQUIRED; The recipient who is invited to accept the external data share.
-	Recipient *ExternalDataShareRecipient
+	Recipient BaseExternalDataShareRecipientClassification
 }
 
 // CreateExternalDataShareShortcutRequest - Definitions for creating an external data share shortcut.
@@ -1865,6 +1892,9 @@ type ErrorResponse struct {
 	// READ-ONLY; A human readable representation of the error.
 	Message *string
 
+	// READ-ONLY; When true, the request can be retried. Use the Retry-After response header to determine the delay, if available.
+	IsRetriable *bool
+
 	// READ-ONLY; List of additional error details.
 	MoreDetails []ErrorResponseDetails
 
@@ -1909,7 +1939,7 @@ type ExternalDataShare struct {
 	Paths []string
 
 	// READ-ONLY; The recipient who was invited to accept the external data share.
-	Recipient *ExternalDataShareRecipient
+	Recipient BaseExternalDataShareRecipientClassification
 
 	// READ-ONLY; The status of the external data share.
 	Status *ExternalDataShareStatus
@@ -1972,13 +2002,25 @@ type ExternalDataShareProviderTenantDetails struct {
 	VerifiedDomainName *string
 }
 
-// ExternalDataShareRecipient - A representation of the the external data share recipient.
-type ExternalDataShareRecipient struct {
-	// REQUIRED; The recipient's email address.
-	UserPrincipalName *string
+// ExternalDataShareSPRecipient - An external data share recipient that is a service principal, identified by principal ID
+// and tenant ID.
+type ExternalDataShareSPRecipient struct {
+	// REQUIRED; The principal ID of the service principal recipient. This is equivalent to the Entra ID object ID.
+	PrincipalID *string
 
-	// The recipient's tenant ID.
+	// REQUIRED; The tenant ID of the service principal recipient.
 	TenantID *string
+
+	// REQUIRED; The type of the external data share recipient. Defaults to 'User' if not provided. Additional recipient types
+	// may be added over time.
+	Type *ExternalDataShareRecipientType
+}
+
+// GetBaseExternalDataShareRecipient implements the BaseExternalDataShareRecipientClassification interface for type ExternalDataShareSPRecipient.
+func (e *ExternalDataShareSPRecipient) GetBaseExternalDataShareRecipient() *BaseExternalDataShareRecipient {
+	return &BaseExternalDataShareRecipient{
+		Type: e.Type,
+	}
 }
 
 // ExternalDataShareShortcutInfo - Information about a shortcut that was created by accepting an external data share invitation.
@@ -2001,6 +2043,27 @@ type ExternalDataShareTarget struct {
 	// REQUIRED; A string representing the connection that is bound with the shortcut. The connectionId is a unique identifier
 	// used to establish a connection between the shortcut and the target datasource.
 	ConnectionID *string
+}
+
+// ExternalDataShareUserRecipient - An external data share recipient that is a user, identified by user principal name (email
+// address). This is the default recipient type.
+type ExternalDataShareUserRecipient struct {
+	// REQUIRED; The type of the external data share recipient. Defaults to 'User' if not provided. Additional recipient types
+	// may be added over time.
+	Type *ExternalDataShareRecipientType
+
+	// REQUIRED; The user principal name (email address) of the recipient.
+	UserPrincipalName *string
+
+	// The tenant ID of the user recipient. Optional.
+	TenantID *string
+}
+
+// GetBaseExternalDataShareRecipient implements the BaseExternalDataShareRecipientClassification interface for type ExternalDataShareUserRecipient.
+func (e *ExternalDataShareUserRecipient) GetBaseExternalDataShareRecipient() *BaseExternalDataShareRecipient {
+	return &BaseExternalDataShareRecipient{
+		Type: e.Type,
+	}
 }
 
 // ExternalDataShares - A list of external data shares with a continuation token.
@@ -2100,6 +2163,20 @@ type GetOneLakeSettingsResponse struct {
 
 	// Immutability settings of the workspace.
 	ImmutabilityPolicies []ImmutabilityPolicy
+
+	// Lifecycle management settings for the workspace. Only present when lifecycle management is enabled.
+	Lifecycle *GetOneLakeSettingsResponseLifecycle
+}
+
+// GetOneLakeSettingsResponseLifecycle - Lifecycle management settings for the workspace. Only present when lifecycle management
+// is enabled.
+type GetOneLakeSettingsResponseLifecycle struct {
+	// REQUIRED; The default access tier for the workspace. All files without an explicitly set tier are stored in the default
+	// tier.
+	DefaultTier *OneLakeAccessTier
+
+	// REQUIRED; Indicates whether there is at least one active lifecycle rule in the workspace.
+	Policy *OneLakeLifecyclePolicyStatus
 }
 
 // GitConnectRequest - Contains the Git connect request data.
@@ -2302,6 +2379,15 @@ type ImportItemDefinitionsDetails struct {
 	OperationType *ItemDefinitionOperationType
 }
 
+// ImportOneLakeWorkspaceLifecyclePolicyRequest - Request for importing a OneLake workspace lifecycle policy. The request
+// body follows the same structure as Azure Storage lifecycle management
+// [https://learn.microsoft.com/azure/storage/blobs/lifecycle-management-overview]. Send an empty rules array to delete the
+// existing policy.
+type ImportOneLakeWorkspaceLifecyclePolicyRequest struct {
+	// REQUIRED; The lifecycle policy properties. The structure follows Azure Storage lifecycle management [https://learn.microsoft.com/azure/storage/blobs/lifecycle-management-overview].
+	Properties any
+}
+
 // InboundRules - The policy for all inbound communications to a workspace.
 type InboundRules struct {
 	// The policy for inbound communications to a workspace from public networks.
@@ -2388,6 +2474,9 @@ type ItemCatalogEntry struct {
 
 	// The description of the catalog entry.
 	Description *string
+
+	// The hierarchy of the catalog entry.
+	Hierarchy *ItemCatalogEntryHierarchy
 }
 
 // GetCatalogEntry implements the CatalogEntryClassification interface for type ItemCatalogEntry.
@@ -2398,6 +2487,13 @@ func (i *ItemCatalogEntry) GetCatalogEntry() *CatalogEntry {
 		DisplayName:      i.DisplayName,
 		ID:               i.ID,
 	}
+}
+
+// ItemCatalogEntryHierarchy - The immediate ancestors of the item in Fabric's data architecture. Only applicable levels are
+// returned.
+type ItemCatalogEntryHierarchy struct {
+	// The workspace that contains the item.
+	Workspace *CatalogWorkspace
 }
 
 // ItemChange - Contains the item's change information.
@@ -2710,7 +2806,7 @@ type LakehouseOneLakeDiagnosticSettingsDestination struct {
 	// REQUIRED; The item type of the destination.
 	Type *string
 
-	// Reference to the destination lakehouse.
+	// Reference to the destination lakehouse. Currently, only ItemReferenceById is supported.
 	Lakehouse ItemReferenceClassification
 }
 
@@ -2845,6 +2941,12 @@ type MicrosoftEntraMember struct {
 	ObjectType *ObjectType
 }
 
+// ModifyOneLakeWorkspaceDefaultTierResponse - Response for modifying the default OneLake access tier.
+type ModifyOneLakeWorkspaceDefaultTierResponse struct {
+	// REQUIRED; The new default access tier for the workspace.
+	DefaultTier *OneLakeAccessTier
+}
+
 // MonthlyOccurrence - Specifies the day for triggering jobs
 type MonthlyOccurrence struct {
 	// REQUIRED; An enumerator that lists the day for triggering jobs. Additional types may be added over time.
@@ -2908,7 +3010,9 @@ type MovedItems struct {
 
 // NetworkRules - The policy defining access to/from a workspace to/from public networks.
 type NetworkRules struct {
-	// Default policy for workspace access from public networks.
+	// The default policy for workspace access from public networks. If omitted from a PUT request body, this field defaults to
+	// Allow, which may unintentionally open network access. Always explicitly specify
+	// this field in every PUT request body.
 	DefaultAction *NetworkAccessRule
 }
 
@@ -3187,6 +3291,17 @@ type OneLakeEndpoints struct {
 	// preferWorkspaceSpecificEndpoints or the workspace has public access disabled, the workspace-specific endpoint is provided
 	// to allow for access over private links.
 	DfsEndpoint *string
+}
+
+// OneLakeWorkspaceLifecyclePolicyResponse - The OneLake workspace lifecycle policy response. Contains the policy properties
+// and type as returned by Azure Storage lifecycle management
+// [https://learn.microsoft.com/azure/storage/blobs/lifecycle-management-overview].
+type OneLakeWorkspaceLifecyclePolicyResponse struct {
+	// REQUIRED; The lifecycle policy properties. The structure follows Azure Storage lifecycle management [https://learn.microsoft.com/azure/storage/blobs/lifecycle-management-overview].
+	Properties any
+
+	// The ARM resource type, as returned by Azure Storage lifecycle management [https://learn.microsoft.com/azure/storage/blobs/lifecycle-management-overview].
+	Type *string
 }
 
 // OperationState - An object describing the details and current state of a long running operation
@@ -4441,6 +4556,28 @@ func (w *WorkspaceIdentityCredentials) GetCredentials() *Credentials {
 	}
 }
 
+// WorkspaceInboundAzureResourceRule - Represents a single inbound Azure resource instance rule that specifies an allowed
+// Azure resource instance for the workspace.
+type WorkspaceInboundAzureResourceRule struct {
+	// REQUIRED; A user-friendly display name for the rule. This name is used for display purposes only and does not affect the
+	// rule's functionality.
+	DisplayName *string
+
+	// REQUIRED; The full Azure Resource Manager (ARM) resource ID of the resource within the rule. This is a unique identifier
+	// in the format:
+	// /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}.
+	// You can retrieve this from the Azure Portal (Resource
+	// properties), Azure CLI (az resource show), or ARM templates.
+	ResourceID *string
+}
+
+// WorkspaceInboundAzureResourceRules - Represents a collection of inbound Azure resource instance rules configured for a
+// workspace. These rules define which Azure resource instances are allowed to access the workspace.
+type WorkspaceInboundAzureResourceRules struct {
+	// An array of inbound Azure resource instance rules associated with the workspace.
+	Rules []WorkspaceInboundAzureResourceRule
+}
+
 // WorkspaceInfo - A workspace object.
 type WorkspaceInfo struct {
 	// REQUIRED; The workspace display name.
@@ -4499,7 +4636,9 @@ type WorkspaceOutboundConnections struct {
 	// "Allow", all unspecified connection types are permitted by default. If set to
 	// "Deny", all unspecified connection types are blocked by default unless explicitly allowed. This setting acts as a global
 	// fallback policy and is critical for enforcing a secure default posture in
-	// environments where only known and trusted connections should be permitted.
+	// environments where only known and trusted connections should be permitted.If omitted from a PUT request body, this field
+	// defaults to Allow, which may unintentionally permit all outbound connections.
+	// Always explicitly specify this field in every PUT request body.
 	DefaultAction *ConnectionAccessActionType
 
 	// A list of rules that define outbound access behavior for specific cloud connection types. Each rule may include endpoint-based
@@ -4516,7 +4655,9 @@ type WorkspaceOutboundGateways struct {
 
 	// Defines the default behavior for all gateways that are not explicitly listed in the allowed list array. If set to "Allow",
 	// all unspecified gateways are permitted by default. If set to "Deny", all
-	// unspecified gateways are blocked.
+	// unspecified gateways are blocked.If omitted from a PUT request body, this field defaults to Allow, which may unintentionally
+	// permit all outbound gateway connections. Always explicitly specify this
+	// field in every PUT request body.
 	DefaultAction *GatewayAccessActionType
 }
 

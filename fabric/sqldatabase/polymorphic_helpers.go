@@ -33,29 +33,6 @@ func unmarshalCreationPayloadClassification(rawMsg json.RawMessage) (CreationPay
 	return b, nil
 }
 
-func unmarshalItemReferenceClassification(rawMsg json.RawMessage) (ItemReferenceClassification, error) {
-	if rawMsg == nil || string(rawMsg) == "null" {
-		return nil, nil
-	}
-	var m map[string]any
-	if err := json.Unmarshal(rawMsg, &m); err != nil {
-		return nil, err
-	}
-	var b ItemReferenceClassification
-	switch m["referenceType"] {
-	case string(ItemReferenceTypeByID):
-		b = &ItemReferenceByID{}
-	case string(ItemReferenceTypeByVariable):
-		b = &ItemReferenceByVariable{}
-	default:
-		b = &ItemReference{}
-	}
-	if err := json.Unmarshal(rawMsg, b); err != nil {
-		return nil, err
-	}
-	return b, nil
-}
-
 func unmarshalPrincipalClassification(rawMsg json.RawMessage) (PrincipalClassification, error) {
 	if rawMsg == nil || string(rawMsg) == "null" {
 		return nil, nil

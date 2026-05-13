@@ -1102,6 +1102,72 @@ func (testsuite *FakeTestSuite) TestWorkspaces_SetGitOutboundPolicy() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
+func (testsuite *FakeTestSuite) TestWorkspaces_GetInboundAzureResourceRules() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get workspace resource instance example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+
+	exampleRes := core.WorkspaceInboundAzureResourceRules{
+		Rules: []core.WorkspaceInboundAzureResourceRule{
+			{
+				DisplayName: to.Ptr("SQL Server - testsql1"),
+				ResourceID:  to.Ptr("/subscriptions/2374e516-d28b-4898-a39c-6070e078ae31/resourceGroups/testrg/providers/Microsoft.Sql/servers/testsql1"),
+			},
+			{
+				DisplayName: to.Ptr("Storage Account - teststorageacct"),
+				ResourceID:  to.Ptr("/subscriptions/2374e516-d28b-4898-a39c-6070e078ae31/resourceGroups/testrg/providers/Microsoft.Storage/storageAccounts/teststorageacct"),
+			}},
+	}
+
+	testsuite.serverFactory.WorkspacesServer.GetInboundAzureResourceRules = func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetInboundAzureResourceRulesOptions) (resp azfake.Responder[core.WorkspacesClientGetInboundAzureResourceRulesResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.WorkspacesClientGetInboundAzureResourceRulesResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientGetInboundAzureResourceRulesResponse{WorkspaceInboundAzureResourceRules: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	res, err := client.GetInboundAzureResourceRules(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.WorkspaceInboundAzureResourceRules))
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaces_SetInboundAzureResourceRules() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Set workspace resource instance example"},
+	})
+	var exampleWorkspaceID string
+	var exampleWorkspaceInboundAzureResourceRules core.WorkspaceInboundAzureResourceRules
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+	exampleWorkspaceInboundAzureResourceRules = core.WorkspaceInboundAzureResourceRules{
+		Rules: []core.WorkspaceInboundAzureResourceRule{
+			{
+				DisplayName: to.Ptr("SQL Server - testsql1"),
+				ResourceID:  to.Ptr("/subscriptions/2374e516-d28b-4898-a39c-6070e078ae31/resourceGroups/testrg/providers/Microsoft.Sql/servers/testsql1"),
+			},
+			{
+				DisplayName: to.Ptr("Storage Account - teststorageacct"),
+				ResourceID:  to.Ptr("/subscriptions/2374e516-d28b-4898-a39c-6070e078ae31/resourceGroups/testrg/providers/Microsoft.Storage/storageAccounts/teststorageacct"),
+			}},
+	}
+
+	testsuite.serverFactory.WorkspacesServer.SetInboundAzureResourceRules = func(ctx context.Context, workspaceID string, workspaceInboundAzureResourceRules core.WorkspaceInboundAzureResourceRules, options *core.WorkspacesClientSetInboundAzureResourceRulesOptions) (resp azfake.Responder[core.WorkspacesClientSetInboundAzureResourceRulesResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleWorkspaceInboundAzureResourceRules, workspaceInboundAzureResourceRules))
+		resp = azfake.Responder[core.WorkspacesClientSetInboundAzureResourceRulesResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientSetInboundAzureResourceRulesResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	_, err = client.SetInboundAzureResourceRules(ctx, exampleWorkspaceID, exampleWorkspaceInboundAzureResourceRules, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
 func (testsuite *FakeTestSuite) TestItems_ListItems() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -2760,16 +2826,16 @@ func (testsuite *FakeTestSuite) TestJobScheduler_GetItemSchedule() {
 		},
 		CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T05:35:20.536Z"); return t }()),
 		Enabled:         to.Ptr(true),
+		ID:              to.Ptr("11111111-2222-3333-4444-555555555555"),
+		Owner: &core.UserPrincipal{
+			Type: to.Ptr(core.PrincipalTypeUser),
+			ID:   to.Ptr("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+		},
 		ExecutionData: map[string]any{
 			"optimizeSettings": map[string]any{
 				"vOrder": false,
 			},
 			"tableName": "Table2",
-		},
-		ID: to.Ptr("11111111-2222-3333-4444-555555555555"),
-		Owner: &core.UserPrincipal{
-			Type: to.Ptr(core.PrincipalTypeUser),
-			ID:   to.Ptr("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
 		},
 	}
 
@@ -2893,16 +2959,16 @@ func (testsuite *FakeTestSuite) TestJobScheduler_UpdateItemSchedule() {
 		},
 		CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T05:35:20.536Z"); return t }()),
 		Enabled:         to.Ptr(true),
+		ID:              to.Ptr("11111111-2222-3333-4444-555555555555"),
+		Owner: &core.UserPrincipal{
+			Type: to.Ptr(core.PrincipalTypeUser),
+			ID:   to.Ptr("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+		},
 		ExecutionData: map[string]any{
 			"optimizeSettings": map[string]any{
 				"vOrder": false,
 			},
 			"tableName": "Table2",
-		},
-		ID: to.Ptr("11111111-2222-3333-4444-555555555555"),
-		Owner: &core.UserPrincipal{
-			Type: to.Ptr(core.PrincipalTypeUser),
-			ID:   to.Ptr("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
 		},
 	}
 
@@ -5318,7 +5384,7 @@ func (testsuite *FakeTestSuite) TestDomains_GetDomain() {
 func (testsuite *FakeTestSuite) TestOneLakeSettings_GetSettings() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Get OneLake Setting for workspace with diagnostic setting example"},
+		"example-id": {"Get OneLake Settings with all settings example"},
 	})
 	var exampleWorkspaceID string
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
@@ -5334,6 +5400,15 @@ func (testsuite *FakeTestSuite) TestOneLakeSettings_GetSettings() {
 				},
 			},
 			Status: to.Ptr("Enabled"),
+		},
+		ImmutabilityPolicies: []core.ImmutabilityPolicy{
+			{
+				RetentionDays: to.Ptr[int32](30),
+				Scope:         to.Ptr(core.ImmutabilityScopeDiagnosticLogs),
+			}},
+		Lifecycle: &core.GetOneLakeSettingsResponseLifecycle{
+			DefaultTier: to.Ptr(core.OneLakeAccessTierCool),
+			Policy:      to.Ptr(core.OneLakeLifecyclePolicyStatusActive),
 		},
 	}
 
@@ -5351,13 +5426,52 @@ func (testsuite *FakeTestSuite) TestOneLakeSettings_GetSettings() {
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Get OneLake Setting for workspace without diagnostic setting example"},
+		"example-id": {"Get OneLake Settings with diagnostics disabled example"},
 	})
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
 
 	exampleRes = core.GetOneLakeSettingsResponse{
 		Diagnostics: &core.OneLakeDiagnosticSettings{
 			Status: to.Ptr("Disabled"),
+		},
+		Lifecycle: &core.GetOneLakeSettingsResponseLifecycle{
+			DefaultTier: to.Ptr(core.OneLakeAccessTierHot),
+			Policy:      to.Ptr(core.OneLakeLifecyclePolicyStatusInactive),
+		},
+	}
+
+	testsuite.serverFactory.OneLakeSettingsServer.GetSettings = func(ctx context.Context, workspaceID string, options *core.OneLakeSettingsClientGetSettingsOptions) (resp azfake.Responder[core.OneLakeSettingsClientGetSettingsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.OneLakeSettingsClientGetSettingsResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeSettingsClientGetSettingsResponse{GetOneLakeSettingsResponse: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.GetSettings(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.GetOneLakeSettingsResponse))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get OneLake Settings with diagnostics enabled example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
+
+	exampleRes = core.GetOneLakeSettingsResponse{
+		Diagnostics: &core.OneLakeDiagnosticSettings{
+			Destination: &core.LakehouseOneLakeDiagnosticSettingsDestination{
+				Type: to.Ptr("Lakehouse"),
+				Lakehouse: &core.ItemReferenceByID{
+					ReferenceType: to.Ptr(core.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("33d48b2c-5b7c-42e2-8467-87fecb105fdd"),
+					WorkspaceID:   to.Ptr("85173301-af01-49c9-b667-03edc44517da"),
+				},
+			},
+			Status: to.Ptr("Enabled"),
+		},
+		Lifecycle: &core.GetOneLakeSettingsResponseLifecycle{
+			DefaultTier: to.Ptr(core.OneLakeAccessTierCool),
+			Policy:      to.Ptr(core.OneLakeLifecyclePolicyStatusActive),
 		},
 	}
 
@@ -5395,6 +5509,10 @@ func (testsuite *FakeTestSuite) TestOneLakeSettings_GetSettings() {
 				RetentionDays: to.Ptr[int32](30),
 				Scope:         to.Ptr(core.ImmutabilityScopeDiagnosticLogs),
 			}},
+		Lifecycle: &core.GetOneLakeSettingsResponseLifecycle{
+			DefaultTier: to.Ptr(core.OneLakeAccessTierCool),
+			Policy:      to.Ptr(core.OneLakeLifecyclePolicyStatusActive),
+		},
 	}
 
 	testsuite.serverFactory.OneLakeSettingsServer.GetSettings = func(ctx context.Context, workspaceID string, options *core.OneLakeSettingsClientGetSettingsOptions) (resp azfake.Responder[core.OneLakeSettingsClientGetSettingsResponse], errResp azfake.ErrorResponder) {
@@ -5417,6 +5535,10 @@ func (testsuite *FakeTestSuite) TestOneLakeSettings_GetSettings() {
 	exampleRes = core.GetOneLakeSettingsResponse{
 		Diagnostics: &core.OneLakeDiagnosticSettings{
 			Status: to.Ptr("Disabled"),
+		},
+		Lifecycle: &core.GetOneLakeSettingsResponseLifecycle{
+			DefaultTier: to.Ptr(core.OneLakeAccessTierHot),
+			Policy:      to.Ptr(core.OneLakeLifecyclePolicyStatusInactive),
 		},
 	}
 
@@ -5584,6 +5706,498 @@ func (testsuite *FakeTestSuite) TestOneLakeSettings_ModifyImmutabilityPolicy() {
 
 	_, err = client.ModifyImmutabilityPolicy(ctx, exampleWorkspaceID, exampleImmutabilityPolicyRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestOneLakeSettings_ModifyDefaultTier() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Modify default tier to Cool example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDefaultTier core.OneLakeAccessTier
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
+	exampleDefaultTier = core.OneLakeAccessTierCool
+
+	exampleRes := core.ModifyOneLakeWorkspaceDefaultTierResponse{
+		DefaultTier: to.Ptr(core.OneLakeAccessTierCool),
+	}
+
+	testsuite.serverFactory.OneLakeSettingsServer.ModifyDefaultTier = func(ctx context.Context, workspaceID string, defaultTier core.OneLakeAccessTier, options *core.OneLakeSettingsClientModifyDefaultTierOptions) (resp azfake.Responder[core.OneLakeSettingsClientModifyDefaultTierResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDefaultTier, defaultTier)
+		resp = azfake.Responder[core.OneLakeSettingsClientModifyDefaultTierResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeSettingsClientModifyDefaultTierResponse{ModifyOneLakeWorkspaceDefaultTierResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewOneLakeSettingsClient()
+	res, err := client.ModifyDefaultTier(ctx, exampleWorkspaceID, exampleDefaultTier, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ModifyOneLakeWorkspaceDefaultTierResponse))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Modify default tier to Hot example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
+	exampleDefaultTier = core.OneLakeAccessTierHot
+
+	exampleRes = core.ModifyOneLakeWorkspaceDefaultTierResponse{
+		DefaultTier: to.Ptr(core.OneLakeAccessTierHot),
+	}
+
+	testsuite.serverFactory.OneLakeSettingsServer.ModifyDefaultTier = func(ctx context.Context, workspaceID string, defaultTier core.OneLakeAccessTier, options *core.OneLakeSettingsClientModifyDefaultTierOptions) (resp azfake.Responder[core.OneLakeSettingsClientModifyDefaultTierResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDefaultTier, defaultTier)
+		resp = azfake.Responder[core.OneLakeSettingsClientModifyDefaultTierResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeSettingsClientModifyDefaultTierResponse{ModifyOneLakeWorkspaceDefaultTierResponse: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.ModifyDefaultTier(ctx, exampleWorkspaceID, exampleDefaultTier, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ModifyOneLakeWorkspaceDefaultTierResponse))
+}
+
+func (testsuite *FakeTestSuite) TestOneLakeLifecyclePolicy_ExportPolicy() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Export OneLake lifecycle policy example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
+
+	exampleRes := core.OneLakeWorkspaceLifecyclePolicyResponse{
+		Type: to.Ptr("Microsoft.Storage/storageAccounts/managementPolicies"),
+		Properties: map[string]any{
+			"lastModifiedTime": "2026-02-27T00:05:17.74123Z",
+			"policy": map[string]any{
+				"rules": []any{
+					map[string]any{
+						"name": "BasicCoolTier",
+						"type": "Lifecycle",
+						"definition": map[string]any{
+							"actions": map[string]any{
+								"baseBlob": map[string]any{
+									"tierToCool": map[string]any{
+										"daysAfterLastAccessTimeGreaterThan": float64(30),
+									},
+								},
+							},
+							"filters": map[string]any{
+								"blobTypes": []any{
+									"blockBlob",
+								},
+							},
+						},
+						"enabled": true,
+					},
+				},
+			},
+		},
+	}
+
+	testsuite.serverFactory.OneLakeLifecyclePolicyServer.ExportPolicy = func(ctx context.Context, workspaceID string, options *core.OneLakeLifecyclePolicyClientExportPolicyOptions) (resp azfake.Responder[core.OneLakeLifecyclePolicyClientExportPolicyResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.OneLakeLifecyclePolicyClientExportPolicyResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeLifecyclePolicyClientExportPolicyResponse{OneLakeWorkspaceLifecyclePolicyResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewOneLakeLifecyclePolicyClient()
+	res, err := client.ExportPolicy(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.OneLakeWorkspaceLifecyclePolicyResponse))
+}
+
+func (testsuite *FakeTestSuite) TestOneLakeLifecyclePolicy_ImportPolicy() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Import OneLake lifecycle policy create example"},
+	})
+	var exampleWorkspaceID string
+	var exampleImportOneLakeWorkspaceLifecyclePolicyRequest core.ImportOneLakeWorkspaceLifecyclePolicyRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
+	exampleImportOneLakeWorkspaceLifecyclePolicyRequest = core.ImportOneLakeWorkspaceLifecyclePolicyRequest{
+		Properties: map[string]any{
+			"policy": map[string]any{
+				"rules": []any{
+					map[string]any{
+						"name": "BasicCoolTier",
+						"type": "Lifecycle",
+						"definition": map[string]any{
+							"actions": map[string]any{
+								"baseBlob": map[string]any{
+									"tierToCool": map[string]any{
+										"daysAfterLastAccessTimeGreaterThan": float64(30),
+									},
+								},
+							},
+							"filters": map[string]any{
+								"blobTypes": []any{
+									"blockBlob",
+								},
+							},
+						},
+						"enabled": true,
+					},
+				},
+			},
+		},
+	}
+
+	exampleRes := core.OneLakeWorkspaceLifecyclePolicyResponse{
+		Type: to.Ptr("Microsoft.Storage/storageAccounts/managementPolicies"),
+		Properties: map[string]any{
+			"lastModifiedTime": "2026-02-27T00:10:45.123456Z",
+			"policy": map[string]any{
+				"rules": []any{
+					map[string]any{
+						"name": "BasicCoolTier",
+						"type": "Lifecycle",
+						"definition": map[string]any{
+							"actions": map[string]any{
+								"baseBlob": map[string]any{
+									"tierToCool": map[string]any{
+										"daysAfterLastAccessTimeGreaterThan": float64(30),
+									},
+								},
+							},
+							"filters": map[string]any{
+								"blobTypes": []any{
+									"blockBlob",
+								},
+							},
+						},
+						"enabled": true,
+					},
+				},
+			},
+		},
+	}
+
+	testsuite.serverFactory.OneLakeLifecyclePolicyServer.ImportPolicy = func(ctx context.Context, workspaceID string, importOneLakeWorkspaceLifecyclePolicyRequest core.ImportOneLakeWorkspaceLifecyclePolicyRequest, options *core.OneLakeLifecyclePolicyClientImportPolicyOptions) (resp azfake.Responder[core.OneLakeLifecyclePolicyClientImportPolicyResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleImportOneLakeWorkspaceLifecyclePolicyRequest, importOneLakeWorkspaceLifecyclePolicyRequest))
+		resp = azfake.Responder[core.OneLakeLifecyclePolicyClientImportPolicyResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeLifecyclePolicyClientImportPolicyResponse{OneLakeWorkspaceLifecyclePolicyResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewOneLakeLifecyclePolicyClient()
+	res, err := client.ImportPolicy(ctx, exampleWorkspaceID, exampleImportOneLakeWorkspaceLifecyclePolicyRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.OneLakeWorkspaceLifecyclePolicyResponse))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Import OneLake lifecycle policy with diagnostic events scope example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
+	exampleImportOneLakeWorkspaceLifecyclePolicyRequest = core.ImportOneLakeWorkspaceLifecyclePolicyRequest{
+		Properties: map[string]any{
+			"policy": map[string]any{
+				"rules": []any{
+					map[string]any{
+						"name": "WithPrefixMatch",
+						"type": "Lifecycle",
+						"definition": map[string]any{
+							"actions": map[string]any{
+								"baseBlob": map[string]any{
+									"tierToCool": map[string]any{
+										"daysAfterLastAccessTimeGreaterThan": float64(30),
+									},
+								},
+							},
+							"filters": map[string]any{
+								"blobTypes": []any{
+									"blockBlob",
+								},
+								"prefixMatch": []any{
+									"*/diagnosticLogs",
+								},
+							},
+						},
+						"enabled": true,
+					},
+				},
+			},
+		},
+	}
+
+	exampleRes = core.OneLakeWorkspaceLifecyclePolicyResponse{
+		Type: to.Ptr("Microsoft.Storage/storageAccounts/managementPolicies"),
+		Properties: map[string]any{
+			"lastModifiedTime": "2026-02-27T00:25:08.654321Z",
+			"policy": map[string]any{
+				"rules": []any{
+					map[string]any{
+						"name": "WithPrefixMatch",
+						"type": "Lifecycle",
+						"definition": map[string]any{
+							"actions": map[string]any{
+								"baseBlob": map[string]any{
+									"tierToCool": map[string]any{
+										"daysAfterLastAccessTimeGreaterThan": float64(30),
+									},
+								},
+							},
+							"filters": map[string]any{
+								"blobTypes": []any{
+									"blockBlob",
+								},
+								"prefixMatch": []any{
+									"*/diagnosticLogs",
+								},
+							},
+						},
+						"enabled": true,
+					},
+				},
+			},
+		},
+	}
+
+	testsuite.serverFactory.OneLakeLifecyclePolicyServer.ImportPolicy = func(ctx context.Context, workspaceID string, importOneLakeWorkspaceLifecyclePolicyRequest core.ImportOneLakeWorkspaceLifecyclePolicyRequest, options *core.OneLakeLifecyclePolicyClientImportPolicyOptions) (resp azfake.Responder[core.OneLakeLifecyclePolicyClientImportPolicyResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleImportOneLakeWorkspaceLifecyclePolicyRequest, importOneLakeWorkspaceLifecyclePolicyRequest))
+		resp = azfake.Responder[core.OneLakeLifecyclePolicyClientImportPolicyResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeLifecyclePolicyClientImportPolicyResponse{OneLakeWorkspaceLifecyclePolicyResponse: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.ImportPolicy(ctx, exampleWorkspaceID, exampleImportOneLakeWorkspaceLifecyclePolicyRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.OneLakeWorkspaceLifecyclePolicyResponse))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Import OneLake lifecycle policy with multiple actions example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
+	exampleImportOneLakeWorkspaceLifecyclePolicyRequest = core.ImportOneLakeWorkspaceLifecyclePolicyRequest{
+		Properties: map[string]any{
+			"policy": map[string]any{
+				"rules": []any{
+					map[string]any{
+						"name": "MultiTierRule",
+						"type": "Lifecycle",
+						"definition": map[string]any{
+							"actions": map[string]any{
+								"baseBlob": map[string]any{
+									"enableAutoTierToHotFromCool": true,
+									"tierToCold": map[string]any{
+										"daysAfterModificationGreaterThan": float64(90),
+									},
+									"tierToCool": map[string]any{
+										"daysAfterLastAccessTimeGreaterThan": float64(30),
+									},
+								},
+							},
+							"filters": map[string]any{
+								"blobTypes": []any{
+									"blockBlob",
+								},
+							},
+						},
+						"enabled": true,
+					},
+				},
+			},
+		},
+	}
+
+	exampleRes = core.OneLakeWorkspaceLifecyclePolicyResponse{
+		Type: to.Ptr("Microsoft.Storage/storageAccounts/managementPolicies"),
+		Properties: map[string]any{
+			"lastModifiedTime": "2026-02-27T00:15:30.987654Z",
+			"policy": map[string]any{
+				"rules": []any{
+					map[string]any{
+						"name": "MultiTierRule",
+						"type": "Lifecycle",
+						"definition": map[string]any{
+							"actions": map[string]any{
+								"baseBlob": map[string]any{
+									"enableAutoTierToHotFromCool": true,
+									"tierToCold": map[string]any{
+										"daysAfterModificationGreaterThan": float64(90),
+									},
+									"tierToCool": map[string]any{
+										"daysAfterLastAccessTimeGreaterThan": float64(30),
+									},
+								},
+							},
+							"filters": map[string]any{
+								"blobTypes": []any{
+									"blockBlob",
+								},
+							},
+						},
+						"enabled": true,
+					},
+				},
+			},
+		},
+	}
+
+	testsuite.serverFactory.OneLakeLifecyclePolicyServer.ImportPolicy = func(ctx context.Context, workspaceID string, importOneLakeWorkspaceLifecyclePolicyRequest core.ImportOneLakeWorkspaceLifecyclePolicyRequest, options *core.OneLakeLifecyclePolicyClientImportPolicyOptions) (resp azfake.Responder[core.OneLakeLifecyclePolicyClientImportPolicyResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleImportOneLakeWorkspaceLifecyclePolicyRequest, importOneLakeWorkspaceLifecyclePolicyRequest))
+		resp = azfake.Responder[core.OneLakeLifecyclePolicyClientImportPolicyResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeLifecyclePolicyClientImportPolicyResponse{OneLakeWorkspaceLifecyclePolicyResponse: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.ImportPolicy(ctx, exampleWorkspaceID, exampleImportOneLakeWorkspaceLifecyclePolicyRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.OneLakeWorkspaceLifecyclePolicyResponse))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Import OneLake lifecycle policy with multiple rules example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
+	exampleImportOneLakeWorkspaceLifecyclePolicyRequest = core.ImportOneLakeWorkspaceLifecyclePolicyRequest{
+		Properties: map[string]any{
+			"policy": map[string]any{
+				"rules": []any{
+					map[string]any{
+						"name": "Rule1_CoolAfterAccess",
+						"type": "Lifecycle",
+						"definition": map[string]any{
+							"actions": map[string]any{
+								"baseBlob": map[string]any{
+									"tierToCool": map[string]any{
+										"daysAfterLastAccessTimeGreaterThan": float64(14),
+									},
+								},
+							},
+							"filters": map[string]any{
+								"blobTypes": []any{
+									"blockBlob",
+								},
+							},
+						},
+						"enabled": true,
+					},
+					map[string]any{
+						"name": "Rule2_ColdAfterCreation",
+						"type": "Lifecycle",
+						"definition": map[string]any{
+							"actions": map[string]any{
+								"baseBlob": map[string]any{
+									"tierToCold": map[string]any{
+										"daysAfterCreationGreaterThan": float64(180),
+									},
+								},
+							},
+							"filters": map[string]any{
+								"blobTypes": []any{
+									"blockBlob",
+								},
+							},
+						},
+						"enabled": true,
+					},
+				},
+			},
+		},
+	}
+
+	exampleRes = core.OneLakeWorkspaceLifecyclePolicyResponse{
+		Type: to.Ptr("Microsoft.Storage/storageAccounts/managementPolicies"),
+		Properties: map[string]any{
+			"lastModifiedTime": "2026-02-27T00:20:12.345678Z",
+			"policy": map[string]any{
+				"rules": []any{
+					map[string]any{
+						"name": "Rule1_CoolAfterAccess",
+						"type": "Lifecycle",
+						"definition": map[string]any{
+							"actions": map[string]any{
+								"baseBlob": map[string]any{
+									"tierToCool": map[string]any{
+										"daysAfterLastAccessTimeGreaterThan": float64(14),
+									},
+								},
+							},
+							"filters": map[string]any{
+								"blobTypes": []any{
+									"blockBlob",
+								},
+							},
+						},
+						"enabled": true,
+					},
+					map[string]any{
+						"name": "Rule2_ColdAfterCreation",
+						"type": "Lifecycle",
+						"definition": map[string]any{
+							"actions": map[string]any{
+								"baseBlob": map[string]any{
+									"tierToCold": map[string]any{
+										"daysAfterCreationGreaterThan": float64(180),
+									},
+								},
+							},
+							"filters": map[string]any{
+								"blobTypes": []any{
+									"blockBlob",
+								},
+							},
+						},
+						"enabled": true,
+					},
+				},
+			},
+		},
+	}
+
+	testsuite.serverFactory.OneLakeLifecyclePolicyServer.ImportPolicy = func(ctx context.Context, workspaceID string, importOneLakeWorkspaceLifecyclePolicyRequest core.ImportOneLakeWorkspaceLifecyclePolicyRequest, options *core.OneLakeLifecyclePolicyClientImportPolicyOptions) (resp azfake.Responder[core.OneLakeLifecyclePolicyClientImportPolicyResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleImportOneLakeWorkspaceLifecyclePolicyRequest, importOneLakeWorkspaceLifecyclePolicyRequest))
+		resp = azfake.Responder[core.OneLakeLifecyclePolicyClientImportPolicyResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeLifecyclePolicyClientImportPolicyResponse{OneLakeWorkspaceLifecyclePolicyResponse: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.ImportPolicy(ctx, exampleWorkspaceID, exampleImportOneLakeWorkspaceLifecyclePolicyRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.OneLakeWorkspaceLifecyclePolicyResponse))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Import empty OneLake lifecycle policy (delete) example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
+	exampleImportOneLakeWorkspaceLifecyclePolicyRequest = core.ImportOneLakeWorkspaceLifecyclePolicyRequest{
+		Properties: map[string]any{
+			"policy": map[string]any{
+				"rules": []any{},
+			},
+		},
+	}
+
+	exampleRes = core.OneLakeWorkspaceLifecyclePolicyResponse{
+		Properties: map[string]any{
+			"policy": map[string]any{
+				"rules": []any{},
+			},
+		},
+	}
+
+	testsuite.serverFactory.OneLakeLifecyclePolicyServer.ImportPolicy = func(ctx context.Context, workspaceID string, importOneLakeWorkspaceLifecyclePolicyRequest core.ImportOneLakeWorkspaceLifecyclePolicyRequest, options *core.OneLakeLifecyclePolicyClientImportPolicyOptions) (resp azfake.Responder[core.OneLakeLifecyclePolicyClientImportPolicyResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleImportOneLakeWorkspaceLifecyclePolicyRequest, importOneLakeWorkspaceLifecyclePolicyRequest))
+		resp = azfake.Responder[core.OneLakeLifecyclePolicyClientImportPolicyResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeLifecyclePolicyClientImportPolicyResponse{OneLakeWorkspaceLifecyclePolicyResponse: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.ImportPolicy(ctx, exampleWorkspaceID, exampleImportOneLakeWorkspaceLifecyclePolicyRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.OneLakeWorkspaceLifecyclePolicyResponse))
 }
 
 func (testsuite *FakeTestSuite) TestDeploymentPipelines_ListDeploymentPipelines() {
@@ -7339,7 +7953,8 @@ func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_CreateExternalDat
 	exampleCreateExternalDataShareRequest = core.CreateExternalDataShareRequest{
 		Paths: []string{
 			"Files/Sales/Contoso_Sales_2023"},
-		Recipient: &core.ExternalDataShareRecipient{
+		Recipient: &core.ExternalDataShareUserRecipient{
+			Type:              to.Ptr(core.ExternalDataShareRecipientTypeUser),
 			UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
 		},
 	}
@@ -7366,7 +7981,8 @@ func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_CreateExternalDat
 	exampleCreateExternalDataShareRequest = core.CreateExternalDataShareRequest{
 		Paths: []string{
 			"Files/Sales/Contoso_Sales_2023"},
-		Recipient: &core.ExternalDataShareRecipient{
+		Recipient: &core.ExternalDataShareUserRecipient{
+			Type:              to.Ptr(core.ExternalDataShareRecipientTypeUser),
 			TenantID:          to.Ptr("c51dc03f-268a-4da0-a879-25f24947ab8b"),
 			UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
 		},
@@ -7395,8 +8011,37 @@ func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_CreateExternalDat
 			"Files/Sales/Contoso_Sales_2023",
 			"Files/Sales/Contoso_Sales_2024/SubFolder1",
 			"Files/Sales/Contoso_Sales_2024/SubFolder2/SubFolder3"},
-		Recipient: &core.ExternalDataShareRecipient{
+		Recipient: &core.ExternalDataShareUserRecipient{
+			Type:              to.Ptr(core.ExternalDataShareRecipientTypeUser),
 			UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
+		},
+	}
+
+	testsuite.serverFactory.ExternalDataSharesProviderServer.CreateExternalDataShare = func(ctx context.Context, workspaceID string, itemID string, createExternalDataShareRequest core.CreateExternalDataShareRequest, options *core.ExternalDataSharesProviderClientCreateExternalDataShareOptions) (resp azfake.Responder[core.ExternalDataSharesProviderClientCreateExternalDataShareResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateExternalDataShareRequest, createExternalDataShareRequest))
+		resp = azfake.Responder[core.ExternalDataSharesProviderClientCreateExternalDataShareResponse]{}
+		resp.SetResponse(http.StatusCreated, core.ExternalDataSharesProviderClientCreateExternalDataShareResponse{}, nil)
+		return
+	}
+
+	_, err = client.CreateExternalDataShare(ctx, exampleWorkspaceID, exampleItemID, exampleCreateExternalDataShareRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create an external data share with recipient object ID example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleItemID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleCreateExternalDataShareRequest = core.CreateExternalDataShareRequest{
+		Paths: []string{
+			"Files/Sales/Contoso_Sales_2023"},
+		Recipient: &core.ExternalDataShareSPRecipient{
+			Type:        to.Ptr(core.ExternalDataShareRecipientTypeServicePrincipal),
+			PrincipalID: to.Ptr("a1b2c3d4-e5f6-7890-abcd-ef1234567890"),
+			TenantID:    to.Ptr("c51dc03f-268a-4da0-a879-25f24947ab8b"),
 		},
 	}
 
@@ -7436,8 +8081,10 @@ func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_ListExternalDataS
 				ItemID:            to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 				Paths: []string{
 					"Files/Sales/Contoso_Sales_2023"},
-				Recipient: &core.ExternalDataShareRecipient{
-					UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
+				Recipient: &core.ExternalDataShareSPRecipient{
+					Type:        to.Ptr(core.ExternalDataShareRecipientTypeServicePrincipal),
+					PrincipalID: to.Ptr("a1b2c3d4-e5f6-7890-abcd-ef1234567890"),
+					TenantID:    to.Ptr("c51dc03f-268a-4da0-a879-25f24947ab8b"),
 				},
 				Status:      to.Ptr(core.ExternalDataShareStatusPending),
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
@@ -7454,7 +8101,8 @@ func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_ListExternalDataS
 				ItemID:            to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 				Paths: []string{
 					"Files/Sales/Contoso_Sales_2023"},
-				Recipient: &core.ExternalDataShareRecipient{
+				Recipient: &core.ExternalDataShareUserRecipient{
+					Type:              to.Ptr(core.ExternalDataShareRecipientTypeUser),
 					UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
 				},
 				Status:      to.Ptr(core.ExternalDataShareStatusActive),
@@ -7471,7 +8119,8 @@ func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_ListExternalDataS
 				ItemID:            to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 				Paths: []string{
 					"Files/Sales/Contoso_Sales_2023"},
-				Recipient: &core.ExternalDataShareRecipient{
+				Recipient: &core.ExternalDataShareUserRecipient{
+					Type:              to.Ptr(core.ExternalDataShareRecipientTypeUser),
 					UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
 				},
 				Status:      to.Ptr(core.ExternalDataShareStatusInvitationExpired),
@@ -7489,7 +8138,8 @@ func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_ListExternalDataS
 				ItemID:            to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 				Paths: []string{
 					"Files/Sales/Contoso_Sales_2023"},
-				Recipient: &core.ExternalDataShareRecipient{
+				Recipient: &core.ExternalDataShareUserRecipient{
+					Type:              to.Ptr(core.ExternalDataShareRecipientTypeUser),
 					UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
 				},
 				Status:      to.Ptr(core.ExternalDataShareStatusRevoked),
@@ -7540,7 +8190,8 @@ func (testsuite *FakeTestSuite) TestExternalDataSharesProvider_GetExternalDataSh
 		ItemID:            to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 		Paths: []string{
 			"Files/Sales/Contoso_Sales_2023"},
-		Recipient: &core.ExternalDataShareRecipient{
+		Recipient: &core.ExternalDataShareUserRecipient{
+			Type:              to.Ptr(core.ExternalDataShareRecipientTypeUser),
 			UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
 		},
 		Status:      to.Ptr(core.ExternalDataShareStatusPending),
@@ -9853,7 +10504,7 @@ func (testsuite *FakeTestSuite) TestCatalog_Search() {
 	}
 
 	exampleRes := core.CatalogQueryResponse{
-		ContinuationToken: to.Ptr("lyJ1257lksfdfG=="),
+		ContinuationToken: to.Ptr("eyJza2lwIjoyLCJ0YWtl..."),
 		Value: []core.CatalogEntryClassification{
 			&core.ItemCatalogEntry{
 				Description:      to.Ptr("Consolidated revenue report for the current fiscal year."),
@@ -9861,13 +10512,25 @@ func (testsuite *FakeTestSuite) TestCatalog_Search() {
 				DisplayName:      to.Ptr("Monthly Sales Revenue"),
 				ID:               to.Ptr("0acd697c-1550-43cd-b998-91bfb12347c6"),
 				Type:             to.Ptr(core.ItemTypeReport),
+				Hierarchy: &core.ItemCatalogEntryHierarchy{
+					Workspace: &core.CatalogWorkspace{
+						DisplayName: to.Ptr("Sales Analytics"),
+						ID:          to.Ptr("7f2c8a91-3b4d-4e5f-a6b7-c8d9e0f1a2b3"),
+					},
+				},
 			},
 			&core.ItemCatalogEntry{
-				Description:      to.Ptr("Consolidated revenue report for the current fiscal year."),
+				Description:      to.Ptr("Central lakehouse for sales transaction data."),
 				CatalogEntryType: to.Ptr(core.CatalogEntryTypeFabricItem),
-				DisplayName:      to.Ptr("Yeartly Sales Revenue"),
-				ID:               to.Ptr("123d697c-7848-77cd-b887-91bfb12347cc"),
+				DisplayName:      to.Ptr("Sales Revenue Lakehouse"),
+				ID:               to.Ptr("5e8f2a1b-9c3d-4e7f-b6a5-d4c3b2a1e0f9"),
 				Type:             to.Ptr(core.ItemTypeLakehouse),
+				Hierarchy: &core.ItemCatalogEntryHierarchy{
+					Workspace: &core.CatalogWorkspace{
+						DisplayName: to.Ptr("Finance Platform"),
+						ID:          to.Ptr("a2b3c4d5-e6f7-4a8b-9c0d-1e2f3a4b5c6d"),
+					},
+				},
 			}},
 	}
 

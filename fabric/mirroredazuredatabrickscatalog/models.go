@@ -192,6 +192,9 @@ type ErrorResponse struct {
 	// READ-ONLY; A human readable representation of the error.
 	Message *string
 
+	// READ-ONLY; When true, the request can be retried. Use the Retry-After response header to determine the delay, if available.
+	IsRetriable *bool
+
 	// READ-ONLY; List of additional error details.
 	MoreDetails []ErrorResponseDetails
 
@@ -351,7 +354,7 @@ type PublicDefinition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []PublicDefinitionPart
 
-	// The format of the item definition.
+	// The format of the mirrored Azure Databricks catalog definition.
 	Format *string
 }
 

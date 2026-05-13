@@ -219,7 +219,7 @@ type PublicDefinition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []PublicDefinitionPart
 
-	// The format of the item definition. Additional format types may be added over time.
+	// The format of the graph model definition. Additional format types may be added over time.
 	Format *DefinitionFormat
 }
 

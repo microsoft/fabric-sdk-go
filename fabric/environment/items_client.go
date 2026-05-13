@@ -446,8 +446,8 @@ func (client *ItemsClient) listEnvironmentsHandleResponse(resp *http.Response) (
 	return result, nil
 }
 
-// BeginPublishEnvironment - > [!NOTE] This API is a release version of a beta version due to be deprecated on April 30, 2026.
-// When calling this API - callers must set the query parameter beta to the value false
+// BeginPublishEnvironment - > [!NOTE] This API is a release version of a beta version due to be deprecated on August 31,
+// 2026. When calling this API - callers must set the query parameter beta to the value false
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS Write permission for the environment item.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All or Environment.ReadWrite.All
@@ -469,7 +469,7 @@ func (client *ItemsClient) BeginPublishEnvironment(ctx context.Context, workspac
 	return client.beginPublishEnvironment(ctx, workspaceID, environmentID, beta, options)
 }
 
-// PublishEnvironment - > [!NOTE] This API is a release version of a beta version due to be deprecated on April 30, 2026.
+// PublishEnvironment - > [!NOTE] This API is a release version of a beta version due to be deprecated on August 31, 2026.
 // When calling this API - callers must set the query parameter beta to the value false
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS Write permission for the environment item.
@@ -528,7 +528,7 @@ func (client *ItemsClient) publishEnvironmentCreateRequest(ctx context.Context, 
 
 // PublishEnvironmentBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes
 // only. It may change based on feedback and is not recommended for production use. This beta API will
-// be deprecated on April 30, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/items/publish-environment].
+// be deprecated on August 31, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/items/publish-environment].
 // The new version introduces breaking changes and is not
 // backward compatible. When calling this API, callers must specify true as the value for the query parameter beta (preview
 // query parameter has been replaced by beta. For backward compatibility, preview
@@ -536,7 +536,7 @@ func (client *ItemsClient) publishEnvironmentCreateRequest(ctx context.Context, 
 // DEPRECATION NOTICE A new query parameter beta has been introduced to facilitate this transition:
 // * The beta query parameter currently defaults to true.
 // * Set the value of the beta query parameter to false to use the stable Release version of this API.
-// * Starting April 30, 2026, the default value for beta will change to false.
+// * Starting August 31, 2026, the default value for beta will change to false.
 // It is recommended to migrate your integration to use the Release version as soon as possible by specifying false for the
 // beta query parameter (the default value for the beta query parameter will be
 // set to false on API's deprecation date).
@@ -558,7 +558,7 @@ func (client *ItemsClient) publishEnvironmentCreateRequest(ctx context.Context, 
 //   - environmentID - The environment ID.
 //   - beta - This parameter specifies which version of the API to use. Set to true to use the beta version described on this
 //     page, or to false to use the Release version detailed here
-//     [/rest/api/fabric/environment/items/publish-environment]. Starting April 30, 2026, the default value for beta will change
+//     [/rest/api/fabric/environment/items/publish-environment]. Starting August 31, 2026, the default value for beta will change
 //     to false.
 //   - options - ItemsClientPublishEnvironmentBetaOptions contains the optional parameters for the ItemsClient.PublishEnvironmentBeta
 //     method.
@@ -914,7 +914,7 @@ func (client *ItemsClient) beginGetEnvironmentDefinition(ctx context.Context, wo
 }
 
 // PublishEnvironment - returns ItemsClientPublishEnvironmentResponse in sync mode.
-// >  [!NOTE] This API is a release version of a beta version due to be deprecated on April 30, 2026. When calling this API - callers must set the query parameter beta to the value false
+// >  [!NOTE] This API is a release version of a beta version due to be deprecated on August 31, 2026. When calling this API - callers must set the query parameter beta to the value false
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //

@@ -65,10 +65,10 @@ type ExecutionData struct {
 	CommandLineArguments *string
 
 	// The lakehouse ID that will be used as the default lakehouse of the Spark job definition.
-	DefaultLakehouseID ItemReferenceClassification
+	DefaultLakehouseID *ItemReferenceByID
 
 	// The environment ID that will be used for the Spark job definition. Can be used to specify Spark settings.
-	EnvironmentID ItemReferenceClassification
+	EnvironmentID *ItemReferenceByID
 
 	// Executable main file to be used. The path must be an abfs path.
 	ExecutableFile *string

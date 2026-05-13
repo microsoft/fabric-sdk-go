@@ -76,6 +76,41 @@ func (a *AutomaticLogProperties) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type CapacitySparkSettings.
+func (c CapacitySparkSettings) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "jobBurstSupport", c.JobBurstSupport)
+	populate(objectMap, "workspaceCustomPoolsSupport", c.WorkspaceCustomPoolsSupport)
+	populate(objectMap, "workspaceStarterPoolStatus", c.WorkspaceStarterPoolStatus)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CapacitySparkSettings.
+func (c *CapacitySparkSettings) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "jobBurstSupport":
+			err = unpopulate(val, "JobBurstSupport", &c.JobBurstSupport)
+			delete(rawMsg, key)
+		case "workspaceCustomPoolsSupport":
+			err = unpopulate(val, "WorkspaceCustomPoolsSupport", &c.WorkspaceCustomPoolsSupport)
+			delete(rawMsg, key)
+		case "workspaceStarterPoolStatus":
+			err = unpopulate(val, "WorkspaceStarterPoolStatus", &c.WorkspaceStarterPoolStatus)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type CreateCustomPoolRequest.
 func (c CreateCustomPoolRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -1015,6 +1050,41 @@ func (s *StarterPoolProperties) UnmarshalJSON(data []byte) error {
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", s, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type UpdateCapacitySparkSettingsRequest.
+func (u UpdateCapacitySparkSettingsRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "jobBurstSupport", u.JobBurstSupport)
+	populate(objectMap, "workspaceCustomPoolsSupport", u.WorkspaceCustomPoolsSupport)
+	populate(objectMap, "workspaceStarterPoolStatus", u.WorkspaceStarterPoolStatus)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type UpdateCapacitySparkSettingsRequest.
+func (u *UpdateCapacitySparkSettingsRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", u, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "jobBurstSupport":
+			err = unpopulate(val, "JobBurstSupport", &u.JobBurstSupport)
+			delete(rawMsg, key)
+		case "workspaceCustomPoolsSupport":
+			err = unpopulate(val, "WorkspaceCustomPoolsSupport", &u.WorkspaceCustomPoolsSupport)
+			delete(rawMsg, key)
+		case "workspaceStarterPoolStatus":
+			err = unpopulate(val, "WorkspaceStarterPoolStatus", &u.WorkspaceStarterPoolStatus)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", u, err)
 		}
 	}
 	return nil

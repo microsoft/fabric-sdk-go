@@ -29,6 +29,10 @@ type OneLakeSettingsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetSettings func(ctx context.Context, workspaceID string, options *core.OneLakeSettingsClientGetSettingsOptions) (resp azfake.Responder[core.OneLakeSettingsClientGetSettingsResponse], errResp azfake.ErrorResponder)
 
+	// ModifyDefaultTier is the fake for method OneLakeSettingsClient.ModifyDefaultTier
+	// HTTP status codes to indicate success: http.StatusOK
+	ModifyDefaultTier func(ctx context.Context, workspaceID string, defaultTier core.OneLakeAccessTier, options *core.OneLakeSettingsClientModifyDefaultTierOptions) (resp azfake.Responder[core.OneLakeSettingsClientModifyDefaultTierResponse], errResp azfake.ErrorResponder)
+
 	// BeginModifyDiagnostics is the fake for method OneLakeSettingsClient.BeginModifyDiagnostics
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
 	BeginModifyDiagnostics func(ctx context.Context, workspaceID string, options *core.OneLakeSettingsClientBeginModifyDiagnosticsOptions) (resp azfake.PollerResponder[core.OneLakeSettingsClientModifyDiagnosticsResponse], errResp azfake.ErrorResponder)
@@ -82,6 +86,8 @@ func (o *OneLakeSettingsServerTransport) dispatchToMethodFake(req *http.Request,
 			switch method {
 			case "OneLakeSettingsClient.GetSettings":
 				res.resp, res.err = o.dispatchGetSettings(req)
+			case "OneLakeSettingsClient.ModifyDefaultTier":
+				res.resp, res.err = o.dispatchModifyDefaultTier(req)
 			case "OneLakeSettingsClient.BeginModifyDiagnostics":
 				res.resp, res.err = o.dispatchBeginModifyDiagnostics(req)
 			case "OneLakeSettingsClient.ModifyImmutabilityPolicy":
@@ -128,6 +134,46 @@ func (o *OneLakeSettingsServerTransport) dispatchGetSettings(req *http.Request) 
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
 	}
 	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).GetOneLakeSettingsResponse, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (o *OneLakeSettingsServerTransport) dispatchModifyDefaultTier(req *http.Request) (*http.Response, error) {
+	if o.srv.ModifyDefaultTier == nil {
+		return nil, &nonRetriableError{errors.New("fake for method ModifyDefaultTier not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/onelake/settings/modifyDefaultTier`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	qp := req.URL.Query()
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	defaultTierParam, err := parseWithCast(qp.Get("defaultTier"), func(v string) (core.OneLakeAccessTier, error) {
+		p, unescapeErr := url.QueryUnescape(v)
+		if unescapeErr != nil {
+			return "", unescapeErr
+		}
+		return core.OneLakeAccessTier(p), nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := o.srv.ModifyDefaultTier(req.Context(), workspaceIDParam, defaultTierParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).ModifyOneLakeWorkspaceDefaultTierResponse, req)
 	if err != nil {
 		return nil, err
 	}

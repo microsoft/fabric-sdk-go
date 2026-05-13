@@ -16,6 +16,9 @@ type ItemsClientBeginCreateCosmosDBDatabaseOptions struct {
 // ItemsClientBeginGetCosmosDBDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetCosmosDBDatabaseDefinition
 // method.
 type ItemsClientBeginGetCosmosDBDatabaseDefinitionOptions struct {
+	// The format of the Cosmos DB database public definition.
+	Format *string
+
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }

@@ -134,6 +134,8 @@ const (
 	ItemTypeMap ItemType = "Map"
 	// ItemTypeMirroredAzureDatabricksCatalog - A mirrored azure databricks catalog.
 	ItemTypeMirroredAzureDatabricksCatalog ItemType = "MirroredAzureDatabricksCatalog"
+	// ItemTypeMirroredCatalog - A MirroredCatalog.
+	ItemTypeMirroredCatalog ItemType = "MirroredCatalog"
 	// ItemTypeMirroredDatabase - A mirrored database.
 	ItemTypeMirroredDatabase ItemType = "MirroredDatabase"
 	// ItemTypeMirroredWarehouse - A mirrored warehouse.
@@ -201,6 +203,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeMLModel,
 		ItemTypeMap,
 		ItemTypeMirroredAzureDatabricksCatalog,
+		ItemTypeMirroredCatalog,
 		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
 		ItemTypeMountedDataFactory,

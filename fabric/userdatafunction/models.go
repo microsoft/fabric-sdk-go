@@ -111,7 +111,7 @@ type PublicDefinition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []PublicDefinitionPart
 
-	// The format of the item definition.
+	// The format of the user data function definition.
 	Format *string
 }
 

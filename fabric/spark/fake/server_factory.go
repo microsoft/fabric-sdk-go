@@ -18,6 +18,7 @@ import (
 
 // ServerFactory is a fake server for instances of the spark.ClientFactory type.
 type ServerFactory struct {
+	CapacitySettingsServer  CapacitySettingsServer
 	CustomPoolsServer       CustomPoolsServer
 	LivySessionsServer      LivySessionsServer
 	WorkspaceSettingsServer WorkspaceSettingsServer
@@ -28,6 +29,7 @@ type ServerFactory struct {
 type ServerFactoryTransport struct {
 	srv                       *ServerFactory
 	trMu                      sync.Mutex
+	trCapacitySettingsServer  *CapacitySettingsServerTransport
 	trCustomPoolsServer       *CustomPoolsServerTransport
 	trLivySessionsServer      *LivySessionsServerTransport
 	trWorkspaceSettingsServer *WorkspaceSettingsServerTransport
@@ -56,6 +58,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	var err error
 
 	switch client {
+	case "CapacitySettingsClient":
+		initServer(s, &s.trCapacitySettingsServer, func() *CapacitySettingsServerTransport {
+			return NewCapacitySettingsServerTransport(&s.srv.CapacitySettingsServer)
+		})
+		resp, err = s.trCapacitySettingsServer.Do(req)
 	case "CustomPoolsClient":
 		initServer(s, &s.trCustomPoolsServer, func() *CustomPoolsServerTransport { return NewCustomPoolsServerTransport(&s.srv.CustomPoolsServer) })
 		resp, err = s.trCustomPoolsServer.Do(req)

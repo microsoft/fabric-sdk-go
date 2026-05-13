@@ -9,6 +9,9 @@ package mirroreddatabase
 // ItemsClientBeginGetMirroredDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetMirroredDatabaseDefinition
 // method.
 type ItemsClientBeginGetMirroredDatabaseDefinitionOptions struct {
+	// The format of the Mirrored Database public definition.
+	Format *string
+
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }

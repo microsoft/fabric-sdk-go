@@ -220,6 +220,33 @@ func (a *AzureDevOpsDetails) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type BaseExternalDataShareRecipient.
+func (b BaseExternalDataShareRecipient) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["type"] = b.Type
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type BaseExternalDataShareRecipient.
+func (b *BaseExternalDataShareRecipient) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", b, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "type":
+			err = unpopulate(val, "Type", &b.Type)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", b, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type BaseWorkloadAssignment.
 func (b BaseWorkloadAssignment) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -1363,7 +1390,7 @@ func (e *ExternalDataShare) UnmarshalJSON(data []byte) error {
 			err = unpopulate(val, "Paths", &e.Paths)
 			delete(rawMsg, key)
 		case "recipient":
-			err = unpopulate(val, "Recipient", &e.Recipient)
+			e.Recipient, err = unmarshalBaseExternalDataShareRecipientClassification(val)
 			delete(rawMsg, key)
 		case "status":
 			err = unpopulate(val, "Status", &e.Status)
@@ -1379,16 +1406,52 @@ func (e *ExternalDataShare) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// MarshalJSON implements the json.Marshaller interface for type ExternalDataShareRecipient.
-func (e ExternalDataShareRecipient) MarshalJSON() ([]byte, error) {
+// MarshalJSON implements the json.Marshaller interface for type ExternalDataShareSPRecipient.
+func (e ExternalDataShareSPRecipient) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "principalId", e.PrincipalID)
+	populate(objectMap, "tenantId", e.TenantID)
+	objectMap["type"] = ExternalDataShareRecipientTypeServicePrincipal
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ExternalDataShareSPRecipient.
+func (e *ExternalDataShareSPRecipient) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", e, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "principalId":
+			err = unpopulate(val, "PrincipalID", &e.PrincipalID)
+			delete(rawMsg, key)
+		case "tenantId":
+			err = unpopulate(val, "TenantID", &e.TenantID)
+			delete(rawMsg, key)
+		case "type":
+			err = unpopulate(val, "Type", &e.Type)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", e, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type ExternalDataShareUserRecipient.
+func (e ExternalDataShareUserRecipient) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "tenantId", e.TenantID)
+	objectMap["type"] = ExternalDataShareRecipientTypeUser
 	populate(objectMap, "userPrincipalName", e.UserPrincipalName)
 	return json.Marshal(objectMap)
 }
 
-// UnmarshalJSON implements the json.Unmarshaller interface for type ExternalDataShareRecipient.
-func (e *ExternalDataShareRecipient) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON implements the json.Unmarshaller interface for type ExternalDataShareUserRecipient.
+func (e *ExternalDataShareUserRecipient) UnmarshalJSON(data []byte) error {
 	var rawMsg map[string]json.RawMessage
 	if err := json.Unmarshal(data, &rawMsg); err != nil {
 		return fmt.Errorf("unmarshalling type %T: %v", e, err)
@@ -1398,6 +1461,9 @@ func (e *ExternalDataShareRecipient) UnmarshalJSON(data []byte) error {
 		switch key {
 		case "tenantId":
 			err = unpopulate(val, "TenantID", &e.TenantID)
+			delete(rawMsg, key)
+		case "type":
+			err = unpopulate(val, "Type", &e.Type)
 			delete(rawMsg, key)
 		case "userPrincipalName":
 			err = unpopulate(val, "UserPrincipalName", &e.UserPrincipalName)

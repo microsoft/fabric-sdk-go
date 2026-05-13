@@ -301,7 +301,7 @@ func (client *ItemsClient) getDigitalTwinBuilderFlowDefinition(ctx context.Conte
 }
 
 // getDigitalTwinBuilderFlowDefinitionCreateRequest creates the GetDigitalTwinBuilderFlowDefinition request.
-func (client *ItemsClient) getDigitalTwinBuilderFlowDefinitionCreateRequest(ctx context.Context, workspaceID string, digitalTwinBuilderFlowID string, _ *ItemsClientBeginGetDigitalTwinBuilderFlowDefinitionOptions) (*policy.Request, error) {
+func (client *ItemsClient) getDigitalTwinBuilderFlowDefinitionCreateRequest(ctx context.Context, workspaceID string, digitalTwinBuilderFlowID string, options *ItemsClientBeginGetDigitalTwinBuilderFlowDefinitionOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/digitalTwinBuilderFlows/{digitalTwinBuilderFlowId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -315,6 +315,11 @@ func (client *ItemsClient) getDigitalTwinBuilderFlowDefinitionCreateRequest(ctx 
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.Format != nil {
+		reqQP.Set("format", *options.Format)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }
