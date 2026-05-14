@@ -17,7 +17,7 @@ import (
 )
 
 // Generated from example definition
-func ExampleOneLakeSettingsClient_GetSettings_getOneLakeSettingForWorkspaceWithDiagnosticSettingExample() {
+func ExampleOneLakeSettingsClient_GetSettings_getOneLakeSettingsWithAllSettingsExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -46,11 +46,20 @@ func ExampleOneLakeSettingsClient_GetSettings_getOneLakeSettingForWorkspaceWithD
 	// 		},
 	// 		Status: to.Ptr("Enabled"),
 	// 	},
+	// 	ImmutabilityPolicies: []core.ImmutabilityPolicy{
+	// 		{
+	// 			RetentionDays: to.Ptr[int32](30),
+	// 			Scope: to.Ptr(core.ImmutabilityScopeDiagnosticLogs),
+	// 	}},
+	// 	Lifecycle: &core.GetOneLakeSettingsResponseLifecycle{
+	// 		DefaultTier: to.Ptr(core.OneLakeAccessTierCool),
+	// 		Policy: to.Ptr(core.OneLakeLifecyclePolicyStatusActive),
+	// 	},
 	// }
 }
 
 // Generated from example definition
-func ExampleOneLakeSettingsClient_GetSettings_getOneLakeSettingForWorkspaceWithoutDiagnosticSettingExample() {
+func ExampleOneLakeSettingsClient_GetSettings_getOneLakeSettingsWithDiagnosticsDisabledExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -70,6 +79,47 @@ func ExampleOneLakeSettingsClient_GetSettings_getOneLakeSettingForWorkspaceWitho
 	// res.GetOneLakeSettingsResponse = core.GetOneLakeSettingsResponse{
 	// 	Diagnostics: &core.OneLakeDiagnosticSettings{
 	// 		Status: to.Ptr("Disabled"),
+	// 	},
+	// 	Lifecycle: &core.GetOneLakeSettingsResponseLifecycle{
+	// 		DefaultTier: to.Ptr(core.OneLakeAccessTierHot),
+	// 		Policy: to.Ptr(core.OneLakeLifecyclePolicyStatusInactive),
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleOneLakeSettingsClient_GetSettings_getOneLakeSettingsWithDiagnosticsEnabledExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewOneLakeSettingsClient().GetSettings(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff227", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.GetOneLakeSettingsResponse = core.GetOneLakeSettingsResponse{
+	// 	Diagnostics: &core.OneLakeDiagnosticSettings{
+	// 		Destination: &core.LakehouseOneLakeDiagnosticSettingsDestination{
+	// 			Type: to.Ptr("Lakehouse"),
+	// 			Lakehouse: &core.ItemReferenceByID{
+	// 				ReferenceType: to.Ptr(core.ItemReferenceTypeByID),
+	// 				ItemID: to.Ptr("33d48b2c-5b7c-42e2-8467-87fecb105fdd"),
+	// 				WorkspaceID: to.Ptr("85173301-af01-49c9-b667-03edc44517da"),
+	// 			},
+	// 		},
+	// 		Status: to.Ptr("Enabled"),
+	// 	},
+	// 	Lifecycle: &core.GetOneLakeSettingsResponseLifecycle{
+	// 		DefaultTier: to.Ptr(core.OneLakeAccessTierCool),
+	// 		Policy: to.Ptr(core.OneLakeLifecyclePolicyStatusActive),
 	// 	},
 	// }
 }
@@ -109,6 +159,10 @@ func ExampleOneLakeSettingsClient_GetSettings_getOneLakeSettingsWithImmutability
 	// 			RetentionDays: to.Ptr[int32](30),
 	// 			Scope: to.Ptr(core.ImmutabilityScopeDiagnosticLogs),
 	// 	}},
+	// 	Lifecycle: &core.GetOneLakeSettingsResponseLifecycle{
+	// 		DefaultTier: to.Ptr(core.OneLakeAccessTierCool),
+	// 		Policy: to.Ptr(core.OneLakeLifecyclePolicyStatusActive),
+	// 	},
 	// }
 }
 
@@ -133,6 +187,10 @@ func ExampleOneLakeSettingsClient_GetSettings_getOneLakeSettingsWithoutImmutabil
 	// res.GetOneLakeSettingsResponse = core.GetOneLakeSettingsResponse{
 	// 	Diagnostics: &core.OneLakeDiagnosticSettings{
 	// 		Status: to.Ptr("Disabled"),
+	// 	},
+	// 	Lifecycle: &core.GetOneLakeSettingsResponseLifecycle{
+	// 		DefaultTier: to.Ptr(core.OneLakeAccessTierHot),
+	// 		Policy: to.Ptr(core.OneLakeLifecyclePolicyStatusInactive),
 	// 	},
 	// }
 }
@@ -290,4 +348,50 @@ func ExampleOneLakeSettingsClient_ModifyImmutabilityPolicy_reduceRetentionDaysEx
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
+}
+
+// Generated from example definition
+func ExampleOneLakeSettingsClient_ModifyDefaultTier_modifyDefaultTierToCoolExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewOneLakeSettingsClient().ModifyDefaultTier(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff227", core.OneLakeAccessTierCool, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.ModifyOneLakeWorkspaceDefaultTierResponse = core.ModifyOneLakeWorkspaceDefaultTierResponse{
+	// 	DefaultTier: to.Ptr(core.OneLakeAccessTierCool),
+	// }
+}
+
+// Generated from example definition
+func ExampleOneLakeSettingsClient_ModifyDefaultTier_modifyDefaultTierToHotExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewOneLakeSettingsClient().ModifyDefaultTier(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff227", core.OneLakeAccessTierHot, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.ModifyOneLakeWorkspaceDefaultTierResponse = core.ModifyOneLakeWorkspaceDefaultTierResponse{
+	// 	DefaultTier: to.Ptr(core.OneLakeAccessTierHot),
+	// }
 }

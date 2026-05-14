@@ -208,7 +208,7 @@ func ExampleItemsClient_BeginGetMirroredDatabaseDefinition() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	poller, err := clientFactory.NewItemsClient().BeginGetMirroredDatabaseDefinition(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2", nil)
+	poller, err := clientFactory.NewItemsClient().BeginGetMirroredDatabaseDefinition(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2", &mirroreddatabase.ItemsClientBeginGetMirroredDatabaseDefinitionOptions{Format: nil})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

@@ -153,7 +153,7 @@ type PublicDefinition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []PublicDefinitionPart
 
-	// The format of the item definition. Currently we support json format.
+	// The format of the graph query set definition. Currently we support json format.
 	Format *string
 }
 

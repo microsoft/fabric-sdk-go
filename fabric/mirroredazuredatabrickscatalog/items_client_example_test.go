@@ -358,7 +358,7 @@ func ExampleItemsClient_BeginGetMirroredAzureDatabricksCatalogDefinition() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	poller, err := clientFactory.NewItemsClient().BeginGetMirroredAzureDatabricksCatalogDefinition(ctx, "6e335e92-a2a2-4b5a-970a-bd6a89fbb765", "b9429666-fd5a-4a51-a81d-09b1e20ca4be", nil)
+	poller, err := clientFactory.NewItemsClient().BeginGetMirroredAzureDatabricksCatalogDefinition(ctx, "6e335e92-a2a2-4b5a-970a-bd6a89fbb765", "b9429666-fd5a-4a51-a81d-09b1e20ca4be", &mirroredazuredatabrickscatalog.ItemsClientBeginGetMirroredAzureDatabricksCatalogDefinitionOptions{Format: nil})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

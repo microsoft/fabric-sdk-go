@@ -282,7 +282,7 @@ func ExampleItemsClient_BeginGetSnowflakeDatabaseDefinition() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	poller, err := clientFactory.NewItemsClient().BeginGetSnowflakeDatabaseDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "123e4567-e89b-12d3-a456-426614174001", nil)
+	poller, err := clientFactory.NewItemsClient().BeginGetSnowflakeDatabaseDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "123e4567-e89b-12d3-a456-426614174001", &snowflakedatabase.ItemsClientBeginGetSnowflakeDatabaseDefinitionOptions{Format: nil})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

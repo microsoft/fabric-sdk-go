@@ -6,6 +6,20 @@
 
 package datapipeline
 
+// BackgroundJobsClientRunOnDemandExecuteResponse contains the response from method BackgroundJobsClient.RunOnDemandExecute.
+type BackgroundJobsClientRunOnDemandExecuteResponse struct {
+	// placeholder for future response values
+}
+
+// BackgroundJobsClientScheduleExecuteResponse contains the response from method BackgroundJobsClient.ScheduleExecute.
+type BackgroundJobsClientScheduleExecuteResponse struct {
+	// Data pipeline execute schedule.
+	ExecuteSchedule
+
+	// Location contains the information returned from the Location header response.
+	Location *string
+}
+
 // ItemsClientCreateDataPipelineResponse contains the response from method ItemsClient.BeginCreateDataPipeline.
 type ItemsClientCreateDataPipelineResponse struct {
 	// A data pipeline object.

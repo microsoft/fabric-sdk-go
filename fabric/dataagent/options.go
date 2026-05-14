@@ -15,6 +15,9 @@ type ItemsClientBeginCreateDataAgentOptions struct {
 // ItemsClientBeginGetDataAgentDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetDataAgentDefinition
 // method.
 type ItemsClientBeginGetDataAgentDefinitionOptions struct {
+	// The format of the data agent public definition.
+	Format *string
+
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }

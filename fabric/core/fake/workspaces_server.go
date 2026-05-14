@@ -62,6 +62,10 @@ type WorkspacesServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetGitOutboundPolicy func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetGitOutboundPolicyOptions) (resp azfake.Responder[core.WorkspacesClientGetGitOutboundPolicyResponse], errResp azfake.ErrorResponder)
 
+	// GetInboundAzureResourceRules is the fake for method WorkspacesClient.GetInboundAzureResourceRules
+	// HTTP status codes to indicate success: http.StatusOK
+	GetInboundAzureResourceRules func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetInboundAzureResourceRulesOptions) (resp azfake.Responder[core.WorkspacesClientGetInboundAzureResourceRulesResponse], errResp azfake.ErrorResponder)
+
 	// GetNetworkCommunicationPolicy is the fake for method WorkspacesClient.GetNetworkCommunicationPolicy
 	// HTTP status codes to indicate success: http.StatusOK
 	GetNetworkCommunicationPolicy func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetNetworkCommunicationPolicyOptions) (resp azfake.Responder[core.WorkspacesClientGetNetworkCommunicationPolicyResponse], errResp azfake.ErrorResponder)
@@ -97,6 +101,10 @@ type WorkspacesServer struct {
 	// SetGitOutboundPolicy is the fake for method WorkspacesClient.SetGitOutboundPolicy
 	// HTTP status codes to indicate success: http.StatusOK
 	SetGitOutboundPolicy func(ctx context.Context, workspaceID string, setWorkspaceGitNetworkingCommunicationPolicy core.NetworkRules, options *core.WorkspacesClientSetGitOutboundPolicyOptions) (resp azfake.Responder[core.WorkspacesClientSetGitOutboundPolicyResponse], errResp azfake.ErrorResponder)
+
+	// SetInboundAzureResourceRules is the fake for method WorkspacesClient.SetInboundAzureResourceRules
+	// HTTP status codes to indicate success: http.StatusOK
+	SetInboundAzureResourceRules func(ctx context.Context, workspaceID string, workspaceInboundAzureResourceRules core.WorkspaceInboundAzureResourceRules, options *core.WorkspacesClientSetInboundAzureResourceRulesOptions) (resp azfake.Responder[core.WorkspacesClientSetInboundAzureResourceRulesResponse], errResp azfake.ErrorResponder)
 
 	// SetNetworkCommunicationPolicy is the fake for method WorkspacesClient.SetNetworkCommunicationPolicy
 	// HTTP status codes to indicate success: http.StatusOK
@@ -197,6 +205,8 @@ func (w *WorkspacesServerTransport) dispatchToMethodFake(req *http.Request, meth
 				res.resp, res.err = w.dispatchBeginDeprovisionIdentity(req)
 			case "WorkspacesClient.GetGitOutboundPolicy":
 				res.resp, res.err = w.dispatchGetGitOutboundPolicy(req)
+			case "WorkspacesClient.GetInboundAzureResourceRules":
+				res.resp, res.err = w.dispatchGetInboundAzureResourceRules(req)
 			case "WorkspacesClient.GetNetworkCommunicationPolicy":
 				res.resp, res.err = w.dispatchGetNetworkCommunicationPolicy(req)
 			case "WorkspacesClient.GetOutboundCloudConnectionRules":
@@ -215,6 +225,8 @@ func (w *WorkspacesServerTransport) dispatchToMethodFake(req *http.Request, meth
 				res.resp, res.err = w.dispatchBeginProvisionIdentity(req)
 			case "WorkspacesClient.SetGitOutboundPolicy":
 				res.resp, res.err = w.dispatchSetGitOutboundPolicy(req)
+			case "WorkspacesClient.SetInboundAzureResourceRules":
+				res.resp, res.err = w.dispatchSetInboundAzureResourceRules(req)
 			case "WorkspacesClient.SetNetworkCommunicationPolicy":
 				res.resp, res.err = w.dispatchSetNetworkCommunicationPolicy(req)
 			case "WorkspacesClient.SetOutboundCloudConnectionRules":
@@ -541,6 +553,35 @@ func (w *WorkspacesServerTransport) dispatchGetGitOutboundPolicy(req *http.Reque
 	}
 	if val := server.GetResponse(respr).ETag; val != nil {
 		resp.Header.Set("ETag", *val)
+	}
+	return resp, nil
+}
+
+func (w *WorkspacesServerTransport) dispatchGetInboundAzureResourceRules(req *http.Request) (*http.Response, error) {
+	if w.srv.GetInboundAzureResourceRules == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetInboundAzureResourceRules not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/networking/communicationPolicy/inbound/azureResources`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := w.srv.GetInboundAzureResourceRules(req.Context(), workspaceIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).WorkspaceInboundAzureResourceRules, req)
+	if err != nil {
+		return nil, err
 	}
 	return resp, nil
 }
@@ -900,6 +941,39 @@ func (w *WorkspacesServerTransport) dispatchSetGitOutboundPolicy(req *http.Reque
 	}
 	if val := server.GetResponse(respr).ETag; val != nil {
 		resp.Header.Set("ETag", *val)
+	}
+	return resp, nil
+}
+
+func (w *WorkspacesServerTransport) dispatchSetInboundAzureResourceRules(req *http.Request) (*http.Response, error) {
+	if w.srv.SetInboundAzureResourceRules == nil {
+		return nil, &nonRetriableError{errors.New("fake for method SetInboundAzureResourceRules not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/networking/communicationPolicy/inbound/azureResources`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.WorkspaceInboundAzureResourceRules](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := w.srv.SetInboundAzureResourceRules(req.Context(), workspaceIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
 	}
 	return resp, nil
 }

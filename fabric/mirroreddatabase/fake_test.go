@@ -301,7 +301,7 @@ func (testsuite *FakeTestSuite) TestItems_GetMirroredDatabaseDefinition() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	poller, err := client.BeginGetMirroredDatabaseDefinition(ctx, exampleWorkspaceID, exampleMirroredDatabaseID, nil)
+	poller, err := client.BeginGetMirroredDatabaseDefinition(ctx, exampleWorkspaceID, exampleMirroredDatabaseID, &mirroreddatabase.ItemsClientBeginGetMirroredDatabaseDefinitionOptions{Format: nil})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	res, err := poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")

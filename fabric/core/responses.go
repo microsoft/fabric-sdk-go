@@ -73,6 +73,7 @@ type ConnectionsClientListSupportedConnectionTypesResponse struct {
 
 // ConnectionsClientTestConnectionResponse contains the response from method ConnectionsClient.BeginTestConnection.
 type ConnectionsClientTestConnectionResponse struct {
+	// The connection status response returned when testing a connection. Includes the status and any errors encountered.
 	ConnectionStatusResponse
 }
 
@@ -612,10 +613,30 @@ type OneLakeDataAccessSecurityClientListDataAccessRolesResponse struct {
 	Etag *string
 }
 
+// OneLakeLifecyclePolicyClientExportPolicyResponse contains the response from method OneLakeLifecyclePolicyClient.ExportPolicy.
+type OneLakeLifecyclePolicyClientExportPolicyResponse struct {
+	// The OneLake workspace lifecycle policy response. Contains the policy properties and type as returned by [Azure Storage
+	// lifecycle management](https://learn.microsoft.com/azure/storage/blobs/lifecycle-management-overview).
+	OneLakeWorkspaceLifecyclePolicyResponse
+}
+
+// OneLakeLifecyclePolicyClientImportPolicyResponse contains the response from method OneLakeLifecyclePolicyClient.ImportPolicy.
+type OneLakeLifecyclePolicyClientImportPolicyResponse struct {
+	// The OneLake workspace lifecycle policy response. Contains the policy properties and type as returned by [Azure Storage
+	// lifecycle management](https://learn.microsoft.com/azure/storage/blobs/lifecycle-management-overview).
+	OneLakeWorkspaceLifecyclePolicyResponse
+}
+
 // OneLakeSettingsClientGetSettingsResponse contains the response from method OneLakeSettingsClient.GetSettings.
 type OneLakeSettingsClientGetSettingsResponse struct {
 	// OneLake settings response.
 	GetOneLakeSettingsResponse
+}
+
+// OneLakeSettingsClientModifyDefaultTierResponse contains the response from method OneLakeSettingsClient.ModifyDefaultTier.
+type OneLakeSettingsClientModifyDefaultTierResponse struct {
+	// Response for modifying the default OneLake access tier.
+	ModifyOneLakeWorkspaceDefaultTierResponse
 }
 
 // OneLakeSettingsClientModifyDiagnosticsResponse contains the response from method OneLakeSettingsClient.BeginModifyDiagnostics.
@@ -739,6 +760,13 @@ type WorkspacesClientGetGitOutboundPolicyResponse struct {
 	ETag *string
 }
 
+// WorkspacesClientGetInboundAzureResourceRulesResponse contains the response from method WorkspacesClient.GetInboundAzureResourceRules.
+type WorkspacesClientGetInboundAzureResourceRulesResponse struct {
+	// Represents a collection of inbound Azure resource instance rules configured for a workspace. These rules define which Azure
+	// resource instances are allowed to access the workspace.
+	WorkspaceInboundAzureResourceRules
+}
+
 // WorkspacesClientGetNetworkCommunicationPolicyResponse contains the response from method WorkspacesClient.GetNetworkCommunicationPolicy.
 type WorkspacesClientGetNetworkCommunicationPolicyResponse struct {
 	// The networking communication policy for a workspace.
@@ -803,6 +831,11 @@ type WorkspacesClientProvisionIdentityResponse struct {
 type WorkspacesClientSetGitOutboundPolicyResponse struct {
 	// ETag contains the information returned from the ETag header response.
 	ETag *string
+}
+
+// WorkspacesClientSetInboundAzureResourceRulesResponse contains the response from method WorkspacesClient.SetInboundAzureResourceRules.
+type WorkspacesClientSetInboundAzureResourceRulesResponse struct {
+	// placeholder for future response values
 }
 
 // WorkspacesClientSetNetworkCommunicationPolicyResponse contains the response from method WorkspacesClient.SetNetworkCommunicationPolicy.

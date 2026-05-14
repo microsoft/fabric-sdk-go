@@ -299,7 +299,7 @@ func (testsuite *FakeTestSuite) TestItems_GetReportDefinition() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	poller, err := client.BeginGetReportDefinition(ctx, exampleWorkspaceID, exampleReportID, nil)
+	poller, err := client.BeginGetReportDefinition(ctx, exampleWorkspaceID, exampleReportID, &report.ItemsClientBeginGetReportDefinitionOptions{Format: nil})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	res, err := poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")

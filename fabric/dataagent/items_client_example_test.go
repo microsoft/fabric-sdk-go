@@ -263,7 +263,7 @@ func ExampleItemsClient_BeginGetDataAgentDefinition() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	poller, err := clientFactory.NewItemsClient().BeginGetDataAgentDefinition(ctx, "6e335e92-a2a2-4b5a-970a-bd6a89fbb765", "cfafbeb1-8037-4d0c-896e-a46fb27ff229", nil)
+	poller, err := clientFactory.NewItemsClient().BeginGetDataAgentDefinition(ctx, "6e335e92-a2a2-4b5a-970a-bd6a89fbb765", "cfafbeb1-8037-4d0c-896e-a46fb27ff229", &dataagent.ItemsClientBeginGetDataAgentDefinitionOptions{Format: nil})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

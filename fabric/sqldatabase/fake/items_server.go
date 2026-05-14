@@ -287,6 +287,7 @@ func (i *ItemsServerTransport) dispatchBeginGetSQLDatabaseDefinition(req *http.R
 		if len(matches) < 3 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
+		qp := req.URL.Query()
 		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 		if err != nil {
 			return nil, err
@@ -295,7 +296,18 @@ func (i *ItemsServerTransport) dispatchBeginGetSQLDatabaseDefinition(req *http.R
 		if err != nil {
 			return nil, err
 		}
-		respr, errRespr := i.srv.BeginGetSQLDatabaseDefinition(req.Context(), workspaceIDParam, sqlDatabaseIDParam, nil)
+		formatUnescaped, err := url.QueryUnescape(qp.Get("format"))
+		if err != nil {
+			return nil, err
+		}
+		formatParam := getOptional(formatUnescaped)
+		var options *sqldatabase.ItemsClientBeginGetSQLDatabaseDefinitionOptions
+		if formatParam != nil {
+			options = &sqldatabase.ItemsClientBeginGetSQLDatabaseDefinitionOptions{
+				Format: formatParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginGetSQLDatabaseDefinition(req.Context(), workspaceIDParam, sqlDatabaseIDParam, options)
 		if respErr := server.GetError(errRespr, req); respErr != nil {
 			return nil, respErr
 		}

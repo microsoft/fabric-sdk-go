@@ -30,7 +30,8 @@ func ExampleExternalDataSharesProviderClient_CreateExternalDataShare_createAnExt
 	_, err = clientFactory.NewExternalDataSharesProviderClient().CreateExternalDataShare(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", core.CreateExternalDataShareRequest{
 		Paths: []string{
 			"Files/Sales/Contoso_Sales_2023"},
-		Recipient: &core.ExternalDataShareRecipient{
+		Recipient: &core.ExternalDataShareUserRecipient{
+			Type:              to.Ptr(core.ExternalDataShareRecipientTypeUser),
 			UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
 		},
 	}, nil)
@@ -53,7 +54,8 @@ func ExampleExternalDataSharesProviderClient_CreateExternalDataShare_createAnExt
 	_, err = clientFactory.NewExternalDataSharesProviderClient().CreateExternalDataShare(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", core.CreateExternalDataShareRequest{
 		Paths: []string{
 			"Files/Sales/Contoso_Sales_2023"},
-		Recipient: &core.ExternalDataShareRecipient{
+		Recipient: &core.ExternalDataShareUserRecipient{
+			Type:              to.Ptr(core.ExternalDataShareRecipientTypeUser),
 			TenantID:          to.Ptr("c51dc03f-268a-4da0-a879-25f24947ab8b"),
 			UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
 		},
@@ -79,8 +81,34 @@ func ExampleExternalDataSharesProviderClient_CreateExternalDataShare_createAnExt
 			"Files/Sales/Contoso_Sales_2023",
 			"Files/Sales/Contoso_Sales_2024/SubFolder1",
 			"Files/Sales/Contoso_Sales_2024/SubFolder2/SubFolder3"},
-		Recipient: &core.ExternalDataShareRecipient{
+		Recipient: &core.ExternalDataShareUserRecipient{
+			Type:              to.Ptr(core.ExternalDataShareRecipientTypeUser),
 			UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
+		},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleExternalDataSharesProviderClient_CreateExternalDataShare_createAnExternalDataShareWithRecipientObjectIdExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewExternalDataSharesProviderClient().CreateExternalDataShare(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", core.CreateExternalDataShareRequest{
+		Paths: []string{
+			"Files/Sales/Contoso_Sales_2023"},
+		Recipient: &core.ExternalDataShareSPRecipient{
+			Type:        to.Ptr(core.ExternalDataShareRecipientTypeServicePrincipal),
+			PrincipalID: to.Ptr("a1b2c3d4-e5f6-7890-abcd-ef1234567890"),
+			TenantID:    to.Ptr("c51dc03f-268a-4da0-a879-25f24947ab8b"),
 		},
 	}, nil)
 	if err != nil {
@@ -123,8 +151,10 @@ func ExampleExternalDataSharesProviderClient_NewListExternalDataSharesInItemPage
 		// 			ItemID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 		// 			Paths: []string{
 		// 				"Files/Sales/Contoso_Sales_2023"},
-		// 				Recipient: &core.ExternalDataShareRecipient{
-		// 					UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
+		// 				Recipient: &core.ExternalDataShareSPRecipient{
+		// 					Type: to.Ptr(core.ExternalDataShareRecipientTypeServicePrincipal),
+		// 					PrincipalID: to.Ptr("a1b2c3d4-e5f6-7890-abcd-ef1234567890"),
+		// 					TenantID: to.Ptr("c51dc03f-268a-4da0-a879-25f24947ab8b"),
 		// 				},
 		// 				Status: to.Ptr(core.ExternalDataShareStatusPending),
 		// 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
@@ -141,7 +171,8 @@ func ExampleExternalDataSharesProviderClient_NewListExternalDataSharesInItemPage
 		// 				ItemID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 		// 				Paths: []string{
 		// 					"Files/Sales/Contoso_Sales_2023"},
-		// 					Recipient: &core.ExternalDataShareRecipient{
+		// 					Recipient: &core.ExternalDataShareUserRecipient{
+		// 						Type: to.Ptr(core.ExternalDataShareRecipientTypeUser),
 		// 						UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
 		// 					},
 		// 					Status: to.Ptr(core.ExternalDataShareStatusActive),
@@ -158,7 +189,8 @@ func ExampleExternalDataSharesProviderClient_NewListExternalDataSharesInItemPage
 		// 					ItemID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 		// 					Paths: []string{
 		// 						"Files/Sales/Contoso_Sales_2023"},
-		// 						Recipient: &core.ExternalDataShareRecipient{
+		// 						Recipient: &core.ExternalDataShareUserRecipient{
+		// 							Type: to.Ptr(core.ExternalDataShareRecipientTypeUser),
 		// 							UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
 		// 						},
 		// 						Status: to.Ptr(core.ExternalDataShareStatusInvitationExpired),
@@ -176,7 +208,8 @@ func ExampleExternalDataSharesProviderClient_NewListExternalDataSharesInItemPage
 		// 						ItemID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 		// 						Paths: []string{
 		// 							"Files/Sales/Contoso_Sales_2023"},
-		// 							Recipient: &core.ExternalDataShareRecipient{
+		// 							Recipient: &core.ExternalDataShareUserRecipient{
+		// 								Type: to.Ptr(core.ExternalDataShareRecipientTypeUser),
 		// 								UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
 		// 							},
 		// 							Status: to.Ptr(core.ExternalDataShareStatusRevoked),
@@ -215,7 +248,8 @@ func ExampleExternalDataSharesProviderClient_GetExternalDataShare() {
 	// 	ItemID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
 	// 	Paths: []string{
 	// 		"Files/Sales/Contoso_Sales_2023"},
-	// 		Recipient: &core.ExternalDataShareRecipient{
+	// 		Recipient: &core.ExternalDataShareUserRecipient{
+	// 			Type: to.Ptr(core.ExternalDataShareRecipientTypeUser),
 	// 			UserPrincipalName: to.Ptr("lisa@fabrikam.com"),
 	// 		},
 	// 		Status: to.Ptr(core.ExternalDataShareStatusPending),

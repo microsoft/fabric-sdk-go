@@ -73,7 +73,7 @@ type Definition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []DefinitionPart
 
-	// The format of the item definition. Additional format types may be added over time.
+	// The format of the anomaly detector definition. Additional format types may be added over time.
 	Format *DefinitionFormat
 }
 

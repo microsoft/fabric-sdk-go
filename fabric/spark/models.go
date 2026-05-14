@@ -26,6 +26,19 @@ type AutomaticLogProperties struct {
 	Enabled *bool
 }
 
+// CapacitySparkSettings - Capacity Spark settings.
+type CapacitySparkSettings struct {
+	// Allow a single job to use the maximum available VCores with burst factor. When this is off, each job will be limited to
+	// the max VCores without burst factor.
+	JobBurstSupport *Enablement
+
+	// Allow workspace admins to create custom Spark pools based on their compute needs.
+	WorkspaceCustomPoolsSupport *Enablement
+
+	// Disable starter pools in the workspaces attached to the capacity.
+	WorkspaceStarterPoolStatus *Enablement
+}
+
 // CreateCustomPoolRequest - Create custom pool request payload.
 type CreateCustomPoolRequest struct {
 	// REQUIRED; Autoscale.
@@ -458,6 +471,19 @@ type StarterPoolProperties struct {
 
 	// The maximum node count.
 	MaxNodeCount *int32
+}
+
+// UpdateCapacitySparkSettingsRequest - Update capacity Spark settings request payload.
+type UpdateCapacitySparkSettingsRequest struct {
+	// Allow a single job to use the maximum available VCores with burst factor. When this is off, each job will be limited to
+	// the max VCores without burst factor.
+	JobBurstSupport *Enablement
+
+	// Allow workspace admins to create custom Spark pools based on their compute needs.
+	WorkspaceCustomPoolsSupport *Enablement
+
+	// Disable starter pools in the workspaces attached to the capacity.
+	WorkspaceStarterPoolStatus *Enablement
 }
 
 // UpdateCustomPoolRequest - Update custom pool request payload.

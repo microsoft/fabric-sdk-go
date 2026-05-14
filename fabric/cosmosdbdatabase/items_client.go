@@ -292,7 +292,7 @@ func (client *ItemsClient) getCosmosDBDatabaseDefinition(ctx context.Context, wo
 }
 
 // getCosmosDBDatabaseDefinitionCreateRequest creates the GetCosmosDBDatabaseDefinition request.
-func (client *ItemsClient) getCosmosDBDatabaseDefinitionCreateRequest(ctx context.Context, workspaceID string, cosmosDbDatabaseID string, _ *ItemsClientBeginGetCosmosDBDatabaseDefinitionOptions) (*policy.Request, error) {
+func (client *ItemsClient) getCosmosDBDatabaseDefinitionCreateRequest(ctx context.Context, workspaceID string, cosmosDbDatabaseID string, options *ItemsClientBeginGetCosmosDBDatabaseDefinitionOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/cosmosDbDatabases/{cosmosDbDatabaseId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -306,6 +306,11 @@ func (client *ItemsClient) getCosmosDBDatabaseDefinitionCreateRequest(ctx contex
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.Format != nil {
+		reqQP.Set("format", *options.Format)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

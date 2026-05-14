@@ -8,6 +8,29 @@ package core
 
 import "encoding/json"
 
+func unmarshalBaseExternalDataShareRecipientClassification(rawMsg json.RawMessage) (BaseExternalDataShareRecipientClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b BaseExternalDataShareRecipientClassification
+	switch m["type"] {
+	case string(ExternalDataShareRecipientTypeServicePrincipal):
+		b = &ExternalDataShareSPRecipient{}
+	case string(ExternalDataShareRecipientTypeUser):
+		b = &ExternalDataShareUserRecipient{}
+	default:
+		b = &BaseExternalDataShareRecipient{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
 func unmarshalCatalogEntryClassification(rawMsg json.RawMessage) (CatalogEntryClassification, error) {
 	if rawMsg == nil || string(rawMsg) == "null" {
 		return nil, nil

@@ -27,7 +27,7 @@ type CreateDigitalTwinBuilderFlowRequest struct {
 // CreationPayload - The Digital Twin Builder Flow creation payload.
 type CreationPayload struct {
 	// REQUIRED; The Digital Twin Builder Item Reference.
-	DigitalTwinBuilderItemReference ItemReferenceClassification
+	DigitalTwinBuilderItemReference *ItemReferenceByID
 }
 
 // DefinitionResponse - The Digital Twin Builder Flow public definition response.
@@ -216,6 +216,9 @@ type Properties struct {
 type PublicDefinition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []PublicDefinitionPart
+
+	// The format of the digital twin builder flow definition.
+	Format *string
 }
 
 // PublicDefinitionPart - Digital Twin Builder Flow definition part object.

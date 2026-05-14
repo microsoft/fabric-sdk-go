@@ -334,6 +334,7 @@ func (i *ItemsServerTransport) dispatchBeginGetDataflowDefinition(req *http.Requ
 		if len(matches) < 3 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
+		qp := req.URL.Query()
 		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 		if err != nil {
 			return nil, err
@@ -342,7 +343,18 @@ func (i *ItemsServerTransport) dispatchBeginGetDataflowDefinition(req *http.Requ
 		if err != nil {
 			return nil, err
 		}
-		respr, errRespr := i.srv.BeginGetDataflowDefinition(req.Context(), workspaceIDParam, dataflowIDParam, nil)
+		formatUnescaped, err := url.QueryUnescape(qp.Get("format"))
+		if err != nil {
+			return nil, err
+		}
+		formatParam := getOptional(formatUnescaped)
+		var options *dataflow.ItemsClientBeginGetDataflowDefinitionOptions
+		if formatParam != nil {
+			options = &dataflow.ItemsClientBeginGetDataflowDefinitionOptions{
+				Format: formatParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginGetDataflowDefinition(req.Context(), workspaceIDParam, dataflowIDParam, options)
 		if respErr := server.GetError(errRespr, req); respErr != nil {
 			return nil, respErr
 		}

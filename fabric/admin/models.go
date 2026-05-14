@@ -87,6 +87,19 @@ func (a *AzureDevOpsDetails) GetGitProviderDetails() *GitProviderDetails {
 	}
 }
 
+// BaseExternalDataShareRecipient - The recipient of an external data share. Use 'ExternalDataShareUserRecipient' to share
+// with a user by email, or 'ExternalDataShareSPRecipient' to share with a service principal by object ID. If 'type'
+// is not specified, it defaults to 'User'.
+type BaseExternalDataShareRecipient struct {
+	// REQUIRED; The type of the external data share recipient. Additional recipient types may be added over time.
+	Type *ExternalDataShareRecipientType
+}
+
+// GetBaseExternalDataShareRecipient implements the BaseExternalDataShareRecipientClassification interface for type BaseExternalDataShareRecipient.
+func (b *BaseExternalDataShareRecipient) GetBaseExternalDataShareRecipient() *BaseExternalDataShareRecipient {
+	return b
+}
+
 // BaseWorkloadAssignment - Base workload assignment.
 type BaseWorkloadAssignment struct {
 	// READ-ONLY; The unique identifier of the assignment.
@@ -538,7 +551,7 @@ type ExternalDataShare struct {
 	Paths []string
 
 	// READ-ONLY; The recipient who was invited to accept the external data share.
-	Recipient *ExternalDataShareRecipient
+	Recipient BaseExternalDataShareRecipientClassification
 
 	// READ-ONLY; The status of the external data share.
 	Status *ExternalDataShareStatus
@@ -556,13 +569,44 @@ type ExternalDataShare struct {
 	InvitationURL *string
 }
 
-// ExternalDataShareRecipient - A representation of the the external data share recipient.
-type ExternalDataShareRecipient struct {
-	// REQUIRED; The recipient's email address.
+// ExternalDataShareSPRecipient - An external data share recipient that is a service principal, identified by principal ID
+// and tenant ID.
+type ExternalDataShareSPRecipient struct {
+	// REQUIRED; The principal ID of the service principal recipient. This is equivalent to the Entra ID object ID.
+	PrincipalID *string
+
+	// REQUIRED; The tenant ID of the service principal recipient.
+	TenantID *string
+
+	// REQUIRED; The type of the external data share recipient. Additional recipient types may be added over time.
+	Type *ExternalDataShareRecipientType
+}
+
+// GetBaseExternalDataShareRecipient implements the BaseExternalDataShareRecipientClassification interface for type ExternalDataShareSPRecipient.
+func (e *ExternalDataShareSPRecipient) GetBaseExternalDataShareRecipient() *BaseExternalDataShareRecipient {
+	return &BaseExternalDataShareRecipient{
+		Type: e.Type,
+	}
+}
+
+// ExternalDataShareUserRecipient - An external data share recipient that is a user, identified by user principal name (email
+// address). This is the default recipient type.
+type ExternalDataShareUserRecipient struct {
+	// REQUIRED; The type of the external data share recipient. Additional recipient types may be added over time.
+	Type *ExternalDataShareRecipientType
+
+	// REQUIRED; The user principal name (email address) of the recipient.
 	UserPrincipalName *string
 
-	// The recipient's tenant ID.
+	// The tenant ID of the user recipient. Optional.
 	TenantID *string
+}
+
+// GetBaseExternalDataShareRecipient implements the BaseExternalDataShareRecipientClassification interface for type ExternalDataShareUserRecipient.
+func (e *ExternalDataShareUserRecipient) GetBaseExternalDataShareRecipient() *BaseExternalDataShareRecipient {
+	return &BaseExternalDataShareRecipient{
+		Type: e.Type,
+	}
 }
 
 // ExternalDataShares - A list of external data shares with a continuation token.
@@ -866,7 +910,9 @@ type NetworkCommunicationPolicyOutboundDetails struct {
 
 // NetworkRules - The policy defining access to/from a workspace to/from public networks.
 type NetworkRules struct {
-	// Default policy for workspace access from public networks.
+	// The default policy for workspace access from public networks. If omitted from a PUT request body, this field defaults to
+	// Allow, which may unintentionally open network access. Always explicitly specify
+	// this field in every PUT request body.
 	DefaultAction *NetworkAccessRule
 }
 
@@ -1465,7 +1511,9 @@ type WorkspaceOutboundConnections struct {
 	// "Allow", all unspecified connection types are permitted by default. If set to
 	// "Deny", all unspecified connection types are blocked by default unless explicitly allowed. This setting acts as a global
 	// fallback policy and is critical for enforcing a secure default posture in
-	// environments where only known and trusted connections should be permitted.
+	// environments where only known and trusted connections should be permitted.If omitted from a PUT request body, this field
+	// defaults to Allow, which may unintentionally permit all outbound connections.
+	// Always explicitly specify this field in every PUT request body.
 	DefaultAction *ConnectionAccessActionType
 
 	// A list of rules that define outbound access behavior for specific cloud connection types. Each rule may include endpoint-based
@@ -1482,7 +1530,9 @@ type WorkspaceOutboundGateways struct {
 
 	// Defines the default behavior for all gateways that are not explicitly listed in the allowed list array. If set to "Allow",
 	// all unspecified gateways are permitted by default. If set to "Deny", all
-	// unspecified gateways are blocked.
+	// unspecified gateways are blocked.If omitted from a PUT request body, this field defaults to Allow, which may unintentionally
+	// permit all outbound gateway connections. Always explicitly specify this
+	// field in every PUT request body.
 	DefaultAction *GatewayAccessActionType
 }
 

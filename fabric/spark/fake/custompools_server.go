@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
@@ -25,21 +26,41 @@ import (
 
 // CustomPoolsServer is a fake server for instances of the spark.CustomPoolsClient type.
 type CustomPoolsServer struct {
+	// CreateCapacityCustomPoolBeta is the fake for method CustomPoolsClient.CreateCapacityCustomPoolBeta
+	// HTTP status codes to indicate success: http.StatusCreated
+	CreateCapacityCustomPoolBeta func(ctx context.Context, capacityID string, beta bool, createCustomPoolRequest spark.CreateCustomPoolRequest, options *spark.CustomPoolsClientCreateCapacityCustomPoolBetaOptions) (resp azfake.Responder[spark.CustomPoolsClientCreateCapacityCustomPoolBetaResponse], errResp azfake.ErrorResponder)
+
 	// CreateWorkspaceCustomPool is the fake for method CustomPoolsClient.CreateWorkspaceCustomPool
 	// HTTP status codes to indicate success: http.StatusCreated
 	CreateWorkspaceCustomPool func(ctx context.Context, workspaceID string, createCustomPoolRequest spark.CreateCustomPoolRequest, options *spark.CustomPoolsClientCreateWorkspaceCustomPoolOptions) (resp azfake.Responder[spark.CustomPoolsClientCreateWorkspaceCustomPoolResponse], errResp azfake.ErrorResponder)
+
+	// DeleteCapacityCustomPoolBeta is the fake for method CustomPoolsClient.DeleteCapacityCustomPoolBeta
+	// HTTP status codes to indicate success: http.StatusOK
+	DeleteCapacityCustomPoolBeta func(ctx context.Context, capacityID string, poolID string, beta bool, options *spark.CustomPoolsClientDeleteCapacityCustomPoolBetaOptions) (resp azfake.Responder[spark.CustomPoolsClientDeleteCapacityCustomPoolBetaResponse], errResp azfake.ErrorResponder)
 
 	// DeleteWorkspaceCustomPool is the fake for method CustomPoolsClient.DeleteWorkspaceCustomPool
 	// HTTP status codes to indicate success: http.StatusOK
 	DeleteWorkspaceCustomPool func(ctx context.Context, workspaceID string, poolID string, options *spark.CustomPoolsClientDeleteWorkspaceCustomPoolOptions) (resp azfake.Responder[spark.CustomPoolsClientDeleteWorkspaceCustomPoolResponse], errResp azfake.ErrorResponder)
 
+	// GetCapacityCustomPoolBeta is the fake for method CustomPoolsClient.GetCapacityCustomPoolBeta
+	// HTTP status codes to indicate success: http.StatusOK
+	GetCapacityCustomPoolBeta func(ctx context.Context, capacityID string, poolID string, beta bool, options *spark.CustomPoolsClientGetCapacityCustomPoolBetaOptions) (resp azfake.Responder[spark.CustomPoolsClientGetCapacityCustomPoolBetaResponse], errResp azfake.ErrorResponder)
+
 	// GetWorkspaceCustomPool is the fake for method CustomPoolsClient.GetWorkspaceCustomPool
 	// HTTP status codes to indicate success: http.StatusOK
 	GetWorkspaceCustomPool func(ctx context.Context, workspaceID string, poolID string, options *spark.CustomPoolsClientGetWorkspaceCustomPoolOptions) (resp azfake.Responder[spark.CustomPoolsClientGetWorkspaceCustomPoolResponse], errResp azfake.ErrorResponder)
 
+	// NewListCapacityCustomPoolsBetaPager is the fake for method CustomPoolsClient.NewListCapacityCustomPoolsBetaPager
+	// HTTP status codes to indicate success: http.StatusOK
+	NewListCapacityCustomPoolsBetaPager func(capacityID string, beta bool, options *spark.CustomPoolsClientListCapacityCustomPoolsBetaOptions) (resp azfake.PagerResponder[spark.CustomPoolsClientListCapacityCustomPoolsBetaResponse])
+
 	// NewListWorkspaceCustomPoolsPager is the fake for method CustomPoolsClient.NewListWorkspaceCustomPoolsPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListWorkspaceCustomPoolsPager func(workspaceID string, options *spark.CustomPoolsClientListWorkspaceCustomPoolsOptions) (resp azfake.PagerResponder[spark.CustomPoolsClientListWorkspaceCustomPoolsResponse])
+
+	// UpdateCapacityCustomPoolBeta is the fake for method CustomPoolsClient.UpdateCapacityCustomPoolBeta
+	// HTTP status codes to indicate success: http.StatusOK
+	UpdateCapacityCustomPoolBeta func(ctx context.Context, capacityID string, poolID string, beta bool, updateCustomPoolRequest spark.UpdateCustomPoolRequest, options *spark.CustomPoolsClientUpdateCapacityCustomPoolBetaOptions) (resp azfake.Responder[spark.CustomPoolsClientUpdateCapacityCustomPoolBetaResponse], errResp azfake.ErrorResponder)
 
 	// UpdateWorkspaceCustomPool is the fake for method CustomPoolsClient.UpdateWorkspaceCustomPool
 	// HTTP status codes to indicate success: http.StatusOK
@@ -51,16 +72,18 @@ type CustomPoolsServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewCustomPoolsServerTransport(srv *CustomPoolsServer) *CustomPoolsServerTransport {
 	return &CustomPoolsServerTransport{
-		srv:                              srv,
-		newListWorkspaceCustomPoolsPager: newTracker[azfake.PagerResponder[spark.CustomPoolsClientListWorkspaceCustomPoolsResponse]](),
+		srv:                                 srv,
+		newListCapacityCustomPoolsBetaPager: newTracker[azfake.PagerResponder[spark.CustomPoolsClientListCapacityCustomPoolsBetaResponse]](),
+		newListWorkspaceCustomPoolsPager:    newTracker[azfake.PagerResponder[spark.CustomPoolsClientListWorkspaceCustomPoolsResponse]](),
 	}
 }
 
 // CustomPoolsServerTransport connects instances of spark.CustomPoolsClient to instances of CustomPoolsServer.
 // Don't use this type directly, use NewCustomPoolsServerTransport instead.
 type CustomPoolsServerTransport struct {
-	srv                              *CustomPoolsServer
-	newListWorkspaceCustomPoolsPager *tracker[azfake.PagerResponder[spark.CustomPoolsClientListWorkspaceCustomPoolsResponse]]
+	srv                                 *CustomPoolsServer
+	newListCapacityCustomPoolsBetaPager *tracker[azfake.PagerResponder[spark.CustomPoolsClientListCapacityCustomPoolsBetaResponse]]
+	newListWorkspaceCustomPoolsPager    *tracker[azfake.PagerResponder[spark.CustomPoolsClientListWorkspaceCustomPoolsResponse]]
 }
 
 // Do implements the policy.Transporter interface for CustomPoolsServerTransport.
@@ -88,14 +111,24 @@ func (c *CustomPoolsServerTransport) dispatchToMethodFake(req *http.Request, met
 		}
 		if !intercepted {
 			switch method {
+			case "CustomPoolsClient.CreateCapacityCustomPoolBeta":
+				res.resp, res.err = c.dispatchCreateCapacityCustomPoolBeta(req)
 			case "CustomPoolsClient.CreateWorkspaceCustomPool":
 				res.resp, res.err = c.dispatchCreateWorkspaceCustomPool(req)
+			case "CustomPoolsClient.DeleteCapacityCustomPoolBeta":
+				res.resp, res.err = c.dispatchDeleteCapacityCustomPoolBeta(req)
 			case "CustomPoolsClient.DeleteWorkspaceCustomPool":
 				res.resp, res.err = c.dispatchDeleteWorkspaceCustomPool(req)
+			case "CustomPoolsClient.GetCapacityCustomPoolBeta":
+				res.resp, res.err = c.dispatchGetCapacityCustomPoolBeta(req)
 			case "CustomPoolsClient.GetWorkspaceCustomPool":
 				res.resp, res.err = c.dispatchGetWorkspaceCustomPool(req)
+			case "CustomPoolsClient.NewListCapacityCustomPoolsBetaPager":
+				res.resp, res.err = c.dispatchNewListCapacityCustomPoolsBetaPager(req)
 			case "CustomPoolsClient.NewListWorkspaceCustomPoolsPager":
 				res.resp, res.err = c.dispatchNewListWorkspaceCustomPoolsPager(req)
+			case "CustomPoolsClient.UpdateCapacityCustomPoolBeta":
+				res.resp, res.err = c.dispatchUpdateCapacityCustomPoolBeta(req)
 			case "CustomPoolsClient.UpdateWorkspaceCustomPool":
 				res.resp, res.err = c.dispatchUpdateWorkspaceCustomPool(req)
 			default:
@@ -115,6 +148,48 @@ func (c *CustomPoolsServerTransport) dispatchToMethodFake(req *http.Request, met
 	case res := <-resultChan:
 		return res.resp, res.err
 	}
+}
+
+func (c *CustomPoolsServerTransport) dispatchCreateCapacityCustomPoolBeta(req *http.Request) (*http.Response, error) {
+	if c.srv.CreateCapacityCustomPoolBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method CreateCapacityCustomPoolBeta not implemented")}
+	}
+	const regexStr = `/v1/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/spark/pools`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	qp := req.URL.Query()
+	body, err := server.UnmarshalRequestAsJSON[spark.CreateCustomPoolRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+	if err != nil {
+		return nil, err
+	}
+	betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
+	if err != nil {
+		return nil, err
+	}
+	betaParam, err := strconv.ParseBool(betaUnescaped)
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := c.srv.CreateCapacityCustomPoolBeta(req.Context(), capacityIDParam, betaParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusCreated}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).CustomPool, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 func (c *CustomPoolsServerTransport) dispatchCreateWorkspaceCustomPool(req *http.Request) (*http.Response, error) {
@@ -153,6 +228,48 @@ func (c *CustomPoolsServerTransport) dispatchCreateWorkspaceCustomPool(req *http
 	return resp, nil
 }
 
+func (c *CustomPoolsServerTransport) dispatchDeleteCapacityCustomPoolBeta(req *http.Request) (*http.Response, error) {
+	if c.srv.DeleteCapacityCustomPoolBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method DeleteCapacityCustomPoolBeta not implemented")}
+	}
+	const regexStr = `/v1/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/spark/pools/(?P<poolId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	qp := req.URL.Query()
+	capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+	if err != nil {
+		return nil, err
+	}
+	poolIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("poolId")])
+	if err != nil {
+		return nil, err
+	}
+	betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
+	if err != nil {
+		return nil, err
+	}
+	betaParam, err := strconv.ParseBool(betaUnescaped)
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := c.srv.DeleteCapacityCustomPoolBeta(req.Context(), capacityIDParam, poolIDParam, betaParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
 func (c *CustomPoolsServerTransport) dispatchDeleteWorkspaceCustomPool(req *http.Request) (*http.Response, error) {
 	if c.srv.DeleteWorkspaceCustomPool == nil {
 		return nil, &nonRetriableError{errors.New("fake for method DeleteWorkspaceCustomPool not implemented")}
@@ -180,6 +297,48 @@ func (c *CustomPoolsServerTransport) dispatchDeleteWorkspaceCustomPool(req *http
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
 	}
 	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *CustomPoolsServerTransport) dispatchGetCapacityCustomPoolBeta(req *http.Request) (*http.Response, error) {
+	if c.srv.GetCapacityCustomPoolBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetCapacityCustomPoolBeta not implemented")}
+	}
+	const regexStr = `/v1/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/spark/pools/(?P<poolId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	qp := req.URL.Query()
+	capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+	if err != nil {
+		return nil, err
+	}
+	poolIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("poolId")])
+	if err != nil {
+		return nil, err
+	}
+	betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
+	if err != nil {
+		return nil, err
+	}
+	betaParam, err := strconv.ParseBool(betaUnescaped)
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := c.srv.GetCapacityCustomPoolBeta(req.Context(), capacityIDParam, poolIDParam, betaParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).CustomPool, req)
 	if err != nil {
 		return nil, err
 	}
@@ -215,6 +374,63 @@ func (c *CustomPoolsServerTransport) dispatchGetWorkspaceCustomPool(req *http.Re
 	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).CustomPool, req)
 	if err != nil {
 		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *CustomPoolsServerTransport) dispatchNewListCapacityCustomPoolsBetaPager(req *http.Request) (*http.Response, error) {
+	if c.srv.NewListCapacityCustomPoolsBetaPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListCapacityCustomPoolsBetaPager not implemented")}
+	}
+	newListCapacityCustomPoolsBetaPager := c.newListCapacityCustomPoolsBetaPager.get(req)
+	if newListCapacityCustomPoolsBetaPager == nil {
+		const regexStr = `/v1/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/spark/pools`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+		if err != nil {
+			return nil, err
+		}
+		betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
+		if err != nil {
+			return nil, err
+		}
+		betaParam, err := strconv.ParseBool(betaUnescaped)
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *spark.CustomPoolsClientListCapacityCustomPoolsBetaOptions
+		if continuationTokenParam != nil {
+			options = &spark.CustomPoolsClientListCapacityCustomPoolsBetaOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := c.srv.NewListCapacityCustomPoolsBetaPager(capacityIDParam, betaParam, options)
+		newListCapacityCustomPoolsBetaPager = &resp
+		c.newListCapacityCustomPoolsBetaPager.add(req, newListCapacityCustomPoolsBetaPager)
+		server.PagerResponderInjectNextLinks(newListCapacityCustomPoolsBetaPager, req, func(page *spark.CustomPoolsClientListCapacityCustomPoolsBetaResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
+	}
+	resp, err := server.PagerResponderNext(newListCapacityCustomPoolsBetaPager, req)
+	if err != nil {
+		return nil, err
+	}
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		c.newListCapacityCustomPoolsBetaPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
+	}
+	if !server.PagerResponderMore(newListCapacityCustomPoolsBetaPager) {
+		c.newListCapacityCustomPoolsBetaPager.remove(req)
 	}
 	return resp, nil
 }
@@ -264,6 +480,52 @@ func (c *CustomPoolsServerTransport) dispatchNewListWorkspaceCustomPoolsPager(re
 	}
 	if !server.PagerResponderMore(newListWorkspaceCustomPoolsPager) {
 		c.newListWorkspaceCustomPoolsPager.remove(req)
+	}
+	return resp, nil
+}
+
+func (c *CustomPoolsServerTransport) dispatchUpdateCapacityCustomPoolBeta(req *http.Request) (*http.Response, error) {
+	if c.srv.UpdateCapacityCustomPoolBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method UpdateCapacityCustomPoolBeta not implemented")}
+	}
+	const regexStr = `/v1/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/spark/pools/(?P<poolId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	qp := req.URL.Query()
+	body, err := server.UnmarshalRequestAsJSON[spark.UpdateCustomPoolRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+	if err != nil {
+		return nil, err
+	}
+	poolIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("poolId")])
+	if err != nil {
+		return nil, err
+	}
+	betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
+	if err != nil {
+		return nil, err
+	}
+	betaParam, err := strconv.ParseBool(betaUnescaped)
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := c.srv.UpdateCapacityCustomPoolBeta(req.Context(), capacityIDParam, poolIDParam, betaParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).CustomPool, req)
+	if err != nil {
+		return nil, err
 	}
 	return resp, nil
 }

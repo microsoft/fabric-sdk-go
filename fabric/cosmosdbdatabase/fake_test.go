@@ -316,7 +316,7 @@ func (testsuite *FakeTestSuite) TestItems_GetCosmosDBDatabaseDefinition() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	poller, err := client.BeginGetCosmosDBDatabaseDefinition(ctx, exampleWorkspaceID, exampleCosmosDbDatabaseID, nil)
+	poller, err := client.BeginGetCosmosDBDatabaseDefinition(ctx, exampleWorkspaceID, exampleCosmosDbDatabaseID, &cosmosdbdatabase.ItemsClientBeginGetCosmosDBDatabaseDefinitionOptions{Format: nil})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	res, err := poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")

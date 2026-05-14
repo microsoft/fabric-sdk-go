@@ -231,16 +231,16 @@ func ExampleJobSchedulerClient_GetItemSchedule_getItemScheduleWithExecutionDataE
 	// 			},
 	// 			CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T05:35:20.536Z"); return t}()),
 	// 			Enabled: to.Ptr(true),
+	// 			ID: to.Ptr("11111111-2222-3333-4444-555555555555"),
+	// 			Owner: &core.UserPrincipal{
+	// 				Type: to.Ptr(core.PrincipalTypeUser),
+	// 				ID: to.Ptr("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+	// 			},
 	// 			ExecutionData: map[string]any{
 	// 				"optimizeSettings":map[string]any{
 	// 					"vOrder": false,
 	// 				},
 	// 				"tableName": "Table2",
-	// 			},
-	// 			ID: to.Ptr("11111111-2222-3333-4444-555555555555"),
-	// 			Owner: &core.UserPrincipal{
-	// 				Type: to.Ptr(core.PrincipalTypeUser),
-	// 				ID: to.Ptr("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
 	// 			},
 	// 		}
 }
@@ -345,16 +345,16 @@ func ExampleJobSchedulerClient_UpdateItemSchedule_updateItemScheduleWithExecutio
 	// 			},
 	// 			CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-04-28T05:35:20.536Z"); return t}()),
 	// 			Enabled: to.Ptr(true),
+	// 			ID: to.Ptr("11111111-2222-3333-4444-555555555555"),
+	// 			Owner: &core.UserPrincipal{
+	// 				Type: to.Ptr(core.PrincipalTypeUser),
+	// 				ID: to.Ptr("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+	// 			},
 	// 			ExecutionData: map[string]any{
 	// 				"optimizeSettings":map[string]any{
 	// 					"vOrder": false,
 	// 				},
 	// 				"tableName": "Table2",
-	// 			},
-	// 			ID: to.Ptr("11111111-2222-3333-4444-555555555555"),
-	// 			Owner: &core.UserPrincipal{
-	// 				Type: to.Ptr(core.PrincipalTypeUser),
-	// 				ID: to.Ptr("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
 	// 			},
 	// 		}
 }

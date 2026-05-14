@@ -336,7 +336,7 @@ func (testsuite *FakeTestSuite) TestItems_GetDataflowDefinition() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	poller, err := client.BeginGetDataflowDefinition(ctx, exampleWorkspaceID, exampleDataflowID, nil)
+	poller, err := client.BeginGetDataflowDefinition(ctx, exampleWorkspaceID, exampleDataflowID, &dataflow.ItemsClientBeginGetDataflowDefinitionOptions{Format: nil})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	res, err := poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")

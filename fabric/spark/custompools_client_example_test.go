@@ -260,3 +260,231 @@ func ExampleCustomPoolsClient_UpdateWorkspaceCustomPool() {
 	// 	NodeSize: to.Ptr(spark.NodeSizeSmall),
 	// }
 }
+
+// Generated from example definition
+func ExampleCustomPoolsClient_NewListCapacityCustomPoolsBetaPager_listCustomPoolsExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := spark.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewCustomPoolsClient().NewListCapacityCustomPoolsBetaPager("ce6db599-0877-4fb1-aa1f-9b1b8d99dc40", true, &spark.CustomPoolsClientListCapacityCustomPoolsBetaOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.CustomPools = spark.CustomPools{
+		// 	Value: []spark.CustomPool{
+		// 		{
+		// 			Name: to.Ptr("pool1"),
+		// 			Type: to.Ptr(spark.CustomPoolTypeCapacity),
+		// 			AutoScale: &spark.AutoScaleProperties{
+		// 				Enabled: to.Ptr(true),
+		// 				MaxNodeCount: to.Ptr[int32](4),
+		// 				MinNodeCount: to.Ptr[int32](1),
+		// 			},
+		// 			DynamicExecutorAllocation: &spark.DynamicExecutorAllocationProperties{
+		// 				Enabled: to.Ptr(true),
+		// 				MaxExecutors: to.Ptr[int32](2),
+		// 				MinExecutors: to.Ptr[int32](1),
+		// 			},
+		// 			ID: to.Ptr("2367293d-b70b-4b33-97f2-161b8d04a8d7"),
+		// 			NodeFamily: to.Ptr(spark.NodeFamilyMemoryOptimized),
+		// 			NodeSize: to.Ptr(spark.NodeSizeSmall),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
+func ExampleCustomPoolsClient_NewListCapacityCustomPoolsBetaPager_listCustomPoolsWithContinuationExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := spark.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewCustomPoolsClient().NewListCapacityCustomPoolsBetaPager("ce6db599-0877-4fb1-aa1f-9b1b8d99dc40", true, &spark.CustomPoolsClientListCapacityCustomPoolsBetaOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.CustomPools = spark.CustomPools{
+		// 	ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		// 	ContinuationURI: to.Ptr("https://api.fabric.microsoft.com/v1/capacities/ce6db599-0877-4fb1-aa1f-9b1b8d99dc40/spark/pools?beta=true&continuationToken=LDEsMTAwMDAwLDA%3D"),
+		// 	Value: []spark.CustomPool{
+		// 		{
+		// 			Name: to.Ptr("pool1"),
+		// 			Type: to.Ptr(spark.CustomPoolTypeCapacity),
+		// 			AutoScale: &spark.AutoScaleProperties{
+		// 				Enabled: to.Ptr(true),
+		// 				MaxNodeCount: to.Ptr[int32](4),
+		// 				MinNodeCount: to.Ptr[int32](1),
+		// 			},
+		// 			DynamicExecutorAllocation: &spark.DynamicExecutorAllocationProperties{
+		// 				Enabled: to.Ptr(true),
+		// 				MaxExecutors: to.Ptr[int32](2),
+		// 				MinExecutors: to.Ptr[int32](1),
+		// 			},
+		// 			ID: to.Ptr("2367293d-b70b-4b33-97f2-161b8d04a8d7"),
+		// 			NodeFamily: to.Ptr(spark.NodeFamilyMemoryOptimized),
+		// 			NodeSize: to.Ptr(spark.NodeSizeSmall),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
+func ExampleCustomPoolsClient_CreateCapacityCustomPoolBeta() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := spark.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewCustomPoolsClient().CreateCapacityCustomPoolBeta(ctx, "ce6db599-0877-4fb1-aa1f-9b1b8d99dc40", true, spark.CreateCustomPoolRequest{
+		Name: to.Ptr("pool1"),
+		AutoScale: &spark.AutoScaleProperties{
+			Enabled:      to.Ptr(true),
+			MaxNodeCount: to.Ptr[int32](2),
+			MinNodeCount: to.Ptr[int32](1),
+		},
+		DynamicExecutorAllocation: &spark.DynamicExecutorAllocationProperties{
+			Enabled:      to.Ptr(true),
+			MaxExecutors: to.Ptr[int32](1),
+			MinExecutors: to.Ptr[int32](1),
+		},
+		NodeFamily: to.Ptr(spark.NodeFamilyMemoryOptimized),
+		NodeSize:   to.Ptr(spark.NodeSizeSmall),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleCustomPoolsClient_GetCapacityCustomPoolBeta() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := spark.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewCustomPoolsClient().GetCapacityCustomPoolBeta(ctx, "ce6db599-0877-4fb1-aa1f-9b1b8d99dc40", "2367293d-b70b-4b33-97f2-161b8d04a8d7", true, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.CustomPool = spark.CustomPool{
+	// 	Name: to.Ptr("pool1"),
+	// 	Type: to.Ptr(spark.CustomPoolTypeCapacity),
+	// 	AutoScale: &spark.AutoScaleProperties{
+	// 		Enabled: to.Ptr(true),
+	// 		MaxNodeCount: to.Ptr[int32](4),
+	// 		MinNodeCount: to.Ptr[int32](1),
+	// 	},
+	// 	DynamicExecutorAllocation: &spark.DynamicExecutorAllocationProperties{
+	// 		Enabled: to.Ptr(true),
+	// 		MaxExecutors: to.Ptr[int32](2),
+	// 		MinExecutors: to.Ptr[int32](1),
+	// 	},
+	// 	ID: to.Ptr("2367293d-b70b-4b33-97f2-161b8d04a8d7"),
+	// 	NodeFamily: to.Ptr(spark.NodeFamilyMemoryOptimized),
+	// 	NodeSize: to.Ptr(spark.NodeSizeSmall),
+	// }
+}
+
+// Generated from example definition
+func ExampleCustomPoolsClient_DeleteCapacityCustomPoolBeta() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := spark.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewCustomPoolsClient().DeleteCapacityCustomPoolBeta(ctx, "ce6db599-0877-4fb1-aa1f-9b1b8d99dc40", "2367293d-b70b-4b33-97f2-161b8d04a8d7", true, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleCustomPoolsClient_UpdateCapacityCustomPoolBeta() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := spark.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewCustomPoolsClient().UpdateCapacityCustomPoolBeta(ctx, "ce6db599-0877-4fb1-aa1f-9b1b8d99dc40", "2367293d-b70b-4b33-97f2-161b8d04a8d7", true, spark.UpdateCustomPoolRequest{
+		Name: to.Ptr("pool1"),
+		AutoScale: &spark.AutoScaleProperties{
+			Enabled:      to.Ptr(true),
+			MaxNodeCount: to.Ptr[int32](2),
+			MinNodeCount: to.Ptr[int32](1),
+		},
+		DynamicExecutorAllocation: &spark.DynamicExecutorAllocationProperties{
+			Enabled:      to.Ptr(true),
+			MaxExecutors: to.Ptr[int32](1),
+			MinExecutors: to.Ptr[int32](1),
+		},
+		NodeFamily: to.Ptr(spark.NodeFamilyMemoryOptimized),
+		NodeSize:   to.Ptr(spark.NodeSizeSmall),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.CustomPool = spark.CustomPool{
+	// 	Name: to.Ptr("pool1"),
+	// 	Type: to.Ptr(spark.CustomPoolTypeCapacity),
+	// 	AutoScale: &spark.AutoScaleProperties{
+	// 		Enabled: to.Ptr(true),
+	// 		MaxNodeCount: to.Ptr[int32](2),
+	// 		MinNodeCount: to.Ptr[int32](1),
+	// 	},
+	// 	DynamicExecutorAllocation: &spark.DynamicExecutorAllocationProperties{
+	// 		Enabled: to.Ptr(true),
+	// 		MaxExecutors: to.Ptr[int32](1),
+	// 		MinExecutors: to.Ptr[int32](1),
+	// 	},
+	// 	ID: to.Ptr("2367293d-b70b-4b33-97f2-161b8d04a8d7"),
+	// 	NodeFamily: to.Ptr(spark.NodeFamilyMemoryOptimized),
+	// 	NodeSize: to.Ptr(spark.NodeSizeSmall),
+	// }
+}

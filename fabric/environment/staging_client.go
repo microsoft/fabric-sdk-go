@@ -92,7 +92,7 @@ func (client *StagingClient) deleteCustomLibraryCreateRequest(ctx context.Contex
 
 // DeleteCustomLibraryBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes
 // only. It may change based on feedback and is not recommended for production use. This beta API will
-// be deprecated on April 30, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/staging/delete-custom-library].
+// be deprecated on August 31, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/staging/delete-custom-library].
 // The new version introduces breaking changes and is not
 // backward compatible.**
 // DEPRECATION NOTICE It is recommended to migrate your integration to use the Release version.
@@ -212,7 +212,7 @@ func (client *StagingClient) exportExternalLibrariesCreateRequest(ctx context.Co
 	return req, nil
 }
 
-// GetSparkCompute - > [!NOTE] This API is a release version of a beta version due to be deprecated on April 30, 2026. When
+// GetSparkCompute - > [!NOTE] This API is a release version of a beta version due to be deprecated on August 31, 2026. When
 // calling this API - callers must set the query parameter beta to the value false.
 // PERMISSIONS Read permission for the environment item.
 // REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All or Environment.Read.All or Environment.ReadWrite.All
@@ -284,7 +284,7 @@ func (client *StagingClient) getSparkComputeHandleResponse(resp *http.Response) 
 
 // GetSparkComputeBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes
 // only. It may change based on feedback and is not recommended for production use. This beta API will
-// be deprecated on April 30, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/staging/get-spark-compute].
+// be deprecated on August 31, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/staging/get-spark-compute].
 // The new version introduces breaking changes and is not
 // backward compatible. When calling this API, callers must specify true as the value for the query parameter beta (preview
 // query parameter has been replaced by beta. For backward compatibility, beta is
@@ -292,7 +292,7 @@ func (client *StagingClient) getSparkComputeHandleResponse(resp *http.Response) 
 // DEPRECATION NOTICE A new query parameter beta has been introduced to facilitate this transition:
 // * The beta query parameter currently defaults to true.
 // * Set the value of the beta query parameter to false to use the stable Release version of this API.
-// * Starting April 30, 2026, the default value for beta will change to false.
+// * Starting August 31, 2026, the default value for beta will change to false.
 // To ensure compatibility, explicitly set the beta parameter to your desired value (true or false).
 // It is recommended to migrate your integration to use the Release version as soon as possible by specifying false for the
 // beta query parameter (the default value for the beta query parameter will be
@@ -314,7 +314,7 @@ func (client *StagingClient) getSparkComputeHandleResponse(resp *http.Response) 
 //   - environmentID - The environment ID.
 //   - beta - This parameter specifies which version of the API to use. Set to true to use the beta version described on this
 //     page, or to false to use the Release version detailed here
-//     [/rest/api/fabric/environment/staging/get-spark-compute]. Starting April 30, 2026, the default value for beta will change
+//     [/rest/api/fabric/environment/staging/get-spark-compute]. Starting August 31, 2026, the default value for beta will change
 //     to false.
 //   - options - StagingClientGetSparkComputeBetaOptions contains the optional parameters for the StagingClient.GetSparkComputeBeta
 //     method.
@@ -427,7 +427,7 @@ func (client *StagingClient) importExternalLibrariesCreateRequest(ctx context.Co
 	return req, nil
 }
 
-// NewListLibrariesPager - > [!NOTE] This API is a release version of a beta version due to be deprecated on April 30, 2026.
+// NewListLibrariesPager - > [!NOTE] This API is a release version of a beta version due to be deprecated on August 31, 2026.
 // When calling this API - callers must set the query parameter beta to the value false
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS Read permission for the environment item.
@@ -504,15 +504,15 @@ func (client *StagingClient) listLibrariesHandleResponse(resp *http.Response) (S
 
 // ListLibrariesBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes
 // only. It may change based on feedback and is not recommended for production use. This beta API will
-// be deprecated on April 30, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/staging/list-libraries].
-// The new version introduces breaking changes and is not backward
-// compatible. When calling this API, callers must specify true as the value for the query parameter beta (preview query parameter
-// has been replaced by beta. For backward compatibility, preview is still
-// supported and behaves the same as beta).
+// be deprecated on August 31, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/staging/list-libraries].
+// The new version introduces breaking changes and is not
+// backward compatible. When calling this API, callers must specify true as the value for the query parameter beta (preview
+// query parameter has been replaced by beta. For backward compatibility, preview
+// is still supported and behaves the same as beta).
 // DEPRECATION NOTICE A new query parameter beta has been introduced to facilitate this transition:
 // * The beta query parameter currently defaults to true.
 // * Set the value of the beta query parameter to false to use the stable Release version of this API.
-// * Starting April 30, 2026, the default value for beta will change to false.
+// * Starting August 31, 2026, the default value for beta will change to false.
 // It is recommended to migrate your integration to use the Release version as soon as possible by specifying false for the
 // beta query parameter (the default value for the beta query parameter will be
 // set to false on API's deprecation date).
@@ -537,7 +537,7 @@ func (client *StagingClient) listLibrariesHandleResponse(resp *http.Response) (S
 //   - environmentID - The environment ID.
 //   - beta - This parameter specifies which version of the API to use. Set to true to use the beta version described on this
 //     page, or to false to use the Release version detailed here
-//     [/rest/api/fabric/environment/staging/list-libraries]. Starting April 30, 2026, the default value for beta will change
+//     [/rest/api/fabric/environment/staging/list-libraries]. Starting August 31, 2026, the default value for beta will change
 //     to false.
 //   - options - StagingClientListLibrariesBetaOptions contains the optional parameters for the StagingClient.ListLibrariesBeta
 //     method.
@@ -654,7 +654,7 @@ func (client *StagingClient) removeExternalLibraryCreateRequest(ctx context.Cont
 	return req, nil
 }
 
-// UpdateSparkCompute - > [!NOTE] This API is a release version of a beta version due to be deprecated on April 30, 2026.
+// UpdateSparkCompute - > [!NOTE] This API is a release version of a beta version due to be deprecated on August 31, 2026.
 // When calling this API - callers must set the query parameter beta to the value false
 // PERMISSIONS Write permission for the environment item.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All or Environment.ReadWrite.All
@@ -731,7 +731,7 @@ func (client *StagingClient) updateSparkComputeHandleResponse(resp *http.Respons
 
 // UpdateSparkComputeBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes
 // only. It may change based on feedback and is not recommended for production use. This beta API will
-// be deprecated on April 30, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/staging/update-spark-compute].
+// be deprecated on August 31, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/staging/update-spark-compute].
 // The new version introduces breaking changes and is not
 // backward compatible. When calling this API, callers must specify true as the value for the query parameter beta (preview
 // query parameter has been replaced by beta. For backward compatibility, preview
@@ -739,7 +739,7 @@ func (client *StagingClient) updateSparkComputeHandleResponse(resp *http.Respons
 // DEPRECATION NOTICE A new query parameter beta has been introduced to facilitate this transition:
 // * The beta query parameter currently defaults to true.
 // * Set the value of the beta query parameter to false to use the stable Release version of this API.
-// * Starting April 30, 2026, the default value for beta will change to false.
+// * Starting August 31, 2026, the default value for beta will change to false.
 // To ensure compatibility, explicitly set the beta parameter to your desired value (true or false).
 // It is recommended to migrate your integration to use the Release version as soon as possible by specifying false for the
 // beta query parameter (the default value for the beta query parameter will be
@@ -761,8 +761,8 @@ func (client *StagingClient) updateSparkComputeHandleResponse(resp *http.Respons
 //   - environmentID - The environment ID.
 //   - beta - This parameter specifies which version of the API to use. Set to true to use the beta version described on this
 //     page, or to false to use the Release version detailed here
-//     [/rest/api/fabric/environment/staging/update-spark-compute]. Starting April 30, 2026, the default value for beta will change
-//     to false.
+//     [/rest/api/fabric/environment/staging/update-spark-compute]. Starting August 31, 2026, the default value for beta will
+//     change to false.
 //   - updateEnvironmentSparkComputeRequest - Update environment spark compute request payload.
 //   - options - StagingClientUpdateSparkComputeBetaOptions contains the optional parameters for the StagingClient.UpdateSparkComputeBeta
 //     method.
@@ -888,7 +888,7 @@ func (client *StagingClient) uploadCustomLibraryCreateRequest(ctx context.Contex
 
 // UploadCustomLibraryBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes
 // only. It may change based on feedback and is not recommended for production use. This beta API will
-// be deprecated on April 30, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/staging/upload-custom-library].
+// be deprecated on August 31, 2026, and replaced by a stable version, available here [/rest/api/fabric/environment/staging/upload-custom-library].
 // The new version introduces breaking changes and is not
 // backward compatible.**
 // DEPRECATION NOTICE It is recommended to migrate your integration to use the Release version.
@@ -957,7 +957,7 @@ func (client *StagingClient) uploadCustomLibraryBetaCreateRequest(ctx context.Co
 // Custom code starts below
 
 // ListLibraries - returns array of LibraryClassification from all pages.
-// >  [!NOTE] This API is a release version of a beta version due to be deprecated on April 30, 2026. When calling this API - callers must set the query parameter beta to the value false
+// >  [!NOTE] This API is a release version of a beta version due to be deprecated on August 31, 2026. When calling this API - callers must set the query parameter beta to the value false
 //
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //

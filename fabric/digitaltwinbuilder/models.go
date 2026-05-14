@@ -29,7 +29,7 @@ type Definition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []DefinitionPart
 
-	// The format of the item definition.
+	// The format of the digital twin builder definition.
 	Format *string
 }
 

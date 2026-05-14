@@ -782,6 +782,27 @@ func PossibleExternalDataSharePathTypeValues() []ExternalDataSharePathType {
 	}
 }
 
+// ExternalDataShareRecipientType - The type of the external data share recipient. Defaults to 'User' if not provided. Additional
+// recipient types may be added over time.
+type ExternalDataShareRecipientType string
+
+const (
+	// ExternalDataShareRecipientTypeServicePrincipal - The recipient is a service principal, identified by object ID and tenant
+	// ID.
+	ExternalDataShareRecipientTypeServicePrincipal ExternalDataShareRecipientType = "ServicePrincipal"
+	// ExternalDataShareRecipientTypeUser - The recipient is a user, identified by user principal name (email address). This is
+	// the default value.
+	ExternalDataShareRecipientTypeUser ExternalDataShareRecipientType = "User"
+)
+
+// PossibleExternalDataShareRecipientTypeValues returns the possible values for the ExternalDataShareRecipientType const type.
+func PossibleExternalDataShareRecipientTypeValues() []ExternalDataShareRecipientType {
+	return []ExternalDataShareRecipientType{
+		ExternalDataShareRecipientTypeServicePrincipal,
+		ExternalDataShareRecipientTypeUser,
+	}
+}
+
 // ExternalDataShareStatus - The status of a given external data share. Additional ExternalDataShareStatus types may be added
 // over time.
 type ExternalDataShareStatus string
@@ -1295,6 +1316,8 @@ const (
 	ItemTypeMap ItemType = "Map"
 	// ItemTypeMirroredAzureDatabricksCatalog - A mirrored azure databricks catalog.
 	ItemTypeMirroredAzureDatabricksCatalog ItemType = "MirroredAzureDatabricksCatalog"
+	// ItemTypeMirroredCatalog - A MirroredCatalog.
+	ItemTypeMirroredCatalog ItemType = "MirroredCatalog"
 	// ItemTypeMirroredDatabase - A mirrored database.
 	ItemTypeMirroredDatabase ItemType = "MirroredDatabase"
 	// ItemTypeMirroredWarehouse - A mirrored warehouse.
@@ -1362,6 +1385,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeMLModel,
 		ItemTypeMap,
 		ItemTypeMirroredAzureDatabricksCatalog,
+		ItemTypeMirroredCatalog,
 		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
 		ItemTypeMountedDataFactory,
@@ -1487,6 +1511,44 @@ func PossibleOccurrenceTypeValues() []OccurrenceType {
 	return []OccurrenceType{
 		OccurrenceTypeDayOfMonth,
 		OccurrenceTypeOrdinalWeekday,
+	}
+}
+
+type OneLakeAccessTier string
+
+const (
+	// OneLakeAccessTierCold - Cold access tier.
+	OneLakeAccessTierCold OneLakeAccessTier = "Cold"
+	// OneLakeAccessTierCool - Cool access tier.
+	OneLakeAccessTierCool OneLakeAccessTier = "Cool"
+	// OneLakeAccessTierHot - Hot access tier.
+	OneLakeAccessTierHot OneLakeAccessTier = "Hot"
+)
+
+// PossibleOneLakeAccessTierValues returns the possible values for the OneLakeAccessTier const type.
+func PossibleOneLakeAccessTierValues() []OneLakeAccessTier {
+	return []OneLakeAccessTier{
+		OneLakeAccessTierCold,
+		OneLakeAccessTierCool,
+		OneLakeAccessTierHot,
+	}
+}
+
+// OneLakeLifecyclePolicyStatus - The status of the OneLake lifecycle policy. Additional status values may be added over time.
+type OneLakeLifecyclePolicyStatus string
+
+const (
+	// OneLakeLifecyclePolicyStatusActive - Lifecycle policy rules are configured and active.
+	OneLakeLifecyclePolicyStatusActive OneLakeLifecyclePolicyStatus = "Active"
+	// OneLakeLifecyclePolicyStatusInactive - No lifecycle policy rules are configured.
+	OneLakeLifecyclePolicyStatusInactive OneLakeLifecyclePolicyStatus = "Inactive"
+)
+
+// PossibleOneLakeLifecyclePolicyStatusValues returns the possible values for the OneLakeLifecyclePolicyStatus const type.
+func PossibleOneLakeLifecyclePolicyStatusValues() []OneLakeLifecyclePolicyStatus {
+	return []OneLakeLifecyclePolicyStatus{
+		OneLakeLifecyclePolicyStatusActive,
+		OneLakeLifecyclePolicyStatusInactive,
 	}
 }
 

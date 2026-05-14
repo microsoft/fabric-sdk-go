@@ -280,7 +280,7 @@ func (client *ItemsClient) getSnowflakeDatabaseDefinition(ctx context.Context, w
 }
 
 // getSnowflakeDatabaseDefinitionCreateRequest creates the GetSnowflakeDatabaseDefinition request.
-func (client *ItemsClient) getSnowflakeDatabaseDefinitionCreateRequest(ctx context.Context, workspaceID string, snowflakeDatabaseID string, _ *ItemsClientBeginGetSnowflakeDatabaseDefinitionOptions) (*policy.Request, error) {
+func (client *ItemsClient) getSnowflakeDatabaseDefinitionCreateRequest(ctx context.Context, workspaceID string, snowflakeDatabaseID string, options *ItemsClientBeginGetSnowflakeDatabaseDefinitionOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/snowflakeDatabases/{snowflakeDatabaseId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -294,6 +294,11 @@ func (client *ItemsClient) getSnowflakeDatabaseDefinitionCreateRequest(ctx conte
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.Format != nil {
+		reqQP.Set("format", *options.Format)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

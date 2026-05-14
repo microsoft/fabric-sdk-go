@@ -6,6 +6,18 @@
 
 package datapipeline
 
+// BackgroundJobsClientRunOnDemandExecuteOptions contains the optional parameters for the BackgroundJobsClient.RunOnDemandExecute
+// method.
+type BackgroundJobsClientRunOnDemandExecuteOptions struct {
+	// placeholder for future optional parameters
+}
+
+// BackgroundJobsClientScheduleExecuteOptions contains the optional parameters for the BackgroundJobsClient.ScheduleExecute
+// method.
+type BackgroundJobsClientScheduleExecuteOptions struct {
+	// placeholder for future optional parameters
+}
+
 // ItemsClientBeginCreateDataPipelineOptions contains the optional parameters for the ItemsClient.BeginCreateDataPipeline
 // method.
 type ItemsClientBeginCreateDataPipelineOptions struct {

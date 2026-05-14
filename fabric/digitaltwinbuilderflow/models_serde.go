@@ -74,7 +74,7 @@ func (c *CreationPayload) UnmarshalJSON(data []byte) error {
 		var err error
 		switch key {
 		case "digitalTwinBuilderItemReference":
-			c.DigitalTwinBuilderItemReference, err = unmarshalItemReferenceClassification(val)
+			err = unpopulate(val, "DigitalTwinBuilderItemReference", &c.DigitalTwinBuilderItemReference)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -499,6 +499,7 @@ func (p *Properties) UnmarshalJSON(data []byte) error {
 // MarshalJSON implements the json.Marshaller interface for type PublicDefinition.
 func (p PublicDefinition) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
+	populate(objectMap, "format", p.Format)
 	populate(objectMap, "parts", p.Parts)
 	return json.Marshal(objectMap)
 }
@@ -512,6 +513,9 @@ func (p *PublicDefinition) UnmarshalJSON(data []byte) error {
 	for key, val := range rawMsg {
 		var err error
 		switch key {
+		case "format":
+			err = unpopulate(val, "Format", &p.Format)
+			delete(rawMsg, key)
 		case "parts":
 			err = unpopulate(val, "Parts", &p.Parts)
 			delete(rawMsg, key)

@@ -153,6 +153,9 @@ func (p *Principal) GetPrincipal() *Principal { return p }
 type PublicDefinition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []PublicDefinitionPart
+
+	// The format of the data agent definition.
+	Format *string
 }
 
 // PublicDefinitionPart - DataAgent definition part object.

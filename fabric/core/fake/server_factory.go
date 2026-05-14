@@ -33,6 +33,7 @@ type ServerFactory struct {
 	LongRunningOperationsServer       LongRunningOperationsServer
 	ManagedPrivateEndpointsServer     ManagedPrivateEndpointsServer
 	OneLakeDataAccessSecurityServer   OneLakeDataAccessSecurityServer
+	OneLakeLifecyclePolicyServer      OneLakeLifecyclePolicyServer
 	OneLakeSettingsServer             OneLakeSettingsServer
 	OneLakeShortcutsServer            OneLakeShortcutsServer
 	TagsServer                        TagsServer
@@ -59,6 +60,7 @@ type ServerFactoryTransport struct {
 	trLongRunningOperationsServer       *LongRunningOperationsServerTransport
 	trManagedPrivateEndpointsServer     *ManagedPrivateEndpointsServerTransport
 	trOneLakeDataAccessSecurityServer   *OneLakeDataAccessSecurityServerTransport
+	trOneLakeLifecyclePolicyServer      *OneLakeLifecyclePolicyServerTransport
 	trOneLakeSettingsServer             *OneLakeSettingsServerTransport
 	trOneLakeShortcutsServer            *OneLakeShortcutsServerTransport
 	trTagsServer                        *TagsServerTransport
@@ -145,6 +147,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return NewOneLakeDataAccessSecurityServerTransport(&s.srv.OneLakeDataAccessSecurityServer)
 		})
 		resp, err = s.trOneLakeDataAccessSecurityServer.Do(req)
+	case "OneLakeLifecyclePolicyClient":
+		initServer(s, &s.trOneLakeLifecyclePolicyServer, func() *OneLakeLifecyclePolicyServerTransport {
+			return NewOneLakeLifecyclePolicyServerTransport(&s.srv.OneLakeLifecyclePolicyServer)
+		})
+		resp, err = s.trOneLakeLifecyclePolicyServer.Do(req)
 	case "OneLakeSettingsClient":
 		initServer(s, &s.trOneLakeSettingsServer, func() *OneLakeSettingsServerTransport {
 			return NewOneLakeSettingsServerTransport(&s.srv.OneLakeSettingsServer)

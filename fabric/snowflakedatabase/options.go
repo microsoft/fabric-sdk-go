@@ -16,6 +16,9 @@ type ItemsClientBeginCreateSnowflakeDatabaseOptions struct {
 // ItemsClientBeginGetSnowflakeDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetSnowflakeDatabaseDefinition
 // method.
 type ItemsClientBeginGetSnowflakeDatabaseDefinitionOptions struct {
+	// The format of the Snowflake database public definition.
+	Format *string
+
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }

@@ -687,6 +687,18 @@ type OneLakeDataAccessSecurityClientListDataAccessRolesOptions struct {
 	ContinuationToken *string
 }
 
+// OneLakeLifecyclePolicyClientExportPolicyOptions contains the optional parameters for the OneLakeLifecyclePolicyClient.ExportPolicy
+// method.
+type OneLakeLifecyclePolicyClientExportPolicyOptions struct {
+	// placeholder for future optional parameters
+}
+
+// OneLakeLifecyclePolicyClientImportPolicyOptions contains the optional parameters for the OneLakeLifecyclePolicyClient.ImportPolicy
+// method.
+type OneLakeLifecyclePolicyClientImportPolicyOptions struct {
+	// placeholder for future optional parameters
+}
+
 // OneLakeSettingsClientBeginModifyDiagnosticsOptions contains the optional parameters for the OneLakeSettingsClient.BeginModifyDiagnostics
 // method.
 type OneLakeSettingsClientBeginModifyDiagnosticsOptions struct {
@@ -699,6 +711,12 @@ type OneLakeSettingsClientBeginModifyDiagnosticsOptions struct {
 
 // OneLakeSettingsClientGetSettingsOptions contains the optional parameters for the OneLakeSettingsClient.GetSettings method.
 type OneLakeSettingsClientGetSettingsOptions struct {
+	// placeholder for future optional parameters
+}
+
+// OneLakeSettingsClientModifyDefaultTierOptions contains the optional parameters for the OneLakeSettingsClient.ModifyDefaultTier
+// method.
+type OneLakeSettingsClientModifyDefaultTierOptions struct {
 	// placeholder for future optional parameters
 }
 
@@ -829,6 +847,12 @@ type WorkspacesClientGetGitOutboundPolicyOptions struct {
 	// placeholder for future optional parameters
 }
 
+// WorkspacesClientGetInboundAzureResourceRulesOptions contains the optional parameters for the WorkspacesClient.GetInboundAzureResourceRules
+// method.
+type WorkspacesClientGetInboundAzureResourceRulesOptions struct {
+	// placeholder for future optional parameters
+}
+
 // WorkspacesClientGetNetworkCommunicationPolicyOptions contains the optional parameters for the WorkspacesClient.GetNetworkCommunicationPolicy
 // method.
 type WorkspacesClientGetNetworkCommunicationPolicyOptions struct {
@@ -890,6 +914,12 @@ type WorkspacesClientSetGitOutboundPolicyOptions struct {
 	// An ETag value. The ETag must be specified in quotes. If provided, the call will succeed only if the resource's ETag matches
 	// the provided ETag.
 	IfMatch *string
+}
+
+// WorkspacesClientSetInboundAzureResourceRulesOptions contains the optional parameters for the WorkspacesClient.SetInboundAzureResourceRules
+// method.
+type WorkspacesClientSetInboundAzureResourceRulesOptions struct {
+	// placeholder for future optional parameters
 }
 
 // WorkspacesClientSetNetworkCommunicationPolicyOptions contains the optional parameters for the WorkspacesClient.SetNetworkCommunicationPolicy

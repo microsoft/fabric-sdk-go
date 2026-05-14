@@ -150,6 +150,7 @@ func (c *CreateCosmosDBDatabaseRequest) UnmarshalJSON(data []byte) error {
 // MarshalJSON implements the json.Marshaller interface for type Definition.
 func (d Definition) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
+	populate(objectMap, "format", d.Format)
 	populate(objectMap, "parts", d.Parts)
 	return json.Marshal(objectMap)
 }
@@ -163,6 +164,9 @@ func (d *Definition) UnmarshalJSON(data []byte) error {
 	for key, val := range rawMsg {
 		var err error
 		switch key {
+		case "format":
+			err = unpopulate(val, "Format", &d.Format)
+			delete(rawMsg, key)
 		case "parts":
 			err = unpopulate(val, "Parts", &d.Parts)
 			delete(rawMsg, key)

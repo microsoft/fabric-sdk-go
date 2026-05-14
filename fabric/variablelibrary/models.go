@@ -120,7 +120,7 @@ type PublicDefinition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []PublicDefinitionPart
 
-	// The format of the item definition. Supported format: VariableLibraryV1.
+	// The format of the variable library definition. Supported format: VariableLibraryV1.
 	Format *string
 }
 

@@ -41,6 +41,7 @@ import (
 	lakehousefake "github.com/microsoft/fabric-sdk-go/fabric/lakehouse/fake"
 	mapsfake "github.com/microsoft/fabric-sdk-go/fabric/maps/fake"
 	mirroredazuredatabrickscatalogfake "github.com/microsoft/fabric-sdk-go/fabric/mirroredazuredatabrickscatalog/fake"
+	mirroredcatalogfake "github.com/microsoft/fabric-sdk-go/fabric/mirroredcatalog/fake"
 	mirroreddatabasefake "github.com/microsoft/fabric-sdk-go/fabric/mirroreddatabase/fake"
 	mirroredwarehousefake "github.com/microsoft/fabric-sdk-go/fabric/mirroredwarehouse/fake"
 	mlexperimentfake "github.com/microsoft/fabric-sdk-go/fabric/mlexperiment/fake"
@@ -93,6 +94,7 @@ type ServerFactory struct {
 	Lakehouse                      lakehousefake.ServerFactory
 	Map                            mapsfake.ServerFactory
 	MirroredAzureDatabricksCatalog mirroredazuredatabrickscatalogfake.ServerFactory
+	MirroredCatalog                mirroredcatalogfake.ServerFactory
 	MirroredDatabase               mirroreddatabasefake.ServerFactory
 	MirroredWarehouse              mirroredwarehousefake.ServerFactory
 	MLExperiment                   mlexperimentfake.ServerFactory
@@ -148,6 +150,7 @@ type ServerFactoryTransport struct {
 	trLakehouse                      *lakehousefake.ServerFactoryTransport
 	trMap                            *mapsfake.ServerFactoryTransport
 	trMirroredAzureDatabricksCatalog *mirroredazuredatabrickscatalogfake.ServerFactoryTransport
+	trMirroredCatalog                *mirroredcatalogfake.ServerFactoryTransport
 	trMirroredDatabase               *mirroreddatabasefake.ServerFactoryTransport
 	trMirroredWarehouse              *mirroredwarehousefake.ServerFactoryTransport
 	trMLExperiment                   *mlexperimentfake.ServerFactoryTransport
@@ -319,6 +322,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return mirroredazuredatabrickscatalogfake.NewServerFactoryTransport(&s.srv.MirroredAzureDatabricksCatalog)
 		})
 		resp, err = s.trMirroredAzureDatabricksCatalog.Do(req)
+	case "mirroredcatalog":
+		initServer(s, &s.trMirroredCatalog, func() *mirroredcatalogfake.ServerFactoryTransport {
+			return mirroredcatalogfake.NewServerFactoryTransport(&s.srv.MirroredCatalog)
+		})
+		resp, err = s.trMirroredCatalog.Do(req)
 	case "mirroreddatabase":
 		initServer(s, &s.trMirroredDatabase, func() *mirroreddatabasefake.ServerFactoryTransport {
 			return mirroreddatabasefake.NewServerFactoryTransport(&s.srv.MirroredDatabase)

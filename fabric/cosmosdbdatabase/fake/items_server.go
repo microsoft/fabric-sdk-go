@@ -273,6 +273,7 @@ func (i *ItemsServerTransport) dispatchBeginGetCosmosDBDatabaseDefinition(req *h
 		if len(matches) < 3 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
+		qp := req.URL.Query()
 		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 		if err != nil {
 			return nil, err
@@ -281,7 +282,18 @@ func (i *ItemsServerTransport) dispatchBeginGetCosmosDBDatabaseDefinition(req *h
 		if err != nil {
 			return nil, err
 		}
-		respr, errRespr := i.srv.BeginGetCosmosDBDatabaseDefinition(req.Context(), workspaceIDParam, cosmosDbDatabaseIDParam, nil)
+		formatUnescaped, err := url.QueryUnescape(qp.Get("format"))
+		if err != nil {
+			return nil, err
+		}
+		formatParam := getOptional(formatUnescaped)
+		var options *cosmosdbdatabase.ItemsClientBeginGetCosmosDBDatabaseDefinitionOptions
+		if formatParam != nil {
+			options = &cosmosdbdatabase.ItemsClientBeginGetCosmosDBDatabaseDefinitionOptions{
+				Format: formatParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginGetCosmosDBDatabaseDefinition(req.Context(), workspaceIDParam, cosmosDbDatabaseIDParam, options)
 		if respErr := server.GetError(errRespr, req); respErr != nil {
 			return nil, respErr
 		}

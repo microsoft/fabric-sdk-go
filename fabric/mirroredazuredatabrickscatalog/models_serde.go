@@ -462,6 +462,7 @@ func (e *ErrorRelatedResource) UnmarshalJSON(data []byte) error {
 func (e ErrorResponse) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "errorCode", e.ErrorCode)
+	populate(objectMap, "isRetriable", e.IsRetriable)
 	populate(objectMap, "message", e.Message)
 	populate(objectMap, "moreDetails", e.MoreDetails)
 	populate(objectMap, "relatedResource", e.RelatedResource)
@@ -480,6 +481,9 @@ func (e *ErrorResponse) UnmarshalJSON(data []byte) error {
 		switch key {
 		case "errorCode":
 			err = unpopulate(val, "ErrorCode", &e.ErrorCode)
+			delete(rawMsg, key)
+		case "isRetriable":
+			err = unpopulate(val, "IsRetriable", &e.IsRetriable)
 			delete(rawMsg, key)
 		case "message":
 			err = unpopulate(val, "Message", &e.Message)

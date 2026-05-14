@@ -40,7 +40,7 @@ type Definition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []DefinitionPart
 
-	// The format of the item definition.
+	// The format of the snowflake database definition.
 	Format *string
 }
 

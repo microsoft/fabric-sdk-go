@@ -80,6 +80,9 @@ func (c *CreationPayload) GetCreationPayload() *CreationPayload { return c }
 type Definition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []PublicDefinitionPart
+
+	// The format of the SQL database definition. Supported format: dacpac and sqlproj. If no format is provided, dacpac is used.
+	Format *string
 }
 
 // DefinitionResponse - The SQL database public definition response.
@@ -256,7 +259,8 @@ type Properties struct {
 
 // PublicDefinitionPart - SQL database definition part object.
 type PublicDefinitionPart struct {
-	// The SQL database public definition part path.
+	// The SQL database public definition part path. Supported SQL database content extensions: .dacpac for dacpac format; .sqlproj,
+	// .sql for sqlproj format.
 	Path *string
 
 	// The SQL database public definition part payload.
@@ -332,7 +336,7 @@ type RestoreSQLDatabaseCreationPayload struct {
 	RestorePointInTime *time.Time
 
 	// Set the reference for the source database to be restored from.
-	SourceDatabaseReference ItemReferenceClassification
+	SourceDatabaseReference *ItemReferenceByID
 }
 
 // GetCreationPayload implements the CreationPayloadClassification interface for type RestoreSQLDatabaseCreationPayload.

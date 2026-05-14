@@ -399,7 +399,7 @@ func (testsuite *FakeTestSuite) TestItems_GetSQLDatabaseDefinition() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	poller, err := client.BeginGetSQLDatabaseDefinition(ctx, exampleWorkspaceID, exampleSqlDatabaseID, nil)
+	poller, err := client.BeginGetSQLDatabaseDefinition(ctx, exampleWorkspaceID, exampleSqlDatabaseID, &sqldatabase.ItemsClientBeginGetSQLDatabaseDefinitionOptions{Format: nil})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	res, err := poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")

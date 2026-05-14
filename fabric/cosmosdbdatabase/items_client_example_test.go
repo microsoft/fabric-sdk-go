@@ -227,7 +227,7 @@ func ExampleItemsClient_BeginGetCosmosDBDatabaseDefinition() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	poller, err := clientFactory.NewItemsClient().BeginGetCosmosDBDatabaseDefinition(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", nil)
+	poller, err := clientFactory.NewItemsClient().BeginGetCosmosDBDatabaseDefinition(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", &cosmosdbdatabase.ItemsClientBeginGetCosmosDBDatabaseDefinitionOptions{Format: nil})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

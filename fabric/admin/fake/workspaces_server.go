@@ -29,6 +29,10 @@ type WorkspacesServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetWorkspace func(ctx context.Context, workspaceID string, options *admin.WorkspacesClientGetWorkspaceOptions) (resp azfake.Responder[admin.WorkspacesClientGetWorkspaceResponse], errResp azfake.ErrorResponder)
 
+	// GrantAdminTemporaryAccess is the fake for method WorkspacesClient.GrantAdminTemporaryAccess
+	// HTTP status codes to indicate success: http.StatusOK
+	GrantAdminTemporaryAccess func(ctx context.Context, workspaceID string, options *admin.WorkspacesClientGrantAdminTemporaryAccessOptions) (resp azfake.Responder[admin.WorkspacesClientGrantAdminTemporaryAccessResponse], errResp azfake.ErrorResponder)
+
 	// NewListGitConnectionsPager is the fake for method WorkspacesClient.NewListGitConnectionsPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListGitConnectionsPager func(options *admin.WorkspacesClientListGitConnectionsOptions) (resp azfake.PagerResponder[admin.WorkspacesClientListGitConnectionsResponse])
@@ -44,6 +48,10 @@ type WorkspacesServer struct {
 	// NewListWorkspacesPager is the fake for method WorkspacesClient.NewListWorkspacesPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListWorkspacesPager func(options *admin.WorkspacesClientListWorkspacesOptions) (resp azfake.PagerResponder[admin.WorkspacesClientListWorkspacesResponse])
+
+	// RemoveAdminTemporaryAccess is the fake for method WorkspacesClient.RemoveAdminTemporaryAccess
+	// HTTP status codes to indicate success: http.StatusOK
+	RemoveAdminTemporaryAccess func(ctx context.Context, workspaceID string, options *admin.WorkspacesClientRemoveAdminTemporaryAccessOptions) (resp azfake.Responder[admin.WorkspacesClientRemoveAdminTemporaryAccessResponse], errResp azfake.ErrorResponder)
 
 	// RestoreWorkspace is the fake for method WorkspacesClient.RestoreWorkspace
 	// HTTP status codes to indicate success: http.StatusOK
@@ -98,6 +106,8 @@ func (w *WorkspacesServerTransport) dispatchToMethodFake(req *http.Request, meth
 			switch method {
 			case "WorkspacesClient.GetWorkspace":
 				res.resp, res.err = w.dispatchGetWorkspace(req)
+			case "WorkspacesClient.GrantAdminTemporaryAccess":
+				res.resp, res.err = w.dispatchGrantAdminTemporaryAccess(req)
 			case "WorkspacesClient.NewListGitConnectionsPager":
 				res.resp, res.err = w.dispatchNewListGitConnectionsPager(req)
 			case "WorkspacesClient.NewListNetworkingCommunicationPoliciesPager":
@@ -106,6 +116,8 @@ func (w *WorkspacesServerTransport) dispatchToMethodFake(req *http.Request, meth
 				res.resp, res.err = w.dispatchListWorkspaceAccessDetails(req)
 			case "WorkspacesClient.NewListWorkspacesPager":
 				res.resp, res.err = w.dispatchNewListWorkspacesPager(req)
+			case "WorkspacesClient.RemoveAdminTemporaryAccess":
+				res.resp, res.err = w.dispatchRemoveAdminTemporaryAccess(req)
 			case "WorkspacesClient.RestoreWorkspace":
 				res.resp, res.err = w.dispatchRestoreWorkspace(req)
 			default:
@@ -150,6 +162,35 @@ func (w *WorkspacesServerTransport) dispatchGetWorkspace(req *http.Request) (*ht
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
 	}
 	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).Workspace, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (w *WorkspacesServerTransport) dispatchGrantAdminTemporaryAccess(req *http.Request) (*http.Response, error) {
+	if w.srv.GrantAdminTemporaryAccess == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GrantAdminTemporaryAccess not implemented")}
+	}
+	const regexStr = `/v1/admin/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/grantAdminTemporaryAccess`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := w.srv.GrantAdminTemporaryAccess(req.Context(), workspaceIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -322,6 +363,35 @@ func (w *WorkspacesServerTransport) dispatchNewListWorkspacesPager(req *http.Req
 	}
 	if !server.PagerResponderMore(newListWorkspacesPager) {
 		w.newListWorkspacesPager.remove(req)
+	}
+	return resp, nil
+}
+
+func (w *WorkspacesServerTransport) dispatchRemoveAdminTemporaryAccess(req *http.Request) (*http.Response, error) {
+	if w.srv.RemoveAdminTemporaryAccess == nil {
+		return nil, &nonRetriableError{errors.New("fake for method RemoveAdminTemporaryAccess not implemented")}
+	}
+	const regexStr = `/v1/admin/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/removeAdminTemporaryAccess`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := w.srv.RemoveAdminTemporaryAccess(req.Context(), workspaceIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
 	}
 	return resp, nil
 }

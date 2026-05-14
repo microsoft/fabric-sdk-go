@@ -970,3 +970,61 @@ func ExampleWorkspacesClient_SetGitOutboundPolicy() {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
 }
+
+// Generated from example definition
+func ExampleWorkspacesClient_GetInboundAzureResourceRules() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewWorkspacesClient().GetInboundAzureResourceRules(ctx, "47482db6-4583-4672-86dd-999d0f8f4d7a", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.WorkspaceInboundAzureResourceRules = core.WorkspaceInboundAzureResourceRules{
+	// 	Rules: []core.WorkspaceInboundAzureResourceRule{
+	// 		{
+	// 			DisplayName: to.Ptr("SQL Server - testsql1"),
+	// 			ResourceID: to.Ptr("/subscriptions/2374e516-d28b-4898-a39c-6070e078ae31/resourceGroups/testrg/providers/Microsoft.Sql/servers/testsql1"),
+	// 		},
+	// 		{
+	// 			DisplayName: to.Ptr("Storage Account - teststorageacct"),
+	// 			ResourceID: to.Ptr("/subscriptions/2374e516-d28b-4898-a39c-6070e078ae31/resourceGroups/testrg/providers/Microsoft.Storage/storageAccounts/teststorageacct"),
+	// 	}},
+	// }
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_SetInboundAzureResourceRules() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewWorkspacesClient().SetInboundAzureResourceRules(ctx, "47482db6-4583-4672-86dd-999d0f8f4d7a", core.WorkspaceInboundAzureResourceRules{
+		Rules: []core.WorkspaceInboundAzureResourceRule{
+			{
+				DisplayName: to.Ptr("SQL Server - testsql1"),
+				ResourceID:  to.Ptr("/subscriptions/2374e516-d28b-4898-a39c-6070e078ae31/resourceGroups/testrg/providers/Microsoft.Sql/servers/testsql1"),
+			},
+			{
+				DisplayName: to.Ptr("Storage Account - teststorageacct"),
+				ResourceID:  to.Ptr("/subscriptions/2374e516-d28b-4898-a39c-6070e078ae31/resourceGroups/testrg/providers/Microsoft.Storage/storageAccounts/teststorageacct"),
+			}},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}

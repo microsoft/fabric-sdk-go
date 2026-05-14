@@ -39,7 +39,7 @@ func ExampleCatalogClient_Search() {
 	_ = res
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
 	// res.CatalogQueryResponse = core.CatalogQueryResponse{
-	// 	ContinuationToken: to.Ptr("lyJ1257lksfdfG=="),
+	// 	ContinuationToken: to.Ptr("eyJza2lwIjoyLCJ0YWtl..."),
 	// 	Value: []core.CatalogEntryClassification{
 	// 		&core.ItemCatalogEntry{
 	// 			Description: to.Ptr("Consolidated revenue report for the current fiscal year."),
@@ -47,13 +47,25 @@ func ExampleCatalogClient_Search() {
 	// 			DisplayName: to.Ptr("Monthly Sales Revenue"),
 	// 			ID: to.Ptr("0acd697c-1550-43cd-b998-91bfb12347c6"),
 	// 			Type: to.Ptr(core.ItemTypeReport),
+	// 			Hierarchy: &core.ItemCatalogEntryHierarchy{
+	// 				Workspace: &core.CatalogWorkspace{
+	// 					DisplayName: to.Ptr("Sales Analytics"),
+	// 					ID: to.Ptr("7f2c8a91-3b4d-4e5f-a6b7-c8d9e0f1a2b3"),
+	// 				},
+	// 			},
 	// 		},
 	// 		&core.ItemCatalogEntry{
-	// 			Description: to.Ptr("Consolidated revenue report for the current fiscal year."),
+	// 			Description: to.Ptr("Central lakehouse for sales transaction data."),
 	// 			CatalogEntryType: to.Ptr(core.CatalogEntryTypeFabricItem),
-	// 			DisplayName: to.Ptr("Yeartly Sales Revenue"),
-	// 			ID: to.Ptr("123d697c-7848-77cd-b887-91bfb12347cc"),
+	// 			DisplayName: to.Ptr("Sales Revenue Lakehouse"),
+	// 			ID: to.Ptr("5e8f2a1b-9c3d-4e7f-b6a5-d4c3b2a1e0f9"),
 	// 			Type: to.Ptr(core.ItemTypeLakehouse),
+	// 			Hierarchy: &core.ItemCatalogEntryHierarchy{
+	// 				Workspace: &core.CatalogWorkspace{
+	// 					DisplayName: to.Ptr("Finance Platform"),
+	// 					ID: to.Ptr("a2b3c4d5-e6f7-4a8b-9c0d-1e2f3a4b5c6d"),
+	// 				},
+	// 			},
 	// 	}},
 	// }
 }

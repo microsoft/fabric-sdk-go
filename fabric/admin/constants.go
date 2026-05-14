@@ -126,6 +126,26 @@ func PossibleDomainRoleValues() []DomainRole {
 	}
 }
 
+// ExternalDataShareRecipientType - The type of the external data share recipient. Defaults to 'User' if not provided. Additional
+// recipient types may be added over time.
+type ExternalDataShareRecipientType string
+
+const (
+	// ExternalDataShareRecipientTypeServicePrincipal - The recipient is a service principal, identified by object ID and tenant
+	// ID.
+	ExternalDataShareRecipientTypeServicePrincipal ExternalDataShareRecipientType = "ServicePrincipal"
+	// ExternalDataShareRecipientTypeUser - The recipient is a user, identified by user principal name (email address).
+	ExternalDataShareRecipientTypeUser ExternalDataShareRecipientType = "User"
+)
+
+// PossibleExternalDataShareRecipientTypeValues returns the possible values for the ExternalDataShareRecipientType const type.
+func PossibleExternalDataShareRecipientTypeValues() []ExternalDataShareRecipientType {
+	return []ExternalDataShareRecipientType{
+		ExternalDataShareRecipientTypeServicePrincipal,
+		ExternalDataShareRecipientTypeUser,
+	}
+}
+
 // ExternalDataShareStatus - The status of a given external data share. Additional ExternalDataShareStatus types may be added
 // over time.
 type ExternalDataShareStatus string
@@ -311,6 +331,8 @@ const (
 	ItemTypeMap ItemType = "Map"
 	// ItemTypeMirroredAzureDatabricksCatalog - A mirrored azure databricks catalog.
 	ItemTypeMirroredAzureDatabricksCatalog ItemType = "MirroredAzureDatabricksCatalog"
+	// ItemTypeMirroredCatalog - A MirroredCatalog.
+	ItemTypeMirroredCatalog ItemType = "MirroredCatalog"
 	// ItemTypeMirroredDatabase - A mirrored database.
 	ItemTypeMirroredDatabase ItemType = "MirroredDatabase"
 	// ItemTypeMirroredWarehouse - A mirrored warehouse.
@@ -378,6 +400,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeMLModel,
 		ItemTypeMap,
 		ItemTypeMirroredAzureDatabricksCatalog,
+		ItemTypeMirroredCatalog,
 		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
 		ItemTypeMountedDataFactory,

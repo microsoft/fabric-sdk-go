@@ -360,7 +360,7 @@ func (client *ItemsClient) getDataflowDefinition(ctx context.Context, workspaceI
 }
 
 // getDataflowDefinitionCreateRequest creates the GetDataflowDefinition request.
-func (client *ItemsClient) getDataflowDefinitionCreateRequest(ctx context.Context, workspaceID string, dataflowID string, _ *ItemsClientBeginGetDataflowDefinitionOptions) (*policy.Request, error) {
+func (client *ItemsClient) getDataflowDefinitionCreateRequest(ctx context.Context, workspaceID string, dataflowID string, options *ItemsClientBeginGetDataflowDefinitionOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/dataflows/{dataflowId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -374,6 +374,11 @@ func (client *ItemsClient) getDataflowDefinitionCreateRequest(ctx context.Contex
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.Format != nil {
+		reqQP.Set("format", *options.Format)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }

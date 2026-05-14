@@ -6,7 +6,7 @@
 
 package graphmodel
 
-// DefinitionFormat - The format of the item definition. Additional format types may be added over time.
+// DefinitionFormat - The format of the graph model definition. Additional format types may be added over time.
 type DefinitionFormat string
 
 const (
@@ -99,6 +99,8 @@ const (
 	ItemTypeMap ItemType = "Map"
 	// ItemTypeMirroredAzureDatabricksCatalog - A mirrored azure databricks catalog.
 	ItemTypeMirroredAzureDatabricksCatalog ItemType = "MirroredAzureDatabricksCatalog"
+	// ItemTypeMirroredCatalog - A MirroredCatalog.
+	ItemTypeMirroredCatalog ItemType = "MirroredCatalog"
 	// ItemTypeMirroredDatabase - A mirrored database.
 	ItemTypeMirroredDatabase ItemType = "MirroredDatabase"
 	// ItemTypeMirroredWarehouse - A mirrored warehouse.
@@ -166,6 +168,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeMLModel,
 		ItemTypeMap,
 		ItemTypeMirroredAzureDatabricksCatalog,
+		ItemTypeMirroredCatalog,
 		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
 		ItemTypeMountedDataFactory,

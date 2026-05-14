@@ -290,7 +290,7 @@ func (client *ItemsClient) getDataAgentDefinition(ctx context.Context, workspace
 }
 
 // getDataAgentDefinitionCreateRequest creates the GetDataAgentDefinition request.
-func (client *ItemsClient) getDataAgentDefinitionCreateRequest(ctx context.Context, workspaceID string, dataAgentID string, _ *ItemsClientBeginGetDataAgentDefinitionOptions) (*policy.Request, error) {
+func (client *ItemsClient) getDataAgentDefinitionCreateRequest(ctx context.Context, workspaceID string, dataAgentID string, options *ItemsClientBeginGetDataAgentDefinitionOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/dataAgents/{dataAgentId}/getDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -304,6 +304,11 @@ func (client *ItemsClient) getDataAgentDefinitionCreateRequest(ctx context.Conte
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.Format != nil {
+		reqQP.Set("format", *options.Format)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }
