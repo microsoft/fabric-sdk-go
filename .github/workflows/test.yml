@@ -55,21 +55,22 @@ jobs:
           reporter: jest-junit
           path: testresults.xml
 
-      - name: ⚙️ Get Coverage summary
-        uses: irongut/CodeCoverageSummary@51cc3a756ddcd398d447c044c02cb6aa83fdae95 # v1.3.0
-        with:
-          filename: coverage.xml
-          badge: true
-          fail_below_min: false
-          format: markdown
-          hide_branch_rate: false
-          hide_complexity: false
-          indicators: true
-          output: both
-          thresholds: "40 60"
+      # Code coverage disabled for now — uncomment to re-enable.
+      # - name: ⚙️ Get Coverage summary
+      #   uses: irongut/CodeCoverageSummary@51cc3a756ddcd398d447c044c02cb6aa83fdae95 # v1.3.0
+      #   with:
+      #     filename: coverage.xml
+      #     badge: true
+      #     fail_below_min: false
+      #     format: markdown
+      #     hide_branch_rate: false
+      #     hide_complexity: false
+      #     indicators: true
+      #     output: both
+      #     thresholds: "40 60"
 
-      - name: 📢 Publish coverage results
-        run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+      # - name: 📢 Publish coverage results
+      #   run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
 
       - name: 📤 Upload test results
         if: always()
@@ -80,17 +81,18 @@ jobs:
           if-no-files-found: warn
           overwrite: true
 
-      - name: 📤 Upload coverage results
-        if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: test-coverage-results
-          path: |
-            coverage.html
-            coverage.json
-            coverage.out
-            coverage.txt
-            coverage.xml
-            code-coverage-results.md
-          if-no-files-found: warn
-          overwrite: true
+      # Code coverage disabled for now — uncomment to re-enable.
+      # - name: 📤 Upload coverage results
+      #   if: always()
+      #   uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      #   with:
+      #     name: test-coverage-results
+      #     path: |
+      #       coverage.html
+      #       coverage.json
+      #       coverage.out
+      #       coverage.txt
+      #       coverage.xml
+      #       code-coverage-results.md
+      #     if-no-files-found: warn
+      #     overwrite: true
