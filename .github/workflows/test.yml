@@ -28,10 +28,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⤵️ Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: 🚧 Setup Go
-        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version-file: go.mod
           cache: false
@@ -55,21 +55,23 @@ jobs:
           reporter: jest-junit
           path: testresults.xml
 
-      - name: ⚙️ Get Coverage summary
-        uses: irongut/CodeCoverageSummary@51cc3a756ddcd398d447c044c02cb6aa83fdae95 # v1.3.0
-        with:
-          filename: coverage.xml
-          badge: true
-          fail_below_min: false
-          format: markdown
-          hide_branch_rate: false
-          hide_complexity: false
-          indicators: true
-          output: both
-          thresholds: "40 60"
+      # Cobertura summary needs a coverage.xml translation layer (gocov-xml or
+      # gocover-cobertura); disabled while using built-in Go coverage only.
+      # - name: ⚙️ Get Coverage summary
+      #   uses: irongut/CodeCoverageSummary@51cc3a756ddcd398d447c044c02cb6aa83fdae95 # v1.3.0
+      #   with:
+      #     filename: coverage.xml
+      #     badge: true
+      #     fail_below_min: false
+      #     format: markdown
+      #     hide_branch_rate: false
+      #     hide_complexity: false
+      #     indicators: true
+      #     output: both
+      #     thresholds: "40 60"
 
-      - name: 📢 Publish coverage results
-        run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+      # - name: 📢 Publish coverage results
+      #   run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
 
       - name: 📤 Upload test results
         if: always()
@@ -87,10 +89,7 @@ jobs:
           name: test-coverage-results
           path: |
             coverage.html
-            coverage.json
             coverage.out
             coverage.txt
-            coverage.xml
-            code-coverage-results.md
           if-no-files-found: warn
           overwrite: true
