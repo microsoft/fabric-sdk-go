@@ -365,6 +365,77 @@ func (testsuite *FakeTestSuite) TestItems_UpdateDataPipelineDefinition() {
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
 
+func (testsuite *FakeTestSuite) TestBackgroundJobs_ListExecuteSchedules() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List data pipeline execute schedules example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataPipelineID string
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleDataPipelineID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+
+	exampleRes := datapipeline.ExecuteSchedules{
+		Value: []datapipeline.ExecuteSchedule{
+			{
+				Configuration: &datapipeline.CronScheduleConfig{
+					Type:            to.Ptr(datapipeline.ScheduleTypeCron),
+					EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-30T23:59:00.000Z"); return t }()),
+					LocalTimeZoneID: to.Ptr("Central Standard Time"),
+					StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T00:00:00.000Z"); return t }()),
+					Interval:        to.Ptr[int32](10),
+				},
+				CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-05-28T05:35:20.536Z"); return t }()),
+				Enabled:         to.Ptr(true),
+				ID:              to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+				Owner: &datapipeline.UserPrincipal{
+					Type: to.Ptr(datapipeline.PrincipalTypeUser),
+					ID:   to.Ptr("33dd33dd-ee44-ff55-aa66-77bb77bb77bb"),
+				},
+			},
+			{
+				Configuration: &datapipeline.WeeklyScheduleConfig{
+					Type:            to.Ptr(datapipeline.ScheduleTypeWeekly),
+					EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-30T23:59:00.000Z"); return t }()),
+					LocalTimeZoneID: to.Ptr("Central Standard Time"),
+					StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T00:00:00.000Z"); return t }()),
+					Times: []string{
+						"18:09",
+						"17:12"},
+					Weekdays: []datapipeline.DayOfWeek{
+						datapipeline.DayOfWeekMonday,
+						datapipeline.DayOfWeekTuesday},
+				},
+				CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-05-28T05:35:20.536Z"); return t }()),
+				Enabled:         to.Ptr(true),
+				ID:              to.Ptr("cccccccc-2222-3333-4444-dddddddddddd"),
+				Owner: &datapipeline.UserPrincipal{
+					Type: to.Ptr(datapipeline.PrincipalTypeUser),
+					ID:   to.Ptr("33dd33dd-ee44-ff55-aa66-77bb77bb77bb"),
+				},
+			}},
+	}
+
+	testsuite.serverFactory.BackgroundJobsServer.NewListExecuteSchedulesPager = func(workspaceID string, dataPipelineID string, options *datapipeline.BackgroundJobsClientListExecuteSchedulesOptions) (resp azfake.PagerResponder[datapipeline.BackgroundJobsClientListExecuteSchedulesResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataPipelineID, dataPipelineID)
+		resp = azfake.PagerResponder[datapipeline.BackgroundJobsClientListExecuteSchedulesResponse]{}
+		resp.AddPage(http.StatusOK, datapipeline.BackgroundJobsClientListExecuteSchedulesResponse{ExecuteSchedules: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewBackgroundJobsClient()
+	pager := client.NewListExecuteSchedulesPager(exampleWorkspaceID, exampleDataPipelineID, &datapipeline.BackgroundJobsClientListExecuteSchedulesOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.ExecuteSchedules))
+		if err == nil {
+			break
+		}
+	}
+}
+
 func (testsuite *FakeTestSuite) TestBackgroundJobs_ScheduleExecute() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -400,6 +471,186 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_ScheduleExecute() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
+func (testsuite *FakeTestSuite) TestBackgroundJobs_GetExecuteSchedule() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get data pipeline execute schedule example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataPipelineID string
+	var exampleScheduleID string
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleDataPipelineID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+	exampleScheduleID = "bbbbbbbb-1111-2222-3333-cccccccccccc"
+
+	exampleRes := datapipeline.ExecuteSchedule{
+		Configuration: &datapipeline.CronScheduleConfig{
+			Type:            to.Ptr(datapipeline.ScheduleTypeCron),
+			EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-30T23:59:00.000Z"); return t }()),
+			LocalTimeZoneID: to.Ptr("Central Standard Time"),
+			StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T00:00:00.000Z"); return t }()),
+			Interval:        to.Ptr[int32](10),
+		},
+		CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-05-28T05:35:20.536Z"); return t }()),
+		Enabled:         to.Ptr(true),
+		ID:              to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+		Owner: &datapipeline.UserPrincipal{
+			Type: to.Ptr(datapipeline.PrincipalTypeUser),
+			ID:   to.Ptr("33dd33dd-ee44-ff55-aa66-77bb77bb77bb"),
+		},
+	}
+
+	testsuite.serverFactory.BackgroundJobsServer.GetExecuteSchedule = func(ctx context.Context, workspaceID string, dataPipelineID string, scheduleID string, options *datapipeline.BackgroundJobsClientGetExecuteScheduleOptions) (resp azfake.Responder[datapipeline.BackgroundJobsClientGetExecuteScheduleResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataPipelineID, dataPipelineID)
+		testsuite.Require().Equal(exampleScheduleID, scheduleID)
+		resp = azfake.Responder[datapipeline.BackgroundJobsClientGetExecuteScheduleResponse]{}
+		resp.SetResponse(http.StatusOK, datapipeline.BackgroundJobsClientGetExecuteScheduleResponse{ExecuteSchedule: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewBackgroundJobsClient()
+	res, err := client.GetExecuteSchedule(ctx, exampleWorkspaceID, exampleDataPipelineID, exampleScheduleID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ExecuteSchedule))
+}
+
+func (testsuite *FakeTestSuite) TestBackgroundJobs_UpdateExecuteSchedule() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update data pipeline execute schedule example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataPipelineID string
+	var exampleScheduleID string
+	var exampleUpdateScheduleRequest datapipeline.UpdateDataPipelineExecuteScheduleRequest
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleDataPipelineID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+	exampleScheduleID = "bbbbbbbb-1111-2222-3333-cccccccccccc"
+	exampleUpdateScheduleRequest = datapipeline.UpdateDataPipelineExecuteScheduleRequest{
+		Configuration: &datapipeline.CronScheduleConfig{
+			Type:            to.Ptr(datapipeline.ScheduleTypeCron),
+			EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-30T23:59:00.000Z"); return t }()),
+			LocalTimeZoneID: to.Ptr("Central Standard Time"),
+			StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T00:00:00.000Z"); return t }()),
+			Interval:        to.Ptr[int32](10),
+		},
+		Enabled: to.Ptr(true),
+	}
+
+	exampleRes := datapipeline.ExecuteSchedule{
+		Configuration: &datapipeline.CronScheduleConfig{
+			Type:            to.Ptr(datapipeline.ScheduleTypeCron),
+			EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-30T23:59:00.000Z"); return t }()),
+			LocalTimeZoneID: to.Ptr("Central Standard Time"),
+			StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T00:00:00.000Z"); return t }()),
+			Interval:        to.Ptr[int32](10),
+		},
+		CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-05-28T05:35:20.536Z"); return t }()),
+		Enabled:         to.Ptr(true),
+		ID:              to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+		Owner: &datapipeline.UserPrincipal{
+			Type: to.Ptr(datapipeline.PrincipalTypeUser),
+			ID:   to.Ptr("33dd33dd-ee44-ff55-aa66-77bb77bb77bb"),
+		},
+	}
+
+	testsuite.serverFactory.BackgroundJobsServer.UpdateExecuteSchedule = func(ctx context.Context, workspaceID string, dataPipelineID string, scheduleID string, updateScheduleRequest datapipeline.UpdateDataPipelineExecuteScheduleRequest, options *datapipeline.BackgroundJobsClientUpdateExecuteScheduleOptions) (resp azfake.Responder[datapipeline.BackgroundJobsClientUpdateExecuteScheduleResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataPipelineID, dataPipelineID)
+		testsuite.Require().Equal(exampleScheduleID, scheduleID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateScheduleRequest, updateScheduleRequest))
+		resp = azfake.Responder[datapipeline.BackgroundJobsClientUpdateExecuteScheduleResponse]{}
+		resp.SetResponse(http.StatusOK, datapipeline.BackgroundJobsClientUpdateExecuteScheduleResponse{ExecuteSchedule: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewBackgroundJobsClient()
+	res, err := client.UpdateExecuteSchedule(ctx, exampleWorkspaceID, exampleDataPipelineID, exampleScheduleID, exampleUpdateScheduleRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ExecuteSchedule))
+}
+
+func (testsuite *FakeTestSuite) TestBackgroundJobs_DeleteExecuteSchedule() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete data pipeline execute schedule example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataPipelineID string
+	var exampleScheduleID string
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleDataPipelineID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+	exampleScheduleID = "bbbbbbbb-1111-2222-3333-cccccccccccc"
+
+	testsuite.serverFactory.BackgroundJobsServer.DeleteExecuteSchedule = func(ctx context.Context, workspaceID string, dataPipelineID string, scheduleID string, options *datapipeline.BackgroundJobsClientDeleteExecuteScheduleOptions) (resp azfake.Responder[datapipeline.BackgroundJobsClientDeleteExecuteScheduleResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataPipelineID, dataPipelineID)
+		testsuite.Require().Equal(exampleScheduleID, scheduleID)
+		resp = azfake.Responder[datapipeline.BackgroundJobsClientDeleteExecuteScheduleResponse]{}
+		resp.SetResponse(http.StatusOK, datapipeline.BackgroundJobsClientDeleteExecuteScheduleResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewBackgroundJobsClient()
+	_, err = client.DeleteExecuteSchedule(ctx, exampleWorkspaceID, exampleDataPipelineID, exampleScheduleID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestBackgroundJobs_ListExecuteJobInstances() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List data pipeline execute job instances example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataPipelineID string
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleDataPipelineID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+
+	exampleRes := datapipeline.ExecuteJobInstances{
+		Value: []datapipeline.ExecuteJobInstance{
+			{
+				EndTimeUTC:     to.Ptr("2024-06-22T06:35:00.8033333"),
+				ID:             to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+				InvokeType:     to.Ptr(datapipeline.InvokeTypeManual),
+				ItemID:         to.Ptr("dddddddd-9999-0000-1111-eeeeeeeeeeee"),
+				JobType:        to.Ptr("Execute"),
+				RootActivityID: to.Ptr("11111111-2222-3333-4444-555555555555"),
+				StartTimeUTC:   to.Ptr("2024-06-22T06:35:00.7812154"),
+				Status:         to.Ptr(datapipeline.ItemJobStatusCompleted),
+			},
+			{
+				EndTimeUTC:     to.Ptr("2024-06-22T08:35:00.8033333"),
+				ID:             to.Ptr("cccccccc-3333-4444-5555-dddddddddddd"),
+				InvokeType:     to.Ptr(datapipeline.InvokeTypeScheduled),
+				ItemID:         to.Ptr("dddddddd-9999-0000-1111-eeeeeeeeeeee"),
+				JobType:        to.Ptr("Execute"),
+				RootActivityID: to.Ptr("22222222-3333-4444-5555-666666666666"),
+				StartTimeUTC:   to.Ptr("2024-06-22T07:35:00.7812154"),
+				Status:         to.Ptr(datapipeline.ItemJobStatusCompleted),
+			}},
+	}
+
+	testsuite.serverFactory.BackgroundJobsServer.NewListExecuteJobInstancesPager = func(workspaceID string, dataPipelineID string, options *datapipeline.BackgroundJobsClientListExecuteJobInstancesOptions) (resp azfake.PagerResponder[datapipeline.BackgroundJobsClientListExecuteJobInstancesResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataPipelineID, dataPipelineID)
+		resp = azfake.PagerResponder[datapipeline.BackgroundJobsClientListExecuteJobInstancesResponse]{}
+		resp.AddPage(http.StatusOK, datapipeline.BackgroundJobsClientListExecuteJobInstancesResponse{ExecuteJobInstances: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewBackgroundJobsClient()
+	pager := client.NewListExecuteJobInstancesPager(exampleWorkspaceID, exampleDataPipelineID, &datapipeline.BackgroundJobsClientListExecuteJobInstancesOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.ExecuteJobInstances))
+		if err == nil {
+			break
+		}
+	}
+}
+
 func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandExecute() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -421,4 +672,42 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandExecute() {
 	client := testsuite.clientFactory.NewBackgroundJobsClient()
 	_, err = client.RunOnDemandExecute(ctx, exampleWorkspaceID, exampleDataPipelineID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestBackgroundJobs_GetExecuteJobInstance() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get data pipeline execute job instance example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataPipelineID string
+	var exampleJobInstanceID string
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleDataPipelineID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+	exampleJobInstanceID = "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"
+
+	exampleRes := datapipeline.ExecuteJobInstance{
+		EndTimeUTC:     to.Ptr("2024-06-22T06:35:00.8033333"),
+		ID:             to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+		InvokeType:     to.Ptr(datapipeline.InvokeTypeManual),
+		ItemID:         to.Ptr("dddddddd-9999-0000-1111-eeeeeeeeeeee"),
+		JobType:        to.Ptr("Execute"),
+		RootActivityID: to.Ptr("11111111-2222-3333-4444-555555555555"),
+		StartTimeUTC:   to.Ptr("2024-06-22T06:35:00.7812154"),
+		Status:         to.Ptr(datapipeline.ItemJobStatusCompleted),
+	}
+
+	testsuite.serverFactory.BackgroundJobsServer.GetExecuteJobInstance = func(ctx context.Context, workspaceID string, dataPipelineID string, jobInstanceID string, options *datapipeline.BackgroundJobsClientGetExecuteJobInstanceOptions) (resp azfake.Responder[datapipeline.BackgroundJobsClientGetExecuteJobInstanceResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataPipelineID, dataPipelineID)
+		testsuite.Require().Equal(exampleJobInstanceID, jobInstanceID)
+		resp = azfake.Responder[datapipeline.BackgroundJobsClientGetExecuteJobInstanceResponse]{}
+		resp.SetResponse(http.StatusOK, datapipeline.BackgroundJobsClientGetExecuteJobInstanceResponse{ExecuteJobInstance: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewBackgroundJobsClient()
+	res, err := client.GetExecuteJobInstance(ctx, exampleWorkspaceID, exampleDataPipelineID, exampleJobInstanceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ExecuteJobInstance))
 }

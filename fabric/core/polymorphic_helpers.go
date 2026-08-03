@@ -89,6 +89,8 @@ func unmarshalConnectionClassification(rawMsg json.RawMessage) (ConnectionClassi
 		b = &PersonalCloudConnection{}
 	case string(ConnectivityTypeShareableCloud):
 		b = &ShareableCloudConnection{}
+	case string(ConnectivityTypeStreamingVirtualNetworkGateway):
+		b = &StreamingVirtualNetworkGatewayConnection{}
 	case string(ConnectivityTypeVirtualNetworkGateway):
 		b = &VirtualNetworkGatewayConnection{}
 	default:
@@ -245,6 +247,8 @@ func unmarshalGatewayClassification(rawMsg json.RawMessage) (GatewayClassificati
 		b = &OnPremisesGateway{}
 	case string(GatewayTypeOnPremisesPersonal):
 		b = &OnPremisesGatewayPersonal{}
+	case string(GatewayTypeStreamingVirtualNetwork):
+		b = &StreamingVirtualNetworkGateway{}
 	case string(GatewayTypeVirtualNetwork):
 		b = &VirtualNetworkGateway{}
 	default:

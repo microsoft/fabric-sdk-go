@@ -104,12 +104,13 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ListWorkspaces() {
 					}},
 			},
 			{
-				Type:        to.Ptr(core.WorkspaceTypeWorkspace),
-				Description: to.Ptr("A workspace used by the finance team"),
-				CapacityID:  to.Ptr("171018af-1531-4e61-942a-74f024b7f9fd"),
-				DisplayName: to.Ptr("Finance"),
-				DomainID:    to.Ptr("7c889f28-999b-4945-840d-54da3e3b5a29"),
-				ID:          to.Ptr("f2d70dc6-8f3e-4f2c-b00e-e2d336d7d711"),
+				Type:           to.Ptr(core.WorkspaceTypeWorkspace),
+				Description:    to.Ptr("A workspace used by the finance team"),
+				CapacityID:     to.Ptr("171018af-1531-4e61-942a-74f024b7f9fd"),
+				CapacityRegion: to.Ptr(core.CapacityRegionEastUS),
+				DisplayName:    to.Ptr("Finance"),
+				DomainID:       to.Ptr("7c889f28-999b-4945-840d-54da3e3b5a29"),
+				ID:             to.Ptr("f2d70dc6-8f3e-4f2c-b00e-e2d336d7d711"),
 				Tags: []core.WorkspaceAppliedTag{
 					{
 						DisplayName: to.Ptr("Finance"),
@@ -164,11 +165,12 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ListWorkspaces() {
 				ID:          to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
 			},
 			{
-				Type:        to.Ptr(core.WorkspaceTypeWorkspace),
-				Description: to.Ptr("A workspace used by the finance team"),
-				CapacityID:  to.Ptr("171018af-1531-4e61-942a-74f024b7f9fd"),
-				DisplayName: to.Ptr("Finance"),
-				ID:          to.Ptr("f2d70dc6-8f3e-4f2c-b00e-e2d336d7d711"),
+				Type:           to.Ptr(core.WorkspaceTypeWorkspace),
+				Description:    to.Ptr("A workspace used by the finance team"),
+				CapacityID:     to.Ptr("171018af-1531-4e61-942a-74f024b7f9fd"),
+				CapacityRegion: to.Ptr(core.CapacityRegionEastUS),
+				DisplayName:    to.Ptr("Finance"),
+				ID:             to.Ptr("f2d70dc6-8f3e-4f2c-b00e-e2d336d7d711"),
 			}},
 	}
 
@@ -295,19 +297,19 @@ func (testsuite *FakeTestSuite) TestWorkspaces_GetWorkspace() {
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
 
 	exampleRes := core.WorkspaceInfo{
-		Type:        to.Ptr(core.WorkspaceTypeWorkspace),
-		Description: to.Ptr("New workspace description"),
-		CapacityID:  to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
-		DisplayName: to.Ptr("New workspace"),
-		DomainID:    to.Ptr("9ce364e0-8e9d-4605-887a-b599b3e8b123"),
-		ID:          to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
+		Type:           to.Ptr(core.WorkspaceTypeWorkspace),
+		Description:    to.Ptr("New workspace description"),
+		CapacityID:     to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
+		CapacityRegion: to.Ptr(core.CapacityRegionEastUS),
+		DisplayName:    to.Ptr("New workspace"),
+		DomainID:       to.Ptr("9ce364e0-8e9d-4605-887a-b599b3e8b123"),
+		ID:             to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
 		Tags: []core.WorkspaceAppliedTag{
 			{
 				DisplayName: to.Ptr("Finance"),
 				ID:          to.Ptr("b3f2c8e9-4d8e-4a7c-9a32-f8c1b2e4d6af"),
 			}},
 		CapacityAssignmentProgress: to.Ptr(core.CapacityAssignmentProgressCompleted),
-		CapacityRegion:             to.Ptr(core.CapacityRegionEastUS),
 		OneLakeEndpoints: &core.OneLakeEndpoints{
 			BlobEndpoint: to.Ptr("https://eastus-onelake.blob.fabric.microsoft.com"),
 			DfsEndpoint:  to.Ptr("https://eastus-onelake.dfs.fabric.microsoft.com"),
@@ -341,10 +343,10 @@ func (testsuite *FakeTestSuite) TestWorkspaces_GetWorkspace() {
 		Description:                to.Ptr("New workspace description"),
 		APIEndpoint:                to.Ptr("https://cfafbeb180374d0c896ea46fb27ff227.zcf.w.api.fabric.microsoft.com"),
 		CapacityID:                 to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
+		CapacityRegion:             to.Ptr(core.CapacityRegionEastUS),
 		DisplayName:                to.Ptr("New workspace"),
 		ID:                         to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
 		CapacityAssignmentProgress: to.Ptr(core.CapacityAssignmentProgressCompleted),
-		CapacityRegion:             to.Ptr(core.CapacityRegionEastUS),
 		OneLakeEndpoints: &core.OneLakeEndpoints{
 			BlobEndpoint: to.Ptr("https://cfafbeb180374d0c896ea46fb27ff227.zcf.blob.fabric.microsoft.com"),
 			DfsEndpoint:  to.Ptr("https://cfafbeb180374d0c896ea46fb27ff227.zcf.dfs.fabric.microsoft.com"),
@@ -381,11 +383,12 @@ func (testsuite *FakeTestSuite) TestWorkspaces_UpdateWorkspace() {
 	}
 
 	exampleRes := core.Workspace{
-		Type:        to.Ptr(core.WorkspaceTypeWorkspace),
-		Description: to.Ptr("Workspace New description"),
-		DisplayName: to.Ptr("Workspace New displayName"),
-		DomainID:    to.Ptr("686177b9-ef29-45e4-a5db-1786ca6dbb9f"),
-		ID:          to.Ptr("33bae707-5fe7-4352-89bd-061a1318b60a"),
+		Type:           to.Ptr(core.WorkspaceTypeWorkspace),
+		Description:    to.Ptr("Workspace New description"),
+		CapacityRegion: to.Ptr(core.CapacityRegionEastUS),
+		DisplayName:    to.Ptr("Workspace New displayName"),
+		DomainID:       to.Ptr("686177b9-ef29-45e4-a5db-1786ca6dbb9f"),
+		ID:             to.Ptr("33bae707-5fe7-4352-89bd-061a1318b60a"),
 	}
 
 	testsuite.serverFactory.WorkspacesServer.UpdateWorkspace = func(ctx context.Context, workspaceID string, updateWorkspaceRequest core.UpdateWorkspaceRequest, options *core.WorkspacesClientUpdateWorkspaceOptions) (resp azfake.Responder[core.WorkspacesClientUpdateWorkspaceResponse], errResp azfake.ErrorResponder) {
@@ -1165,6 +1168,246 @@ func (testsuite *FakeTestSuite) TestWorkspaces_SetInboundAzureResourceRules() {
 
 	client := testsuite.clientFactory.NewWorkspacesClient()
 	_, err = client.SetInboundAzureResourceRules(ctx, exampleWorkspaceID, exampleWorkspaceInboundAzureResourceRules, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaces_GetInboundExternalDataSharesPolicy() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get workspace inbound External Data Shares policy example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+
+	exampleRes := core.WorkspaceInboundExternalDataSharesPolicy{
+		DefaultAction: to.Ptr(core.NetworkAccessRuleDeny),
+	}
+
+	testsuite.serverFactory.WorkspacesServer.GetInboundExternalDataSharesPolicy = func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetInboundExternalDataSharesPolicyOptions) (resp azfake.Responder[core.WorkspacesClientGetInboundExternalDataSharesPolicyResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.WorkspacesClientGetInboundExternalDataSharesPolicyResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientGetInboundExternalDataSharesPolicyResponse{WorkspaceInboundExternalDataSharesPolicy: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	res, err := client.GetInboundExternalDataSharesPolicy(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.WorkspaceInboundExternalDataSharesPolicy))
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaces_SetInboundExternalDataSharesPolicy() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Set workspace inbound External Data Shares policy example"},
+	})
+	var exampleWorkspaceID string
+	var exampleWorkspaceInboundExternalDataSharesPolicy core.WorkspaceInboundExternalDataSharesPolicy
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleWorkspaceInboundExternalDataSharesPolicy = core.WorkspaceInboundExternalDataSharesPolicy{
+		DefaultAction: to.Ptr(core.NetworkAccessRuleAllow),
+	}
+
+	testsuite.serverFactory.WorkspacesServer.SetInboundExternalDataSharesPolicy = func(ctx context.Context, workspaceID string, workspaceInboundExternalDataSharesPolicy core.WorkspaceInboundExternalDataSharesPolicy, options *core.WorkspacesClientSetInboundExternalDataSharesPolicyOptions) (resp azfake.Responder[core.WorkspacesClientSetInboundExternalDataSharesPolicyResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleWorkspaceInboundExternalDataSharesPolicy, workspaceInboundExternalDataSharesPolicy))
+		resp = azfake.Responder[core.WorkspacesClientSetInboundExternalDataSharesPolicyResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientSetInboundExternalDataSharesPolicyResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	_, err = client.SetInboundExternalDataSharesPolicy(ctx, exampleWorkspaceID, exampleWorkspaceInboundExternalDataSharesPolicy, &core.WorkspacesClientSetInboundExternalDataSharesPolicyOptions{IfMatch: to.Ptr("\"a1b2c3d4\"")})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaces_GetWorkspaceEncryption() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get workspace CMK encryption active example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+
+	exampleRes := core.WorkspaceEncryptionDetail{
+		EncryptionDetail: &core.EncryptionDetail{
+			EncryptionStatus: to.Ptr(core.WorkspaceEncryptionStatusActive),
+			KeyIdentifier:    to.Ptr("https://westus07112025-cmktest1.vault.azure.net/keys/test2k/"),
+		},
+	}
+
+	testsuite.serverFactory.WorkspacesServer.GetWorkspaceEncryption = func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetWorkspaceEncryptionOptions) (resp azfake.Responder[core.WorkspacesClientGetWorkspaceEncryptionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.WorkspacesClientGetWorkspaceEncryptionResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientGetWorkspaceEncryptionResponse{WorkspaceEncryptionDetail: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	res, err := client.GetWorkspaceEncryption(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.WorkspaceEncryptionDetail))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get workspace CMK encryption in progress example"},
+	})
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+
+	exampleRes = core.WorkspaceEncryptionDetail{
+		EncryptionDetail: &core.EncryptionDetail{
+			EncryptionStatus: to.Ptr(core.WorkspaceEncryptionStatusEnableInProgress),
+			KeyIdentifier:    to.Ptr("https://westus07112025-cmktest1.vault.azure.net/keys/test2k/"),
+		},
+		PreviousEncryptionDetail: &core.EncryptionDetail{
+			EncryptionStatus: to.Ptr(core.WorkspaceEncryptionStatusActive),
+			KeyIdentifier:    to.Ptr("https://westus07112025-cmktest1.vault.azure.net/keys/key1/"),
+		},
+		WorkspaceEncryptionItemsDetails: []core.WorkspaceEncryptionItemsDetail{
+			{
+				EncryptionStatus: to.Ptr(core.WorkspaceEncryptionStatusEnableInProgress),
+				Items: []core.WorkspaceEncryptionItem{
+					{
+						Type:        to.Ptr("CopyJob"),
+						DisplayName: to.Ptr("copyjob1"),
+						ID:          to.Ptr("9d922047-55a9-4737-8ec0-f34a320100bc"),
+					},
+					{
+						Type:        to.Ptr("CopyJob"),
+						DisplayName: to.Ptr("copyjob2"),
+						ID:          to.Ptr("8d022047-55a9-4737-8ec0-f34a320100b7"),
+					}},
+			}},
+	}
+
+	testsuite.serverFactory.WorkspacesServer.GetWorkspaceEncryption = func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetWorkspaceEncryptionOptions) (resp azfake.Responder[core.WorkspacesClientGetWorkspaceEncryptionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.WorkspacesClientGetWorkspaceEncryptionResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientGetWorkspaceEncryptionResponse{WorkspaceEncryptionDetail: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.GetWorkspaceEncryption(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.WorkspaceEncryptionDetail))
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaces_AssignWorkspaceEncryption() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Assign workspace CMK encryption example"},
+	})
+	var exampleWorkspaceID string
+	var exampleAssignWorkspaceEncryptionRequest core.AssignWorkspaceEncryptionRequest
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+	exampleAssignWorkspaceEncryptionRequest = core.AssignWorkspaceEncryptionRequest{
+		KeyIdentifier: to.Ptr("https://westus07112025-cmktest1.vault.azure.net/keys/test2k/"),
+	}
+
+	testsuite.serverFactory.WorkspacesServer.AssignWorkspaceEncryption = func(ctx context.Context, workspaceID string, assignWorkspaceEncryptionRequest core.AssignWorkspaceEncryptionRequest, options *core.WorkspacesClientAssignWorkspaceEncryptionOptions) (resp azfake.Responder[core.WorkspacesClientAssignWorkspaceEncryptionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleAssignWorkspaceEncryptionRequest, assignWorkspaceEncryptionRequest))
+		resp = azfake.Responder[core.WorkspacesClientAssignWorkspaceEncryptionResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientAssignWorkspaceEncryptionResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	_, err = client.AssignWorkspaceEncryption(ctx, exampleWorkspaceID, exampleAssignWorkspaceEncryptionRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaces_ResetWorkspaceEncryption() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Reset workspace CMK encryption example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+
+	testsuite.serverFactory.WorkspacesServer.ResetWorkspaceEncryption = func(ctx context.Context, workspaceID string, options *core.WorkspacesClientResetWorkspaceEncryptionOptions) (resp azfake.Responder[core.WorkspacesClientResetWorkspaceEncryptionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.WorkspacesClientResetWorkspaceEncryptionResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientResetWorkspaceEncryptionResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	_, err = client.ResetWorkspaceEncryption(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaces_GetFirewallRules() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example for getting workspace firewall rules"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+
+	exampleRes := core.InboundFirewallConfiguration{
+		Rules: []core.FirewallRule{
+			{
+				DisplayName: to.Ptr("SingleIPAddressRule"),
+				Value:       to.Ptr("12.34.56.78"),
+			},
+			{
+				DisplayName: to.Ptr("IPAddressRangeRule"),
+				Value:       to.Ptr("12.34.56.78-12.34.56.89"),
+			},
+			{
+				DisplayName: to.Ptr("CidrIPAddressRule"),
+				Value:       to.Ptr("12.34.56.0/24"),
+			}},
+	}
+
+	testsuite.serverFactory.WorkspacesServer.GetFirewallRules = func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetFirewallRulesOptions) (resp azfake.Responder[core.WorkspacesClientGetFirewallRulesResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[core.WorkspacesClientGetFirewallRulesResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientGetFirewallRulesResponse{InboundFirewallConfiguration: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	res, err := client.GetFirewallRules(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.InboundFirewallConfiguration))
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaces_SetFirewallRules() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example for setting workspace firewall rules"},
+	})
+	var exampleWorkspaceID string
+	var exampleFirewallRulesRequest core.InboundFirewallConfiguration
+	exampleWorkspaceID = "47482db6-4583-4672-86dd-999d0f8f4d7a"
+	exampleFirewallRulesRequest = core.InboundFirewallConfiguration{
+		Rules: []core.FirewallRule{
+			{
+				DisplayName: to.Ptr("SingleIPAddressRule"),
+				Value:       to.Ptr("12.34.56.78"),
+			},
+			{
+				DisplayName: to.Ptr("IPAddressRangeRule"),
+				Value:       to.Ptr("12.34.56.78-12.34.56.89"),
+			},
+			{
+				DisplayName: to.Ptr("CidrIPAddressRule"),
+				Value:       to.Ptr("12.34.56.0/24"),
+			}},
+	}
+
+	testsuite.serverFactory.WorkspacesServer.SetFirewallRules = func(ctx context.Context, workspaceID string, firewallRulesRequest core.InboundFirewallConfiguration, options *core.WorkspacesClientSetFirewallRulesOptions) (resp azfake.Responder[core.WorkspacesClientSetFirewallRulesResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleFirewallRulesRequest, firewallRulesRequest))
+		resp = azfake.Responder[core.WorkspacesClientSetFirewallRulesResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspacesClientSetFirewallRulesResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	_, err = client.SetFirewallRules(ctx, exampleWorkspaceID, exampleFirewallRulesRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
@@ -2586,6 +2829,108 @@ func (testsuite *FakeTestSuite) TestItems_AssociateIdentityBeta() {
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.UpdateItemIdentityResponse))
 }
 
+func (testsuite *FakeTestSuite) TestItems_GetDownstreamRelationsBeta() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get downstream relations example"},
+	})
+	var exampleWorkspaceID string
+	var exampleItemID string
+	var exampleBeta bool
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleItemID = "9b218778-e7a5-4d73-8187-f10824047715"
+	exampleBeta = true
+
+	exampleRes := core.RelationsResponse{
+		Items: []core.RelationsRelatedItem{
+			{
+				Type:        to.Ptr(core.ItemTypeReport),
+				DisplayName: to.Ptr("Q4 Sales Dashboard"),
+				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+			},
+			{
+				Type:        to.Ptr(core.ItemTypeSemanticModel),
+				DisplayName: to.Ptr("Sales Semantic Model"),
+				ID:          to.Ptr("9b218778-e7a5-4d73-8187-f10824047715"),
+				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+			}},
+		Relations: []core.RelationsEdge{
+			{
+				DependentOnItemID: to.Ptr("9b218778-e7a5-4d73-8187-f10824047715"),
+				ItemID:            to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				RelationType:      to.Ptr(core.RelationTypePushData),
+			}},
+		Workspaces: []core.RelationsWorkspace{
+			{
+				DisplayName: to.Ptr("Finance Analytics Workspace"),
+				ID:          to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+			}},
+	}
+
+	testsuite.serverFactory.ItemsServer.GetDownstreamRelationsBeta = func(ctx context.Context, workspaceID string, itemID string, beta bool, options *core.ItemsClientGetDownstreamRelationsBetaOptions) (resp azfake.Responder[core.ItemsClientGetDownstreamRelationsBetaResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.Responder[core.ItemsClientGetDownstreamRelationsBetaResponse]{}
+		resp.SetResponse(http.StatusOK, core.ItemsClientGetDownstreamRelationsBetaResponse{RelationsResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	res, err := client.GetDownstreamRelationsBeta(ctx, exampleWorkspaceID, exampleItemID, exampleBeta, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.RelationsResponse))
+}
+
+func (testsuite *FakeTestSuite) TestItems_GetUpstreamRelationsBeta() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get upstream relations example"},
+	})
+	var exampleWorkspaceID string
+	var exampleItemID string
+	var exampleBeta bool
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleItemID = "3546052c-ae64-4526-b1a8-52af7761426f"
+	exampleBeta = true
+
+	exampleRes := core.RelationsResponse{
+		Items: []core.RelationsRelatedItem{
+			{
+				Type:        to.Ptr(core.ItemTypeLakehouse),
+				DisplayName: to.Ptr("Enterprise Sales Lakehouse"),
+				ID:          to.Ptr("9b218778-e7a5-4d73-8187-f10824047715"),
+				WorkspaceID: to.Ptr("9a1f7d8b-4f9c-4c1e-b8e7-3d6c2b0a5f41"),
+			}},
+		Relations: []core.RelationsEdge{
+			{
+				DependentOnItemID: to.Ptr("9b218778-e7a5-4d73-8187-f10824047715"),
+				ItemID:            to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				RelationType:      to.Ptr(core.RelationTypePushData),
+			}},
+		Workspaces: []core.RelationsWorkspace{
+			{
+				DisplayName: to.Ptr("Data Engineering Workspace"),
+				ID:          to.Ptr("9a1f7d8b-4f9c-4c1e-b8e7-3d6c2b0a5f41"),
+			}},
+	}
+
+	testsuite.serverFactory.ItemsServer.GetUpstreamRelationsBeta = func(ctx context.Context, workspaceID string, itemID string, beta bool, options *core.ItemsClientGetUpstreamRelationsBetaOptions) (resp azfake.Responder[core.ItemsClientGetUpstreamRelationsBetaResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.Responder[core.ItemsClientGetUpstreamRelationsBetaResponse]{}
+		resp.SetResponse(http.StatusOK, core.ItemsClientGetUpstreamRelationsBetaResponse{RelationsResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	res, err := client.GetUpstreamRelationsBeta(ctx, exampleWorkspaceID, exampleItemID, exampleBeta, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.RelationsResponse))
+}
+
 func (testsuite *FakeTestSuite) TestJobScheduler_ListItemSchedules() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -3324,6 +3669,7 @@ func (testsuite *FakeTestSuite) TestGit_GetConnection() {
 
 	exampleRes := core.GitConnection{
 		GitConnectionState: to.Ptr(core.GitConnectionStateConnectedAndInitialized),
+		GitConnectionType:  to.Ptr(core.GitConnectionTypeFull),
 		GitProviderDetails: &core.AzureDevOpsDetails{
 			BranchName:       to.Ptr("Test Branch"),
 			DirectoryName:    to.Ptr(""),
@@ -4024,6 +4370,35 @@ func (testsuite *FakeTestSuite) TestCapacities_ListCapacities() {
 			break
 		}
 	}
+}
+
+func (testsuite *FakeTestSuite) TestCapacities_GetCapacity() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a capacity example"},
+	})
+	var exampleCapacityID string
+	exampleCapacityID = "96f3f0ff-4fe2-4712-b61b-05a456ba9357"
+
+	exampleRes := core.Capacity{
+		DisplayName: to.Ptr("F4 Capacity"),
+		ID:          to.Ptr("96f3f0ff-4fe2-4712-b61b-05a456ba9357"),
+		Region:      to.Ptr("West Central US"),
+		SKU:         to.Ptr("F4"),
+		State:       to.Ptr(core.CapacityStateActive),
+	}
+
+	testsuite.serverFactory.CapacitiesServer.GetCapacity = func(ctx context.Context, capacityID string, options *core.CapacitiesClientGetCapacityOptions) (resp azfake.Responder[core.CapacitiesClientGetCapacityResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		resp = azfake.Responder[core.CapacitiesClientGetCapacityResponse]{}
+		resp.SetResponse(http.StatusOK, core.CapacitiesClientGetCapacityResponse{Capacity: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewCapacitiesClient()
+	res, err := client.GetCapacity(ctx, exampleCapacityID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Capacity))
 }
 
 func (testsuite *FakeTestSuite) TestLongRunningOperations_GetOperationState() {
@@ -8965,6 +9340,13 @@ func (testsuite *FakeTestSuite) TestConnections_ListConnections() {
 					Type: to.Ptr("Web"),
 					Path: to.Ptr("https://www.contoso.com"),
 				},
+				ConnectionRecency: &core.ConnectionRecency{
+					CreatedDateTime:              to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-23T16:22:20.000Z"); return t }()),
+					LastBoundDateTime:            to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-26T16:22:20.000Z"); return t }()),
+					LastCredentialUsedDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-27T16:22:20.000Z"); return t }()),
+					MyLastBoundDateTime:          to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-24T16:22:20.000Z"); return t }()),
+					MyLastCredentialUsedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-25T16:22:20.000Z"); return t }()),
+				},
 				ConnectivityType: to.Ptr(core.ConnectivityTypeShareableCloud),
 				CredentialDetails: &core.ListCredentialDetails{
 					ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
@@ -8973,6 +9355,7 @@ func (testsuite *FakeTestSuite) TestConnections_ListConnections() {
 					CredentialType:       to.Ptr(core.CredentialTypeAnonymous),
 				},
 				DisplayName:  to.Ptr("ContosoConnection1"),
+				GatewayID:    to.Ptr("8f72eea3-d989-4a5a-aeed-02b3aaa2ddd0"),
 				ID:           to.Ptr("6952a7b2-aea3-414f-9d85-6c0fe5d34539"),
 				PrivacyLevel: to.Ptr(core.PrivacyLevelPublic),
 			},
@@ -8980,6 +9363,13 @@ func (testsuite *FakeTestSuite) TestConnections_ListConnections() {
 				ConnectionDetails: &core.ListConnectionDetails{
 					Type: to.Ptr("SQL"),
 					Path: to.Ptr("contoso.database.windows.net;sales"),
+				},
+				ConnectionRecency: &core.ConnectionRecency{
+					CreatedDateTime:              to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-23T16:22:20.000Z"); return t }()),
+					LastBoundDateTime:            to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-26T16:22:20.000Z"); return t }()),
+					LastCredentialUsedDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-27T16:22:20.000Z"); return t }()),
+					MyLastBoundDateTime:          to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-24T16:22:20.000Z"); return t }()),
+					MyLastCredentialUsedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-25T16:22:20.000Z"); return t }()),
 				},
 				ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGateway),
 				CredentialDetails: &core.ListCredentialDetails{
@@ -8989,9 +9379,26 @@ func (testsuite *FakeTestSuite) TestConnections_ListConnections() {
 					CredentialType:       to.Ptr(core.CredentialTypeBasic),
 				},
 				DisplayName:  to.Ptr("ContosoConnection2"),
+				GatewayID:    to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
 				ID:           to.Ptr("f6a39b76-9816-4e4b-b93a-f42e405017b7"),
 				PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
-				GatewayID:    to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
+			},
+			&core.StreamingVirtualNetworkGatewayConnection{
+				ConnectionDetails: &core.ListConnectionDetails{
+					Type: to.Ptr("SQL"),
+					Path: to.Ptr("contoso.database.windows.net;marketing"),
+				},
+				ConnectivityType: to.Ptr(core.ConnectivityTypeStreamingVirtualNetworkGateway),
+				CredentialDetails: &core.ListCredentialDetails{
+					ConnectionEncryption: to.Ptr(core.ConnectionEncryptionEncrypted),
+					SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+					SkipTestConnection:   to.Ptr(false),
+					CredentialType:       to.Ptr(core.CredentialTypeBasic),
+				},
+				DisplayName:  to.Ptr("ContosoStreamingVirtualNetworkGatewayConnection"),
+				GatewayID:    to.Ptr("3f8d6a4b-1c2e-4f5a-9b7c-2d6e8f1a3b9d"),
+				ID:           to.Ptr("a3b4c5d6-7e8f-4a5b-9c0d-1e2f3a4b5c6d"),
+				PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 			}},
 	}
 
@@ -9166,6 +9573,52 @@ func (testsuite *FakeTestSuite) TestConnections_CreateConnection() {
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Streaming virtual network gateway example"},
+	})
+	exampleCreateConnectionRequest = &core.CreateStreamingVirtualNetworkGatewayConnectionRequest{
+		ConnectionDetails: &core.CreateConnectionDetails{
+			Type:           to.Ptr("SQL"),
+			CreationMethod: to.Ptr("SQL"),
+			Parameters: []core.ConnectionDetailsParameterClassification{
+				&core.ConnectionDetailsTextParameter{
+					Name:     to.Ptr("server"),
+					DataType: to.Ptr(core.DataTypeText),
+					Value:    to.Ptr("contoso.database.windows.net"),
+				},
+				&core.ConnectionDetailsTextParameter{
+					Name:     to.Ptr("database"),
+					DataType: to.Ptr(core.DataTypeText),
+					Value:    to.Ptr("sales"),
+				}},
+		},
+		ConnectivityType: to.Ptr(core.ConnectivityTypeStreamingVirtualNetworkGateway),
+		DisplayName:      to.Ptr("ContosoStreamingVirtualNetworkGatewayConnection"),
+		PrivacyLevel:     to.Ptr(core.PrivacyLevelOrganizational),
+		CredentialDetails: &core.CreateCredentialDetails{
+			ConnectionEncryption: to.Ptr(core.ConnectionEncryptionEncrypted),
+			SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+			SkipTestConnection:   to.Ptr(false),
+			Credentials: &core.BasicCredentials{
+				CredentialType: to.Ptr(core.CredentialTypeBasic),
+				Password:       to.Ptr("*********"),
+				Username:       to.Ptr("admin"),
+			},
+		},
+		GatewayID: to.Ptr("93491300-cfbd-402f-bf17-9ace59a92354"),
+	}
+
+	testsuite.serverFactory.ConnectionsServer.CreateConnection = func(ctx context.Context, createConnectionRequest core.CreateConnectionRequestClassification, options *core.ConnectionsClientCreateConnectionOptions) (resp azfake.Responder[core.ConnectionsClientCreateConnectionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateConnectionRequest, createConnectionRequest))
+		resp = azfake.Responder[core.ConnectionsClientCreateConnectionResponse]{}
+		resp.SetResponse(http.StatusCreated, core.ConnectionsClientCreateConnectionResponse{}, nil)
+		return
+	}
+
+	_, err = client.CreateConnection(ctx, exampleCreateConnectionRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Virtual network gateway example"},
 	})
 	exampleCreateConnectionRequest = &core.CreateVirtualNetworkGatewayConnectionRequest{
@@ -9225,6 +9678,13 @@ func (testsuite *FakeTestSuite) TestConnections_GetConnection() {
 				Type: to.Ptr("SQL"),
 				Path: to.Ptr("contoso.database.windows.net;sales"),
 			},
+			ConnectionRecency: &core.ConnectionRecency{
+				CreatedDateTime:              to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-23T16:22:20.000Z"); return t }()),
+				LastBoundDateTime:            to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-26T16:22:20.000Z"); return t }()),
+				LastCredentialUsedDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-27T16:22:20.000Z"); return t }()),
+				MyLastBoundDateTime:          to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-24T16:22:20.000Z"); return t }()),
+				MyLastCredentialUsedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-25T16:22:20.000Z"); return t }()),
+			},
 			ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGateway),
 			CredentialDetails: &core.ListCredentialDetails{
 				ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
@@ -9233,9 +9693,9 @@ func (testsuite *FakeTestSuite) TestConnections_GetConnection() {
 				CredentialType:       to.Ptr(core.CredentialTypeBasic),
 			},
 			DisplayName:  to.Ptr("ContosoConnection"),
+			GatewayID:    to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
 			ID:           to.Ptr("f6a39b76-9816-4e4b-b93a-f42e405017b7"),
 			PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
-			GatewayID:    to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
 		},
 	}
 
@@ -9276,6 +9736,13 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 				Type: to.Ptr("SQL"),
 				Path: to.Ptr("contoso.database.windows.net;reporting"),
 			},
+			ConnectionRecency: &core.ConnectionRecency{
+				CreatedDateTime:              to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-23T16:22:20.000Z"); return t }()),
+				LastBoundDateTime:            to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-26T16:22:20.000Z"); return t }()),
+				LastCredentialUsedDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-27T16:22:20.000Z"); return t }()),
+				MyLastBoundDateTime:          to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-24T16:22:20.000Z"); return t }()),
+				MyLastCredentialUsedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-25T16:22:20.000Z"); return t }()),
+			},
 			ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGatewayPersonal),
 			CredentialDetails: &core.ListCredentialDetails{
 				ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
@@ -9283,9 +9750,9 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 				SkipTestConnection:   to.Ptr(false),
 				CredentialType:       to.Ptr(core.CredentialTypeWindowsWithoutImpersonation),
 			},
+			GatewayID:    to.Ptr("429a773e-5633-45ee-8584-a192bd79c16a"),
 			ID:           to.Ptr("ef8f408d-2ab7-4a18-b662-9251febda49c"),
 			PrivacyLevel: to.Ptr(core.PrivacyLevelPrivate),
-			GatewayID:    to.Ptr("429a773e-5633-45ee-8584-a192bd79c16a"),
 		},
 	}
 
@@ -9333,6 +9800,13 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 				Type: to.Ptr("SQL"),
 				Path: to.Ptr("contoso.database.windows.net;sales"),
 			},
+			ConnectionRecency: &core.ConnectionRecency{
+				CreatedDateTime:              to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-23T16:22:20.000Z"); return t }()),
+				LastBoundDateTime:            to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-26T16:22:20.000Z"); return t }()),
+				LastCredentialUsedDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-27T16:22:20.000Z"); return t }()),
+				MyLastBoundDateTime:          to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-24T16:22:20.000Z"); return t }()),
+				MyLastCredentialUsedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-25T16:22:20.000Z"); return t }()),
+			},
 			ConnectivityType: to.Ptr(core.ConnectivityTypeOnPremisesGateway),
 			CredentialDetails: &core.ListCredentialDetails{
 				ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
@@ -9341,9 +9815,9 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 				CredentialType:       to.Ptr(core.CredentialTypeWindows),
 			},
 			DisplayName:  to.Ptr("ContosoSalesOnPremisesConnection"),
+			GatewayID:    to.Ptr("4f8b5d6e-8e99-4817-8b9e-6b6a613be707"),
 			ID:           to.Ptr("70b17680-48f1-4729-9df6-02576647dc3a"),
 			PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
-			GatewayID:    to.Ptr("4f8b5d6e-8e99-4817-8b9e-6b6a613be707"),
 		},
 	}
 
@@ -9375,6 +9849,13 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 				Type: to.Ptr("SQL"),
 				Path: to.Ptr("contoso.database.windows.net;finances"),
 			},
+			ConnectionRecency: &core.ConnectionRecency{
+				CreatedDateTime:              to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-23T16:22:20.000Z"); return t }()),
+				LastBoundDateTime:            to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-26T16:22:20.000Z"); return t }()),
+				LastCredentialUsedDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-27T16:22:20.000Z"); return t }()),
+				MyLastBoundDateTime:          to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-24T16:22:20.000Z"); return t }()),
+				MyLastCredentialUsedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-25T16:22:20.000Z"); return t }()),
+			},
 			ConnectivityType: to.Ptr(core.ConnectivityTypePersonalCloud),
 			CredentialDetails: &core.ListCredentialDetails{
 				ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
@@ -9382,6 +9863,7 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 				SkipTestConnection:   to.Ptr(false),
 				CredentialType:       to.Ptr(core.CredentialTypeOAuth2),
 			},
+			GatewayID:    to.Ptr("8f72eea3-d989-4a5a-aeed-02b3aaa2ddd0"),
 			ID:           to.Ptr("7a0369b2-58c4-4b67-b3f3-92156a95f1cd"),
 			PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 		},
@@ -9415,6 +9897,13 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 				Type: to.Ptr("SQL"),
 				Path: to.Ptr("contoso.database.windows.net;networks"),
 			},
+			ConnectionRecency: &core.ConnectionRecency{
+				CreatedDateTime:              to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-23T16:22:20.000Z"); return t }()),
+				LastBoundDateTime:            to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-26T16:22:20.000Z"); return t }()),
+				LastCredentialUsedDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-27T16:22:20.000Z"); return t }()),
+				MyLastBoundDateTime:          to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-24T16:22:20.000Z"); return t }()),
+				MyLastCredentialUsedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-25T16:22:20.000Z"); return t }()),
+			},
 			ConnectivityType: to.Ptr(core.ConnectivityTypeShareableCloud),
 			CredentialDetails: &core.ListCredentialDetails{
 				ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
@@ -9423,8 +9912,54 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 				CredentialType:       to.Ptr(core.CredentialTypeBasic),
 			},
 			DisplayName:  to.Ptr("ContosoCloudConnection"),
+			GatewayID:    to.Ptr("8f72eea3-d989-4a5a-aeed-02b3aaa2ddd0"),
 			ID:           to.Ptr("fa968eee-8075-48f6-8c6d-41260ee1396d"),
 			PrivacyLevel: to.Ptr(core.PrivacyLevelPublic),
+		},
+	}
+
+	testsuite.serverFactory.ConnectionsServer.UpdateConnection = func(ctx context.Context, connectionID string, updateConnectionRequest core.UpdateConnectionRequestClassification, options *core.ConnectionsClientUpdateConnectionOptions) (resp azfake.Responder[core.ConnectionsClientUpdateConnectionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateConnectionRequest, updateConnectionRequest))
+		resp = azfake.Responder[core.ConnectionsClientUpdateConnectionResponse]{}
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
+		return
+	}
+
+	res, err = client.UpdateConnection(ctx, exampleConnectionID, exampleUpdateConnectionRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Streaming virtual network gateway example"},
+	})
+	exampleConnectionID = "6b571614-2e98-4bfd-b9ed-1cb8d3ffc396"
+	exampleUpdateConnectionRequest = &core.UpdateStreamingVirtualNetworkGatewayConnectionRequest{
+		ConnectivityType: to.Ptr(core.ConnectivityTypeStreamingVirtualNetworkGateway),
+		CredentialDetails: &core.UpdateCredentialDetails{
+			SingleSignOnType: to.Ptr(core.SingleSignOnTypeNone),
+		},
+		DisplayName: to.Ptr("ContosoMarketingStreamingVirtualNetworkGatewayConnection"),
+	}
+
+	exampleRes = core.ConnectionsClientUpdateConnectionResponse{
+		ConnectionClassification: &core.StreamingVirtualNetworkGatewayConnection{
+			ConnectionDetails: &core.ListConnectionDetails{
+				Type: to.Ptr("SQL"),
+				Path: to.Ptr("contoso.database.windows.net;marketing"),
+			},
+			ConnectivityType: to.Ptr(core.ConnectivityTypeStreamingVirtualNetworkGateway),
+			CredentialDetails: &core.ListCredentialDetails{
+				ConnectionEncryption: to.Ptr(core.ConnectionEncryptionEncrypted),
+				SingleSignOnType:     to.Ptr(core.SingleSignOnTypeNone),
+				SkipTestConnection:   to.Ptr(false),
+				CredentialType:       to.Ptr(core.CredentialTypeBasic),
+			},
+			DisplayName:  to.Ptr("ContosoMarketingStreamingVirtualNetworkGatewayConnection"),
+			GatewayID:    to.Ptr("befccff4-3ee6-40d7-b8f1-a0a9fd684a85"),
+			ID:           to.Ptr("6b571614-2e98-4bfd-b9ed-1cb8d3ffc396"),
+			PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 		},
 	}
 
@@ -9460,6 +9995,13 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 				Type: to.Ptr("SQL"),
 				Path: to.Ptr("contoso.database.windows.net;marketing"),
 			},
+			ConnectionRecency: &core.ConnectionRecency{
+				CreatedDateTime:              to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-23T16:22:20.000Z"); return t }()),
+				LastBoundDateTime:            to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-26T16:22:20.000Z"); return t }()),
+				LastCredentialUsedDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-27T16:22:20.000Z"); return t }()),
+				MyLastBoundDateTime:          to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-24T16:22:20.000Z"); return t }()),
+				MyLastCredentialUsedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-25T16:22:20.000Z"); return t }()),
+			},
 			ConnectivityType: to.Ptr(core.ConnectivityTypeVirtualNetworkGateway),
 			CredentialDetails: &core.ListCredentialDetails{
 				ConnectionEncryption: to.Ptr(core.ConnectionEncryptionNotEncrypted),
@@ -9468,9 +10010,9 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 				CredentialType:       to.Ptr(core.CredentialTypeBasic),
 			},
 			DisplayName:  to.Ptr("ContosoMarketingVirtualNetworkGatewayConnection"),
+			GatewayID:    to.Ptr("befccff4-3ee6-40d7-b8f1-a0a9fd684a85"),
 			ID:           to.Ptr("6b571614-2e98-4bfd-b9ed-1cb8d3ffc396"),
 			PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
-			GatewayID:    to.Ptr("befccff4-3ee6-40d7-b8f1-a0a9fd684a85"),
 		},
 	}
 
@@ -9912,7 +10454,20 @@ func (testsuite *FakeTestSuite) TestGateways_ListGateways() {
 				CapacityID:                   to.Ptr("ed26b6f3-7bc5-44b0-9565-a8942619ef4c"),
 				DisplayName:                  to.Ptr("ContosoVirtualNetworkGateway"),
 				InactivityMinutesBeforeSleep: to.Ptr[int32](1440),
+				MaxMemberGatewayCount:        to.Ptr[int32](3),
+				MinMemberGatewayCount:        to.Ptr[int32](1),
 				NumberOfMemberGateways:       to.Ptr[int32](3),
+				VirtualNetworkAzureResource: &core.VirtualNetworkAzureResource{
+					ResourceGroupName:  to.Ptr("ContosoResourceGroup"),
+					SubscriptionID:     to.Ptr("879b4ba0-ed17-4ff2-851e-4a2228e00b70"),
+					SubnetName:         to.Ptr("ContosoSubnet"),
+					VirtualNetworkName: to.Ptr("ContosoVirtualNetwork"),
+				},
+			},
+			&core.StreamingVirtualNetworkGateway{
+				Type:        to.Ptr(core.GatewayTypeStreamingVirtualNetwork),
+				ID:          to.Ptr("3f8d6a4b-1c2e-4f5a-9b7c-2d6e8f1a3b9d"),
+				DisplayName: to.Ptr("ContosoStreamingVirtualNetworkGateway"),
 				VirtualNetworkAzureResource: &core.VirtualNetworkAzureResource{
 					ResourceGroupName:  to.Ptr("ContosoResourceGroup"),
 					SubscriptionID:     to.Ptr("879b4ba0-ed17-4ff2-851e-4a2228e00b70"),
@@ -9943,15 +10498,12 @@ func (testsuite *FakeTestSuite) TestGateways_ListGateways() {
 func (testsuite *FakeTestSuite) TestGateways_CreateGateway() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Virtual network gateway example"},
+		"example-id": {"Streaming virtual network gateway example"},
 	})
 	var exampleCreateGatewayRequest core.CreateGatewayRequestClassification
-	exampleCreateGatewayRequest = &core.CreateVirtualNetworkGatewayRequest{
-		Type:                         to.Ptr(core.GatewayTypeVirtualNetwork),
-		CapacityID:                   to.Ptr("ed26b6f3-7bc5-44b0-9565-a8942619ef4c"),
-		DisplayName:                  to.Ptr("ContosoVirtualNetworkGateway"),
-		InactivityMinutesBeforeSleep: to.Ptr[int32](120),
-		NumberOfMemberGateways:       to.Ptr[int32](3),
+	exampleCreateGatewayRequest = &core.CreateStreamingVirtualNetworkGatewayRequest{
+		Type:        to.Ptr(core.GatewayTypeStreamingVirtualNetwork),
+		DisplayName: to.Ptr("ContosoStreamingVirtualNetworkGateway"),
 		VirtualNetworkAzureResource: &core.VirtualNetworkAzureResource{
 			ResourceGroupName:  to.Ptr("ContosoResourceGroup"),
 			SubscriptionID:     to.Ptr("879b4ba0-ed17-4ff2-851e-4a2228e00b70"),
@@ -9968,6 +10520,65 @@ func (testsuite *FakeTestSuite) TestGateways_CreateGateway() {
 	}
 
 	client := testsuite.clientFactory.NewGatewaysClient()
+	_, err = client.CreateGateway(ctx, exampleCreateGatewayRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Virtual network gateway example"},
+	})
+	exampleCreateGatewayRequest = &core.CreateVirtualNetworkGatewayRequest{
+		Type:                         to.Ptr(core.GatewayTypeVirtualNetwork),
+		CapacityID:                   to.Ptr("ed26b6f3-7bc5-44b0-9565-a8942619ef4c"),
+		DisplayName:                  to.Ptr("ContosoVirtualNetworkGateway"),
+		InactivityMinutesBeforeSleep: to.Ptr[int32](120),
+		MaxMemberGatewayCount:        to.Ptr[int32](3),
+		MinMemberGatewayCount:        to.Ptr[int32](1),
+		VirtualNetworkAzureResource: &core.VirtualNetworkAzureResource{
+			ResourceGroupName:  to.Ptr("ContosoResourceGroup"),
+			SubscriptionID:     to.Ptr("879b4ba0-ed17-4ff2-851e-4a2228e00b70"),
+			SubnetName:         to.Ptr("ContosoSubnet"),
+			VirtualNetworkName: to.Ptr("ContosoVirtualNetwork"),
+		},
+	}
+
+	testsuite.serverFactory.GatewaysServer.CreateGateway = func(ctx context.Context, createGatewayRequest core.CreateGatewayRequestClassification, options *core.GatewaysClientCreateGatewayOptions) (resp azfake.Responder[core.GatewaysClientCreateGatewayResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateGatewayRequest, createGatewayRequest))
+		resp = azfake.Responder[core.GatewaysClientCreateGatewayResponse]{}
+		resp.SetResponse(http.StatusCreated, core.GatewaysClientCreateGatewayResponse{}, nil)
+		return
+	}
+
+	_, err = client.CreateGateway(ctx, exampleCreateGatewayRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Virtual network gateway example with invalid parameters"},
+	})
+	exampleCreateGatewayRequest = &core.CreateVirtualNetworkGatewayRequest{
+		Type:                         to.Ptr(core.GatewayTypeVirtualNetwork),
+		CapacityID:                   to.Ptr("ed26b6f3-7bc5-44b0-9565-a8942619ef4c"),
+		DisplayName:                  to.Ptr("ContosoVirtualNetworkGateway"),
+		InactivityMinutesBeforeSleep: to.Ptr[int32](120),
+		MaxMemberGatewayCount:        to.Ptr[int32](5),
+		MinMemberGatewayCount:        to.Ptr[int32](1),
+		NumberOfMemberGateways:       to.Ptr[int32](3),
+		VirtualNetworkAzureResource: &core.VirtualNetworkAzureResource{
+			ResourceGroupName:  to.Ptr("ContosoResourceGroup"),
+			SubscriptionID:     to.Ptr("879b4ba0-ed17-4ff2-851e-4a2228e00b70"),
+			SubnetName:         to.Ptr("ContosoSubnet"),
+			VirtualNetworkName: to.Ptr("ContosoVirtualNetwork"),
+		},
+	}
+
+	testsuite.serverFactory.GatewaysServer.CreateGateway = func(ctx context.Context, createGatewayRequest core.CreateGatewayRequestClassification, options *core.GatewaysClientCreateGatewayOptions) (resp azfake.Responder[core.GatewaysClientCreateGatewayResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateGatewayRequest, createGatewayRequest))
+		resp = azfake.Responder[core.GatewaysClientCreateGatewayResponse]{}
+		resp.SetResponse(http.StatusCreated, core.GatewaysClientCreateGatewayResponse{}, nil)
+		return
+	}
+
 	_, err = client.CreateGateway(ctx, exampleCreateGatewayRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
@@ -10058,6 +10669,42 @@ func (testsuite *FakeTestSuite) TestGateways_UpdateGateway() {
 
 	// From example
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Streaming virtual network gateway example"},
+	})
+	exampleGatewayID = "7015263e-885f-455b-80f7-bbf862899176"
+	exampleUpdateGatewayRequest = &core.UpdateStreamingVirtualNetworkGatewayRequest{
+		Type:        to.Ptr(core.GatewayTypeStreamingVirtualNetwork),
+		DisplayName: to.Ptr("ContosoStreamingVirtualNetworkGateway1"),
+	}
+
+	exampleRes = core.GatewaysClientUpdateGatewayResponse{
+		GatewayClassification: &core.StreamingVirtualNetworkGateway{
+			Type:        to.Ptr(core.GatewayTypeStreamingVirtualNetwork),
+			ID:          to.Ptr("7015263e-885f-455b-80f7-bbf862899176"),
+			DisplayName: to.Ptr("ContosoStreamingVirtualNetworkGateway1"),
+			VirtualNetworkAzureResource: &core.VirtualNetworkAzureResource{
+				ResourceGroupName:  to.Ptr("ContosoResourceGroup"),
+				SubscriptionID:     to.Ptr("879b4ba0-ed17-4ff2-851e-4a2228e00b70"),
+				SubnetName:         to.Ptr("ContosoSubnet"),
+				VirtualNetworkName: to.Ptr("ContosoVirtualNetwork"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.GatewaysServer.UpdateGateway = func(ctx context.Context, gatewayID string, updateGatewayRequest core.UpdateGatewayRequestClassification, options *core.GatewaysClientUpdateGatewayOptions) (resp azfake.Responder[core.GatewaysClientUpdateGatewayResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleGatewayID, gatewayID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateGatewayRequest, updateGatewayRequest))
+		resp = azfake.Responder[core.GatewaysClientUpdateGatewayResponse]{}
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
+		return
+	}
+
+	res, err = client.UpdateGateway(ctx, exampleGatewayID, exampleUpdateGatewayRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Virtual network gateway example"},
 	})
 	exampleGatewayID = "7015263e-885f-455b-80f7-bbf862899176"
@@ -10066,7 +10713,8 @@ func (testsuite *FakeTestSuite) TestGateways_UpdateGateway() {
 		DisplayName:                  to.Ptr("ContosoVirtualNetworkGateway1"),
 		CapacityID:                   to.Ptr("7cf7181f-9457-4178-b488-e7472b02faf4"),
 		InactivityMinutesBeforeSleep: to.Ptr[int32](720),
-		NumberOfMemberGateways:       to.Ptr[int32](5),
+		MaxMemberGatewayCount:        to.Ptr[int32](5),
+		MinMemberGatewayCount:        to.Ptr[int32](1),
 	}
 
 	exampleRes = core.GatewaysClientUpdateGatewayResponse{
@@ -10076,6 +10724,8 @@ func (testsuite *FakeTestSuite) TestGateways_UpdateGateway() {
 			CapacityID:                   to.Ptr("7cf7181f-9457-4178-b488-e7472b02faf4"),
 			DisplayName:                  to.Ptr("ContosoVirtualNetworkGateway1"),
 			InactivityMinutesBeforeSleep: to.Ptr[int32](720),
+			MaxMemberGatewayCount:        to.Ptr[int32](5),
+			MinMemberGatewayCount:        to.Ptr[int32](1),
 			NumberOfMemberGateways:       to.Ptr[int32](5),
 			VirtualNetworkAzureResource: &core.VirtualNetworkAzureResource{
 				ResourceGroupName:  to.Ptr("ContosoResourceGroup"),
@@ -10226,6 +10876,168 @@ func (testsuite *FakeTestSuite) TestGateways_DeleteGatewayMember() {
 	client := testsuite.clientFactory.NewGatewaysClient()
 	_, err = client.DeleteGatewayMember(ctx, exampleGatewayID, exampleGatewayMemberID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestGateways_CheckGatewayStatus() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"On premise data gateway example when gateway cluster is online but one of the gateway member encounters an error"},
+	})
+	var exampleGatewayID string
+	exampleGatewayID = "8e41c4dd-a382-4937-9bf3-695ab881f7c2"
+
+	exampleRes := core.GatewayStatusResponse{
+		ErrorDetails: []core.ErrorResponseDetails{
+			{
+				ErrorCode: to.Ptr("DMTS_GatewayIsDisabled"),
+				Message:   to.Ptr("Gateway is disabled"),
+				RelatedResource: &core.ErrorRelatedResource{
+					ResourceID:   to.Ptr("f5a83d6a-78e2-4834-af05-b586e3aeb7e6"),
+					ResourceType: to.Ptr("Gateway"),
+				},
+			}},
+		GatewayUpgradeState: to.Ptr(core.GatewayUpgradeStateUpToDate),
+		GatewayVersion:      to.Ptr("1.2.3"),
+		Status:              to.Ptr(core.GatewayStatusOnline),
+	}
+
+	testsuite.serverFactory.GatewaysServer.BeginCheckGatewayStatus = func(ctx context.Context, gatewayID string, options *core.GatewaysClientBeginCheckGatewayStatusOptions) (resp azfake.PollerResponder[core.GatewaysClientCheckGatewayStatusResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleGatewayID, gatewayID)
+		resp = azfake.PollerResponder[core.GatewaysClientCheckGatewayStatusResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, core.GatewaysClientCheckGatewayStatusResponse{GatewayStatusResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGatewaysClient()
+	poller, err := client.BeginCheckGatewayStatus(ctx, exampleGatewayID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.GatewayStatusResponse))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Virtual network gateway example"},
+	})
+	exampleGatewayID = "8e41c4dd-a382-4937-9bf3-695ab881f7c2"
+
+	exampleRes = core.GatewayStatusResponse{
+		ErrorDetails: []core.ErrorResponseDetails{
+			{
+				ErrorCode: to.Ptr("DM_GWPipeline_Client_GatewayUnreachable"),
+				Message:   to.Ptr("Gateway is unreachable"),
+				RelatedResource: &core.ErrorRelatedResource{
+					ResourceID:   to.Ptr("8e41c4dd-a382-4937-9bf3-695ab881f7c2"),
+					ResourceType: to.Ptr("Gateway"),
+				},
+			}},
+		GatewayUpgradeState: to.Ptr(core.GatewayUpgradeStateUpToDate),
+		GatewayVersion:      to.Ptr("1.2.3"),
+		Status:              to.Ptr(core.GatewayStatusOffline),
+	}
+
+	testsuite.serverFactory.GatewaysServer.BeginCheckGatewayStatus = func(ctx context.Context, gatewayID string, options *core.GatewaysClientBeginCheckGatewayStatusOptions) (resp azfake.PollerResponder[core.GatewaysClientCheckGatewayStatusResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleGatewayID, gatewayID)
+		resp = azfake.PollerResponder[core.GatewaysClientCheckGatewayStatusResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, core.GatewaysClientCheckGatewayStatusResponse{GatewayStatusResponse: exampleRes}, nil)
+		return
+	}
+
+	poller, err = client.BeginCheckGatewayStatus(ctx, exampleGatewayID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.GatewayStatusResponse))
+}
+
+func (testsuite *FakeTestSuite) TestGateways_CheckGatewayMemberStatus() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Offline gateway member example"},
+	})
+	var exampleGatewayID string
+	var exampleGatewayMemberID string
+	exampleGatewayID = "8e41c4dd-a382-4937-9bf3-695ab881f7c2"
+	exampleGatewayMemberID = "f921ee6b-8feb-4595-8aa7-3ed34338e8b6"
+
+	exampleRes := core.GatewayStatusResponse{
+		ErrorDetails: []core.ErrorResponseDetails{
+			{
+				ErrorCode: to.Ptr("DM_GWPipeline_Client_GatewayUnreachable"),
+				Message:   to.Ptr("Gateway is unreachable"),
+				RelatedResource: &core.ErrorRelatedResource{
+					ResourceID:   to.Ptr("f921ee6b-8feb-4595-8aa7-3ed34338e8b6"),
+					ResourceType: to.Ptr("Gateway"),
+				},
+			}},
+		GatewayUpgradeState: to.Ptr(core.GatewayUpgradeStateUpToDate),
+		GatewayVersion:      to.Ptr("1.2.3"),
+		Status:              to.Ptr(core.GatewayStatusOffline),
+	}
+
+	testsuite.serverFactory.GatewaysServer.BeginCheckGatewayMemberStatus = func(ctx context.Context, gatewayID string, gatewayMemberID string, options *core.GatewaysClientBeginCheckGatewayMemberStatusOptions) (resp azfake.PollerResponder[core.GatewaysClientCheckGatewayMemberStatusResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleGatewayID, gatewayID)
+		testsuite.Require().Equal(exampleGatewayMemberID, gatewayMemberID)
+		resp = azfake.PollerResponder[core.GatewaysClientCheckGatewayMemberStatusResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, core.GatewaysClientCheckGatewayMemberStatusResponse{GatewayStatusResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGatewaysClient()
+	poller, err := client.BeginCheckGatewayMemberStatus(ctx, exampleGatewayID, exampleGatewayMemberID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.GatewayStatusResponse))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Online gateway member example"},
+	})
+	exampleGatewayID = "8e41c4dd-a382-4937-9bf3-695ab881f7c2"
+	exampleGatewayMemberID = "f921ee6b-8feb-4595-8aa7-3ed34338e8b6"
+
+	exampleRes = core.GatewayStatusResponse{
+		GatewayUpgradeState: to.Ptr(core.GatewayUpgradeStateUpToDate),
+		GatewayVersion:      to.Ptr("1.2.3"),
+		Status:              to.Ptr(core.GatewayStatusOnline),
+	}
+
+	testsuite.serverFactory.GatewaysServer.BeginCheckGatewayMemberStatus = func(ctx context.Context, gatewayID string, gatewayMemberID string, options *core.GatewaysClientBeginCheckGatewayMemberStatusOptions) (resp azfake.PollerResponder[core.GatewaysClientCheckGatewayMemberStatusResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleGatewayID, gatewayID)
+		testsuite.Require().Equal(exampleGatewayMemberID, gatewayMemberID)
+		resp = azfake.PollerResponder[core.GatewaysClientCheckGatewayMemberStatusResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, core.GatewaysClientCheckGatewayMemberStatusResponse{GatewayStatusResponse: exampleRes}, nil)
+		return
+	}
+
+	poller, err = client.BeginCheckGatewayMemberStatus(ctx, exampleGatewayID, exampleGatewayMemberID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.GatewayStatusResponse))
+}
+
+func (testsuite *FakeTestSuite) TestGateways_RestartGateway() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+	var exampleGatewayID string
+	exampleGatewayID = "8e41c4dd-a382-4937-9bf3-695ab881f7c2"
+
+	testsuite.serverFactory.GatewaysServer.BeginRestartGateway = func(ctx context.Context, gatewayID string, options *core.GatewaysClientBeginRestartGatewayOptions) (resp azfake.PollerResponder[core.GatewaysClientRestartGatewayResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleGatewayID, gatewayID)
+		resp = azfake.PollerResponder[core.GatewaysClientRestartGatewayResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, core.GatewaysClientRestartGatewayResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGatewaysClient()
+	poller, err := client.BeginRestartGateway(ctx, exampleGatewayID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestGateways_ListGatewayRoleAssignments() {
@@ -10491,6 +11303,28 @@ func (testsuite *FakeTestSuite) TestGateways_DeleteGatewayRoleAssignment() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
+func (testsuite *FakeTestSuite) TestGateways_ShutdownGateway() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example"},
+	})
+	var exampleGatewayID string
+	exampleGatewayID = "8e41c4dd-a382-4937-9bf3-695ab881f7c2"
+
+	testsuite.serverFactory.GatewaysServer.BeginShutdownGateway = func(ctx context.Context, gatewayID string, options *core.GatewaysClientBeginShutdownGatewayOptions) (resp azfake.PollerResponder[core.GatewaysClientShutdownGatewayResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleGatewayID, gatewayID)
+		resp = azfake.PollerResponder[core.GatewaysClientShutdownGatewayResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, core.GatewaysClientShutdownGatewayResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGatewaysClient()
+	poller, err := client.BeginShutdownGateway(ctx, exampleGatewayID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
 func (testsuite *FakeTestSuite) TestCatalog_Search() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -10545,4 +11379,102 @@ func (testsuite *FakeTestSuite) TestCatalog_Search() {
 	res, err := client.Search(ctx, exampleCatalogQueryRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.CatalogQueryResponse))
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaceRelations_ListWorkspaceRelations() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List workspace relations example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "66666666-6666-6666-6666-666666666666"
+
+	exampleRes := core.WorkspaceRelations{
+		Value: []core.WorkspaceRelation{
+			{
+				ID:                 to.Ptr("ffffffff-ffff-ffff-ffff-ffffffffffff"),
+				RelatedWorkspaceID: to.Ptr("88888888-8888-8888-8888-888888888888"),
+				RelationType:       to.Ptr(core.WorkspaceRelationTypeBase),
+				WorkspaceID:        to.Ptr("66666666-6666-6666-6666-666666666666"),
+			},
+			{
+				ID:                 to.Ptr("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+				RelatedWorkspaceID: to.Ptr("22222222-2222-2222-2222-222222222222"),
+				RelationType:       to.Ptr(core.WorkspaceRelationTypeRelatedWorkspace),
+				WorkspaceID:        to.Ptr("66666666-6666-6666-6666-666666666666"),
+			},
+			{
+				ID:                 to.Ptr("cccccccc-cccc-cccc-cccc-cccccccccccc"),
+				RelatedWorkspaceID: to.Ptr("44444444-4444-4444-4444-444444444444"),
+				RelationType:       to.Ptr(core.WorkspaceRelationTypeRelatedWorkspace),
+				WorkspaceID:        to.Ptr("66666666-6666-6666-6666-666666666666"),
+			}},
+	}
+
+	testsuite.serverFactory.WorkspaceRelationsServer.NewListWorkspaceRelationsPager = func(workspaceID string, options *core.WorkspaceRelationsClientListWorkspaceRelationsOptions) (resp azfake.PagerResponder[core.WorkspaceRelationsClientListWorkspaceRelationsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.PagerResponder[core.WorkspaceRelationsClientListWorkspaceRelationsResponse]{}
+		resp.AddPage(http.StatusOK, core.WorkspaceRelationsClientListWorkspaceRelationsResponse{WorkspaceRelations: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspaceRelationsClient()
+	pager := client.NewListWorkspaceRelationsPager(exampleWorkspaceID, &core.WorkspaceRelationsClientListWorkspaceRelationsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.WorkspaceRelations))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaceRelations_CreateWorkspaceRelation() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a workspace relation example"},
+	})
+	var exampleWorkspaceID string
+	var exampleCreateWorkspaceRelationRequest core.CreateWorkspaceRelationRequest
+	exampleWorkspaceID = "55555555-5555-5555-5555-555555555555"
+	exampleCreateWorkspaceRelationRequest = core.CreateWorkspaceRelationRequest{
+		RelatedWorkspaceID: to.Ptr("33333333-3333-3333-3333-333333333333"),
+		RelationType:       to.Ptr(core.WorkspaceRelationTypeBase),
+	}
+
+	testsuite.serverFactory.WorkspaceRelationsServer.CreateWorkspaceRelation = func(ctx context.Context, workspaceID string, createWorkspaceRelationRequest core.CreateWorkspaceRelationRequest, options *core.WorkspaceRelationsClientCreateWorkspaceRelationOptions) (resp azfake.Responder[core.WorkspaceRelationsClientCreateWorkspaceRelationResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateWorkspaceRelationRequest, createWorkspaceRelationRequest))
+		resp = azfake.Responder[core.WorkspaceRelationsClientCreateWorkspaceRelationResponse]{}
+		resp.SetResponse(http.StatusCreated, core.WorkspaceRelationsClientCreateWorkspaceRelationResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspaceRelationsClient()
+	_, err = client.CreateWorkspaceRelation(ctx, exampleWorkspaceID, exampleCreateWorkspaceRelationRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestWorkspaceRelations_DeleteWorkspaceRelation() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete a workspace relation example"},
+	})
+	var exampleWorkspaceID string
+	var exampleWorkspaceRelationID string
+	exampleWorkspaceID = "55555555-5555-5555-5555-555555555555"
+	exampleWorkspaceRelationID = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+
+	testsuite.serverFactory.WorkspaceRelationsServer.DeleteWorkspaceRelation = func(ctx context.Context, workspaceID string, workspaceRelationID string, options *core.WorkspaceRelationsClientDeleteWorkspaceRelationOptions) (resp azfake.Responder[core.WorkspaceRelationsClientDeleteWorkspaceRelationResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleWorkspaceRelationID, workspaceRelationID)
+		resp = azfake.Responder[core.WorkspaceRelationsClientDeleteWorkspaceRelationResponse]{}
+		resp.SetResponse(http.StatusOK, core.WorkspaceRelationsClientDeleteWorkspaceRelationResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspaceRelationsClient()
+	_, err = client.DeleteWorkspaceRelation(ctx, exampleWorkspaceID, exampleWorkspaceRelationID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
 }

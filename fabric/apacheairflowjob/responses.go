@@ -14,6 +14,11 @@ type ComputeClientGetApacheAirflowJobComputeBetaResponse struct {
 	AirflowComputeResponse
 }
 
+// ComputeClientUpdateApacheAirflowJobComputeBetaResponse contains the response from method ComputeClient.BeginUpdateApacheAirflowJobComputeBeta.
+type ComputeClientUpdateApacheAirflowJobComputeBetaResponse struct {
+	// placeholder for future response values
+}
+
 // EnvironmentClientGetApacheAirflowJobEnvironmentBetaResponse contains the response from method EnvironmentClient.GetApacheAirflowJobEnvironmentBeta.
 type EnvironmentClientGetApacheAirflowJobEnvironmentBetaResponse struct {
 	// Apache Airflow environment status response.

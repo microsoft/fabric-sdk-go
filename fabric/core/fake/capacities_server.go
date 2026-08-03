@@ -7,10 +7,12 @@
 package fake
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strings"
 
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
@@ -23,6 +25,10 @@ import (
 
 // CapacitiesServer is a fake server for instances of the core.CapacitiesClient type.
 type CapacitiesServer struct {
+	// GetCapacity is the fake for method CapacitiesClient.GetCapacity
+	// HTTP status codes to indicate success: http.StatusOK
+	GetCapacity func(ctx context.Context, capacityID string, options *core.CapacitiesClientGetCapacityOptions) (resp azfake.Responder[core.CapacitiesClientGetCapacityResponse], errResp azfake.ErrorResponder)
+
 	// NewListCapacitiesPager is the fake for method CapacitiesClient.NewListCapacitiesPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListCapacitiesPager func(options *core.CapacitiesClientListCapacitiesOptions) (resp azfake.PagerResponder[core.CapacitiesClientListCapacitiesResponse])
@@ -70,6 +76,8 @@ func (c *CapacitiesServerTransport) dispatchToMethodFake(req *http.Request, meth
 		}
 		if !intercepted {
 			switch method {
+			case "CapacitiesClient.GetCapacity":
+				res.resp, res.err = c.dispatchGetCapacity(req)
 			case "CapacitiesClient.NewListCapacitiesPager":
 				res.resp, res.err = c.dispatchNewListCapacitiesPager(req)
 			default:
@@ -89,6 +97,35 @@ func (c *CapacitiesServerTransport) dispatchToMethodFake(req *http.Request, meth
 	case res := <-resultChan:
 		return res.resp, res.err
 	}
+}
+
+func (c *CapacitiesServerTransport) dispatchGetCapacity(req *http.Request) (*http.Response, error) {
+	if c.srv.GetCapacity == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetCapacity not implemented")}
+	}
+	const regexStr = `/v1/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := c.srv.GetCapacity(req.Context(), capacityIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).Capacity, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 func (c *CapacitiesServerTransport) dispatchNewListCapacitiesPager(req *http.Request) (*http.Response, error) {

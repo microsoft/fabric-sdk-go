@@ -8,6 +8,75 @@ package lakehouse
 
 import "encoding/json"
 
+func unmarshalCurrentLakehouseExecutionContextClassification(rawMsg json.RawMessage) (CurrentLakehouseExecutionContextClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b CurrentLakehouseExecutionContextClassification
+	switch m["mode"] {
+	case string(ExecutionContextModeAll):
+		b = &CurrentLakehouseExecutionContextAll{}
+	case string(ExecutionContextModeSelected):
+		b = &CurrentLakehouseExecutionContextSelected{}
+	default:
+		b = &CurrentLakehouseExecutionContext{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalExtendedLineageExecutionContextRequestClassification(rawMsg json.RawMessage) (ExtendedLineageExecutionContextRequestClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b ExtendedLineageExecutionContextRequestClassification
+	switch m["mode"] {
+	case string(ExecutionContextModeAll):
+		b = &ExtendedLineageExecutionContextRequestAll{}
+	case string(ExecutionContextModeSelected):
+		b = &ExtendedLineageExecutionContextRequestSelected{}
+	default:
+		b = &ExtendedLineageExecutionContextRequest{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalExtendedLineageExecutionContextResponseClassification(rawMsg json.RawMessage) (ExtendedLineageExecutionContextResponseClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b ExtendedLineageExecutionContextResponseClassification
+	switch m["mode"] {
+	case string(ExecutionContextModeAll):
+		b = &ExtendedLineageExecutionContextResponseAll{}
+	case string(ExecutionContextModeSelected):
+		b = &ExtendedLineageExecutionContextResponseSelected{}
+	default:
+		b = &ExtendedLineageExecutionContextResponse{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
 func unmarshalFileFormatOptionsClassification(rawMsg json.RawMessage) (FileFormatOptionsClassification, error) {
 	if rawMsg == nil || string(rawMsg) == "null" {
 		return nil, nil
@@ -29,6 +98,48 @@ func unmarshalFileFormatOptionsClassification(rawMsg json.RawMessage) (FileForma
 		return nil, err
 	}
 	return b, nil
+}
+
+func unmarshalItemReferenceClassification(rawMsg json.RawMessage) (ItemReferenceClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b ItemReferenceClassification
+	switch m["referenceType"] {
+	case string(ItemReferenceTypeByID):
+		b = &ItemReferenceByID{}
+	case string(ItemReferenceTypeByVariable):
+		b = &ItemReferenceByVariable{}
+	default:
+		b = &ItemReference{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalItemReferenceClassificationArray(rawMsg json.RawMessage) ([]ItemReferenceClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var rawMessages []json.RawMessage
+	if err := json.Unmarshal(rawMsg, &rawMessages); err != nil {
+		return nil, err
+	}
+	fArray := make([]ItemReferenceClassification, len(rawMessages))
+	for index, rawMessage := range rawMessages {
+		f, err := unmarshalItemReferenceClassification(rawMessage)
+		if err != nil {
+			return nil, err
+		}
+		fArray[index] = f
+	}
+	return fArray, nil
 }
 
 func unmarshalMonthlyOccurrenceClassification(rawMsg json.RawMessage) (MonthlyOccurrenceClassification, error) {

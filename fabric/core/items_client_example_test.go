@@ -1368,3 +1368,89 @@ func ExampleItemsClient_BeginAssociateIdentityBeta() {
 	// 	}},
 	// }
 }
+
+// Generated from example definition
+func ExampleItemsClient_GetDownstreamRelationsBeta() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewItemsClient().GetDownstreamRelationsBeta(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "9b218778-e7a5-4d73-8187-f10824047715", true, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.RelationsResponse = core.RelationsResponse{
+	// 	Items: []core.RelationsRelatedItem{
+	// 		{
+	// 			Type: to.Ptr(core.ItemTypeReport),
+	// 			DisplayName: to.Ptr("Q4 Sales Dashboard"),
+	// 			ID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+	// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+	// 		},
+	// 		{
+	// 			Type: to.Ptr(core.ItemTypeSemanticModel),
+	// 			DisplayName: to.Ptr("Sales Semantic Model"),
+	// 			ID: to.Ptr("9b218778-e7a5-4d73-8187-f10824047715"),
+	// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+	// 	}},
+	// 	Relations: []core.RelationsEdge{
+	// 		{
+	// 			DependentOnItemID: to.Ptr("9b218778-e7a5-4d73-8187-f10824047715"),
+	// 			ItemID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+	// 			RelationType: to.Ptr(core.RelationTypePushData),
+	// 	}},
+	// 	Workspaces: []core.RelationsWorkspace{
+	// 		{
+	// 			DisplayName: to.Ptr("Finance Analytics Workspace"),
+	// 			ID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+	// 	}},
+	// }
+}
+
+// Generated from example definition
+func ExampleItemsClient_GetUpstreamRelationsBeta() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewItemsClient().GetUpstreamRelationsBeta(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "3546052c-ae64-4526-b1a8-52af7761426f", true, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.RelationsResponse = core.RelationsResponse{
+	// 	Items: []core.RelationsRelatedItem{
+	// 		{
+	// 			Type: to.Ptr(core.ItemTypeLakehouse),
+	// 			DisplayName: to.Ptr("Enterprise Sales Lakehouse"),
+	// 			ID: to.Ptr("9b218778-e7a5-4d73-8187-f10824047715"),
+	// 			WorkspaceID: to.Ptr("9a1f7d8b-4f9c-4c1e-b8e7-3d6c2b0a5f41"),
+	// 	}},
+	// 	Relations: []core.RelationsEdge{
+	// 		{
+	// 			DependentOnItemID: to.Ptr("9b218778-e7a5-4d73-8187-f10824047715"),
+	// 			ItemID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+	// 			RelationType: to.Ptr(core.RelationTypePushData),
+	// 	}},
+	// 	Workspaces: []core.RelationsWorkspace{
+	// 		{
+	// 			DisplayName: to.Ptr("Data Engineering Workspace"),
+	// 			ID: to.Ptr("9a1f7d8b-4f9c-4c1e-b8e7-3d6c2b0a5f41"),
+	// 	}},
+	// }
+}

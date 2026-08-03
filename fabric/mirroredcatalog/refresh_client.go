@@ -36,7 +36,7 @@ type RefreshClient struct {
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Refreshes the catalog metadata from the source Iceberg REST Catalog, synchronizing namespace and table changes.
 // PERMISSIONS The caller must have read and write permissions for the mirrored catalog.
-// REQUIRED DELEGATED SCOPES Item.ReadWrite.All or MirroredCatalog.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -61,7 +61,7 @@ func (client *RefreshClient) BeginRefreshCatalogMetadataBeta(ctx context.Context
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Refreshes the catalog metadata from the source Iceberg REST Catalog, synchronizing namespace and table changes.
 // PERMISSIONS The caller must have read and write permissions for the mirrored catalog.
-// REQUIRED DELEGATED SCOPES Item.ReadWrite.All or MirroredCatalog.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -127,7 +127,7 @@ func (client *RefreshClient) refreshCatalogMetadataBetaCreateRequest(ctx context
 //
 // PERMISSIONS The caller must have read and write permissions for the mirrored catalog.
 //
-// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All or MirroredCatalog.ReadWrite.All
+// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

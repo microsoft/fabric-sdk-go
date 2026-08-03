@@ -28,7 +28,7 @@ type BackgroundJobsClient struct {
 }
 
 // RunOnDemandRefreshGraph - > [!NOTE] GraphModel item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// REQUIRED DELEGATED SCOPES GraphModel.Execute.All or Item.Execute.All
+// REQUIRED DELEGATED SCOPES Item.Execute.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]

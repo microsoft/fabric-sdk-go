@@ -370,3 +370,60 @@ func (testsuite *FakeTestSuite) TestItems_UpdateCopyJobDefinition() {
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
+
+func (testsuite *FakeTestSuite) TestItems_ResetCopyJob() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Reset all entities example"},
+	})
+	var exampleWorkspaceID string
+	var exampleCopyJobID string
+	var exampleResetCopyJobRequest copyjob.EntityResetPayload
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCopyJobID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleResetCopyJobRequest = copyjob.EntityResetPayload{
+		ResetAllCopyJobEntities: to.Ptr(true),
+	}
+
+	testsuite.serverFactory.ItemsServer.ResetCopyJob = func(ctx context.Context, workspaceID string, copyJobID string, resetCopyJobRequest copyjob.EntityResetPayload, options *copyjob.ItemsClientResetCopyJobOptions) (resp azfake.Responder[copyjob.ItemsClientResetCopyJobResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleCopyJobID, copyJobID)
+		testsuite.Require().True(reflect.DeepEqual(exampleResetCopyJobRequest, resetCopyJobRequest))
+		resp = azfake.Responder[copyjob.ItemsClientResetCopyJobResponse]{}
+		resp.SetResponse(http.StatusOK, copyjob.ItemsClientResetCopyJobResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	_, err = client.ResetCopyJob(ctx, exampleWorkspaceID, exampleCopyJobID, exampleResetCopyJobRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Reset selected copyJobEntities example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCopyJobID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleResetCopyJobRequest = copyjob.EntityResetPayload{
+		CopyJobEntitiesToReset: []copyjob.EntityReset{
+			{
+				CopyJobEntityID: to.Ptr("b1b04262-1a57-412b-8b92-117832e4dad0"),
+			},
+			{
+				CopyJobEntityID: to.Ptr("7351d4be-fc32-4799-a6a4-f2b9572e1674"),
+			}},
+		ResetAllCopyJobEntities: to.Ptr(false),
+	}
+
+	testsuite.serverFactory.ItemsServer.ResetCopyJob = func(ctx context.Context, workspaceID string, copyJobID string, resetCopyJobRequest copyjob.EntityResetPayload, options *copyjob.ItemsClientResetCopyJobOptions) (resp azfake.Responder[copyjob.ItemsClientResetCopyJobResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleCopyJobID, copyJobID)
+		testsuite.Require().True(reflect.DeepEqual(exampleResetCopyJobRequest, resetCopyJobRequest))
+		resp = azfake.Responder[copyjob.ItemsClientResetCopyJobResponse]{}
+		resp.SetResponse(http.StatusOK, copyjob.ItemsClientResetCopyJobResponse{}, nil)
+		return
+	}
+
+	_, err = client.ResetCopyJob(ctx, exampleWorkspaceID, exampleCopyJobID, exampleResetCopyJobRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}

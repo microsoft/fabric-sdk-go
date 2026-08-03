@@ -116,6 +116,20 @@ func (e *EntireTenantPrincipal) GetPrincipal() *Principal {
 	}
 }
 
+// EntityReset - The Id of a CopyJobEntity to reset.
+type EntityReset struct {
+	CopyJobEntityID *string
+}
+
+// EntityResetPayload - A list of CopyJobEntities to reset.
+type EntityResetPayload struct {
+	// A list of CopyJob entities to reset.
+	CopyJobEntitiesToReset []EntityReset
+
+	// Whether to reset all CopyJob entities.
+	ResetAllCopyJobEntities *bool
+}
+
 // GroupPrincipal - Represents a security group.
 type GroupPrincipal struct {
 	// REQUIRED; The principal's ID.

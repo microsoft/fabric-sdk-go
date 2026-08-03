@@ -6,10 +6,38 @@
 
 package paginatedreport
 
+// ItemsClientCreatePaginatedReportResponse contains the response from method ItemsClient.BeginCreatePaginatedReport.
+type ItemsClientCreatePaginatedReportResponse struct {
+	// A paginated report object.
+	PaginatedReport
+}
+
+// ItemsClientDeletePaginatedReportResponse contains the response from method ItemsClient.DeletePaginatedReport.
+type ItemsClientDeletePaginatedReportResponse struct {
+	// placeholder for future response values
+}
+
+// ItemsClientGetPaginatedReportDefinitionResponse contains the response from method ItemsClient.BeginGetPaginatedReportDefinition.
+type ItemsClientGetPaginatedReportDefinitionResponse struct {
+	// Paginated report public definition response.
+	DefinitionResponse
+}
+
+// ItemsClientGetPaginatedReportResponse contains the response from method ItemsClient.GetPaginatedReport.
+type ItemsClientGetPaginatedReportResponse struct {
+	// A paginated report object.
+	PaginatedReport
+}
+
 // ItemsClientListPaginatedReportsResponse contains the response from method ItemsClient.NewListPaginatedReportsPager.
 type ItemsClientListPaginatedReportsResponse struct {
 	// A list of paginated reports.
 	PaginatedReports
+}
+
+// ItemsClientUpdatePaginatedReportDefinitionResponse contains the response from method ItemsClient.BeginUpdatePaginatedReportDefinition.
+type ItemsClientUpdatePaginatedReportDefinitionResponse struct {
+	// placeholder for future response values
 }
 
 // ItemsClientUpdatePaginatedReportResponse contains the response from method ItemsClient.UpdatePaginatedReport.

@@ -277,6 +277,63 @@ func (client *WorkspacesClient) assignToDomainCreateRequest(ctx context.Context,
 	return req, nil
 }
 
+// AssignWorkspaceEncryption - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// Enables CMK encryption for the workspace or rotates the encryption key for the workspace.
+// PERMISSIONS The caller must have an admin workspace role.
+// REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - assignWorkspaceEncryptionRequest - Assign workspace encryption request payload.
+//   - options - WorkspacesClientAssignWorkspaceEncryptionOptions contains the optional parameters for the WorkspacesClient.AssignWorkspaceEncryption
+//     method.
+func (client *WorkspacesClient) AssignWorkspaceEncryption(ctx context.Context, workspaceID string, assignWorkspaceEncryptionRequest AssignWorkspaceEncryptionRequest, options *WorkspacesClientAssignWorkspaceEncryptionOptions) (WorkspacesClientAssignWorkspaceEncryptionResponse, error) {
+	var err error
+	const operationName = "core.WorkspacesClient.AssignWorkspaceEncryption"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.assignWorkspaceEncryptionCreateRequest(ctx, workspaceID, assignWorkspaceEncryptionRequest, options)
+	if err != nil {
+		return WorkspacesClientAssignWorkspaceEncryptionResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientAssignWorkspaceEncryptionResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return WorkspacesClientAssignWorkspaceEncryptionResponse{}, err
+	}
+	return WorkspacesClientAssignWorkspaceEncryptionResponse{}, nil
+}
+
+// assignWorkspaceEncryptionCreateRequest creates the AssignWorkspaceEncryption request.
+func (client *WorkspacesClient) assignWorkspaceEncryptionCreateRequest(ctx context.Context, workspaceID string, assignWorkspaceEncryptionRequest AssignWorkspaceEncryptionRequest, _ *WorkspacesClientAssignWorkspaceEncryptionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/encryption/assign"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, assignWorkspaceEncryptionRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // CreateWorkspace - PERMISSIONS
 // * The caller must have permission to create workspaces granted by Fabric administrator. For more information see: create
 // workspaces
@@ -523,6 +580,68 @@ func (client *WorkspacesClient) deprovisionIdentityCreateRequest(ctx context.Con
 	return req, nil
 }
 
+// GetFirewallRules - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must have viewer or higher workspace role.
+// REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - Unique identifier of the workspace whose firewall rules are being queried.
+//   - options - WorkspacesClientGetFirewallRulesOptions contains the optional parameters for the WorkspacesClient.GetFirewallRules
+//     method.
+func (client *WorkspacesClient) GetFirewallRules(ctx context.Context, workspaceID string, options *WorkspacesClientGetFirewallRulesOptions) (WorkspacesClientGetFirewallRulesResponse, error) {
+	var err error
+	const operationName = "core.WorkspacesClient.GetFirewallRules"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getFirewallRulesCreateRequest(ctx, workspaceID, options)
+	if err != nil {
+		return WorkspacesClientGetFirewallRulesResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientGetFirewallRulesResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return WorkspacesClientGetFirewallRulesResponse{}, err
+	}
+	resp, err := client.getFirewallRulesHandleResponse(httpResp)
+	return resp, err
+}
+
+// getFirewallRulesCreateRequest creates the GetFirewallRules request.
+func (client *WorkspacesClient) getFirewallRulesCreateRequest(ctx context.Context, workspaceID string, _ *WorkspacesClientGetFirewallRulesOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/networking/communicationPolicy/inbound/firewall"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getFirewallRulesHandleResponse handles the GetFirewallRules response.
+func (client *WorkspacesClient) getFirewallRulesHandleResponse(resp *http.Response) (WorkspacesClientGetFirewallRulesResponse, error) {
+	result := WorkspacesClientGetFirewallRulesResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.InboundFirewallConfiguration); err != nil {
+		return WorkspacesClientGetFirewallRulesResponse{}, err
+	}
+	return result, nil
+}
+
 // GetGitOutboundPolicy - In cases the workspace restricts outbound policy, a workspace admin needs to allow the use of Git
 // integration on the specified workspace.
 // PERMISSIONS The caller must have viewer or higher workspace role.
@@ -646,6 +765,69 @@ func (client *WorkspacesClient) getInboundAzureResourceRulesHandleResponse(resp 
 	result := WorkspacesClientGetInboundAzureResourceRulesResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.WorkspaceInboundAzureResourceRules); err != nil {
 		return WorkspacesClientGetInboundAzureResourceRulesResponse{}, err
+	}
+	return result, nil
+}
+
+// GetInboundExternalDataSharesPolicy - PERMISSIONS The caller must have viewer or higher workspace role.
+// REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - options - WorkspacesClientGetInboundExternalDataSharesPolicyOptions contains the optional parameters for the WorkspacesClient.GetInboundExternalDataSharesPolicy
+//     method.
+func (client *WorkspacesClient) GetInboundExternalDataSharesPolicy(ctx context.Context, workspaceID string, options *WorkspacesClientGetInboundExternalDataSharesPolicyOptions) (WorkspacesClientGetInboundExternalDataSharesPolicyResponse, error) {
+	var err error
+	const operationName = "core.WorkspacesClient.GetInboundExternalDataSharesPolicy"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getInboundExternalDataSharesPolicyCreateRequest(ctx, workspaceID, options)
+	if err != nil {
+		return WorkspacesClientGetInboundExternalDataSharesPolicyResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientGetInboundExternalDataSharesPolicyResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return WorkspacesClientGetInboundExternalDataSharesPolicyResponse{}, err
+	}
+	resp, err := client.getInboundExternalDataSharesPolicyHandleResponse(httpResp)
+	return resp, err
+}
+
+// getInboundExternalDataSharesPolicyCreateRequest creates the GetInboundExternalDataSharesPolicy request.
+func (client *WorkspacesClient) getInboundExternalDataSharesPolicyCreateRequest(ctx context.Context, workspaceID string, _ *WorkspacesClientGetInboundExternalDataSharesPolicyOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/networking/communicationPolicy/inbound/externalDataShares"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getInboundExternalDataSharesPolicyHandleResponse handles the GetInboundExternalDataSharesPolicy response.
+func (client *WorkspacesClient) getInboundExternalDataSharesPolicyHandleResponse(resp *http.Response) (WorkspacesClientGetInboundExternalDataSharesPolicyResponse, error) {
+	result := WorkspacesClientGetInboundExternalDataSharesPolicyResponse{}
+	if val := resp.Header.Get("ETag"); val != "" {
+		result.ETag = &val
+	}
+	if err := runtime.UnmarshalAsJSON(resp, &result.WorkspaceInboundExternalDataSharesPolicy); err != nil {
+		return WorkspacesClientGetInboundExternalDataSharesPolicyResponse{}, err
 	}
 	return result, nil
 }
@@ -909,6 +1091,69 @@ func (client *WorkspacesClient) getWorkspaceHandleResponse(resp *http.Response) 
 	result := WorkspacesClientGetWorkspaceResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.WorkspaceInfo); err != nil {
 		return WorkspacesClientGetWorkspaceResponse{}, err
+	}
+	return result, nil
+}
+
+// GetWorkspaceEncryption - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// Returns the CMK encryption settings and status for the specified workspace.
+// PERMISSIONS The caller must have viewer or higher workspace role.
+// REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - options - WorkspacesClientGetWorkspaceEncryptionOptions contains the optional parameters for the WorkspacesClient.GetWorkspaceEncryption
+//     method.
+func (client *WorkspacesClient) GetWorkspaceEncryption(ctx context.Context, workspaceID string, options *WorkspacesClientGetWorkspaceEncryptionOptions) (WorkspacesClientGetWorkspaceEncryptionResponse, error) {
+	var err error
+	const operationName = "core.WorkspacesClient.GetWorkspaceEncryption"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getWorkspaceEncryptionCreateRequest(ctx, workspaceID, options)
+	if err != nil {
+		return WorkspacesClientGetWorkspaceEncryptionResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientGetWorkspaceEncryptionResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return WorkspacesClientGetWorkspaceEncryptionResponse{}, err
+	}
+	resp, err := client.getWorkspaceEncryptionHandleResponse(httpResp)
+	return resp, err
+}
+
+// getWorkspaceEncryptionCreateRequest creates the GetWorkspaceEncryption request.
+func (client *WorkspacesClient) getWorkspaceEncryptionCreateRequest(ctx context.Context, workspaceID string, _ *WorkspacesClientGetWorkspaceEncryptionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/encryption"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getWorkspaceEncryptionHandleResponse handles the GetWorkspaceEncryption response.
+func (client *WorkspacesClient) getWorkspaceEncryptionHandleResponse(resp *http.Response) (WorkspacesClientGetWorkspaceEncryptionResponse, error) {
+	result := WorkspacesClientGetWorkspaceEncryptionResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.WorkspaceEncryptionDetail); err != nil {
+		return WorkspacesClientGetWorkspaceEncryptionResponse{}, err
 	}
 	return result, nil
 }
@@ -1179,6 +1424,120 @@ func (client *WorkspacesClient) provisionIdentityCreateRequest(ctx context.Conte
 	return req, nil
 }
 
+// ResetWorkspaceEncryption - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// After reset, the workspace data remains encrypted using Fabric's default Microsoft-managed keys.
+// PERMISSIONS The caller must have an admin workspace role.
+// REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - options - WorkspacesClientResetWorkspaceEncryptionOptions contains the optional parameters for the WorkspacesClient.ResetWorkspaceEncryption
+//     method.
+func (client *WorkspacesClient) ResetWorkspaceEncryption(ctx context.Context, workspaceID string, options *WorkspacesClientResetWorkspaceEncryptionOptions) (WorkspacesClientResetWorkspaceEncryptionResponse, error) {
+	var err error
+	const operationName = "core.WorkspacesClient.ResetWorkspaceEncryption"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.resetWorkspaceEncryptionCreateRequest(ctx, workspaceID, options)
+	if err != nil {
+		return WorkspacesClientResetWorkspaceEncryptionResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientResetWorkspaceEncryptionResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return WorkspacesClientResetWorkspaceEncryptionResponse{}, err
+	}
+	return WorkspacesClientResetWorkspaceEncryptionResponse{}, nil
+}
+
+// resetWorkspaceEncryptionCreateRequest creates the ResetWorkspaceEncryption request.
+func (client *WorkspacesClient) resetWorkspaceEncryptionCreateRequest(ctx context.Context, workspaceID string, _ *WorkspacesClientResetWorkspaceEncryptionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/encryption/reset"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// SetFirewallRules - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
+// only. It may change based on feedback and is not recommended for production use.
+// [!NOTE] Firewall rules are only enforced if the workspace’s network communication policy has inbound.publicAccessRules.defaultAction
+// set to Deny. If public access is not blocked on workspace, API
+// calls to this workspace will not be restricted.
+// [!NOTE] This API uses the PUT method and will overwrite all IP firewall rules for the workspace. Always run Get first and
+// provide all IP firewall rules in the request body.
+// PERMISSIONS The caller must have admin workspace role.
+// REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - Unique identifier of the workspace to update.
+//   - firewallRulesRequest - Request payload for setting IP firewall rules for the workspace.
+//   - options - WorkspacesClientSetFirewallRulesOptions contains the optional parameters for the WorkspacesClient.SetFirewallRules
+//     method.
+func (client *WorkspacesClient) SetFirewallRules(ctx context.Context, workspaceID string, firewallRulesRequest InboundFirewallConfiguration, options *WorkspacesClientSetFirewallRulesOptions) (WorkspacesClientSetFirewallRulesResponse, error) {
+	var err error
+	const operationName = "core.WorkspacesClient.SetFirewallRules"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.setFirewallRulesCreateRequest(ctx, workspaceID, firewallRulesRequest, options)
+	if err != nil {
+		return WorkspacesClientSetFirewallRulesResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientSetFirewallRulesResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return WorkspacesClientSetFirewallRulesResponse{}, err
+	}
+	return WorkspacesClientSetFirewallRulesResponse{}, nil
+}
+
+// setFirewallRulesCreateRequest creates the SetFirewallRules request.
+func (client *WorkspacesClient) setFirewallRulesCreateRequest(ctx context.Context, workspaceID string, firewallRulesRequest InboundFirewallConfiguration, _ *WorkspacesClientSetFirewallRulesOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/networking/communicationPolicy/inbound/firewall"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPut, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, firewallRulesRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // SetGitOutboundPolicy - This API uses the PUT method and overwrites all settings. When the workspace restricts outbound
 // policy, a workspace admin needs to allow the use of Git integration on the specified workspace. When
 // there's no outbound restriction on the workspace, changing this property will fail and will not impact the Git integration
@@ -1309,6 +1668,76 @@ func (client *WorkspacesClient) setInboundAzureResourceRulesCreateRequest(ctx co
 		return nil, err
 	}
 	return req, nil
+}
+
+// SetInboundExternalDataSharesPolicy - > [!NOTE] This API is part of a Preview release and is provided for evaluation and
+// development purposes only. It may change based on feedback and is not recommended for production use.
+// PERMISSIONS The caller must have admin workspace role.
+// REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - workspaceInboundExternalDataSharesPolicy - The request payload for setting the inbound External Data Shares bypass policy
+//     for the workspace.
+//   - options - WorkspacesClientSetInboundExternalDataSharesPolicyOptions contains the optional parameters for the WorkspacesClient.SetInboundExternalDataSharesPolicy
+//     method.
+func (client *WorkspacesClient) SetInboundExternalDataSharesPolicy(ctx context.Context, workspaceID string, workspaceInboundExternalDataSharesPolicy WorkspaceInboundExternalDataSharesPolicy, options *WorkspacesClientSetInboundExternalDataSharesPolicyOptions) (WorkspacesClientSetInboundExternalDataSharesPolicyResponse, error) {
+	var err error
+	const operationName = "core.WorkspacesClient.SetInboundExternalDataSharesPolicy"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.setInboundExternalDataSharesPolicyCreateRequest(ctx, workspaceID, workspaceInboundExternalDataSharesPolicy, options)
+	if err != nil {
+		return WorkspacesClientSetInboundExternalDataSharesPolicyResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return WorkspacesClientSetInboundExternalDataSharesPolicyResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return WorkspacesClientSetInboundExternalDataSharesPolicyResponse{}, err
+	}
+	resp, err := client.setInboundExternalDataSharesPolicyHandleResponse(httpResp)
+	return resp, err
+}
+
+// setInboundExternalDataSharesPolicyCreateRequest creates the SetInboundExternalDataSharesPolicy request.
+func (client *WorkspacesClient) setInboundExternalDataSharesPolicyCreateRequest(ctx context.Context, workspaceID string, workspaceInboundExternalDataSharesPolicy WorkspaceInboundExternalDataSharesPolicy, options *WorkspacesClientSetInboundExternalDataSharesPolicyOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/networking/communicationPolicy/inbound/externalDataShares"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPut, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if options != nil && options.IfMatch != nil {
+		req.Raw().Header["If-Match"] = []string{*options.IfMatch}
+	}
+	if err := runtime.MarshalAsJSON(req, workspaceInboundExternalDataSharesPolicy); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// setInboundExternalDataSharesPolicyHandleResponse handles the SetInboundExternalDataSharesPolicy response.
+func (client *WorkspacesClient) setInboundExternalDataSharesPolicyHandleResponse(resp *http.Response) (WorkspacesClientSetInboundExternalDataSharesPolicyResponse, error) {
+	result := WorkspacesClientSetInboundExternalDataSharesPolicyResponse{}
+	if val := resp.Header.Get("ETag"); val != "" {
+		result.ETag = &val
+	}
+	return result, nil
 }
 
 // SetNetworkCommunicationPolicy - This API uses the PUT method and overwrites all settings. If only a partial policy is provided

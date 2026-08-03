@@ -36,7 +36,7 @@ type ItemsClient struct {
 // article.
 // PERMISSIONS
 // The caller must have a contributor workspace role.
-// REQUIRED DELEGATED SCOPES Item.ReadWrite.All or MirroredCatalog.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
 // * To create a MirroredCatalog the workspace must be on a supported Fabric capacity. For more information see: Microsoft
 // Fabric license types
@@ -65,7 +65,7 @@ func (client *ItemsClient) BeginCreateMirroredCatalog(ctx context.Context, works
 // article.
 // PERMISSIONS
 // The caller must have a contributor workspace role.
-// REQUIRED DELEGATED SCOPES Item.ReadWrite.All or MirroredCatalog.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
 // * To create a MirroredCatalog the workspace must be on a supported Fabric capacity. For more information see: Microsoft
 // Fabric license types
@@ -121,7 +121,7 @@ func (client *ItemsClient) createMirroredCatalogCreateRequest(ctx context.Contex
 
 // DeleteMirroredCatalog - > [!NOTE] MirroredCatalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // PERMISSIONS The caller must have write permissions for the mirrored catalog.
-// REQUIRED DELEGATED SCOPES Item.ReadWrite.All or MirroredCatalog.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -177,7 +177,7 @@ func (client *ItemsClient) deleteMirroredCatalogCreateRequest(ctx context.Contex
 
 // GetMirroredCatalog - > [!NOTE] MirroredCatalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // PERMISSIONS The caller must have read permissions for the mirrored catalog.
-// REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All or MirroredCatalog.Read.All or MirroredCatalog.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -245,7 +245,7 @@ func (client *ItemsClient) getMirroredCatalogHandleResponse(resp *http.Response)
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a MirroredCatalog's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the mirrored catalog.
-// REQUIRED DELEGATED SCOPES Item.ReadWrite.All or MirroredCatalog.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -267,7 +267,7 @@ func (client *ItemsClient) BeginGetMirroredCatalogDefinition(ctx context.Context
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a MirroredCatalog's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the mirrored catalog.
-// REQUIRED DELEGATED SCOPES Item.ReadWrite.All or MirroredCatalog.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -397,7 +397,7 @@ func (client *ItemsClient) listMirroredCatalogsHandleResponse(resp *http.Respons
 
 // UpdateMirroredCatalog - > [!NOTE] MirroredCatalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // PERMISSIONS The caller must have read and write permissions for the mirrored catalog.
-// REQUIRED DELEGATED SCOPES Item.ReadWrite.All or MirroredCatalog.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -469,7 +469,7 @@ func (client *ItemsClient) updateMirroredCatalogHandleResponse(resp *http.Respon
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the MirroredCatalog's definition, does not affect its sensitivity label.
 // PERMISSIONS The caller must have read and write permissions for the mirrored catalog.
-// REQUIRED DELEGATED SCOPES Item.ReadWrite.All or MirroredCatalog.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
 // * The scope in the definition payload must be a Selectable namespace as returned by the List Scopes API.
 // * The sourceType and connectionId properties are immutable and cannot be changed after item creation.
@@ -495,7 +495,7 @@ func (client *ItemsClient) BeginUpdateMirroredCatalogDefinition(ctx context.Cont
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the MirroredCatalog's definition, does not affect its sensitivity label.
 // PERMISSIONS The caller must have read and write permissions for the mirrored catalog.
-// REQUIRED DELEGATED SCOPES Item.ReadWrite.All or MirroredCatalog.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
 // * The scope in the definition payload must be a Selectable namespace as returned by the List Scopes API.
 // * The sourceType and connectionId properties are immutable and cannot be changed after item creation.
@@ -568,7 +568,7 @@ func (client *ItemsClient) updateMirroredCatalogDefinitionCreateRequest(ctx cont
 // PERMISSIONS
 // The caller must have a contributor workspace role.
 //
-// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All or MirroredCatalog.ReadWrite.All
+// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 //
 // LIMITATIONS
 //
@@ -647,7 +647,7 @@ func (client *ItemsClient) beginCreateMirroredCatalog(ctx context.Context, works
 //
 // PERMISSIONS The caller must have read and write permissions for the mirrored catalog.
 //
-// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All or MirroredCatalog.ReadWrite.All
+// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
@@ -720,7 +720,7 @@ func (client *ItemsClient) beginGetMirroredCatalogDefinition(ctx context.Context
 //
 // PERMISSIONS The caller must have read and write permissions for the mirrored catalog.
 //
-// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All or MirroredCatalog.ReadWrite.All
+// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 //
 // LIMITATIONS
 //

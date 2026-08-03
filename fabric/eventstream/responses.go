@@ -48,7 +48,7 @@ type ItemsClientUpdateEventstreamResponse struct {
 
 // TopologyClientGetEventstreamDestinationConnectionResponse contains the response from method TopologyClient.GetEventstreamDestinationConnection.
 type TopologyClientGetEventstreamDestinationConnectionResponse struct {
-	// Represents the connection information for a destination custom endpoint.
+	// Represents the connection information for an eventstream destination.
 	DestinationConnectionResponse
 }
 
@@ -60,7 +60,7 @@ type TopologyClientGetEventstreamDestinationResponse struct {
 
 // TopologyClientGetEventstreamSourceConnectionResponse contains the response from method TopologyClient.GetEventstreamSourceConnection.
 type TopologyClientGetEventstreamSourceConnectionResponse struct {
-	// Represents the connection information for a source custom endpoint.
+	// Represents the connection information for an eventstream source.
 	SourceConnectionResponse
 }
 

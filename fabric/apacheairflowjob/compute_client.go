@@ -19,6 +19,8 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 
 	"github.com/microsoft/fabric-sdk-go/fabric/core"
+	"github.com/microsoft/fabric-sdk-go/internal/iruntime"
+	"github.com/microsoft/fabric-sdk-go/internal/pollers/locasync"
 )
 
 // ComputeClient contains the methods for the Compute group.
@@ -31,7 +33,7 @@ type ComputeClient struct {
 // GetApacheAirflowJobComputeBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
 // purposes only. It may change based on feedback and is not recommended for production use.
 // PERMISSIONS The caller must have read permissions for the Apache Airflow job.
-// REQUIRED DELEGATED SCOPES Airflow.Read.All or Item.Read.All
+// REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All
 // Set the beta query parameter to true to call this API.
 // When calling this API, callers must specify true as the value for the query parameter beta.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -101,4 +103,169 @@ func (client *ComputeClient) getApacheAirflowJobComputeBetaHandleResponse(resp *
 	return result, nil
 }
 
+// BeginUpdateApacheAirflowJobComputeBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and
+// development purposes only. It may change based on feedback and is not recommended for production use.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have read and write permissions for the Apache Airflow job.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
+// Set the beta query parameter to true to call this API.
+// When calling this API, callers must specify true as the value for the query parameter beta.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - apacheAirflowJobID - The Apache Airflow job ID.
+//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
+//   - airflowEnvironmentComputeRequest - Update Apache Airflow environment compute request payload.
+//   - options - ComputeClientBeginUpdateApacheAirflowJobComputeBetaOptions contains the optional parameters for the ComputeClient.BeginUpdateApacheAirflowJobComputeBeta
+//     method.
+func (client *ComputeClient) BeginUpdateApacheAirflowJobComputeBeta(ctx context.Context, workspaceID string, apacheAirflowJobID string, beta bool, airflowEnvironmentComputeRequest AirflowEnvironmentComputeRequest, options *ComputeClientBeginUpdateApacheAirflowJobComputeBetaOptions) (*runtime.Poller[ComputeClientUpdateApacheAirflowJobComputeBetaResponse], error) {
+	return client.beginUpdateApacheAirflowJobComputeBeta(ctx, workspaceID, apacheAirflowJobID, beta, airflowEnvironmentComputeRequest, options)
+}
+
+// UpdateApacheAirflowJobComputeBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have read and write permissions for the Apache Airflow job.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
+// Set the beta query parameter to true to call this API.
+// When calling this API, callers must specify true as the value for the query parameter beta.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ComputeClient) updateApacheAirflowJobComputeBeta(ctx context.Context, workspaceID string, apacheAirflowJobID string, beta bool, airflowEnvironmentComputeRequest AirflowEnvironmentComputeRequest, options *ComputeClientBeginUpdateApacheAirflowJobComputeBetaOptions) (*http.Response, error) {
+	var err error
+	const operationName = "apacheairflowjob.ComputeClient.BeginUpdateApacheAirflowJobComputeBeta"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateApacheAirflowJobComputeBetaCreateRequest(ctx, workspaceID, apacheAirflowJobID, beta, airflowEnvironmentComputeRequest, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// updateApacheAirflowJobComputeBetaCreateRequest creates the UpdateApacheAirflowJobComputeBeta request.
+func (client *ComputeClient) updateApacheAirflowJobComputeBetaCreateRequest(ctx context.Context, workspaceID string, apacheAirflowJobID string, beta bool, airflowEnvironmentComputeRequest AirflowEnvironmentComputeRequest, _ *ComputeClientBeginUpdateApacheAirflowJobComputeBetaOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/apacheAirflowJobs/{apacheAirflowJobId}/environment/updateCompute"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if apacheAirflowJobID == "" {
+		return nil, errors.New("parameter apacheAirflowJobID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{apacheAirflowJobId}", url.PathEscape(apacheAirflowJobID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("beta", strconv.FormatBool(beta))
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, airflowEnvironmentComputeRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // Custom code starts below
+
+// UpdateApacheAirflowJobComputeBeta - returns ComputeClientUpdateApacheAirflowJobComputeBetaResponse in sync mode.
+// >  [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
+//
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS The caller must have read and write permissions for the Apache Airflow job.
+//
+// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
+//
+// Set the beta query parameter to true to call this API.
+//
+// When calling this API, callers must specify true as the value for the query parameter beta.
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - apacheAirflowJobID - The Apache Airflow job ID.
+//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
+//   - airflowEnvironmentComputeRequest - Update Apache Airflow environment compute request payload.
+//   - options - ComputeClientBeginUpdateApacheAirflowJobComputeBetaOptions contains the optional parameters for the ComputeClient.BeginUpdateApacheAirflowJobComputeBeta method.
+func (client *ComputeClient) UpdateApacheAirflowJobComputeBeta(ctx context.Context, workspaceID string, apacheAirflowJobID string, beta bool, airflowEnvironmentComputeRequest AirflowEnvironmentComputeRequest, options *ComputeClientBeginUpdateApacheAirflowJobComputeBetaOptions) (ComputeClientUpdateApacheAirflowJobComputeBetaResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginUpdateApacheAirflowJobComputeBeta(ctx, workspaceID, apacheAirflowJobID, beta, airflowEnvironmentComputeRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ComputeClientUpdateApacheAirflowJobComputeBetaResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ComputeClientUpdateApacheAirflowJobComputeBetaResponse{}, err
+	}
+	return result, err
+}
+
+// beginUpdateApacheAirflowJobComputeBeta creates the updateApacheAirflowJobComputeBeta request.
+func (client *ComputeClient) beginUpdateApacheAirflowJobComputeBeta(ctx context.Context, workspaceID string, apacheAirflowJobID string, beta bool, airflowEnvironmentComputeRequest AirflowEnvironmentComputeRequest, options *ComputeClientBeginUpdateApacheAirflowJobComputeBetaOptions) (*runtime.Poller[ComputeClientUpdateApacheAirflowJobComputeBetaResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.updateApacheAirflowJobComputeBeta(ctx, workspaceID, apacheAirflowJobID, beta, airflowEnvironmentComputeRequest, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ComputeClientUpdateApacheAirflowJobComputeBetaResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ComputeClientUpdateApacheAirflowJobComputeBetaResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ComputeClientUpdateApacheAirflowJobComputeBetaResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ComputeClientUpdateApacheAirflowJobComputeBetaResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}

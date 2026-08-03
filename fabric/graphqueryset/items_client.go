@@ -34,7 +34,7 @@ type ItemsClient struct {
 // To create GraphQuerySet with a public definition, refer to GraphQuerySet [/rest/api/fabric/articles/item-management/definitions/graph-queryset-definition]
 // article.
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
-// REQUIRED DELEGATED SCOPES GraphQuerySet.ReadWrite.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
 // * To create a GraphQuerySet the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
 // license types [/fabric/enterprise/licenses#microsoft-fabric-license-types]
@@ -60,7 +60,7 @@ func (client *ItemsClient) BeginCreateGraphQuerySet(ctx context.Context, workspa
 // To create GraphQuerySet with a public definition, refer to GraphQuerySet [/rest/api/fabric/articles/item-management/definitions/graph-queryset-definition]
 // article.
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
-// REQUIRED DELEGATED SCOPES GraphQuerySet.ReadWrite.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
 // * To create a GraphQuerySet the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
 // license types [/fabric/enterprise/licenses#microsoft-fabric-license-types]
@@ -114,7 +114,7 @@ func (client *ItemsClient) createGraphQuerySetCreateRequest(ctx context.Context,
 }
 
 // DeleteGraphQuerySet - PERMISSIONS The caller must have write permissions for the workspace.
-// REQUIRED DELEGATED SCOPES GraphQuerySet.ReadWrite.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -174,7 +174,7 @@ func (client *ItemsClient) deleteGraphQuerySetCreateRequest(ctx context.Context,
 }
 
 // GetGraphQuerySet - PERMISSIONS The caller must have read permissions for the workspace.
-// REQUIRED DELEGATED SCOPES GraphQuerySet.Read.All or GraphQuerySet.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -240,7 +240,7 @@ func (client *ItemsClient) getGraphQuerySetHandleResponse(resp *http.Response) (
 // BeginGetGraphQuerySetDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a GraphQuerySet's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the workspace.
-// REQUIRED DELEGATED SCOPES GraphQuerySet.ReadWrite.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -261,7 +261,7 @@ func (client *ItemsClient) BeginGetGraphQuerySetDefinition(ctx context.Context, 
 // GetGraphQuerySetDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a GraphQuerySet's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the workspace.
-// REQUIRED DELEGATED SCOPES GraphQuerySet.ReadWrite.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -389,7 +389,7 @@ func (client *ItemsClient) listGraphQuerySetsHandleResponse(resp *http.Response)
 }
 
 // UpdateGraphQuerySet - PERMISSIONS The caller must have read and write permissions for the workspace.
-// REQUIRED DELEGATED SCOPES GraphQuerySet.ReadWrite.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -460,7 +460,7 @@ func (client *ItemsClient) updateGraphQuerySetHandleResponse(resp *http.Response
 // BeginUpdateGraphQuerySetDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the GraphQuerySet's definition, does not affect its sensitivity label.
 // PERMISSIONS The caller must have read and write permissions for the workspace.
-// REQUIRED DELEGATED SCOPES GraphQuerySet.ReadWrite.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -482,7 +482,7 @@ func (client *ItemsClient) BeginUpdateGraphQuerySetDefinition(ctx context.Contex
 // UpdateGraphQuerySetDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the GraphQuerySet's definition, does not affect its sensitivity label.
 // PERMISSIONS The caller must have read and write permissions for the workspace.
-// REQUIRED DELEGATED SCOPES GraphQuerySet.ReadWrite.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -548,7 +548,7 @@ func (client *ItemsClient) updateGraphQuerySetDefinitionCreateRequest(ctx contex
 // To create GraphQuerySet with a public definition, refer to GraphQuerySet [/rest/api/fabric/articles/item-management/definitions/graph-queryset-definition] article.
 //
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
-// REQUIRED DELEGATED SCOPES GraphQuerySet.ReadWrite.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 //
 // LIMITATIONS
 //
@@ -624,7 +624,7 @@ func (client *ItemsClient) beginCreateGraphQuerySet(ctx context.Context, workspa
 //
 // PERMISSIONS The caller must have read and write permissions for the workspace.
 //
-// # REQUIRED DELEGATED SCOPES GraphQuerySet.ReadWrite.All or Item.ReadWrite.All
+// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
@@ -695,7 +695,7 @@ func (client *ItemsClient) beginGetGraphQuerySetDefinition(ctx context.Context, 
 //
 // PERMISSIONS The caller must have read and write permissions for the workspace.
 //
-// # REQUIRED DELEGATED SCOPES GraphQuerySet.ReadWrite.All or Item.ReadWrite.All
+// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

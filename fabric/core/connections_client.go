@@ -594,6 +594,9 @@ func (client *ConnectionsClient) listSupportedConnectionTypesHandleResponse(resp
 
 // BeginTestConnection - Provides the status of the specified connection.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// [!NOTE]
+// > Connections that route through a streaming virtual network gateway (connectivityType = StreamingVirtualNetworkGateway)
+// are not supported.
 // PERMISSIONS Permission to read the connection, or admin permission for the gateway that hosts the connection.
 // REQUIRED DELEGATED SCOPES Connection.Read.All or Connection.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -614,6 +617,9 @@ func (client *ConnectionsClient) BeginTestConnection(ctx context.Context, connec
 
 // TestConnection - Provides the status of the specified connection.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// [!NOTE]
+// > Connections that route through a streaming virtual network gateway (connectivityType = StreamingVirtualNetworkGateway)
+// are not supported.
 // PERMISSIONS Permission to read the connection, or admin permission for the gateway that hosts the connection.
 // REQUIRED DELEGATED SCOPES Connection.Read.All or Connection.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -803,6 +809,10 @@ func (client *ConnectionsClient) updateConnectionRoleAssignmentHandleResponse(re
 // Provides the status of the specified connection.
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// [!NOTE]
+//
+// >  Connections that route through a streaming virtual network gateway (connectivityType = StreamingVirtualNetworkGateway) are not supported.
 //
 // PERMISSIONS Permission to read the connection, or admin permission for the gateway that hosts the connection.
 //

@@ -335,11 +335,12 @@ func (client *WorkspacesClient) listWorkspaceAccessDetailsHandleResponse(resp *h
 // NewListWorkspacesPager - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
 // purposes only. It may change based on feedback and is not recommended for production use.
 // This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records can be returned per request.
-// With the continuous token provided in the response, you can get the next
+// With the continuation token provided in the response, you can get the next
 // 10,000 records.
 // PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
 // LIMITATIONS Maximum 200 requests per hour.
+// The encryptionStatus filter is applied only when the include parameter contains encryption.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -386,6 +387,12 @@ func (client *WorkspacesClient) listWorkspacesCreateRequest(ctx context.Context,
 	}
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	if options != nil && options.EncryptionStatus != nil {
+		reqQP.Set("encryptionStatus", *options.EncryptionStatus)
+	}
+	if options != nil && options.Include != nil {
+		reqQP.Set("include", *options.Include)
 	}
 	if options != nil && options.Name != nil {
 		reqQP.Set("name", *options.Name)
@@ -590,7 +597,7 @@ func (client *WorkspacesClient) ListNetworkingCommunicationPolicies(ctx context.
 // ListWorkspaces - returns array of Workspace from all pages.
 // >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
 //
-// This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records can be returned per request. With the continuous token provided in the response, you can get the next
+// This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records can be returned per request. With the continuation token provided in the response, you can get the next
 // 10,000 records.
 //
 // PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
@@ -598,6 +605,8 @@ func (client *WorkspacesClient) ListNetworkingCommunicationPolicies(ctx context.
 // # REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
 //
 // LIMITATIONS Maximum 200 requests per hour.
+//
+// The encryptionStatus filter is applied only when the include parameter contains encryption.
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

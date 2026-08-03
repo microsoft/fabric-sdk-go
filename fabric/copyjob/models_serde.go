@@ -279,6 +279,64 @@ func (e *EntireTenantPrincipal) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type EntityReset.
+func (e EntityReset) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "copyJobEntityId", e.CopyJobEntityID)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type EntityReset.
+func (e *EntityReset) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", e, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "copyJobEntityId":
+			err = unpopulate(val, "CopyJobEntityID", &e.CopyJobEntityID)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", e, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type EntityResetPayload.
+func (e EntityResetPayload) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "copyJobEntitiesToReset", e.CopyJobEntitiesToReset)
+	populate(objectMap, "resetAllCopyJobEntities", e.ResetAllCopyJobEntities)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type EntityResetPayload.
+func (e *EntityResetPayload) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", e, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "copyJobEntitiesToReset":
+			err = unpopulate(val, "CopyJobEntitiesToReset", &e.CopyJobEntitiesToReset)
+			delete(rawMsg, key)
+		case "resetAllCopyJobEntities":
+			err = unpopulate(val, "ResetAllCopyJobEntities", &e.ResetAllCopyJobEntities)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", e, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type GroupPrincipal.
 func (g GroupPrincipal) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)

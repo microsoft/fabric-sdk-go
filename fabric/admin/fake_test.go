@@ -473,6 +473,8 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ListWorkspaces() {
 		Name:              nil,
 		State:             nil,
 		ContinuationToken: nil,
+		EncryptionStatus:  nil,
+		Include:           nil,
 	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
@@ -510,6 +512,186 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ListWorkspaces() {
 		Name:              nil,
 		State:             to.Ptr("Active"),
 		ContinuationToken: nil,
+		EncryptionStatus:  nil,
+		Include:           nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Workspaces))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List workspaces for a given capacity, ignoring the encryptionStatus filter."},
+	})
+
+	exampleRes = admin.Workspaces{
+		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/admin/workspaces?continuationToken='LDEsMTAwMDAwLDA%3D'"),
+		Workspaces: []admin.Workspace{
+			{
+				Name:       to.Ptr("Contoso Workspace 1"),
+				Type:       to.Ptr(admin.WorkspaceTypeWorkspace),
+				CapacityID: to.Ptr("61d6811f-7544-4e75-a1e6-1c59c0383312"),
+				DomainID:   to.Ptr("039bd896-b39c-4540-93e3-e9926de135f9"),
+				ID:         to.Ptr("abf49964-6f70-4aea-a66c-4b78a22e3ddc"),
+				State:      to.Ptr(admin.WorkspaceStateActive),
+			},
+			{
+				Name:       to.Ptr("Contoso Workspace 3"),
+				Type:       to.Ptr(admin.WorkspaceTypeWorkspace),
+				CapacityID: to.Ptr("61d6811f-7544-4e75-a1e6-1c59c0383312"),
+				DomainID:   to.Ptr("039bd896-b39c-4540-93e3-e9926de135f9"),
+				ID:         to.Ptr("90119767-07b4-4657-82ee-53e90fece225"),
+				State:      to.Ptr(admin.WorkspaceStateActive),
+			}},
+	}
+
+	testsuite.serverFactory.WorkspacesServer.NewListWorkspacesPager = func(options *admin.WorkspacesClientListWorkspacesOptions) (resp azfake.PagerResponder[admin.WorkspacesClientListWorkspacesResponse]) {
+		resp = azfake.PagerResponder[admin.WorkspacesClientListWorkspacesResponse]{}
+		resp.AddPage(http.StatusOK, admin.WorkspacesClientListWorkspacesResponse{Workspaces: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListWorkspacesPager(&admin.WorkspacesClientListWorkspacesOptions{Type: nil,
+		CapacityID:        to.Ptr("61d6811f-7544-4e75-a1e6-1c59c0383312"),
+		Name:              nil,
+		State:             nil,
+		ContinuationToken: nil,
+		EncryptionStatus:  to.Ptr("Active"),
+		Include:           nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Workspaces))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List workspaces with active encryption status in a given capacity"},
+	})
+
+	exampleRes = admin.Workspaces{
+		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/admin/workspaces?continuationToken='LDEsMTAwMDAwLDA%3D'"),
+		Workspaces: []admin.Workspace{
+			{
+				Name:       to.Ptr("Contoso Workspace 3"),
+				Type:       to.Ptr(admin.WorkspaceTypeWorkspace),
+				CapacityID: to.Ptr("61d6811f-7544-4e75-a1e6-1c59c0383312"),
+				DomainID:   to.Ptr("039bd896-b39c-4540-93e3-e9926de135f9"),
+				Encryption: &admin.Encryption{
+					KeyIdentifier: to.Ptr("https://westus07112025-cmktest1.vault.azure.net/keys/test2k/"),
+					Status:        to.Ptr(admin.WorkspaceEncryptionStatusActive),
+				},
+				ID:    to.Ptr("90119767-07b4-4657-82ee-53e90fece225"),
+				State: to.Ptr(admin.WorkspaceStateActive),
+			}},
+	}
+
+	testsuite.serverFactory.WorkspacesServer.NewListWorkspacesPager = func(options *admin.WorkspacesClientListWorkspacesOptions) (resp azfake.PagerResponder[admin.WorkspacesClientListWorkspacesResponse]) {
+		resp = azfake.PagerResponder[admin.WorkspacesClientListWorkspacesResponse]{}
+		resp.AddPage(http.StatusOK, admin.WorkspacesClientListWorkspacesResponse{Workspaces: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListWorkspacesPager(&admin.WorkspacesClientListWorkspacesOptions{Type: nil,
+		CapacityID:        to.Ptr("61d6811f-7544-4e75-a1e6-1c59c0383312"),
+		Name:              nil,
+		State:             nil,
+		ContinuationToken: nil,
+		EncryptionStatus:  to.Ptr("Active"),
+		Include:           to.Ptr("encryption"),
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Workspaces))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List workspaces with encryption details"},
+	})
+
+	exampleRes = admin.Workspaces{
+		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/admin/workspaces?continuationToken='LDEsMTAwMDAwLDA%3D'"),
+		Workspaces: []admin.Workspace{
+			{
+				Name:       to.Ptr("Contoso Workspace 1"),
+				Type:       to.Ptr(admin.WorkspaceTypeWorkspace),
+				CapacityID: to.Ptr("61d6811f-7544-4e75-a1e6-1c59c0383312"),
+				DomainID:   to.Ptr("039bd896-b39c-4540-93e3-e9926de135f9"),
+				Encryption: &admin.Encryption{
+					Status: to.Ptr(admin.WorkspaceEncryptionStatusDisabled),
+				},
+				ID:    to.Ptr("abf49964-6f70-4aea-a66c-4b78a22e3ddc"),
+				State: to.Ptr(admin.WorkspaceStateActive),
+			},
+			{
+				Name:       to.Ptr("Contoso Workspace 2"),
+				Type:       to.Ptr(admin.WorkspaceTypeWorkspace),
+				CapacityID: to.Ptr("41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e84"),
+				DomainID:   to.Ptr("039bd896-b39c-4540-93e3-e9926de135f9"),
+				Encryption: &admin.Encryption{
+					Status: to.Ptr(admin.WorkspaceEncryptionStatusDisabled),
+				},
+				ID:    to.Ptr("9c7f06cc-e850-4961-b2bd-181a70b1a784"),
+				State: to.Ptr(admin.WorkspaceStateActive),
+			},
+			{
+				Name:       to.Ptr("Contoso Workspace 3"),
+				Type:       to.Ptr(admin.WorkspaceTypeWorkspace),
+				CapacityID: to.Ptr("61d6811f-7544-4e75-a1e6-1c59c0383312"),
+				DomainID:   to.Ptr("039bd896-b39c-4540-93e3-e9926de135f9"),
+				Encryption: &admin.Encryption{
+					KeyIdentifier: to.Ptr("https://westus07112025-cmktest1.vault.azure.net/keys/test2k/"),
+					Status:        to.Ptr(admin.WorkspaceEncryptionStatusActive),
+				},
+				ID:    to.Ptr("90119767-07b4-4657-82ee-53e90fece225"),
+				State: to.Ptr(admin.WorkspaceStateActive),
+			},
+			{
+				Name:       to.Ptr("Contoso Workspace 4"),
+				Type:       to.Ptr(admin.WorkspaceTypeWorkspace),
+				CapacityID: to.Ptr("41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e84"),
+				DomainID:   to.Ptr("039bd896-b39c-4540-93e3-e9926de135f9"),
+				Encryption: &admin.Encryption{
+					KeyIdentifier:         to.Ptr("https://westus07112025-cmktest1.vault.azure.net/keys/test2k/"),
+					PreviousKeyIdentifier: to.Ptr("https://westus07112025-cmktest1.vault.azure.net/keys/test4k/"),
+					PreviousStatus:        to.Ptr(admin.WorkspaceEncryptionStatusActive),
+					Status:                to.Ptr(admin.WorkspaceEncryptionStatusEnableInProgress),
+				},
+				ID:    to.Ptr("adaa3051-b1de-41ed-b1b4-d5e08887c1e9"),
+				State: to.Ptr(admin.WorkspaceStateActive),
+			}},
+	}
+
+	testsuite.serverFactory.WorkspacesServer.NewListWorkspacesPager = func(options *admin.WorkspacesClientListWorkspacesOptions) (resp azfake.PagerResponder[admin.WorkspacesClientListWorkspacesResponse]) {
+		resp = azfake.PagerResponder[admin.WorkspacesClientListWorkspacesResponse]{}
+		resp.AddPage(http.StatusOK, admin.WorkspacesClientListWorkspacesResponse{Workspaces: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListWorkspacesPager(&admin.WorkspacesClientListWorkspacesOptions{Type: nil,
+		CapacityID:        nil,
+		Name:              nil,
+		State:             nil,
+		ContinuationToken: nil,
+		EncryptionStatus:  nil,
+		Include:           to.Ptr("encryption"),
 	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
@@ -1568,7 +1750,9 @@ func (testsuite *FakeTestSuite) TestDomains_ListDomains() {
 	}
 
 	client := testsuite.clientFactory.NewDomainsClient()
-	res, err := client.ListDomains(ctx, examplePreview, &admin.DomainsClientListDomainsOptions{NonEmptyOnly: to.Ptr(true)})
+	res, err := client.ListDomains(ctx, examplePreview, &admin.DomainsClientListDomainsOptions{NonEmptyOnly: to.Ptr(true),
+		WithAssignedWorkspacesOnly: nil,
+	})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DomainsResponse))
 
@@ -1626,7 +1810,9 @@ func (testsuite *FakeTestSuite) TestDomains_ListDomains() {
 		return
 	}
 
-	res, err = client.ListDomains(ctx, examplePreview, &admin.DomainsClientListDomainsOptions{NonEmptyOnly: nil})
+	res, err = client.ListDomains(ctx, examplePreview, &admin.DomainsClientListDomainsOptions{NonEmptyOnly: nil,
+		WithAssignedWorkspacesOnly: nil,
+	})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DomainsResponse))
 }

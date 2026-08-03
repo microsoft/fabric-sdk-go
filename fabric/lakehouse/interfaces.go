@@ -6,6 +6,33 @@
 
 package lakehouse
 
+// CurrentLakehouseExecutionContextClassification provides polymorphic access to related types.
+// Call the interface's GetCurrentLakehouseExecutionContext() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *CurrentLakehouseExecutionContext, *CurrentLakehouseExecutionContextAll, *CurrentLakehouseExecutionContextSelected
+type CurrentLakehouseExecutionContextClassification interface {
+	// GetCurrentLakehouseExecutionContext returns the CurrentLakehouseExecutionContext content of the underlying type.
+	GetCurrentLakehouseExecutionContext() *CurrentLakehouseExecutionContext
+}
+
+// ExtendedLineageExecutionContextRequestClassification provides polymorphic access to related types.
+// Call the interface's GetExtendedLineageExecutionContextRequest() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *ExtendedLineageExecutionContextRequest, *ExtendedLineageExecutionContextRequestAll, *ExtendedLineageExecutionContextRequestSelected
+type ExtendedLineageExecutionContextRequestClassification interface {
+	// GetExtendedLineageExecutionContextRequest returns the ExtendedLineageExecutionContextRequest content of the underlying type.
+	GetExtendedLineageExecutionContextRequest() *ExtendedLineageExecutionContextRequest
+}
+
+// ExtendedLineageExecutionContextResponseClassification provides polymorphic access to related types.
+// Call the interface's GetExtendedLineageExecutionContextResponse() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *ExtendedLineageExecutionContextResponse, *ExtendedLineageExecutionContextResponseAll, *ExtendedLineageExecutionContextResponseSelected
+type ExtendedLineageExecutionContextResponseClassification interface {
+	// GetExtendedLineageExecutionContextResponse returns the ExtendedLineageExecutionContextResponse content of the underlying type.
+	GetExtendedLineageExecutionContextResponse() *ExtendedLineageExecutionContextResponse
+}
+
 // FileFormatOptionsClassification provides polymorphic access to related types.
 // Call the interface's GetFileFormatOptions() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:

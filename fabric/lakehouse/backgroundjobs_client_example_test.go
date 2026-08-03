@@ -141,6 +141,9 @@ func ExampleBackgroundJobsClient_CreateRefreshMaterializedLakeViewsSchedule() {
 			Interval:        to.Ptr[int32](10),
 		},
 		Enabled: to.Ptr(true),
+		ExecutionData: &lakehouse.RefreshMaterializedLakeViewsExecutionData{
+			MlvExecutionDefinitionID: to.Ptr("eeeeeeee-4444-5555-6666-ffffffffffff"),
+		},
 	}, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
@@ -184,6 +187,9 @@ func ExampleBackgroundJobsClient_UpdateRefreshMaterializedLakeViewsSchedule() {
 			Interval:        to.Ptr[int32](15),
 		},
 		Enabled: to.Ptr(false),
+		ExecutionData: &lakehouse.RefreshMaterializedLakeViewsExecutionData{
+			MlvExecutionDefinitionID: to.Ptr("eeeeeeee-4444-5555-6666-ffffffffffff"),
+		},
 	}, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
@@ -205,6 +211,9 @@ func ExampleBackgroundJobsClient_UpdateRefreshMaterializedLakeViewsSchedule() {
 	// 	Owner: &lakehouse.UserPrincipal{
 	// 		Type: to.Ptr(lakehouse.PrincipalTypeUser),
 	// 		ID: to.Ptr("33dd33dd-ee44-ff55-aa66-77bb77bb77bb"),
+	// 	},
+	// 	ExecutionData: &lakehouse.RefreshMaterializedLakeViewsExecutionData{
+	// 		MlvExecutionDefinitionID: to.Ptr("eeeeeeee-4444-5555-6666-ffffffffffff"),
 	// 	},
 	// }
 }

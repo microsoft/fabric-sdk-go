@@ -33,7 +33,7 @@ type SettingsClient struct {
 // GetApacheAirflowJobSettingsBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
 // purposes only. It may change based on feedback and is not recommended for production use.
 // PERMISSIONS The caller must have read permissions for the Apache Airflow job.
-// REQUIRED DELEGATED SCOPES Airflow.Read.All or Item.Read.All
+// REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All
 // Set the beta query parameter to true to call this API.
 // When calling this API, callers must specify true as the value for the query parameter beta.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -106,8 +106,8 @@ func (client *SettingsClient) getApacheAirflowJobSettingsBetaHandleResponse(resp
 // BeginUpdateApacheAirflowJobSettingsBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and
 // development purposes only. It may change based on feedback and is not recommended for production use.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have write permissions for the Apache Airflow job.
-// REQUIRED DELEGATED SCOPES Airflow.Write.All or Item.Write.All
+// PERMISSIONS The caller must have read and write permissions for the Apache Airflow job.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // Set the beta query parameter to true to call this API.
 // When calling this API, callers must specify true as the value for the query parameter beta.
 // When updating list values (environmentVariables, airflowConfigurationOverrides), users must submit the complete set of
@@ -134,8 +134,8 @@ func (client *SettingsClient) BeginUpdateApacheAirflowJobSettingsBeta(ctx contex
 // UpdateApacheAirflowJobSettingsBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
 // purposes only. It may change based on feedback and is not recommended for production use.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have write permissions for the Apache Airflow job.
-// REQUIRED DELEGATED SCOPES Airflow.Write.All or Item.Write.All
+// PERMISSIONS The caller must have read and write permissions for the Apache Airflow job.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // Set the beta query parameter to true to call this API.
 // When calling this API, callers must specify true as the value for the query parameter beta.
 // When updating list values (environmentVariables, airflowConfigurationOverrides), users must submit the complete set of
@@ -202,9 +202,9 @@ func (client *SettingsClient) updateApacheAirflowJobSettingsBetaCreateRequest(ct
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// PERMISSIONS The caller must have write permissions for the Apache Airflow job.
+// PERMISSIONS The caller must have read and write permissions for the Apache Airflow job.
 //
-// # REQUIRED DELEGATED SCOPES Airflow.Write.All or Item.Write.All
+// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 //
 // Set the beta query parameter to true to call this API.
 //

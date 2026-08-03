@@ -27,9 +27,7 @@ type ManagedPrivateEndpointsClient struct {
 	endpoint string
 }
 
-// CreateWorkspaceManagedPrivateEndpoint - > [!NOTE] This API is part of a Preview release and is provided for evaluation
-// and development purposes only. It may change based on feedback and is not recommended for production use.
-// PERMISSIONS The caller must have admin workspace role.
+// CreateWorkspaceManagedPrivateEndpoint - PERMISSIONS The caller must have admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All.
 // LIMITATIONS
 // * To create managed private endpoint the workspace must be on a supported Fabric capacity. For more information see: Microsoft
@@ -100,9 +98,7 @@ func (client *ManagedPrivateEndpointsClient) createWorkspaceManagedPrivateEndpoi
 	return result, nil
 }
 
-// DeleteWorkspaceManagedPrivateEndpoint - > [!NOTE] This API is part of a Preview release and is provided for evaluation
-// and development purposes only. It may change based on feedback and is not recommended for production use.
-// PERMISSIONS The caller must have admin workspace role.
+// DeleteWorkspaceManagedPrivateEndpoint - PERMISSIONS The caller must have admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -157,9 +153,7 @@ func (client *ManagedPrivateEndpointsClient) deleteWorkspaceManagedPrivateEndpoi
 	return req, nil
 }
 
-// GetWorkspaceManagedPrivateEndpoint - > [!NOTE] This API is part of a Preview release and is provided for evaluation and
-// development purposes only. It may change based on feedback and is not recommended for production use.
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// GetWorkspaceManagedPrivateEndpoint - PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -224,9 +218,7 @@ func (client *ManagedPrivateEndpointsClient) getWorkspaceManagedPrivateEndpointH
 	return result, nil
 }
 
-// NewListWorkspaceManagedPrivateEndpointsPager - > [!NOTE] This API is part of a Preview release and is provided for evaluation
-// and development purposes only. It may change based on feedback and is not recommended for production use.
-// PERMISSIONS The caller must have viewer or higher workspace role.
+// NewListWorkspaceManagedPrivateEndpointsPager - PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -294,8 +286,6 @@ func (client *ManagedPrivateEndpointsClient) listWorkspaceManagedPrivateEndpoint
 // Custom code starts below
 
 // ListWorkspaceManagedPrivateEndpoints - returns array of ManagedPrivateEndpoint from all pages.
-// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
-//
 // PERMISSIONS The caller must have viewer or higher workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All

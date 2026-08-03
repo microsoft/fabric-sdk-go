@@ -42,6 +42,10 @@ type WorkspacesServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	AssignToDomain func(ctx context.Context, workspaceID string, assignWorkspaceToDomainRequest core.AssignWorkspaceToDomainRequest, options *core.WorkspacesClientAssignToDomainOptions) (resp azfake.Responder[core.WorkspacesClientAssignToDomainResponse], errResp azfake.ErrorResponder)
 
+	// AssignWorkspaceEncryption is the fake for method WorkspacesClient.AssignWorkspaceEncryption
+	// HTTP status codes to indicate success: http.StatusOK
+	AssignWorkspaceEncryption func(ctx context.Context, workspaceID string, assignWorkspaceEncryptionRequest core.AssignWorkspaceEncryptionRequest, options *core.WorkspacesClientAssignWorkspaceEncryptionOptions) (resp azfake.Responder[core.WorkspacesClientAssignWorkspaceEncryptionResponse], errResp azfake.ErrorResponder)
+
 	// CreateWorkspace is the fake for method WorkspacesClient.CreateWorkspace
 	// HTTP status codes to indicate success: http.StatusCreated
 	CreateWorkspace func(ctx context.Context, createWorkspaceRequest core.CreateWorkspaceRequest, options *core.WorkspacesClientCreateWorkspaceOptions) (resp azfake.Responder[core.WorkspacesClientCreateWorkspaceResponse], errResp azfake.ErrorResponder)
@@ -58,6 +62,10 @@ type WorkspacesServer struct {
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
 	BeginDeprovisionIdentity func(ctx context.Context, workspaceID string, options *core.WorkspacesClientBeginDeprovisionIdentityOptions) (resp azfake.PollerResponder[core.WorkspacesClientDeprovisionIdentityResponse], errResp azfake.ErrorResponder)
 
+	// GetFirewallRules is the fake for method WorkspacesClient.GetFirewallRules
+	// HTTP status codes to indicate success: http.StatusOK
+	GetFirewallRules func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetFirewallRulesOptions) (resp azfake.Responder[core.WorkspacesClientGetFirewallRulesResponse], errResp azfake.ErrorResponder)
+
 	// GetGitOutboundPolicy is the fake for method WorkspacesClient.GetGitOutboundPolicy
 	// HTTP status codes to indicate success: http.StatusOK
 	GetGitOutboundPolicy func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetGitOutboundPolicyOptions) (resp azfake.Responder[core.WorkspacesClientGetGitOutboundPolicyResponse], errResp azfake.ErrorResponder)
@@ -65,6 +73,10 @@ type WorkspacesServer struct {
 	// GetInboundAzureResourceRules is the fake for method WorkspacesClient.GetInboundAzureResourceRules
 	// HTTP status codes to indicate success: http.StatusOK
 	GetInboundAzureResourceRules func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetInboundAzureResourceRulesOptions) (resp azfake.Responder[core.WorkspacesClientGetInboundAzureResourceRulesResponse], errResp azfake.ErrorResponder)
+
+	// GetInboundExternalDataSharesPolicy is the fake for method WorkspacesClient.GetInboundExternalDataSharesPolicy
+	// HTTP status codes to indicate success: http.StatusOK
+	GetInboundExternalDataSharesPolicy func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetInboundExternalDataSharesPolicyOptions) (resp azfake.Responder[core.WorkspacesClientGetInboundExternalDataSharesPolicyResponse], errResp azfake.ErrorResponder)
 
 	// GetNetworkCommunicationPolicy is the fake for method WorkspacesClient.GetNetworkCommunicationPolicy
 	// HTTP status codes to indicate success: http.StatusOK
@@ -82,6 +94,10 @@ type WorkspacesServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetWorkspace func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetWorkspaceOptions) (resp azfake.Responder[core.WorkspacesClientGetWorkspaceResponse], errResp azfake.ErrorResponder)
 
+	// GetWorkspaceEncryption is the fake for method WorkspacesClient.GetWorkspaceEncryption
+	// HTTP status codes to indicate success: http.StatusOK
+	GetWorkspaceEncryption func(ctx context.Context, workspaceID string, options *core.WorkspacesClientGetWorkspaceEncryptionOptions) (resp azfake.Responder[core.WorkspacesClientGetWorkspaceEncryptionResponse], errResp azfake.ErrorResponder)
+
 	// GetWorkspaceRoleAssignment is the fake for method WorkspacesClient.GetWorkspaceRoleAssignment
 	// HTTP status codes to indicate success: http.StatusOK
 	GetWorkspaceRoleAssignment func(ctx context.Context, workspaceID string, workspaceRoleAssignmentID string, options *core.WorkspacesClientGetWorkspaceRoleAssignmentOptions) (resp azfake.Responder[core.WorkspacesClientGetWorkspaceRoleAssignmentResponse], errResp azfake.ErrorResponder)
@@ -98,6 +114,14 @@ type WorkspacesServer struct {
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
 	BeginProvisionIdentity func(ctx context.Context, workspaceID string, options *core.WorkspacesClientBeginProvisionIdentityOptions) (resp azfake.PollerResponder[core.WorkspacesClientProvisionIdentityResponse], errResp azfake.ErrorResponder)
 
+	// ResetWorkspaceEncryption is the fake for method WorkspacesClient.ResetWorkspaceEncryption
+	// HTTP status codes to indicate success: http.StatusOK
+	ResetWorkspaceEncryption func(ctx context.Context, workspaceID string, options *core.WorkspacesClientResetWorkspaceEncryptionOptions) (resp azfake.Responder[core.WorkspacesClientResetWorkspaceEncryptionResponse], errResp azfake.ErrorResponder)
+
+	// SetFirewallRules is the fake for method WorkspacesClient.SetFirewallRules
+	// HTTP status codes to indicate success: http.StatusOK
+	SetFirewallRules func(ctx context.Context, workspaceID string, firewallRulesRequest core.InboundFirewallConfiguration, options *core.WorkspacesClientSetFirewallRulesOptions) (resp azfake.Responder[core.WorkspacesClientSetFirewallRulesResponse], errResp azfake.ErrorResponder)
+
 	// SetGitOutboundPolicy is the fake for method WorkspacesClient.SetGitOutboundPolicy
 	// HTTP status codes to indicate success: http.StatusOK
 	SetGitOutboundPolicy func(ctx context.Context, workspaceID string, setWorkspaceGitNetworkingCommunicationPolicy core.NetworkRules, options *core.WorkspacesClientSetGitOutboundPolicyOptions) (resp azfake.Responder[core.WorkspacesClientSetGitOutboundPolicyResponse], errResp azfake.ErrorResponder)
@@ -105,6 +129,10 @@ type WorkspacesServer struct {
 	// SetInboundAzureResourceRules is the fake for method WorkspacesClient.SetInboundAzureResourceRules
 	// HTTP status codes to indicate success: http.StatusOK
 	SetInboundAzureResourceRules func(ctx context.Context, workspaceID string, workspaceInboundAzureResourceRules core.WorkspaceInboundAzureResourceRules, options *core.WorkspacesClientSetInboundAzureResourceRulesOptions) (resp azfake.Responder[core.WorkspacesClientSetInboundAzureResourceRulesResponse], errResp azfake.ErrorResponder)
+
+	// SetInboundExternalDataSharesPolicy is the fake for method WorkspacesClient.SetInboundExternalDataSharesPolicy
+	// HTTP status codes to indicate success: http.StatusOK
+	SetInboundExternalDataSharesPolicy func(ctx context.Context, workspaceID string, workspaceInboundExternalDataSharesPolicy core.WorkspaceInboundExternalDataSharesPolicy, options *core.WorkspacesClientSetInboundExternalDataSharesPolicyOptions) (resp azfake.Responder[core.WorkspacesClientSetInboundExternalDataSharesPolicyResponse], errResp azfake.ErrorResponder)
 
 	// SetNetworkCommunicationPolicy is the fake for method WorkspacesClient.SetNetworkCommunicationPolicy
 	// HTTP status codes to indicate success: http.StatusOK
@@ -195,6 +223,8 @@ func (w *WorkspacesServerTransport) dispatchToMethodFake(req *http.Request, meth
 				res.resp, res.err = w.dispatchAssignToCapacity(req)
 			case "WorkspacesClient.AssignToDomain":
 				res.resp, res.err = w.dispatchAssignToDomain(req)
+			case "WorkspacesClient.AssignWorkspaceEncryption":
+				res.resp, res.err = w.dispatchAssignWorkspaceEncryption(req)
 			case "WorkspacesClient.CreateWorkspace":
 				res.resp, res.err = w.dispatchCreateWorkspace(req)
 			case "WorkspacesClient.DeleteWorkspace":
@@ -203,10 +233,14 @@ func (w *WorkspacesServerTransport) dispatchToMethodFake(req *http.Request, meth
 				res.resp, res.err = w.dispatchDeleteWorkspaceRoleAssignment(req)
 			case "WorkspacesClient.BeginDeprovisionIdentity":
 				res.resp, res.err = w.dispatchBeginDeprovisionIdentity(req)
+			case "WorkspacesClient.GetFirewallRules":
+				res.resp, res.err = w.dispatchGetFirewallRules(req)
 			case "WorkspacesClient.GetGitOutboundPolicy":
 				res.resp, res.err = w.dispatchGetGitOutboundPolicy(req)
 			case "WorkspacesClient.GetInboundAzureResourceRules":
 				res.resp, res.err = w.dispatchGetInboundAzureResourceRules(req)
+			case "WorkspacesClient.GetInboundExternalDataSharesPolicy":
+				res.resp, res.err = w.dispatchGetInboundExternalDataSharesPolicy(req)
 			case "WorkspacesClient.GetNetworkCommunicationPolicy":
 				res.resp, res.err = w.dispatchGetNetworkCommunicationPolicy(req)
 			case "WorkspacesClient.GetOutboundCloudConnectionRules":
@@ -215,6 +249,8 @@ func (w *WorkspacesServerTransport) dispatchToMethodFake(req *http.Request, meth
 				res.resp, res.err = w.dispatchGetOutboundGatewayRules(req)
 			case "WorkspacesClient.GetWorkspace":
 				res.resp, res.err = w.dispatchGetWorkspace(req)
+			case "WorkspacesClient.GetWorkspaceEncryption":
+				res.resp, res.err = w.dispatchGetWorkspaceEncryption(req)
 			case "WorkspacesClient.GetWorkspaceRoleAssignment":
 				res.resp, res.err = w.dispatchGetWorkspaceRoleAssignment(req)
 			case "WorkspacesClient.NewListWorkspaceRoleAssignmentsPager":
@@ -223,10 +259,16 @@ func (w *WorkspacesServerTransport) dispatchToMethodFake(req *http.Request, meth
 				res.resp, res.err = w.dispatchNewListWorkspacesPager(req)
 			case "WorkspacesClient.BeginProvisionIdentity":
 				res.resp, res.err = w.dispatchBeginProvisionIdentity(req)
+			case "WorkspacesClient.ResetWorkspaceEncryption":
+				res.resp, res.err = w.dispatchResetWorkspaceEncryption(req)
+			case "WorkspacesClient.SetFirewallRules":
+				res.resp, res.err = w.dispatchSetFirewallRules(req)
 			case "WorkspacesClient.SetGitOutboundPolicy":
 				res.resp, res.err = w.dispatchSetGitOutboundPolicy(req)
 			case "WorkspacesClient.SetInboundAzureResourceRules":
 				res.resp, res.err = w.dispatchSetInboundAzureResourceRules(req)
+			case "WorkspacesClient.SetInboundExternalDataSharesPolicy":
+				res.resp, res.err = w.dispatchSetInboundExternalDataSharesPolicy(req)
 			case "WorkspacesClient.SetNetworkCommunicationPolicy":
 				res.resp, res.err = w.dispatchSetNetworkCommunicationPolicy(req)
 			case "WorkspacesClient.SetOutboundCloudConnectionRules":
@@ -397,6 +439,39 @@ func (w *WorkspacesServerTransport) dispatchAssignToDomain(req *http.Request) (*
 	return resp, nil
 }
 
+func (w *WorkspacesServerTransport) dispatchAssignWorkspaceEncryption(req *http.Request) (*http.Response, error) {
+	if w.srv.AssignWorkspaceEncryption == nil {
+		return nil, &nonRetriableError{errors.New("fake for method AssignWorkspaceEncryption not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/encryption/assign`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.AssignWorkspaceEncryptionRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := w.srv.AssignWorkspaceEncryption(req.Context(), workspaceIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
 func (w *WorkspacesServerTransport) dispatchCreateWorkspace(req *http.Request) (*http.Response, error) {
 	if w.srv.CreateWorkspace == nil {
 		return nil, &nonRetriableError{errors.New("fake for method CreateWorkspace not implemented")}
@@ -525,6 +600,35 @@ func (w *WorkspacesServerTransport) dispatchBeginDeprovisionIdentity(req *http.R
 	return resp, nil
 }
 
+func (w *WorkspacesServerTransport) dispatchGetFirewallRules(req *http.Request) (*http.Response, error) {
+	if w.srv.GetFirewallRules == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetFirewallRules not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/networking/communicationPolicy/inbound/firewall`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := w.srv.GetFirewallRules(req.Context(), workspaceIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).InboundFirewallConfiguration, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
 func (w *WorkspacesServerTransport) dispatchGetGitOutboundPolicy(req *http.Request) (*http.Response, error) {
 	if w.srv.GetGitOutboundPolicy == nil {
 		return nil, &nonRetriableError{errors.New("fake for method GetGitOutboundPolicy not implemented")}
@@ -582,6 +686,38 @@ func (w *WorkspacesServerTransport) dispatchGetInboundAzureResourceRules(req *ht
 	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).WorkspaceInboundAzureResourceRules, req)
 	if err != nil {
 		return nil, err
+	}
+	return resp, nil
+}
+
+func (w *WorkspacesServerTransport) dispatchGetInboundExternalDataSharesPolicy(req *http.Request) (*http.Response, error) {
+	if w.srv.GetInboundExternalDataSharesPolicy == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetInboundExternalDataSharesPolicy not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/networking/communicationPolicy/inbound/externalDataShares`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := w.srv.GetInboundExternalDataSharesPolicy(req.Context(), workspaceIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).WorkspaceInboundExternalDataSharesPolicy, req)
+	if err != nil {
+		return nil, err
+	}
+	if val := server.GetResponse(respr).ETag; val != nil {
+		resp.Header.Set("ETag", *val)
 	}
 	return resp, nil
 }
@@ -720,6 +856,35 @@ func (w *WorkspacesServerTransport) dispatchGetWorkspace(req *http.Request) (*ht
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
 	}
 	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).WorkspaceInfo, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (w *WorkspacesServerTransport) dispatchGetWorkspaceEncryption(req *http.Request) (*http.Response, error) {
+	if w.srv.GetWorkspaceEncryption == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetWorkspaceEncryption not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/encryption`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := w.srv.GetWorkspaceEncryption(req.Context(), workspaceIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).WorkspaceEncryptionDetail, req)
 	if err != nil {
 		return nil, err
 	}
@@ -902,6 +1067,68 @@ func (w *WorkspacesServerTransport) dispatchBeginProvisionIdentity(req *http.Req
 	return resp, nil
 }
 
+func (w *WorkspacesServerTransport) dispatchResetWorkspaceEncryption(req *http.Request) (*http.Response, error) {
+	if w.srv.ResetWorkspaceEncryption == nil {
+		return nil, &nonRetriableError{errors.New("fake for method ResetWorkspaceEncryption not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/encryption/reset`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := w.srv.ResetWorkspaceEncryption(req.Context(), workspaceIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (w *WorkspacesServerTransport) dispatchSetFirewallRules(req *http.Request) (*http.Response, error) {
+	if w.srv.SetFirewallRules == nil {
+		return nil, &nonRetriableError{errors.New("fake for method SetFirewallRules not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/networking/communicationPolicy/inbound/firewall`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.InboundFirewallConfiguration](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := w.srv.SetFirewallRules(req.Context(), workspaceIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
 func (w *WorkspacesServerTransport) dispatchSetGitOutboundPolicy(req *http.Request) (*http.Response, error) {
 	if w.srv.SetGitOutboundPolicy == nil {
 		return nil, &nonRetriableError{errors.New("fake for method SetGitOutboundPolicy not implemented")}
@@ -974,6 +1201,49 @@ func (w *WorkspacesServerTransport) dispatchSetInboundAzureResourceRules(req *ht
 	resp, err := server.NewResponse(respContent, req, nil)
 	if err != nil {
 		return nil, err
+	}
+	return resp, nil
+}
+
+func (w *WorkspacesServerTransport) dispatchSetInboundExternalDataSharesPolicy(req *http.Request) (*http.Response, error) {
+	if w.srv.SetInboundExternalDataSharesPolicy == nil {
+		return nil, &nonRetriableError{errors.New("fake for method SetInboundExternalDataSharesPolicy not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/networking/communicationPolicy/inbound/externalDataShares`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.WorkspaceInboundExternalDataSharesPolicy](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	ifMatchParam := getOptional(getHeaderValue(req.Header, "If-Match"))
+	var options *core.WorkspacesClientSetInboundExternalDataSharesPolicyOptions
+	if ifMatchParam != nil {
+		options = &core.WorkspacesClientSetInboundExternalDataSharesPolicyOptions{
+			IfMatch: ifMatchParam,
+		}
+	}
+	respr, errRespr := w.srv.SetInboundExternalDataSharesPolicy(req.Context(), workspaceIDParam, body, options)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	if val := server.GetResponse(respr).ETag; val != nil {
+		resp.Header.Set("ETag", *val)
 	}
 	return resp, nil
 }

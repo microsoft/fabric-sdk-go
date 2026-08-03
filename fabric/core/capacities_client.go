@@ -10,6 +10,8 @@ import (
 	"context"
 	"errors"
 	"net/http"
+	"net/url"
+	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
@@ -23,6 +25,65 @@ import (
 type CapacitiesClient struct {
 	internal *azcore.Client
 	endpoint string
+}
+
+// GetCapacity - PERMISSIONS The caller must have administrator or contributor permissions on the capacity.
+// REQUIRED DELEGATED SCOPES Capacity.Read.All or Capacity.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - options - CapacitiesClientGetCapacityOptions contains the optional parameters for the CapacitiesClient.GetCapacity method.
+func (client *CapacitiesClient) GetCapacity(ctx context.Context, capacityID string, options *CapacitiesClientGetCapacityOptions) (CapacitiesClientGetCapacityResponse, error) {
+	var err error
+	const operationName = "core.CapacitiesClient.GetCapacity"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getCapacityCreateRequest(ctx, capacityID, options)
+	if err != nil {
+		return CapacitiesClientGetCapacityResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return CapacitiesClientGetCapacityResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return CapacitiesClientGetCapacityResponse{}, err
+	}
+	resp, err := client.getCapacityHandleResponse(httpResp)
+	return resp, err
+}
+
+// getCapacityCreateRequest creates the GetCapacity request.
+func (client *CapacitiesClient) getCapacityCreateRequest(ctx context.Context, capacityID string, _ *CapacitiesClientGetCapacityOptions) (*policy.Request, error) {
+	urlPath := "/v1/capacities/{capacityId}"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getCapacityHandleResponse handles the GetCapacity response.
+func (client *CapacitiesClient) getCapacityHandleResponse(resp *http.Response) (CapacitiesClientGetCapacityResponse, error) {
+	result := CapacitiesClientGetCapacityResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.Capacity); err != nil {
+		return CapacitiesClientGetCapacityResponse{}, err
+	}
+	return result, nil
 }
 
 // NewListCapacitiesPager - This API supports pagination [/rest/api/fabric/articles/pagination].

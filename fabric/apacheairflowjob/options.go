@@ -6,6 +6,13 @@
 
 package apacheairflowjob
 
+// ComputeClientBeginUpdateApacheAirflowJobComputeBetaOptions contains the optional parameters for the ComputeClient.BeginUpdateApacheAirflowJobComputeBeta
+// method.
+type ComputeClientBeginUpdateApacheAirflowJobComputeBetaOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
 // ComputeClientGetApacheAirflowJobComputeBetaOptions contains the optional parameters for the ComputeClient.GetApacheAirflowJobComputeBeta
 // method.
 type ComputeClientGetApacheAirflowJobComputeBetaOptions struct {
@@ -70,7 +77,8 @@ type ItemsClientBeginCreateApacheAirflowJobOptions struct {
 // ItemsClientBeginGetApacheAirflowJobDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetApacheAirflowJobDefinition
 // method.
 type ItemsClientBeginGetApacheAirflowJobDefinitionOptions struct {
-	// The format of the public definition.
+	// The format of the Apache Airflow job public definition. If no format is provided, the default Apache Airflow job definition
+	// format is used.
 	Format *string
 
 	// Resumes the long-running operation from the provided token.

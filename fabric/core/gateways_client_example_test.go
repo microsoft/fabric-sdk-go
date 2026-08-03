@@ -71,7 +71,20 @@ func ExampleGatewaysClient_NewListGatewaysPager() {
 		// 			CapacityID: to.Ptr("ed26b6f3-7bc5-44b0-9565-a8942619ef4c"),
 		// 			DisplayName: to.Ptr("ContosoVirtualNetworkGateway"),
 		// 			InactivityMinutesBeforeSleep: to.Ptr[int32](1440),
+		// 			MaxMemberGatewayCount: to.Ptr[int32](3),
+		// 			MinMemberGatewayCount: to.Ptr[int32](1),
 		// 			NumberOfMemberGateways: to.Ptr[int32](3),
+		// 			VirtualNetworkAzureResource: &core.VirtualNetworkAzureResource{
+		// 				ResourceGroupName: to.Ptr("ContosoResourceGroup"),
+		// 				SubscriptionID: to.Ptr("879b4ba0-ed17-4ff2-851e-4a2228e00b70"),
+		// 				SubnetName: to.Ptr("ContosoSubnet"),
+		// 				VirtualNetworkName: to.Ptr("ContosoVirtualNetwork"),
+		// 			},
+		// 		},
+		// 		&core.StreamingVirtualNetworkGateway{
+		// 			Type: to.Ptr(core.GatewayTypeStreamingVirtualNetwork),
+		// 			ID: to.Ptr("3f8d6a4b-1c2e-4f5a-9b7c-2d6e8f1a3b9d"),
+		// 			DisplayName: to.Ptr("ContosoStreamingVirtualNetworkGateway"),
 		// 			VirtualNetworkAzureResource: &core.VirtualNetworkAzureResource{
 		// 				ResourceGroupName: to.Ptr("ContosoResourceGroup"),
 		// 				SubscriptionID: to.Ptr("879b4ba0-ed17-4ff2-851e-4a2228e00b70"),
@@ -84,7 +97,33 @@ func ExampleGatewaysClient_NewListGatewaysPager() {
 }
 
 // Generated from example definition
-func ExampleGatewaysClient_CreateGateway() {
+func ExampleGatewaysClient_CreateGateway_streamingVirtualNetworkGatewayExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewGatewaysClient().CreateGateway(ctx, &core.CreateStreamingVirtualNetworkGatewayRequest{
+		Type:        to.Ptr(core.GatewayTypeStreamingVirtualNetwork),
+		DisplayName: to.Ptr("ContosoStreamingVirtualNetworkGateway"),
+		VirtualNetworkAzureResource: &core.VirtualNetworkAzureResource{
+			ResourceGroupName:  to.Ptr("ContosoResourceGroup"),
+			SubscriptionID:     to.Ptr("879b4ba0-ed17-4ff2-851e-4a2228e00b70"),
+			SubnetName:         to.Ptr("ContosoSubnet"),
+			VirtualNetworkName: to.Ptr("ContosoVirtualNetwork"),
+		},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleGatewaysClient_CreateGateway_virtualNetworkGatewayExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -99,6 +138,38 @@ func ExampleGatewaysClient_CreateGateway() {
 		CapacityID:                   to.Ptr("ed26b6f3-7bc5-44b0-9565-a8942619ef4c"),
 		DisplayName:                  to.Ptr("ContosoVirtualNetworkGateway"),
 		InactivityMinutesBeforeSleep: to.Ptr[int32](120),
+		MaxMemberGatewayCount:        to.Ptr[int32](3),
+		MinMemberGatewayCount:        to.Ptr[int32](1),
+		VirtualNetworkAzureResource: &core.VirtualNetworkAzureResource{
+			ResourceGroupName:  to.Ptr("ContosoResourceGroup"),
+			SubscriptionID:     to.Ptr("879b4ba0-ed17-4ff2-851e-4a2228e00b70"),
+			SubnetName:         to.Ptr("ContosoSubnet"),
+			VirtualNetworkName: to.Ptr("ContosoVirtualNetwork"),
+		},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleGatewaysClient_CreateGateway_virtualNetworkGatewayExampleWithInvalidParameters() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewGatewaysClient().CreateGateway(ctx, &core.CreateVirtualNetworkGatewayRequest{
+		Type:                         to.Ptr(core.GatewayTypeVirtualNetwork),
+		CapacityID:                   to.Ptr("ed26b6f3-7bc5-44b0-9565-a8942619ef4c"),
+		DisplayName:                  to.Ptr("ContosoVirtualNetworkGateway"),
+		InactivityMinutesBeforeSleep: to.Ptr[int32](120),
+		MaxMemberGatewayCount:        to.Ptr[int32](5),
+		MinMemberGatewayCount:        to.Ptr[int32](1),
 		NumberOfMemberGateways:       to.Ptr[int32](3),
 		VirtualNetworkAzureResource: &core.VirtualNetworkAzureResource{
 			ResourceGroupName:  to.Ptr("ContosoResourceGroup"),
@@ -191,6 +262,42 @@ func ExampleGatewaysClient_UpdateGateway_onPremisesGatewayExample() {
 }
 
 // Generated from example definition
+func ExampleGatewaysClient_UpdateGateway_streamingVirtualNetworkGatewayExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewGatewaysClient().UpdateGateway(ctx, "7015263e-885f-455b-80f7-bbf862899176", &core.UpdateStreamingVirtualNetworkGatewayRequest{
+		Type:        to.Ptr(core.GatewayTypeStreamingVirtualNetwork),
+		DisplayName: to.Ptr("ContosoStreamingVirtualNetworkGateway1"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res = core.GatewaysClientUpdateGatewayResponse{
+	// 	                            GatewayClassification: &core.StreamingVirtualNetworkGateway{
+	// 		Type: to.Ptr(core.GatewayTypeStreamingVirtualNetwork),
+	// 		ID: to.Ptr("7015263e-885f-455b-80f7-bbf862899176"),
+	// 		DisplayName: to.Ptr("ContosoStreamingVirtualNetworkGateway1"),
+	// 		VirtualNetworkAzureResource: &core.VirtualNetworkAzureResource{
+	// 			ResourceGroupName: to.Ptr("ContosoResourceGroup"),
+	// 			SubscriptionID: to.Ptr("879b4ba0-ed17-4ff2-851e-4a2228e00b70"),
+	// 			SubnetName: to.Ptr("ContosoSubnet"),
+	// 			VirtualNetworkName: to.Ptr("ContosoVirtualNetwork"),
+	// 		},
+	// 	},
+	// 	                        }
+}
+
+// Generated from example definition
 func ExampleGatewaysClient_UpdateGateway_virtualNetworkGatewayExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -206,7 +313,8 @@ func ExampleGatewaysClient_UpdateGateway_virtualNetworkGatewayExample() {
 		DisplayName:                  to.Ptr("ContosoVirtualNetworkGateway1"),
 		CapacityID:                   to.Ptr("7cf7181f-9457-4178-b488-e7472b02faf4"),
 		InactivityMinutesBeforeSleep: to.Ptr[int32](720),
-		NumberOfMemberGateways:       to.Ptr[int32](5),
+		MaxMemberGatewayCount:        to.Ptr[int32](5),
+		MinMemberGatewayCount:        to.Ptr[int32](1),
 	}, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
@@ -221,6 +329,8 @@ func ExampleGatewaysClient_UpdateGateway_virtualNetworkGatewayExample() {
 	// 		CapacityID: to.Ptr("7cf7181f-9457-4178-b488-e7472b02faf4"),
 	// 		DisplayName: to.Ptr("ContosoVirtualNetworkGateway1"),
 	// 		InactivityMinutesBeforeSleep: to.Ptr[int32](720),
+	// 		MaxMemberGatewayCount: to.Ptr[int32](5),
+	// 		MinMemberGatewayCount: to.Ptr[int32](1),
 	// 		NumberOfMemberGateways: to.Ptr[int32](5),
 	// 		VirtualNetworkAzureResource: &core.VirtualNetworkAzureResource{
 	// 			ResourceGroupName: to.Ptr("ContosoResourceGroup"),
@@ -339,6 +449,170 @@ func ExampleGatewaysClient_DeleteGatewayMember() {
 	_, err = clientFactory.NewGatewaysClient().DeleteGatewayMember(ctx, "ad457a0a-1fc4-4218-9867-1d84661ca4b8", "f921ee6b-8feb-4595-8aa7-3ed34338e8b6", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleGatewaysClient_BeginCheckGatewayStatus_onPremiseDataGatewayExampleWhenGatewayClusterIsOnlineButOneOfTheGatewayMemberEncountersAnError() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewGatewaysClient().BeginCheckGatewayStatus(ctx, "8e41c4dd-a382-4937-9bf3-695ab881f7c2", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	res, err := poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.GatewayStatusResponse = core.GatewayStatusResponse{
+	// 	ErrorDetails: []core.ErrorResponseDetails{
+	// 		{
+	// 			ErrorCode: to.Ptr("DMTS_GatewayIsDisabled"),
+	// 			Message: to.Ptr("Gateway is disabled"),
+	// 			RelatedResource: &core.ErrorRelatedResource{
+	// 				ResourceID: to.Ptr("f5a83d6a-78e2-4834-af05-b586e3aeb7e6"),
+	// 				ResourceType: to.Ptr("Gateway"),
+	// 			},
+	// 	}},
+	// 	GatewayUpgradeState: to.Ptr(core.GatewayUpgradeStateUpToDate),
+	// 	GatewayVersion: to.Ptr("1.2.3"),
+	// 	Status: to.Ptr(core.GatewayStatusOnline),
+	// }
+}
+
+// Generated from example definition
+func ExampleGatewaysClient_BeginCheckGatewayStatus_virtualNetworkGatewayExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewGatewaysClient().BeginCheckGatewayStatus(ctx, "8e41c4dd-a382-4937-9bf3-695ab881f7c2", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	res, err := poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.GatewayStatusResponse = core.GatewayStatusResponse{
+	// 	ErrorDetails: []core.ErrorResponseDetails{
+	// 		{
+	// 			ErrorCode: to.Ptr("DM_GWPipeline_Client_GatewayUnreachable"),
+	// 			Message: to.Ptr("Gateway is unreachable"),
+	// 			RelatedResource: &core.ErrorRelatedResource{
+	// 				ResourceID: to.Ptr("8e41c4dd-a382-4937-9bf3-695ab881f7c2"),
+	// 				ResourceType: to.Ptr("Gateway"),
+	// 			},
+	// 	}},
+	// 	GatewayUpgradeState: to.Ptr(core.GatewayUpgradeStateUpToDate),
+	// 	GatewayVersion: to.Ptr("1.2.3"),
+	// 	Status: to.Ptr(core.GatewayStatusOffline),
+	// }
+}
+
+// Generated from example definition
+func ExampleGatewaysClient_BeginCheckGatewayMemberStatus_offlineGatewayMemberExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewGatewaysClient().BeginCheckGatewayMemberStatus(ctx, "8e41c4dd-a382-4937-9bf3-695ab881f7c2", "f921ee6b-8feb-4595-8aa7-3ed34338e8b6", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	res, err := poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.GatewayStatusResponse = core.GatewayStatusResponse{
+	// 	ErrorDetails: []core.ErrorResponseDetails{
+	// 		{
+	// 			ErrorCode: to.Ptr("DM_GWPipeline_Client_GatewayUnreachable"),
+	// 			Message: to.Ptr("Gateway is unreachable"),
+	// 			RelatedResource: &core.ErrorRelatedResource{
+	// 				ResourceID: to.Ptr("f921ee6b-8feb-4595-8aa7-3ed34338e8b6"),
+	// 				ResourceType: to.Ptr("Gateway"),
+	// 			},
+	// 	}},
+	// 	GatewayUpgradeState: to.Ptr(core.GatewayUpgradeStateUpToDate),
+	// 	GatewayVersion: to.Ptr("1.2.3"),
+	// 	Status: to.Ptr(core.GatewayStatusOffline),
+	// }
+}
+
+// Generated from example definition
+func ExampleGatewaysClient_BeginCheckGatewayMemberStatus_onlineGatewayMemberExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewGatewaysClient().BeginCheckGatewayMemberStatus(ctx, "8e41c4dd-a382-4937-9bf3-695ab881f7c2", "f921ee6b-8feb-4595-8aa7-3ed34338e8b6", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	res, err := poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.GatewayStatusResponse = core.GatewayStatusResponse{
+	// 	GatewayUpgradeState: to.Ptr(core.GatewayUpgradeStateUpToDate),
+	// 	GatewayVersion: to.Ptr("1.2.3"),
+	// 	Status: to.Ptr(core.GatewayStatusOnline),
+	// }
+}
+
+// Generated from example definition
+func ExampleGatewaysClient_BeginRestartGateway() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewGatewaysClient().BeginRestartGateway(ctx, "8e41c4dd-a382-4937-9bf3-695ab881f7c2", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
 	}
 }
 
@@ -575,5 +849,26 @@ func ExampleGatewaysClient_DeleteGatewayRoleAssignment() {
 	_, err = clientFactory.NewGatewaysClient().DeleteGatewayRoleAssignment(ctx, "8e41c4dd-a382-4937-9bf3-695ab881f7c2", "056afb37-8f6c-4fd8-9aa5-64ba7f1974e7", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleGatewaysClient_BeginShutdownGateway() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewGatewaysClient().BeginShutdownGateway(ctx, "8e41c4dd-a382-4937-9bf3-695ab881f7c2", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
 	}
 }

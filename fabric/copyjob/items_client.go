@@ -380,6 +380,66 @@ func (client *ItemsClient) listCopyJobsHandleResponse(resp *http.Response) (Item
 	return result, nil
 }
 
+// ResetCopyJob - Resets the specified CopyJob. If resetAllCopyJobEntities is true, all entities are reset. Otherwise, only
+// the specified entities are reset.
+// PERMISSIONS The caller must have contributor workspace role.
+// REQUIRED DELEGATED SCOPES CopyJob.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - copyJobID - The CopyJob ID.
+//   - resetCopyJobRequest - The CopyJobReset payload.
+//   - options - ItemsClientResetCopyJobOptions contains the optional parameters for the ItemsClient.ResetCopyJob method.
+func (client *ItemsClient) ResetCopyJob(ctx context.Context, workspaceID string, copyJobID string, resetCopyJobRequest EntityResetPayload, options *ItemsClientResetCopyJobOptions) (ItemsClientResetCopyJobResponse, error) {
+	var err error
+	const operationName = "copyjob.ItemsClient.ResetCopyJob"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.resetCopyJobCreateRequest(ctx, workspaceID, copyJobID, resetCopyJobRequest, options)
+	if err != nil {
+		return ItemsClientResetCopyJobResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return ItemsClientResetCopyJobResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return ItemsClientResetCopyJobResponse{}, err
+	}
+	return ItemsClientResetCopyJobResponse{}, nil
+}
+
+// resetCopyJobCreateRequest creates the ResetCopyJob request.
+func (client *ItemsClient) resetCopyJobCreateRequest(ctx context.Context, workspaceID string, copyJobID string, resetCopyJobRequest EntityResetPayload, _ *ItemsClientResetCopyJobOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/copyJobs/{copyJobId}/resetCopyJob"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if copyJobID == "" {
+		return nil, errors.New("parameter copyJobID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{copyJobId}", url.PathEscape(copyJobID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, resetCopyJobRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // UpdateCopyJob - PERMISSIONS The caller must have read and write permissions for the copy job.
 // REQUIRED DELEGATED SCOPES CopyJob.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]

@@ -6,6 +6,162 @@
 
 package dataagent
 
+// DatasourceType - The datasource type. Additional DatasourceType types may be added over time.
+type DatasourceType string
+
+const (
+	// DatasourceTypeFabricItem - A datasource backed by a supported Fabric item.
+	DatasourceTypeFabricItem DatasourceType = "FabricItem"
+	// DatasourceTypeLakehouseTables - A datasource backed by a lakehouse in tables-only mode.
+	DatasourceTypeLakehouseTables DatasourceType = "LakehouseTables"
+)
+
+// PossibleDatasourceTypeValues returns the possible values for the DatasourceType const type.
+func PossibleDatasourceTypeValues() []DatasourceType {
+	return []DatasourceType{
+		DatasourceTypeFabricItem,
+		DatasourceTypeLakehouseTables,
+	}
+}
+
+// ElementState - Indicates the current availability of the element in the datasource schema. Additional ElementState types
+// may be added over time.
+type ElementState string
+
+const (
+	// ElementStateAccessDenied - The datasource schema could not be read because access was denied.
+	ElementStateAccessDenied ElementState = "AccessDenied"
+	// ElementStateAccessDeniedOap - The datasource schema could not be read because access is blocked by an organizational access
+	// policy.
+	ElementStateAccessDeniedOap ElementState = "AccessDeniedOap"
+	// ElementStateAvailable - The element is available in the datasource schema.
+	ElementStateAvailable ElementState = "Available"
+	// ElementStateDatasourceNotFound - The datasource could not be found.
+	ElementStateDatasourceNotFound ElementState = "DatasourceNotFound"
+	// ElementStateNotAvailable - The element was previously configured but is no longer available in the datasource schema.
+	ElementStateNotAvailable ElementState = "NotAvailable"
+	// ElementStateSchemaUnavailable - The datasource schema is currently unavailable.
+	ElementStateSchemaUnavailable ElementState = "SchemaUnavailable"
+)
+
+// PossibleElementStateValues returns the possible values for the ElementState const type.
+func PossibleElementStateValues() []ElementState {
+	return []ElementState{
+		ElementStateAccessDenied,
+		ElementStateAccessDeniedOap,
+		ElementStateAvailable,
+		ElementStateDatasourceNotFound,
+		ElementStateNotAvailable,
+		ElementStateSchemaUnavailable,
+	}
+}
+
+// ElementType - The public type of a datasource schema element. Additional ElementType types may be added over time.
+type ElementType string
+
+const (
+	// ElementTypeColumn - A column element.
+	ElementTypeColumn ElementType = "Column"
+	// ElementTypeDirectory - A directory element.
+	ElementTypeDirectory ElementType = "Directory"
+	// ElementTypeEdgeType - A graph edge type element.
+	ElementTypeEdgeType ElementType = "EdgeType"
+	// ElementTypeEntity - An ontology entity element.
+	ElementTypeEntity ElementType = "Entity"
+	// ElementTypeExternalTable - An external table element.
+	ElementTypeExternalTable ElementType = "ExternalTable"
+	// ElementTypeFiles - A files container element.
+	ElementTypeFiles ElementType = "Files"
+	// ElementTypeFunction - A function element.
+	ElementTypeFunction ElementType = "Function"
+	// ElementTypeFunctionParameter - A function parameter element.
+	ElementTypeFunctionParameter ElementType = "FunctionParameter"
+	// ElementTypeFunctionReturnValue - A function return value element.
+	ElementTypeFunctionReturnValue ElementType = "FunctionReturnValue"
+	// ElementTypeFunctions - A grouping container for function elements.
+	ElementTypeFunctions ElementType = "Functions"
+	// ElementTypeMaterializedView - A materialized view element.
+	ElementTypeMaterializedView ElementType = "MaterializedView"
+	// ElementTypeMaterializedViews - A grouping container for materialized view elements.
+	ElementTypeMaterializedViews ElementType = "MaterializedViews"
+	// ElementTypeMeasure - A measure element.
+	ElementTypeMeasure ElementType = "Measure"
+	// ElementTypeNodeType - A graph node type element.
+	ElementTypeNodeType ElementType = "NodeType"
+	// ElementTypeRoot - The root element of a datasource schema tree.
+	ElementTypeRoot ElementType = "Root"
+	// ElementTypeScalarFunctions - A grouping container for scalar function elements.
+	ElementTypeScalarFunctions ElementType = "ScalarFunctions"
+	// ElementTypeSchema - A schema element.
+	ElementTypeSchema ElementType = "Schema"
+	// ElementTypeSchemas - A grouping container for schema elements.
+	ElementTypeSchemas ElementType = "Schemas"
+	// ElementTypeShortcuts - A grouping container for shortcut elements.
+	ElementTypeShortcuts ElementType = "Shortcuts"
+	// ElementTypeTable - A table element.
+	ElementTypeTable ElementType = "Table"
+	// ElementTypeTableValuedFunctions - A grouping container for table-valued function elements.
+	ElementTypeTableValuedFunctions ElementType = "TableValuedFunctions"
+	// ElementTypeTables - A grouping container for table elements.
+	ElementTypeTables ElementType = "Tables"
+	// ElementTypeView - A view element.
+	ElementTypeView ElementType = "View"
+	// ElementTypeViews - A grouping container for view elements.
+	ElementTypeViews ElementType = "Views"
+)
+
+// PossibleElementTypeValues returns the possible values for the ElementType const type.
+func PossibleElementTypeValues() []ElementType {
+	return []ElementType{
+		ElementTypeColumn,
+		ElementTypeDirectory,
+		ElementTypeEdgeType,
+		ElementTypeEntity,
+		ElementTypeExternalTable,
+		ElementTypeFiles,
+		ElementTypeFunction,
+		ElementTypeFunctionParameter,
+		ElementTypeFunctionReturnValue,
+		ElementTypeFunctions,
+		ElementTypeMaterializedView,
+		ElementTypeMaterializedViews,
+		ElementTypeMeasure,
+		ElementTypeNodeType,
+		ElementTypeRoot,
+		ElementTypeScalarFunctions,
+		ElementTypeSchema,
+		ElementTypeSchemas,
+		ElementTypeShortcuts,
+		ElementTypeTable,
+		ElementTypeTableValuedFunctions,
+		ElementTypeTables,
+		ElementTypeView,
+		ElementTypeViews,
+	}
+}
+
+// FewshotValidationStatusValue - The validation result for a fewshot. Additional FewshotValidationStatusValue types may be
+// added over time.
+type FewshotValidationStatusValue string
+
+const (
+	// FewshotValidationStatusValueInvalid - Query failed validation.
+	FewshotValidationStatusValueInvalid FewshotValidationStatusValue = "Invalid"
+	// FewshotValidationStatusValueValid - Query has been validated successfully.
+	FewshotValidationStatusValueValid FewshotValidationStatusValue = "Valid"
+	// FewshotValidationStatusValueValidating - Validation is currently in progress.
+	FewshotValidationStatusValueValidating FewshotValidationStatusValue = "Validating"
+)
+
+// PossibleFewshotValidationStatusValueValues returns the possible values for the FewshotValidationStatusValue const type.
+func PossibleFewshotValidationStatusValueValues() []FewshotValidationStatusValue {
+	return []FewshotValidationStatusValue{
+		FewshotValidationStatusValueInvalid,
+		FewshotValidationStatusValueValid,
+		FewshotValidationStatusValueValidating,
+	}
+}
+
 // GroupType - The type of the group. Additional group types may be added over time.
 type GroupType string
 
@@ -27,6 +183,45 @@ func PossibleGroupTypeValues() []GroupType {
 	}
 }
 
+// IndexState - Index state for lakehouse file directories. Additional IndexState types may be added over time.
+type IndexState string
+
+const (
+	// IndexStateIndexed - Directory has been indexed for unstructured search.
+	IndexStateIndexed IndexState = "Indexed"
+	// IndexStateIndexing - Directory is currently being indexed.
+	IndexStateIndexing IndexState = "Indexing"
+	// IndexStateNotIndexed - Directory has not been indexed.
+	IndexStateNotIndexed IndexState = "NotIndexed"
+)
+
+// PossibleIndexStateValues returns the possible values for the IndexState const type.
+func PossibleIndexStateValues() []IndexState {
+	return []IndexState{
+		IndexStateIndexed,
+		IndexStateIndexing,
+		IndexStateNotIndexed,
+	}
+}
+
+// ItemReferenceType - The item reference type. Additional ItemReferenceType types may be added over time.
+type ItemReferenceType string
+
+const (
+	// ItemReferenceTypeByID - The item is referenced by its ID.
+	ItemReferenceTypeByID ItemReferenceType = "ById"
+	// ItemReferenceTypeByVariable - The item is referenced by a variable.
+	ItemReferenceTypeByVariable ItemReferenceType = "ByVariable"
+)
+
+// PossibleItemReferenceTypeValues returns the possible values for the ItemReferenceType const type.
+func PossibleItemReferenceTypeValues() []ItemReferenceType {
+	return []ItemReferenceType{
+		ItemReferenceTypeByID,
+		ItemReferenceTypeByVariable,
+	}
+}
+
 // ItemType - The type of the item. Additional item types may be added over time.
 type ItemType string
 
@@ -35,6 +230,10 @@ const (
 	ItemTypeAnomalyDetector ItemType = "AnomalyDetector"
 	// ItemTypeApacheAirflowJob - An ApacheAirflowJob.
 	ItemTypeApacheAirflowJob ItemType = "ApacheAirflowJob"
+	// ItemTypeAppBackend - An AppBackend.
+	ItemTypeAppBackend ItemType = "AppBackend"
+	// ItemTypeAzureDatabricksStorage - A OneLake-backed storage item for Azure Databricks.
+	ItemTypeAzureDatabricksStorage ItemType = "AzureDatabricksStorage"
 	// ItemTypeCopyJob - A Copy job.
 	ItemTypeCopyJob ItemType = "CopyJob"
 	// ItemTypeCosmosDBDatabase - A Cosmos DB Database.
@@ -43,6 +242,8 @@ const (
 	ItemTypeDashboard ItemType = "Dashboard"
 	// ItemTypeDataAgent - A DataAgent.
 	ItemTypeDataAgent ItemType = "DataAgent"
+	// ItemTypeDataBuildToolJob - A DataBuildToolJob.
+	ItemTypeDataBuildToolJob ItemType = "DataBuildToolJob"
 	// ItemTypeDataPipeline - A data pipeline.
 	ItemTypeDataPipeline ItemType = "DataPipeline"
 	// ItemTypeDataflow - A Dataflow.
@@ -97,6 +298,10 @@ const (
 	ItemTypeOntology ItemType = "Ontology"
 	// ItemTypeOperationsAgent - A OperationsAgent.
 	ItemTypeOperationsAgent ItemType = "OperationsAgent"
+	// ItemTypeOrgApp - An Org App.
+	ItemTypeOrgApp ItemType = "OrgApp"
+	// ItemTypeOrgAppAudience - An Org App Audience.
+	ItemTypeOrgAppAudience ItemType = "OrgAppAudience"
 	// ItemTypePaginatedReport - PowerBI paginated report.
 	ItemTypePaginatedReport ItemType = "PaginatedReport"
 	// ItemTypeReflex - A Reflex.
@@ -128,10 +333,13 @@ func PossibleItemTypeValues() []ItemType {
 	return []ItemType{
 		ItemTypeAnomalyDetector,
 		ItemTypeApacheAirflowJob,
+		ItemTypeAppBackend,
+		ItemTypeAzureDatabricksStorage,
 		ItemTypeCopyJob,
 		ItemTypeCosmosDBDatabase,
 		ItemTypeDashboard,
 		ItemTypeDataAgent,
+		ItemTypeDataBuildToolJob,
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
 		ItemTypeDatamart,
@@ -159,6 +367,8 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeNotebook,
 		ItemTypeOntology,
 		ItemTypeOperationsAgent,
+		ItemTypeOrgApp,
+		ItemTypeOrgAppAudience,
 		ItemTypePaginatedReport,
 		ItemTypeReflex,
 		ItemTypeReport,
@@ -233,5 +443,48 @@ func PossibleSensitivityLabelApplyStrategyValues() []SensitivityLabelApplyStrate
 	return []SensitivityLabelApplyStrategy{
 		SensitivityLabelApplyStrategyApplyOrFail,
 		SensitivityLabelApplyStrategyIgnore,
+	}
+}
+
+// SupportedItemType - The supported Fabric item type for a FabricItem datasource. Values use published Fabric item names.
+// Additional DataAgentSupportedItemType types may be added over time.
+type SupportedItemType string
+
+const (
+	// SupportedItemTypeGraphModel - A graph model.
+	SupportedItemTypeGraphModel SupportedItemType = "GraphModel"
+	// SupportedItemTypeKQLDatabase - A KQL database.
+	SupportedItemTypeKQLDatabase SupportedItemType = "KQLDatabase"
+	// SupportedItemTypeLakehouse - A lakehouse.
+	SupportedItemTypeLakehouse SupportedItemType = "Lakehouse"
+	// SupportedItemTypeMirroredAzureDatabricksCatalog - A mirrored Azure Databricks catalog.
+	SupportedItemTypeMirroredAzureDatabricksCatalog SupportedItemType = "MirroredAzureDatabricksCatalog"
+	// SupportedItemTypeMirroredDatabase - A mirrored database.
+	SupportedItemTypeMirroredDatabase SupportedItemType = "MirroredDatabase"
+	// SupportedItemTypeOntology - An ontology.
+	SupportedItemTypeOntology SupportedItemType = "Ontology"
+	// SupportedItemTypeReport - Power BI report.
+	SupportedItemTypeReport SupportedItemType = "Report"
+	// SupportedItemTypeSQLDatabase - A SQL database.
+	SupportedItemTypeSQLDatabase SupportedItemType = "SQLDatabase"
+	// SupportedItemTypeSemanticModel - Power BI semantic model.
+	SupportedItemTypeSemanticModel SupportedItemType = "SemanticModel"
+	// SupportedItemTypeWarehouse - A warehouse.
+	SupportedItemTypeWarehouse SupportedItemType = "Warehouse"
+)
+
+// PossibleDataAgentSupportedItemTypeValues returns the possible values for the SupportedItemType const type.
+func PossibleDataAgentSupportedItemTypeValues() []SupportedItemType {
+	return []SupportedItemType{
+		SupportedItemTypeGraphModel,
+		SupportedItemTypeKQLDatabase,
+		SupportedItemTypeLakehouse,
+		SupportedItemTypeMirroredAzureDatabricksCatalog,
+		SupportedItemTypeMirroredDatabase,
+		SupportedItemTypeOntology,
+		SupportedItemTypeReport,
+		SupportedItemTypeSQLDatabase,
+		SupportedItemTypeSemanticModel,
+		SupportedItemTypeWarehouse,
 	}
 }

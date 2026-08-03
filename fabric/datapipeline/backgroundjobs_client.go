@@ -18,6 +18,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 
 	"github.com/microsoft/fabric-sdk-go/fabric/core"
+	"github.com/microsoft/fabric-sdk-go/internal/iruntime"
 )
 
 // BackgroundJobsClient contains the methods for the BackgroundJobs group.
@@ -27,9 +28,346 @@ type BackgroundJobsClient struct {
 	endpoint string
 }
 
-// RunOnDemandExecute - PERMISSIONS
-// * The caller must have a member or higher workspace role.
-// REQUIRED DELEGATED SCOPES
+// DeleteExecuteSchedule - REQUIRED DELEGATED SCOPES DataPipeline.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataPipelineID - The data pipeline ID.
+//   - scheduleID - The data pipeline schedule ID.
+//   - options - BackgroundJobsClientDeleteExecuteScheduleOptions contains the optional parameters for the BackgroundJobsClient.DeleteExecuteSchedule
+//     method.
+func (client *BackgroundJobsClient) DeleteExecuteSchedule(ctx context.Context, workspaceID string, dataPipelineID string, scheduleID string, options *BackgroundJobsClientDeleteExecuteScheduleOptions) (BackgroundJobsClientDeleteExecuteScheduleResponse, error) {
+	var err error
+	const operationName = "datapipeline.BackgroundJobsClient.DeleteExecuteSchedule"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.deleteExecuteScheduleCreateRequest(ctx, workspaceID, dataPipelineID, scheduleID, options)
+	if err != nil {
+		return BackgroundJobsClientDeleteExecuteScheduleResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return BackgroundJobsClientDeleteExecuteScheduleResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return BackgroundJobsClientDeleteExecuteScheduleResponse{}, err
+	}
+	return BackgroundJobsClientDeleteExecuteScheduleResponse{}, nil
+}
+
+// deleteExecuteScheduleCreateRequest creates the DeleteExecuteSchedule request.
+func (client *BackgroundJobsClient) deleteExecuteScheduleCreateRequest(ctx context.Context, workspaceID string, dataPipelineID string, scheduleID string, _ *BackgroundJobsClientDeleteExecuteScheduleOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/dataPipelines/{dataPipelineId}/jobs/execute/schedules/{scheduleId}"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if dataPipelineID == "" {
+		return nil, errors.New("parameter dataPipelineID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{dataPipelineId}", url.PathEscape(dataPipelineID))
+	if scheduleID == "" {
+		return nil, errors.New("parameter scheduleID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{scheduleId}", url.PathEscape(scheduleID))
+	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// GetExecuteJobInstance - REQUIRED DELEGATED SCOPES DataPipeline.Read.All or DataPipeline.ReadWrite.All or Item.Read.All
+// or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataPipelineID - The data pipeline ID.
+//   - jobInstanceID - The job instance ID.
+//   - options - BackgroundJobsClientGetExecuteJobInstanceOptions contains the optional parameters for the BackgroundJobsClient.GetExecuteJobInstance
+//     method.
+func (client *BackgroundJobsClient) GetExecuteJobInstance(ctx context.Context, workspaceID string, dataPipelineID string, jobInstanceID string, options *BackgroundJobsClientGetExecuteJobInstanceOptions) (BackgroundJobsClientGetExecuteJobInstanceResponse, error) {
+	var err error
+	const operationName = "datapipeline.BackgroundJobsClient.GetExecuteJobInstance"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getExecuteJobInstanceCreateRequest(ctx, workspaceID, dataPipelineID, jobInstanceID, options)
+	if err != nil {
+		return BackgroundJobsClientGetExecuteJobInstanceResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return BackgroundJobsClientGetExecuteJobInstanceResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return BackgroundJobsClientGetExecuteJobInstanceResponse{}, err
+	}
+	resp, err := client.getExecuteJobInstanceHandleResponse(httpResp)
+	return resp, err
+}
+
+// getExecuteJobInstanceCreateRequest creates the GetExecuteJobInstance request.
+func (client *BackgroundJobsClient) getExecuteJobInstanceCreateRequest(ctx context.Context, workspaceID string, dataPipelineID string, jobInstanceID string, _ *BackgroundJobsClientGetExecuteJobInstanceOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/dataPipelines/{dataPipelineId}/jobs/execute/instances/{jobInstanceId}"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if dataPipelineID == "" {
+		return nil, errors.New("parameter dataPipelineID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{dataPipelineId}", url.PathEscape(dataPipelineID))
+	if jobInstanceID == "" {
+		return nil, errors.New("parameter jobInstanceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{jobInstanceId}", url.PathEscape(jobInstanceID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getExecuteJobInstanceHandleResponse handles the GetExecuteJobInstance response.
+func (client *BackgroundJobsClient) getExecuteJobInstanceHandleResponse(resp *http.Response) (BackgroundJobsClientGetExecuteJobInstanceResponse, error) {
+	result := BackgroundJobsClientGetExecuteJobInstanceResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.ExecuteJobInstance); err != nil {
+		return BackgroundJobsClientGetExecuteJobInstanceResponse{}, err
+	}
+	return result, nil
+}
+
+// GetExecuteSchedule - REQUIRED DELEGATED SCOPES DataPipeline.Read.All or DataPipeline.ReadWrite.All or Item.Read.All or
+// Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataPipelineID - The data pipeline ID.
+//   - scheduleID - The data pipeline schedule ID.
+//   - options - BackgroundJobsClientGetExecuteScheduleOptions contains the optional parameters for the BackgroundJobsClient.GetExecuteSchedule
+//     method.
+func (client *BackgroundJobsClient) GetExecuteSchedule(ctx context.Context, workspaceID string, dataPipelineID string, scheduleID string, options *BackgroundJobsClientGetExecuteScheduleOptions) (BackgroundJobsClientGetExecuteScheduleResponse, error) {
+	var err error
+	const operationName = "datapipeline.BackgroundJobsClient.GetExecuteSchedule"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getExecuteScheduleCreateRequest(ctx, workspaceID, dataPipelineID, scheduleID, options)
+	if err != nil {
+		return BackgroundJobsClientGetExecuteScheduleResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return BackgroundJobsClientGetExecuteScheduleResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return BackgroundJobsClientGetExecuteScheduleResponse{}, err
+	}
+	resp, err := client.getExecuteScheduleHandleResponse(httpResp)
+	return resp, err
+}
+
+// getExecuteScheduleCreateRequest creates the GetExecuteSchedule request.
+func (client *BackgroundJobsClient) getExecuteScheduleCreateRequest(ctx context.Context, workspaceID string, dataPipelineID string, scheduleID string, _ *BackgroundJobsClientGetExecuteScheduleOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/dataPipelines/{dataPipelineId}/jobs/execute/schedules/{scheduleId}"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if dataPipelineID == "" {
+		return nil, errors.New("parameter dataPipelineID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{dataPipelineId}", url.PathEscape(dataPipelineID))
+	if scheduleID == "" {
+		return nil, errors.New("parameter scheduleID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{scheduleId}", url.PathEscape(scheduleID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getExecuteScheduleHandleResponse handles the GetExecuteSchedule response.
+func (client *BackgroundJobsClient) getExecuteScheduleHandleResponse(resp *http.Response) (BackgroundJobsClientGetExecuteScheduleResponse, error) {
+	result := BackgroundJobsClientGetExecuteScheduleResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.ExecuteSchedule); err != nil {
+		return BackgroundJobsClientGetExecuteScheduleResponse{}, err
+	}
+	return result, nil
+}
+
+// NewListExecuteJobInstancesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
+// REQUIRED DELEGATED SCOPES DataPipeline.Read.All or DataPipeline.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataPipelineID - The data pipeline ID.
+//   - options - BackgroundJobsClientListExecuteJobInstancesOptions contains the optional parameters for the BackgroundJobsClient.NewListExecuteJobInstancesPager
+//     method.
+func (client *BackgroundJobsClient) NewListExecuteJobInstancesPager(workspaceID string, dataPipelineID string, options *BackgroundJobsClientListExecuteJobInstancesOptions) *runtime.Pager[BackgroundJobsClientListExecuteJobInstancesResponse] {
+	return runtime.NewPager(runtime.PagingHandler[BackgroundJobsClientListExecuteJobInstancesResponse]{
+		More: func(page BackgroundJobsClientListExecuteJobInstancesResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *BackgroundJobsClientListExecuteJobInstancesResponse) (BackgroundJobsClientListExecuteJobInstancesResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "datapipeline.BackgroundJobsClient.NewListExecuteJobInstancesPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.listExecuteJobInstancesCreateRequest(ctx, workspaceID, dataPipelineID, options)
+			}, nil)
+			if err != nil {
+				return BackgroundJobsClientListExecuteJobInstancesResponse{}, err
+			}
+			return client.listExecuteJobInstancesHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
+}
+
+// listExecuteJobInstancesCreateRequest creates the ListExecuteJobInstances request.
+func (client *BackgroundJobsClient) listExecuteJobInstancesCreateRequest(ctx context.Context, workspaceID string, dataPipelineID string, options *BackgroundJobsClientListExecuteJobInstancesOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/dataPipelines/{dataPipelineId}/jobs/execute/instances"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if dataPipelineID == "" {
+		return nil, errors.New("parameter dataPipelineID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{dataPipelineId}", url.PathEscape(dataPipelineID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// listExecuteJobInstancesHandleResponse handles the ListExecuteJobInstances response.
+func (client *BackgroundJobsClient) listExecuteJobInstancesHandleResponse(resp *http.Response) (BackgroundJobsClientListExecuteJobInstancesResponse, error) {
+	result := BackgroundJobsClientListExecuteJobInstancesResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.ExecuteJobInstances); err != nil {
+		return BackgroundJobsClientListExecuteJobInstancesResponse{}, err
+	}
+	return result, nil
+}
+
+// NewListExecuteSchedulesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
+// REQUIRED DELEGATED SCOPES DataPipeline.Read.All or DataPipeline.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataPipelineID - The data pipeline ID.
+//   - options - BackgroundJobsClientListExecuteSchedulesOptions contains the optional parameters for the BackgroundJobsClient.NewListExecuteSchedulesPager
+//     method.
+func (client *BackgroundJobsClient) NewListExecuteSchedulesPager(workspaceID string, dataPipelineID string, options *BackgroundJobsClientListExecuteSchedulesOptions) *runtime.Pager[BackgroundJobsClientListExecuteSchedulesResponse] {
+	return runtime.NewPager(runtime.PagingHandler[BackgroundJobsClientListExecuteSchedulesResponse]{
+		More: func(page BackgroundJobsClientListExecuteSchedulesResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *BackgroundJobsClientListExecuteSchedulesResponse) (BackgroundJobsClientListExecuteSchedulesResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "datapipeline.BackgroundJobsClient.NewListExecuteSchedulesPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.listExecuteSchedulesCreateRequest(ctx, workspaceID, dataPipelineID, options)
+			}, nil)
+			if err != nil {
+				return BackgroundJobsClientListExecuteSchedulesResponse{}, err
+			}
+			return client.listExecuteSchedulesHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
+}
+
+// listExecuteSchedulesCreateRequest creates the ListExecuteSchedules request.
+func (client *BackgroundJobsClient) listExecuteSchedulesCreateRequest(ctx context.Context, workspaceID string, dataPipelineID string, options *BackgroundJobsClientListExecuteSchedulesOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/dataPipelines/{dataPipelineId}/jobs/execute/schedules"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if dataPipelineID == "" {
+		return nil, errors.New("parameter dataPipelineID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{dataPipelineId}", url.PathEscape(dataPipelineID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// listExecuteSchedulesHandleResponse handles the ListExecuteSchedules response.
+func (client *BackgroundJobsClient) listExecuteSchedulesHandleResponse(resp *http.Response) (BackgroundJobsClientListExecuteSchedulesResponse, error) {
+	result := BackgroundJobsClientListExecuteSchedulesResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.ExecuteSchedules); err != nil {
+		return BackgroundJobsClientListExecuteSchedulesResponse{}, err
+	}
+	return result, nil
+}
+
+// RunOnDemandExecute - REQUIRED DELEGATED SCOPES
 // * Specific scope: DataPipeline.Execute.All or Item.Execute.All
 //
 // for more information about scopes, see: scopes article [/rest/api/fabric/articles/scopes].
@@ -87,9 +425,8 @@ func (client *BackgroundJobsClient) runOnDemandExecuteCreateRequest(ctx context.
 	return req, nil
 }
 
-// ScheduleExecute - PERMISSIONS
-// * The caller must have a member or higher workspace role.
-// REQUIRED DELEGATED SCOPES: (DataPipeline.Execute.All or Item.Execute.All) and (DataPipeline.ReadWrite.All or Item.ReadWrite.All)
+// ScheduleExecute - REQUIRED DELEGATED SCOPES: (DataPipeline.Execute.All or Item.Execute.All) and (DataPipeline.ReadWrite.All
+// or Item.ReadWrite.All)
 // LIMITATIONS A data pipeline can create maximum 20 schedulers.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -161,4 +498,140 @@ func (client *BackgroundJobsClient) scheduleExecuteHandleResponse(resp *http.Res
 	return result, nil
 }
 
+// UpdateExecuteSchedule - REQUIRED DELEGATED SCOPES: (DataPipeline.Execute.All or Item.Execute.All) and (DataPipeline.ReadWrite.All
+// or Item.ReadWrite.All)
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataPipelineID - The data pipeline ID.
+//   - scheduleID - The data pipeline schedule ID.
+//   - updateScheduleRequest - A data pipeline execute schedule update request.
+//   - options - BackgroundJobsClientUpdateExecuteScheduleOptions contains the optional parameters for the BackgroundJobsClient.UpdateExecuteSchedule
+//     method.
+func (client *BackgroundJobsClient) UpdateExecuteSchedule(ctx context.Context, workspaceID string, dataPipelineID string, scheduleID string, updateScheduleRequest UpdateDataPipelineExecuteScheduleRequest, options *BackgroundJobsClientUpdateExecuteScheduleOptions) (BackgroundJobsClientUpdateExecuteScheduleResponse, error) {
+	var err error
+	const operationName = "datapipeline.BackgroundJobsClient.UpdateExecuteSchedule"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateExecuteScheduleCreateRequest(ctx, workspaceID, dataPipelineID, scheduleID, updateScheduleRequest, options)
+	if err != nil {
+		return BackgroundJobsClientUpdateExecuteScheduleResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return BackgroundJobsClientUpdateExecuteScheduleResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return BackgroundJobsClientUpdateExecuteScheduleResponse{}, err
+	}
+	resp, err := client.updateExecuteScheduleHandleResponse(httpResp)
+	return resp, err
+}
+
+// updateExecuteScheduleCreateRequest creates the UpdateExecuteSchedule request.
+func (client *BackgroundJobsClient) updateExecuteScheduleCreateRequest(ctx context.Context, workspaceID string, dataPipelineID string, scheduleID string, updateScheduleRequest UpdateDataPipelineExecuteScheduleRequest, _ *BackgroundJobsClientUpdateExecuteScheduleOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/dataPipelines/{dataPipelineId}/jobs/execute/schedules/{scheduleId}"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if dataPipelineID == "" {
+		return nil, errors.New("parameter dataPipelineID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{dataPipelineId}", url.PathEscape(dataPipelineID))
+	if scheduleID == "" {
+		return nil, errors.New("parameter scheduleID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{scheduleId}", url.PathEscape(scheduleID))
+	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateScheduleRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// updateExecuteScheduleHandleResponse handles the UpdateExecuteSchedule response.
+func (client *BackgroundJobsClient) updateExecuteScheduleHandleResponse(resp *http.Response) (BackgroundJobsClientUpdateExecuteScheduleResponse, error) {
+	result := BackgroundJobsClientUpdateExecuteScheduleResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.ExecuteSchedule); err != nil {
+		return BackgroundJobsClientUpdateExecuteScheduleResponse{}, err
+	}
+	return result, nil
+}
+
 // Custom code starts below
+
+// ListExecuteJobInstances - returns array of ExecuteJobInstance from all pages.
+// This API supports pagination [/rest/api/fabric/articles/pagination].
+//
+// # REQUIRED DELEGATED SCOPES DataPipeline.Read.All or DataPipeline.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataPipelineID - The data pipeline ID.
+//   - options - BackgroundJobsClientListExecuteJobInstancesOptions contains the optional parameters for the BackgroundJobsClient.NewListExecuteJobInstancesPager method.
+func (client *BackgroundJobsClient) ListExecuteJobInstances(ctx context.Context, workspaceID string, dataPipelineID string, options *BackgroundJobsClientListExecuteJobInstancesOptions) ([]ExecuteJobInstance, error) {
+	pager := client.NewListExecuteJobInstancesPager(workspaceID, dataPipelineID, options)
+	mapper := func(resp BackgroundJobsClientListExecuteJobInstancesResponse) []ExecuteJobInstance {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []ExecuteJobInstance{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []ExecuteJobInstance{}, err
+	}
+	return list, nil
+}
+
+// ListExecuteSchedules - returns array of ExecuteSchedule from all pages.
+// This API supports pagination [/rest/api/fabric/articles/pagination].
+//
+// # REQUIRED DELEGATED SCOPES DataPipeline.Read.All or DataPipeline.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataPipelineID - The data pipeline ID.
+//   - options - BackgroundJobsClientListExecuteSchedulesOptions contains the optional parameters for the BackgroundJobsClient.NewListExecuteSchedulesPager method.
+func (client *BackgroundJobsClient) ListExecuteSchedules(ctx context.Context, workspaceID string, dataPipelineID string, options *BackgroundJobsClientListExecuteSchedulesOptions) ([]ExecuteSchedule, error) {
+	pager := client.NewListExecuteSchedulesPager(workspaceID, dataPipelineID, options)
+	mapper := func(resp BackgroundJobsClientListExecuteSchedulesResponse) []ExecuteSchedule {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []ExecuteSchedule{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []ExecuteSchedule{}, err
+	}
+	return list, nil
+}

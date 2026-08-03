@@ -579,6 +579,79 @@ func (client *ItemsClient) deleteItemCreateRequest(ctx context.Context, workspac
 	return req, nil
 }
 
+// GetDownstreamRelationsBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use. When calling this
+// API, callers must specify true as the value for the query parameter beta.
+// Returns all items that are downstream of the specified item, including the relation edges and referenced workspaces.
+// PERMISSIONS The caller must have read permissions for the item.
+// REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - itemID - The item ID.
+//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
+//   - options - ItemsClientGetDownstreamRelationsBetaOptions contains the optional parameters for the ItemsClient.GetDownstreamRelationsBeta
+//     method.
+func (client *ItemsClient) GetDownstreamRelationsBeta(ctx context.Context, workspaceID string, itemID string, beta bool, options *ItemsClientGetDownstreamRelationsBetaOptions) (ItemsClientGetDownstreamRelationsBetaResponse, error) {
+	var err error
+	const operationName = "core.ItemsClient.GetDownstreamRelationsBeta"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getDownstreamRelationsBetaCreateRequest(ctx, workspaceID, itemID, beta, options)
+	if err != nil {
+		return ItemsClientGetDownstreamRelationsBetaResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return ItemsClientGetDownstreamRelationsBetaResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return ItemsClientGetDownstreamRelationsBetaResponse{}, err
+	}
+	resp, err := client.getDownstreamRelationsBetaHandleResponse(httpResp)
+	return resp, err
+}
+
+// getDownstreamRelationsBetaCreateRequest creates the GetDownstreamRelationsBeta request.
+func (client *ItemsClient) getDownstreamRelationsBetaCreateRequest(ctx context.Context, workspaceID string, itemID string, beta bool, _ *ItemsClientGetDownstreamRelationsBetaOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/relations/downstream"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if itemID == "" {
+		return nil, errors.New("parameter itemID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{itemId}", url.PathEscape(itemID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("beta", strconv.FormatBool(beta))
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getDownstreamRelationsBetaHandleResponse handles the GetDownstreamRelationsBeta response.
+func (client *ItemsClient) getDownstreamRelationsBetaHandleResponse(resp *http.Response) (ItemsClientGetDownstreamRelationsBetaResponse, error) {
+	result := ItemsClientGetDownstreamRelationsBetaResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.RelationsResponse); err != nil {
+		return ItemsClientGetDownstreamRelationsBetaResponse{}, err
+	}
+	return result, nil
+}
+
 // GetItem - This API is supported for a number of item types, find the supported item types in Item management overview [/rest/api/fabric/articles/item-management/item-management-overview].
 // For retrieving additional type specific properties, refer to the get API reference page of the specific item type.
 // PERMISSIONS The caller must have read permissions for the item.
@@ -759,6 +832,79 @@ func (client *ItemsClient) getItemDefinitionCreateRequest(ctx context.Context, w
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
+}
+
+// GetUpstreamRelationsBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use. When calling this
+// API, callers must specify true as the value for the query parameter beta.
+// Returns all items that are upstream of the specified item, including the relation edges and referenced workspaces.
+// PERMISSIONS The caller must have read permissions for the item.
+// REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - itemID - The item ID.
+//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
+//   - options - ItemsClientGetUpstreamRelationsBetaOptions contains the optional parameters for the ItemsClient.GetUpstreamRelationsBeta
+//     method.
+func (client *ItemsClient) GetUpstreamRelationsBeta(ctx context.Context, workspaceID string, itemID string, beta bool, options *ItemsClientGetUpstreamRelationsBetaOptions) (ItemsClientGetUpstreamRelationsBetaResponse, error) {
+	var err error
+	const operationName = "core.ItemsClient.GetUpstreamRelationsBeta"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getUpstreamRelationsBetaCreateRequest(ctx, workspaceID, itemID, beta, options)
+	if err != nil {
+		return ItemsClientGetUpstreamRelationsBetaResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return ItemsClientGetUpstreamRelationsBetaResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return ItemsClientGetUpstreamRelationsBetaResponse{}, err
+	}
+	resp, err := client.getUpstreamRelationsBetaHandleResponse(httpResp)
+	return resp, err
+}
+
+// getUpstreamRelationsBetaCreateRequest creates the GetUpstreamRelationsBeta request.
+func (client *ItemsClient) getUpstreamRelationsBetaCreateRequest(ctx context.Context, workspaceID string, itemID string, beta bool, _ *ItemsClientGetUpstreamRelationsBetaOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/relations/upstream"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if itemID == "" {
+		return nil, errors.New("parameter itemID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{itemId}", url.PathEscape(itemID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("beta", strconv.FormatBool(beta))
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getUpstreamRelationsBetaHandleResponse handles the GetUpstreamRelationsBeta response.
+func (client *ItemsClient) getUpstreamRelationsBetaHandleResponse(resp *http.Response) (ItemsClientGetUpstreamRelationsBetaResponse, error) {
+	result := ItemsClientGetUpstreamRelationsBetaResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.RelationsResponse); err != nil {
+		return ItemsClientGetUpstreamRelationsBetaResponse{}, err
+	}
+	return result, nil
 }
 
 // NewListItemConnectionsPager - This API supports pagination [/rest/api/fabric/articles/pagination].

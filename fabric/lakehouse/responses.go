@@ -95,6 +95,35 @@ type LivySessionsClientListLivySessionsResponse struct {
 	LivySessions
 }
 
+// MaterializedLakeViewsClientCreateMlvExecutionDefinitionResponse contains the response from method MaterializedLakeViewsClient.CreateMlvExecutionDefinition.
+type MaterializedLakeViewsClientCreateMlvExecutionDefinitionResponse struct {
+	// A materialized lake views execution definition object.
+	MaterializedLakeViewExecutionDefinition
+}
+
+// MaterializedLakeViewsClientDeleteMlvExecutionDefinitionResponse contains the response from method MaterializedLakeViewsClient.DeleteMlvExecutionDefinition.
+type MaterializedLakeViewsClientDeleteMlvExecutionDefinitionResponse struct {
+	// placeholder for future response values
+}
+
+// MaterializedLakeViewsClientGetMlvExecutionDefinitionResponse contains the response from method MaterializedLakeViewsClient.GetMlvExecutionDefinition.
+type MaterializedLakeViewsClientGetMlvExecutionDefinitionResponse struct {
+	// A materialized lake views execution definition object.
+	MaterializedLakeViewExecutionDefinition
+}
+
+// MaterializedLakeViewsClientListMlvExecutionDefinitionsResponse contains the response from method MaterializedLakeViewsClient.NewListMlvExecutionDefinitionsPager.
+type MaterializedLakeViewsClientListMlvExecutionDefinitionsResponse struct {
+	// A list of materialized lake view execution definitions.
+	MaterializedLakeViewExecutionDefinitions
+}
+
+// MaterializedLakeViewsClientUpdateMlvExecutionDefinitionResponse contains the response from method MaterializedLakeViewsClient.UpdateMlvExecutionDefinition.
+type MaterializedLakeViewsClientUpdateMlvExecutionDefinitionResponse struct {
+	// A materialized lake views execution definition object.
+	MaterializedLakeViewExecutionDefinition
+}
+
 // TablesClientListTablesResponse contains the response from method TablesClient.NewListTablesPager.
 type TablesClientListTablesResponse struct {
 	// A paginated list of tables.

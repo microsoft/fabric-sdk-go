@@ -385,6 +385,76 @@ func (client *ItemsClient) listDataAgentsHandleResponse(resp *http.Response) (It
 	return result, nil
 }
 
+// PublishDataAgent - > [!NOTE] Data Agent configuration management is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// Promotes the current staging state to the published environment, making it live.
+// PERMISSIONS The caller must have read and write permissions for the DataAgent.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All or DataAgent.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataAgentID - The DataAgent ID.
+//   - publishDataAgentRequest - Publish DataAgent request payload.
+//   - options - ItemsClientPublishDataAgentOptions contains the optional parameters for the ItemsClient.PublishDataAgent method.
+func (client *ItemsClient) PublishDataAgent(ctx context.Context, workspaceID string, dataAgentID string, publishDataAgentRequest PublishDataAgentRequest, options *ItemsClientPublishDataAgentOptions) (ItemsClientPublishDataAgentResponse, error) {
+	var err error
+	const operationName = "dataagent.ItemsClient.PublishDataAgent"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.publishDataAgentCreateRequest(ctx, workspaceID, dataAgentID, publishDataAgentRequest, options)
+	if err != nil {
+		return ItemsClientPublishDataAgentResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return ItemsClientPublishDataAgentResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return ItemsClientPublishDataAgentResponse{}, err
+	}
+	resp, err := client.publishDataAgentHandleResponse(httpResp)
+	return resp, err
+}
+
+// publishDataAgentCreateRequest creates the PublishDataAgent request.
+func (client *ItemsClient) publishDataAgentCreateRequest(ctx context.Context, workspaceID string, dataAgentID string, publishDataAgentRequest PublishDataAgentRequest, _ *ItemsClientPublishDataAgentOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/dataAgents/{dataAgentId}/staging/publish"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if dataAgentID == "" {
+		return nil, errors.New("parameter dataAgentID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{dataAgentId}", url.PathEscape(dataAgentID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, publishDataAgentRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// publishDataAgentHandleResponse handles the PublishDataAgent response.
+func (client *ItemsClient) publishDataAgentHandleResponse(resp *http.Response) (ItemsClientPublishDataAgentResponse, error) {
+	result := ItemsClientPublishDataAgentResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.PublishDataAgentResponse); err != nil {
+		return ItemsClientPublishDataAgentResponse{}, err
+	}
+	return result, nil
+}
+
 // UpdateDataAgent - PERMISSIONS The caller must have read and write permissions for the DataAgent.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]

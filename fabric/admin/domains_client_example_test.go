@@ -161,7 +161,9 @@ func ExampleDomainsClient_ListDomains_getAllNonEmptyDomainsExample() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewDomainsClient().ListDomains(ctx, false, &admin.DomainsClientListDomainsOptions{NonEmptyOnly: to.Ptr(true)})
+	res, err := clientFactory.NewDomainsClient().ListDomains(ctx, false, &admin.DomainsClientListDomainsOptions{NonEmptyOnly: to.Ptr(true),
+		WithAssignedWorkspacesOnly: nil,
+	})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -205,7 +207,9 @@ func ExampleDomainsClient_ListDomains_getInfoForAllDomainsExample() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewDomainsClient().ListDomains(ctx, false, &admin.DomainsClientListDomainsOptions{NonEmptyOnly: nil})
+	res, err := clientFactory.NewDomainsClient().ListDomains(ctx, false, &admin.DomainsClientListDomainsOptions{NonEmptyOnly: nil,
+		WithAssignedWorkspacesOnly: nil,
+	})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

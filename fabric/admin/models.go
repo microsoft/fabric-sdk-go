@@ -515,6 +515,21 @@ type DomainsResponsePreview struct {
 	Domains []DomainPreview
 }
 
+// Encryption - Workspace encryption details using a customer-managed key (CMK).
+type Encryption struct {
+	// The encryption key identifier.
+	KeyIdentifier *string
+
+	// The previous encryption key identifier.
+	PreviousKeyIdentifier *string
+
+	// The previous CMK encryption status of the workspace.
+	PreviousStatus *WorkspaceEncryptionStatus
+
+	// The CMK encryption status of the workspace.
+	Status *WorkspaceEncryptionStatus
+}
+
 // EntireTenantPrincipal - Represents a tenant principal
 type EntireTenantPrincipal struct {
 	// REQUIRED; The principal's ID.
@@ -666,8 +681,7 @@ type GitHubDetails struct {
 	// REQUIRED; The repository name. Maximum length is 128 characters.
 	RepositoryName *string
 
-	// > [!NOTE] Support for GitHub Enterprise with Data residency (ghe.com) is currently in Preview.(learn more [/fabric/fundamentals/preview]).
-	// The name of the enterprise github domain if it's not github.com. Only GitHub Enterprise with data residency domains (ghe.com)
+	// The name of the enterprise GitHub domain if it is not github.com. Only GitHub Enterprise with data residency domains (ghe.com)
 	// are supported. Maximum length is 100 characters.
 	CustomDomainName *string
 }
@@ -1465,6 +1479,9 @@ type Workspace struct {
 
 	// READ-ONLY; The domain ID of the workspace.
 	DomainID *string
+
+	// READ-ONLY; The encryption details of the workspace.
+	Encryption *Encryption
 
 	// READ-ONLY; List of applied tags.
 	Tags []WorkspaceAppliedTag

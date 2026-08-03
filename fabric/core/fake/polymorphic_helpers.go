@@ -26,6 +26,8 @@ func unmarshalCreateConnectionRequestClassification(rawMsg json.RawMessage) (cor
 		b = &core.CreateOnPremisesConnectionRequest{}
 	case string(core.ConnectivityTypeShareableCloud):
 		b = &core.CreateCloudConnectionRequest{}
+	case string(core.ConnectivityTypeStreamingVirtualNetworkGateway):
+		b = &core.CreateStreamingVirtualNetworkGatewayConnectionRequest{}
 	case string(core.ConnectivityTypeVirtualNetworkGateway):
 		b = &core.CreateVirtualNetworkGatewayConnectionRequest{}
 	default:
@@ -47,6 +49,8 @@ func unmarshalCreateGatewayRequestClassification(rawMsg json.RawMessage) (core.C
 	}
 	var b core.CreateGatewayRequestClassification
 	switch m["type"] {
+	case string(core.GatewayTypeStreamingVirtualNetwork):
+		b = &core.CreateStreamingVirtualNetworkGatewayRequest{}
 	case string(core.GatewayTypeVirtualNetwork):
 		b = &core.CreateVirtualNetworkGatewayRequest{}
 	default:
@@ -76,6 +80,8 @@ func unmarshalUpdateConnectionRequestClassification(rawMsg json.RawMessage) (cor
 		b = &core.UpdatePersonalCloudConnectionRequest{}
 	case string(core.ConnectivityTypeShareableCloud):
 		b = &core.UpdateShareableCloudConnectionRequest{}
+	case string(core.ConnectivityTypeStreamingVirtualNetworkGateway):
+		b = &core.UpdateStreamingVirtualNetworkGatewayConnectionRequest{}
 	case string(core.ConnectivityTypeVirtualNetworkGateway):
 		b = &core.UpdateVirtualNetworkGatewayConnectionRequest{}
 	default:
@@ -99,6 +105,8 @@ func unmarshalUpdateGatewayRequestClassification(rawMsg json.RawMessage) (core.U
 	switch m["type"] {
 	case string(core.GatewayTypeOnPremises):
 		b = &core.UpdateOnPremisesGatewayRequest{}
+	case string(core.GatewayTypeStreamingVirtualNetwork):
+		b = &core.UpdateStreamingVirtualNetworkGatewayRequest{}
 	case string(core.GatewayTypeVirtualNetwork):
 		b = &core.UpdateVirtualNetworkGatewayRequest{}
 	default:

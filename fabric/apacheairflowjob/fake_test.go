@@ -58,7 +58,7 @@ func TestFakeTest(t *testing.T) {
 func (testsuite *FakeTestSuite) TestItems_ListApacheAirflowJobs() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"List s in workspace example"},
+		"example-id": {"List Apache Airflow jobs in workspace example"},
 	})
 	var exampleWorkspaceID string
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
@@ -112,7 +112,7 @@ func (testsuite *FakeTestSuite) TestItems_ListApacheAirflowJobs() {
 func (testsuite *FakeTestSuite) TestItems_CreateApacheAirflowJob() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Create an Apache Airflow job with public definition example"},
+		"example-id": {"Create an Apache Airflow job example"},
 	})
 	var exampleWorkspaceID string
 	var exampleCreateApacheAirflowJobRequest apacheairflowjob.CreateApacheAirflowJobRequest
@@ -132,6 +132,42 @@ func (testsuite *FakeTestSuite) TestItems_CreateApacheAirflowJob() {
 
 	client := testsuite.clientFactory.NewItemsClient()
 	poller, err := client.BeginCreateApacheAirflowJob(ctx, exampleWorkspaceID, exampleCreateApacheAirflowJobRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create an Apache Airflow job with public definition example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCreateApacheAirflowJobRequest = apacheairflowjob.CreateApacheAirflowJobRequest{
+		Description: to.Ptr("An Apache Airflow job description."),
+		Definition: &apacheairflowjob.Definition{
+			Parts: []apacheairflowjob.DefinitionPart{
+				{
+					Path:        to.Ptr("ApacheAirflowJobV1.json"),
+					Payload:     to.Ptr("ewogICJwcm9wZXJ0aWVzIjogewogICAgInR5cGUiOiAiQXBhY2hlQWlyZmxvd0pvYiIsCiAgICAidHlwZVByb3BlcnRpZXMiOiB7CiAgICAgICJhaXJmbG93UHJvcGVydGllcyI6IHsKICAgICAgICAiYWlyZmxvd1ZlcnNpb24iOiAiMi42LjMiLAogICAgICAgICJweXRob25WZXJzaW9uIjogIjMuOCIsCiAgICAgICAgImVudmlyb25tZW50VmFyaWFibGVzIjoge30sCiAgICAgICAgImFpcmZsb3dDb25maWd1cmF0aW9uT3ZlcnJpZGVzIjoge30sCiAgICAgICAgImFpcmZsb3dSZXF1aXJlbWVudHMiOiBbCiAgICAgICAgICAiZmxhc2stYmNyeXB0PT0wLjcuMSIKICAgICAgICBdLAogICAgICAgICJwYWNrYWdlUHJvdmlkZXJQYXRoIjogInBsdWdpbnMiLAogICAgICAgICJlbmFibGVBQURJbnRlZ3JhdGlvbiI6IHRydWUsCiAgICAgICAgImVuYWJsZVRyaWdnZXJlcnMiOiBmYWxzZSwKICAgICAgICAic2VjcmV0cyI6IFtdCiAgICAgIH0sCiAgICAgICJjb21wdXRlUHJvcGVydGllcyI6IHsKICAgICAgICAiY29tcHV0ZVBvb2wiOiAiU3RhcnRlclBvb2wiLAogICAgICAgICJsb2NhdGlvbiI6ICJDZW50cmFsIFVTIiwKICAgICAgICAiY29tcHV0ZVNpemUiOiAiU21hbGwiLAogICAgICAgICJleHRyYU5vZGVzIjogMCwKICAgICAgICAiZW5hYmxlQXZhaWxhYmlsaXR5Wm9uZXMiOiBmYWxzZSwKICAgICAgICAiZW5hYmxlQXV0b3NjYWxlIjogZmFsc2UKICAgICAgfQogICAgfQogIH0KfQ=="),
+					PayloadType: to.Ptr(apacheairflowjob.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(apacheairflowjob.PayloadTypeInlineBase64),
+				}},
+		},
+		DisplayName: to.Ptr("ApacheAirflowJob1"),
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginCreateApacheAirflowJob = func(ctx context.Context, workspaceID string, createApacheAirflowJobRequest apacheairflowjob.CreateApacheAirflowJobRequest, options *apacheairflowjob.ItemsClientBeginCreateApacheAirflowJobOptions) (resp azfake.PollerResponder[apacheairflowjob.ItemsClientCreateApacheAirflowJobResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateApacheAirflowJobRequest, createApacheAirflowJobRequest))
+		resp = azfake.PollerResponder[apacheairflowjob.ItemsClientCreateApacheAirflowJobResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, apacheairflowjob.ItemsClientCreateApacheAirflowJobResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateApacheAirflowJob(ctx, exampleWorkspaceID, exampleCreateApacheAirflowJobRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
@@ -600,6 +636,39 @@ func (testsuite *FakeTestSuite) TestCompute_GetApacheAirflowJobComputeBeta() {
 	res, err := client.GetApacheAirflowJobComputeBeta(ctx, exampleWorkspaceID, exampleApacheAirflowJobID, exampleBeta, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.AirflowComputeResponse))
+}
+
+func (testsuite *FakeTestSuite) TestCompute_UpdateApacheAirflowJobComputeBeta() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update Apache Airflow compute configuration example"},
+	})
+	var exampleWorkspaceID string
+	var exampleApacheAirflowJobID string
+	var exampleBeta bool
+	var exampleAirflowEnvironmentComputeRequest apacheairflowjob.AirflowEnvironmentComputeRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleApacheAirflowJobID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleBeta = true
+	exampleAirflowEnvironmentComputeRequest = apacheairflowjob.AirflowEnvironmentComputeRequest{
+		PoolTemplateID: to.Ptr("a1b2c3d4-e5f6-7890-abcd-ef1234567890"),
+	}
+
+	testsuite.serverFactory.ComputeServer.BeginUpdateApacheAirflowJobComputeBeta = func(ctx context.Context, workspaceID string, apacheAirflowJobID string, beta bool, airflowEnvironmentComputeRequest apacheairflowjob.AirflowEnvironmentComputeRequest, options *apacheairflowjob.ComputeClientBeginUpdateApacheAirflowJobComputeBetaOptions) (resp azfake.PollerResponder[apacheairflowjob.ComputeClientUpdateApacheAirflowJobComputeBetaResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleApacheAirflowJobID, apacheAirflowJobID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		testsuite.Require().True(reflect.DeepEqual(exampleAirflowEnvironmentComputeRequest, airflowEnvironmentComputeRequest))
+		resp = azfake.PollerResponder[apacheairflowjob.ComputeClientUpdateApacheAirflowJobComputeBetaResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, apacheairflowjob.ComputeClientUpdateApacheAirflowJobComputeBetaResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewComputeClient()
+	poller, err := client.BeginUpdateApacheAirflowJobComputeBeta(ctx, exampleWorkspaceID, exampleApacheAirflowJobID, exampleBeta, exampleAirflowEnvironmentComputeRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestFiles_ListApacheAirflowJobFilesBeta() {

@@ -34,7 +34,7 @@ type MonitoringClient struct {
 // When calling this API, callers must specify true as the value for the query parameter beta.
 // Returns the overall mirroring status of the MirroredCatalog.
 // PERMISSIONS The caller must have read permissions for the mirrored catalog.
-// REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All or MirroredCatalog.Read.All or MirroredCatalog.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -109,7 +109,7 @@ func (client *MonitoringClient) mirroringStatusBetaHandleResponse(resp *http.Res
 // Returns the per-table mirroring status for the MirroredCatalog. This API shows the mirroring status of each table in the
 // source catalog.
 // PERMISSIONS The caller must have read permissions for the mirrored catalog.
-// REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All or MirroredCatalog.Read.All or MirroredCatalog.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -193,7 +193,7 @@ func (client *MonitoringClient) tablesMirroringStatusBetaHandleResponse(resp *ht
 //
 // PERMISSIONS The caller must have read permissions for the mirrored catalog.
 //
-// # REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All or MirroredCatalog.Read.All or MirroredCatalog.ReadWrite.All
+// # REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

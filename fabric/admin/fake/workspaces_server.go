@@ -336,14 +336,26 @@ func (w *WorkspacesServerTransport) dispatchNewListWorkspacesPager(req *http.Req
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		encryptionStatusUnescaped, err := url.QueryUnescape(qp.Get("encryptionStatus"))
+		if err != nil {
+			return nil, err
+		}
+		encryptionStatusParam := getOptional(encryptionStatusUnescaped)
+		includeUnescaped, err := url.QueryUnescape(qp.Get("include"))
+		if err != nil {
+			return nil, err
+		}
+		includeParam := getOptional(includeUnescaped)
 		var options *admin.WorkspacesClientListWorkspacesOptions
-		if typeParam != nil || capacityIDParam != nil || nameParam != nil || stateParam != nil || continuationTokenParam != nil {
+		if typeParam != nil || capacityIDParam != nil || nameParam != nil || stateParam != nil || continuationTokenParam != nil || encryptionStatusParam != nil || includeParam != nil {
 			options = &admin.WorkspacesClientListWorkspacesOptions{
 				Type:              typeParam,
 				CapacityID:        capacityIDParam,
 				Name:              nameParam,
 				State:             stateParam,
 				ContinuationToken: continuationTokenParam,
+				EncryptionStatus:  encryptionStatusParam,
+				Include:           includeParam,
 			}
 		}
 		resp := w.srv.NewListWorkspacesPager(options)

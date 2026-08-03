@@ -83,6 +83,7 @@ func ExampleWorkspacesClient_NewListWorkspacesPager_listWorkspacesExample() {
 		// 			Type: to.Ptr(core.WorkspaceTypeWorkspace),
 		// 			Description: to.Ptr("A workspace used by the finance team"),
 		// 			CapacityID: to.Ptr("171018af-1531-4e61-942a-74f024b7f9fd"),
+		// 			CapacityRegion: to.Ptr(core.CapacityRegionEastUS),
 		// 			DisplayName: to.Ptr("Finance"),
 		// 			DomainID: to.Ptr("7c889f28-999b-4945-840d-54da3e3b5a29"),
 		// 			ID: to.Ptr("f2d70dc6-8f3e-4f2c-b00e-e2d336d7d711"),
@@ -145,6 +146,7 @@ func ExampleWorkspacesClient_NewListWorkspacesPager_listWorkspacesWithContinuati
 		// 			Type: to.Ptr(core.WorkspaceTypeWorkspace),
 		// 			Description: to.Ptr("A workspace used by the finance team"),
 		// 			CapacityID: to.Ptr("171018af-1531-4e61-942a-74f024b7f9fd"),
+		// 			CapacityRegion: to.Ptr(core.CapacityRegionEastUS),
 		// 			DisplayName: to.Ptr("Finance"),
 		// 			ID: to.Ptr("f2d70dc6-8f3e-4f2c-b00e-e2d336d7d711"),
 		// 	}},
@@ -274,6 +276,7 @@ func ExampleWorkspacesClient_GetWorkspace_getAWorkspaceExample() {
 	// 	Type: to.Ptr(core.WorkspaceTypeWorkspace),
 	// 	Description: to.Ptr("New workspace description"),
 	// 	CapacityID: to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
+	// 	CapacityRegion: to.Ptr(core.CapacityRegionEastUS),
 	// 	DisplayName: to.Ptr("New workspace"),
 	// 	DomainID: to.Ptr("9ce364e0-8e9d-4605-887a-b599b3e8b123"),
 	// 	ID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
@@ -283,7 +286,6 @@ func ExampleWorkspacesClient_GetWorkspace_getAWorkspaceExample() {
 	// 			ID: to.Ptr("b3f2c8e9-4d8e-4a7c-9a32-f8c1b2e4d6af"),
 	// 	}},
 	// 	CapacityAssignmentProgress: to.Ptr(core.CapacityAssignmentProgressCompleted),
-	// 	CapacityRegion: to.Ptr(core.CapacityRegionEastUS),
 	// 	OneLakeEndpoints: &core.OneLakeEndpoints{
 	// 		BlobEndpoint: to.Ptr("https://eastus-onelake.blob.fabric.microsoft.com"),
 	// 		DfsEndpoint: to.Ptr("https://eastus-onelake.dfs.fabric.microsoft.com"),
@@ -318,10 +320,10 @@ func ExampleWorkspacesClient_GetWorkspace_getAWorkspaceWithPreferWorkspaceSpecif
 	// 	Description: to.Ptr("New workspace description"),
 	// 	APIEndpoint: to.Ptr("https://cfafbeb180374d0c896ea46fb27ff227.zcf.w.api.fabric.microsoft.com"),
 	// 	CapacityID: to.Ptr("56bac802-080d-4f73-8a42-1b406eb1fcac"),
+	// 	CapacityRegion: to.Ptr(core.CapacityRegionEastUS),
 	// 	DisplayName: to.Ptr("New workspace"),
 	// 	ID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
 	// 	CapacityAssignmentProgress: to.Ptr(core.CapacityAssignmentProgressCompleted),
-	// 	CapacityRegion: to.Ptr(core.CapacityRegionEastUS),
 	// 	OneLakeEndpoints: &core.OneLakeEndpoints{
 	// 		BlobEndpoint: to.Ptr("https://cfafbeb180374d0c896ea46fb27ff227.zcf.blob.fabric.microsoft.com"),
 	// 		DfsEndpoint: to.Ptr("https://cfafbeb180374d0c896ea46fb27ff227.zcf.dfs.fabric.microsoft.com"),
@@ -357,6 +359,7 @@ func ExampleWorkspacesClient_UpdateWorkspace() {
 	// res.Workspace = core.Workspace{
 	// 	Type: to.Ptr(core.WorkspaceTypeWorkspace),
 	// 	Description: to.Ptr("Workspace New description"),
+	// 	CapacityRegion: to.Ptr(core.CapacityRegionEastUS),
 	// 	DisplayName: to.Ptr("Workspace New displayName"),
 	// 	DomainID: to.Ptr("686177b9-ef29-45e4-a5db-1786ca6dbb9f"),
 	// 	ID: to.Ptr("33bae707-5fe7-4352-89bd-061a1318b60a"),
@@ -1022,6 +1025,221 @@ func ExampleWorkspacesClient_SetInboundAzureResourceRules() {
 			{
 				DisplayName: to.Ptr("Storage Account - teststorageacct"),
 				ResourceID:  to.Ptr("/subscriptions/2374e516-d28b-4898-a39c-6070e078ae31/resourceGroups/testrg/providers/Microsoft.Storage/storageAccounts/teststorageacct"),
+			}},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_GetInboundExternalDataSharesPolicy() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewWorkspacesClient().GetInboundExternalDataSharesPolicy(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.WorkspaceInboundExternalDataSharesPolicy = core.WorkspaceInboundExternalDataSharesPolicy{
+	// 	DefaultAction: to.Ptr(core.NetworkAccessRuleDeny),
+	// }
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_SetInboundExternalDataSharesPolicy() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewWorkspacesClient().SetInboundExternalDataSharesPolicy(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", core.WorkspaceInboundExternalDataSharesPolicy{
+		DefaultAction: to.Ptr(core.NetworkAccessRuleAllow),
+	}, &core.WorkspacesClientSetInboundExternalDataSharesPolicyOptions{IfMatch: to.Ptr("\"a1b2c3d4\"")})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_GetWorkspaceEncryption_getWorkspaceCmkEncryptionActiveExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewWorkspacesClient().GetWorkspaceEncryption(ctx, "47482db6-4583-4672-86dd-999d0f8f4d7a", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.WorkspaceEncryptionDetail = core.WorkspaceEncryptionDetail{
+	// 	EncryptionDetail: &core.EncryptionDetail{
+	// 		EncryptionStatus: to.Ptr(core.WorkspaceEncryptionStatusActive),
+	// 		KeyIdentifier: to.Ptr("https://westus07112025-cmktest1.vault.azure.net/keys/test2k/"),
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_GetWorkspaceEncryption_getWorkspaceCmkEncryptionInProgressExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewWorkspacesClient().GetWorkspaceEncryption(ctx, "47482db6-4583-4672-86dd-999d0f8f4d7a", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.WorkspaceEncryptionDetail = core.WorkspaceEncryptionDetail{
+	// 	EncryptionDetail: &core.EncryptionDetail{
+	// 		EncryptionStatus: to.Ptr(core.WorkspaceEncryptionStatusEnableInProgress),
+	// 		KeyIdentifier: to.Ptr("https://westus07112025-cmktest1.vault.azure.net/keys/test2k/"),
+	// 	},
+	// 	PreviousEncryptionDetail: &core.EncryptionDetail{
+	// 		EncryptionStatus: to.Ptr(core.WorkspaceEncryptionStatusActive),
+	// 		KeyIdentifier: to.Ptr("https://westus07112025-cmktest1.vault.azure.net/keys/key1/"),
+	// 	},
+	// 	WorkspaceEncryptionItemsDetails: []core.WorkspaceEncryptionItemsDetail{
+	// 		{
+	// 			EncryptionStatus: to.Ptr(core.WorkspaceEncryptionStatusEnableInProgress),
+	// 			Items: []core.WorkspaceEncryptionItem{
+	// 				{
+	// 					Type: to.Ptr("CopyJob"),
+	// 					DisplayName: to.Ptr("copyjob1"),
+	// 					ID: to.Ptr("9d922047-55a9-4737-8ec0-f34a320100bc"),
+	// 				},
+	// 				{
+	// 					Type: to.Ptr("CopyJob"),
+	// 					DisplayName: to.Ptr("copyjob2"),
+	// 					ID: to.Ptr("8d022047-55a9-4737-8ec0-f34a320100b7"),
+	// 			}},
+	// 	}},
+	// }
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_AssignWorkspaceEncryption() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewWorkspacesClient().AssignWorkspaceEncryption(ctx, "47482db6-4583-4672-86dd-999d0f8f4d7a", core.AssignWorkspaceEncryptionRequest{
+		KeyIdentifier: to.Ptr("https://westus07112025-cmktest1.vault.azure.net/keys/test2k/"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_ResetWorkspaceEncryption() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewWorkspacesClient().ResetWorkspaceEncryption(ctx, "47482db6-4583-4672-86dd-999d0f8f4d7a", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_GetFirewallRules() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewWorkspacesClient().GetFirewallRules(ctx, "47482db6-4583-4672-86dd-999d0f8f4d7a", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.InboundFirewallConfiguration = core.InboundFirewallConfiguration{
+	// 	Rules: []core.FirewallRule{
+	// 		{
+	// 			DisplayName: to.Ptr("SingleIPAddressRule"),
+	// 			Value: to.Ptr("12.34.56.78"),
+	// 		},
+	// 		{
+	// 			DisplayName: to.Ptr("IPAddressRangeRule"),
+	// 			Value: to.Ptr("12.34.56.78-12.34.56.89"),
+	// 		},
+	// 		{
+	// 			DisplayName: to.Ptr("CidrIPAddressRule"),
+	// 			Value: to.Ptr("12.34.56.0/24"),
+	// 	}},
+	// }
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_SetFirewallRules() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewWorkspacesClient().SetFirewallRules(ctx, "47482db6-4583-4672-86dd-999d0f8f4d7a", core.InboundFirewallConfiguration{
+		Rules: []core.FirewallRule{
+			{
+				DisplayName: to.Ptr("SingleIPAddressRule"),
+				Value:       to.Ptr("12.34.56.78"),
+			},
+			{
+				DisplayName: to.Ptr("IPAddressRangeRule"),
+				Value:       to.Ptr("12.34.56.78-12.34.56.89"),
+			},
+			{
+				DisplayName: to.Ptr("CidrIPAddressRule"),
+				Value:       to.Ptr("12.34.56.0/24"),
 			}},
 	}, nil)
 	if err != nil {

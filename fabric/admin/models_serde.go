@@ -1308,6 +1308,45 @@ func (d *DomainsResponsePreview) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type Encryption.
+func (e Encryption) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "keyIdentifier", e.KeyIdentifier)
+	populate(objectMap, "previousKeyIdentifier", e.PreviousKeyIdentifier)
+	populate(objectMap, "previousStatus", e.PreviousStatus)
+	populate(objectMap, "status", e.Status)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type Encryption.
+func (e *Encryption) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", e, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "keyIdentifier":
+			err = unpopulate(val, "KeyIdentifier", &e.KeyIdentifier)
+			delete(rawMsg, key)
+		case "previousKeyIdentifier":
+			err = unpopulate(val, "PreviousKeyIdentifier", &e.PreviousKeyIdentifier)
+			delete(rawMsg, key)
+		case "previousStatus":
+			err = unpopulate(val, "PreviousStatus", &e.PreviousStatus)
+			delete(rawMsg, key)
+		case "status":
+			err = unpopulate(val, "Status", &e.Status)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", e, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type EntireTenantPrincipal.
 func (e EntireTenantPrincipal) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -3542,6 +3581,7 @@ func (w Workspace) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "capacityId", w.CapacityID)
 	populate(objectMap, "domainId", w.DomainID)
+	populate(objectMap, "encryption", w.Encryption)
 	populate(objectMap, "id", w.ID)
 	populate(objectMap, "name", w.Name)
 	populate(objectMap, "state", w.State)
@@ -3564,6 +3604,9 @@ func (w *Workspace) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "domainId":
 			err = unpopulate(val, "DomainID", &w.DomainID)
+			delete(rawMsg, key)
+		case "encryption":
+			err = unpopulate(val, "Encryption", &w.Encryption)
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &w.ID)

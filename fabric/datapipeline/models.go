@@ -205,6 +205,92 @@ func (e *EntireTenantPrincipal) GetPrincipal() *Principal {
 	}
 }
 
+// ErrorRelatedResource - The error related resource details object.
+type ErrorRelatedResource struct {
+	// READ-ONLY; The resource ID that's involved in the error.
+	ResourceID *string
+
+	// READ-ONLY; The type of the resource that's involved in the error.
+	ResourceType *string
+}
+
+// ErrorResponse - The error response.
+type ErrorResponse struct {
+	// READ-ONLY; A specific identifier that provides information about an error condition, allowing for standardized communication
+	// between our service and its users.
+	ErrorCode *string
+
+	// READ-ONLY; A human readable representation of the error.
+	Message *string
+
+	// READ-ONLY; When true, the request can be retried. Use the Retry-After response header to determine the delay, if available.
+	IsRetriable *bool
+
+	// READ-ONLY; List of additional error details.
+	MoreDetails []ErrorResponseDetails
+
+	// READ-ONLY; The error related resource details.
+	RelatedResource *ErrorRelatedResource
+
+	// READ-ONLY; ID of the request associated with the error.
+	RequestID *string
+}
+
+// ErrorResponseDetails - The error response details.
+type ErrorResponseDetails struct {
+	// READ-ONLY; A specific identifier that provides information about an error condition, allowing for standardized communication
+	// between our service and its users.
+	ErrorCode *string
+
+	// READ-ONLY; A human readable representation of the error.
+	Message *string
+
+	// READ-ONLY; The error related resource details.
+	RelatedResource *ErrorRelatedResource
+}
+
+// ExecuteJobInstance - A data pipeline execute job instance.
+type ExecuteJobInstance struct {
+	// Job end time in UTC
+	EndTimeUTC *string
+
+	// Job instance Id
+	ID *string
+
+	// The item job invoke type. Additional invokeTypes may be added over time.
+	InvokeType *InvokeType
+
+	// Item Id
+	ItemID *string
+
+	// Job type
+	JobType *string
+
+	// Root activity id to trace requests across services
+	RootActivityID *string
+
+	// Job start time in UTC
+	StartTimeUTC *string
+
+	// The item job status. Additional statuses may be added over time.
+	Status *ItemJobStatus
+
+	// READ-ONLY; Error response when job is failed
+	FailureReason *ErrorResponse
+}
+
+// ExecuteJobInstances - A list of data pipeline execute job instances.
+type ExecuteJobInstances struct {
+	// REQUIRED; A list of data pipeline execute job instances.
+	Value []ExecuteJobInstance
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
 // ExecuteSchedule - Data pipeline execute schedule.
 type ExecuteSchedule struct {
 	// REQUIRED; Whether this schedule is enabled. True - Enabled, False - Disabled.
@@ -221,6 +307,18 @@ type ExecuteSchedule struct {
 
 	// The user identity that created this schedule or last modified it.
 	Owner PrincipalClassification
+}
+
+// ExecuteSchedules - A list of data pipeline execute schedules.
+type ExecuteSchedules struct {
+	// REQUIRED; A list of data pipeline execute schedules.
+	Value []ExecuteSchedule
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
 }
 
 // GroupPrincipal - Represents a security group.
@@ -443,6 +541,15 @@ type UpdateDataPipelineDefinitionRequest struct {
 	// for more details on the structure of the Data pipeline
 	// definition.
 	Definition *Definition
+}
+
+// UpdateDataPipelineExecuteScheduleRequest - Update data pipeline execute schedule request payload.
+type UpdateDataPipelineExecuteScheduleRequest struct {
+	// REQUIRED; The actual data contains the time/weekdays of this schedule.
+	Configuration ScheduleConfigClassification
+
+	// REQUIRED; Whether this schedule is enabled. True - Enabled, False - Disabled.
+	Enabled *bool
 }
 
 // UpdateDataPipelineRequest - Update data pipeline request.

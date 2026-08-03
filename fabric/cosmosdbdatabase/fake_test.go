@@ -74,6 +74,10 @@ func (testsuite *FakeTestSuite) TestItems_ListCosmosDBDatabases() {
 					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
 				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+				Properties: &cosmosdbdatabase.Properties{
+					DatabaseName: to.Ptr("Cosmos DB Database Name 1"),
+					ServerFqdn:   to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f.xyz.cosmos.fabric.microsoft.com"),
+				},
 			},
 			{
 				Type:        to.Ptr(cosmosdbdatabase.ItemTypeCosmosDBDatabase),
@@ -84,6 +88,10 @@ func (testsuite *FakeTestSuite) TestItems_ListCosmosDBDatabases() {
 					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
 				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+				Properties: &cosmosdbdatabase.Properties{
+					DatabaseName: to.Ptr("Cosmos DB Database Name 2"),
+					ServerFqdn:   to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f.xyz.cosmos.fabric.microsoft.com"),
+				},
 			}},
 	}
 
@@ -187,6 +195,10 @@ func (testsuite *FakeTestSuite) TestItems_GetCosmosDBDatabase() {
 			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
 		},
 		WorkspaceID: to.Ptr("f089354e-8366-4e18-aea3-4cb4a3a50b48"),
+		Properties: &cosmosdbdatabase.Properties{
+			DatabaseName: to.Ptr("Cosmos DB Database 1"),
+			ServerFqdn:   to.Ptr("41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87.xyz.cosmos.fabric.microsoft.com"),
+		},
 	}
 
 	testsuite.serverFactory.ItemsServer.GetCosmosDBDatabase = func(ctx context.Context, workspaceID string, cosmosDbDatabaseID string, options *cosmosdbdatabase.ItemsClientGetCosmosDBDatabaseOptions) (resp azfake.Responder[cosmosdbdatabase.ItemsClientGetCosmosDBDatabaseResponse], errResp azfake.ErrorResponder) {

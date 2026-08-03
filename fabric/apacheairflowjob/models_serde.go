@@ -69,6 +69,33 @@ func (a *AirflowComputeResponse) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type AirflowEnvironmentComputeRequest.
+func (a AirflowEnvironmentComputeRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "poolTemplateId", a.PoolTemplateID)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type AirflowEnvironmentComputeRequest.
+func (a *AirflowEnvironmentComputeRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", a, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "poolTemplateId":
+			err = unpopulate(val, "PoolTemplateID", &a.PoolTemplateID)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", a, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type AirflowEnvironmentSettingsRequest.
 func (a AirflowEnvironmentSettingsRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)

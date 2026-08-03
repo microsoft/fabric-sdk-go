@@ -698,6 +698,9 @@ func (client *DomainsClient) listDomainsCreateRequest(ctx context.Context, previ
 		reqQP.Set("nonEmptyOnly", strconv.FormatBool(*options.NonEmptyOnly))
 	}
 	reqQP.Set("preview", strconv.FormatBool(preview))
+	if options != nil && options.WithAssignedWorkspacesOnly != nil {
+		reqQP.Set("withAssignedWorkspacesOnly", strconv.FormatBool(*options.WithAssignedWorkspacesOnly))
+	}
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil

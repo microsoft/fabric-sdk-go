@@ -61,7 +61,153 @@ type ItemsClientListDataAgentsOptions struct {
 	RootFolderID *string
 }
 
+// ItemsClientPublishDataAgentOptions contains the optional parameters for the ItemsClient.PublishDataAgent method.
+type ItemsClientPublishDataAgentOptions struct {
+	// placeholder for future optional parameters
+}
+
 // ItemsClientUpdateDataAgentOptions contains the optional parameters for the ItemsClient.UpdateDataAgent method.
 type ItemsClientUpdateDataAgentOptions struct {
+	// placeholder for future optional parameters
+}
+
+// PublishedClientGetDatasourceFewshotOptions contains the optional parameters for the PublishedClient.GetDatasourceFewshot
+// method.
+type PublishedClientGetDatasourceFewshotOptions struct {
+	// placeholder for future optional parameters
+}
+
+// PublishedClientGetDatasourceOptions contains the optional parameters for the PublishedClient.GetDatasource method.
+type PublishedClientGetDatasourceOptions struct {
+	// placeholder for future optional parameters
+}
+
+// PublishedClientGetSettingsOptions contains the optional parameters for the PublishedClient.GetSettings method.
+type PublishedClientGetSettingsOptions struct {
+	// placeholder for future optional parameters
+}
+
+// PublishedClientListDatasourceElementsOptions contains the optional parameters for the PublishedClient.NewListDatasourceElementsPager
+// method.
+type PublishedClientListDatasourceElementsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+
+	// The identifier of a parent element. Omit to get the root level.
+	RootID *string
+}
+
+// PublishedClientListDatasourceFewshotsOptions contains the optional parameters for the PublishedClient.NewListDatasourceFewshotsPager
+// method.
+type PublishedClientListDatasourceFewshotsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// PublishedClientListDatasourcesOptions contains the optional parameters for the PublishedClient.NewListDatasourcesPager
+// method.
+type PublishedClientListDatasourcesOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// StagingClientBeginCreateDatasourceOptions contains the optional parameters for the StagingClient.BeginCreateDatasource
+// method.
+type StagingClientBeginCreateDatasourceOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// StagingClientCreateDatasourceFewshotOptions contains the optional parameters for the StagingClient.CreateDatasourceFewshot
+// method.
+type StagingClientCreateDatasourceFewshotOptions struct {
+	// placeholder for future optional parameters
+}
+
+// StagingClientDeleteAllDatasourceFewshotsOptions contains the optional parameters for the StagingClient.DeleteAllDatasourceFewshots
+// method.
+type StagingClientDeleteAllDatasourceFewshotsOptions struct {
+	// placeholder for future optional parameters
+}
+
+// StagingClientDeleteDatasourceElementOptions contains the optional parameters for the StagingClient.DeleteDatasourceElement
+// method.
+type StagingClientDeleteDatasourceElementOptions struct {
+	// placeholder for future optional parameters
+}
+
+// StagingClientDeleteDatasourceFewshotOptions contains the optional parameters for the StagingClient.DeleteDatasourceFewshot
+// method.
+type StagingClientDeleteDatasourceFewshotOptions struct {
+	// placeholder for future optional parameters
+}
+
+// StagingClientDeleteDatasourceOptions contains the optional parameters for the StagingClient.DeleteDatasource method.
+type StagingClientDeleteDatasourceOptions struct {
+	// placeholder for future optional parameters
+}
+
+// StagingClientGetDatasourceFewshotOptions contains the optional parameters for the StagingClient.GetDatasourceFewshot method.
+type StagingClientGetDatasourceFewshotOptions struct {
+	// placeholder for future optional parameters
+}
+
+// StagingClientGetDatasourceOptions contains the optional parameters for the StagingClient.GetDatasource method.
+type StagingClientGetDatasourceOptions struct {
+	// placeholder for future optional parameters
+}
+
+// StagingClientGetSettingsOptions contains the optional parameters for the StagingClient.GetSettings method.
+type StagingClientGetSettingsOptions struct {
+	// placeholder for future optional parameters
+}
+
+// StagingClientListDatasourceElementsOptions contains the optional parameters for the StagingClient.NewListDatasourceElementsPager
+// method.
+type StagingClientListDatasourceElementsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+
+	// The identifier of a parent element. Omit to get the root level.
+	RootID *string
+}
+
+// StagingClientListDatasourceFewshotsOptions contains the optional parameters for the StagingClient.NewListDatasourceFewshotsPager
+// method.
+type StagingClientListDatasourceFewshotsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// StagingClientListDatasourcesOptions contains the optional parameters for the StagingClient.NewListDatasourcesPager method.
+type StagingClientListDatasourcesOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// StagingClientResetOptions contains the optional parameters for the StagingClient.Reset method.
+type StagingClientResetOptions struct {
+	// placeholder for future optional parameters
+}
+
+// StagingClientUpdateDatasourceElementOptions contains the optional parameters for the StagingClient.UpdateDatasourceElement
+// method.
+type StagingClientUpdateDatasourceElementOptions struct {
+	// placeholder for future optional parameters
+}
+
+// StagingClientUpdateDatasourceFewshotOptions contains the optional parameters for the StagingClient.UpdateDatasourceFewshot
+// method.
+type StagingClientUpdateDatasourceFewshotOptions struct {
+	// placeholder for future optional parameters
+}
+
+// StagingClientUpdateDatasourceOptions contains the optional parameters for the StagingClient.UpdateDatasource method.
+type StagingClientUpdateDatasourceOptions struct {
+	// placeholder for future optional parameters
+}
+
+// StagingClientUpdateSettingsOptions contains the optional parameters for the StagingClient.UpdateSettings method.
+type StagingClientUpdateSettingsOptions struct {
 	// placeholder for future optional parameters
 }

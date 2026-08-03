@@ -114,3 +114,30 @@ func ExampleCapacitiesClient_NewListCapacitiesPager_listCapacitiesWithContinuati
 		// }
 	}
 }
+
+// Generated from example definition
+func ExampleCapacitiesClient_GetCapacity() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewCapacitiesClient().GetCapacity(ctx, "96f3f0ff-4fe2-4712-b61b-05a456ba9357", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.Capacity = core.Capacity{
+	// 	DisplayName: to.Ptr("F4 Capacity"),
+	// 	ID: to.Ptr("96f3f0ff-4fe2-4712-b61b-05a456ba9357"),
+	// 	Region: to.Ptr("West Central US"),
+	// 	SKU: to.Ptr("F4"),
+	// 	State: to.Ptr(core.CapacityStateActive),
+	// }
+}

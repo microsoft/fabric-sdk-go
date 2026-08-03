@@ -513,6 +513,8 @@ const (
 	ConnectivityTypePersonalCloud ConnectivityType = "PersonalCloud"
 	// ConnectivityTypeShareableCloud - The connection connects through the cloud and can be shared with others.
 	ConnectivityTypeShareableCloud ConnectivityType = "ShareableCloud"
+	// ConnectivityTypeStreamingVirtualNetworkGateway - The connection connects through a streaming virtual network data gateway.
+	ConnectivityTypeStreamingVirtualNetworkGateway ConnectivityType = "StreamingVirtualNetworkGateway"
 	// ConnectivityTypeVirtualNetworkGateway - The connection connects through a virtual network data gateway.
 	ConnectivityTypeVirtualNetworkGateway ConnectivityType = "VirtualNetworkGateway"
 )
@@ -526,6 +528,7 @@ func PossibleConnectivityTypeValues() []ConnectivityType {
 		ConnectivityTypeOnPremisesGatewayPersonal,
 		ConnectivityTypePersonalCloud,
 		ConnectivityTypeShareableCloud,
+		ConnectivityTypeStreamingVirtualNetworkGateway,
 		ConnectivityTypeVirtualNetworkGateway,
 	}
 }
@@ -872,6 +875,24 @@ func PossibleGatewayRoleValues() []GatewayRole {
 	}
 }
 
+// GatewayStatus - The status of the gateway. Additional statuses may be added over time.
+type GatewayStatus string
+
+const (
+	// GatewayStatusOffline - The gateway is offline. Please check errorDetails property for more information.
+	GatewayStatusOffline GatewayStatus = "Offline"
+	// GatewayStatusOnline - The gateway is online and available for use.
+	GatewayStatusOnline GatewayStatus = "Online"
+)
+
+// PossibleGatewayStatusValues returns the possible values for the GatewayStatus const type.
+func PossibleGatewayStatusValues() []GatewayStatus {
+	return []GatewayStatus{
+		GatewayStatusOffline,
+		GatewayStatusOnline,
+	}
+}
+
 // GatewayType - The type of the gateway. Additional gateway types may be added over time.
 type GatewayType string
 
@@ -880,6 +901,8 @@ const (
 	GatewayTypeOnPremises GatewayType = "OnPremises"
 	// GatewayTypeOnPremisesPersonal - The on-premises gateway (personal mode).
 	GatewayTypeOnPremisesPersonal GatewayType = "OnPremisesPersonal"
+	// GatewayTypeStreamingVirtualNetwork - The streaming virtual network gateway.
+	GatewayTypeStreamingVirtualNetwork GatewayType = "StreamingVirtualNetwork"
 	// GatewayTypeVirtualNetwork - The virtual network gateway.
 	GatewayTypeVirtualNetwork GatewayType = "VirtualNetwork"
 )
@@ -889,7 +912,32 @@ func PossibleGatewayTypeValues() []GatewayType {
 	return []GatewayType{
 		GatewayTypeOnPremises,
 		GatewayTypeOnPremisesPersonal,
+		GatewayTypeStreamingVirtualNetwork,
 		GatewayTypeVirtualNetwork,
+	}
+}
+
+// GatewayUpgradeState - The gateway version upgrade state. Additional upgrade states may be added over time.
+type GatewayUpgradeState string
+
+const (
+	// GatewayUpgradeStateNewVersionAvailable - A new gateway version is available.
+	GatewayUpgradeStateNewVersionAvailable GatewayUpgradeState = "NewVersionAvailable"
+	// GatewayUpgradeStateUnknown - The gateway upgrade state is unknown.
+	GatewayUpgradeStateUnknown GatewayUpgradeState = "Unknown"
+	// GatewayUpgradeStateUpToDate - The gateway is up to date.
+	GatewayUpgradeStateUpToDate GatewayUpgradeState = "UpToDate"
+	// GatewayUpgradeStateUpgradeRequired - The gateway requires an upgrade.
+	GatewayUpgradeStateUpgradeRequired GatewayUpgradeState = "UpgradeRequired"
+)
+
+// PossibleGatewayUpgradeStateValues returns the possible values for the GatewayUpgradeState const type.
+func PossibleGatewayUpgradeStateValues() []GatewayUpgradeState {
+	return []GatewayUpgradeState{
+		GatewayUpgradeStateNewVersionAvailable,
+		GatewayUpgradeStateUnknown,
+		GatewayUpgradeStateUpToDate,
+		GatewayUpgradeStateUpgradeRequired,
 	}
 }
 
@@ -911,6 +959,24 @@ func PossibleGitConnectionStateValues() []GitConnectionState {
 		GitConnectionStateConnected,
 		GitConnectionStateConnectedAndInitialized,
 		GitConnectionStateNotConnected,
+	}
+}
+
+// GitConnectionType - The type of Git connection. Additional GitConnectionType types may be added over time.
+type GitConnectionType string
+
+const (
+	// GitConnectionTypeFull - All items in the branch are synced to the workspace.
+	GitConnectionTypeFull GitConnectionType = "Full"
+	// GitConnectionTypeSelective - Only user-selected items are synced to the workspace.
+	GitConnectionTypeSelective GitConnectionType = "Selective"
+)
+
+// PossibleGitConnectionTypeValues returns the possible values for the GitConnectionType const type.
+func PossibleGitConnectionTypeValues() []GitConnectionType {
+	return []GitConnectionType{
+		GitConnectionTypeFull,
+		GitConnectionTypeSelective,
 	}
 }
 
@@ -1268,6 +1334,10 @@ const (
 	ItemTypeAnomalyDetector ItemType = "AnomalyDetector"
 	// ItemTypeApacheAirflowJob - An ApacheAirflowJob.
 	ItemTypeApacheAirflowJob ItemType = "ApacheAirflowJob"
+	// ItemTypeAppBackend - An AppBackend.
+	ItemTypeAppBackend ItemType = "AppBackend"
+	// ItemTypeAzureDatabricksStorage - A OneLake-backed storage item for Azure Databricks.
+	ItemTypeAzureDatabricksStorage ItemType = "AzureDatabricksStorage"
 	// ItemTypeCopyJob - A Copy job.
 	ItemTypeCopyJob ItemType = "CopyJob"
 	// ItemTypeCosmosDBDatabase - A Cosmos DB Database.
@@ -1276,6 +1346,8 @@ const (
 	ItemTypeDashboard ItemType = "Dashboard"
 	// ItemTypeDataAgent - A DataAgent.
 	ItemTypeDataAgent ItemType = "DataAgent"
+	// ItemTypeDataBuildToolJob - A DataBuildToolJob.
+	ItemTypeDataBuildToolJob ItemType = "DataBuildToolJob"
 	// ItemTypeDataPipeline - A data pipeline.
 	ItemTypeDataPipeline ItemType = "DataPipeline"
 	// ItemTypeDataflow - A Dataflow.
@@ -1330,6 +1402,10 @@ const (
 	ItemTypeOntology ItemType = "Ontology"
 	// ItemTypeOperationsAgent - A OperationsAgent.
 	ItemTypeOperationsAgent ItemType = "OperationsAgent"
+	// ItemTypeOrgApp - An Org App.
+	ItemTypeOrgApp ItemType = "OrgApp"
+	// ItemTypeOrgAppAudience - An Org App Audience.
+	ItemTypeOrgAppAudience ItemType = "OrgAppAudience"
 	// ItemTypePaginatedReport - PowerBI paginated report.
 	ItemTypePaginatedReport ItemType = "PaginatedReport"
 	// ItemTypeReflex - A Reflex.
@@ -1361,10 +1437,13 @@ func PossibleItemTypeValues() []ItemType {
 	return []ItemType{
 		ItemTypeAnomalyDetector,
 		ItemTypeApacheAirflowJob,
+		ItemTypeAppBackend,
+		ItemTypeAzureDatabricksStorage,
 		ItemTypeCopyJob,
 		ItemTypeCosmosDBDatabase,
 		ItemTypeDashboard,
 		ItemTypeDataAgent,
+		ItemTypeDataBuildToolJob,
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
 		ItemTypeDatamart,
@@ -1392,6 +1471,8 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeNotebook,
 		ItemTypeOntology,
 		ItemTypeOperationsAgent,
+		ItemTypeOrgApp,
+		ItemTypeOrgAppAudience,
 		ItemTypePaginatedReport,
 		ItemTypeReflex,
 		ItemTypeReport,
@@ -1649,6 +1730,47 @@ func PossiblePrivateEndpointProvisioningStateValues() []PrivateEndpointProvision
 	}
 }
 
+// RelationType - The type of relation between the two items. Additional relation types may be added over time.
+type RelationType string
+
+const (
+	// RelationTypeCascadeDelete - A CascadeDelete relationship indicates that the item is the Parent of the dependentOnItemId
+	// and deleting the item will cause the Dependent item to also be deleted.
+	RelationTypeCascadeDelete RelationType = "CascadeDelete"
+	// RelationTypeDatasource - A Datasource relationship indicates that there is a soft dependency on the item identified by
+	// a common Datasource. If the Dependent item is deleted, the relationship will be removed.
+	RelationTypeDatasource RelationType = "Datasource"
+	// RelationTypeHiddenInWorkspace - HiddenInWorkspace indicates that the item that owns this relationship will be hidden in
+	// the workspace.
+	RelationTypeHiddenInWorkspace RelationType = "HiddenInWorkspace"
+	// RelationTypeOrchestration - An Orchestration relationship indicates that an item executes management or orchestration processes
+	// of the dependency item(the item identified by the dependentOnItemId). If the Dependent item is deleted, the relationship
+	// will be removed.
+	RelationTypeOrchestration RelationType = "Orchestration"
+	// RelationTypePushData - A PushData relationship indicates that a dependent item writes/pushes data to dependecy item(the
+	// item identified by the dependentOnItemId). If the Dependent item is deleted, the relationship will be removed.
+	RelationTypePushData RelationType = "PushData"
+	// RelationTypeShortcut - A Shortcut relationship indicates that an item has a shortcut or link to data or data area from
+	// item identified by the dependentOnItemId. If the Dependent item is deleted, the relationship will be removed.
+	RelationTypeShortcut RelationType = "Shortcut"
+	// RelationTypeWeakAssociation - A WeakAssociation relationship indicates that there is a soft dependency on the item identified
+	// by the dependentOnItemId. If the Dependent item is deleted, the relationship will be removed.
+	RelationTypeWeakAssociation RelationType = "WeakAssociation"
+)
+
+// PossibleRelationTypeValues returns the possible values for the RelationType const type.
+func PossibleRelationTypeValues() []RelationType {
+	return []RelationType{
+		RelationTypeCascadeDelete,
+		RelationTypeDatasource,
+		RelationTypeHiddenInWorkspace,
+		RelationTypeOrchestration,
+		RelationTypePushData,
+		RelationTypeShortcut,
+		RelationTypeWeakAssociation,
+	}
+}
+
 // RequiredAction - Required action after the initialization process has finished. Additional actions may be added over time.
 type RequiredAction string
 
@@ -1901,6 +2023,55 @@ func PossibleWeekIndexValues() []WeekIndex {
 		WeekIndexFourth,
 		WeekIndexSecond,
 		WeekIndexThird,
+	}
+}
+
+// WorkspaceEncryptionStatus - Workspace encryption status. Additional encryption status may be added over time.
+type WorkspaceEncryptionStatus string
+
+const (
+	// WorkspaceEncryptionStatusActive - Workspace encryption is active and the workspace is encrypted.
+	WorkspaceEncryptionStatusActive WorkspaceEncryptionStatus = "Active"
+	// WorkspaceEncryptionStatusDisableInProgress - Workspace encryption is disabling.
+	WorkspaceEncryptionStatusDisableInProgress WorkspaceEncryptionStatus = "DisableInProgress"
+	// WorkspaceEncryptionStatusDisabled - Workspace encryption is not active.
+	WorkspaceEncryptionStatusDisabled WorkspaceEncryptionStatus = "Disabled"
+	// WorkspaceEncryptionStatusEnableInProgress - Workspace encryption is enabling.
+	WorkspaceEncryptionStatusEnableInProgress WorkspaceEncryptionStatus = "EnableInProgress"
+	// WorkspaceEncryptionStatusFailed - Workspace encryption application failed.
+	WorkspaceEncryptionStatusFailed WorkspaceEncryptionStatus = "Failed"
+)
+
+// PossibleWorkspaceEncryptionStatusValues returns the possible values for the WorkspaceEncryptionStatus const type.
+func PossibleWorkspaceEncryptionStatusValues() []WorkspaceEncryptionStatus {
+	return []WorkspaceEncryptionStatus{
+		WorkspaceEncryptionStatusActive,
+		WorkspaceEncryptionStatusDisableInProgress,
+		WorkspaceEncryptionStatusDisabled,
+		WorkspaceEncryptionStatusEnableInProgress,
+		WorkspaceEncryptionStatusFailed,
+	}
+}
+
+// WorkspaceRelationType - The type of the related workspace in the relation. Additional related workspace types may be added
+// over time.
+type WorkspaceRelationType string
+
+const (
+	// WorkspaceRelationTypeBase - The related workspace is the base (source) workspace.
+	WorkspaceRelationTypeBase WorkspaceRelationType = "Base"
+	// WorkspaceRelationTypeBranch - The related workspace is a branch workspace.
+	WorkspaceRelationTypeBranch WorkspaceRelationType = "Branch"
+	// WorkspaceRelationTypeRelatedWorkspace - The related workspace has a general relation.
+	WorkspaceRelationTypeRelatedWorkspace WorkspaceRelationType = "RelatedWorkspace"
+)
+
+// PossibleWorkspaceRelationTypeValues returns the possible values for the WorkspaceRelationType const type.
+func PossibleWorkspaceRelationTypeValues() []WorkspaceRelationType {
+	return []WorkspaceRelationType{
+		WorkspaceRelationTypeBase,
+		WorkspaceRelationTypeBranch,
+		WorkspaceRelationTypeRelatedWorkspace,
 	}
 }
 

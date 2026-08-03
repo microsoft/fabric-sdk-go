@@ -29,8 +29,8 @@ type QueryExecutionClient struct {
 	endpoint string
 }
 
-// BeginExecuteQuery - Executes a specified query against a dataflow and streams the results in Apache Arrow format. Supports
-// using custom mashup documents for advanced scenarios.
+// BeginExecuteQuery - Executes a specified query against a dataflow and streams the result back to the caller. Supports using
+// custom mashup documents for advanced scenarios.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must have execute permissions for the dataflow.
 // REQUIRED DELEGATED SCOPES Dataflow.Execute.All or Item.Execute.All.
@@ -40,6 +40,17 @@ type QueryExecutionClient struct {
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// RESPONSE FORMATS Use the Accept header to negotiate the response media type. Today, the Apache Arrow [https://arrow.apache.org/]
+// streaming format is the only available response format; additional
+// formats may be offered in the future.
+// APACHE ARROW STREAMING FORMAT Media type: application/vnd.apache.arrow.stream
+// When sending this media type, the pq-arrow-version media-type parameter is required and selects the Arrow encoding version:
+// * pq-arrow-version=1 — Original Apache Arrow encoding. Compatible with all dataflows, including those that connect through
+// an on-premises data gateway.
+// * pq-arrow-version=2 — Newer Apache Arrow encoding with improved streaming performance. Not supported for dataflows that
+// connect through an on-premises data gateway.
+// Example: Accept: application/vnd.apache.arrow.stream;pq-arrow-version=2
+// If the Accept header is omitted entirely (or / is sent), the response defaults to application/vnd.apache.arrow.stream;pq-arrow-version=1.
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -53,7 +64,7 @@ func (client *QueryExecutionClient) BeginExecuteQuery(ctx context.Context, works
 	return client.beginExecuteQuery(ctx, workspaceID, dataflowID, executeQueryRequest, options)
 }
 
-// ExecuteQuery - Executes a specified query against a dataflow and streams the results in Apache Arrow format. Supports using
+// ExecuteQuery - Executes a specified query against a dataflow and streams the result back to the caller. Supports using
 // custom mashup documents for advanced scenarios.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must have execute permissions for the dataflow.
@@ -64,6 +75,17 @@ func (client *QueryExecutionClient) BeginExecuteQuery(ctx context.Context, works
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// RESPONSE FORMATS Use the Accept header to negotiate the response media type. Today, the Apache Arrow [https://arrow.apache.org/]
+// streaming format is the only available response format; additional
+// formats may be offered in the future.
+// APACHE ARROW STREAMING FORMAT Media type: application/vnd.apache.arrow.stream
+// When sending this media type, the pq-arrow-version media-type parameter is required and selects the Arrow encoding version:
+// * pq-arrow-version=1 — Original Apache Arrow encoding. Compatible with all dataflows, including those that connect through
+// an on-premises data gateway.
+// * pq-arrow-version=2 — Newer Apache Arrow encoding with improved streaming performance. Not supported for dataflows that
+// connect through an on-premises data gateway.
+// Example: Accept: application/vnd.apache.arrow.stream;pq-arrow-version=2
+// If the Accept header is omitted entirely (or / is sent), the response defaults to application/vnd.apache.arrow.stream;pq-arrow-version=1.
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //
@@ -90,7 +112,7 @@ func (client *QueryExecutionClient) executeQuery(ctx context.Context, workspaceI
 }
 
 // executeQueryCreateRequest creates the ExecuteQuery request.
-func (client *QueryExecutionClient) executeQueryCreateRequest(ctx context.Context, workspaceID string, dataflowID string, executeQueryRequest ExecuteQueryRequest, _ *QueryExecutionClientBeginExecuteQueryOptions) (*policy.Request, error) {
+func (client *QueryExecutionClient) executeQueryCreateRequest(ctx context.Context, workspaceID string, dataflowID string, executeQueryRequest ExecuteQueryRequest, options *QueryExecutionClientBeginExecuteQueryOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/dataflows/{dataflowId}/executeQuery"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -105,7 +127,9 @@ func (client *QueryExecutionClient) executeQueryCreateRequest(ctx context.Contex
 		return nil, err
 	}
 	runtime.SkipBodyDownload(req)
-	req.Raw().Header["Accept"] = []string{"application/json"}
+	if options != nil && options.Accept != nil {
+		req.Raw().Header["Accept"] = []string{*options.Accept}
+	}
 	if err := runtime.MarshalAsJSON(req, executeQueryRequest); err != nil {
 		return nil, err
 	}
@@ -115,7 +139,7 @@ func (client *QueryExecutionClient) executeQueryCreateRequest(ctx context.Contex
 // Custom code starts below
 
 // ExecuteQuery - returns QueryExecutionClientExecuteQueryResponse in sync mode.
-// Executes a specified query against a dataflow and streams the results in Apache Arrow format. Supports using custom mashup documents for advanced scenarios.
+// Executes a specified query against a dataflow and streams the result back to the caller. Supports using custom mashup documents for advanced scenarios.
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
@@ -129,6 +153,20 @@ func (client *QueryExecutionClient) executeQueryCreateRequest(ctx context.Contex
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// RESPONSE FORMATS Use the Accept header to negotiate the response media type. Today, the Apache Arrow [https://arrow.apache.org/] streaming format is the only available response format; additional
+// formats may be offered in the future.
+//
+// APACHE ARROW STREAMING FORMAT Media type: application/vnd.apache.arrow.stream
+//
+// When sending this media type, the pq-arrow-version media-type parameter is required and selects the Arrow encoding version:
+//
+//   - pq-arrow-version=1 — Original Apache Arrow encoding. Compatible with all dataflows, including those that connect through an on-premises data gateway.
+//   - pq-arrow-version=2 — Newer Apache Arrow encoding with improved streaming performance. Not supported for dataflows that connect through an on-premises data gateway.
+//
+// Example: Accept: application/vnd.apache.arrow.stream;pq-arrow-version=2
+//
+// If the Accept header is omitted entirely (or / is sent), the response defaults to application/vnd.apache.arrow.stream;pq-arrow-version=1.
 //
 // INTERFACE
 // Generated from API version v1

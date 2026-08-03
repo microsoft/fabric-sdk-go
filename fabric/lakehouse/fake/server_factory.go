@@ -18,21 +18,23 @@ import (
 
 // ServerFactory is a fake server for instances of the lakehouse.ClientFactory type.
 type ServerFactory struct {
-	BackgroundJobsServer BackgroundJobsServer
-	ItemsServer          ItemsServer
-	LivySessionsServer   LivySessionsServer
-	TablesServer         TablesServer
+	BackgroundJobsServer        BackgroundJobsServer
+	ItemsServer                 ItemsServer
+	LivySessionsServer          LivySessionsServer
+	MaterializedLakeViewsServer MaterializedLakeViewsServer
+	TablesServer                TablesServer
 }
 
 // ServerFactoryTransport connects instances of lakehouse.ClientFactory to instances of ServerFactory.
 // Don't use this type directly, use NewServerFactoryTransport instead.
 type ServerFactoryTransport struct {
-	srv                    *ServerFactory
-	trMu                   sync.Mutex
-	trBackgroundJobsServer *BackgroundJobsServerTransport
-	trItemsServer          *ItemsServerTransport
-	trLivySessionsServer   *LivySessionsServerTransport
-	trTablesServer         *TablesServerTransport
+	srv                           *ServerFactory
+	trMu                          sync.Mutex
+	trBackgroundJobsServer        *BackgroundJobsServerTransport
+	trItemsServer                 *ItemsServerTransport
+	trLivySessionsServer          *LivySessionsServerTransport
+	trMaterializedLakeViewsServer *MaterializedLakeViewsServerTransport
+	trTablesServer                *TablesServerTransport
 }
 
 // NewServerFactoryTransport creates a new instance of ServerFactoryTransport with the provided implementation.
@@ -69,6 +71,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	case "LivySessionsClient":
 		initServer(s, &s.trLivySessionsServer, func() *LivySessionsServerTransport { return NewLivySessionsServerTransport(&s.srv.LivySessionsServer) })
 		resp, err = s.trLivySessionsServer.Do(req)
+	case "MaterializedLakeViewsClient":
+		initServer(s, &s.trMaterializedLakeViewsServer, func() *MaterializedLakeViewsServerTransport {
+			return NewMaterializedLakeViewsServerTransport(&s.srv.MaterializedLakeViewsServer)
+		})
+		resp, err = s.trMaterializedLakeViewsServer.Do(req)
 	case "TablesClient":
 		initServer(s, &s.trTablesServer, func() *TablesServerTransport { return NewTablesServerTransport(&s.srv.TablesServer) })
 		resp, err = s.trTablesServer.Do(req)

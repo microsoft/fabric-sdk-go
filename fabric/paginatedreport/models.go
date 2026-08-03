@@ -6,6 +6,50 @@
 
 package paginatedreport
 
+// CreatePaginatedReportRequest - The request payload to create a paginated report.
+type CreatePaginatedReportRequest struct {
+	// REQUIRED; The paginated report public definition.
+	Definition *Definition
+
+	// REQUIRED; The paginated report display name. The display name must follow naming rules according to item type.
+	DisplayName *string
+
+	// The paginated report description. Maximum length is 256 characters.
+	Description *string
+}
+
+// Definition - Paginated report public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/paginatedreport-definition]
+// for more details on the structure of the Paginated
+// Report definition.
+type Definition struct {
+	// REQUIRED; A list of definition parts.
+	Parts []DefinitionPart
+
+	// The format of the paginated report definition. Supported format: PaginatedReportDefinition. Additional format types may
+	// be added over time.
+	Format *DefinitionFormat
+}
+
+// DefinitionPart - Paginated report definition part object.
+type DefinitionPart struct {
+	// The paginated report part path (e.g., ContosoReport.rdl, .platform).
+	Path *string
+
+	// The paginated report part payload.
+	Payload *string
+
+	// The payload type.
+	PayloadType *PayloadType
+}
+
+// DefinitionResponse - Paginated report public definition response.
+type DefinitionResponse struct {
+	// READ-ONLY; Paginated report public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/paginatedreport-definition]
+	// for more details on the structure of the Paginated
+	// Report definition.
+	Definition *Definition
+}
+
 // EntireTenantPrincipal - Represents a tenant principal
 type EntireTenantPrincipal struct {
 	// REQUIRED; The principal's ID.
@@ -188,6 +232,14 @@ func (s *ServicePrincipalProfilePrincipal) GetPrincipal() *Principal {
 type ServicePrincipalProfilePrincipalServicePrincipalProfileDetails struct {
 	// The service principal profile's parent principal.
 	ParentPrincipal PrincipalClassification
+}
+
+// UpdatePaginatedReportDefinitionRequest - Update paginated report public definition request payload.
+type UpdatePaginatedReportDefinitionRequest struct {
+	// REQUIRED; Paginated report public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/paginatedreport-definition]
+	// for more details on the structure of the Paginated
+	// Report definition.
+	Definition *Definition
 }
 
 // UpdatePaginatedReportRequest - Update paginated report request.

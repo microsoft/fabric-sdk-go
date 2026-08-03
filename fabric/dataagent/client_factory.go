@@ -54,3 +54,19 @@ func (c *ClientFactory) NewItemsClient() *ItemsClient {
 		endpoint: c.endpoint,
 	}
 }
+
+// NewPublishedClient creates a new instance of PublishedClient.
+func (c *ClientFactory) NewPublishedClient() *PublishedClient {
+	return &PublishedClient{
+		internal: c.internal.WithClientName("dataagent.PublishedClient"),
+		endpoint: c.endpoint,
+	}
+}
+
+// NewStagingClient creates a new instance of StagingClient.
+func (c *ClientFactory) NewStagingClient() *StagingClient {
+	return &StagingClient{
+		internal: c.internal.WithClientName("dataagent.StagingClient"),
+		endpoint: c.endpoint,
+	}
+}

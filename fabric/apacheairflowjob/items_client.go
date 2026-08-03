@@ -31,12 +31,10 @@ type ItemsClient struct {
 }
 
 // BeginCreateApacheAirflowJob - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create Apache Airflow job with a public definition, refer to [/rest/api/fabric/articles/item-management/definitions/public-facing-name]
-// article.
-// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
-// REQUIRED DELEGATED SCOPES ApacheAirflowJob.ReadWrite.All or Item.ReadWrite.All
+// PERMISSIONS The caller must have a contributor workspace role.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
-// * To create an Apache Airflow job the workspace must be on a supported Fabric capacity. For more information see: Microsoft
+// * To create an Apache Airflow job, the workspace must be on a supported Fabric capacity. For more information, see: Microsoft
 // Fabric license types
 // [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -57,12 +55,10 @@ func (client *ItemsClient) BeginCreateApacheAirflowJob(ctx context.Context, work
 }
 
 // CreateApacheAirflowJob - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create Apache Airflow job with a public definition, refer to [/rest/api/fabric/articles/item-management/definitions/public-facing-name]
-// article.
-// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
-// REQUIRED DELEGATED SCOPES ApacheAirflowJob.ReadWrite.All or Item.ReadWrite.All
+// PERMISSIONS The caller must have a contributor workspace role.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
-// * To create an Apache Airflow job the workspace must be on a supported Fabric capacity. For more information see: Microsoft
+// * To create an Apache Airflow job, the workspace must be on a supported Fabric capacity. For more information, see: Microsoft
 // Fabric license types
 // [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -114,7 +110,7 @@ func (client *ItemsClient) createApacheAirflowJobCreateRequest(ctx context.Conte
 }
 
 // DeleteApacheAirflowJob - PERMISSIONS The caller must have write permissions for the Apache Airflow job.
-// REQUIRED DELEGATED SCOPES ApacheAirflowJob.ReadWrite.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -174,7 +170,7 @@ func (client *ItemsClient) deleteApacheAirflowJobCreateRequest(ctx context.Conte
 }
 
 // GetApacheAirflowJob - PERMISSIONS The caller must have read permissions for the Apache Airflow job.
-// REQUIRED DELEGATED SCOPES ApacheAirflowJob.Read.All or ApacheAirflowJob.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -239,8 +235,9 @@ func (client *ItemsClient) getApacheAirflowJobHandleResponse(resp *http.Response
 }
 
 // BeginGetApacheAirflowJobDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// When you get a 's public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have read and write permissions for the apache airflow job.
+// When you get an Apache Airflow job's public definition, the sensitivity label is not a part of the definition.
+// PERMISSIONS The caller must have read and write permissions for the Apache Airflow job.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -259,8 +256,9 @@ func (client *ItemsClient) BeginGetApacheAirflowJobDefinition(ctx context.Contex
 }
 
 // GetApacheAirflowJobDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// When you get a 's public definition, the sensitivity label is not a part of the definition.
-// PERMISSIONS The caller must have read and write permissions for the apache airflow job.
+// When you get an Apache Airflow job's public definition, the sensitivity label is not a part of the definition.
+// PERMISSIONS The caller must have read and write permissions for the Apache Airflow job.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -387,8 +385,8 @@ func (client *ItemsClient) listApacheAirflowJobsHandleResponse(resp *http.Respon
 	return result, nil
 }
 
-// UpdateApacheAirflowJob - PERMISSIONS The caller must have read and write permissions for the apache airflow job.
-// REQUIRED DELEGATED SCOPES ApacheAirflowJob.ReadWrite.All or Item.ReadWrite.All
+// UpdateApacheAirflowJob - PERMISSIONS The caller must have read and write permissions for the Apache Airflow job.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -457,9 +455,9 @@ func (client *ItemsClient) updateApacheAirflowJobHandleResponse(resp *http.Respo
 }
 
 // BeginUpdateApacheAirflowJobDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// Updating the 's definition, does not affect its sensitivity label.
-// PERMISSIONS The caller must have read and write permissions for the apache airflow job.
-// REQUIRED DELEGATED SCOPES ApacheAirflowJob.ReadWrite.All or Item.ReadWrite.All
+// Updating an Apache Airflow job's definition does not affect its sensitivity label.
+// PERMISSIONS The caller must have read and write permissions for the Apache Airflow job.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -479,9 +477,9 @@ func (client *ItemsClient) BeginUpdateApacheAirflowJobDefinition(ctx context.Con
 }
 
 // UpdateApacheAirflowJobDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// Updating the 's definition, does not affect its sensitivity label.
-// PERMISSIONS The caller must have read and write permissions for the apache airflow job.
-// REQUIRED DELEGATED SCOPES ApacheAirflowJob.ReadWrite.All or Item.ReadWrite.All
+// Updating an Apache Airflow job's definition does not affect its sensitivity label.
+// PERMISSIONS The caller must have read and write permissions for the Apache Airflow job.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -544,14 +542,13 @@ func (client *ItemsClient) updateApacheAirflowJobDefinitionCreateRequest(ctx con
 // CreateApacheAirflowJob - returns ItemsClientCreateApacheAirflowJobResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// To create Apache Airflow job with a public definition, refer to [/rest/api/fabric/articles/item-management/definitions/public-facing-name] article.
+// PERMISSIONS The caller must have a contributor workspace role.
 //
-// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
-// REQUIRED DELEGATED SCOPES ApacheAirflowJob.ReadWrite.All or Item.ReadWrite.All
+// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 //
 // LIMITATIONS
 //
-//   - To create an Apache Airflow job the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric license types
+//   - To create an Apache Airflow job, the workspace must be on a supported Fabric capacity. For more information, see: Microsoft Fabric license types
 //     [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
@@ -619,9 +616,11 @@ func (client *ItemsClient) beginCreateApacheAirflowJob(ctx context.Context, work
 // GetApacheAirflowJobDefinition - returns ItemsClientGetApacheAirflowJobDefinitionResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// When you get a 's public definition, the sensitivity label is not a part of the definition.
+// When you get an Apache Airflow job's public definition, the sensitivity label is not a part of the definition.
 //
-// PERMISSIONS The caller must have read and write permissions for the apache airflow job.
+// PERMISSIONS The caller must have read and write permissions for the Apache Airflow job.
+//
+// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
@@ -688,11 +687,11 @@ func (client *ItemsClient) beginGetApacheAirflowJobDefinition(ctx context.Contex
 // UpdateApacheAirflowJobDefinition - returns ItemsClientUpdateApacheAirflowJobDefinitionResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// Updating the 's definition, does not affect its sensitivity label.
+// Updating an Apache Airflow job's definition does not affect its sensitivity label.
 //
-// PERMISSIONS The caller must have read and write permissions for the apache airflow job.
+// PERMISSIONS The caller must have read and write permissions for the Apache Airflow job.
 //
-// # REQUIRED DELEGATED SCOPES ApacheAirflowJob.ReadWrite.All or Item.ReadWrite.All
+// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

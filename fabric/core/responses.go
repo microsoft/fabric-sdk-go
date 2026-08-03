@@ -8,6 +8,12 @@ package core
 
 import "io"
 
+// CapacitiesClientGetCapacityResponse contains the response from method CapacitiesClient.GetCapacity.
+type CapacitiesClientGetCapacityResponse struct {
+	// A capacity object.
+	Capacity
+}
+
 // CapacitiesClientListCapacitiesResponse contains the response from method CapacitiesClient.NewListCapacitiesPager.
 type CapacitiesClientListCapacitiesResponse struct {
 	Capacities
@@ -284,6 +290,18 @@ type GatewaysClientAddGatewayRoleAssignmentResponse struct {
 	Location *string
 }
 
+// GatewaysClientCheckGatewayMemberStatusResponse contains the response from method GatewaysClient.BeginCheckGatewayMemberStatus.
+type GatewaysClientCheckGatewayMemberStatusResponse struct {
+	// The gateway status response.
+	GatewayStatusResponse
+}
+
+// GatewaysClientCheckGatewayStatusResponse contains the response from method GatewaysClient.BeginCheckGatewayStatus.
+type GatewaysClientCheckGatewayStatusResponse struct {
+	// The gateway status response.
+	GatewayStatusResponse
+}
+
 // GatewaysClientCreateGatewayResponse contains the response from method GatewaysClient.CreateGateway.
 type GatewaysClientCreateGatewayResponse struct {
 	// The base object of gateway.
@@ -330,6 +348,16 @@ type GatewaysClientListGatewayRoleAssignmentsResponse struct {
 // GatewaysClientListGatewaysResponse contains the response from method GatewaysClient.NewListGatewaysPager.
 type GatewaysClientListGatewaysResponse struct {
 	ListGatewaysResponse
+}
+
+// GatewaysClientRestartGatewayResponse contains the response from method GatewaysClient.BeginRestartGateway.
+type GatewaysClientRestartGatewayResponse struct {
+	// placeholder for future response values
+}
+
+// GatewaysClientShutdownGatewayResponse contains the response from method GatewaysClient.BeginShutdownGateway.
+type GatewaysClientShutdownGatewayResponse struct {
+	// placeholder for future response values
 }
 
 // GatewaysClientUpdateGatewayMemberResponse contains the response from method GatewaysClient.UpdateGatewayMember.
@@ -434,6 +462,12 @@ type ItemsClientDeleteItemResponse struct {
 	// placeholder for future response values
 }
 
+// ItemsClientGetDownstreamRelationsBetaResponse contains the response from method ItemsClient.GetDownstreamRelationsBeta.
+type ItemsClientGetDownstreamRelationsBetaResponse struct {
+	// A response containing related items, relation edges, and referenced workspaces.
+	RelationsResponse
+}
+
 // ItemsClientGetItemDefinitionResponse contains the response from method ItemsClient.BeginGetItemDefinition.
 type ItemsClientGetItemDefinitionResponse struct {
 	// Item public definition response.
@@ -444,6 +478,12 @@ type ItemsClientGetItemDefinitionResponse struct {
 type ItemsClientGetItemResponse struct {
 	// An item object.
 	Item
+}
+
+// ItemsClientGetUpstreamRelationsBetaResponse contains the response from method ItemsClient.GetUpstreamRelationsBeta.
+type ItemsClientGetUpstreamRelationsBetaResponse struct {
+	// A response containing related items, relation edges, and referenced workspaces.
+	RelationsResponse
 }
 
 // ItemsClientListItemConnectionsResponse contains the response from method ItemsClient.NewListItemConnectionsPager.
@@ -703,6 +743,23 @@ type TagsClientUnapplyTagsResponse struct {
 	// placeholder for future response values
 }
 
+// WorkspaceRelationsClientCreateWorkspaceRelationResponse contains the response from method WorkspaceRelationsClient.CreateWorkspaceRelation.
+type WorkspaceRelationsClientCreateWorkspaceRelationResponse struct {
+	// A workspace relation object.
+	WorkspaceRelation
+}
+
+// WorkspaceRelationsClientDeleteWorkspaceRelationResponse contains the response from method WorkspaceRelationsClient.DeleteWorkspaceRelation.
+type WorkspaceRelationsClientDeleteWorkspaceRelationResponse struct {
+	// placeholder for future response values
+}
+
+// WorkspaceRelationsClientListWorkspaceRelationsResponse contains the response from method WorkspaceRelationsClient.NewListWorkspaceRelationsPager.
+type WorkspaceRelationsClientListWorkspaceRelationsResponse struct {
+	// A list of workspace relations.
+	WorkspaceRelations
+}
+
 // WorkspacesClientAddWorkspaceRoleAssignmentResponse contains the response from method WorkspacesClient.AddWorkspaceRoleAssignment.
 type WorkspacesClientAddWorkspaceRoleAssignmentResponse struct {
 	// A workspace role assignment object.
@@ -724,6 +781,11 @@ type WorkspacesClientAssignToCapacityResponse struct {
 
 // WorkspacesClientAssignToDomainResponse contains the response from method WorkspacesClient.AssignToDomain.
 type WorkspacesClientAssignToDomainResponse struct {
+	// placeholder for future response values
+}
+
+// WorkspacesClientAssignWorkspaceEncryptionResponse contains the response from method WorkspacesClient.AssignWorkspaceEncryption.
+type WorkspacesClientAssignWorkspaceEncryptionResponse struct {
 	// placeholder for future response values
 }
 
@@ -751,6 +813,16 @@ type WorkspacesClientDeprovisionIdentityResponse struct {
 	// placeholder for future response values
 }
 
+// WorkspacesClientGetFirewallRulesResponse contains the response from method WorkspacesClient.GetFirewallRules.
+type WorkspacesClientGetFirewallRulesResponse struct {
+	// This object defines the complete set of firewall rules to manage inbound access protection as part of a workspace’s networking
+	// communication policy. It ensures that only explicitly authorized IP addresses are permitted for inbound communication.
+	// When submitted via the PUT API, this object creates or fully replaces the existing IP firewall configuration for the workspace.
+	// These rules are enforced only when the workspace’s network communication policy has inbound.publicAccessRules.defaultAction
+	// set to Deny.
+	InboundFirewallConfiguration
+}
+
 // WorkspacesClientGetGitOutboundPolicyResponse contains the response from method WorkspacesClient.GetGitOutboundPolicy.
 type WorkspacesClientGetGitOutboundPolicyResponse struct {
 	// The policy defining access to/from a workspace to/from public networks.
@@ -765,6 +837,15 @@ type WorkspacesClientGetInboundAzureResourceRulesResponse struct {
 	// Represents a collection of inbound Azure resource instance rules configured for a workspace. These rules define which Azure
 	// resource instances are allowed to access the workspace.
 	WorkspaceInboundAzureResourceRules
+}
+
+// WorkspacesClientGetInboundExternalDataSharesPolicyResponse contains the response from method WorkspacesClient.GetInboundExternalDataSharesPolicy.
+type WorkspacesClientGetInboundExternalDataSharesPolicyResponse struct {
+	// The inbound networking exception policy for External Data Shares in a workspace.
+	WorkspaceInboundExternalDataSharesPolicy
+
+	// ETag contains the information returned from the ETag header response.
+	ETag *string
 }
 
 // WorkspacesClientGetNetworkCommunicationPolicyResponse contains the response from method WorkspacesClient.GetNetworkCommunicationPolicy.
@@ -799,6 +880,12 @@ type WorkspacesClientGetOutboundGatewayRulesResponse struct {
 	ETag *string
 }
 
+// WorkspacesClientGetWorkspaceEncryptionResponse contains the response from method WorkspacesClient.GetWorkspaceEncryption.
+type WorkspacesClientGetWorkspaceEncryptionResponse struct {
+	// Workspace encryption settings and status details.
+	WorkspaceEncryptionDetail
+}
+
 // WorkspacesClientGetWorkspaceResponse contains the response from method WorkspacesClient.GetWorkspace.
 type WorkspacesClientGetWorkspaceResponse struct {
 	// A workspace object.
@@ -827,6 +914,16 @@ type WorkspacesClientProvisionIdentityResponse struct {
 	WorkspaceIdentity
 }
 
+// WorkspacesClientResetWorkspaceEncryptionResponse contains the response from method WorkspacesClient.ResetWorkspaceEncryption.
+type WorkspacesClientResetWorkspaceEncryptionResponse struct {
+	// placeholder for future response values
+}
+
+// WorkspacesClientSetFirewallRulesResponse contains the response from method WorkspacesClient.SetFirewallRules.
+type WorkspacesClientSetFirewallRulesResponse struct {
+	// placeholder for future response values
+}
+
 // WorkspacesClientSetGitOutboundPolicyResponse contains the response from method WorkspacesClient.SetGitOutboundPolicy.
 type WorkspacesClientSetGitOutboundPolicyResponse struct {
 	// ETag contains the information returned from the ETag header response.
@@ -836,6 +933,12 @@ type WorkspacesClientSetGitOutboundPolicyResponse struct {
 // WorkspacesClientSetInboundAzureResourceRulesResponse contains the response from method WorkspacesClient.SetInboundAzureResourceRules.
 type WorkspacesClientSetInboundAzureResourceRulesResponse struct {
 	// placeholder for future response values
+}
+
+// WorkspacesClientSetInboundExternalDataSharesPolicyResponse contains the response from method WorkspacesClient.SetInboundExternalDataSharesPolicy.
+type WorkspacesClientSetInboundExternalDataSharesPolicyResponse struct {
+	// ETag contains the information returned from the ETag header response.
+	ETag *string
 }
 
 // WorkspacesClientSetNetworkCommunicationPolicyResponse contains the response from method WorkspacesClient.SetNetworkCommunicationPolicy.

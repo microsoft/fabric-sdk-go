@@ -51,6 +51,10 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	DeleteItem func(ctx context.Context, workspaceID string, itemID string, options *core.ItemsClientDeleteItemOptions) (resp azfake.Responder[core.ItemsClientDeleteItemResponse], errResp azfake.ErrorResponder)
 
+	// GetDownstreamRelationsBeta is the fake for method ItemsClient.GetDownstreamRelationsBeta
+	// HTTP status codes to indicate success: http.StatusOK
+	GetDownstreamRelationsBeta func(ctx context.Context, workspaceID string, itemID string, beta bool, options *core.ItemsClientGetDownstreamRelationsBetaOptions) (resp azfake.Responder[core.ItemsClientGetDownstreamRelationsBetaResponse], errResp azfake.ErrorResponder)
+
 	// GetItem is the fake for method ItemsClient.GetItem
 	// HTTP status codes to indicate success: http.StatusOK
 	GetItem func(ctx context.Context, workspaceID string, itemID string, options *core.ItemsClientGetItemOptions) (resp azfake.Responder[core.ItemsClientGetItemResponse], errResp azfake.ErrorResponder)
@@ -58,6 +62,10 @@ type ItemsServer struct {
 	// BeginGetItemDefinition is the fake for method ItemsClient.BeginGetItemDefinition
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
 	BeginGetItemDefinition func(ctx context.Context, workspaceID string, itemID string, options *core.ItemsClientBeginGetItemDefinitionOptions) (resp azfake.PollerResponder[core.ItemsClientGetItemDefinitionResponse], errResp azfake.ErrorResponder)
+
+	// GetUpstreamRelationsBeta is the fake for method ItemsClient.GetUpstreamRelationsBeta
+	// HTTP status codes to indicate success: http.StatusOK
+	GetUpstreamRelationsBeta func(ctx context.Context, workspaceID string, itemID string, beta bool, options *core.ItemsClientGetUpstreamRelationsBetaOptions) (resp azfake.Responder[core.ItemsClientGetUpstreamRelationsBetaResponse], errResp azfake.ErrorResponder)
 
 	// NewListItemConnectionsPager is the fake for method ItemsClient.NewListItemConnectionsPager
 	// HTTP status codes to indicate success: http.StatusOK
@@ -148,10 +156,14 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 				res.resp, res.err = i.dispatchBeginCreateItem(req)
 			case "ItemsClient.DeleteItem":
 				res.resp, res.err = i.dispatchDeleteItem(req)
+			case "ItemsClient.GetDownstreamRelationsBeta":
+				res.resp, res.err = i.dispatchGetDownstreamRelationsBeta(req)
 			case "ItemsClient.GetItem":
 				res.resp, res.err = i.dispatchGetItem(req)
 			case "ItemsClient.BeginGetItemDefinition":
 				res.resp, res.err = i.dispatchBeginGetItemDefinition(req)
+			case "ItemsClient.GetUpstreamRelationsBeta":
+				res.resp, res.err = i.dispatchGetUpstreamRelationsBeta(req)
 			case "ItemsClient.NewListItemConnectionsPager":
 				res.resp, res.err = i.dispatchNewListItemConnectionsPager(req)
 			case "ItemsClient.NewListItemsPager":
@@ -481,6 +493,48 @@ func (i *ItemsServerTransport) dispatchDeleteItem(req *http.Request) (*http.Resp
 	return resp, nil
 }
 
+func (i *ItemsServerTransport) dispatchGetDownstreamRelationsBeta(req *http.Request) (*http.Response, error) {
+	if i.srv.GetDownstreamRelationsBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetDownstreamRelationsBeta not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/items/(?P<itemId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/relations/downstream`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	qp := req.URL.Query()
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	itemIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("itemId")])
+	if err != nil {
+		return nil, err
+	}
+	betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
+	if err != nil {
+		return nil, err
+	}
+	betaParam, err := strconv.ParseBool(betaUnescaped)
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := i.srv.GetDownstreamRelationsBeta(req.Context(), workspaceIDParam, itemIDParam, betaParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).RelationsResponse, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
 func (i *ItemsServerTransport) dispatchGetItem(req *http.Request) (*http.Response, error) {
 	if i.srv.GetItem == nil {
 		return nil, &nonRetriableError{errors.New("fake for method GetItem not implemented")}
@@ -583,6 +637,48 @@ func (i *ItemsServerTransport) dispatchBeginGetItemDefinition(req *http.Request)
 		i.beginGetItemDefinition.remove(req)
 	}
 
+	return resp, nil
+}
+
+func (i *ItemsServerTransport) dispatchGetUpstreamRelationsBeta(req *http.Request) (*http.Response, error) {
+	if i.srv.GetUpstreamRelationsBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetUpstreamRelationsBeta not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/items/(?P<itemId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/relations/upstream`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	qp := req.URL.Query()
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	itemIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("itemId")])
+	if err != nil {
+		return nil, err
+	}
+	betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
+	if err != nil {
+		return nil, err
+	}
+	betaParam, err := strconv.ParseBool(betaUnescaped)
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := i.srv.GetUpstreamRelationsBeta(req.Context(), workspaceIDParam, itemIDParam, betaParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).RelationsResponse, req)
+	if err != nil {
+		return nil, err
+	}
 	return resp, nil
 }
 

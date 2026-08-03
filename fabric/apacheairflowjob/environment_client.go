@@ -33,7 +33,7 @@ type EnvironmentClient struct {
 // GetApacheAirflowJobEnvironmentBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
 // purposes only. It may change based on feedback and is not recommended for production use.
 // PERMISSIONS The caller must have read permissions for the Apache Airflow job.
-// REQUIRED DELEGATED SCOPES Airflow.Read.All or Item.Read.All
+// REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All
 // Set the beta query parameter to true to call this API.
 // When calling this API, callers must specify true as the value for the query parameter beta.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -106,8 +106,8 @@ func (client *EnvironmentClient) getApacheAirflowJobEnvironmentBetaHandleRespons
 // BeginStartApacheAirflowJobEnvironmentBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation
 // and development purposes only. It may change based on feedback and is not recommended for production use.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have execute permissions for the Apache Airflow job.
-// REQUIRED DELEGATED SCOPES Airflow.Execute.All or Item.Execute.All
+// PERMISSIONS The caller must have read and write permissions for the Apache Airflow job.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // Set the beta query parameter to true to call this API.
 // When calling this API, callers must specify true as the value for the query parameter beta.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -131,8 +131,8 @@ func (client *EnvironmentClient) BeginStartApacheAirflowJobEnvironmentBeta(ctx c
 // StartApacheAirflowJobEnvironmentBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and
 // development purposes only. It may change based on feedback and is not recommended for production use.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have execute permissions for the Apache Airflow job.
-// REQUIRED DELEGATED SCOPES Airflow.Execute.All or Item.Execute.All
+// PERMISSIONS The caller must have read and write permissions for the Apache Airflow job.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // Set the beta query parameter to true to call this API.
 // When calling this API, callers must specify true as the value for the query parameter beta.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -190,8 +190,8 @@ func (client *EnvironmentClient) startApacheAirflowJobEnvironmentBetaCreateReque
 // BeginStopApacheAirflowJobEnvironmentBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation
 // and development purposes only. It may change based on feedback and is not recommended for production use.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have execute permissions for the Apache Airflow job.
-// REQUIRED DELEGATED SCOPES Airflow.Execute.All or Item.Execute.All
+// PERMISSIONS The caller must have read and write permissions for the Apache Airflow job.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // Set the beta query parameter to true to call this API.
 // When calling this API, callers must specify true as the value for the query parameter beta.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -215,8 +215,8 @@ func (client *EnvironmentClient) BeginStopApacheAirflowJobEnvironmentBeta(ctx co
 // StopApacheAirflowJobEnvironmentBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
 // purposes only. It may change based on feedback and is not recommended for production use.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS The caller must have execute permissions for the Apache Airflow job.
-// REQUIRED DELEGATED SCOPES Airflow.Execute.All or Item.Execute.All
+// PERMISSIONS The caller must have read and write permissions for the Apache Airflow job.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // Set the beta query parameter to true to call this API.
 // When calling this API, callers must specify true as the value for the query parameter beta.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -278,9 +278,9 @@ func (client *EnvironmentClient) stopApacheAirflowJobEnvironmentBetaCreateReques
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// PERMISSIONS The caller must have execute permissions for the Apache Airflow job.
+// PERMISSIONS The caller must have read and write permissions for the Apache Airflow job.
 //
-// # REQUIRED DELEGATED SCOPES Airflow.Execute.All or Item.Execute.All
+// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 //
 // Set the beta query parameter to true to call this API.
 //
@@ -354,9 +354,9 @@ func (client *EnvironmentClient) beginStartApacheAirflowJobEnvironmentBeta(ctx c
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// PERMISSIONS The caller must have execute permissions for the Apache Airflow job.
+// PERMISSIONS The caller must have read and write permissions for the Apache Airflow job.
 //
-// # REQUIRED DELEGATED SCOPES Airflow.Execute.All or Item.Execute.All
+// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 //
 // Set the beta query parameter to true to call this API.
 //
