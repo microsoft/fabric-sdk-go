@@ -55,7 +55,8 @@ jobs:
           reporter: jest-junit
           path: testresults.xml
 
-      # Code coverage disabled for now — uncomment to re-enable.
+      # Cobertura summary needs a coverage.xml translation layer (gocov-xml or
+      # gocover-cobertura); disabled while using built-in Go coverage only.
       # - name: ⚙️ Get Coverage summary
       #   uses: irongut/CodeCoverageSummary@51cc3a756ddcd398d447c044c02cb6aa83fdae95 # v1.3.0
       #   with:
@@ -81,18 +82,14 @@ jobs:
           if-no-files-found: warn
           overwrite: true
 
-      # Code coverage disabled for now — uncomment to re-enable.
-      # - name: 📤 Upload coverage results
-      #   if: always()
-      #   uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-      #   with:
-      #     name: test-coverage-results
-      #     path: |
-      #       coverage.html
-      #       coverage.json
-      #       coverage.out
-      #       coverage.txt
-      #       coverage.xml
-      #       code-coverage-results.md
-      #     if-no-files-found: warn
-      #     overwrite: true
+      - name: 📤 Upload coverage results
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: test-coverage-results
+          path: |
+            coverage.html
+            coverage.out
+            coverage.txt
+          if-no-files-found: warn
+          overwrite: true
