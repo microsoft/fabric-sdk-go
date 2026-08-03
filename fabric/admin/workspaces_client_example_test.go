@@ -32,6 +32,8 @@ func ExampleWorkspacesClient_NewListWorkspacesPager_getAListOfWorkspacesExample(
 		Name:              nil,
 		State:             nil,
 		ContinuationToken: nil,
+		EncryptionStatus:  nil,
+		Include:           nil,
 	})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
@@ -84,6 +86,8 @@ func ExampleWorkspacesClient_NewListWorkspacesPager_getAListOfWorkspacesUsingSta
 		Name:              nil,
 		State:             to.Ptr("Active"),
 		ContinuationToken: nil,
+		EncryptionStatus:  nil,
+		Include:           nil,
 	})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
@@ -102,6 +106,193 @@ func ExampleWorkspacesClient_NewListWorkspacesPager_getAListOfWorkspacesUsingSta
 		// 			Type: to.Ptr(admin.WorkspaceTypeWorkspace),
 		// 			CapacityID: to.Ptr("41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e84"),
 		// 			ID: to.Ptr("41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"),
+		// 			State: to.Ptr(admin.WorkspaceStateActive),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_NewListWorkspacesPager_listWorkspacesForAGivenCapacityIgnoringTheEncryptionStatusFilter() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := admin.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewWorkspacesClient().NewListWorkspacesPager(&admin.WorkspacesClientListWorkspacesOptions{Type: nil,
+		CapacityID:        to.Ptr("61d6811f-7544-4e75-a1e6-1c59c0383312"),
+		Name:              nil,
+		State:             nil,
+		ContinuationToken: nil,
+		EncryptionStatus:  to.Ptr("Active"),
+		Include:           nil,
+	})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Workspaces.Workspaces {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.Workspaces = admin.Workspaces{
+		// 	ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		// 	ContinuationURI: to.Ptr("https://api.fabric.microsoft.com/v1/admin/workspaces?continuationToken='LDEsMTAwMDAwLDA%3D'"),
+		// 	Workspaces: []admin.Workspace{
+		// 		{
+		// 			Name: to.Ptr("Contoso Workspace 1"),
+		// 			Type: to.Ptr(admin.WorkspaceTypeWorkspace),
+		// 			CapacityID: to.Ptr("61d6811f-7544-4e75-a1e6-1c59c0383312"),
+		// 			DomainID: to.Ptr("039bd896-b39c-4540-93e3-e9926de135f9"),
+		// 			ID: to.Ptr("abf49964-6f70-4aea-a66c-4b78a22e3ddc"),
+		// 			State: to.Ptr(admin.WorkspaceStateActive),
+		// 		},
+		// 		{
+		// 			Name: to.Ptr("Contoso Workspace 3"),
+		// 			Type: to.Ptr(admin.WorkspaceTypeWorkspace),
+		// 			CapacityID: to.Ptr("61d6811f-7544-4e75-a1e6-1c59c0383312"),
+		// 			DomainID: to.Ptr("039bd896-b39c-4540-93e3-e9926de135f9"),
+		// 			ID: to.Ptr("90119767-07b4-4657-82ee-53e90fece225"),
+		// 			State: to.Ptr(admin.WorkspaceStateActive),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_NewListWorkspacesPager_listWorkspacesWithActiveEncryptionStatusInAGivenCapacity() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := admin.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewWorkspacesClient().NewListWorkspacesPager(&admin.WorkspacesClientListWorkspacesOptions{Type: nil,
+		CapacityID:        to.Ptr("61d6811f-7544-4e75-a1e6-1c59c0383312"),
+		Name:              nil,
+		State:             nil,
+		ContinuationToken: nil,
+		EncryptionStatus:  to.Ptr("Active"),
+		Include:           to.Ptr("encryption"),
+	})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Workspaces.Workspaces {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.Workspaces = admin.Workspaces{
+		// 	ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		// 	ContinuationURI: to.Ptr("https://api.fabric.microsoft.com/v1/admin/workspaces?continuationToken='LDEsMTAwMDAwLDA%3D'"),
+		// 	Workspaces: []admin.Workspace{
+		// 		{
+		// 			Name: to.Ptr("Contoso Workspace 3"),
+		// 			Type: to.Ptr(admin.WorkspaceTypeWorkspace),
+		// 			CapacityID: to.Ptr("61d6811f-7544-4e75-a1e6-1c59c0383312"),
+		// 			DomainID: to.Ptr("039bd896-b39c-4540-93e3-e9926de135f9"),
+		// 			Encryption: &admin.Encryption{
+		// 				KeyIdentifier: to.Ptr("https://westus07112025-cmktest1.vault.azure.net/keys/test2k/"),
+		// 				Status: to.Ptr(admin.WorkspaceEncryptionStatusActive),
+		// 			},
+		// 			ID: to.Ptr("90119767-07b4-4657-82ee-53e90fece225"),
+		// 			State: to.Ptr(admin.WorkspaceStateActive),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
+func ExampleWorkspacesClient_NewListWorkspacesPager_listWorkspacesWithEncryptionDetails() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := admin.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewWorkspacesClient().NewListWorkspacesPager(&admin.WorkspacesClientListWorkspacesOptions{Type: nil,
+		CapacityID:        nil,
+		Name:              nil,
+		State:             nil,
+		ContinuationToken: nil,
+		EncryptionStatus:  nil,
+		Include:           to.Ptr("encryption"),
+	})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Workspaces.Workspaces {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.Workspaces = admin.Workspaces{
+		// 	ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		// 	ContinuationURI: to.Ptr("https://api.fabric.microsoft.com/v1/admin/workspaces?continuationToken='LDEsMTAwMDAwLDA%3D'"),
+		// 	Workspaces: []admin.Workspace{
+		// 		{
+		// 			Name: to.Ptr("Contoso Workspace 1"),
+		// 			Type: to.Ptr(admin.WorkspaceTypeWorkspace),
+		// 			CapacityID: to.Ptr("61d6811f-7544-4e75-a1e6-1c59c0383312"),
+		// 			DomainID: to.Ptr("039bd896-b39c-4540-93e3-e9926de135f9"),
+		// 			Encryption: &admin.Encryption{
+		// 				Status: to.Ptr(admin.WorkspaceEncryptionStatusDisabled),
+		// 			},
+		// 			ID: to.Ptr("abf49964-6f70-4aea-a66c-4b78a22e3ddc"),
+		// 			State: to.Ptr(admin.WorkspaceStateActive),
+		// 		},
+		// 		{
+		// 			Name: to.Ptr("Contoso Workspace 2"),
+		// 			Type: to.Ptr(admin.WorkspaceTypeWorkspace),
+		// 			CapacityID: to.Ptr("41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e84"),
+		// 			DomainID: to.Ptr("039bd896-b39c-4540-93e3-e9926de135f9"),
+		// 			Encryption: &admin.Encryption{
+		// 				Status: to.Ptr(admin.WorkspaceEncryptionStatusDisabled),
+		// 			},
+		// 			ID: to.Ptr("9c7f06cc-e850-4961-b2bd-181a70b1a784"),
+		// 			State: to.Ptr(admin.WorkspaceStateActive),
+		// 		},
+		// 		{
+		// 			Name: to.Ptr("Contoso Workspace 3"),
+		// 			Type: to.Ptr(admin.WorkspaceTypeWorkspace),
+		// 			CapacityID: to.Ptr("61d6811f-7544-4e75-a1e6-1c59c0383312"),
+		// 			DomainID: to.Ptr("039bd896-b39c-4540-93e3-e9926de135f9"),
+		// 			Encryption: &admin.Encryption{
+		// 				KeyIdentifier: to.Ptr("https://westus07112025-cmktest1.vault.azure.net/keys/test2k/"),
+		// 				Status: to.Ptr(admin.WorkspaceEncryptionStatusActive),
+		// 			},
+		// 			ID: to.Ptr("90119767-07b4-4657-82ee-53e90fece225"),
+		// 			State: to.Ptr(admin.WorkspaceStateActive),
+		// 		},
+		// 		{
+		// 			Name: to.Ptr("Contoso Workspace 4"),
+		// 			Type: to.Ptr(admin.WorkspaceTypeWorkspace),
+		// 			CapacityID: to.Ptr("41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e84"),
+		// 			DomainID: to.Ptr("039bd896-b39c-4540-93e3-e9926de135f9"),
+		// 			Encryption: &admin.Encryption{
+		// 				KeyIdentifier: to.Ptr("https://westus07112025-cmktest1.vault.azure.net/keys/test2k/"),
+		// 				PreviousKeyIdentifier: to.Ptr("https://westus07112025-cmktest1.vault.azure.net/keys/test4k/"),
+		// 				PreviousStatus: to.Ptr(admin.WorkspaceEncryptionStatusActive),
+		// 				Status: to.Ptr(admin.WorkspaceEncryptionStatusEnableInProgress),
+		// 			},
+		// 			ID: to.Ptr("adaa3051-b1de-41ed-b1b4-d5e08887c1e9"),
 		// 			State: to.Ptr(admin.WorkspaceStateActive),
 		// 	}},
 		// }

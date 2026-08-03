@@ -17,6 +17,9 @@ type CosmosDBDatabase struct {
 	// The item display name.
 	DisplayName *string
 
+	// The CosmosDBDatabase properties.
+	Properties *Properties
+
 	// READ-ONLY; The item's default identity.
 	DefaultIdentity PrincipalClassification
 
@@ -168,6 +171,16 @@ type Principal struct {
 
 // GetPrincipal implements the PrincipalClassification interface for type Principal.
 func (p *Principal) GetPrincipal() *Principal { return p }
+
+// Properties - The Cosmos DB database properties.
+type Properties struct {
+	// REQUIRED; The name of the Cosmos DB database, automatically set from the display name during creation. This property is
+	// read-only and cannot be changed.
+	DatabaseName *string
+
+	// REQUIRED; The Cosmos DB database server fully qualified domain name (FQDN).
+	ServerFqdn *string
+}
 
 // SensitivityLabel - Represents a sensitivity label applied to an item.
 type SensitivityLabel struct {

@@ -26,6 +26,22 @@ import (
 
 // ItemsServer is a fake server for instances of the paginatedreport.ItemsClient type.
 type ItemsServer struct {
+	// BeginCreatePaginatedReport is the fake for method ItemsClient.BeginCreatePaginatedReport
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated, http.StatusAccepted
+	BeginCreatePaginatedReport func(ctx context.Context, workspaceID string, createPaginatedReportRequest paginatedreport.CreatePaginatedReportRequest, options *paginatedreport.ItemsClientBeginCreatePaginatedReportOptions) (resp azfake.PollerResponder[paginatedreport.ItemsClientCreatePaginatedReportResponse], errResp azfake.ErrorResponder)
+
+	// DeletePaginatedReport is the fake for method ItemsClient.DeletePaginatedReport
+	// HTTP status codes to indicate success: http.StatusOK
+	DeletePaginatedReport func(ctx context.Context, workspaceID string, paginatedReportID string, options *paginatedreport.ItemsClientDeletePaginatedReportOptions) (resp azfake.Responder[paginatedreport.ItemsClientDeletePaginatedReportResponse], errResp azfake.ErrorResponder)
+
+	// GetPaginatedReport is the fake for method ItemsClient.GetPaginatedReport
+	// HTTP status codes to indicate success: http.StatusOK
+	GetPaginatedReport func(ctx context.Context, workspaceID string, paginatedReportID string, options *paginatedreport.ItemsClientGetPaginatedReportOptions) (resp azfake.Responder[paginatedreport.ItemsClientGetPaginatedReportResponse], errResp azfake.ErrorResponder)
+
+	// BeginGetPaginatedReportDefinition is the fake for method ItemsClient.BeginGetPaginatedReportDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	BeginGetPaginatedReportDefinition func(ctx context.Context, workspaceID string, paginatedReportID string, options *paginatedreport.ItemsClientBeginGetPaginatedReportDefinitionOptions) (resp azfake.PollerResponder[paginatedreport.ItemsClientGetPaginatedReportDefinitionResponse], errResp azfake.ErrorResponder)
+
 	// NewListPaginatedReportsPager is the fake for method ItemsClient.NewListPaginatedReportsPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListPaginatedReportsPager func(workspaceID string, options *paginatedreport.ItemsClientListPaginatedReportsOptions) (resp azfake.PagerResponder[paginatedreport.ItemsClientListPaginatedReportsResponse])
@@ -33,6 +49,10 @@ type ItemsServer struct {
 	// UpdatePaginatedReport is the fake for method ItemsClient.UpdatePaginatedReport
 	// HTTP status codes to indicate success: http.StatusOK
 	UpdatePaginatedReport func(ctx context.Context, workspaceID string, paginatedReportID string, updatePaginatedReportRequest paginatedreport.UpdatePaginatedReportRequest, options *paginatedreport.ItemsClientUpdatePaginatedReportOptions) (resp azfake.Responder[paginatedreport.ItemsClientUpdatePaginatedReportResponse], errResp azfake.ErrorResponder)
+
+	// BeginUpdatePaginatedReportDefinition is the fake for method ItemsClient.BeginUpdatePaginatedReportDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
+	BeginUpdatePaginatedReportDefinition func(ctx context.Context, workspaceID string, paginatedReportID string, updatePaginatedReportDefinitionRequest paginatedreport.UpdatePaginatedReportDefinitionRequest, options *paginatedreport.ItemsClientBeginUpdatePaginatedReportDefinitionOptions) (resp azfake.PollerResponder[paginatedreport.ItemsClientUpdatePaginatedReportDefinitionResponse], errResp azfake.ErrorResponder)
 }
 
 // NewItemsServerTransport creates a new instance of ItemsServerTransport with the provided implementation.
@@ -40,16 +60,22 @@ type ItemsServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewItemsServerTransport(srv *ItemsServer) *ItemsServerTransport {
 	return &ItemsServerTransport{
-		srv:                          srv,
-		newListPaginatedReportsPager: newTracker[azfake.PagerResponder[paginatedreport.ItemsClientListPaginatedReportsResponse]](),
+		srv:                                  srv,
+		beginCreatePaginatedReport:           newTracker[azfake.PollerResponder[paginatedreport.ItemsClientCreatePaginatedReportResponse]](),
+		beginGetPaginatedReportDefinition:    newTracker[azfake.PollerResponder[paginatedreport.ItemsClientGetPaginatedReportDefinitionResponse]](),
+		newListPaginatedReportsPager:         newTracker[azfake.PagerResponder[paginatedreport.ItemsClientListPaginatedReportsResponse]](),
+		beginUpdatePaginatedReportDefinition: newTracker[azfake.PollerResponder[paginatedreport.ItemsClientUpdatePaginatedReportDefinitionResponse]](),
 	}
 }
 
 // ItemsServerTransport connects instances of paginatedreport.ItemsClient to instances of ItemsServer.
 // Don't use this type directly, use NewItemsServerTransport instead.
 type ItemsServerTransport struct {
-	srv                          *ItemsServer
-	newListPaginatedReportsPager *tracker[azfake.PagerResponder[paginatedreport.ItemsClientListPaginatedReportsResponse]]
+	srv                                  *ItemsServer
+	beginCreatePaginatedReport           *tracker[azfake.PollerResponder[paginatedreport.ItemsClientCreatePaginatedReportResponse]]
+	beginGetPaginatedReportDefinition    *tracker[azfake.PollerResponder[paginatedreport.ItemsClientGetPaginatedReportDefinitionResponse]]
+	newListPaginatedReportsPager         *tracker[azfake.PagerResponder[paginatedreport.ItemsClientListPaginatedReportsResponse]]
+	beginUpdatePaginatedReportDefinition *tracker[azfake.PollerResponder[paginatedreport.ItemsClientUpdatePaginatedReportDefinitionResponse]]
 }
 
 // Do implements the policy.Transporter interface for ItemsServerTransport.
@@ -77,10 +103,20 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 		}
 		if !intercepted {
 			switch method {
+			case "ItemsClient.BeginCreatePaginatedReport":
+				res.resp, res.err = i.dispatchBeginCreatePaginatedReport(req)
+			case "ItemsClient.DeletePaginatedReport":
+				res.resp, res.err = i.dispatchDeletePaginatedReport(req)
+			case "ItemsClient.GetPaginatedReport":
+				res.resp, res.err = i.dispatchGetPaginatedReport(req)
+			case "ItemsClient.BeginGetPaginatedReportDefinition":
+				res.resp, res.err = i.dispatchBeginGetPaginatedReportDefinition(req)
 			case "ItemsClient.NewListPaginatedReportsPager":
 				res.resp, res.err = i.dispatchNewListPaginatedReportsPager(req)
 			case "ItemsClient.UpdatePaginatedReport":
 				res.resp, res.err = i.dispatchUpdatePaginatedReport(req)
+			case "ItemsClient.BeginUpdatePaginatedReportDefinition":
+				res.resp, res.err = i.dispatchBeginUpdatePaginatedReportDefinition(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -98,6 +134,172 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 	case res := <-resultChan:
 		return res.resp, res.err
 	}
+}
+
+func (i *ItemsServerTransport) dispatchBeginCreatePaginatedReport(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginCreatePaginatedReport == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginCreatePaginatedReport not implemented")}
+	}
+	beginCreatePaginatedReport := i.beginCreatePaginatedReport.get(req)
+	if beginCreatePaginatedReport == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/paginatedReports`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		body, err := server.UnmarshalRequestAsJSON[paginatedreport.CreatePaginatedReportRequest](req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		respr, errRespr := i.srv.BeginCreatePaginatedReport(req.Context(), workspaceIDParam, body, nil)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginCreatePaginatedReport = &respr
+		i.beginCreatePaginatedReport.add(req, beginCreatePaginatedReport)
+	}
+
+	resp, err := server.PollerResponderNext(beginCreatePaginatedReport, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusCreated, http.StatusAccepted}, resp.StatusCode) {
+		i.beginCreatePaginatedReport.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusCreated, http.StatusAccepted", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginCreatePaginatedReport) {
+		i.beginCreatePaginatedReport.remove(req)
+	}
+
+	return resp, nil
+}
+
+func (i *ItemsServerTransport) dispatchDeletePaginatedReport(req *http.Request) (*http.Response, error) {
+	if i.srv.DeletePaginatedReport == nil {
+		return nil, &nonRetriableError{errors.New("fake for method DeletePaginatedReport not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/paginatedReports/(?P<paginatedReportId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	paginatedReportIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("paginatedReportId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := i.srv.DeletePaginatedReport(req.Context(), workspaceIDParam, paginatedReportIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (i *ItemsServerTransport) dispatchGetPaginatedReport(req *http.Request) (*http.Response, error) {
+	if i.srv.GetPaginatedReport == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetPaginatedReport not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/paginatedReports/(?P<paginatedReportId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	paginatedReportIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("paginatedReportId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := i.srv.GetPaginatedReport(req.Context(), workspaceIDParam, paginatedReportIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).PaginatedReport, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (i *ItemsServerTransport) dispatchBeginGetPaginatedReportDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginGetPaginatedReportDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginGetPaginatedReportDefinition not implemented")}
+	}
+	beginGetPaginatedReportDefinition := i.beginGetPaginatedReportDefinition.get(req)
+	if beginGetPaginatedReportDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/paginatedReports/(?P<paginatedReportId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 3 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		paginatedReportIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("paginatedReportId")])
+		if err != nil {
+			return nil, err
+		}
+		formatUnescaped, err := url.QueryUnescape(qp.Get("format"))
+		if err != nil {
+			return nil, err
+		}
+		formatParam := getOptional(formatUnescaped)
+		var options *paginatedreport.ItemsClientBeginGetPaginatedReportDefinitionOptions
+		if formatParam != nil {
+			options = &paginatedreport.ItemsClientBeginGetPaginatedReportDefinitionOptions{
+				Format: formatParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginGetPaginatedReportDefinition(req.Context(), workspaceIDParam, paginatedReportIDParam, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginGetPaginatedReportDefinition = &respr
+		i.beginGetPaginatedReportDefinition.add(req, beginGetPaginatedReportDefinition)
+	}
+
+	resp, err := server.PollerResponderNext(beginGetPaginatedReportDefinition, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+		i.beginGetPaginatedReportDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginGetPaginatedReportDefinition) {
+		i.beginGetPaginatedReportDefinition.remove(req)
+	}
+
+	return resp, nil
 }
 
 func (i *ItemsServerTransport) dispatchNewListPaginatedReportsPager(req *http.Request) (*http.Response, error) {
@@ -198,6 +400,69 @@ func (i *ItemsServerTransport) dispatchUpdatePaginatedReport(req *http.Request) 
 	if err != nil {
 		return nil, err
 	}
+	return resp, nil
+}
+
+func (i *ItemsServerTransport) dispatchBeginUpdatePaginatedReportDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginUpdatePaginatedReportDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginUpdatePaginatedReportDefinition not implemented")}
+	}
+	beginUpdatePaginatedReportDefinition := i.beginUpdatePaginatedReportDefinition.get(req)
+	if beginUpdatePaginatedReportDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/paginatedReports/(?P<paginatedReportId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 3 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		body, err := server.UnmarshalRequestAsJSON[paginatedreport.UpdatePaginatedReportDefinitionRequest](req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		paginatedReportIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("paginatedReportId")])
+		if err != nil {
+			return nil, err
+		}
+		updateMetadataUnescaped, err := url.QueryUnescape(qp.Get("updateMetadata"))
+		if err != nil {
+			return nil, err
+		}
+		updateMetadataParam, err := parseOptional(updateMetadataUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		var options *paginatedreport.ItemsClientBeginUpdatePaginatedReportDefinitionOptions
+		if updateMetadataParam != nil {
+			options = &paginatedreport.ItemsClientBeginUpdatePaginatedReportDefinitionOptions{
+				UpdateMetadata: updateMetadataParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginUpdatePaginatedReportDefinition(req.Context(), workspaceIDParam, paginatedReportIDParam, body, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginUpdatePaginatedReportDefinition = &respr
+		i.beginUpdatePaginatedReportDefinition.add(req, beginUpdatePaginatedReportDefinition)
+	}
+
+	resp, err := server.PollerResponderNext(beginUpdatePaginatedReportDefinition, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
+		i.beginUpdatePaginatedReportDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginUpdatePaginatedReportDefinition) {
+		i.beginUpdatePaginatedReportDefinition.remove(req)
+	}
+
 	return resp, nil
 }
 

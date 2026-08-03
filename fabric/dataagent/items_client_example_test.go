@@ -52,6 +52,9 @@ func ExampleItemsClient_NewListDataAgentsPager() {
 		// 				ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
 		// 			},
 		// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+		// 			Properties: &dataagent.Properties{
+		// 				PublishedDescription: to.Ptr("Published via API"),
+		// 			},
 		// 		},
 		// 		{
 		// 			Type: to.Ptr(dataagent.ItemTypeDataAgent),
@@ -185,6 +188,9 @@ func ExampleItemsClient_GetDataAgent() {
 	// 		ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
 	// 	},
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+	// 	Properties: &dataagent.Properties{
+	// 		PublishedDescription: to.Ptr("Published via API"),
+	// 	},
 	// }
 }
 
@@ -324,4 +330,29 @@ func ExampleItemsClient_BeginUpdateDataAgentDefinition() {
 	if err != nil {
 		log.Fatalf("failed to pull the result: %v", err)
 	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_PublishDataAgent() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := dataagent.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewItemsClient().PublishDataAgent(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", dataagent.PublishDataAgentRequest{
+		PublishedDescription: to.Ptr("Production release v2 with improved instructions"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.PublishDataAgentResponse = dataagent.PublishDataAgentResponse{
+	// 	PublishedDescription: to.Ptr("Production release v2 with improved instructions"),
+	// }
 }

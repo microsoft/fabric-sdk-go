@@ -18,6 +18,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 
 	"github.com/microsoft/fabric-sdk-go/internal/iruntime"
+	"github.com/microsoft/fabric-sdk-go/internal/pollers/locasync"
 )
 
 // GatewaysClient contains the methods for the Gateways group.
@@ -94,6 +95,145 @@ func (client *GatewaysClient) addGatewayRoleAssignmentHandleResponse(resp *http.
 		return GatewaysClientAddGatewayRoleAssignmentResponse{}, err
 	}
 	return result, nil
+}
+
+// BeginCheckGatewayMemberStatus - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have permission for the gateway.
+// REQUIRED DELEGATED SCOPES Gateway.Read.All or Gateway.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - gatewayID - The ID of the gateway.
+//   - gatewayMemberID - The ID of the gateway member.
+//   - options - GatewaysClientBeginCheckGatewayMemberStatusOptions contains the optional parameters for the GatewaysClient.BeginCheckGatewayMemberStatus
+//     method.
+func (client *GatewaysClient) BeginCheckGatewayMemberStatus(ctx context.Context, gatewayID string, gatewayMemberID string, options *GatewaysClientBeginCheckGatewayMemberStatusOptions) (*runtime.Poller[GatewaysClientCheckGatewayMemberStatusResponse], error) {
+	return client.beginCheckGatewayMemberStatus(ctx, gatewayID, gatewayMemberID, options)
+}
+
+// CheckGatewayMemberStatus - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have permission for the gateway.
+// REQUIRED DELEGATED SCOPES Gateway.Read.All or Gateway.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *GatewaysClient) checkGatewayMemberStatus(ctx context.Context, gatewayID string, gatewayMemberID string, options *GatewaysClientBeginCheckGatewayMemberStatusOptions) (*http.Response, error) {
+	var err error
+	const operationName = "core.GatewaysClient.BeginCheckGatewayMemberStatus"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.checkGatewayMemberStatusCreateRequest(ctx, gatewayID, gatewayMemberID, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// checkGatewayMemberStatusCreateRequest creates the CheckGatewayMemberStatus request.
+func (client *GatewaysClient) checkGatewayMemberStatusCreateRequest(ctx context.Context, gatewayID string, gatewayMemberID string, _ *GatewaysClientBeginCheckGatewayMemberStatusOptions) (*policy.Request, error) {
+	urlPath := "/v1/gateways/{gatewayId}/members/{gatewayMemberId}/checkStatus"
+	if gatewayID == "" {
+		return nil, errors.New("parameter gatewayID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{gatewayId}", url.PathEscape(gatewayID))
+	if gatewayMemberID == "" {
+		return nil, errors.New("parameter gatewayMemberID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{gatewayMemberId}", url.PathEscape(gatewayMemberID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// BeginCheckGatewayStatus - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have permission for the gateway.
+// REQUIRED DELEGATED SCOPES Gateway.Read.All or Gateway.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - gatewayID - The ID of the gateway.
+//   - options - GatewaysClientBeginCheckGatewayStatusOptions contains the optional parameters for the GatewaysClient.BeginCheckGatewayStatus
+//     method.
+func (client *GatewaysClient) BeginCheckGatewayStatus(ctx context.Context, gatewayID string, options *GatewaysClientBeginCheckGatewayStatusOptions) (*runtime.Poller[GatewaysClientCheckGatewayStatusResponse], error) {
+	return client.beginCheckGatewayStatus(ctx, gatewayID, options)
+}
+
+// CheckGatewayStatus - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have permission for the gateway.
+// REQUIRED DELEGATED SCOPES Gateway.Read.All or Gateway.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *GatewaysClient) checkGatewayStatus(ctx context.Context, gatewayID string, options *GatewaysClientBeginCheckGatewayStatusOptions) (*http.Response, error) {
+	var err error
+	const operationName = "core.GatewaysClient.BeginCheckGatewayStatus"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.checkGatewayStatusCreateRequest(ctx, gatewayID, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// checkGatewayStatusCreateRequest creates the CheckGatewayStatus request.
+func (client *GatewaysClient) checkGatewayStatusCreateRequest(ctx context.Context, gatewayID string, _ *GatewaysClientBeginCheckGatewayStatusOptions) (*policy.Request, error) {
+	urlPath := "/v1/gateways/{gatewayId}/checkStatus"
+	if gatewayID == "" {
+		return nil, errors.New("parameter gatewayID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{gatewayId}", url.PathEscape(gatewayID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
 }
 
 // CreateGateway - REQUIRED DELEGATED SCOPES Gateway.ReadWrite.All
@@ -628,6 +768,144 @@ func (client *GatewaysClient) listGatewaysHandleResponse(resp *http.Response) (G
 	return result, nil
 }
 
+// BeginRestartGateway - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have admin permission for the gateway.
+// REQUIRED DELEGATED SCOPES Gateway.ReadWrite.All
+// LIMITATIONS This operation is only supported for vnet data gateway.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - gatewayID - The ID of the gateway.
+//   - options - GatewaysClientBeginRestartGatewayOptions contains the optional parameters for the GatewaysClient.BeginRestartGateway
+//     method.
+func (client *GatewaysClient) BeginRestartGateway(ctx context.Context, gatewayID string, options *GatewaysClientBeginRestartGatewayOptions) (*runtime.Poller[GatewaysClientRestartGatewayResponse], error) {
+	return client.beginRestartGateway(ctx, gatewayID, options)
+}
+
+// RestartGateway - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have admin permission for the gateway.
+// REQUIRED DELEGATED SCOPES Gateway.ReadWrite.All
+// LIMITATIONS This operation is only supported for vnet data gateway.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *GatewaysClient) restartGateway(ctx context.Context, gatewayID string, options *GatewaysClientBeginRestartGatewayOptions) (*http.Response, error) {
+	var err error
+	const operationName = "core.GatewaysClient.BeginRestartGateway"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.restartGatewayCreateRequest(ctx, gatewayID, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// restartGatewayCreateRequest creates the RestartGateway request.
+func (client *GatewaysClient) restartGatewayCreateRequest(ctx context.Context, gatewayID string, _ *GatewaysClientBeginRestartGatewayOptions) (*policy.Request, error) {
+	urlPath := "/v1/gateways/{gatewayId}/restart"
+	if gatewayID == "" {
+		return nil, errors.New("parameter gatewayID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{gatewayId}", url.PathEscape(gatewayID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// BeginShutdownGateway - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have admin permission for the gateway.
+// REQUIRED DELEGATED SCOPES Gateway.ReadWrite.All
+// LIMITATIONS This operation is only supported for vnet data gateway.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - gatewayID - The ID of the gateway.
+//   - options - GatewaysClientBeginShutdownGatewayOptions contains the optional parameters for the GatewaysClient.BeginShutdownGateway
+//     method.
+func (client *GatewaysClient) BeginShutdownGateway(ctx context.Context, gatewayID string, options *GatewaysClientBeginShutdownGatewayOptions) (*runtime.Poller[GatewaysClientShutdownGatewayResponse], error) {
+	return client.beginShutdownGateway(ctx, gatewayID, options)
+}
+
+// ShutdownGateway - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have admin permission for the gateway.
+// REQUIRED DELEGATED SCOPES Gateway.ReadWrite.All
+// LIMITATIONS This operation is only supported for vnet data gateway.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *GatewaysClient) shutdownGateway(ctx context.Context, gatewayID string, options *GatewaysClientBeginShutdownGatewayOptions) (*http.Response, error) {
+	var err error
+	const operationName = "core.GatewaysClient.BeginShutdownGateway"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.shutdownGatewayCreateRequest(ctx, gatewayID, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// shutdownGatewayCreateRequest creates the ShutdownGateway request.
+func (client *GatewaysClient) shutdownGatewayCreateRequest(ctx context.Context, gatewayID string, _ *GatewaysClientBeginShutdownGatewayOptions) (*policy.Request, error) {
+	urlPath := "/v1/gateways/{gatewayId}/shutdown"
+	if gatewayID == "" {
+		return nil, errors.New("parameter gatewayID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{gatewayId}", url.PathEscape(gatewayID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
 // UpdateGateway - PERMISSIONS The caller must have admin permission for the gateway.
 // REQUIRED DELEGATED SCOPES Gateway.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -832,6 +1110,283 @@ func (client *GatewaysClient) updateGatewayRoleAssignmentHandleResponse(resp *ht
 }
 
 // Custom code starts below
+
+// CheckGatewayMemberStatus - returns GatewaysClientCheckGatewayMemberStatusResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS The caller must have permission for the gateway.
+//
+// # REQUIRED DELEGATED SCOPES Gateway.Read.All or Gateway.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - gatewayID - The ID of the gateway.
+//   - gatewayMemberID - The ID of the gateway member.
+//   - options - GatewaysClientBeginCheckGatewayMemberStatusOptions contains the optional parameters for the GatewaysClient.BeginCheckGatewayMemberStatus method.
+func (client *GatewaysClient) CheckGatewayMemberStatus(ctx context.Context, gatewayID string, gatewayMemberID string, options *GatewaysClientBeginCheckGatewayMemberStatusOptions) (GatewaysClientCheckGatewayMemberStatusResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginCheckGatewayMemberStatus(ctx, gatewayID, gatewayMemberID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return GatewaysClientCheckGatewayMemberStatusResponse{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return GatewaysClientCheckGatewayMemberStatusResponse{}, err
+	}
+	return result, err
+}
+
+// beginCheckGatewayMemberStatus creates the checkGatewayMemberStatus request.
+func (client *GatewaysClient) beginCheckGatewayMemberStatus(ctx context.Context, gatewayID string, gatewayMemberID string, options *GatewaysClientBeginCheckGatewayMemberStatusOptions) (*runtime.Poller[GatewaysClientCheckGatewayMemberStatusResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.checkGatewayMemberStatus(ctx, gatewayID, gatewayMemberID, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[GatewaysClientCheckGatewayMemberStatusResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[GatewaysClientCheckGatewayMemberStatusResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[GatewaysClientCheckGatewayMemberStatusResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[GatewaysClientCheckGatewayMemberStatusResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// CheckGatewayStatus - returns GatewaysClientCheckGatewayStatusResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS The caller must have permission for the gateway.
+//
+// # REQUIRED DELEGATED SCOPES Gateway.Read.All or Gateway.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - gatewayID - The ID of the gateway.
+//   - options - GatewaysClientBeginCheckGatewayStatusOptions contains the optional parameters for the GatewaysClient.BeginCheckGatewayStatus method.
+func (client *GatewaysClient) CheckGatewayStatus(ctx context.Context, gatewayID string, options *GatewaysClientBeginCheckGatewayStatusOptions) (GatewaysClientCheckGatewayStatusResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginCheckGatewayStatus(ctx, gatewayID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return GatewaysClientCheckGatewayStatusResponse{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return GatewaysClientCheckGatewayStatusResponse{}, err
+	}
+	return result, err
+}
+
+// beginCheckGatewayStatus creates the checkGatewayStatus request.
+func (client *GatewaysClient) beginCheckGatewayStatus(ctx context.Context, gatewayID string, options *GatewaysClientBeginCheckGatewayStatusOptions) (*runtime.Poller[GatewaysClientCheckGatewayStatusResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.checkGatewayStatus(ctx, gatewayID, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[GatewaysClientCheckGatewayStatusResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[GatewaysClientCheckGatewayStatusResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[GatewaysClientCheckGatewayStatusResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[GatewaysClientCheckGatewayStatusResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// RestartGateway - returns GatewaysClientRestartGatewayResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS The caller must have admin permission for the gateway.
+//
+// # REQUIRED DELEGATED SCOPES Gateway.ReadWrite.All
+//
+// LIMITATIONS This operation is only supported for vnet data gateway.
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - gatewayID - The ID of the gateway.
+//   - options - GatewaysClientBeginRestartGatewayOptions contains the optional parameters for the GatewaysClient.BeginRestartGateway method.
+func (client *GatewaysClient) RestartGateway(ctx context.Context, gatewayID string, options *GatewaysClientBeginRestartGatewayOptions) (GatewaysClientRestartGatewayResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginRestartGateway(ctx, gatewayID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return GatewaysClientRestartGatewayResponse{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return GatewaysClientRestartGatewayResponse{}, err
+	}
+	return result, err
+}
+
+// beginRestartGateway creates the restartGateway request.
+func (client *GatewaysClient) beginRestartGateway(ctx context.Context, gatewayID string, options *GatewaysClientBeginRestartGatewayOptions) (*runtime.Poller[GatewaysClientRestartGatewayResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.restartGateway(ctx, gatewayID, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[GatewaysClientRestartGatewayResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[GatewaysClientRestartGatewayResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[GatewaysClientRestartGatewayResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[GatewaysClientRestartGatewayResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// ShutdownGateway - returns GatewaysClientShutdownGatewayResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS The caller must have admin permission for the gateway.
+//
+// # REQUIRED DELEGATED SCOPES Gateway.ReadWrite.All
+//
+// LIMITATIONS This operation is only supported for vnet data gateway.
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - gatewayID - The ID of the gateway.
+//   - options - GatewaysClientBeginShutdownGatewayOptions contains the optional parameters for the GatewaysClient.BeginShutdownGateway method.
+func (client *GatewaysClient) ShutdownGateway(ctx context.Context, gatewayID string, options *GatewaysClientBeginShutdownGatewayOptions) (GatewaysClientShutdownGatewayResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginShutdownGateway(ctx, gatewayID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return GatewaysClientShutdownGatewayResponse{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return GatewaysClientShutdownGatewayResponse{}, err
+	}
+	return result, err
+}
+
+// beginShutdownGateway creates the shutdownGateway request.
+func (client *GatewaysClient) beginShutdownGateway(ctx context.Context, gatewayID string, options *GatewaysClientBeginShutdownGatewayOptions) (*runtime.Poller[GatewaysClientShutdownGatewayResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.shutdownGateway(ctx, gatewayID, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[GatewaysClientShutdownGatewayResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[GatewaysClientShutdownGatewayResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[GatewaysClientShutdownGatewayResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[GatewaysClientShutdownGatewayResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
 
 // ListGatewayRoleAssignments - returns array of GatewayRoleAssignment from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].

@@ -88,6 +88,21 @@ func PossibleAzureServiceBusSourcePropertiesServiceBusTypeValues() []AzureServic
 	}
 }
 
+// CertificateResourceType - The certificate resource type. Additional types may be added over time.
+type CertificateResourceType string
+
+const (
+	// CertificateResourceTypeKeyVault - The certificate is stored in Azure Key Vault.
+	CertificateResourceTypeKeyVault CertificateResourceType = "KeyVault"
+)
+
+// PossibleCertificateResourceTypeValues returns the possible values for the CertificateResourceType const type.
+func PossibleCertificateResourceTypeValues() []CertificateResourceType {
+	return []CertificateResourceType{
+		CertificateResourceTypeKeyVault,
+	}
+}
+
 // CompatibilityLevel - Represents the compatibility level of the Eventstream topology. Additional compatibility levels may
 // be added over time.
 type CompatibilityLevel string
@@ -179,6 +194,24 @@ func PossibleDataTypeValues() []DataType {
 	}
 }
 
+// DatabaseApplicationIntent - Specifies the application intent for the database connection.
+type DatabaseApplicationIntent string
+
+const (
+	// DatabaseApplicationIntentReadOnly - The database application intent is ReadOnly.
+	DatabaseApplicationIntentReadOnly DatabaseApplicationIntent = "ReadOnly"
+	// DatabaseApplicationIntentReadWrite - The database application intent is ReadWrite.
+	DatabaseApplicationIntentReadWrite DatabaseApplicationIntent = "ReadWrite"
+)
+
+// PossibleDatabaseApplicationIntentValues returns the possible values for the DatabaseApplicationIntent const type.
+func PossibleDatabaseApplicationIntentValues() []DatabaseApplicationIntent {
+	return []DatabaseApplicationIntent{
+		DatabaseApplicationIntentReadOnly,
+		DatabaseApplicationIntentReadWrite,
+	}
+}
+
 // DecimalHandlingMode - Specifies how decimal values are represented by the connector (precise decimal, double, or string).
 type DecimalHandlingMode string
 
@@ -212,6 +245,8 @@ const (
 	DestinationTypeEventhouse DestinationType = "Eventhouse"
 	// DestinationTypeLakehouse - The Lakehouse destination type.
 	DestinationTypeLakehouse DestinationType = "Lakehouse"
+	// DestinationTypeNotebook - The Notebook destination type.
+	DestinationTypeNotebook DestinationType = "Notebook"
 )
 
 // PossibleDestinationTypeValues returns the possible values for the DestinationType const type.
@@ -221,6 +256,7 @@ func PossibleDestinationTypeValues() []DestinationType {
 		DestinationTypeCustomEndpoint,
 		DestinationTypeEventhouse,
 		DestinationTypeLakehouse,
+		DestinationTypeNotebook,
 	}
 }
 
@@ -417,6 +453,10 @@ const (
 	ItemTypeAnomalyDetector ItemType = "AnomalyDetector"
 	// ItemTypeApacheAirflowJob - An ApacheAirflowJob.
 	ItemTypeApacheAirflowJob ItemType = "ApacheAirflowJob"
+	// ItemTypeAppBackend - An AppBackend.
+	ItemTypeAppBackend ItemType = "AppBackend"
+	// ItemTypeAzureDatabricksStorage - A OneLake-backed storage item for Azure Databricks.
+	ItemTypeAzureDatabricksStorage ItemType = "AzureDatabricksStorage"
 	// ItemTypeCopyJob - A Copy job.
 	ItemTypeCopyJob ItemType = "CopyJob"
 	// ItemTypeCosmosDBDatabase - A Cosmos DB Database.
@@ -425,6 +465,8 @@ const (
 	ItemTypeDashboard ItemType = "Dashboard"
 	// ItemTypeDataAgent - A DataAgent.
 	ItemTypeDataAgent ItemType = "DataAgent"
+	// ItemTypeDataBuildToolJob - A DataBuildToolJob.
+	ItemTypeDataBuildToolJob ItemType = "DataBuildToolJob"
 	// ItemTypeDataPipeline - A data pipeline.
 	ItemTypeDataPipeline ItemType = "DataPipeline"
 	// ItemTypeDataflow - A Dataflow.
@@ -479,6 +521,10 @@ const (
 	ItemTypeOntology ItemType = "Ontology"
 	// ItemTypeOperationsAgent - A OperationsAgent.
 	ItemTypeOperationsAgent ItemType = "OperationsAgent"
+	// ItemTypeOrgApp - An Org App.
+	ItemTypeOrgApp ItemType = "OrgApp"
+	// ItemTypeOrgAppAudience - An Org App Audience.
+	ItemTypeOrgAppAudience ItemType = "OrgAppAudience"
 	// ItemTypePaginatedReport - PowerBI paginated report.
 	ItemTypePaginatedReport ItemType = "PaginatedReport"
 	// ItemTypeReflex - A Reflex.
@@ -510,10 +556,13 @@ func PossibleItemTypeValues() []ItemType {
 	return []ItemType{
 		ItemTypeAnomalyDetector,
 		ItemTypeApacheAirflowJob,
+		ItemTypeAppBackend,
+		ItemTypeAzureDatabricksStorage,
 		ItemTypeCopyJob,
 		ItemTypeCosmosDBDatabase,
 		ItemTypeDashboard,
 		ItemTypeDataAgent,
+		ItemTypeDataBuildToolJob,
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
 		ItemTypeDatamart,
@@ -541,6 +590,8 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeNotebook,
 		ItemTypeOntology,
 		ItemTypeOperationsAgent,
+		ItemTypeOrgApp,
+		ItemTypeOrgAppAudience,
 		ItemTypePaginatedReport,
 		ItemTypeReflex,
 		ItemTypeReport,
@@ -697,6 +748,24 @@ func PossibleOperatorTypeValues() []OperatorType {
 		OperatorTypeLessThanOrEquals,
 		OperatorTypeNotEquals,
 		OperatorTypeStartsWith,
+	}
+}
+
+// PaginationMethod - The pagination type. Additional pagination types may be added over time.
+type PaginationMethod string
+
+const (
+	// PaginationMethodCursor - Cursor-based pagination.
+	PaginationMethodCursor PaginationMethod = "Cursor"
+	// PaginationMethodPage - Page-based pagination.
+	PaginationMethodPage PaginationMethod = "Page"
+)
+
+// PossiblePaginationMethodValues returns the possible values for the PaginationMethod const type.
+func PossiblePaginationMethodValues() []PaginationMethod {
+	return []PaginationMethod{
+		PaginationMethodCursor,
+		PaginationMethodPage,
 	}
 }
 
@@ -1002,6 +1071,8 @@ const (
 	SnapshotLockingModeExtended SnapshotLockingMode = "Extended"
 	// SnapshotLockingModeMinimal - The snapshot locking mode is Minimal.
 	SnapshotLockingModeMinimal SnapshotLockingMode = "Minimal"
+	// SnapshotLockingModeNone - The snapshot locking mode is None.
+	SnapshotLockingModeNone SnapshotLockingMode = "None"
 )
 
 // PossibleSnapshotLockingModeValues returns the possible values for the SnapshotLockingMode const type.
@@ -1009,10 +1080,29 @@ func PossibleSnapshotLockingModeValues() []SnapshotLockingMode {
 	return []SnapshotLockingMode{
 		SnapshotLockingModeExtended,
 		SnapshotLockingModeMinimal,
+		SnapshotLockingModeNone,
 	}
 }
 
-// SnapshotMode - The snapshot mode.
+// SnapshotLockingModeForOracle - Specifies the locking strategy used when taking the initial snapshot of Oracle tables.
+type SnapshotLockingModeForOracle string
+
+const (
+	// SnapshotLockingModeForOracleNone - The snapshot locking mode is None.
+	SnapshotLockingModeForOracleNone SnapshotLockingModeForOracle = "None"
+	// SnapshotLockingModeForOracleShared - The snapshot locking mode is Shared.
+	SnapshotLockingModeForOracleShared SnapshotLockingModeForOracle = "Shared"
+)
+
+// PossibleSnapshotLockingModeForOracleValues returns the possible values for the SnapshotLockingModeForOracle const type.
+func PossibleSnapshotLockingModeForOracleValues() []SnapshotLockingModeForOracle {
+	return []SnapshotLockingModeForOracle{
+		SnapshotLockingModeForOracleNone,
+		SnapshotLockingModeForOracleShared,
+	}
+}
+
+// SnapshotMode - Specifies how the initial snapshot of data is taken (for example, initial load, initial only, or no data).
 type SnapshotMode string
 
 const (
@@ -1057,6 +1147,8 @@ const (
 	SourceTypeAzureEventHubExtended SourceType = "AzureEventHubExtended"
 	// SourceTypeAzureIoTHub - The Azure IoT Hub source type.
 	SourceTypeAzureIoTHub SourceType = "AzureIoTHub"
+	// SourceTypeAzureIoTHubExtended - The Azure IoT Hub Extended source type.
+	SourceTypeAzureIoTHubExtended SourceType = "AzureIoTHubExtended"
 	// SourceTypeAzureSQLDBCDC - The Azure SQL DB CDC source type.
 	SourceTypeAzureSQLDBCDC SourceType = "AzureSQLDBCDC"
 	// SourceTypeAzureSQLMIDBCDC - The Azure SQL MI DB CDC source type.
@@ -1067,6 +1159,8 @@ const (
 	SourceTypeConfluentCloud SourceType = "ConfluentCloud"
 	// SourceTypeCustomEndpoint - The Custom Endpoint source type.
 	SourceTypeCustomEndpoint SourceType = "CustomEndpoint"
+	// SourceTypeFabricAnomalyDetectionEvents - The Fabric Anomaly Detection Events source type.
+	SourceTypeFabricAnomalyDetectionEvents SourceType = "FabricAnomalyDetectionEvents"
 	// SourceTypeFabricCapacityOverviewEvents - The Fabric Capacity Overview Events source type.
 	SourceTypeFabricCapacityOverviewEvents SourceType = "FabricCapacityOverviewEvents"
 	// SourceTypeFabricJobEvents - The Fabric Job Events source type.
@@ -1079,12 +1173,16 @@ const (
 	SourceTypeGooglePubSub SourceType = "GooglePubSub"
 	// SourceTypeHTTP - The HTTP source type.
 	SourceTypeHTTP SourceType = "Http"
+	// SourceTypeMirroredDatabaseChangeFeed - The Mirrored Database Change Feed source type.
+	SourceTypeMirroredDatabaseChangeFeed SourceType = "MirroredDatabaseChangeFeed"
 	// SourceTypeMongoDBCDC - The MongoDB CDC source type.
 	SourceTypeMongoDBCDC SourceType = "MongoDBCDC"
 	// SourceTypeMqtt - The MQTT source type.
 	SourceTypeMqtt SourceType = "Mqtt"
 	// SourceTypeMySQLCDC - The MySQL CDC source type.
 	SourceTypeMySQLCDC SourceType = "MySQLCDC"
+	// SourceTypeOracleDBCDC - The Oracle DB CDC source type.
+	SourceTypeOracleDBCDC SourceType = "OracleDBCDC"
 	// SourceTypePostgreSQLCDC - The PostgreSQL CDC source type.
 	SourceTypePostgreSQLCDC SourceType = "PostgreSQLCDC"
 	// SourceTypeRealTimeWeather - The Real Time Weather source type.
@@ -1110,20 +1208,24 @@ func PossibleSourceTypeValues() []SourceType {
 		SourceTypeAzureEventHub,
 		SourceTypeAzureEventHubExtended,
 		SourceTypeAzureIoTHub,
+		SourceTypeAzureIoTHubExtended,
 		SourceTypeAzureSQLDBCDC,
 		SourceTypeAzureSQLMIDBCDC,
 		SourceTypeAzureServiceBus,
 		SourceTypeConfluentCloud,
 		SourceTypeCustomEndpoint,
+		SourceTypeFabricAnomalyDetectionEvents,
 		SourceTypeFabricCapacityOverviewEvents,
 		SourceTypeFabricJobEvents,
 		SourceTypeFabricOneLakeEvents,
 		SourceTypeFabricWorkspaceItemEvents,
 		SourceTypeGooglePubSub,
 		SourceTypeHTTP,
+		SourceTypeMirroredDatabaseChangeFeed,
 		SourceTypeMongoDBCDC,
 		SourceTypeMqtt,
 		SourceTypeMySQLCDC,
+		SourceTypeOracleDBCDC,
 		SourceTypePostgreSQLCDC,
 		SourceTypeRealTimeWeather,
 		SourceTypeSQLServerOnVMDBCDC,
@@ -1165,6 +1267,30 @@ func PossibleStreamTypeValues() []StreamType {
 	return []StreamType{
 		StreamTypeDefaultStream,
 		StreamTypeDerivedStream,
+	}
+}
+
+// TLSRevocationMode - The TLS certificate revocation mode. Additional modes may be added over time.
+type TLSRevocationMode string
+
+const (
+	// TLSRevocationModeCRL - Revocation checking uses CRL (Certificate Revocation List).
+	TLSRevocationModeCRL TLSRevocationMode = "CRL"
+	// TLSRevocationModeCRLAndOCSP - Revocation checking uses both CRL and OCSP.
+	TLSRevocationModeCRLAndOCSP TLSRevocationMode = "CRLAndOCSP"
+	// TLSRevocationModeOCSP - Revocation checking uses OCSP (Online Certificate Status Protocol).
+	TLSRevocationModeOCSP TLSRevocationMode = "OCSP"
+	// TLSRevocationModeOff - Revocation checking is disabled.
+	TLSRevocationModeOff TLSRevocationMode = "Off"
+)
+
+// PossibleTLSRevocationModeValues returns the possible values for the TLSRevocationMode const type.
+func PossibleTLSRevocationModeValues() []TLSRevocationMode {
+	return []TLSRevocationMode{
+		TLSRevocationModeCRL,
+		TLSRevocationModeCRLAndOCSP,
+		TLSRevocationModeOCSP,
+		TLSRevocationModeOff,
 	}
 }
 

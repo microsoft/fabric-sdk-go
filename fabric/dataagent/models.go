@@ -6,6 +6,27 @@
 
 package dataagent
 
+// CreateDataAgentDatasourceRequest - Create DataAgent datasource request payload.
+type CreateDataAgentDatasourceRequest struct {
+	// REQUIRED; The datasource type to create.
+	Type *DatasourceType
+
+	// An item reference by ID object.
+	ItemReference *ItemReferenceByID
+
+	// An item reference by ID object.
+	LakehouseReference *ItemReferenceByID
+}
+
+// CreateDataAgentFewshotRequest - Create a DataAgent fewshot request payload.
+type CreateDataAgentFewshotRequest struct {
+	// REQUIRED; Natural language question.
+	Question *string
+
+	// The SQL/KQL query answer.
+	Query *string
+}
+
 // CreateDataAgentRequest - Create DataAgent request payload.
 type CreateDataAgentRequest struct {
 	// REQUIRED; The DataAgent display name. The display name must follow naming rules according to item type.
@@ -35,6 +56,9 @@ type DataAgent struct {
 	// The item display name.
 	DisplayName *string
 
+	// The DataAgent properties.
+	Properties *Properties
+
 	// READ-ONLY; The item's default identity.
 	DefaultIdentity PrincipalClassification
 
@@ -58,6 +82,84 @@ type DataAgent struct {
 type DataAgents struct {
 	// REQUIRED; A list of data agents.
 	Value []DataAgent
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
+// DataSourceElement - A datasource schema element.
+type DataSourceElement struct {
+	// REQUIRED; Human-readable name of the element.
+	DisplayName *string
+
+	// REQUIRED; Whether this element has children to drill into.
+	HasSubElements *bool
+
+	// REQUIRED; The element identifier. Use as rootId to drill deeper into the schema tree.
+	ID *string
+
+	// REQUIRED; Whether this element is selected for use by the DataAgent.
+	IsSelected *bool
+
+	// REQUIRED; The type of schema element.
+	Type *ElementType
+
+	// Data type for columns (e.g., int, string). Present only for column elements.
+	DataType *string
+
+	// User-set description of the element.
+	Description *string
+
+	// Index state for lakehouse file directories.
+	IndexState *IndexState
+
+	// The last time this element was synchronized from the datasource schema, as an ISO 8601 timestamp (e.g., 2025-06-15T10:30:00Z).
+	LastSyncDateTime *string
+
+	// Indicates if the element exists in the live schema.
+	State *ElementState
+}
+
+// DataSourceElements - A paginated list of datasource schema elements.
+type DataSourceElements struct {
+	// REQUIRED; A list of schema elements.
+	Value []DataSourceElement
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
+// DatasourceResponse - A DataAgent datasource.
+type DatasourceResponse struct {
+	// REQUIRED; The datasource ID.
+	ID *string
+
+	// REQUIRED; The datasource type.
+	Type *DatasourceType
+
+	// The description of the datasource.
+	Description *string
+
+	// The display name of the datasource.
+	DisplayName *string
+
+	// Custom AI instructions specific to this datasource.
+	Instructions *string
+}
+
+// GetDatasourceResponse implements the DatasourceResponseClassification interface for type DatasourceResponse.
+func (d *DatasourceResponse) GetDatasourceResponse() *DatasourceResponse { return d }
+
+// Datasources - A paginated list of DataAgent datasources.
+type Datasources struct {
+	// REQUIRED; A list of datasources.
+	Value []DatasourceResponseClassification
 
 	// The token for the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationToken *string
@@ -94,6 +196,77 @@ func (e *EntireTenantPrincipal) GetPrincipal() *Principal {
 	}
 }
 
+// FabricItemDatasource - A DataAgent datasource backed by a Fabric item.
+type FabricItemDatasource struct {
+	// REQUIRED; The Fabric item type of the datasource.
+	FabricItemType *SupportedItemType
+
+	// REQUIRED; The datasource ID.
+	ID *string
+
+	// REQUIRED; An item reference object.
+	ItemReference ItemReferenceClassification
+
+	// REQUIRED; The datasource type.
+	Type *DatasourceType
+
+	// The description of the datasource.
+	Description *string
+
+	// The display name of the datasource.
+	DisplayName *string
+
+	// Custom AI instructions specific to this datasource.
+	Instructions *string
+}
+
+// GetDatasourceResponse implements the DatasourceResponseClassification interface for type FabricItemDatasource.
+func (f *FabricItemDatasource) GetDatasourceResponse() *DatasourceResponse {
+	return &DatasourceResponse{
+		Description:  f.Description,
+		DisplayName:  f.DisplayName,
+		ID:           f.ID,
+		Instructions: f.Instructions,
+		Type:         f.Type,
+	}
+}
+
+// Fewshot - A DataAgent fewshot.
+type Fewshot struct {
+	// REQUIRED; The fewshot ID.
+	ID *string
+
+	// REQUIRED; Natural language question.
+	Question *string
+
+	// REQUIRED; The validation status of the fewshot.
+	ValidationStatus *FewshotValidationStatus
+
+	// The SQL/KQL query answer.
+	Query *string
+}
+
+// FewshotValidationStatus - The validation status of a fewshot.
+type FewshotValidationStatus struct {
+	// REQUIRED; The validation result.
+	Value *FewshotValidationStatusValue
+
+	// The reason for the current validation status, when available.
+	Reason *string
+}
+
+// Fewshots - A paginated list of DataAgent fewshots.
+type Fewshots struct {
+	// REQUIRED; A list of fewshots.
+	Value []Fewshot
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
 // GroupPrincipal - Represents a security group.
 type GroupPrincipal struct {
 	// REQUIRED; The principal's ID.
@@ -124,6 +297,52 @@ type GroupPrincipalGroupDetails struct {
 	GroupType *GroupType
 }
 
+// ItemReference - An item reference object.
+type ItemReference struct {
+	// REQUIRED; The item reference type.
+	ReferenceType *ItemReferenceType
+}
+
+// GetItemReference implements the ItemReferenceClassification interface for type ItemReference.
+func (i *ItemReference) GetItemReference() *ItemReference { return i }
+
+// ItemReferenceByID - An item reference by ID object.
+type ItemReferenceByID struct {
+	// REQUIRED; The ID of the item.
+	ItemID *string
+
+	// REQUIRED; The item reference type.
+	ReferenceType *ItemReferenceType
+
+	// REQUIRED; The workspace ID of the item.
+	WorkspaceID *string
+}
+
+// GetItemReference implements the ItemReferenceClassification interface for type ItemReferenceByID.
+func (i *ItemReferenceByID) GetItemReference() *ItemReference {
+	return &ItemReference{
+		ReferenceType: i.ReferenceType,
+	}
+}
+
+// ItemReferenceByVariable - An item reference by variable.
+type ItemReferenceByVariable struct {
+	// REQUIRED; The item reference type.
+	ReferenceType *ItemReferenceType
+
+	// REQUIRED; A variable reference string that specifies the Variable Library and the variable name inside it. Format: $(/**/_VarLibrary_/_VarName_)
+	// for a Variable Library named VarLibrary and a variable named
+	// VarName.
+	VariableReference *string
+}
+
+// GetItemReference implements the ItemReferenceClassification interface for type ItemReferenceByVariable.
+func (i *ItemReferenceByVariable) GetItemReference() *ItemReference {
+	return &ItemReference{
+		ReferenceType: i.ReferenceType,
+	}
+}
+
 // ItemTag - Represents a tag applied on an item.
 type ItemTag struct {
 	// REQUIRED; The name of the tag.
@@ -131,6 +350,38 @@ type ItemTag struct {
 
 	// REQUIRED; The tag ID.
 	ID *string
+}
+
+// LakehouseTablesDatasource - A DataAgent datasource that uses a lakehouse in tables-only mode.
+type LakehouseTablesDatasource struct {
+	// REQUIRED; The datasource ID.
+	ID *string
+
+	// REQUIRED; An item reference object.
+	LakehouseReference ItemReferenceClassification
+
+	// REQUIRED; The datasource type.
+	Type *DatasourceType
+
+	// The description of the datasource.
+	Description *string
+
+	// The display name of the datasource.
+	DisplayName *string
+
+	// Custom AI instructions specific to this datasource.
+	Instructions *string
+}
+
+// GetDatasourceResponse implements the DatasourceResponseClassification interface for type LakehouseTablesDatasource.
+func (l *LakehouseTablesDatasource) GetDatasourceResponse() *DatasourceResponse {
+	return &DatasourceResponse{
+		Description:  l.Description,
+		DisplayName:  l.DisplayName,
+		ID:           l.ID,
+		Instructions: l.Instructions,
+		Type:         l.Type,
+	}
 }
 
 // Principal - Represents an identity or a Microsoft Entra group.
@@ -147,6 +398,14 @@ type Principal struct {
 
 // GetPrincipal implements the PrincipalClassification interface for type Principal.
 func (p *Principal) GetPrincipal() *Principal { return p }
+
+// Properties - The DataAgent properties.
+type Properties struct {
+	// READ-ONLY; The published description of the DataAgent. This description provides context when the agent appears in other
+	// experiences. It is set when the DataAgent is published and is not returned for an
+	// unpublished DataAgent.
+	PublishedDescription *string
+}
 
 // PublicDefinition - DataAgent public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/data-agent-definition]
 // for more details on the structure of the DataAgent definition.
@@ -168,6 +427,18 @@ type PublicDefinitionPart struct {
 
 	// The payload type.
 	PayloadType *PayloadType
+}
+
+// PublishDataAgentRequest - Publish DataAgent request payload.
+type PublishDataAgentRequest struct {
+	// A description shown when the agent appears in other experiences.
+	PublishedDescription *string
+}
+
+// PublishDataAgentResponse - Publish DataAgent response.
+type PublishDataAgentResponse struct {
+	// The publish description.
+	PublishedDescription *string
 }
 
 // SensitivityLabel - Represents a sensitivity label applied to an item.
@@ -246,11 +517,35 @@ type ServicePrincipalProfilePrincipalServicePrincipalProfileDetails struct {
 	ParentPrincipal PrincipalClassification
 }
 
+// SettingsResponse - The DataAgent settings.
+type SettingsResponse struct {
+	// Custom AI system prompt for the DataAgent.
+	AiInstructions *string
+}
+
+// UpdateDataAgentDatasourceRequest - Update DataAgent datasource request payload. Only provided fields are updated.
+type UpdateDataAgentDatasourceRequest struct {
+	// The description of the datasource.
+	Description *string
+
+	// Custom AI instructions specific to this datasource.
+	Instructions *string
+}
+
 // UpdateDataAgentDefinitionRequest - Update DataAgent public definition request payload.
 type UpdateDataAgentDefinitionRequest struct {
 	// REQUIRED; DataAgent public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/data-agent-definition]
 	// for more details on the structure of the DataAgent definition.
 	Definition *PublicDefinition
+}
+
+// UpdateDataAgentFewshotRequest - Update a DataAgent fewshot request payload. Only provided fields are updated.
+type UpdateDataAgentFewshotRequest struct {
+	// The SQL/KQL query answer.
+	Query *string
+
+	// Natural language question.
+	Question *string
 }
 
 // UpdateDataAgentRequest - Update DataAgent request.
@@ -260,6 +555,21 @@ type UpdateDataAgentRequest struct {
 
 	// The DataAgent display name. The display name must follow naming rules according to item type.
 	DisplayName *string
+}
+
+// UpdateDataAgentSettingsRequest - Update DataAgent settings request payload. Only provided fields are updated.
+type UpdateDataAgentSettingsRequest struct {
+	// Custom AI system prompt for the DataAgent.
+	AiInstructions *string
+}
+
+// UpdateDataSourceElementRequest - Update a datasource element request payload. Only provided fields are updated.
+type UpdateDataSourceElementRequest struct {
+	// Set a custom description for the element.
+	Description *string
+
+	// Select or deselect the element. When deselected, the element configuration is preserved and restored when re-selected.
+	IsSelected *bool
 }
 
 // UserPrincipal - Represents a Microsoft Entra user principal.

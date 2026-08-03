@@ -8,6 +8,71 @@ package dataagent
 
 import "encoding/json"
 
+func unmarshalDatasourceResponseClassification(rawMsg json.RawMessage) (DatasourceResponseClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b DatasourceResponseClassification
+	switch m["type"] {
+	case string(DatasourceTypeFabricItem):
+		b = &FabricItemDatasource{}
+	case string(DatasourceTypeLakehouseTables):
+		b = &LakehouseTablesDatasource{}
+	default:
+		b = &DatasourceResponse{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalDatasourceResponseClassificationArray(rawMsg json.RawMessage) ([]DatasourceResponseClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var rawMessages []json.RawMessage
+	if err := json.Unmarshal(rawMsg, &rawMessages); err != nil {
+		return nil, err
+	}
+	fArray := make([]DatasourceResponseClassification, len(rawMessages))
+	for index, rawMessage := range rawMessages {
+		f, err := unmarshalDatasourceResponseClassification(rawMessage)
+		if err != nil {
+			return nil, err
+		}
+		fArray[index] = f
+	}
+	return fArray, nil
+}
+
+func unmarshalItemReferenceClassification(rawMsg json.RawMessage) (ItemReferenceClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b ItemReferenceClassification
+	switch m["referenceType"] {
+	case string(ItemReferenceTypeByID):
+		b = &ItemReferenceByID{}
+	case string(ItemReferenceTypeByVariable):
+		b = &ItemReferenceByVariable{}
+	default:
+		b = &ItemReference{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
 func unmarshalPrincipalClassification(rawMsg json.RawMessage) (PrincipalClassification, error) {
 	if rawMsg == nil || string(rawMsg) == "null" {
 		return nil, nil

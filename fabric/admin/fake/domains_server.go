@@ -561,6 +561,14 @@ func (d *DomainsServerTransport) dispatchListDomains(req *http.Request) (*http.R
 	if err != nil {
 		return nil, err
 	}
+	withAssignedWorkspacesOnlyUnescaped, err := url.QueryUnescape(qp.Get("withAssignedWorkspacesOnly"))
+	if err != nil {
+		return nil, err
+	}
+	withAssignedWorkspacesOnlyParam, err := parseOptional(withAssignedWorkspacesOnlyUnescaped, strconv.ParseBool)
+	if err != nil {
+		return nil, err
+	}
 	previewUnescaped, err := url.QueryUnescape(qp.Get("preview"))
 	if err != nil {
 		return nil, err
@@ -570,9 +578,10 @@ func (d *DomainsServerTransport) dispatchListDomains(req *http.Request) (*http.R
 		return nil, err
 	}
 	var options *admin.DomainsClientListDomainsOptions
-	if nonEmptyOnlyParam != nil {
+	if nonEmptyOnlyParam != nil || withAssignedWorkspacesOnlyParam != nil {
 		options = &admin.DomainsClientListDomainsOptions{
-			NonEmptyOnly: nonEmptyOnlyParam,
+			NonEmptyOnly:               nonEmptyOnlyParam,
+			WithAssignedWorkspacesOnly: withAssignedWorkspacesOnlyParam,
 		}
 	}
 	respr, errRespr := d.srv.ListDomains(req.Context(), previewParam, options)

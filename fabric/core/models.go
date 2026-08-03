@@ -127,6 +127,12 @@ type ApplyWorkspaceTagsRequest struct {
 	Tags []string
 }
 
+// AssignWorkspaceEncryptionRequest - The Assign Workspace CMK Encryption request payload.
+type AssignWorkspaceEncryptionRequest struct {
+	// REQUIRED; The Azure Key Vault key identifier. This must be a versionless key URI.
+	KeyIdentifier *string
+}
+
 // AssignWorkspaceToCapacityRequest - A capacity assignment request.
 type AssignWorkspaceToCapacityRequest struct {
 	// REQUIRED; The ID of the capacity the workspace should be assigned to.
@@ -534,11 +540,17 @@ type Connection struct {
 	// REQUIRED; The object ID of the connection.
 	ID *string
 
+	// The recency details about the connection.
+	ConnectionRecency *ConnectionRecency
+
 	// The credential details of the connection.
 	CredentialDetails *ListCredentialDetails
 
 	// The display name of the connection.
 	DisplayName *string
+
+	// The gateway object ID through which the connection is made. For cloud connections, this is the virtual gateway ID.
+	GatewayID *string
 
 	// The privacy level of the connection.
 	PrivacyLevel *PrivacyLevel
@@ -765,6 +777,26 @@ func (c *ConnectionDetailsTimeParameter) GetConnectionDetailsParameter() *Connec
 		DataType: c.DataType,
 		Name:     c.Name,
 	}
+}
+
+// ConnectionRecency - Represents the recency details about the connection.
+type ConnectionRecency struct {
+	// The timestamp when the connection was created in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	CreatedDateTime *time.Time
+
+	// The timestamp when the connection was most recently bound to any item in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	LastBoundDateTime *time.Time
+
+	// The timestamp when the connection credentials were most recently used in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	LastCredentialUsedDateTime *time.Time
+
+	// The timestamp when the connection was most recently bound to any item by the calling user in UTC, using the YYYY-MM-DDTHH:mm:ssZ
+	// format.
+	MyLastBoundDateTime *time.Time
+
+	// The timestamp when the connection credentials were most recently used by the calling user in UTC, using the YYYY-MM-DDTHH:mm:ssZ
+	// format.
+	MyLastCredentialUsedDateTime *time.Time
 }
 
 // ConnectionRoleAssignment - The connection role assignment for a principal.
@@ -1176,6 +1208,57 @@ type CreateShortcutWithTransformRequest struct {
 	Transform TransformClassification
 }
 
+// CreateStreamingVirtualNetworkGatewayConnectionRequest - Creates a connection that connects through a streaming virtual
+// network data gateway.
+type CreateStreamingVirtualNetworkGatewayConnectionRequest struct {
+	// REQUIRED; The connection details of the connection.
+	ConnectionDetails *CreateConnectionDetails
+
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// REQUIRED; The credential details of the connection.
+	CredentialDetails *CreateCredentialDetails
+
+	// REQUIRED; The display name of the connection. Maximum length is 200 characters.
+	DisplayName *string
+
+	// REQUIRED; The object ID of the streaming virtual network gateway that the connection is created under.
+	GatewayID *string
+
+	// (Optional) The privacy level of the connection. When no value is passed, this is set to 'Organizational'.
+	PrivacyLevel *PrivacyLevel
+}
+
+// GetCreateConnectionRequest implements the CreateConnectionRequestClassification interface for type CreateStreamingVirtualNetworkGatewayConnectionRequest.
+func (c *CreateStreamingVirtualNetworkGatewayConnectionRequest) GetCreateConnectionRequest() *CreateConnectionRequest {
+	return &CreateConnectionRequest{
+		ConnectionDetails: c.ConnectionDetails,
+		ConnectivityType:  c.ConnectivityType,
+		DisplayName:       c.DisplayName,
+		PrivacyLevel:      c.PrivacyLevel,
+	}
+}
+
+// CreateStreamingVirtualNetworkGatewayRequest - Creates a streaming virtual network gateway.
+type CreateStreamingVirtualNetworkGatewayRequest struct {
+	// REQUIRED; The display name of the streaming virtual network gateway. Maximum length is 200 characters.
+	DisplayName *string
+
+	// REQUIRED; The type of the gateway.
+	Type *GatewayType
+
+	// REQUIRED; The Azure virtual network resource.
+	VirtualNetworkAzureResource *VirtualNetworkAzureResource
+}
+
+// GetCreateGatewayRequest implements the CreateGatewayRequestClassification interface for type CreateStreamingVirtualNetworkGatewayRequest.
+func (c *CreateStreamingVirtualNetworkGatewayRequest) GetCreateGatewayRequest() *CreateGatewayRequest {
+	return &CreateGatewayRequest{
+		Type: c.Type,
+	}
+}
+
 type CreateVirtualNetworkGatewayConnectionRequest struct {
 	// REQUIRED; The connection details of the connection.
 	ConnectionDetails *CreateConnectionDetails
@@ -1217,14 +1300,24 @@ type CreateVirtualNetworkGatewayRequest struct {
 	// values: 30, 60, 90, 120, 150, 240, 360, 480, 720, 1440.
 	InactivityMinutesBeforeSleep *int32
 
-	// REQUIRED; The number of member gateways. A number between 1 and 9.
-	NumberOfMemberGateways *int32
-
 	// REQUIRED; The type of the gateway.
 	Type *GatewayType
 
 	// REQUIRED; The Azure virtual network resource.
 	VirtualNetworkAzureResource *VirtualNetworkAzureResource
+
+	// The maximum number of member gateways. A number between 1 and 9. Cannot be used together with numberOfMemberGateways. minMemberGatewayCount
+	// must also be specified. maxMemberGatewayCount value must be
+	// greater than or equal to minMemberGatewayCount value.
+	MaxMemberGatewayCount *int32
+
+	// The minimum number of member gateways. A number between 1 and 9. Cannot be used together with numberOfMemberGateways. maxMemberGatewayCount
+	// must also be specified. minMemberGatewayCount value must be
+	// less than or equal to maxMemberGatewayCount value.
+	MinMemberGatewayCount *int32
+
+	// The number of member gateways. A number between 1 and 9. Cannot be used together with maxMemberGatewayCount and minMemberGatewayCount.
+	NumberOfMemberGateways *int32
 }
 
 // GetCreateGatewayRequest implements the CreateGatewayRequestClassification interface for type CreateVirtualNetworkGatewayRequest.
@@ -1232,6 +1325,15 @@ func (c *CreateVirtualNetworkGatewayRequest) GetCreateGatewayRequest() *CreateGa
 	return &CreateGatewayRequest{
 		Type: c.Type,
 	}
+}
+
+// CreateWorkspaceRelationRequest - The request payload for creating a workspace relation.
+type CreateWorkspaceRelationRequest struct {
+	// REQUIRED; The related workspace ID.
+	RelatedWorkspaceID *string
+
+	// REQUIRED; The type of the related workspace to create in the relation. Only Base and Branch are valid for creation.
+	RelationType *WorkspaceRelationType
 }
 
 // CreateWorkspaceRequest - Create workspace request payload.
@@ -1853,6 +1955,15 @@ type Domains struct {
 	ContinuationURI *string
 }
 
+// EncryptionDetail - Workspace encryption details.
+type EncryptionDetail struct {
+	// The workspace encryption status.
+	EncryptionStatus *WorkspaceEncryptionStatus
+
+	// The key identifier.
+	KeyIdentifier *string
+}
+
 // EntireTenantPrincipal - Represents a tenant principal
 type EntireTenantPrincipal struct {
 	// REQUIRED; The principal's ID.
@@ -2088,6 +2199,17 @@ type FabricItemMember struct {
 	SourcePath *string
 }
 
+// FirewallRule - Defines a firewall rule, identified by its name and containing a single IP address, an IP address range,
+// or a CIDR IP address as its value.
+type FirewallRule struct {
+	// REQUIRED; Specifies the name of the rule. Display names can be up to 128 characters in length and are required to be unique
+	// per workspace.
+	DisplayName *string
+
+	// REQUIRED; Specifies the value of the rule, specified as a single IP address, an IP address range, or a CIDR IP address.
+	Value *string
+}
+
 // Folder - A folder object.
 type Folder struct {
 	// READ-ONLY; The folder display name.
@@ -2156,6 +2278,21 @@ type GatewayRoleAssignments struct {
 	ContinuationURI *string
 }
 
+// GatewayStatusResponse - The gateway status response.
+type GatewayStatusResponse struct {
+	// REQUIRED; The status of the gateway.
+	Status *GatewayStatus
+
+	// The error details when the gateway is offline or when one or many members of gateway clusters encounters an error.
+	ErrorDetails []ErrorResponseDetails
+
+	// The upgrade state of the gateway.
+	GatewayUpgradeState *GatewayUpgradeState
+
+	// The version of the gateway.
+	GatewayVersion *string
+}
+
 // GetOneLakeSettingsResponse - OneLake settings response.
 type GetOneLakeSettingsResponse struct {
 	// REQUIRED; OneLake diagnostic settings object.
@@ -2200,6 +2337,9 @@ type GitConnection struct {
 
 	// Contains the sync details.
 	GitSyncDetails *GitSyncDetails
+
+	// READ-ONLY; The type of Git connection. Additional GitConnectionType types may be added over time.
+	GitConnectionType *GitConnectionType
 }
 
 // GitCredentials - The Git credentials.
@@ -2240,8 +2380,7 @@ type GitHubDetails struct {
 	// REQUIRED; The repository name. Maximum length is 128 characters.
 	RepositoryName *string
 
-	// > [!NOTE] Support for GitHub Enterprise with Data residency (ghe.com) is currently in Preview.(learn more [/fabric/fundamentals/preview]).
-	// The name of the enterprise github domain if it's not github.com. Only GitHub Enterprise with data residency domains (ghe.com)
+	// The name of the enterprise GitHub domain if it is not github.com. Only GitHub Enterprise with data residency domains (ghe.com)
 	// are supported. Maximum length is 100 characters.
 	CustomDomainName *string
 }
@@ -2386,6 +2525,18 @@ type ImportItemDefinitionsDetails struct {
 type ImportOneLakeWorkspaceLifecyclePolicyRequest struct {
 	// REQUIRED; The lifecycle policy properties. The structure follows Azure Storage lifecycle management [https://learn.microsoft.com/azure/storage/blobs/lifecycle-management-overview].
 	Properties any
+}
+
+// InboundFirewallConfiguration - This object defines the complete set of firewall rules to manage inbound access protection
+// as part of a workspace’s networking communication policy. It ensures that only explicitly authorized IP
+// addresses are permitted for inbound communication. When submitted via the PUT API, this object creates or fully replaces
+// the existing IP firewall configuration for the workspace. These rules are
+// enforced only when the workspace’s network communication policy has inbound.publicAccessRules.defaultAction set to Deny.
+type InboundFirewallConfiguration struct {
+	// A list of rules that define IP addresses permitted for inbound access. Each rule may include a name and a single IP address,
+	// an IP address range, or a CIDR IP address. A maximum of 256 rules can be
+	// specified per workspace.
+	Rules []FirewallRule
 }
 
 // InboundRules - The policy for all inbound communications to a workspace.
@@ -3090,13 +3241,16 @@ type OnPremisesGatewayConnection struct {
 	// REQUIRED; The object ID of the connection.
 	ID *string
 
+	// The recency details about the connection.
+	ConnectionRecency *ConnectionRecency
+
 	// The credential details of the connection.
 	CredentialDetails *ListCredentialDetails
 
 	// The display name of the connection.
 	DisplayName *string
 
-	// The gateway object ID of the connection.
+	// The gateway object ID through which the connection is made. For cloud connections, this is the virtual gateway ID.
 	GatewayID *string
 
 	// The privacy level of the connection.
@@ -3107,9 +3261,11 @@ type OnPremisesGatewayConnection struct {
 func (o *OnPremisesGatewayConnection) GetConnection() *Connection {
 	return &Connection{
 		ConnectionDetails: o.ConnectionDetails,
+		ConnectionRecency: o.ConnectionRecency,
 		ConnectivityType:  o.ConnectivityType,
 		CredentialDetails: o.CredentialDetails,
 		DisplayName:       o.DisplayName,
+		GatewayID:         o.GatewayID,
 		ID:                o.ID,
 		PrivacyLevel:      o.PrivacyLevel,
 	}
@@ -3175,13 +3331,16 @@ type OnPremisesGatewayPersonalConnection struct {
 	// REQUIRED; The object ID of the connection.
 	ID *string
 
+	// The recency details about the connection.
+	ConnectionRecency *ConnectionRecency
+
 	// The credential details of the connection.
 	CredentialDetails *ListCredentialDetails
 
 	// The display name of the connection.
 	DisplayName *string
 
-	// The gateway object ID of the connection.
+	// The gateway object ID through which the connection is made. For cloud connections, this is the virtual gateway ID.
 	GatewayID *string
 
 	// The privacy level of the connection.
@@ -3192,9 +3351,11 @@ type OnPremisesGatewayPersonalConnection struct {
 func (o *OnPremisesGatewayPersonalConnection) GetConnection() *Connection {
 	return &Connection{
 		ConnectionDetails: o.ConnectionDetails,
+		ConnectionRecency: o.ConnectionRecency,
 		ConnectivityType:  o.ConnectivityType,
 		CredentialDetails: o.CredentialDetails,
 		DisplayName:       o.DisplayName,
+		GatewayID:         o.GatewayID,
 		ID:                o.ID,
 		PrivacyLevel:      o.PrivacyLevel,
 	}
@@ -3420,11 +3581,17 @@ type PersonalCloudConnection struct {
 	// Allow this connection to be utilized with either on-premises data gateways or VNet data gateways.
 	AllowConnectionUsageInGateway *bool
 
+	// The recency details about the connection.
+	ConnectionRecency *ConnectionRecency
+
 	// The credential details of the connection.
 	CredentialDetails *ListCredentialDetails
 
 	// The display name of the connection.
 	DisplayName *string
+
+	// The gateway object ID through which the connection is made. For cloud connections, this is the virtual gateway ID.
+	GatewayID *string
 
 	// The privacy level of the connection.
 	PrivacyLevel *PrivacyLevel
@@ -3434,9 +3601,11 @@ type PersonalCloudConnection struct {
 func (p *PersonalCloudConnection) GetConnection() *Connection {
 	return &Connection{
 		ConnectionDetails: p.ConnectionDetails,
+		ConnectionRecency: p.ConnectionRecency,
 		ConnectivityType:  p.ConnectivityType,
 		CredentialDetails: p.CredentialDetails,
 		DisplayName:       p.DisplayName,
+		GatewayID:         p.GatewayID,
 		ID:                p.ID,
 		PrivacyLevel:      p.PrivacyLevel,
 	}
@@ -3488,6 +3657,55 @@ type PublicKey struct {
 
 	// REQUIRED; The modulus of the public key.
 	Modulus *string
+}
+
+// RelationsEdge - A relation edge between two items.
+type RelationsEdge struct {
+	// READ-ONLY; The identifier of the item that the source item depends on.
+	DependentOnItemID *string
+
+	// READ-ONLY; The source item identifier.
+	ItemID *string
+
+	// READ-ONLY; The type of relation between the two items. Additional relation types may be added over time.
+	RelationType *RelationType
+}
+
+// RelationsRelatedItem - An item that is related to the specified item. This is a subset of the full item object, containing
+// only the properties returned by the relations APIs.
+type RelationsRelatedItem struct {
+	// READ-ONLY; The item display name.
+	DisplayName *string
+
+	// READ-ONLY; The item ID.
+	ID *string
+
+	// READ-ONLY; The item type.
+	Type *ItemType
+
+	// READ-ONLY; The ID of the workspace that contains the item. Use this ID to find the workspace in the workspaces list.
+	WorkspaceID *string
+}
+
+// RelationsResponse - A response containing related items, relation edges, and referenced workspaces.
+type RelationsResponse struct {
+	// READ-ONLY; A list of related items.
+	Items []RelationsRelatedItem
+
+	// READ-ONLY; A list of relation edges between items.
+	Relations []RelationsEdge
+
+	// READ-ONLY; A list of workspaces referenced by the related items.
+	Workspaces []RelationsWorkspace
+}
+
+// RelationsWorkspace - A workspace referenced in the relations response.
+type RelationsWorkspace struct {
+	// READ-ONLY; The workspace display name.
+	DisplayName *string
+
+	// READ-ONLY; The workspace identifier.
+	ID *string
 }
 
 // RowConstraint indicates a constraint that determines the rows in a table that users can see. Roles defined with RowConstraints
@@ -3675,11 +3893,17 @@ type ShareableCloudConnection struct {
 	// Allow this connection to be used with items that allow user-controlled code such as Notebook.
 	AllowUsageInUserControlledCode *bool
 
+	// The recency details about the connection.
+	ConnectionRecency *ConnectionRecency
+
 	// The credential details of the connection.
 	CredentialDetails *ListCredentialDetails
 
 	// The display name of the connection.
 	DisplayName *string
+
+	// The gateway object ID through which the connection is made. For cloud connections, this is the virtual gateway ID.
+	GatewayID *string
 
 	// The privacy level of the connection.
 	PrivacyLevel *PrivacyLevel
@@ -3689,9 +3913,11 @@ type ShareableCloudConnection struct {
 func (s *ShareableCloudConnection) GetConnection() *Connection {
 	return &Connection{
 		ConnectionDetails: s.ConnectionDetails,
+		ConnectionRecency: s.ConnectionRecency,
 		ConnectivityType:  s.ConnectivityType,
 		CredentialDetails: s.CredentialDetails,
 		DisplayName:       s.DisplayName,
+		GatewayID:         s.GatewayID,
 		ID:                s.ID,
 		PrivacyLevel:      s.PrivacyLevel,
 	}
@@ -3795,6 +4021,70 @@ type Shortcuts struct {
 
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
+}
+
+// StreamingVirtualNetworkGateway - A streaming virtual network gateway.
+type StreamingVirtualNetworkGateway struct {
+	// REQUIRED; The display name of the streaming virtual network gateway.
+	DisplayName *string
+
+	// REQUIRED; The object ID of the gateway.
+	ID *string
+
+	// REQUIRED; The type of the gateway.
+	Type *GatewayType
+
+	// REQUIRED; The Azure virtual network resource.
+	VirtualNetworkAzureResource *VirtualNetworkAzureResource
+}
+
+// GetGateway implements the GatewayClassification interface for type StreamingVirtualNetworkGateway.
+func (s *StreamingVirtualNetworkGateway) GetGateway() *Gateway {
+	return &Gateway{
+		ID:   s.ID,
+		Type: s.Type,
+	}
+}
+
+// StreamingVirtualNetworkGatewayConnection - A connection that connects through a streaming virtual network data gateway.
+type StreamingVirtualNetworkGatewayConnection struct {
+	// REQUIRED; The connection details of the connection.
+	ConnectionDetails *ListConnectionDetails
+
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// REQUIRED; The object ID of the connection.
+	ID *string
+
+	// The recency details about the connection.
+	ConnectionRecency *ConnectionRecency
+
+	// The credential details of the connection.
+	CredentialDetails *ListCredentialDetails
+
+	// The display name of the connection.
+	DisplayName *string
+
+	// The gateway object ID through which the connection is made. For cloud connections, this is the virtual gateway ID.
+	GatewayID *string
+
+	// The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+}
+
+// GetConnection implements the ConnectionClassification interface for type StreamingVirtualNetworkGatewayConnection.
+func (s *StreamingVirtualNetworkGatewayConnection) GetConnection() *Connection {
+	return &Connection{
+		ConnectionDetails: s.ConnectionDetails,
+		ConnectionRecency: s.ConnectionRecency,
+		ConnectivityType:  s.ConnectivityType,
+		CredentialDetails: s.CredentialDetails,
+		DisplayName:       s.DisplayName,
+		GatewayID:         s.GatewayID,
+		ID:                s.ID,
+		PrivacyLevel:      s.PrivacyLevel,
+	}
 }
 
 // Tag - Represents a tag.
@@ -4244,6 +4534,47 @@ func (u *UpdateShareableCloudConnectionRequest) GetUpdateConnectionRequest() *Up
 	}
 }
 
+// UpdateStreamingVirtualNetworkGatewayConnectionRequest - Updates a connection that connects through a streaming virtual
+// network data gateway.
+type UpdateStreamingVirtualNetworkGatewayConnectionRequest struct {
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// The credential details of the connection.
+	CredentialDetails *UpdateCredentialDetails
+
+	// The display name of the connection. Maximum length is 200 characters.
+	DisplayName *string
+
+	// The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+}
+
+// GetUpdateConnectionRequest implements the UpdateConnectionRequestClassification interface for type UpdateStreamingVirtualNetworkGatewayConnectionRequest.
+func (u *UpdateStreamingVirtualNetworkGatewayConnectionRequest) GetUpdateConnectionRequest() *UpdateConnectionRequest {
+	return &UpdateConnectionRequest{
+		ConnectivityType: u.ConnectivityType,
+		PrivacyLevel:     u.PrivacyLevel,
+	}
+}
+
+// UpdateStreamingVirtualNetworkGatewayRequest - Updates a streaming virtual network gateway.
+type UpdateStreamingVirtualNetworkGatewayRequest struct {
+	// REQUIRED; The type of the gateway.
+	Type *GatewayType
+
+	// The name of the gateway. Maximum length is 200 characters.
+	DisplayName *string
+}
+
+// GetUpdateGatewayRequest implements the UpdateGatewayRequestClassification interface for type UpdateStreamingVirtualNetworkGatewayRequest.
+func (u *UpdateStreamingVirtualNetworkGatewayRequest) GetUpdateGatewayRequest() *UpdateGatewayRequest {
+	return &UpdateGatewayRequest{
+		DisplayName: u.DisplayName,
+		Type:        u.Type,
+	}
+}
+
 type UpdateVirtualNetworkGatewayConnectionRequest struct {
 	// REQUIRED; The connectivity type of the connection.
 	ConnectivityType *ConnectivityType
@@ -4280,7 +4611,17 @@ type UpdateVirtualNetworkGatewayRequest struct {
 	// 30, 60, 90, 120, 150, 240, 360, 480, 720, 1440.
 	InactivityMinutesBeforeSleep *int32
 
-	// The number of member gateways. A number between 1 and 9.
+	// The maximum number of member gateways. A number between 1 and 9. Cannot be used together with numberOfMemberGateways. minMemberGatewayCount
+	// must also be specified. maxMemberGatewayCount value must be
+	// greater than or equal to minMemberGatewayCount value.
+	MaxMemberGatewayCount *int32
+
+	// The minimum number of member gateways. A number between 1 and 9. Cannot be used together with numberOfMemberGateways. maxMemberGatewayCount
+	// must also be specified. minMemberGatewayCount value must be
+	// less than or equal to maxMemberGatewayCount value.
+	MinMemberGatewayCount *int32
+
+	// The number of member gateways. A number between 1 and 9. Cannot be used together with maxMemberGatewayCount and minMemberGatewayCount.
 	NumberOfMemberGateways *int32
 }
 
@@ -4366,7 +4707,7 @@ type VirtualNetworkGateway struct {
 	// REQUIRED; The minutes of inactivity before the virtual network gateway goes into auto-sleep.
 	InactivityMinutesBeforeSleep *int32
 
-	// REQUIRED; The number of member gateways.
+	// REQUIRED; The number of member gateways. A number between 1 and 9.
 	NumberOfMemberGateways *int32
 
 	// REQUIRED; The type of the gateway.
@@ -4377,6 +4718,12 @@ type VirtualNetworkGateway struct {
 
 	// The object ID of the Fabric license capacity.
 	CapacityID *string
+
+	// The maximum number of member gateways. A number between 1 and 9.
+	MaxMemberGatewayCount *int32
+
+	// The minimum number of member gateways. A number between 1 and 9.
+	MinMemberGatewayCount *int32
 }
 
 // GetGateway implements the GatewayClassification interface for type VirtualNetworkGateway.
@@ -4398,13 +4745,16 @@ type VirtualNetworkGatewayConnection struct {
 	// REQUIRED; The object ID of the connection.
 	ID *string
 
+	// The recency details about the connection.
+	ConnectionRecency *ConnectionRecency
+
 	// The credential details of the connection.
 	CredentialDetails *ListCredentialDetails
 
 	// The display name of the connection.
 	DisplayName *string
 
-	// The gateway object ID of the connection.
+	// The gateway object ID through which the connection is made. For cloud connections, this is the virtual gateway ID.
 	GatewayID *string
 
 	// The privacy level of the connection.
@@ -4415,9 +4765,11 @@ type VirtualNetworkGatewayConnection struct {
 func (v *VirtualNetworkGatewayConnection) GetConnection() *Connection {
 	return &Connection{
 		ConnectionDetails: v.ConnectionDetails,
+		ConnectionRecency: v.ConnectionRecency,
 		ConnectivityType:  v.ConnectivityType,
 		CredentialDetails: v.CredentialDetails,
 		DisplayName:       v.DisplayName,
+		GatewayID:         v.GatewayID,
 		ID:                v.ID,
 		PrivacyLevel:      v.PrivacyLevel,
 	}
@@ -4506,6 +4858,9 @@ type Workspace struct {
 	// READ-ONLY; The ID of the capacity the workspace is assigned to.
 	CapacityID *string
 
+	// READ-ONLY; The region of the capacity associated with this workspace.
+	CapacityRegion *CapacityRegion
+
 	// READ-ONLY; The ID of the domain the workspace is assigned to.
 	DomainID *string
 
@@ -4532,6 +4887,39 @@ type WorkspaceConflictResolution struct {
 
 	// REQUIRED; Conflict resolution type. Additional conflict resolution types may be added over time.
 	ConflictResolutionType *ConflictResolutionType
+}
+
+// WorkspaceEncryptionDetail - Workspace encryption settings and status details.
+type WorkspaceEncryptionDetail struct {
+	// The workspace encryption detail.
+	EncryptionDetail *EncryptionDetail
+
+	// The previous workspace encryption detail.
+	PreviousEncryptionDetail *EncryptionDetail
+
+	// The encryption status of items in the workspace.
+	WorkspaceEncryptionItemsDetails []WorkspaceEncryptionItemsDetail
+}
+
+// WorkspaceEncryptionItem - Workspace item details.
+type WorkspaceEncryptionItem struct {
+	// The item display name.
+	DisplayName *string
+
+	// The item Id.
+	ID *string
+
+	// The item type.
+	Type *string
+}
+
+// WorkspaceEncryptionItemsDetail - Encryption status details for items in the workspace.
+type WorkspaceEncryptionItemsDetail struct {
+	// The encryption status for the items.
+	EncryptionStatus *WorkspaceEncryptionStatus
+
+	// The array of workspace item details.
+	Items []WorkspaceEncryptionItem
 }
 
 // WorkspaceIdentity - A workspace identity object.
@@ -4576,6 +4964,12 @@ type WorkspaceInboundAzureResourceRule struct {
 type WorkspaceInboundAzureResourceRules struct {
 	// An array of inbound Azure resource instance rules associated with the workspace.
 	Rules []WorkspaceInboundAzureResourceRule
+}
+
+// WorkspaceInboundExternalDataSharesPolicy - The inbound networking exception policy for External Data Shares in a workspace.
+type WorkspaceInboundExternalDataSharesPolicy struct {
+	// Defines whether External Data Shares traffic is allowed to bypass inbound networking restrictions.
+	DefaultAction *NetworkAccessRule
 }
 
 // WorkspaceInfo - A workspace object.
@@ -4659,6 +5053,33 @@ type WorkspaceOutboundGateways struct {
 	// permit all outbound gateway connections. Always explicitly specify this
 	// field in every PUT request body.
 	DefaultAction *GatewayAccessActionType
+}
+
+// WorkspaceRelation - A workspace relation object.
+type WorkspaceRelation struct {
+	// READ-ONLY; The workspace relation ID.
+	ID *string
+
+	// READ-ONLY; The related workspace ID.
+	RelatedWorkspaceID *string
+
+	// READ-ONLY; The type of the related workspace in the relation.
+	RelationType *WorkspaceRelationType
+
+	// READ-ONLY; The workspace ID.
+	WorkspaceID *string
+}
+
+// WorkspaceRelations - A list of workspace relations.
+type WorkspaceRelations struct {
+	// REQUIRED; A list of workspace relations.
+	Value []WorkspaceRelation
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
 }
 
 // WorkspaceRoleAssignment - A workspace role assignment object.

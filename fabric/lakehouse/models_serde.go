@@ -54,7 +54,7 @@ func (c CreateLakehouseRefreshMaterializedLakeViewsScheduleRequest) MarshalJSON(
 	objectMap := make(map[string]any)
 	populate(objectMap, "configuration", c.Configuration)
 	populate(objectMap, "enabled", c.Enabled)
-	populateAny(objectMap, "executionData", c.ExecutionData)
+	populate(objectMap, "executionData", c.ExecutionData)
 	return json.Marshal(objectMap)
 }
 
@@ -131,6 +131,49 @@ func (c *CreateLakehouseRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type CreateMaterializedLakeViewExecutionDefinitionRequest.
+func (c CreateMaterializedLakeViewExecutionDefinitionRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "currentLakehouseExecutionContext", c.CurrentLakehouseExecutionContext)
+	populate(objectMap, "description", c.Description)
+	populate(objectMap, "displayName", c.DisplayName)
+	populate(objectMap, "extendedLineageExecutionContext", c.ExtendedLineageExecutionContext)
+	populate(objectMap, "settings", c.Settings)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CreateMaterializedLakeViewExecutionDefinitionRequest.
+func (c *CreateMaterializedLakeViewExecutionDefinitionRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "currentLakehouseExecutionContext":
+			c.CurrentLakehouseExecutionContext, err = unmarshalCurrentLakehouseExecutionContextClassification(val)
+			delete(rawMsg, key)
+		case "description":
+			err = unpopulate(val, "Description", &c.Description)
+			delete(rawMsg, key)
+		case "displayName":
+			err = unpopulate(val, "DisplayName", &c.DisplayName)
+			delete(rawMsg, key)
+		case "extendedLineageExecutionContext":
+			c.ExtendedLineageExecutionContext, err = unmarshalExtendedLineageExecutionContextRequestClassification(val)
+			delete(rawMsg, key)
+		case "settings":
+			err = unpopulate(val, "Settings", &c.Settings)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type CreationPayload.
 func (c CreationPayload) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -192,6 +235,91 @@ func (c *CronScheduleConfig) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "type":
 			err = unpopulate(val, "Type", &c.Type)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type CurrentLakehouseExecutionContext.
+func (c CurrentLakehouseExecutionContext) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["mode"] = c.Mode
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CurrentLakehouseExecutionContext.
+func (c *CurrentLakehouseExecutionContext) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "mode":
+			err = unpopulate(val, "Mode", &c.Mode)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type CurrentLakehouseExecutionContextAll.
+func (c CurrentLakehouseExecutionContextAll) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["mode"] = ExecutionContextModeAll
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CurrentLakehouseExecutionContextAll.
+func (c *CurrentLakehouseExecutionContextAll) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "mode":
+			err = unpopulate(val, "Mode", &c.Mode)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type CurrentLakehouseExecutionContextSelected.
+func (c CurrentLakehouseExecutionContextSelected) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["mode"] = ExecutionContextModeSelected
+	populate(objectMap, "selectedMlvs", c.SelectedMlvs)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CurrentLakehouseExecutionContextSelected.
+func (c *CurrentLakehouseExecutionContextSelected) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "mode":
+			err = unpopulate(val, "Mode", &c.Mode)
+			delete(rawMsg, key)
+		case "selectedMlvs":
+			err = unpopulate(val, "SelectedMlvs", &c.SelectedMlvs)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -425,6 +553,176 @@ func (e *EntireTenantPrincipal) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "type":
 			err = unpopulate(val, "Type", &e.Type)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", e, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type ExtendedLineageExecutionContextRequest.
+func (e ExtendedLineageExecutionContextRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["mode"] = e.Mode
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ExtendedLineageExecutionContextRequest.
+func (e *ExtendedLineageExecutionContextRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", e, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "mode":
+			err = unpopulate(val, "Mode", &e.Mode)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", e, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type ExtendedLineageExecutionContextRequestAll.
+func (e ExtendedLineageExecutionContextRequestAll) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["mode"] = ExecutionContextModeAll
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ExtendedLineageExecutionContextRequestAll.
+func (e *ExtendedLineageExecutionContextRequestAll) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", e, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "mode":
+			err = unpopulate(val, "Mode", &e.Mode)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", e, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type ExtendedLineageExecutionContextRequestSelected.
+func (e ExtendedLineageExecutionContextRequestSelected) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["mode"] = ExecutionContextModeSelected
+	populate(objectMap, "selectedLakehouses", e.SelectedLakehouses)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ExtendedLineageExecutionContextRequestSelected.
+func (e *ExtendedLineageExecutionContextRequestSelected) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", e, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "mode":
+			err = unpopulate(val, "Mode", &e.Mode)
+			delete(rawMsg, key)
+		case "selectedLakehouses":
+			err = unpopulate(val, "SelectedLakehouses", &e.SelectedLakehouses)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", e, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type ExtendedLineageExecutionContextResponse.
+func (e ExtendedLineageExecutionContextResponse) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["mode"] = e.Mode
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ExtendedLineageExecutionContextResponse.
+func (e *ExtendedLineageExecutionContextResponse) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", e, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "mode":
+			err = unpopulate(val, "Mode", &e.Mode)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", e, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type ExtendedLineageExecutionContextResponseAll.
+func (e ExtendedLineageExecutionContextResponseAll) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["mode"] = ExecutionContextModeAll
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ExtendedLineageExecutionContextResponseAll.
+func (e *ExtendedLineageExecutionContextResponseAll) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", e, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "mode":
+			err = unpopulate(val, "Mode", &e.Mode)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", e, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type ExtendedLineageExecutionContextResponseSelected.
+func (e ExtendedLineageExecutionContextResponseSelected) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["mode"] = ExecutionContextModeSelected
+	populate(objectMap, "selectedLakehouses", e.SelectedLakehouses)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ExtendedLineageExecutionContextResponseSelected.
+func (e *ExtendedLineageExecutionContextResponseSelected) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", e, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "mode":
+			err = unpopulate(val, "Mode", &e.Mode)
+			delete(rawMsg, key)
+		case "selectedLakehouses":
+			e.SelectedLakehouses, err = unmarshalItemReferenceClassificationArray(val)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -990,6 +1288,150 @@ func (l *LoadTableRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type MaterializedLakeViewExecutionDefinition.
+func (m MaterializedLakeViewExecutionDefinition) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "currentLakehouseExecutionContext", m.CurrentLakehouseExecutionContext)
+	populate(objectMap, "description", m.Description)
+	populate(objectMap, "displayName", m.DisplayName)
+	populate(objectMap, "extendedLineageExecutionContext", m.ExtendedLineageExecutionContext)
+	populate(objectMap, "id", m.ID)
+	populate(objectMap, "settings", m.Settings)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type MaterializedLakeViewExecutionDefinition.
+func (m *MaterializedLakeViewExecutionDefinition) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", m, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "currentLakehouseExecutionContext":
+			m.CurrentLakehouseExecutionContext, err = unmarshalCurrentLakehouseExecutionContextClassification(val)
+			delete(rawMsg, key)
+		case "description":
+			err = unpopulate(val, "Description", &m.Description)
+			delete(rawMsg, key)
+		case "displayName":
+			err = unpopulate(val, "DisplayName", &m.DisplayName)
+			delete(rawMsg, key)
+		case "extendedLineageExecutionContext":
+			m.ExtendedLineageExecutionContext, err = unmarshalExtendedLineageExecutionContextResponseClassification(val)
+			delete(rawMsg, key)
+		case "id":
+			err = unpopulate(val, "ID", &m.ID)
+			delete(rawMsg, key)
+		case "settings":
+			err = unpopulate(val, "Settings", &m.Settings)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", m, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type MaterializedLakeViewExecutionDefinitionSettingsRequest.
+func (m MaterializedLakeViewExecutionDefinitionSettingsRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "environment", m.Environment)
+	populate(objectMap, "refreshMode", m.RefreshMode)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type MaterializedLakeViewExecutionDefinitionSettingsRequest.
+func (m *MaterializedLakeViewExecutionDefinitionSettingsRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", m, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "environment":
+			err = unpopulate(val, "Environment", &m.Environment)
+			delete(rawMsg, key)
+		case "refreshMode":
+			err = unpopulate(val, "RefreshMode", &m.RefreshMode)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", m, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type MaterializedLakeViewExecutionDefinitionSettingsResponse.
+func (m MaterializedLakeViewExecutionDefinitionSettingsResponse) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "environment", m.Environment)
+	populate(objectMap, "refreshMode", m.RefreshMode)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type MaterializedLakeViewExecutionDefinitionSettingsResponse.
+func (m *MaterializedLakeViewExecutionDefinitionSettingsResponse) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", m, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "environment":
+			m.Environment, err = unmarshalItemReferenceClassification(val)
+			delete(rawMsg, key)
+		case "refreshMode":
+			err = unpopulate(val, "RefreshMode", &m.RefreshMode)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", m, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type MaterializedLakeViewExecutionDefinitions.
+func (m MaterializedLakeViewExecutionDefinitions) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "continuationToken", m.ContinuationToken)
+	populate(objectMap, "continuationUri", m.ContinuationURI)
+	populate(objectMap, "value", m.Value)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type MaterializedLakeViewExecutionDefinitions.
+func (m *MaterializedLakeViewExecutionDefinitions) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", m, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "continuationToken":
+			err = unpopulate(val, "ContinuationToken", &m.ContinuationToken)
+			delete(rawMsg, key)
+		case "continuationUri":
+			err = unpopulate(val, "ContinuationURI", &m.ContinuationURI)
+			delete(rawMsg, key)
+		case "value":
+			err = unpopulate(val, "Value", &m.Value)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", m, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type MonthlyOccurrence.
 func (m MonthlyOccurrence) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -1235,13 +1677,40 @@ func (p *Properties) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type RefreshMaterializedLakeViewsExecutionData.
+func (r RefreshMaterializedLakeViewsExecutionData) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "mlvExecutionDefinitionId", r.MlvExecutionDefinitionID)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type RefreshMaterializedLakeViewsExecutionData.
+func (r *RefreshMaterializedLakeViewsExecutionData) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", r, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "mlvExecutionDefinitionId":
+			err = unpopulate(val, "MlvExecutionDefinitionID", &r.MlvExecutionDefinitionID)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", r, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type RefreshMaterializedLakeViewsSchedule.
 func (r RefreshMaterializedLakeViewsSchedule) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "configuration", r.Configuration)
 	populateDateTimeRFC3339(objectMap, "createdDateTime", r.CreatedDateTime)
 	populate(objectMap, "enabled", r.Enabled)
-	populateAny(objectMap, "executionData", r.ExecutionData)
+	populate(objectMap, "executionData", r.ExecutionData)
 	populate(objectMap, "id", r.ID)
 	populate(objectMap, "owner", r.Owner)
 	return json.Marshal(objectMap)
@@ -1722,7 +2191,7 @@ func (u UpdateLakehouseRefreshMaterializedLakeViewsScheduleRequest) MarshalJSON(
 	objectMap := make(map[string]any)
 	populate(objectMap, "configuration", u.Configuration)
 	populate(objectMap, "enabled", u.Enabled)
-	populateAny(objectMap, "executionData", u.ExecutionData)
+	populate(objectMap, "executionData", u.ExecutionData)
 	return json.Marshal(objectMap)
 }
 
@@ -1774,6 +2243,49 @@ func (u *UpdateLakehouseRequest) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "displayName":
 			err = unpopulate(val, "DisplayName", &u.DisplayName)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", u, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type UpdateMaterializedLakeViewExecutionDefinitionRequest.
+func (u UpdateMaterializedLakeViewExecutionDefinitionRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "currentLakehouseExecutionContext", u.CurrentLakehouseExecutionContext)
+	populate(objectMap, "description", u.Description)
+	populate(objectMap, "displayName", u.DisplayName)
+	populate(objectMap, "extendedLineageExecutionContext", u.ExtendedLineageExecutionContext)
+	populate(objectMap, "settings", u.Settings)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type UpdateMaterializedLakeViewExecutionDefinitionRequest.
+func (u *UpdateMaterializedLakeViewExecutionDefinitionRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", u, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "currentLakehouseExecutionContext":
+			u.CurrentLakehouseExecutionContext, err = unmarshalCurrentLakehouseExecutionContextClassification(val)
+			delete(rawMsg, key)
+		case "description":
+			err = unpopulate(val, "Description", &u.Description)
+			delete(rawMsg, key)
+		case "displayName":
+			err = unpopulate(val, "DisplayName", &u.DisplayName)
+			delete(rawMsg, key)
+		case "extendedLineageExecutionContext":
+			u.ExtendedLineageExecutionContext, err = unmarshalExtendedLineageExecutionContextRequestClassification(val)
+			delete(rawMsg, key)
+		case "settings":
+			err = unpopulate(val, "Settings", &u.Settings)
 			delete(rawMsg, key)
 		}
 		if err != nil {

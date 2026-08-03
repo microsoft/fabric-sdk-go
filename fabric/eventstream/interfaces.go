@@ -6,11 +6,20 @@
 
 package eventstream
 
+// CertificateResourceClassification provides polymorphic access to related types.
+// Call the interface's GetCertificateResource() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *CertificateResource, *KeyVaultCertificateResource
+type CertificateResourceClassification interface {
+	// GetCertificateResource returns the CertificateResource content of the underlying type.
+	GetCertificateResource() *CertificateResource
+}
+
 // DestinationResponseClassification provides polymorphic access to related types.
 // Call the interface's GetDestinationResponse() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
 // - *ActivatorDestinationResponse, *CustomEndpointDestinationResponse, *DestinationResponse, *EventhouseDestinationResponse,
-// - *LakehouseDestinationResponse
+// - *LakehouseDestinationResponse, *NotebookDestinationResponse
 type DestinationResponseClassification interface {
 	// GetDestinationResponse returns the DestinationResponse content of the underlying type.
 	GetDestinationResponse() *DestinationResponse
@@ -32,6 +41,15 @@ type EventhouseDestinationPropertiesClassification interface {
 type GroupByWindowClassification interface {
 	// GetGroupByWindow returns the GroupByWindow content of the underlying type.
 	GetGroupByWindow() *GroupByWindow
+}
+
+// HTTPPaginationClassification provides polymorphic access to related types.
+// Call the interface's GetHTTPPagination() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *CursorPagination, *HTTPPagination, *PagePagination
+type HTTPPaginationClassification interface {
+	// GetHTTPPagination returns the HTTPPagination content of the underlying type.
+	GetHTTPPagination() *HTTPPagination
 }
 
 // ManageFieldsOperationClassification provides polymorphic access to related types.
@@ -85,12 +103,13 @@ type SolacePubSubSourcePropertiesClassification interface {
 // Use a type switch to determine the concrete type.  The possible types are:
 // - *AmazonKinesisSourceResponse, *AmazonMSKKafkaSourceResponse, *ApacheKafkaSourceResponse, *AzureBlobStorageEventsSourceResponse,
 // - *AzureCosmosDBCDCSourceResponse, *AzureDataExplorerSourceResponse, *AzureEventGridNamespaceSourceResponse, *AzureEventHubExtendedSourceResponse,
-// - *AzureEventHubSourceResponse, *AzureIoTHubSourceResponse, *AzureSQLDBCDCSourceResponse, *AzureSQLMIDBCDCSourceResponse,
-// - *AzureServiceBusSourceResponse, *ConfluentCloudSourceResponse, *CustomEndpointSourceResponse, *FabricCapacityOverviewEventsSourceResponse,
-// - *FabricJobEventsSourceResponse, *FabricOneLakeEventsSourceResponse, *FabricWorkspaceItemEventsSourceResponse, *GooglePubSubSourceResponse,
-// - *HTTPSourceResponse, *MongoDBCDCSourceResponse, *MqttSourceResponse, *MySQLCDCSourceResponse, *PostgreSQLCDCSourceResponse,
-// - *RealTimeWeatherSourceResponse, *SQLServerOnVMDBCDCSourceResponse, *SampleDataSourceResponse, *SolacePubSubSourceResponse,
-// - *SourceResponse
+// - *AzureEventHubSourceResponse, *AzureIoTHubExtendedSourceResponse, *AzureIoTHubSourceResponse, *AzureSQLDBCDCSourceResponse,
+// - *AzureSQLMIDBCDCSourceResponse, *AzureServiceBusSourceResponse, *ConfluentCloudSourceResponse, *CustomEndpointSourceResponse,
+// - *FabricAnomalyDetectionEventsSourceResponse, *FabricCapacityOverviewEventsSourceResponse, *FabricJobEventsSourceResponse,
+// - *FabricOneLakeEventsSourceResponse, *FabricWorkspaceItemEventsSourceResponse, *GooglePubSubSourceResponse, *HTTPSourceResponse,
+// - *MirroredDatabaseChangeFeedSourceResponse, *MongoDBCDCSourceResponse, *MqttSourceResponse, *MySQLCDCSourceResponse, *OracleDBCDCSourceResponse,
+// - *PostgreSQLCDCSourceResponse, *RealTimeWeatherSourceResponse, *SQLServerOnVMDBCDCSourceResponse, *SampleDataSourceResponse,
+// - *SolacePubSubSourceResponse, *SourceResponse
 type SourceResponseClassification interface {
 	// GetSourceResponse returns the SourceResponse content of the underlying type.
 	GetSourceResponse() *SourceResponse

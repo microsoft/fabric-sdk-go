@@ -295,3 +295,48 @@ func ExampleItemsClient_BeginUpdateCopyJobDefinition() {
 		log.Fatalf("failed to pull the result: %v", err)
 	}
 }
+
+// Generated from example definition
+func ExampleItemsClient_ResetCopyJob_resetAllEntitiesExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := copyjob.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewItemsClient().ResetCopyJob(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", copyjob.EntityResetPayload{
+		ResetAllCopyJobEntities: to.Ptr(true),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_ResetCopyJob_resetSelectedCopyJobEntitiesExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := copyjob.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewItemsClient().ResetCopyJob(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", copyjob.EntityResetPayload{
+		CopyJobEntitiesToReset: []copyjob.EntityReset{
+			{
+				CopyJobEntityID: to.Ptr("b1b04262-1a57-412b-8b92-117832e4dad0"),
+			},
+			{
+				CopyJobEntityID: to.Ptr("7351d4be-fc32-4799-a6a4-f2b9572e1674"),
+			}},
+		ResetAllCopyJobEntities: to.Ptr(false),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}

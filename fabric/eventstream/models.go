@@ -194,6 +194,9 @@ type AmazonMSKKafkaSourceProperties struct {
 
 	// REQUIRED; The Kafka topic.
 	Topic *string
+
+	// The TLS settings for the Kafka connection.
+	TLSSettings *TLSSettings
 }
 
 // AmazonMSKKafkaSourceResponse - Amazon MSK Kafka source response.
@@ -251,6 +254,9 @@ type ApacheKafkaSourceProperties struct {
 
 	// REQUIRED; The Kafka topic.
 	Topic *string
+
+	// The TLS settings for the Kafka connection.
+	TLSSettings *TLSSettings
 }
 
 // ApacheKafkaSourceResponse - Apache Kafka source response.
@@ -602,6 +608,54 @@ func (a *AzureEventHubSourceResponse) GetSourceResponse() *SourceResponse {
 	}
 }
 
+// AzureIoTHubExtendedSourceProperties - Azure IoT Hub Extended source properties.
+type AzureIoTHubExtendedSourceProperties struct {
+	// REQUIRED; The consumer group name.
+	ConsumerGroupName *string
+
+	// REQUIRED; The Azure IoT Hub data connection identifier.
+	DataConnectionID *string
+
+	// REQUIRED; The start position in the Azure IoT Hub stream.
+	StartPosition *StartPosition
+}
+
+// AzureIoTHubExtendedSourceResponse - Represents an Azure IoT Hub Extended source response.
+type AzureIoTHubExtendedSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Azure IoT Hub Extended source.
+	Properties *AzureIoTHubExtendedSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type AzureIoTHubExtendedSourceResponse.
+func (a *AzureIoTHubExtendedSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        a.Error,
+		ID:           a.ID,
+		InputSchemas: a.InputSchemas,
+		Name:         a.Name,
+		Status:       a.Status,
+		Type:         a.Type,
+	}
+}
+
 // AzureIoTHubSourceProperties - Azure IoT Hub source properties.
 type AzureIoTHubSourceProperties struct {
 	// REQUIRED; The consumer group name.
@@ -655,8 +709,8 @@ type AzureSQLDBCDCSourceResponse struct {
 	// REQUIRED; The unique name of the source.
 	Name *string
 
-	// REQUIRED; Base SQL CDC source properties.
-	Properties *BaseSQLCDCSourceProperties
+	// REQUIRED; The properties of the Azure SQL DB CDC source.
+	Properties *BaseSQLServerCDCSourceProperties
 
 	// REQUIRED; The status of the node. Additional node status may be added over time.
 	Status *NodeStatus
@@ -691,8 +745,8 @@ type AzureSQLMIDBCDCSourceResponse struct {
 	// REQUIRED; The unique name of the source.
 	Name *string
 
-	// REQUIRED; Base SQL CDC source properties.
-	Properties *BaseSQLCDCSourceProperties
+	// REQUIRED; The properties of the Azure SQL MI DB CDC source.
+	Properties *BaseSQLServerCDCSourceProperties
 
 	// REQUIRED; The status of the node. Additional node status may be added over time.
 	Status *NodeStatus
@@ -786,18 +840,35 @@ type BaseKafkaSourceProperties struct {
 
 	// REQUIRED; The Kafka topic.
 	Topic *string
+
+	// The TLS settings for the Kafka connection.
+	TLSSettings *TLSSettings
 }
 
-// BaseSQLCDCSourceProperties - Base SQL CDC source properties.
-type BaseSQLCDCSourceProperties struct {
+// BaseSQLServerCDCSourceProperties - Base SQL Server CDC source properties. Extends BaseSQLCDCSourceProperties with SQL Server-specific
+// settings.
+type BaseSQLServerCDCSourceProperties struct {
 	// REQUIRED; The SQL CDC data connection identifier.
 	DataConnectionID *string
 
 	// REQUIRED; The table name.
 	TableName *string
 
+	// Specifies the application intent for the database connection.
+	DatabaseApplicationIntent *DatabaseApplicationIntent
+
 	// Specifies how decimal values are represented by the connector (precise decimal, double, or string).
 	DecimalHandlingMode *DecimalHandlingMode
+
+	// The comma-separated list of columns to exclude from capture.
+	ExcludedColumns *string
+
+	// Specifies how the initial snapshot of data is taken (for example, initial load, initial only, or no data).
+	SnapshotMode *SnapshotMode
+
+	// The snapshot select statement overrides. Each entry specifies a table and a custom SELECT statement to use for the initial
+	// snapshot.
+	SnapshotSelectStatementOverrides []SnapshotSelectStatementOverrideItem
 }
 
 // CSVSerializationInfo - CSV serialization information.
@@ -835,6 +906,24 @@ type CastProperties struct {
 
 	// REQUIRED; Represents the data type. Additional data types may be added over time.
 	TargetDataType *DataType
+}
+
+// CertificateResource - Base type for certificate resources. Additional types may be added over time.
+type CertificateResource struct {
+	// REQUIRED; The certificate resource type.
+	Type *CertificateResourceType
+}
+
+// GetCertificateResource implements the CertificateResourceClassification interface for type CertificateResource.
+func (c *CertificateResource) GetCertificateResource() *CertificateResource { return c }
+
+// ClientCertificate - Represents the client certificate settings.
+type ClientCertificate struct {
+	// The certificate resource.
+	Certificate CertificateResourceClassification
+
+	// The TLS certificate revocation mode. Additional modes may be added over time.
+	RevocationMode *TLSRevocationMode
 }
 
 // ColumnReferenceExpression - Represents a reference to a column.
@@ -916,6 +1005,25 @@ type CreateEventstreamRequest struct {
 
 	// The sensitivity label settings for the eventstream.
 	SensitivityLabelSettings *SensitivityLabelSettings
+}
+
+// CursorPagination - The cursor-based HTTP pagination configuration.
+type CursorPagination struct {
+	// REQUIRED; The JSON Pointer expression to extract the cursor value from the HTTP response body.
+	CursorJSONPointer *string
+
+	// REQUIRED; The pagination type. Additional pagination types may be added over time.
+	Type *PaginationMethod
+
+	// The initial cursor value.
+	InitialCursor *string
+}
+
+// GetHTTPPagination implements the HTTPPaginationClassification interface for type CursorPagination.
+func (c *CursorPagination) GetHTTPPagination() *HTTPPagination {
+	return &HTTPPagination{
+		Type: c.Type,
+	}
 }
 
 // CustomEndpointDestinationResponse - Custom endpoint events destination response.
@@ -1096,7 +1204,7 @@ func (d *DerivedStreamResponse) GetStreamResponse() *StreamResponse {
 	}
 }
 
-// DestinationConnectionResponse - Represents the connection information for a destination custom endpoint.
+// DestinationConnectionResponse - Represents the connection information for an eventstream destination.
 type DestinationConnectionResponse struct {
 	// REQUIRED; The consumer group name.
 	ConsumerGroupName *string
@@ -1365,6 +1473,63 @@ type ExpandOperatorProperties struct {
 
 	// Missing or empty columns setting. True - Ignore the columns, False - Do not ignore the columns.
 	IgnoreMissingOrEmpty *bool
+}
+
+// FabricAnomalyDetectionEventsSourceProperties - Fabric Anomaly Detection Events source properties.
+type FabricAnomalyDetectionEventsSourceProperties struct {
+	// The anomaly detection configuration identifier.
+	ConfigurationID *string
+
+	// The Azure Event Grid advanced filters to apply. Each entry is an advanced filter object as defined by Azure Event Grid.
+	// For details, see
+	// https://learn.microsoft.com/azure/event-grid/event-filtering#advanced-filtering.
+	Filters []any
+
+	// The list of event types to include. Supported values: Microsoft.Fabric.AnomalyDetection.AnomalyDetected. Additional event
+	// types may be added over time.
+	IncludedEventTypes []string
+
+	// The item identifier.
+	ItemID *string
+
+	// The workspace identifier.
+	WorkspaceID *string
+}
+
+// FabricAnomalyDetectionEventsSourceResponse - Fabric Anomaly Detection Events source response.
+type FabricAnomalyDetectionEventsSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Fabric Anomaly Detection Events source.
+	Properties *FabricAnomalyDetectionEventsSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type FabricAnomalyDetectionEventsSourceResponse.
+func (f *FabricAnomalyDetectionEventsSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        f.Error,
+		ID:           f.ID,
+		InputSchemas: f.InputSchemas,
+		Name:         f.Name,
+		Status:       f.Status,
+		Type:         f.Type,
+	}
 }
 
 // FabricCapacityOverviewEventsSourceProperties - Fabric Capacity Overview Events source properties.
@@ -1769,6 +1934,16 @@ type GroupPrincipalGroupDetails struct {
 	GroupType *GroupType
 }
 
+// HTTPPagination - The base HTTP pagination configuration. The concrete pagination strategy is determined by the type field;
+// see PagePagination and CursorPagination.
+type HTTPPagination struct {
+	// REQUIRED; The pagination type. Additional pagination types may be added over time.
+	Type *PaginationMethod
+}
+
+// GetHTTPPagination implements the HTTPPaginationClassification interface for type HTTPPagination.
+func (h *HTTPPagination) GetHTTPPagination() *HTTPPagination { return h }
+
 // HTTPSourceProperties - HTTP source properties.
 type HTTPSourceProperties struct {
 	// REQUIRED; The HTTP data connection identifier.
@@ -1779,6 +1954,10 @@ type HTTPSourceProperties struct {
 
 	// The maximum number of retries for failed requests.
 	MaxRetries *int32
+
+	// The base HTTP pagination configuration. The concrete pagination strategy is determined by the type field; see PagePagination
+	// and CursorPagination.
+	Pagination HTTPPaginationClassification
 
 	// The polling interval in milliseconds.
 	PollIntervalMs *int32
@@ -1791,6 +1970,9 @@ type HTTPSourceProperties struct {
 
 	// The HTTP request parameters.
 	RequestParameters []KeyStringValuePair
+
+	// The JSON Pointer expression to extract data from the HTTP response body.
+	ResponseDataJSONPointer *string
 
 	// The retriable HTTP status codes as a comma-separated string.
 	RetriableHTTPStatusCodes *string
@@ -1980,6 +2162,25 @@ type KeyStringValuePair struct {
 	Value *string
 }
 
+// KeyVaultCertificateResource - A certificate stored in Azure Key Vault.
+type KeyVaultCertificateResource struct {
+	// REQUIRED; The Azure Key Vault resource ID (Azure Resource Manager (ARM) resource ID, not a UUID).
+	AzureKeyVaultResourceID *string
+
+	// REQUIRED; The certificate name in the Key Vault.
+	CertificateName *string
+
+	// REQUIRED; The certificate resource type.
+	Type *CertificateResourceType
+}
+
+// GetCertificateResource implements the CertificateResourceClassification interface for type KeyVaultCertificateResource.
+func (k *KeyVaultCertificateResource) GetCertificateResource() *CertificateResource {
+	return &CertificateResource{
+		Type: k.Type,
+	}
+}
+
 // LakehouseDestinationProperties - Lakehouse destination properties.
 type LakehouseDestinationProperties struct {
 	// REQUIRED; The delta table name.
@@ -2159,6 +2360,55 @@ func (m *ManageFieldsRenameOperation) GetManageFieldsOperation() *ManageFieldsOp
 	}
 }
 
+// MirroredDatabaseChangeFeedSourceProperties - Mirrored Database Change Feed source properties.
+type MirroredDatabaseChangeFeedSourceProperties struct {
+	// REQUIRED; The item identifier.
+	ItemID *string
+
+	// REQUIRED; The list of table names. Currently, only ["*"] (all tables) is supported. Specific table selection will be supported
+	// in a future release.
+	TableNames []string
+
+	// REQUIRED; The workspace identifier.
+	WorkspaceID *string
+}
+
+// MirroredDatabaseChangeFeedSourceResponse - Represents a Mirrored Database Change Feed source response.
+type MirroredDatabaseChangeFeedSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Mirrored Database Change Feed source.
+	Properties *MirroredDatabaseChangeFeedSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type MirroredDatabaseChangeFeedSourceResponse.
+func (m *MirroredDatabaseChangeFeedSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        m.Error,
+		ID:           m.ID,
+		InputSchemas: m.InputSchemas,
+		Name:         m.Name,
+		Status:       m.Status,
+		Type:         m.Type,
+	}
+}
+
 // MongoDBCDCSourceProperties - MongoDB CDC source properties.
 type MongoDBCDCSourceProperties struct {
 	// REQUIRED; The MongoDB CDC data connection identifier.
@@ -2220,6 +2470,9 @@ type MqttSourceProperties struct {
 
 	// REQUIRED; The MQTT topic.
 	Topic *string
+
+	// The TLS settings for the MQTT connection.
+	TLSSettings *TLSSettings
 }
 
 // MqttSourceResponse - MQTT source response.
@@ -2278,6 +2531,9 @@ type MySQLCDCSourceProperties struct {
 	// Specifies the locking strategy used when taking the initial snapshot (for example, minimal locks vs extended locking for
 	// stronger consistency).
 	SnapshotLockingMode *SnapshotLockingMode
+
+	// Specifies how the initial snapshot of data is taken (for example, initial load, initial only, or no data).
+	SnapshotMode *SnapshotMode
 }
 
 // MySQLCDCSourceResponse - MySQL CDC source response.
@@ -2322,6 +2578,55 @@ type NodeReference struct {
 	Name *string
 }
 
+// NotebookDestinationProperties - Notebook destination properties.
+type NotebookDestinationProperties struct {
+	// REQUIRED; The Notebook item identifier.
+	ItemID *string
+
+	// REQUIRED; The Notebook workspace identifier.
+	WorkspaceID *string
+}
+
+// NotebookDestinationResponse - Represents a Notebook destination response.
+type NotebookDestinationResponse struct {
+	// REQUIRED; A list of the references to the input nodes of the destination.
+	InputNodes []NodeReference
+
+	// REQUIRED; The unique name of the destination.
+	Name *string
+
+	// REQUIRED; The properties of the Notebook destination.
+	Properties *NotebookDestinationProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the destination.
+	Type *DestinationType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the destination.
+	ID *string
+
+	// The input schemas of the destination.
+	InputSchemas []InputSchema
+}
+
+// GetDestinationResponse implements the DestinationResponseClassification interface for type NotebookDestinationResponse.
+func (n *NotebookDestinationResponse) GetDestinationResponse() *DestinationResponse {
+	return &DestinationResponse{
+		Error:        n.Error,
+		ID:           n.ID,
+		InputNodes:   n.InputNodes,
+		InputSchemas: n.InputSchemas,
+		Name:         n.Name,
+		Status:       n.Status,
+		Type:         n.Type,
+	}
+}
+
 // Operator - Represents an Eventstream operator.
 type Operator struct {
 	// REQUIRED; A list of the references to the input nodes of the operator.
@@ -2349,6 +2654,79 @@ type OperatorCommonDuration struct {
 	Value *int32
 }
 
+// OracleDBCDCSourceProperties - Oracle DB CDC source properties.
+type OracleDBCDCSourceProperties struct {
+	// REQUIRED; The Oracle DB CDC data connection identifier.
+	DataConnectionID *string
+
+	// Specifies how decimal values are represented by the connector (precise decimal, double, or string).
+	DecimalHandlingMode *DecimalHandlingMode
+
+	// Specifies the locking strategy used when taking the initial snapshot of Oracle tables.
+	SnapshotLockingMode *SnapshotLockingModeForOracle
+
+	// Specifies the criteria for performing a snapshot when the connector starts.
+	SnapshotMode *SnapshotMode
+
+	// The list of fully qualified table names to capture changes from. When not specified, all tables in the database are captured.
+	TableNames []string
+}
+
+// OracleDBCDCSourceResponse - Represents an Oracle DB CDC source response.
+type OracleDBCDCSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Oracle DB CDC source.
+	Properties *OracleDBCDCSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type OracleDBCDCSourceResponse.
+func (o *OracleDBCDCSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        o.Error,
+		ID:           o.ID,
+		InputSchemas: o.InputSchemas,
+		Name:         o.Name,
+		Status:       o.Status,
+		Type:         o.Type,
+	}
+}
+
+// PagePagination - The page-based HTTP pagination configuration.
+type PagePagination struct {
+	// REQUIRED; The initial page number. The value must be greater than or equal to 0.
+	InitialPage *int32
+
+	// REQUIRED; The number to increment per page. The value must be greater than or equal to 1.
+	PageIncrement *int32
+
+	// REQUIRED; The pagination type. Additional pagination types may be added over time.
+	Type *PaginationMethod
+}
+
+// GetHTTPPagination implements the HTTPPaginationClassification interface for type PagePagination.
+func (p *PagePagination) GetHTTPPagination() *HTTPPagination {
+	return &HTTPPagination{
+		Type: p.Type,
+	}
+}
+
 // PostgreSQLCDCSourceProperties - PostgreSQL CDC source properties.
 type PostgreSQLCDCSourceProperties struct {
 	// REQUIRED; The SQL CDC data connection identifier.
@@ -2363,6 +2741,9 @@ type PostgreSQLCDCSourceProperties struct {
 	// Specifies how decimal values are represented by the connector (precise decimal, double, or string).
 	DecimalHandlingMode *DecimalHandlingMode
 
+	// The heartbeat action query. A SQL statement executed periodically to keep the replication slot active.
+	HeartbeatActionQuery *string
+
 	// The port number. Default is 5432.
 	Port *int32
 
@@ -2371,6 +2752,13 @@ type PostgreSQLCDCSourceProperties struct {
 
 	// The publication name for the CDC connector.
 	PublicationName *string
+
+	// Specifies how the initial snapshot of data is taken (for example, initial load, initial only, or no data).
+	SnapshotMode *SnapshotMode
+
+	// The snapshot select statement overrides. Each entry specifies a table and a custom SELECT statement to use for the initial
+	// snapshot.
+	SnapshotSelectStatementOverrides []SnapshotSelectStatementOverrideItem
 }
 
 // PostgreSQLCDCSourceResponse - PostgreSQL CDC source response.
@@ -2530,8 +2918,8 @@ type SQLServerOnVMDBCDCSourceResponse struct {
 	// REQUIRED; The unique name of the source.
 	Name *string
 
-	// REQUIRED; Base SQL CDC source properties.
-	Properties *BaseSQLCDCSourceProperties
+	// REQUIRED; The properties of the SQL Server on VM DB CDC source.
+	Properties *BaseSQLServerCDCSourceProperties
 
 	// REQUIRED; The status of the node. Additional node status may be added over time.
 	Status *NodeStatus
@@ -2742,6 +3130,15 @@ type SlidingWindowProperties struct {
 	Duration *OperatorCommonDuration
 }
 
+// SnapshotSelectStatementOverrideItem - Represents a snapshot select statement override for a specific table.
+type SnapshotSelectStatementOverrideItem struct {
+	// REQUIRED; The custom SELECT statement to use for the initial snapshot.
+	SelectStatement *string
+
+	// REQUIRED; The table name.
+	TableName *string
+}
+
 type SnapshotWindow struct {
 	// REQUIRED; The properties for a snapshot window.
 	Properties any
@@ -2880,7 +3277,7 @@ func (s *SolacePubSubTopicsSourceProperties) GetSolacePubSubSourceProperties() *
 	}
 }
 
-// SourceConnectionResponse - Represents the connection information for a source custom endpoint.
+// SourceConnectionResponse - Represents the connection information for an eventstream source.
 type SourceConnectionResponse struct {
 	// REQUIRED; The name of the EventHub.
 	EventHubName *string
@@ -2934,6 +3331,15 @@ type StreamResponse struct {
 // GetStreamResponse implements the StreamResponseClassification interface for type StreamResponse.
 func (s *StreamResponse) GetStreamResponse() *StreamResponse { return s }
 
+// TLSSettings - Represents the TLS settings for a source connection.
+type TLSSettings struct {
+	// The client certificate settings.
+	ClientCertificate *ClientCertificate
+
+	// The trust CA certificate settings.
+	TrustCACertificate *TrustCACertificate
+}
+
 // TopologyResponse - Represents the Eventstream topology response.
 type TopologyResponse struct {
 	// Represents the compatibility level of the Eventstream topology. Additional compatibility levels may be added over time.
@@ -2950,6 +3356,19 @@ type TopologyResponse struct {
 
 	// A list of Eventstream default and derived streams.
 	Streams []StreamResponseClassification
+}
+
+// TrustCACertificate - Represents the trust CA certificate settings.
+type TrustCACertificate struct {
+	// REQUIRED; Determines whether the client verifies the broker's certificate hostname during the TLS handshake. When false,
+	// the client can connect even if the broker's certificate does not match its hostname.
+	VerifyHostname *bool
+
+	// The certificate resource.
+	Certificate CertificateResourceClassification
+
+	// The cipher suites to use for the TLS connection.
+	CipherSuites *string
 }
 
 type TumblingWindow struct {

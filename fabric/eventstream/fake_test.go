@@ -488,6 +488,20 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 					ConnectionName:    to.Ptr("connectionName"),
 					MappingRuleName:   to.Ptr("mappingRuleName"),
 				},
+			},
+			&eventstream.NotebookDestinationResponse{
+				Name: to.Ptr("NotebookDestination"),
+				ID:   to.Ptr("d5f8b3a7-1e94-4c2b-86fa-7b0e1c9d4a35"),
+				InputNodes: []eventstream.NodeReference{
+					{
+						Name: to.Ptr("DerivedStreamName"),
+					}},
+				Status: to.Ptr(eventstream.NodeStatusRunning),
+				Type:   to.Ptr(eventstream.DestinationTypeNotebook),
+				Properties: &eventstream.NotebookDestinationProperties{
+					ItemID:      to.Ptr("3a7c1e95-2f48-4b6d-9e10-8c5d2f7a0b63"),
+					WorkspaceID: to.Ptr("9625b495-17b3-4d6c-aeea-a81ae76ba369"),
+				},
 			}},
 		Operators: []eventstream.OperatorClassification{
 			&eventstream.FilterOperator{
@@ -844,6 +858,17 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 					},
 				},
 			},
+			&eventstream.AzureIoTHubExtendedSourceResponse{
+				Name:   to.Ptr("AzureIoTHubExtendedSource"),
+				ID:     to.Ptr("a3f1d9c4-2b7e-4f8a-9c6d-5e1b3a7f0c92"),
+				Status: to.Ptr(eventstream.NodeStatusRunning),
+				Type:   to.Ptr(eventstream.SourceTypeAzureIoTHubExtended),
+				Properties: &eventstream.AzureIoTHubExtendedSourceProperties{
+					ConsumerGroupName: to.Ptr("$Default"),
+					DataConnectionID:  to.Ptr("9d4e2a17-6c8b-4f1a-b3d2-7a5c9e0f1b48"),
+					StartPosition:     to.Ptr(eventstream.StartPositionEarliest),
+				},
+			},
 			&eventstream.AzureDataExplorerSourceResponse{
 				Name:   to.Ptr("AzureDataExplorerSource"),
 				ID:     to.Ptr("7ff51116-df2c-4e47-bf4f-1b59f5f0ed17"),
@@ -911,6 +936,28 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 					IncludedEventTypes: []string{
 						"Microsoft.Fabric.Capacity.State",
 						"Microsoft.Fabric.Capacity.Summary"},
+				},
+			},
+			&eventstream.FabricAnomalyDetectionEventsSourceResponse{
+				Name:   to.Ptr("FabricAnomalyDetectionEventsSource"),
+				ID:     to.Ptr("b5c6d7e8-f9a0-4b1c-d2e3-f4a5b6c7d8e9"),
+				Status: to.Ptr(eventstream.NodeStatusRunning),
+				Type:   to.Ptr(eventstream.SourceTypeFabricAnomalyDetectionEvents),
+				Properties: &eventstream.FabricAnomalyDetectionEventsSourceProperties{
+					ConfigurationID: to.Ptr("c1d2e3f4-a5b6-4c7d-8e9f-0a1b2c3d4e5f"),
+					Filters: []any{
+						map[string]any{
+							"key":          "data.severity",
+							"operatorType": "StringIn",
+							"values": []any{
+								"High",
+								"Critical",
+							},
+						}},
+					IncludedEventTypes: []string{
+						"Microsoft.Fabric.AnomalyDetection.AnomalyDetected"},
+					ItemID:      to.Ptr("ee579458-85ea-4652-bd77-5c7d7c298b2a"),
+					WorkspaceID: to.Ptr("9625b495-17b3-4d6c-aeea-a81ae76ba369"),
 				},
 			},
 			&eventstream.FabricJobEventsSourceResponse{
@@ -1032,9 +1079,27 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 					AutoOffsetReset:   to.Ptr(eventstream.AutoOffsetResetLatest),
 					ConsumerGroupName: to.Ptr("consumerGroupName"),
 					DataConnectionID:  to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
-					Topic:             to.Ptr("topic"),
-					SaslMechanism:     to.Ptr(eventstream.SaslMechanismSCRAMSHA512),
-					SecurityProtocol:  to.Ptr(eventstream.SecurityProtocolSASLSSL),
+					TLSSettings: &eventstream.TLSSettings{
+						ClientCertificate: &eventstream.ClientCertificate{
+							Certificate: &eventstream.KeyVaultCertificateResource{
+								Type:                    to.Ptr(eventstream.CertificateResourceTypeKeyVault),
+								AzureKeyVaultResourceID: to.Ptr("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myRG/providers/Microsoft.KeyVault/vaults/myVault"),
+								CertificateName:         to.Ptr("my-client-cert"),
+							},
+							RevocationMode: to.Ptr(eventstream.TLSRevocationModeCRL),
+						},
+						TrustCACertificate: &eventstream.TrustCACertificate{
+							Certificate: &eventstream.KeyVaultCertificateResource{
+								Type:                    to.Ptr(eventstream.CertificateResourceTypeKeyVault),
+								AzureKeyVaultResourceID: to.Ptr("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myRG/providers/Microsoft.KeyVault/vaults/myVault"),
+								CertificateName:         to.Ptr("my-ca-cert"),
+							},
+							VerifyHostname: to.Ptr(true),
+						},
+					},
+					Topic:            to.Ptr("topic"),
+					SaslMechanism:    to.Ptr(eventstream.SaslMechanismSCRAMSHA512),
+					SecurityProtocol: to.Ptr(eventstream.SecurityProtocolSASLSSL),
 				},
 			},
 			&eventstream.ConfluentCloudSourceResponse{
@@ -1066,10 +1131,18 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 				ID:     to.Ptr("da5ed80d-c672-4809-a7ac-6224aa2ab2c7"),
 				Status: to.Ptr(eventstream.NodeStatusRunning),
 				Type:   to.Ptr(eventstream.SourceTypeAzureSQLDBCDC),
-				Properties: &eventstream.BaseSQLCDCSourceProperties{
-					DataConnectionID:    to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
-					DecimalHandlingMode: to.Ptr(eventstream.DecimalHandlingModePrecise),
-					TableName:           to.Ptr("tableName"),
+				Properties: &eventstream.BaseSQLServerCDCSourceProperties{
+					DataConnectionID:          to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+					DecimalHandlingMode:       to.Ptr(eventstream.DecimalHandlingModePrecise),
+					SnapshotMode:              to.Ptr(eventstream.SnapshotModeInitialOnly),
+					TableName:                 to.Ptr("dbo.Orders"),
+					DatabaseApplicationIntent: to.Ptr(eventstream.DatabaseApplicationIntentReadOnly),
+					ExcludedColumns:           to.Ptr("dbo.Orders.secret_col,dbo.Orders.internal_col"),
+					SnapshotSelectStatementOverrides: []eventstream.SnapshotSelectStatementOverrideItem{
+						{
+							SelectStatement: to.Ptr("SELECT * FROM dbo.Orders WHERE active = 1"),
+							TableName:       to.Ptr("dbo.Orders"),
+						}},
 				},
 			},
 			&eventstream.AzureSQLMIDBCDCSourceResponse{
@@ -1077,10 +1150,13 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 				ID:     to.Ptr("745e401f-aac6-463f-b107-c336a2440abe"),
 				Status: to.Ptr(eventstream.NodeStatusRunning),
 				Type:   to.Ptr(eventstream.SourceTypeAzureSQLMIDBCDC),
-				Properties: &eventstream.BaseSQLCDCSourceProperties{
-					DataConnectionID:    to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
-					DecimalHandlingMode: to.Ptr(eventstream.DecimalHandlingModeDouble),
-					TableName:           to.Ptr("tableName"),
+				Properties: &eventstream.BaseSQLServerCDCSourceProperties{
+					DataConnectionID:          to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+					DecimalHandlingMode:       to.Ptr(eventstream.DecimalHandlingModeDouble),
+					SnapshotMode:              to.Ptr(eventstream.SnapshotModeInitial),
+					TableName:                 to.Ptr("dbo.Products"),
+					DatabaseApplicationIntent: to.Ptr(eventstream.DatabaseApplicationIntentReadWrite),
+					ExcludedColumns:           to.Ptr("dbo.Products.internal_flag"),
 				},
 			},
 			&eventstream.SQLServerOnVMDBCDCSourceResponse{
@@ -1088,10 +1164,11 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 				ID:     to.Ptr("759842ab-a968-498d-9f37-f46297da8b07"),
 				Status: to.Ptr(eventstream.NodeStatusRunning),
 				Type:   to.Ptr(eventstream.SourceTypeSQLServerOnVMDBCDC),
-				Properties: &eventstream.BaseSQLCDCSourceProperties{
+				Properties: &eventstream.BaseSQLServerCDCSourceProperties{
 					DataConnectionID:    to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
 					DecimalHandlingMode: to.Ptr(eventstream.DecimalHandlingModeString),
-					TableName:           to.Ptr("tableName"),
+					SnapshotMode:        to.Ptr(eventstream.SnapshotModeNoData),
+					TableName:           to.Ptr("dbo.Inventory"),
 				},
 			},
 			&eventstream.MySQLCDCSourceResponse{
@@ -1101,9 +1178,11 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 				Type:   to.Ptr(eventstream.SourceTypeMySQLCDC),
 				Properties: &eventstream.MySQLCDCSourceProperties{
 					DataConnectionID:    to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
-					TableName:           to.Ptr("tableName"),
+					DecimalHandlingMode: to.Ptr(eventstream.DecimalHandlingModePrecise),
+					SnapshotMode:        to.Ptr(eventstream.SnapshotModeInitial),
+					TableName:           to.Ptr("inventory.products"),
 					Port:                to.Ptr[int32](3306),
-					ServerID:            to.Ptr[int32](9),
+					ServerID:            to.Ptr[int32](12345),
 					SnapshotLockingMode: to.Ptr(eventstream.SnapshotLockingModeMinimal),
 				},
 			},
@@ -1114,11 +1193,19 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 				Type:   to.Ptr(eventstream.SourceTypePostgreSQLCDC),
 				Properties: &eventstream.PostgreSQLCDCSourceProperties{
 					DataConnectionID:          to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
-					TableName:                 to.Ptr("tableName"),
+					DecimalHandlingMode:       to.Ptr(eventstream.DecimalHandlingModeDouble),
+					SnapshotMode:              to.Ptr(eventstream.SnapshotModeInitialOnly),
+					TableName:                 to.Ptr("public.orders"),
+					HeartbeatActionQuery:      to.Ptr("INSERT INTO heartbeat (ts) VALUES (NOW())"),
 					Port:                      to.Ptr[int32](5432),
-					PublicationAutoCreateMode: to.Ptr(eventstream.PublicationAutoCreateModeFiltered),
+					PublicationAutoCreateMode: to.Ptr(eventstream.PublicationAutoCreateModeAllTables),
 					PublicationName:           to.Ptr("my_publication"),
-					SlotName:                  to.Ptr("slotName"),
+					SlotName:                  to.Ptr("my_slot"),
+					SnapshotSelectStatementOverrides: []eventstream.SnapshotSelectStatementOverrideItem{
+						{
+							SelectStatement: to.Ptr("SELECT * FROM public.orders WHERE created_at >= '2025-01-01'"),
+							TableName:       to.Ptr("public.orders"),
+						}},
 				},
 			},
 			&eventstream.MongoDBCDCSourceResponse{
@@ -1151,8 +1238,13 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 					Method:           to.Ptr(eventstream.HTTPMethodGET),
 					DataConnectionID: to.Ptr("9dfcf6c1-0b38-4d53-9a2f-7b7f7d3f1a4b"),
 					MaxRetries:       to.Ptr[int32](3),
-					PollIntervalMs:   to.Ptr[int32](60000),
-					RequestBody:      to.Ptr("{\"query\":\"sample\"}"),
+					Pagination: &eventstream.PagePagination{
+						Type:          to.Ptr(eventstream.PaginationMethodPage),
+						InitialPage:   to.Ptr[int32](0),
+						PageIncrement: to.Ptr[int32](1),
+					},
+					PollIntervalMs: to.Ptr[int32](60000),
+					RequestBody:    to.Ptr("{\"query\":\"sample\"}"),
 					RequestHeaders: []eventstream.KeyStringValuePair{
 						{
 							Key:   to.Ptr("Accept"),
@@ -1163,6 +1255,7 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 							Key:   to.Ptr("country"),
 							Value: to.Ptr("US"),
 						}},
+					ResponseDataJSONPointer:  to.Ptr("/data"),
 					RetriableHTTPStatusCodes: to.Ptr("408,423,429"),
 					RetryBackoffMs:           to.Ptr[int32](2000),
 				},
@@ -1175,7 +1268,32 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 				Properties: &eventstream.MqttSourceProperties{
 					DataConnectionID: to.Ptr("6950656c-9f6d-48e8-b7d1-6cf9eb7cca28"),
 					ServerVersion:    to.Ptr(eventstream.ServerVersionV5),
-					Topic:            to.Ptr("mqttTopicName"),
+					TLSSettings: &eventstream.TLSSettings{
+						TrustCACertificate: &eventstream.TrustCACertificate{
+							Certificate: &eventstream.KeyVaultCertificateResource{
+								Type:                    to.Ptr(eventstream.CertificateResourceTypeKeyVault),
+								AzureKeyVaultResourceID: to.Ptr("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myRG/providers/Microsoft.KeyVault/vaults/myVault"),
+								CertificateName:         to.Ptr("my-mqtt-ca-cert"),
+							},
+							VerifyHostname: to.Ptr(true),
+						},
+					},
+					Topic: to.Ptr("mqttTopicName"),
+				},
+			},
+			&eventstream.OracleDBCDCSourceResponse{
+				Name:   to.Ptr("OracleDBCDCSource"),
+				ID:     to.Ptr("fc4b3a21-7d62-4eef-9c10-1f6ed5c43a12"),
+				Status: to.Ptr(eventstream.NodeStatusRunning),
+				Type:   to.Ptr(eventstream.SourceTypeOracleDBCDC),
+				Properties: &eventstream.OracleDBCDCSourceProperties{
+					DataConnectionID:    to.Ptr("2e4c91e7-0c4a-4cc4-abe3-cc7ba4310a37"),
+					DecimalHandlingMode: to.Ptr(eventstream.DecimalHandlingModePrecise),
+					SnapshotLockingMode: to.Ptr(eventstream.SnapshotLockingModeForOracleShared),
+					SnapshotMode:        to.Ptr(eventstream.SnapshotModeInitial),
+					TableNames: []string{
+						"HR.EMPLOYEES",
+						"HR.DEPARTMENTS"},
 				},
 			},
 			&eventstream.RealTimeWeatherSourceResponse{
@@ -1202,6 +1320,18 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 					Topics: []string{
 						"topicName1",
 						"topicName2"},
+				},
+			},
+			&eventstream.MirroredDatabaseChangeFeedSourceResponse{
+				Name:   to.Ptr("MirroredDatabaseChangeFeedSource"),
+				ID:     to.Ptr("b7d2a1c3-4e5f-6a7b-8c9d-0e1f2a3b4c5d"),
+				Status: to.Ptr(eventstream.NodeStatusRunning),
+				Type:   to.Ptr(eventstream.SourceTypeMirroredDatabaseChangeFeed),
+				Properties: &eventstream.MirroredDatabaseChangeFeedSourceProperties{
+					ItemID: to.Ptr("3f8a2b1c-5d6e-7f8a-9b0c-1d2e3f4a5b6c"),
+					TableNames: []string{
+						"*"},
+					WorkspaceID: to.Ptr("9625b495-17b3-4d6c-aeea-a81ae76ba369"),
 				},
 			}},
 		Streams: []eventstream.StreamResponseClassification{

@@ -71,6 +71,14 @@ func (c *ClientFactory) NewLivySessionsClient() *LivySessionsClient {
 	}
 }
 
+// NewMaterializedLakeViewsClient creates a new instance of MaterializedLakeViewsClient.
+func (c *ClientFactory) NewMaterializedLakeViewsClient() *MaterializedLakeViewsClient {
+	return &MaterializedLakeViewsClient{
+		internal: c.internal.WithClientName("lakehouse.MaterializedLakeViewsClient"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewTablesClient creates a new instance of TablesClient.
 func (c *ClientFactory) NewTablesClient() *TablesClient {
 	return &TablesClient{

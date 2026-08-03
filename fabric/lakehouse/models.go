@@ -36,8 +36,8 @@ type CreateLakehouseRefreshMaterializedLakeViewsScheduleRequest struct {
 	// REQUIRED; Whether this schedule is enabled. True - Enabled, False - Disabled.
 	Enabled *bool
 
-	// The execution data for a scheduled job. This is fixed static data, defined by the specific item job type.
-	ExecutionData any
+	// The execution data for the refresh materialized lake views.
+	ExecutionData *RefreshMaterializedLakeViewsExecutionData
 }
 
 // CreateLakehouseRequest - Create lakehouse request payload.
@@ -59,6 +59,24 @@ type CreateLakehouseRequest struct {
 
 	// The sensitivity label settings for the lakehouse.
 	SensitivityLabelSettings *SensitivityLabelSettings
+}
+
+// CreateMaterializedLakeViewExecutionDefinitionRequest - Create materialized lake views execution definition request payload.
+type CreateMaterializedLakeViewExecutionDefinitionRequest struct {
+	// REQUIRED; The current lakehouse execution context for the materialized lake views execution definition.
+	CurrentLakehouseExecutionContext CurrentLakehouseExecutionContextClassification
+
+	// REQUIRED; The materialized lake views execution definition display name.
+	DisplayName *string
+
+	// A short description of the materialized lake views execution definition.
+	Description *string
+
+	// The extended lineage execution context for the materialized lake views execution definition.
+	ExtendedLineageExecutionContext ExtendedLineageExecutionContextRequestClassification
+
+	// The materialized lake views execution definition settings.
+	Settings *MaterializedLakeViewExecutionDefinitionSettingsRequest
 }
 
 // CreationPayload - (Preview) Lakehouse item payload. This property is currently required due to the schema enabled lakehouse
@@ -94,6 +112,47 @@ func (c *CronScheduleConfig) GetScheduleConfig() *ScheduleConfig {
 		LocalTimeZoneID: c.LocalTimeZoneID,
 		StartDateTime:   c.StartDateTime,
 		Type:            c.Type,
+	}
+}
+
+// CurrentLakehouseExecutionContext - The current lakehouse execution context for a materialized lake views execution definition.
+type CurrentLakehouseExecutionContext struct {
+	// REQUIRED; The execution context mode for the current lakehouse.
+	Mode *ExecutionContextMode
+}
+
+// GetCurrentLakehouseExecutionContext implements the CurrentLakehouseExecutionContextClassification interface for type CurrentLakehouseExecutionContext.
+func (c *CurrentLakehouseExecutionContext) GetCurrentLakehouseExecutionContext() *CurrentLakehouseExecutionContext {
+	return c
+}
+
+// CurrentLakehouseExecutionContextAll - Current lakehouse execution context where all materialized lake views are included.
+type CurrentLakehouseExecutionContextAll struct {
+	// REQUIRED; The execution context mode for the current lakehouse.
+	Mode *ExecutionContextMode
+}
+
+// GetCurrentLakehouseExecutionContext implements the CurrentLakehouseExecutionContextClassification interface for type CurrentLakehouseExecutionContextAll.
+func (c *CurrentLakehouseExecutionContextAll) GetCurrentLakehouseExecutionContext() *CurrentLakehouseExecutionContext {
+	return &CurrentLakehouseExecutionContext{
+		Mode: c.Mode,
+	}
+}
+
+// CurrentLakehouseExecutionContextSelected - Current lakehouse execution context where only selected materialized lake views
+// are included.
+type CurrentLakehouseExecutionContextSelected struct {
+	// REQUIRED; The execution context mode for the current lakehouse.
+	Mode *ExecutionContextMode
+
+	// REQUIRED; The list of fully qualified names of materialized lake views from the current lakehouse to be refreshed.
+	SelectedMlvs []string
+}
+
+// GetCurrentLakehouseExecutionContext implements the CurrentLakehouseExecutionContextClassification interface for type CurrentLakehouseExecutionContextSelected.
+func (c *CurrentLakehouseExecutionContextSelected) GetCurrentLakehouseExecutionContext() *CurrentLakehouseExecutionContext {
+	return &CurrentLakehouseExecutionContext{
+		Mode: c.Mode,
 	}
 }
 
@@ -200,6 +259,96 @@ func (e *EntireTenantPrincipal) GetPrincipal() *Principal {
 		DisplayName: e.DisplayName,
 		ID:          e.ID,
 		Type:        e.Type,
+	}
+}
+
+// ExtendedLineageExecutionContextRequest - The extended lineage execution context for a materialized lake views execution
+// definition.
+type ExtendedLineageExecutionContextRequest struct {
+	// REQUIRED; The execution context mode for extended lineage.
+	Mode *ExecutionContextMode
+}
+
+// GetExtendedLineageExecutionContextRequest implements the ExtendedLineageExecutionContextRequestClassification interface
+// for type ExtendedLineageExecutionContextRequest.
+func (e *ExtendedLineageExecutionContextRequest) GetExtendedLineageExecutionContextRequest() *ExtendedLineageExecutionContextRequest {
+	return e
+}
+
+// ExtendedLineageExecutionContextRequestAll - Extended lineage execution context where all lakehouses are included.
+type ExtendedLineageExecutionContextRequestAll struct {
+	// REQUIRED; The execution context mode for extended lineage.
+	Mode *ExecutionContextMode
+}
+
+// GetExtendedLineageExecutionContextRequest implements the ExtendedLineageExecutionContextRequestClassification interface
+// for type ExtendedLineageExecutionContextRequestAll.
+func (e *ExtendedLineageExecutionContextRequestAll) GetExtendedLineageExecutionContextRequest() *ExtendedLineageExecutionContextRequest {
+	return &ExtendedLineageExecutionContextRequest{
+		Mode: e.Mode,
+	}
+}
+
+// ExtendedLineageExecutionContextRequestSelected - Extended lineage execution context where only selected lakehouses are
+// included.
+type ExtendedLineageExecutionContextRequestSelected struct {
+	// REQUIRED; The execution context mode for extended lineage.
+	Mode *ExecutionContextMode
+
+	// REQUIRED; The list of lakehouses to be included in refresh.
+	SelectedLakehouses []ItemReferenceByID
+}
+
+// GetExtendedLineageExecutionContextRequest implements the ExtendedLineageExecutionContextRequestClassification interface
+// for type ExtendedLineageExecutionContextRequestSelected.
+func (e *ExtendedLineageExecutionContextRequestSelected) GetExtendedLineageExecutionContextRequest() *ExtendedLineageExecutionContextRequest {
+	return &ExtendedLineageExecutionContextRequest{
+		Mode: e.Mode,
+	}
+}
+
+// ExtendedLineageExecutionContextResponse - The extended lineage execution context for a materialized lake views execution
+// definition (response).
+type ExtendedLineageExecutionContextResponse struct {
+	// REQUIRED; The execution context mode for extended lineage.
+	Mode *ExecutionContextMode
+}
+
+// GetExtendedLineageExecutionContextResponse implements the ExtendedLineageExecutionContextResponseClassification interface
+// for type ExtendedLineageExecutionContextResponse.
+func (e *ExtendedLineageExecutionContextResponse) GetExtendedLineageExecutionContextResponse() *ExtendedLineageExecutionContextResponse {
+	return e
+}
+
+// ExtendedLineageExecutionContextResponseAll - Extended lineage execution context where all lakehouses are included (response).
+type ExtendedLineageExecutionContextResponseAll struct {
+	// REQUIRED; The execution context mode for extended lineage.
+	Mode *ExecutionContextMode
+}
+
+// GetExtendedLineageExecutionContextResponse implements the ExtendedLineageExecutionContextResponseClassification interface
+// for type ExtendedLineageExecutionContextResponseAll.
+func (e *ExtendedLineageExecutionContextResponseAll) GetExtendedLineageExecutionContextResponse() *ExtendedLineageExecutionContextResponse {
+	return &ExtendedLineageExecutionContextResponse{
+		Mode: e.Mode,
+	}
+}
+
+// ExtendedLineageExecutionContextResponseSelected - Extended lineage execution context where only selected lakehouses are
+// included (response).
+type ExtendedLineageExecutionContextResponseSelected struct {
+	// REQUIRED; The execution context mode for extended lineage.
+	Mode *ExecutionContextMode
+
+	// REQUIRED; The list of lakehouses to be included in refresh.
+	SelectedLakehouses []ItemReferenceClassification
+}
+
+// GetExtendedLineageExecutionContextResponse implements the ExtendedLineageExecutionContextResponseClassification interface
+// for type ExtendedLineageExecutionContextResponseSelected.
+func (e *ExtendedLineageExecutionContextResponseSelected) GetExtendedLineageExecutionContextResponse() *ExtendedLineageExecutionContextResponse {
+	return &ExtendedLineageExecutionContextResponse{
+		Mode: e.Mode,
 	}
 }
 
@@ -482,6 +631,57 @@ type LoadTableRequest struct {
 	Recursive *bool
 }
 
+// MaterializedLakeViewExecutionDefinition - A materialized lake views execution definition object.
+type MaterializedLakeViewExecutionDefinition struct {
+	// REQUIRED; The current lakehouse execution context for the materialized lake views execution definition.
+	CurrentLakehouseExecutionContext CurrentLakehouseExecutionContextClassification
+
+	// REQUIRED; The materialized lake views execution definition display name.
+	DisplayName *string
+
+	// The materialized lake views execution definition settings.
+	Settings *MaterializedLakeViewExecutionDefinitionSettingsResponse
+
+	// READ-ONLY; The materialized lake views execution definition ID.
+	ID *string
+
+	// A short description of the materialized lake views execution definition.
+	Description *string
+
+	// The extended lineage execution context for the materialized lake views execution definition.
+	ExtendedLineageExecutionContext ExtendedLineageExecutionContextResponseClassification
+}
+
+// MaterializedLakeViewExecutionDefinitionSettingsRequest - The materialized lake views execution definition settings.
+type MaterializedLakeViewExecutionDefinitionSettingsRequest struct {
+	// The Spark environment reference to be used with the materialized lake views execution definition.
+	Environment *ItemReferenceByID
+
+	// The refresh mode setting to be used with the materialized lake views execution definition. Defaults to Optimal if not specified.
+	RefreshMode *RefreshMode
+}
+
+// MaterializedLakeViewExecutionDefinitionSettingsResponse - The materialized lake views execution definition settings (response).
+type MaterializedLakeViewExecutionDefinitionSettingsResponse struct {
+	// The Spark environment reference to be used with the materialized lake views execution definition.
+	Environment ItemReferenceClassification
+
+	// The refresh mode setting to be used with the materialized lake views execution definition. Defaults to Optimal if not specified.
+	RefreshMode *RefreshMode
+}
+
+// MaterializedLakeViewExecutionDefinitions - A list of materialized lake view execution definitions.
+type MaterializedLakeViewExecutionDefinitions struct {
+	// REQUIRED; A list of materialized lake view execution definitions.
+	Value []MaterializedLakeViewExecutionDefinition
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
 // MonthlyOccurrence - Specifies the day for triggering jobs
 type MonthlyOccurrence struct {
 	// REQUIRED; An enumerator that lists the day for triggering jobs. Additional types may be added over time.
@@ -599,6 +799,12 @@ type Properties struct {
 	SQLEndpointProperties *SQLEndpointProperties
 }
 
+// RefreshMaterializedLakeViewsExecutionData - The execution data for the refresh materialized lake views.
+type RefreshMaterializedLakeViewsExecutionData struct {
+	// The MLV Execution Definition Id.
+	MlvExecutionDefinitionID *string
+}
+
 // RefreshMaterializedLakeViewsSchedule - Lakehouse refresh materialized lake views schedule.
 type RefreshMaterializedLakeViewsSchedule struct {
 	// REQUIRED; Whether this schedule is enabled. True - Enabled, False - Disabled.
@@ -613,8 +819,8 @@ type RefreshMaterializedLakeViewsSchedule struct {
 	// The created time stamp of this schedule in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
 	CreatedDateTime *time.Time
 
-	// The execution data for a scheduled job. This is fixed static data, defined by the specific item job type.
-	ExecutionData any
+	// The execution data for the refresh materialized lake views.
+	ExecutionData *RefreshMaterializedLakeViewsExecutionData
 
 	// The user identity that created this schedule or last modified it.
 	Owner PrincipalClassification
@@ -798,8 +1004,8 @@ type UpdateLakehouseRefreshMaterializedLakeViewsScheduleRequest struct {
 	// REQUIRED; Whether this schedule is enabled. True - Enabled, False - Disabled.
 	Enabled *bool
 
-	// The execution data for a scheduled job. This is fixed static data, defined by the specific item job type.
-	ExecutionData any
+	// The execution data for the refresh materialized lake views.
+	ExecutionData *RefreshMaterializedLakeViewsExecutionData
 }
 
 // UpdateLakehouseRequest - Update lakehouse request.
@@ -809,6 +1015,25 @@ type UpdateLakehouseRequest struct {
 
 	// The lakehouse display name. The display name must follow naming rules according to item type.
 	DisplayName *string
+}
+
+// UpdateMaterializedLakeViewExecutionDefinitionRequest - Update materialized lake views execution definition request payload.
+// Only the fields provided are updated; omitted fields retain their existing values.
+type UpdateMaterializedLakeViewExecutionDefinitionRequest struct {
+	// The current lakehouse execution context for the materialized lake views execution definition.
+	CurrentLakehouseExecutionContext CurrentLakehouseExecutionContextClassification
+
+	// A short description of the materialized lake views execution definition.
+	Description *string
+
+	// The materialized lake views execution definition display name.
+	DisplayName *string
+
+	// The extended lineage execution context for the materialized lake views execution definition.
+	ExtendedLineageExecutionContext ExtendedLineageExecutionContextRequestClassification
+
+	// The materialized lake views execution definition settings.
+	Settings *MaterializedLakeViewExecutionDefinitionSettingsRequest
 }
 
 // UserPrincipal - Represents a Microsoft Entra user principal.

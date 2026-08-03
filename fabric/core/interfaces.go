@@ -28,7 +28,7 @@ type CatalogEntryClassification interface {
 // Call the interface's GetConnection() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
 // - *Connection, *OnPremisesGatewayConnection, *OnPremisesGatewayPersonalConnection, *PersonalCloudConnection, *ShareableCloudConnection,
-// - *VirtualNetworkGatewayConnection
+// - *StreamingVirtualNetworkGatewayConnection, *VirtualNetworkGatewayConnection
 type ConnectionClassification interface {
 	// GetConnection returns the Connection content of the underlying type.
 	GetConnection() *Connection
@@ -48,7 +48,8 @@ type ConnectionDetailsParameterClassification interface {
 // CreateConnectionRequestClassification provides polymorphic access to related types.
 // Call the interface's GetCreateConnectionRequest() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
-// - *CreateCloudConnectionRequest, *CreateConnectionRequest, *CreateOnPremisesConnectionRequest, *CreateVirtualNetworkGatewayConnectionRequest
+// - *CreateCloudConnectionRequest, *CreateConnectionRequest, *CreateOnPremisesConnectionRequest, *CreateStreamingVirtualNetworkGatewayConnectionRequest,
+// - *CreateVirtualNetworkGatewayConnectionRequest
 type CreateConnectionRequestClassification interface {
 	// GetCreateConnectionRequest returns the CreateConnectionRequest content of the underlying type.
 	GetCreateConnectionRequest() *CreateConnectionRequest
@@ -57,7 +58,7 @@ type CreateConnectionRequestClassification interface {
 // CreateGatewayRequestClassification provides polymorphic access to related types.
 // Call the interface's GetCreateGatewayRequest() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
-// - *CreateGatewayRequest, *CreateVirtualNetworkGatewayRequest
+// - *CreateGatewayRequest, *CreateStreamingVirtualNetworkGatewayRequest, *CreateVirtualNetworkGatewayRequest
 type CreateGatewayRequestClassification interface {
 	// GetCreateGatewayRequest returns the CreateGatewayRequest content of the underlying type.
 	GetCreateGatewayRequest() *CreateGatewayRequest
@@ -85,7 +86,7 @@ type ExternalDataShareAcceptRequestPayloadClassification interface {
 // GatewayClassification provides polymorphic access to related types.
 // Call the interface's GetGateway() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
-// - *Gateway, *OnPremisesGateway, *OnPremisesGatewayPersonal, *VirtualNetworkGateway
+// - *Gateway, *OnPremisesGateway, *OnPremisesGatewayPersonal, *StreamingVirtualNetworkGateway, *VirtualNetworkGateway
 type GatewayClassification interface {
 	// GetGateway returns the Gateway content of the underlying type.
 	GetGateway() *Gateway
@@ -186,7 +187,8 @@ type TransformClassification interface {
 // Call the interface's GetUpdateConnectionRequest() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
 // - *UpdateConnectionRequest, *UpdateOnPremisesGatewayConnectionRequest, *UpdateOnPremisesGatewayPersonalConnectionRequest,
-// - *UpdatePersonalCloudConnectionRequest, *UpdateShareableCloudConnectionRequest, *UpdateVirtualNetworkGatewayConnectionRequest
+// - *UpdatePersonalCloudConnectionRequest, *UpdateShareableCloudConnectionRequest, *UpdateStreamingVirtualNetworkGatewayConnectionRequest,
+// - *UpdateVirtualNetworkGatewayConnectionRequest
 type UpdateConnectionRequestClassification interface {
 	// GetUpdateConnectionRequest returns the UpdateConnectionRequest content of the underlying type.
 	GetUpdateConnectionRequest() *UpdateConnectionRequest
@@ -195,7 +197,7 @@ type UpdateConnectionRequestClassification interface {
 // UpdateGatewayRequestClassification provides polymorphic access to related types.
 // Call the interface's GetUpdateGatewayRequest() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
-// - *UpdateGatewayRequest, *UpdateOnPremisesGatewayRequest, *UpdateVirtualNetworkGatewayRequest
+// - *UpdateGatewayRequest, *UpdateOnPremisesGatewayRequest, *UpdateStreamingVirtualNetworkGatewayRequest, *UpdateVirtualNetworkGatewayRequest
 type UpdateGatewayRequestClassification interface {
 	// GetUpdateGatewayRequest returns the UpdateGatewayRequest content of the underlying type.
 	GetUpdateGatewayRequest() *UpdateGatewayRequest

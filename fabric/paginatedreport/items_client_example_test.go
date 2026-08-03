@@ -58,6 +58,66 @@ func ExampleItemsClient_NewListPaginatedReportsPager() {
 }
 
 // Generated from example definition
+func ExampleItemsClient_BeginCreatePaginatedReport() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := paginatedreport.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginCreatePaginatedReport(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", paginatedreport.CreatePaginatedReportRequest{
+		Description: to.Ptr("A quarterly sales report."),
+		Definition: &paginatedreport.Definition{
+			Format: to.Ptr(paginatedreport.DefinitionFormatPaginatedReportDefinition),
+			Parts: []paginatedreport.DefinitionPart{
+				{
+					Path:        to.Ptr("ContosoReport.rdl"),
+					Payload:     to.Ptr("PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4..."),
+					PayloadType: to.Ptr(paginatedreport.PayloadTypeInlineBase64),
+				}},
+		},
+		DisplayName: to.Ptr("ContosoReport"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_GetPaginatedReport() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := paginatedreport.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewItemsClient().GetPaginatedReport(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "cfafbeb1-8037-4d0c-896e-28c4f2e65573", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.PaginatedReport = paginatedreport.PaginatedReport{
+	// 	Type: to.Ptr(paginatedreport.ItemTypePaginatedReport),
+	// 	Description: to.Ptr("A quarterly sales report."),
+	// 	DisplayName: to.Ptr("ContosoReport"),
+	// 	ID: to.Ptr("cfafbeb1-8037-4d0c-896e-28c4f2e65573"),
+	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+	// }
+}
+
+// Generated from example definition
 func ExampleItemsClient_UpdatePaginatedReport() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -85,4 +145,96 @@ func ExampleItemsClient_UpdatePaginatedReport() {
 	// 	ID: to.Ptr("5b218778-e7a5-4d73-8187-f10824047731"),
 	// 	WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff233"),
 	// }
+}
+
+// Generated from example definition
+func ExampleItemsClient_DeletePaginatedReport() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := paginatedreport.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewItemsClient().DeletePaginatedReport(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "cfafbeb1-8037-4d0c-896e-28c4f2e65573", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginGetPaginatedReportDefinition() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := paginatedreport.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginGetPaginatedReportDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "cfafbeb1-8037-4d0c-896e-28c4f2e65573", &paginatedreport.ItemsClientBeginGetPaginatedReportDefinitionOptions{Format: to.Ptr("PaginatedReportDefinition")})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	res, err := poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.DefinitionResponse = paginatedreport.DefinitionResponse{
+	// 	Definition: &paginatedreport.Definition{
+	// 		Parts: []paginatedreport.DefinitionPart{
+	// 			{
+	// 				Path: to.Ptr("ContosoReport.rdl"),
+	// 				Payload: to.Ptr("PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4..."),
+	// 				PayloadType: to.Ptr(paginatedreport.PayloadTypeInlineBase64),
+	// 			},
+	// 			{
+	// 				Path: to.Ptr(".platform"),
+	// 				Payload: to.Ptr("eyJtZXRhZGF0YSI6eyJ0eXBlIjoiUGFnaW5hdGVkUmVwb3J0In19"),
+	// 				PayloadType: to.Ptr(paginatedreport.PayloadTypeInlineBase64),
+	// 		}},
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginUpdatePaginatedReportDefinition() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := paginatedreport.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginUpdatePaginatedReportDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "cfafbeb1-8037-4d0c-896e-28c4f2e65573", paginatedreport.UpdatePaginatedReportDefinitionRequest{
+		Definition: &paginatedreport.Definition{
+			Format: to.Ptr(paginatedreport.DefinitionFormatPaginatedReportDefinition),
+			Parts: []paginatedreport.DefinitionPart{
+				{
+					Path:        to.Ptr("ContosoReport.rdl"),
+					Payload:     to.Ptr("PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4..."),
+					PayloadType: to.Ptr(paginatedreport.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("eyJtZXRhZGF0YSI6eyJ0eXBlIjoiUGFnaW5hdGVkUmVwb3J0In19"),
+					PayloadType: to.Ptr(paginatedreport.PayloadTypeInlineBase64),
+				}},
+		},
+	}, &paginatedreport.ItemsClientBeginUpdatePaginatedReportDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
 }

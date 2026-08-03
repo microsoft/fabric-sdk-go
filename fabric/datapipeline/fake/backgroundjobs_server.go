@@ -18,12 +18,33 @@ import (
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/fake/server"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 
 	"github.com/microsoft/fabric-sdk-go/fabric/datapipeline"
 )
 
 // BackgroundJobsServer is a fake server for instances of the datapipeline.BackgroundJobsClient type.
 type BackgroundJobsServer struct {
+	// DeleteExecuteSchedule is the fake for method BackgroundJobsClient.DeleteExecuteSchedule
+	// HTTP status codes to indicate success: http.StatusOK
+	DeleteExecuteSchedule func(ctx context.Context, workspaceID string, dataPipelineID string, scheduleID string, options *datapipeline.BackgroundJobsClientDeleteExecuteScheduleOptions) (resp azfake.Responder[datapipeline.BackgroundJobsClientDeleteExecuteScheduleResponse], errResp azfake.ErrorResponder)
+
+	// GetExecuteJobInstance is the fake for method BackgroundJobsClient.GetExecuteJobInstance
+	// HTTP status codes to indicate success: http.StatusOK
+	GetExecuteJobInstance func(ctx context.Context, workspaceID string, dataPipelineID string, jobInstanceID string, options *datapipeline.BackgroundJobsClientGetExecuteJobInstanceOptions) (resp azfake.Responder[datapipeline.BackgroundJobsClientGetExecuteJobInstanceResponse], errResp azfake.ErrorResponder)
+
+	// GetExecuteSchedule is the fake for method BackgroundJobsClient.GetExecuteSchedule
+	// HTTP status codes to indicate success: http.StatusOK
+	GetExecuteSchedule func(ctx context.Context, workspaceID string, dataPipelineID string, scheduleID string, options *datapipeline.BackgroundJobsClientGetExecuteScheduleOptions) (resp azfake.Responder[datapipeline.BackgroundJobsClientGetExecuteScheduleResponse], errResp azfake.ErrorResponder)
+
+	// NewListExecuteJobInstancesPager is the fake for method BackgroundJobsClient.NewListExecuteJobInstancesPager
+	// HTTP status codes to indicate success: http.StatusOK
+	NewListExecuteJobInstancesPager func(workspaceID string, dataPipelineID string, options *datapipeline.BackgroundJobsClientListExecuteJobInstancesOptions) (resp azfake.PagerResponder[datapipeline.BackgroundJobsClientListExecuteJobInstancesResponse])
+
+	// NewListExecuteSchedulesPager is the fake for method BackgroundJobsClient.NewListExecuteSchedulesPager
+	// HTTP status codes to indicate success: http.StatusOK
+	NewListExecuteSchedulesPager func(workspaceID string, dataPipelineID string, options *datapipeline.BackgroundJobsClientListExecuteSchedulesOptions) (resp azfake.PagerResponder[datapipeline.BackgroundJobsClientListExecuteSchedulesResponse])
+
 	// RunOnDemandExecute is the fake for method BackgroundJobsClient.RunOnDemandExecute
 	// HTTP status codes to indicate success: http.StatusAccepted
 	RunOnDemandExecute func(ctx context.Context, workspaceID string, dataPipelineID string, options *datapipeline.BackgroundJobsClientRunOnDemandExecuteOptions) (resp azfake.Responder[datapipeline.BackgroundJobsClientRunOnDemandExecuteResponse], errResp azfake.ErrorResponder)
@@ -31,19 +52,29 @@ type BackgroundJobsServer struct {
 	// ScheduleExecute is the fake for method BackgroundJobsClient.ScheduleExecute
 	// HTTP status codes to indicate success: http.StatusCreated
 	ScheduleExecute func(ctx context.Context, workspaceID string, dataPipelineID string, createScheduleRequest datapipeline.CreateDataPipelineExecuteScheduleRequest, options *datapipeline.BackgroundJobsClientScheduleExecuteOptions) (resp azfake.Responder[datapipeline.BackgroundJobsClientScheduleExecuteResponse], errResp azfake.ErrorResponder)
+
+	// UpdateExecuteSchedule is the fake for method BackgroundJobsClient.UpdateExecuteSchedule
+	// HTTP status codes to indicate success: http.StatusOK
+	UpdateExecuteSchedule func(ctx context.Context, workspaceID string, dataPipelineID string, scheduleID string, updateScheduleRequest datapipeline.UpdateDataPipelineExecuteScheduleRequest, options *datapipeline.BackgroundJobsClientUpdateExecuteScheduleOptions) (resp azfake.Responder[datapipeline.BackgroundJobsClientUpdateExecuteScheduleResponse], errResp azfake.ErrorResponder)
 }
 
 // NewBackgroundJobsServerTransport creates a new instance of BackgroundJobsServerTransport with the provided implementation.
 // The returned BackgroundJobsServerTransport instance is connected to an instance of datapipeline.BackgroundJobsClient via the
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewBackgroundJobsServerTransport(srv *BackgroundJobsServer) *BackgroundJobsServerTransport {
-	return &BackgroundJobsServerTransport{srv: srv}
+	return &BackgroundJobsServerTransport{
+		srv:                             srv,
+		newListExecuteJobInstancesPager: newTracker[azfake.PagerResponder[datapipeline.BackgroundJobsClientListExecuteJobInstancesResponse]](),
+		newListExecuteSchedulesPager:    newTracker[azfake.PagerResponder[datapipeline.BackgroundJobsClientListExecuteSchedulesResponse]](),
+	}
 }
 
 // BackgroundJobsServerTransport connects instances of datapipeline.BackgroundJobsClient to instances of BackgroundJobsServer.
 // Don't use this type directly, use NewBackgroundJobsServerTransport instead.
 type BackgroundJobsServerTransport struct {
-	srv *BackgroundJobsServer
+	srv                             *BackgroundJobsServer
+	newListExecuteJobInstancesPager *tracker[azfake.PagerResponder[datapipeline.BackgroundJobsClientListExecuteJobInstancesResponse]]
+	newListExecuteSchedulesPager    *tracker[azfake.PagerResponder[datapipeline.BackgroundJobsClientListExecuteSchedulesResponse]]
 }
 
 // Do implements the policy.Transporter interface for BackgroundJobsServerTransport.
@@ -71,10 +102,22 @@ func (b *BackgroundJobsServerTransport) dispatchToMethodFake(req *http.Request, 
 		}
 		if !intercepted {
 			switch method {
+			case "BackgroundJobsClient.DeleteExecuteSchedule":
+				res.resp, res.err = b.dispatchDeleteExecuteSchedule(req)
+			case "BackgroundJobsClient.GetExecuteJobInstance":
+				res.resp, res.err = b.dispatchGetExecuteJobInstance(req)
+			case "BackgroundJobsClient.GetExecuteSchedule":
+				res.resp, res.err = b.dispatchGetExecuteSchedule(req)
+			case "BackgroundJobsClient.NewListExecuteJobInstancesPager":
+				res.resp, res.err = b.dispatchNewListExecuteJobInstancesPager(req)
+			case "BackgroundJobsClient.NewListExecuteSchedulesPager":
+				res.resp, res.err = b.dispatchNewListExecuteSchedulesPager(req)
 			case "BackgroundJobsClient.RunOnDemandExecute":
 				res.resp, res.err = b.dispatchRunOnDemandExecute(req)
 			case "BackgroundJobsClient.ScheduleExecute":
 				res.resp, res.err = b.dispatchScheduleExecute(req)
+			case "BackgroundJobsClient.UpdateExecuteSchedule":
+				res.resp, res.err = b.dispatchUpdateExecuteSchedule(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -92,6 +135,223 @@ func (b *BackgroundJobsServerTransport) dispatchToMethodFake(req *http.Request, 
 	case res := <-resultChan:
 		return res.resp, res.err
 	}
+}
+
+func (b *BackgroundJobsServerTransport) dispatchDeleteExecuteSchedule(req *http.Request) (*http.Response, error) {
+	if b.srv.DeleteExecuteSchedule == nil {
+		return nil, &nonRetriableError{errors.New("fake for method DeleteExecuteSchedule not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataPipelines/(?P<dataPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/execute/schedules/(?P<scheduleId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 4 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	dataPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("dataPipelineId")])
+	if err != nil {
+		return nil, err
+	}
+	scheduleIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("scheduleId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := b.srv.DeleteExecuteSchedule(req.Context(), workspaceIDParam, dataPipelineIDParam, scheduleIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (b *BackgroundJobsServerTransport) dispatchGetExecuteJobInstance(req *http.Request) (*http.Response, error) {
+	if b.srv.GetExecuteJobInstance == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetExecuteJobInstance not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataPipelines/(?P<dataPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/execute/instances/(?P<jobInstanceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 4 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	dataPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("dataPipelineId")])
+	if err != nil {
+		return nil, err
+	}
+	jobInstanceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("jobInstanceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := b.srv.GetExecuteJobInstance(req.Context(), workspaceIDParam, dataPipelineIDParam, jobInstanceIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).ExecuteJobInstance, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (b *BackgroundJobsServerTransport) dispatchGetExecuteSchedule(req *http.Request) (*http.Response, error) {
+	if b.srv.GetExecuteSchedule == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetExecuteSchedule not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataPipelines/(?P<dataPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/execute/schedules/(?P<scheduleId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 4 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	dataPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("dataPipelineId")])
+	if err != nil {
+		return nil, err
+	}
+	scheduleIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("scheduleId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := b.srv.GetExecuteSchedule(req.Context(), workspaceIDParam, dataPipelineIDParam, scheduleIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).ExecuteSchedule, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (b *BackgroundJobsServerTransport) dispatchNewListExecuteJobInstancesPager(req *http.Request) (*http.Response, error) {
+	if b.srv.NewListExecuteJobInstancesPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListExecuteJobInstancesPager not implemented")}
+	}
+	newListExecuteJobInstancesPager := b.newListExecuteJobInstancesPager.get(req)
+	if newListExecuteJobInstancesPager == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataPipelines/(?P<dataPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/execute/instances`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 3 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		dataPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("dataPipelineId")])
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *datapipeline.BackgroundJobsClientListExecuteJobInstancesOptions
+		if continuationTokenParam != nil {
+			options = &datapipeline.BackgroundJobsClientListExecuteJobInstancesOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := b.srv.NewListExecuteJobInstancesPager(workspaceIDParam, dataPipelineIDParam, options)
+		newListExecuteJobInstancesPager = &resp
+		b.newListExecuteJobInstancesPager.add(req, newListExecuteJobInstancesPager)
+		server.PagerResponderInjectNextLinks(newListExecuteJobInstancesPager, req, func(page *datapipeline.BackgroundJobsClientListExecuteJobInstancesResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
+	}
+	resp, err := server.PagerResponderNext(newListExecuteJobInstancesPager, req)
+	if err != nil {
+		return nil, err
+	}
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		b.newListExecuteJobInstancesPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
+	}
+	if !server.PagerResponderMore(newListExecuteJobInstancesPager) {
+		b.newListExecuteJobInstancesPager.remove(req)
+	}
+	return resp, nil
+}
+
+func (b *BackgroundJobsServerTransport) dispatchNewListExecuteSchedulesPager(req *http.Request) (*http.Response, error) {
+	if b.srv.NewListExecuteSchedulesPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListExecuteSchedulesPager not implemented")}
+	}
+	newListExecuteSchedulesPager := b.newListExecuteSchedulesPager.get(req)
+	if newListExecuteSchedulesPager == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataPipelines/(?P<dataPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/execute/schedules`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 3 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		dataPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("dataPipelineId")])
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *datapipeline.BackgroundJobsClientListExecuteSchedulesOptions
+		if continuationTokenParam != nil {
+			options = &datapipeline.BackgroundJobsClientListExecuteSchedulesOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := b.srv.NewListExecuteSchedulesPager(workspaceIDParam, dataPipelineIDParam, options)
+		newListExecuteSchedulesPager = &resp
+		b.newListExecuteSchedulesPager.add(req, newListExecuteSchedulesPager)
+		server.PagerResponderInjectNextLinks(newListExecuteSchedulesPager, req, func(page *datapipeline.BackgroundJobsClientListExecuteSchedulesResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
+	}
+	resp, err := server.PagerResponderNext(newListExecuteSchedulesPager, req)
+	if err != nil {
+		return nil, err
+	}
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		b.newListExecuteSchedulesPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
+	}
+	if !server.PagerResponderMore(newListExecuteSchedulesPager) {
+		b.newListExecuteSchedulesPager.remove(req)
+	}
+	return resp, nil
 }
 
 func (b *BackgroundJobsServerTransport) dispatchRunOnDemandExecute(req *http.Request) (*http.Response, error) {
@@ -163,6 +423,47 @@ func (b *BackgroundJobsServerTransport) dispatchScheduleExecute(req *http.Reques
 	}
 	if val := server.GetResponse(respr).Location; val != nil {
 		resp.Header.Set("Location", *val)
+	}
+	return resp, nil
+}
+
+func (b *BackgroundJobsServerTransport) dispatchUpdateExecuteSchedule(req *http.Request) (*http.Response, error) {
+	if b.srv.UpdateExecuteSchedule == nil {
+		return nil, &nonRetriableError{errors.New("fake for method UpdateExecuteSchedule not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataPipelines/(?P<dataPipelineId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/jobs/execute/schedules/(?P<scheduleId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 4 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[datapipeline.UpdateDataPipelineExecuteScheduleRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	dataPipelineIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("dataPipelineId")])
+	if err != nil {
+		return nil, err
+	}
+	scheduleIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("scheduleId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := b.srv.UpdateExecuteSchedule(req.Context(), workspaceIDParam, dataPipelineIDParam, scheduleIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).ExecuteSchedule, req)
+	if err != nil {
+		return nil, err
 	}
 	return resp, nil
 }

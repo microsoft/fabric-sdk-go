@@ -34,7 +34,7 @@ type ItemsClient struct {
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create digitaltwinbuilder with definition, refer to DigitalTwinBuilder definition [/rest/api/fabric/articles/item-management/definitions/digital-twin-builder-definition].
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
-// REQUIRED DELEGATED SCOPES DigitalTwinBuilder.ReadWrite.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
 // * To create a digitaltwinbuilder the workspace must be on a supported Fabric capacity. For more information see: Microsoft
 // Fabric license types
@@ -60,7 +60,7 @@ func (client *ItemsClient) BeginCreateDigitalTwinBuilder(ctx context.Context, wo
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To create digitaltwinbuilder with definition, refer to DigitalTwinBuilder definition [/rest/api/fabric/articles/item-management/definitions/digital-twin-builder-definition].
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
-// REQUIRED DELEGATED SCOPES DigitalTwinBuilder.ReadWrite.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
 // * To create a digitaltwinbuilder the workspace must be on a supported Fabric capacity. For more information see: Microsoft
 // Fabric license types
@@ -115,7 +115,7 @@ func (client *ItemsClient) createDigitalTwinBuilderCreateRequest(ctx context.Con
 
 // DeleteDigitalTwinBuilder - > [!NOTE] Digital Twin Builder item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // PERMISSIONS The caller must have write permissions for the digital twin builder.
-// REQUIRED DELEGATED SCOPES DigitalTwinBuilder.ReadWrite.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -176,7 +176,7 @@ func (client *ItemsClient) deleteDigitalTwinBuilderCreateRequest(ctx context.Con
 
 // GetDigitalTwinBuilder - > [!NOTE] Digital Twin Builder item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // PERMISSIONS The caller must have read permissions for the digital twin builder.
-// REQUIRED DELEGATED SCOPES DigitalTwinBuilder.Read.All or DigitalTwinBuilder.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -244,7 +244,7 @@ func (client *ItemsClient) getDigitalTwinBuilderHandleResponse(resp *http.Respon
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a digitaltwinbuilder public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the digital twin builder.
-// REQUIRED DELEGATED SCOPES DigitalTwinBuilder.ReadWrite.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS This API is blocked for a digitaltwinbuilder with an encrypted sensitivity label.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -267,7 +267,7 @@ func (client *ItemsClient) BeginGetDigitalTwinBuilderDefinition(ctx context.Cont
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // When you get a digitaltwinbuilder public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the digital twin builder.
-// REQUIRED DELEGATED SCOPES DigitalTwinBuilder.ReadWrite.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS This API is blocked for a digitaltwinbuilder with an encrypted sensitivity label.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -398,7 +398,7 @@ func (client *ItemsClient) listDigitalTwinBuildersHandleResponse(resp *http.Resp
 
 // UpdateDigitalTwinBuilder - > [!NOTE] Digital Twin Builder item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // PERMISSIONS The caller must have read and write permissions for the digital twin builder.
-// REQUIRED DELEGATED SCOPES DigitalTwinBuilder.ReadWrite.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -470,7 +470,7 @@ func (client *ItemsClient) updateDigitalTwinBuilderHandleResponse(resp *http.Res
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the digitaltwinbuilder definition, does not affect its sensitivity label.
 // PERMISSIONS The caller must have read and write permissions for the digital twin builder.
-// REQUIRED DELEGATED SCOPES DigitalTwinBuilder.ReadWrite.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -493,7 +493,7 @@ func (client *ItemsClient) BeginUpdateDigitalTwinBuilderDefinition(ctx context.C
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the digitaltwinbuilder definition, does not affect its sensitivity label.
 // PERMISSIONS The caller must have read and write permissions for the digital twin builder.
-// REQUIRED DELEGATED SCOPES DigitalTwinBuilder.ReadWrite.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -561,7 +561,7 @@ func (client *ItemsClient) updateDigitalTwinBuilderDefinitionCreateRequest(ctx c
 // To create digitaltwinbuilder with definition, refer to DigitalTwinBuilder definition [/rest/api/fabric/articles/item-management/definitions/digital-twin-builder-definition].
 //
 // PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
-// REQUIRED DELEGATED SCOPES DigitalTwinBuilder.ReadWrite.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 //
 // LIMITATIONS
 //
@@ -639,7 +639,7 @@ func (client *ItemsClient) beginCreateDigitalTwinBuilder(ctx context.Context, wo
 //
 // PERMISSIONS The caller must have read and write permissions for the digital twin builder.
 //
-// # REQUIRED DELEGATED SCOPES DigitalTwinBuilder.ReadWrite.All or Item.ReadWrite.All
+// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 //
 // LIMITATIONS This API is blocked for a digitaltwinbuilder with an encrypted sensitivity label.
 //
@@ -714,7 +714,7 @@ func (client *ItemsClient) beginGetDigitalTwinBuilderDefinition(ctx context.Cont
 //
 // PERMISSIONS The caller must have read and write permissions for the digital twin builder.
 //
-// # REQUIRED DELEGATED SCOPES DigitalTwinBuilder.ReadWrite.All or Item.ReadWrite.All
+// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

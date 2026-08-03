@@ -32,8 +32,8 @@ type FilesClient struct {
 
 // CreateOrUpdateApacheAirflowJobFileBetaWithBinary - > [!NOTE] This API is part of a Beta release and is provided for evaluation
 // and development purposes only. It may change based on feedback and is not recommended for production use.
-// PERMISSIONS The caller must have write permissions for the Apache Airflow job.
-// REQUIRED DELEGATED SCOPES ApacheAirflowJob.ReadWrite.All or Item.ReadWrite.All
+// PERMISSIONS The caller must have read and write permissions for the Apache Airflow job.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
 // * Files must be located within the dags/ or plugins/ folders.
 // * The maximum supported file size is 2 MB.
@@ -110,8 +110,8 @@ func (client *FilesClient) createOrUpdateApacheAirflowJobFileBetaWithBinaryCreat
 
 // DeleteApacheAirflowJobFileBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
 // purposes only. It may change based on feedback and is not recommended for production use.
-// PERMISSIONS The caller must have write permissions for the Apache Airflow job.
-// REQUIRED DELEGATED SCOPES ApacheAirflowJob.Read.All or ApacheAirflowJob.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
+// PERMISSIONS The caller must have read and write permissions for the Apache Airflow job.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
 // * Files must be located within the dags/ or plugins/ folders.
 // * Set the beta query parameter to true to call this API.
@@ -182,7 +182,7 @@ func (client *FilesClient) deleteApacheAirflowJobFileBetaCreateRequest(ctx conte
 // GetApacheAirflowJobFileBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
 // purposes only. It may change based on feedback and is not recommended for production use.
 // PERMISSIONS The caller must have read permissions for the Apache Airflow job.
-// REQUIRED DELEGATED SCOPES ApacheAirflowJob.Read.All or ApacheAirflowJob.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All
 // LIMITATIONS
 // * Files must be located within the dags/ or plugins/ folders.
 // * The maximum supported file size is 2 MB.
@@ -257,7 +257,7 @@ func (client *FilesClient) getApacheAirflowJobFileBetaCreateRequest(ctx context.
 // development purposes only. It may change based on feedback and is not recommended for production use.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have read permissions for the Apache Airflow job.
-// REQUIRED DELEGATED SCOPES ApacheAirflowJob.Read.All or ApacheAirflowJob.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All
 // LIMITATIONS
 // * Root path query parameter must start with dags/ or plugins/.
 // * Listing files is not recursive; only the specified folder is returned.
@@ -345,7 +345,7 @@ func (client *FilesClient) listApacheAirflowJobFilesBetaHandleResponse(resp *htt
 //
 // PERMISSIONS The caller must have read permissions for the Apache Airflow job.
 //
-// # REQUIRED DELEGATED SCOPES ApacheAirflowJob.Read.All or ApacheAirflowJob.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
+// # REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All
 //
 // LIMITATIONS
 //

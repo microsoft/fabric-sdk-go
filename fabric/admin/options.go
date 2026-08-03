@@ -60,13 +60,19 @@ type DomainsClientListDomainWorkspacesOptions struct {
 
 // DomainsClientListDomainsOptions contains the optional parameters for the DomainsClient.ListDomains method.
 type DomainsClientListDomainsOptions struct {
-	// When true, only return domains that have at least one workspace containing an item. Default: false.
+	// When true, only return domains with workspaces assigned that contain one or more items the user has at least read access
+	// to. Default: false.
 	NonEmptyOnly *bool
+
+	// When true, only return domains that have at least one workspace assigned to them, or to any of their subdomains. Default:
+	// false.
+	WithAssignedWorkspacesOnly *bool
 }
 
 // DomainsClientListDomainsPreviewOptions contains the optional parameters for the DomainsClient.ListDomainsPreview method.
 type DomainsClientListDomainsPreviewOptions struct {
-	// When true, only return domains that have at least one workspace containing an item. Default: false.
+	// When true, only return domains with workspaces assigned that contain one or more items the user has at least read access
+	// to. Default: false.
 	NonEmptyOnly *bool
 }
 
@@ -366,6 +372,12 @@ type WorkspacesClientListWorkspacesOptions struct {
 
 	// Continuation token. Used to get the next items in the list.
 	ContinuationToken *string
+
+	// Indicates the CMK encryption status of the workspace and is used to filter workspaces that match the specified status.
+	EncryptionStatus *string
+
+	// Specifies additional data to include for each workspace in the response. Supported values: encryption.
+	Include *string
 
 	// The workspace name.
 	Name *string

@@ -6,6 +6,35 @@
 
 package datapipeline
 
+// BackgroundJobsClientDeleteExecuteScheduleResponse contains the response from method BackgroundJobsClient.DeleteExecuteSchedule.
+type BackgroundJobsClientDeleteExecuteScheduleResponse struct {
+	// placeholder for future response values
+}
+
+// BackgroundJobsClientGetExecuteJobInstanceResponse contains the response from method BackgroundJobsClient.GetExecuteJobInstance.
+type BackgroundJobsClientGetExecuteJobInstanceResponse struct {
+	// A data pipeline execute job instance.
+	ExecuteJobInstance
+}
+
+// BackgroundJobsClientGetExecuteScheduleResponse contains the response from method BackgroundJobsClient.GetExecuteSchedule.
+type BackgroundJobsClientGetExecuteScheduleResponse struct {
+	// Data pipeline execute schedule.
+	ExecuteSchedule
+}
+
+// BackgroundJobsClientListExecuteJobInstancesResponse contains the response from method BackgroundJobsClient.NewListExecuteJobInstancesPager.
+type BackgroundJobsClientListExecuteJobInstancesResponse struct {
+	// A list of data pipeline execute job instances.
+	ExecuteJobInstances
+}
+
+// BackgroundJobsClientListExecuteSchedulesResponse contains the response from method BackgroundJobsClient.NewListExecuteSchedulesPager.
+type BackgroundJobsClientListExecuteSchedulesResponse struct {
+	// A list of data pipeline execute schedules.
+	ExecuteSchedules
+}
+
 // BackgroundJobsClientRunOnDemandExecuteResponse contains the response from method BackgroundJobsClient.RunOnDemandExecute.
 type BackgroundJobsClientRunOnDemandExecuteResponse struct {
 	// placeholder for future response values
@@ -18,6 +47,12 @@ type BackgroundJobsClientScheduleExecuteResponse struct {
 
 	// Location contains the information returned from the Location header response.
 	Location *string
+}
+
+// BackgroundJobsClientUpdateExecuteScheduleResponse contains the response from method BackgroundJobsClient.UpdateExecuteSchedule.
+type BackgroundJobsClientUpdateExecuteScheduleResponse struct {
+	// Data pipeline execute schedule.
+	ExecuteSchedule
 }
 
 // ItemsClientCreateDataPipelineResponse contains the response from method ItemsClient.BeginCreateDataPipeline.

@@ -19,6 +19,71 @@ import (
 )
 
 // Generated from example definition
+func ExampleBackgroundJobsClient_NewListExecuteSchedulesPager() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := datapipeline.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewBackgroundJobsClient().NewListExecuteSchedulesPager("a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "dddddddd-9999-0000-1111-eeeeeeeeeeee", &datapipeline.BackgroundJobsClientListExecuteSchedulesOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.ExecuteSchedules = datapipeline.ExecuteSchedules{
+		// 	Value: []datapipeline.ExecuteSchedule{
+		// 		{
+		// 			Configuration: &datapipeline.CronScheduleConfig{
+		// 				Type: to.Ptr(datapipeline.ScheduleTypeCron),
+		// 				EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-30T23:59:00.000Z"); return t}()),
+		// 				LocalTimeZoneID: to.Ptr("Central Standard Time"),
+		// 				StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T00:00:00.000Z"); return t}()),
+		// 				Interval: to.Ptr[int32](10),
+		// 			},
+		// 			CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-05-28T05:35:20.536Z"); return t}()),
+		// 			Enabled: to.Ptr(true),
+		// 			ID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+		// 			Owner: &datapipeline.UserPrincipal{
+		// 				Type: to.Ptr(datapipeline.PrincipalTypeUser),
+		// 				ID: to.Ptr("33dd33dd-ee44-ff55-aa66-77bb77bb77bb"),
+		// 			},
+		// 		},
+		// 		{
+		// 			Configuration: &datapipeline.WeeklyScheduleConfig{
+		// 				Type: to.Ptr(datapipeline.ScheduleTypeWeekly),
+		// 				EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-30T23:59:00.000Z"); return t}()),
+		// 				LocalTimeZoneID: to.Ptr("Central Standard Time"),
+		// 				StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T00:00:00.000Z"); return t}()),
+		// 				Times: []string{
+		// 					"18:09",
+		// 					"17:12"},
+		// 					Weekdays: []datapipeline.DayOfWeek{
+		// 						datapipeline.DayOfWeekMonday,
+		// 						datapipeline.DayOfWeekTuesday},
+		// 					},
+		// 					CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-05-28T05:35:20.536Z"); return t}()),
+		// 					Enabled: to.Ptr(true),
+		// 					ID: to.Ptr("cccccccc-2222-3333-4444-dddddddddddd"),
+		// 					Owner: &datapipeline.UserPrincipal{
+		// 						Type: to.Ptr(datapipeline.PrincipalTypeUser),
+		// 						ID: to.Ptr("33dd33dd-ee44-ff55-aa66-77bb77bb77bb"),
+		// 					},
+		// 			}},
+		// 		}
+	}
+}
+
+// Generated from example definition
 func ExampleBackgroundJobsClient_ScheduleExecute() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -45,6 +110,152 @@ func ExampleBackgroundJobsClient_ScheduleExecute() {
 }
 
 // Generated from example definition
+func ExampleBackgroundJobsClient_GetExecuteSchedule() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := datapipeline.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewBackgroundJobsClient().GetExecuteSchedule(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "dddddddd-9999-0000-1111-eeeeeeeeeeee", "bbbbbbbb-1111-2222-3333-cccccccccccc", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.ExecuteSchedule = datapipeline.ExecuteSchedule{
+	// 	Configuration: &datapipeline.CronScheduleConfig{
+	// 		Type: to.Ptr(datapipeline.ScheduleTypeCron),
+	// 		EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-30T23:59:00.000Z"); return t}()),
+	// 		LocalTimeZoneID: to.Ptr("Central Standard Time"),
+	// 		StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T00:00:00.000Z"); return t}()),
+	// 		Interval: to.Ptr[int32](10),
+	// 	},
+	// 	CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-05-28T05:35:20.536Z"); return t}()),
+	// 	Enabled: to.Ptr(true),
+	// 	ID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+	// 	Owner: &datapipeline.UserPrincipal{
+	// 		Type: to.Ptr(datapipeline.PrincipalTypeUser),
+	// 		ID: to.Ptr("33dd33dd-ee44-ff55-aa66-77bb77bb77bb"),
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleBackgroundJobsClient_UpdateExecuteSchedule() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := datapipeline.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewBackgroundJobsClient().UpdateExecuteSchedule(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "dddddddd-9999-0000-1111-eeeeeeeeeeee", "bbbbbbbb-1111-2222-3333-cccccccccccc", datapipeline.UpdateDataPipelineExecuteScheduleRequest{
+		Configuration: &datapipeline.CronScheduleConfig{
+			Type:            to.Ptr(datapipeline.ScheduleTypeCron),
+			EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-30T23:59:00.000Z"); return t }()),
+			LocalTimeZoneID: to.Ptr("Central Standard Time"),
+			StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T00:00:00.000Z"); return t }()),
+			Interval:        to.Ptr[int32](10),
+		},
+		Enabled: to.Ptr(true),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.ExecuteSchedule = datapipeline.ExecuteSchedule{
+	// 	Configuration: &datapipeline.CronScheduleConfig{
+	// 		Type: to.Ptr(datapipeline.ScheduleTypeCron),
+	// 		EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-30T23:59:00.000Z"); return t}()),
+	// 		LocalTimeZoneID: to.Ptr("Central Standard Time"),
+	// 		StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T00:00:00.000Z"); return t}()),
+	// 		Interval: to.Ptr[int32](10),
+	// 	},
+	// 	CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2024-05-28T05:35:20.536Z"); return t}()),
+	// 	Enabled: to.Ptr(true),
+	// 	ID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+	// 	Owner: &datapipeline.UserPrincipal{
+	// 		Type: to.Ptr(datapipeline.PrincipalTypeUser),
+	// 		ID: to.Ptr("33dd33dd-ee44-ff55-aa66-77bb77bb77bb"),
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleBackgroundJobsClient_DeleteExecuteSchedule() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := datapipeline.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewBackgroundJobsClient().DeleteExecuteSchedule(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "dddddddd-9999-0000-1111-eeeeeeeeeeee", "bbbbbbbb-1111-2222-3333-cccccccccccc", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleBackgroundJobsClient_NewListExecuteJobInstancesPager() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := datapipeline.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewBackgroundJobsClient().NewListExecuteJobInstancesPager("a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "dddddddd-9999-0000-1111-eeeeeeeeeeee", &datapipeline.BackgroundJobsClientListExecuteJobInstancesOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.ExecuteJobInstances = datapipeline.ExecuteJobInstances{
+		// 	Value: []datapipeline.ExecuteJobInstance{
+		// 		{
+		// 			EndTimeUTC: to.Ptr("2024-06-22T06:35:00.8033333"),
+		// 			ID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+		// 			InvokeType: to.Ptr(datapipeline.InvokeTypeManual),
+		// 			ItemID: to.Ptr("dddddddd-9999-0000-1111-eeeeeeeeeeee"),
+		// 			JobType: to.Ptr("Execute"),
+		// 			RootActivityID: to.Ptr("11111111-2222-3333-4444-555555555555"),
+		// 			StartTimeUTC: to.Ptr("2024-06-22T06:35:00.7812154"),
+		// 			Status: to.Ptr(datapipeline.ItemJobStatusCompleted),
+		// 		},
+		// 		{
+		// 			EndTimeUTC: to.Ptr("2024-06-22T08:35:00.8033333"),
+		// 			ID: to.Ptr("cccccccc-3333-4444-5555-dddddddddddd"),
+		// 			InvokeType: to.Ptr(datapipeline.InvokeTypeScheduled),
+		// 			ItemID: to.Ptr("dddddddd-9999-0000-1111-eeeeeeeeeeee"),
+		// 			JobType: to.Ptr("Execute"),
+		// 			RootActivityID: to.Ptr("22222222-3333-4444-5555-666666666666"),
+		// 			StartTimeUTC: to.Ptr("2024-06-22T07:35:00.7812154"),
+		// 			Status: to.Ptr(datapipeline.ItemJobStatusCompleted),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
 func ExampleBackgroundJobsClient_RunOnDemandExecute() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -59,4 +270,34 @@ func ExampleBackgroundJobsClient_RunOnDemandExecute() {
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
+}
+
+// Generated from example definition
+func ExampleBackgroundJobsClient_GetExecuteJobInstance() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := datapipeline.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewBackgroundJobsClient().GetExecuteJobInstance(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "dddddddd-9999-0000-1111-eeeeeeeeeeee", "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.ExecuteJobInstance = datapipeline.ExecuteJobInstance{
+	// 	EndTimeUTC: to.Ptr("2024-06-22T06:35:00.8033333"),
+	// 	ID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+	// 	InvokeType: to.Ptr(datapipeline.InvokeTypeManual),
+	// 	ItemID: to.Ptr("dddddddd-9999-0000-1111-eeeeeeeeeeee"),
+	// 	JobType: to.Ptr("Execute"),
+	// 	RootActivityID: to.Ptr("11111111-2222-3333-4444-555555555555"),
+	// 	StartTimeUTC: to.Ptr("2024-06-22T06:35:00.7812154"),
+	// 	Status: to.Ptr(datapipeline.ItemJobStatusCompleted),
+	// }
 }

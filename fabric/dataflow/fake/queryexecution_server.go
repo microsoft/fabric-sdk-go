@@ -116,7 +116,14 @@ func (q *QueryExecutionServerTransport) dispatchBeginExecuteQuery(req *http.Requ
 		if err != nil {
 			return nil, err
 		}
-		respr, errRespr := q.srv.BeginExecuteQuery(req.Context(), workspaceIDParam, dataflowIDParam, body, nil)
+		acceptParam := getOptional(getHeaderValue(req.Header, "Accept"))
+		var options *dataflow.QueryExecutionClientBeginExecuteQueryOptions
+		if acceptParam != nil {
+			options = &dataflow.QueryExecutionClientBeginExecuteQueryOptions{
+				Accept: acceptParam,
+			}
+		}
+		respr, errRespr := q.srv.BeginExecuteQuery(req.Context(), workspaceIDParam, dataflowIDParam, body, options)
 		if respErr := server.GetError(errRespr, req); respErr != nil {
 			return nil, respErr
 		}

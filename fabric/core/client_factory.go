@@ -199,6 +199,14 @@ func (c *ClientFactory) NewTagsClient() *TagsClient {
 	}
 }
 
+// NewWorkspaceRelationsClient creates a new instance of WorkspaceRelationsClient.
+func (c *ClientFactory) NewWorkspaceRelationsClient() *WorkspaceRelationsClient {
+	return &WorkspaceRelationsClient{
+		internal: c.internal.WithClientName("core.WorkspaceRelationsClient"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewWorkspacesClient creates a new instance of WorkspacesClient.
 func (c *ClientFactory) NewWorkspacesClient() *WorkspacesClient {
 	return &WorkspacesClient{

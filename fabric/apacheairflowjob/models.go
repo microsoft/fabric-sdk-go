@@ -33,6 +33,12 @@ type AirflowComputeResponse struct {
 	ShutdownPolicy *ShutdownPolicy
 }
 
+// AirflowEnvironmentComputeRequest - The request payload for updating Apache Airflow environment compute configuration.
+type AirflowEnvironmentComputeRequest struct {
+	// REQUIRED; The pool template ID.
+	PoolTemplateID *string
+}
+
 // AirflowEnvironmentSettingsRequest - The request payload for updating Apache Airflow environment settings.
 type AirflowEnvironmentSettingsRequest struct {
 	// Airflow configuration overrides. When updating, users must submit the complete set of desired values; existing values will
@@ -211,7 +217,7 @@ type CreateApacheAirflowJobRequest struct {
 	// The Apache Airflow job description. Maximum length is 256 characters.
 	Description *string
 
-	// The folder ID. If not specified or null, the Apache Airflow is created with the workspace as its folder.
+	// The folder ID. If not specified or null, the Apache Airflow job is created with the workspace as its folder.
 	FolderID *string
 
 	// The sensitivity label settings for the Apache Airflow job.

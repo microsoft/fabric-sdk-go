@@ -22,6 +22,7 @@ func (c CosmosDBDatabase) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", c.DisplayName)
 	populate(objectMap, "folderId", c.FolderID)
 	populate(objectMap, "id", c.ID)
+	populate(objectMap, "properties", c.Properties)
 	populate(objectMap, "sensitivityLabel", c.SensitivityLabel)
 	populate(objectMap, "tags", c.Tags)
 	populate(objectMap, "type", c.Type)
@@ -52,6 +53,9 @@ func (c *CosmosDBDatabase) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &c.ID)
+			delete(rawMsg, key)
+		case "properties":
+			err = unpopulate(val, "Properties", &c.Properties)
 			delete(rawMsg, key)
 		case "sensitivityLabel":
 			err = unpopulate(val, "SensitivityLabel", &c.SensitivityLabel)
@@ -398,6 +402,37 @@ func (p *Principal) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "type":
 			err = unpopulate(val, "Type", &p.Type)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", p, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type Properties.
+func (p Properties) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "databaseName", p.DatabaseName)
+	populate(objectMap, "serverFqdn", p.ServerFqdn)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type Properties.
+func (p *Properties) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", p, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "databaseName":
+			err = unpopulate(val, "DatabaseName", &p.DatabaseName)
+			delete(rawMsg, key)
+		case "serverFqdn":
+			err = unpopulate(val, "ServerFqdn", &p.ServerFqdn)
 			delete(rawMsg, key)
 		}
 		if err != nil {

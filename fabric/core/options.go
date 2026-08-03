@@ -6,6 +6,11 @@
 
 package core
 
+// CapacitiesClientGetCapacityOptions contains the optional parameters for the CapacitiesClient.GetCapacity method.
+type CapacitiesClientGetCapacityOptions struct {
+	// placeholder for future optional parameters
+}
+
 // CapacitiesClientListCapacitiesOptions contains the optional parameters for the CapacitiesClient.NewListCapacitiesPager
 // method.
 type CapacitiesClientListCapacitiesOptions struct {
@@ -305,6 +310,33 @@ type GatewaysClientAddGatewayRoleAssignmentOptions struct {
 	// placeholder for future optional parameters
 }
 
+// GatewaysClientBeginCheckGatewayMemberStatusOptions contains the optional parameters for the GatewaysClient.BeginCheckGatewayMemberStatus
+// method.
+type GatewaysClientBeginCheckGatewayMemberStatusOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// GatewaysClientBeginCheckGatewayStatusOptions contains the optional parameters for the GatewaysClient.BeginCheckGatewayStatus
+// method.
+type GatewaysClientBeginCheckGatewayStatusOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// GatewaysClientBeginRestartGatewayOptions contains the optional parameters for the GatewaysClient.BeginRestartGateway method.
+type GatewaysClientBeginRestartGatewayOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// GatewaysClientBeginShutdownGatewayOptions contains the optional parameters for the GatewaysClient.BeginShutdownGateway
+// method.
+type GatewaysClientBeginShutdownGatewayOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
 // GatewaysClientCreateGatewayOptions contains the optional parameters for the GatewaysClient.CreateGateway method.
 type GatewaysClientCreateGatewayOptions struct {
 	// placeholder for future optional parameters
@@ -490,11 +522,23 @@ type ItemsClientDeleteItemOptions struct {
 	HardDelete *bool
 }
 
+// ItemsClientGetDownstreamRelationsBetaOptions contains the optional parameters for the ItemsClient.GetDownstreamRelationsBeta
+// method.
+type ItemsClientGetDownstreamRelationsBetaOptions struct {
+	// placeholder for future optional parameters
+}
+
 // ItemsClientGetItemOptions contains the optional parameters for the ItemsClient.GetItem method.
 type ItemsClientGetItemOptions struct {
 	// Specifies which item properties to include in the response as a comma-separated list. Additional values may be added over
 	// time.
 	Include []ItemIncludeOption
+}
+
+// ItemsClientGetUpstreamRelationsBetaOptions contains the optional parameters for the ItemsClient.GetUpstreamRelationsBeta
+// method.
+type ItemsClientGetUpstreamRelationsBetaOptions struct {
+	// placeholder for future optional parameters
 }
 
 // ItemsClientListItemConnectionsOptions contains the optional parameters for the ItemsClient.NewListItemConnectionsPager
@@ -789,6 +833,25 @@ type TagsClientUnapplyTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
+// WorkspaceRelationsClientCreateWorkspaceRelationOptions contains the optional parameters for the WorkspaceRelationsClient.CreateWorkspaceRelation
+// method.
+type WorkspaceRelationsClientCreateWorkspaceRelationOptions struct {
+	// placeholder for future optional parameters
+}
+
+// WorkspaceRelationsClientDeleteWorkspaceRelationOptions contains the optional parameters for the WorkspaceRelationsClient.DeleteWorkspaceRelation
+// method.
+type WorkspaceRelationsClientDeleteWorkspaceRelationOptions struct {
+	// placeholder for future optional parameters
+}
+
+// WorkspaceRelationsClientListWorkspaceRelationsOptions contains the optional parameters for the WorkspaceRelationsClient.NewListWorkspaceRelationsPager
+// method.
+type WorkspaceRelationsClientListWorkspaceRelationsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
 // WorkspacesClientAddWorkspaceRoleAssignmentOptions contains the optional parameters for the WorkspacesClient.AddWorkspaceRoleAssignment
 // method.
 type WorkspacesClientAddWorkspaceRoleAssignmentOptions struct {
@@ -808,6 +871,12 @@ type WorkspacesClientAssignToCapacityOptions struct {
 
 // WorkspacesClientAssignToDomainOptions contains the optional parameters for the WorkspacesClient.AssignToDomain method.
 type WorkspacesClientAssignToDomainOptions struct {
+	// placeholder for future optional parameters
+}
+
+// WorkspacesClientAssignWorkspaceEncryptionOptions contains the optional parameters for the WorkspacesClient.AssignWorkspaceEncryption
+// method.
+type WorkspacesClientAssignWorkspaceEncryptionOptions struct {
 	// placeholder for future optional parameters
 }
 
@@ -841,6 +910,11 @@ type WorkspacesClientDeleteWorkspaceRoleAssignmentOptions struct {
 	// placeholder for future optional parameters
 }
 
+// WorkspacesClientGetFirewallRulesOptions contains the optional parameters for the WorkspacesClient.GetFirewallRules method.
+type WorkspacesClientGetFirewallRulesOptions struct {
+	// placeholder for future optional parameters
+}
+
 // WorkspacesClientGetGitOutboundPolicyOptions contains the optional parameters for the WorkspacesClient.GetGitOutboundPolicy
 // method.
 type WorkspacesClientGetGitOutboundPolicyOptions struct {
@@ -850,6 +924,12 @@ type WorkspacesClientGetGitOutboundPolicyOptions struct {
 // WorkspacesClientGetInboundAzureResourceRulesOptions contains the optional parameters for the WorkspacesClient.GetInboundAzureResourceRules
 // method.
 type WorkspacesClientGetInboundAzureResourceRulesOptions struct {
+	// placeholder for future optional parameters
+}
+
+// WorkspacesClientGetInboundExternalDataSharesPolicyOptions contains the optional parameters for the WorkspacesClient.GetInboundExternalDataSharesPolicy
+// method.
+type WorkspacesClientGetInboundExternalDataSharesPolicyOptions struct {
 	// placeholder for future optional parameters
 }
 
@@ -868,6 +948,12 @@ type WorkspacesClientGetOutboundCloudConnectionRulesOptions struct {
 // WorkspacesClientGetOutboundGatewayRulesOptions contains the optional parameters for the WorkspacesClient.GetOutboundGatewayRules
 // method.
 type WorkspacesClientGetOutboundGatewayRulesOptions struct {
+	// placeholder for future optional parameters
+}
+
+// WorkspacesClientGetWorkspaceEncryptionOptions contains the optional parameters for the WorkspacesClient.GetWorkspaceEncryption
+// method.
+type WorkspacesClientGetWorkspaceEncryptionOptions struct {
 	// placeholder for future optional parameters
 }
 
@@ -908,6 +994,17 @@ type WorkspacesClientListWorkspacesOptions struct {
 	Roles *string
 }
 
+// WorkspacesClientResetWorkspaceEncryptionOptions contains the optional parameters for the WorkspacesClient.ResetWorkspaceEncryption
+// method.
+type WorkspacesClientResetWorkspaceEncryptionOptions struct {
+	// placeholder for future optional parameters
+}
+
+// WorkspacesClientSetFirewallRulesOptions contains the optional parameters for the WorkspacesClient.SetFirewallRules method.
+type WorkspacesClientSetFirewallRulesOptions struct {
+	// placeholder for future optional parameters
+}
+
 // WorkspacesClientSetGitOutboundPolicyOptions contains the optional parameters for the WorkspacesClient.SetGitOutboundPolicy
 // method.
 type WorkspacesClientSetGitOutboundPolicyOptions struct {
@@ -920,6 +1017,14 @@ type WorkspacesClientSetGitOutboundPolicyOptions struct {
 // method.
 type WorkspacesClientSetInboundAzureResourceRulesOptions struct {
 	// placeholder for future optional parameters
+}
+
+// WorkspacesClientSetInboundExternalDataSharesPolicyOptions contains the optional parameters for the WorkspacesClient.SetInboundExternalDataSharesPolicy
+// method.
+type WorkspacesClientSetInboundExternalDataSharesPolicyOptions struct {
+	// An ETag value. The ETag must be specified in quotes. If provided, the call will succeed only if the resource's ETag matches
+	// the provided ETag.
+	IfMatch *string
 }
 
 // WorkspacesClientSetNetworkCommunicationPolicyOptions contains the optional parameters for the WorkspacesClient.SetNetworkCommunicationPolicy

@@ -708,6 +708,9 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_CreateRefreshMaterializedLake
 			Interval:        to.Ptr[int32](10),
 		},
 		Enabled: to.Ptr(true),
+		ExecutionData: &lakehouse.RefreshMaterializedLakeViewsExecutionData{
+			MlvExecutionDefinitionID: to.Ptr("eeeeeeee-4444-5555-6666-ffffffffffff"),
+		},
 	}
 
 	testsuite.serverFactory.BackgroundJobsServer.CreateRefreshMaterializedLakeViewsSchedule = func(ctx context.Context, workspaceID string, lakehouseID string, createScheduleRequest lakehouse.CreateLakehouseRefreshMaterializedLakeViewsScheduleRequest, options *lakehouse.BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleOptions) (resp azfake.Responder[lakehouse.BackgroundJobsClientCreateRefreshMaterializedLakeViewsScheduleResponse], errResp azfake.ErrorResponder) {
@@ -768,6 +771,9 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_UpdateRefreshMaterializedLake
 			Interval:        to.Ptr[int32](15),
 		},
 		Enabled: to.Ptr(false),
+		ExecutionData: &lakehouse.RefreshMaterializedLakeViewsExecutionData{
+			MlvExecutionDefinitionID: to.Ptr("eeeeeeee-4444-5555-6666-ffffffffffff"),
+		},
 	}
 
 	exampleRes := lakehouse.RefreshMaterializedLakeViewsSchedule{
@@ -784,6 +790,9 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_UpdateRefreshMaterializedLake
 		Owner: &lakehouse.UserPrincipal{
 			Type: to.Ptr(lakehouse.PrincipalTypeUser),
 			ID:   to.Ptr("33dd33dd-ee44-ff55-aa66-77bb77bb77bb"),
+		},
+		ExecutionData: &lakehouse.RefreshMaterializedLakeViewsExecutionData{
+			MlvExecutionDefinitionID: to.Ptr("eeeeeeee-4444-5555-6666-ffffffffffff"),
 		},
 	}
 
@@ -1093,4 +1102,277 @@ func (testsuite *FakeTestSuite) TestLivySessions_GetLivySession() {
 	res, err := client.GetLivySession(ctx, exampleWorkspaceID, exampleLakehouseID, exampleLivyID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.LivySession))
+}
+
+func (testsuite *FakeTestSuite) TestMaterializedLakeViews_CreateMlvExecutionDefinition() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a materialized lake views execution definition example"},
+	})
+	var exampleWorkspaceID string
+	var exampleLakehouseID string
+	var exampleCreateMLVExecutionDefinitionRequest lakehouse.CreateMaterializedLakeViewExecutionDefinitionRequest
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleLakehouseID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+	exampleCreateMLVExecutionDefinitionRequest = lakehouse.CreateMaterializedLakeViewExecutionDefinitionRequest{
+		Description: to.Ptr("Weekly report on Gold chain"),
+		CurrentLakehouseExecutionContext: &lakehouse.CurrentLakehouseExecutionContextSelected{
+			Mode: to.Ptr(lakehouse.ExecutionContextModeSelected),
+			SelectedMlvs: []string{
+				"schema.mlvName1"},
+		},
+		DisplayName: to.Ptr("Gold Chain – Sales"),
+		ExtendedLineageExecutionContext: &lakehouse.ExtendedLineageExecutionContextRequestSelected{
+			Mode: to.Ptr(lakehouse.ExecutionContextModeSelected),
+			SelectedLakehouses: []lakehouse.ItemReferenceByID{
+				{
+					ReferenceType: to.Ptr(lakehouse.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("cccccccc-4444-5555-6666-dddddddddddd"),
+					WorkspaceID:   to.Ptr("11111111-2222-3333-4444-555555555555"),
+				}},
+		},
+		Settings: &lakehouse.MaterializedLakeViewExecutionDefinitionSettingsRequest{
+			Environment: &lakehouse.ItemReferenceByID{
+				ReferenceType: to.Ptr(lakehouse.ItemReferenceTypeByID),
+				ItemID:        to.Ptr("aaaaaaaa-1111-2222-3333-bbbbbbbbbbbb"),
+				WorkspaceID:   to.Ptr("11111111-2222-3333-4444-555555555555"),
+			},
+			RefreshMode: to.Ptr(lakehouse.RefreshModeOptimal),
+		},
+	}
+
+	testsuite.serverFactory.MaterializedLakeViewsServer.CreateMlvExecutionDefinition = func(ctx context.Context, workspaceID string, lakehouseID string, createMLVExecutionDefinitionRequest lakehouse.CreateMaterializedLakeViewExecutionDefinitionRequest, options *lakehouse.MaterializedLakeViewsClientCreateMlvExecutionDefinitionOptions) (resp azfake.Responder[lakehouse.MaterializedLakeViewsClientCreateMlvExecutionDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleLakehouseID, lakehouseID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateMLVExecutionDefinitionRequest, createMLVExecutionDefinitionRequest))
+		resp = azfake.Responder[lakehouse.MaterializedLakeViewsClientCreateMlvExecutionDefinitionResponse]{}
+		resp.SetResponse(http.StatusCreated, lakehouse.MaterializedLakeViewsClientCreateMlvExecutionDefinitionResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewMaterializedLakeViewsClient()
+	_, err = client.CreateMlvExecutionDefinition(ctx, exampleWorkspaceID, exampleLakehouseID, exampleCreateMLVExecutionDefinitionRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestMaterializedLakeViews_ListMlvExecutionDefinitions() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List materialized lake views execution definitions example"},
+	})
+	var exampleWorkspaceID string
+	var exampleLakehouseID string
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleLakehouseID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+
+	exampleRes := lakehouse.MaterializedLakeViewExecutionDefinitions{
+		Value: []lakehouse.MaterializedLakeViewExecutionDefinition{
+			{
+				Description: to.Ptr("Weekly report on Gold chain"),
+				CurrentLakehouseExecutionContext: &lakehouse.CurrentLakehouseExecutionContextSelected{
+					Mode: to.Ptr(lakehouse.ExecutionContextModeSelected),
+					SelectedMlvs: []string{
+						"schema.mlvName1"},
+				},
+				DisplayName: to.Ptr("Gold Chain – Sales"),
+				ExtendedLineageExecutionContext: &lakehouse.ExtendedLineageExecutionContextResponseSelected{
+					Mode: to.Ptr(lakehouse.ExecutionContextModeSelected),
+					SelectedLakehouses: []lakehouse.ItemReferenceClassification{
+						&lakehouse.ItemReferenceByID{
+							ReferenceType: to.Ptr(lakehouse.ItemReferenceTypeByID),
+							ItemID:        to.Ptr("cccccccc-4444-5555-6666-dddddddddddd"),
+							WorkspaceID:   to.Ptr("11111111-2222-3333-4444-555555555555"),
+						}},
+				},
+				ID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+				Settings: &lakehouse.MaterializedLakeViewExecutionDefinitionSettingsResponse{
+					Environment: &lakehouse.ItemReferenceByID{
+						ReferenceType: to.Ptr(lakehouse.ItemReferenceTypeByID),
+						ItemID:        to.Ptr("aaaaaaaa-1111-2222-3333-bbbbbbbbbbbb"),
+						WorkspaceID:   to.Ptr("11111111-2222-3333-4444-555555555555"),
+					},
+					RefreshMode: to.Ptr(lakehouse.RefreshModeOptimal),
+				},
+			},
+			{
+				CurrentLakehouseExecutionContext: &lakehouse.CurrentLakehouseExecutionContextAll{
+					Mode: to.Ptr(lakehouse.ExecutionContextModeAll),
+				},
+				DisplayName: to.Ptr("Silver Chain – Inventory"),
+				ID:          to.Ptr("dddddddd-5555-6666-7777-eeeeeeeeeeee"),
+			}},
+	}
+
+	testsuite.serverFactory.MaterializedLakeViewsServer.NewListMlvExecutionDefinitionsPager = func(workspaceID string, lakehouseID string, options *lakehouse.MaterializedLakeViewsClientListMlvExecutionDefinitionsOptions) (resp azfake.PagerResponder[lakehouse.MaterializedLakeViewsClientListMlvExecutionDefinitionsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleLakehouseID, lakehouseID)
+		resp = azfake.PagerResponder[lakehouse.MaterializedLakeViewsClientListMlvExecutionDefinitionsResponse]{}
+		resp.AddPage(http.StatusOK, lakehouse.MaterializedLakeViewsClientListMlvExecutionDefinitionsResponse{MaterializedLakeViewExecutionDefinitions: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewMaterializedLakeViewsClient()
+	pager := client.NewListMlvExecutionDefinitionsPager(exampleWorkspaceID, exampleLakehouseID, &lakehouse.MaterializedLakeViewsClientListMlvExecutionDefinitionsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.MaterializedLakeViewExecutionDefinitions))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestMaterializedLakeViews_GetMlvExecutionDefinition() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a materialized lake views execution definition example"},
+	})
+	var exampleWorkspaceID string
+	var exampleLakehouseID string
+	var exampleMlvExecutionDefinitionID string
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleLakehouseID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+	exampleMlvExecutionDefinitionID = "bbbbbbbb-1111-2222-3333-cccccccccccc"
+
+	exampleRes := lakehouse.MaterializedLakeViewExecutionDefinition{
+		Description: to.Ptr("Weekly report on Gold chain"),
+		CurrentLakehouseExecutionContext: &lakehouse.CurrentLakehouseExecutionContextSelected{
+			Mode: to.Ptr(lakehouse.ExecutionContextModeSelected),
+			SelectedMlvs: []string{
+				"schema.mlvName1"},
+		},
+		DisplayName: to.Ptr("Gold Chain – Sales"),
+		ExtendedLineageExecutionContext: &lakehouse.ExtendedLineageExecutionContextResponseSelected{
+			Mode: to.Ptr(lakehouse.ExecutionContextModeSelected),
+			SelectedLakehouses: []lakehouse.ItemReferenceClassification{
+				&lakehouse.ItemReferenceByID{
+					ReferenceType: to.Ptr(lakehouse.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("cccccccc-4444-5555-6666-dddddddddddd"),
+					WorkspaceID:   to.Ptr("11111111-2222-3333-4444-555555555555"),
+				}},
+		},
+		ID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+		Settings: &lakehouse.MaterializedLakeViewExecutionDefinitionSettingsResponse{
+			Environment: &lakehouse.ItemReferenceByID{
+				ReferenceType: to.Ptr(lakehouse.ItemReferenceTypeByID),
+				ItemID:        to.Ptr("aaaaaaaa-1111-2222-3333-bbbbbbbbbbbb"),
+				WorkspaceID:   to.Ptr("11111111-2222-3333-4444-555555555555"),
+			},
+			RefreshMode: to.Ptr(lakehouse.RefreshModeOptimal),
+		},
+	}
+
+	testsuite.serverFactory.MaterializedLakeViewsServer.GetMlvExecutionDefinition = func(ctx context.Context, workspaceID string, lakehouseID string, mlvExecutionDefinitionID string, options *lakehouse.MaterializedLakeViewsClientGetMlvExecutionDefinitionOptions) (resp azfake.Responder[lakehouse.MaterializedLakeViewsClientGetMlvExecutionDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleLakehouseID, lakehouseID)
+		testsuite.Require().Equal(exampleMlvExecutionDefinitionID, mlvExecutionDefinitionID)
+		resp = azfake.Responder[lakehouse.MaterializedLakeViewsClientGetMlvExecutionDefinitionResponse]{}
+		resp.SetResponse(http.StatusOK, lakehouse.MaterializedLakeViewsClientGetMlvExecutionDefinitionResponse{MaterializedLakeViewExecutionDefinition: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewMaterializedLakeViewsClient()
+	res, err := client.GetMlvExecutionDefinition(ctx, exampleWorkspaceID, exampleLakehouseID, exampleMlvExecutionDefinitionID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.MaterializedLakeViewExecutionDefinition))
+}
+
+func (testsuite *FakeTestSuite) TestMaterializedLakeViews_UpdateMlvExecutionDefinition() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update a materialized lake views execution definition example"},
+	})
+	var exampleWorkspaceID string
+	var exampleLakehouseID string
+	var exampleMlvExecutionDefinitionID string
+	var exampleUpdateMLVExecutionDefinitionRequest lakehouse.UpdateMaterializedLakeViewExecutionDefinitionRequest
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleLakehouseID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+	exampleMlvExecutionDefinitionID = "bbbbbbbb-1111-2222-3333-cccccccccccc"
+	exampleUpdateMLVExecutionDefinitionRequest = lakehouse.UpdateMaterializedLakeViewExecutionDefinitionRequest{
+		CurrentLakehouseExecutionContext: &lakehouse.CurrentLakehouseExecutionContextAll{
+			Mode: to.Ptr(lakehouse.ExecutionContextModeAll),
+		},
+		DisplayName: to.Ptr("Updated Gold Chain – Sales"),
+		ExtendedLineageExecutionContext: &lakehouse.ExtendedLineageExecutionContextRequestSelected{
+			Mode: to.Ptr(lakehouse.ExecutionContextModeSelected),
+			SelectedLakehouses: []lakehouse.ItemReferenceByID{
+				{
+					ReferenceType: to.Ptr(lakehouse.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("cccccccc-4444-5555-6666-dddddddddddd"),
+					WorkspaceID:   to.Ptr("11111111-2222-3333-4444-555555555555"),
+				}},
+		},
+		Settings: &lakehouse.MaterializedLakeViewExecutionDefinitionSettingsRequest{
+			RefreshMode: to.Ptr(lakehouse.RefreshModeFull),
+		},
+	}
+
+	exampleRes := lakehouse.MaterializedLakeViewExecutionDefinition{
+		Description: to.Ptr("Weekly report on Gold chain"),
+		CurrentLakehouseExecutionContext: &lakehouse.CurrentLakehouseExecutionContextAll{
+			Mode: to.Ptr(lakehouse.ExecutionContextModeAll),
+		},
+		DisplayName: to.Ptr("Updated Gold Chain – Sales"),
+		ExtendedLineageExecutionContext: &lakehouse.ExtendedLineageExecutionContextResponseSelected{
+			Mode: to.Ptr(lakehouse.ExecutionContextModeSelected),
+			SelectedLakehouses: []lakehouse.ItemReferenceClassification{
+				&lakehouse.ItemReferenceByID{
+					ReferenceType: to.Ptr(lakehouse.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("cccccccc-4444-5555-6666-dddddddddddd"),
+					WorkspaceID:   to.Ptr("11111111-2222-3333-4444-555555555555"),
+				}},
+		},
+		ID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+		Settings: &lakehouse.MaterializedLakeViewExecutionDefinitionSettingsResponse{
+			Environment: &lakehouse.ItemReferenceByID{
+				ReferenceType: to.Ptr(lakehouse.ItemReferenceTypeByID),
+				ItemID:        to.Ptr("aaaaaaaa-1111-2222-3333-bbbbbbbbbbbb"),
+				WorkspaceID:   to.Ptr("11111111-2222-3333-4444-555555555555"),
+			},
+			RefreshMode: to.Ptr(lakehouse.RefreshModeFull),
+		},
+	}
+
+	testsuite.serverFactory.MaterializedLakeViewsServer.UpdateMlvExecutionDefinition = func(ctx context.Context, workspaceID string, lakehouseID string, mlvExecutionDefinitionID string, updateMLVExecutionDefinitionRequest lakehouse.UpdateMaterializedLakeViewExecutionDefinitionRequest, options *lakehouse.MaterializedLakeViewsClientUpdateMlvExecutionDefinitionOptions) (resp azfake.Responder[lakehouse.MaterializedLakeViewsClientUpdateMlvExecutionDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleLakehouseID, lakehouseID)
+		testsuite.Require().Equal(exampleMlvExecutionDefinitionID, mlvExecutionDefinitionID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateMLVExecutionDefinitionRequest, updateMLVExecutionDefinitionRequest))
+		resp = azfake.Responder[lakehouse.MaterializedLakeViewsClientUpdateMlvExecutionDefinitionResponse]{}
+		resp.SetResponse(http.StatusOK, lakehouse.MaterializedLakeViewsClientUpdateMlvExecutionDefinitionResponse{MaterializedLakeViewExecutionDefinition: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewMaterializedLakeViewsClient()
+	res, err := client.UpdateMlvExecutionDefinition(ctx, exampleWorkspaceID, exampleLakehouseID, exampleMlvExecutionDefinitionID, exampleUpdateMLVExecutionDefinitionRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.MaterializedLakeViewExecutionDefinition))
+}
+
+func (testsuite *FakeTestSuite) TestMaterializedLakeViews_DeleteMlvExecutionDefinition() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete a materialized lake views execution definition example"},
+	})
+	var exampleWorkspaceID string
+	var exampleLakehouseID string
+	var exampleMlvExecutionDefinitionID string
+	exampleWorkspaceID = "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1"
+	exampleLakehouseID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+	exampleMlvExecutionDefinitionID = "bbbbbbbb-1111-2222-3333-cccccccccccc"
+
+	testsuite.serverFactory.MaterializedLakeViewsServer.DeleteMlvExecutionDefinition = func(ctx context.Context, workspaceID string, lakehouseID string, mlvExecutionDefinitionID string, options *lakehouse.MaterializedLakeViewsClientDeleteMlvExecutionDefinitionOptions) (resp azfake.Responder[lakehouse.MaterializedLakeViewsClientDeleteMlvExecutionDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleLakehouseID, lakehouseID)
+		testsuite.Require().Equal(exampleMlvExecutionDefinitionID, mlvExecutionDefinitionID)
+		resp = azfake.Responder[lakehouse.MaterializedLakeViewsClientDeleteMlvExecutionDefinitionResponse]{}
+		resp.SetResponse(http.StatusOK, lakehouse.MaterializedLakeViewsClientDeleteMlvExecutionDefinitionResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewMaterializedLakeViewsClient()
+	_, err = client.DeleteMlvExecutionDefinition(ctx, exampleWorkspaceID, exampleLakehouseID, exampleMlvExecutionDefinitionID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
 }

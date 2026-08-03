@@ -28,19 +28,27 @@ type ComputeServer struct {
 	// GetApacheAirflowJobComputeBeta is the fake for method ComputeClient.GetApacheAirflowJobComputeBeta
 	// HTTP status codes to indicate success: http.StatusOK
 	GetApacheAirflowJobComputeBeta func(ctx context.Context, workspaceID string, apacheAirflowJobID string, beta bool, options *apacheairflowjob.ComputeClientGetApacheAirflowJobComputeBetaOptions) (resp azfake.Responder[apacheairflowjob.ComputeClientGetApacheAirflowJobComputeBetaResponse], errResp azfake.ErrorResponder)
+
+	// BeginUpdateApacheAirflowJobComputeBeta is the fake for method ComputeClient.BeginUpdateApacheAirflowJobComputeBeta
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
+	BeginUpdateApacheAirflowJobComputeBeta func(ctx context.Context, workspaceID string, apacheAirflowJobID string, beta bool, airflowEnvironmentComputeRequest apacheairflowjob.AirflowEnvironmentComputeRequest, options *apacheairflowjob.ComputeClientBeginUpdateApacheAirflowJobComputeBetaOptions) (resp azfake.PollerResponder[apacheairflowjob.ComputeClientUpdateApacheAirflowJobComputeBetaResponse], errResp azfake.ErrorResponder)
 }
 
 // NewComputeServerTransport creates a new instance of ComputeServerTransport with the provided implementation.
 // The returned ComputeServerTransport instance is connected to an instance of apacheairflowjob.ComputeClient via the
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewComputeServerTransport(srv *ComputeServer) *ComputeServerTransport {
-	return &ComputeServerTransport{srv: srv}
+	return &ComputeServerTransport{
+		srv:                                    srv,
+		beginUpdateApacheAirflowJobComputeBeta: newTracker[azfake.PollerResponder[apacheairflowjob.ComputeClientUpdateApacheAirflowJobComputeBetaResponse]](),
+	}
 }
 
 // ComputeServerTransport connects instances of apacheairflowjob.ComputeClient to instances of ComputeServer.
 // Don't use this type directly, use NewComputeServerTransport instead.
 type ComputeServerTransport struct {
-	srv *ComputeServer
+	srv                                    *ComputeServer
+	beginUpdateApacheAirflowJobComputeBeta *tracker[azfake.PollerResponder[apacheairflowjob.ComputeClientUpdateApacheAirflowJobComputeBetaResponse]]
 }
 
 // Do implements the policy.Transporter interface for ComputeServerTransport.
@@ -70,6 +78,8 @@ func (c *ComputeServerTransport) dispatchToMethodFake(req *http.Request, method 
 			switch method {
 			case "ComputeClient.GetApacheAirflowJobComputeBeta":
 				res.resp, res.err = c.dispatchGetApacheAirflowJobComputeBeta(req)
+			case "ComputeClient.BeginUpdateApacheAirflowJobComputeBeta":
+				res.resp, res.err = c.dispatchBeginUpdateApacheAirflowJobComputeBeta(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -128,6 +138,63 @@ func (c *ComputeServerTransport) dispatchGetApacheAirflowJobComputeBeta(req *htt
 	if err != nil {
 		return nil, err
 	}
+	return resp, nil
+}
+
+func (c *ComputeServerTransport) dispatchBeginUpdateApacheAirflowJobComputeBeta(req *http.Request) (*http.Response, error) {
+	if c.srv.BeginUpdateApacheAirflowJobComputeBeta == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginUpdateApacheAirflowJobComputeBeta not implemented")}
+	}
+	beginUpdateApacheAirflowJobComputeBeta := c.beginUpdateApacheAirflowJobComputeBeta.get(req)
+	if beginUpdateApacheAirflowJobComputeBeta == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/apacheAirflowJobs/(?P<apacheAirflowJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environment/updateCompute`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 3 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		body, err := server.UnmarshalRequestAsJSON[apacheairflowjob.AirflowEnvironmentComputeRequest](req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		apacheAirflowJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("apacheAirflowJobId")])
+		if err != nil {
+			return nil, err
+		}
+		betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
+		if err != nil {
+			return nil, err
+		}
+		betaParam, err := strconv.ParseBool(betaUnescaped)
+		if err != nil {
+			return nil, err
+		}
+		respr, errRespr := c.srv.BeginUpdateApacheAirflowJobComputeBeta(req.Context(), workspaceIDParam, apacheAirflowJobIDParam, betaParam, body, nil)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginUpdateApacheAirflowJobComputeBeta = &respr
+		c.beginUpdateApacheAirflowJobComputeBeta.add(req, beginUpdateApacheAirflowJobComputeBeta)
+	}
+
+	resp, err := server.PollerResponderNext(beginUpdateApacheAirflowJobComputeBeta, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
+		c.beginUpdateApacheAirflowJobComputeBeta.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginUpdateApacheAirflowJobComputeBeta) {
+		c.beginUpdateApacheAirflowJobComputeBeta.remove(req)
+	}
+
 	return resp, nil
 }
 

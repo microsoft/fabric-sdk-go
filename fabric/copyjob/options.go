@@ -61,6 +61,11 @@ type ItemsClientListCopyJobsOptions struct {
 	RootFolderID *string
 }
 
+// ItemsClientResetCopyJobOptions contains the optional parameters for the ItemsClient.ResetCopyJob method.
+type ItemsClientResetCopyJobOptions struct {
+	// placeholder for future optional parameters
+}
+
 // ItemsClientUpdateCopyJobOptions contains the optional parameters for the ItemsClient.UpdateCopyJob method.
 type ItemsClientUpdateCopyJobOptions struct {
 	// placeholder for future optional parameters

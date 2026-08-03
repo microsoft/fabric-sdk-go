@@ -39,6 +39,24 @@ func PossibleDayOfWeekValues() []DayOfWeek {
 	}
 }
 
+// ExecutionContextMode - The execution context mode. Additional ExecutionContextMode types may be added over time.
+type ExecutionContextMode string
+
+const (
+	// ExecutionContextModeAll - All items are included in the execution boundary.
+	ExecutionContextModeAll ExecutionContextMode = "All"
+	// ExecutionContextModeSelected - Only selected items are included in the execution boundary.
+	ExecutionContextModeSelected ExecutionContextMode = "Selected"
+)
+
+// PossibleExecutionContextModeValues returns the possible values for the ExecutionContextMode const type.
+func PossibleExecutionContextModeValues() []ExecutionContextMode {
+	return []ExecutionContextMode{
+		ExecutionContextModeAll,
+		ExecutionContextModeSelected,
+	}
+}
+
 // FileFormat - Data file format name. Additional file format types may be added over time.
 type FileFormat string
 
@@ -104,6 +122,10 @@ const (
 	ItemTypeAnomalyDetector ItemType = "AnomalyDetector"
 	// ItemTypeApacheAirflowJob - An ApacheAirflowJob.
 	ItemTypeApacheAirflowJob ItemType = "ApacheAirflowJob"
+	// ItemTypeAppBackend - An AppBackend.
+	ItemTypeAppBackend ItemType = "AppBackend"
+	// ItemTypeAzureDatabricksStorage - A OneLake-backed storage item for Azure Databricks.
+	ItemTypeAzureDatabricksStorage ItemType = "AzureDatabricksStorage"
 	// ItemTypeCopyJob - A Copy job.
 	ItemTypeCopyJob ItemType = "CopyJob"
 	// ItemTypeCosmosDBDatabase - A Cosmos DB Database.
@@ -112,6 +134,8 @@ const (
 	ItemTypeDashboard ItemType = "Dashboard"
 	// ItemTypeDataAgent - A DataAgent.
 	ItemTypeDataAgent ItemType = "DataAgent"
+	// ItemTypeDataBuildToolJob - A DataBuildToolJob.
+	ItemTypeDataBuildToolJob ItemType = "DataBuildToolJob"
 	// ItemTypeDataPipeline - A data pipeline.
 	ItemTypeDataPipeline ItemType = "DataPipeline"
 	// ItemTypeDataflow - A Dataflow.
@@ -166,6 +190,10 @@ const (
 	ItemTypeOntology ItemType = "Ontology"
 	// ItemTypeOperationsAgent - A OperationsAgent.
 	ItemTypeOperationsAgent ItemType = "OperationsAgent"
+	// ItemTypeOrgApp - An Org App.
+	ItemTypeOrgApp ItemType = "OrgApp"
+	// ItemTypeOrgAppAudience - An Org App Audience.
+	ItemTypeOrgAppAudience ItemType = "OrgAppAudience"
 	// ItemTypePaginatedReport - PowerBI paginated report.
 	ItemTypePaginatedReport ItemType = "PaginatedReport"
 	// ItemTypeReflex - A Reflex.
@@ -197,10 +225,13 @@ func PossibleItemTypeValues() []ItemType {
 	return []ItemType{
 		ItemTypeAnomalyDetector,
 		ItemTypeApacheAirflowJob,
+		ItemTypeAppBackend,
+		ItemTypeAzureDatabricksStorage,
 		ItemTypeCopyJob,
 		ItemTypeCosmosDBDatabase,
 		ItemTypeDashboard,
 		ItemTypeDataAgent,
+		ItemTypeDataBuildToolJob,
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
 		ItemTypeDatamart,
@@ -228,6 +259,8 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeNotebook,
 		ItemTypeOntology,
 		ItemTypeOperationsAgent,
+		ItemTypeOrgApp,
+		ItemTypeOrgAppAudience,
 		ItemTypePaginatedReport,
 		ItemTypeReflex,
 		ItemTypeReport,
@@ -402,6 +435,25 @@ func PossiblePrincipalTypeValues() []PrincipalType {
 		PrincipalTypeServicePrincipal,
 		PrincipalTypeServicePrincipalProfile,
 		PrincipalTypeUser,
+	}
+}
+
+// RefreshMode - The refresh mode for the execution definition. Additional RefreshMode types may be added over time.
+type RefreshMode string
+
+const (
+	// RefreshModeFull - This mode enforces the full recompute for materialized lake views being refreshed.
+	RefreshModeFull RefreshMode = "Full"
+	// RefreshModeOptimal - This mode chooses the best strategy to maximize performance from among incremental, full, or no recompute
+	// while refreshing each materialized lake view.
+	RefreshModeOptimal RefreshMode = "Optimal"
+)
+
+// PossibleRefreshModeValues returns the possible values for the RefreshMode const type.
+func PossibleRefreshModeValues() []RefreshMode {
+	return []RefreshMode{
+		RefreshModeFull,
+		RefreshModeOptimal,
 	}
 }
 

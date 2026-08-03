@@ -35,6 +35,11 @@ type ItemsClientListCopyJobsResponse struct {
 	CopyJobs
 }
 
+// ItemsClientResetCopyJobResponse contains the response from method ItemsClient.ResetCopyJob.
+type ItemsClientResetCopyJobResponse struct {
+	// placeholder for future response values
+}
+
 // ItemsClientUpdateCopyJobDefinitionResponse contains the response from method ItemsClient.BeginUpdateCopyJobDefinition.
 type ItemsClientUpdateCopyJobDefinitionResponse struct {
 	// placeholder for future response values

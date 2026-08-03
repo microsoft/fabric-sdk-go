@@ -131,6 +131,37 @@ type LivySessionsClientListLivySessionsOptions struct {
 	ContinuationToken *string
 }
 
+// MaterializedLakeViewsClientCreateMlvExecutionDefinitionOptions contains the optional parameters for the MaterializedLakeViewsClient.CreateMlvExecutionDefinition
+// method.
+type MaterializedLakeViewsClientCreateMlvExecutionDefinitionOptions struct {
+	// placeholder for future optional parameters
+}
+
+// MaterializedLakeViewsClientDeleteMlvExecutionDefinitionOptions contains the optional parameters for the MaterializedLakeViewsClient.DeleteMlvExecutionDefinition
+// method.
+type MaterializedLakeViewsClientDeleteMlvExecutionDefinitionOptions struct {
+	// placeholder for future optional parameters
+}
+
+// MaterializedLakeViewsClientGetMlvExecutionDefinitionOptions contains the optional parameters for the MaterializedLakeViewsClient.GetMlvExecutionDefinition
+// method.
+type MaterializedLakeViewsClientGetMlvExecutionDefinitionOptions struct {
+	// placeholder for future optional parameters
+}
+
+// MaterializedLakeViewsClientListMlvExecutionDefinitionsOptions contains the optional parameters for the MaterializedLakeViewsClient.NewListMlvExecutionDefinitionsPager
+// method.
+type MaterializedLakeViewsClientListMlvExecutionDefinitionsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// MaterializedLakeViewsClientUpdateMlvExecutionDefinitionOptions contains the optional parameters for the MaterializedLakeViewsClient.UpdateMlvExecutionDefinition
+// method.
+type MaterializedLakeViewsClientUpdateMlvExecutionDefinitionOptions struct {
+	// placeholder for future optional parameters
+}
+
 // TablesClientBeginLoadSchemaTableBetaOptions contains the optional parameters for the TablesClient.BeginLoadSchemaTableBeta
 // method.
 type TablesClientBeginLoadSchemaTableBetaOptions struct {

@@ -283,6 +283,10 @@ const (
 	ItemTypeAnomalyDetector ItemType = "AnomalyDetector"
 	// ItemTypeApacheAirflowJob - An ApacheAirflowJob.
 	ItemTypeApacheAirflowJob ItemType = "ApacheAirflowJob"
+	// ItemTypeAppBackend - An AppBackend.
+	ItemTypeAppBackend ItemType = "AppBackend"
+	// ItemTypeAzureDatabricksStorage - A OneLake-backed storage item for Azure Databricks.
+	ItemTypeAzureDatabricksStorage ItemType = "AzureDatabricksStorage"
 	// ItemTypeCopyJob - A Copy job.
 	ItemTypeCopyJob ItemType = "CopyJob"
 	// ItemTypeCosmosDBDatabase - A Cosmos DB Database.
@@ -291,6 +295,8 @@ const (
 	ItemTypeDashboard ItemType = "Dashboard"
 	// ItemTypeDataAgent - A DataAgent.
 	ItemTypeDataAgent ItemType = "DataAgent"
+	// ItemTypeDataBuildToolJob - A DataBuildToolJob.
+	ItemTypeDataBuildToolJob ItemType = "DataBuildToolJob"
 	// ItemTypeDataPipeline - A data pipeline.
 	ItemTypeDataPipeline ItemType = "DataPipeline"
 	// ItemTypeDataflow - A Dataflow.
@@ -345,6 +351,10 @@ const (
 	ItemTypeOntology ItemType = "Ontology"
 	// ItemTypeOperationsAgent - A OperationsAgent.
 	ItemTypeOperationsAgent ItemType = "OperationsAgent"
+	// ItemTypeOrgApp - An Org App.
+	ItemTypeOrgApp ItemType = "OrgApp"
+	// ItemTypeOrgAppAudience - An Org App Audience.
+	ItemTypeOrgAppAudience ItemType = "OrgAppAudience"
 	// ItemTypePaginatedReport - PowerBI paginated report.
 	ItemTypePaginatedReport ItemType = "PaginatedReport"
 	// ItemTypeReflex - A Reflex.
@@ -376,10 +386,13 @@ func PossibleItemTypeValues() []ItemType {
 	return []ItemType{
 		ItemTypeAnomalyDetector,
 		ItemTypeApacheAirflowJob,
+		ItemTypeAppBackend,
+		ItemTypeAzureDatabricksStorage,
 		ItemTypeCopyJob,
 		ItemTypeCosmosDBDatabase,
 		ItemTypeDashboard,
 		ItemTypeDataAgent,
+		ItemTypeDataBuildToolJob,
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
 		ItemTypeDatamart,
@@ -407,6 +420,8 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeNotebook,
 		ItemTypeOntology,
 		ItemTypeOperationsAgent,
+		ItemTypeOrgApp,
+		ItemTypeOrgAppAudience,
 		ItemTypePaginatedReport,
 		ItemTypeReflex,
 		ItemTypeReport,
@@ -617,6 +632,33 @@ func PossibleWorkloadAssignmentTypeValues() []WorkloadAssignmentType {
 		WorkloadAssignmentTypeCapacity,
 		WorkloadAssignmentTypeTenant,
 		WorkloadAssignmentTypeWorkspace,
+	}
+}
+
+// WorkspaceEncryptionStatus - Workspace encryption status. Additional encryption status may be added over time.
+type WorkspaceEncryptionStatus string
+
+const (
+	// WorkspaceEncryptionStatusActive - Workspace encryption is active and the workspace is encrypted.
+	WorkspaceEncryptionStatusActive WorkspaceEncryptionStatus = "Active"
+	// WorkspaceEncryptionStatusDisableInProgress - Workspace encryption is disabling.
+	WorkspaceEncryptionStatusDisableInProgress WorkspaceEncryptionStatus = "DisableInProgress"
+	// WorkspaceEncryptionStatusDisabled - Workspace encryption is not active.
+	WorkspaceEncryptionStatusDisabled WorkspaceEncryptionStatus = "Disabled"
+	// WorkspaceEncryptionStatusEnableInProgress - Workspace encryption is enabling.
+	WorkspaceEncryptionStatusEnableInProgress WorkspaceEncryptionStatus = "EnableInProgress"
+	// WorkspaceEncryptionStatusFailed - Workspace encryption application failed.
+	WorkspaceEncryptionStatusFailed WorkspaceEncryptionStatus = "Failed"
+)
+
+// PossibleWorkspaceEncryptionStatusValues returns the possible values for the WorkspaceEncryptionStatus const type.
+func PossibleWorkspaceEncryptionStatusValues() []WorkspaceEncryptionStatus {
+	return []WorkspaceEncryptionStatus{
+		WorkspaceEncryptionStatusActive,
+		WorkspaceEncryptionStatusDisableInProgress,
+		WorkspaceEncryptionStatusDisabled,
+		WorkspaceEncryptionStatusEnableInProgress,
+		WorkspaceEncryptionStatusFailed,
 	}
 }
 

@@ -20,6 +20,7 @@ import (
 
 	"github.com/microsoft/fabric-sdk-go/fabric/core"
 	"github.com/microsoft/fabric-sdk-go/internal/iruntime"
+	"github.com/microsoft/fabric-sdk-go/internal/pollers/locasync"
 )
 
 // ItemsClient contains the methods for the Items group.
@@ -27,6 +28,286 @@ import (
 type ItemsClient struct {
 	internal *azcore.Client
 	endpoint string
+}
+
+// BeginCreatePaginatedReport - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// To create a paginated report with a definition, refer to the Paginated Report definition [/rest/api/fabric/articles/item-management/definitions/paginated-report-definition]
+// article.
+// PERMISSIONS The caller must have a contributor workspace role.
+// REQUIRED DELEGATED SCOPES PaginatedReport.ReadWrite.All or Item.ReadWrite.All
+// LIMITATIONS
+// * Creating a paginated report in a subfolder is not supported. The paginated report is created at the workspace root level.
+// To place a paginated report in a subfolder, use the Update Definition API
+// which supports subfolders.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - createPaginatedReportRequest - Create paginated report request payload.
+//   - options - ItemsClientBeginCreatePaginatedReportOptions contains the optional parameters for the ItemsClient.BeginCreatePaginatedReport
+//     method.
+func (client *ItemsClient) BeginCreatePaginatedReport(ctx context.Context, workspaceID string, createPaginatedReportRequest CreatePaginatedReportRequest, options *ItemsClientBeginCreatePaginatedReportOptions) (*runtime.Poller[ItemsClientCreatePaginatedReportResponse], error) {
+	return client.beginCreatePaginatedReport(ctx, workspaceID, createPaginatedReportRequest, options)
+}
+
+// CreatePaginatedReport - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// To create a paginated report with a definition, refer to the Paginated Report definition [/rest/api/fabric/articles/item-management/definitions/paginated-report-definition]
+// article.
+// PERMISSIONS The caller must have a contributor workspace role.
+// REQUIRED DELEGATED SCOPES PaginatedReport.ReadWrite.All or Item.ReadWrite.All
+// LIMITATIONS
+// * Creating a paginated report in a subfolder is not supported. The paginated report is created at the workspace root level.
+// To place a paginated report in a subfolder, use the Update Definition API
+// which supports subfolders.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) createPaginatedReport(ctx context.Context, workspaceID string, createPaginatedReportRequest CreatePaginatedReportRequest, options *ItemsClientBeginCreatePaginatedReportOptions) (*http.Response, error) {
+	var err error
+	const operationName = "paginatedreport.ItemsClient.BeginCreatePaginatedReport"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.createPaginatedReportCreateRequest(ctx, workspaceID, createPaginatedReportRequest, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusCreated, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// createPaginatedReportCreateRequest creates the CreatePaginatedReport request.
+func (client *ItemsClient) createPaginatedReportCreateRequest(ctx context.Context, workspaceID string, createPaginatedReportRequest CreatePaginatedReportRequest, _ *ItemsClientBeginCreatePaginatedReportOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/paginatedReports"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, createPaginatedReportRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// DeletePaginatedReport - PERMISSIONS The caller must have write permissions for the paginated report.
+// REQUIRED DELEGATED SCOPES PaginatedReport.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - paginatedReportID - The paginated report ID.
+//   - options - ItemsClientDeletePaginatedReportOptions contains the optional parameters for the ItemsClient.DeletePaginatedReport
+//     method.
+func (client *ItemsClient) DeletePaginatedReport(ctx context.Context, workspaceID string, paginatedReportID string, options *ItemsClientDeletePaginatedReportOptions) (ItemsClientDeletePaginatedReportResponse, error) {
+	var err error
+	const operationName = "paginatedreport.ItemsClient.DeletePaginatedReport"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.deletePaginatedReportCreateRequest(ctx, workspaceID, paginatedReportID, options)
+	if err != nil {
+		return ItemsClientDeletePaginatedReportResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return ItemsClientDeletePaginatedReportResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return ItemsClientDeletePaginatedReportResponse{}, err
+	}
+	return ItemsClientDeletePaginatedReportResponse{}, nil
+}
+
+// deletePaginatedReportCreateRequest creates the DeletePaginatedReport request.
+func (client *ItemsClient) deletePaginatedReportCreateRequest(ctx context.Context, workspaceID string, paginatedReportID string, _ *ItemsClientDeletePaginatedReportOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/paginatedReports/{paginatedReportId}"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if paginatedReportID == "" {
+		return nil, errors.New("parameter paginatedReportID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{paginatedReportId}", url.PathEscape(paginatedReportID))
+	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// GetPaginatedReport - PERMISSIONS The caller must have read permissions for the paginated report.
+// REQUIRED DELEGATED SCOPES PaginatedReport.Read.All or PaginatedReport.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - paginatedReportID - The paginated report ID.
+//   - options - ItemsClientGetPaginatedReportOptions contains the optional parameters for the ItemsClient.GetPaginatedReport
+//     method.
+func (client *ItemsClient) GetPaginatedReport(ctx context.Context, workspaceID string, paginatedReportID string, options *ItemsClientGetPaginatedReportOptions) (ItemsClientGetPaginatedReportResponse, error) {
+	var err error
+	const operationName = "paginatedreport.ItemsClient.GetPaginatedReport"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getPaginatedReportCreateRequest(ctx, workspaceID, paginatedReportID, options)
+	if err != nil {
+		return ItemsClientGetPaginatedReportResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return ItemsClientGetPaginatedReportResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return ItemsClientGetPaginatedReportResponse{}, err
+	}
+	resp, err := client.getPaginatedReportHandleResponse(httpResp)
+	return resp, err
+}
+
+// getPaginatedReportCreateRequest creates the GetPaginatedReport request.
+func (client *ItemsClient) getPaginatedReportCreateRequest(ctx context.Context, workspaceID string, paginatedReportID string, _ *ItemsClientGetPaginatedReportOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/paginatedReports/{paginatedReportId}"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if paginatedReportID == "" {
+		return nil, errors.New("parameter paginatedReportID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{paginatedReportId}", url.PathEscape(paginatedReportID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getPaginatedReportHandleResponse handles the GetPaginatedReport response.
+func (client *ItemsClient) getPaginatedReportHandleResponse(resp *http.Response) (ItemsClientGetPaginatedReportResponse, error) {
+	result := ItemsClientGetPaginatedReportResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.PaginatedReport); err != nil {
+		return ItemsClientGetPaginatedReportResponse{}, err
+	}
+	return result, nil
+}
+
+// BeginGetPaginatedReportDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have read and write permissions for the paginated report.
+// REQUIRED DELEGATED SCOPES PaginatedReport.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - paginatedReportID - The paginated report ID.
+//   - options - ItemsClientBeginGetPaginatedReportDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetPaginatedReportDefinition
+//     method.
+func (client *ItemsClient) BeginGetPaginatedReportDefinition(ctx context.Context, workspaceID string, paginatedReportID string, options *ItemsClientBeginGetPaginatedReportDefinitionOptions) (*runtime.Poller[ItemsClientGetPaginatedReportDefinitionResponse], error) {
+	return client.beginGetPaginatedReportDefinition(ctx, workspaceID, paginatedReportID, options)
+}
+
+// GetPaginatedReportDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have read and write permissions for the paginated report.
+// REQUIRED DELEGATED SCOPES PaginatedReport.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) getPaginatedReportDefinition(ctx context.Context, workspaceID string, paginatedReportID string, options *ItemsClientBeginGetPaginatedReportDefinitionOptions) (*http.Response, error) {
+	var err error
+	const operationName = "paginatedreport.ItemsClient.BeginGetPaginatedReportDefinition"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getPaginatedReportDefinitionCreateRequest(ctx, workspaceID, paginatedReportID, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// getPaginatedReportDefinitionCreateRequest creates the GetPaginatedReportDefinition request.
+func (client *ItemsClient) getPaginatedReportDefinitionCreateRequest(ctx context.Context, workspaceID string, paginatedReportID string, options *ItemsClientBeginGetPaginatedReportDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/paginatedReports/{paginatedReportId}/getDefinition"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if paginatedReportID == "" {
+		return nil, errors.New("parameter paginatedReportID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{paginatedReportId}", url.PathEscape(paginatedReportID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.Format != nil {
+		reqQP.Set("format", *options.Format)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
 }
 
 // NewListPaginatedReportsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
@@ -170,7 +451,303 @@ func (client *ItemsClient) updatePaginatedReportHandleResponse(resp *http.Respon
 	return result, nil
 }
 
+// BeginUpdatePaginatedReportDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have read and write permissions for the paginated report.
+// REQUIRED DELEGATED SCOPES PaginatedReport.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - paginatedReportID - The paginated report ID.
+//   - updatePaginatedReportDefinitionRequest - Update paginated report definition request payload.
+//   - options - ItemsClientBeginUpdatePaginatedReportDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdatePaginatedReportDefinition
+//     method.
+func (client *ItemsClient) BeginUpdatePaginatedReportDefinition(ctx context.Context, workspaceID string, paginatedReportID string, updatePaginatedReportDefinitionRequest UpdatePaginatedReportDefinitionRequest, options *ItemsClientBeginUpdatePaginatedReportDefinitionOptions) (*runtime.Poller[ItemsClientUpdatePaginatedReportDefinitionResponse], error) {
+	return client.beginUpdatePaginatedReportDefinition(ctx, workspaceID, paginatedReportID, updatePaginatedReportDefinitionRequest, options)
+}
+
+// UpdatePaginatedReportDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have read and write permissions for the paginated report.
+// REQUIRED DELEGATED SCOPES PaginatedReport.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) updatePaginatedReportDefinition(ctx context.Context, workspaceID string, paginatedReportID string, updatePaginatedReportDefinitionRequest UpdatePaginatedReportDefinitionRequest, options *ItemsClientBeginUpdatePaginatedReportDefinitionOptions) (*http.Response, error) {
+	var err error
+	const operationName = "paginatedreport.ItemsClient.BeginUpdatePaginatedReportDefinition"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updatePaginatedReportDefinitionCreateRequest(ctx, workspaceID, paginatedReportID, updatePaginatedReportDefinitionRequest, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// updatePaginatedReportDefinitionCreateRequest creates the UpdatePaginatedReportDefinition request.
+func (client *ItemsClient) updatePaginatedReportDefinitionCreateRequest(ctx context.Context, workspaceID string, paginatedReportID string, updatePaginatedReportDefinitionRequest UpdatePaginatedReportDefinitionRequest, options *ItemsClientBeginUpdatePaginatedReportDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/paginatedReports/{paginatedReportId}/updateDefinition"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if paginatedReportID == "" {
+		return nil, errors.New("parameter paginatedReportID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{paginatedReportId}", url.PathEscape(paginatedReportID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.UpdateMetadata != nil {
+		reqQP.Set("updateMetadata", strconv.FormatBool(*options.UpdateMetadata))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updatePaginatedReportDefinitionRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // Custom code starts below
+
+// CreatePaginatedReport - returns ItemsClientCreatePaginatedReportResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// To create a paginated report with a definition, refer to the Paginated Report definition [/rest/api/fabric/articles/item-management/definitions/paginated-report-definition] article.
+//
+// PERMISSIONS The caller must have a contributor workspace role.
+//
+// # REQUIRED DELEGATED SCOPES PaginatedReport.ReadWrite.All or Item.ReadWrite.All
+//
+// LIMITATIONS
+//
+//   - Creating a paginated report in a subfolder is not supported. The paginated report is created at the workspace root level. To place a paginated report in a subfolder, use the Update Definition API
+//     which supports subfolders.
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - createPaginatedReportRequest - Create paginated report request payload.
+//   - options - ItemsClientBeginCreatePaginatedReportOptions contains the optional parameters for the ItemsClient.BeginCreatePaginatedReport method.
+func (client *ItemsClient) CreatePaginatedReport(ctx context.Context, workspaceID string, createPaginatedReportRequest CreatePaginatedReportRequest, options *ItemsClientBeginCreatePaginatedReportOptions) (ItemsClientCreatePaginatedReportResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginCreatePaginatedReport(ctx, workspaceID, createPaginatedReportRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientCreatePaginatedReportResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientCreatePaginatedReportResponse{}, err
+	}
+	return result, err
+}
+
+// beginCreatePaginatedReport creates the createPaginatedReport request.
+func (client *ItemsClient) beginCreatePaginatedReport(ctx context.Context, workspaceID string, createPaginatedReportRequest CreatePaginatedReportRequest, options *ItemsClientBeginCreatePaginatedReportOptions) (*runtime.Poller[ItemsClientCreatePaginatedReportResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.createPaginatedReport(ctx, workspaceID, createPaginatedReportRequest, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientCreatePaginatedReportResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientCreatePaginatedReportResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientCreatePaginatedReportResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientCreatePaginatedReportResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// GetPaginatedReportDefinition - returns ItemsClientGetPaginatedReportDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS The caller must have read and write permissions for the paginated report.
+//
+// # REQUIRED DELEGATED SCOPES PaginatedReport.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - paginatedReportID - The paginated report ID.
+//   - options - ItemsClientBeginGetPaginatedReportDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetPaginatedReportDefinition method.
+func (client *ItemsClient) GetPaginatedReportDefinition(ctx context.Context, workspaceID string, paginatedReportID string, options *ItemsClientBeginGetPaginatedReportDefinitionOptions) (ItemsClientGetPaginatedReportDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginGetPaginatedReportDefinition(ctx, workspaceID, paginatedReportID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientGetPaginatedReportDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientGetPaginatedReportDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginGetPaginatedReportDefinition creates the getPaginatedReportDefinition request.
+func (client *ItemsClient) beginGetPaginatedReportDefinition(ctx context.Context, workspaceID string, paginatedReportID string, options *ItemsClientBeginGetPaginatedReportDefinitionOptions) (*runtime.Poller[ItemsClientGetPaginatedReportDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.getPaginatedReportDefinition(ctx, workspaceID, paginatedReportID, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientGetPaginatedReportDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientGetPaginatedReportDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientGetPaginatedReportDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientGetPaginatedReportDefinitionResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// UpdatePaginatedReportDefinition - returns ItemsClientUpdatePaginatedReportDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// PERMISSIONS The caller must have read and write permissions for the paginated report.
+//
+// # REQUIRED DELEGATED SCOPES PaginatedReport.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - paginatedReportID - The paginated report ID.
+//   - updatePaginatedReportDefinitionRequest - Update paginated report definition request payload.
+//   - options - ItemsClientBeginUpdatePaginatedReportDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdatePaginatedReportDefinition method.
+func (client *ItemsClient) UpdatePaginatedReportDefinition(ctx context.Context, workspaceID string, paginatedReportID string, updatePaginatedReportDefinitionRequest UpdatePaginatedReportDefinitionRequest, options *ItemsClientBeginUpdatePaginatedReportDefinitionOptions) (ItemsClientUpdatePaginatedReportDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginUpdatePaginatedReportDefinition(ctx, workspaceID, paginatedReportID, updatePaginatedReportDefinitionRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientUpdatePaginatedReportDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientUpdatePaginatedReportDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginUpdatePaginatedReportDefinition creates the updatePaginatedReportDefinition request.
+func (client *ItemsClient) beginUpdatePaginatedReportDefinition(ctx context.Context, workspaceID string, paginatedReportID string, updatePaginatedReportDefinitionRequest UpdatePaginatedReportDefinitionRequest, options *ItemsClientBeginUpdatePaginatedReportDefinitionOptions) (*runtime.Poller[ItemsClientUpdatePaginatedReportDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.updatePaginatedReportDefinition(ctx, workspaceID, paginatedReportID, updatePaginatedReportDefinitionRequest, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdatePaginatedReportDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientUpdatePaginatedReportDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdatePaginatedReportDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientUpdatePaginatedReportDefinitionResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
 
 // ListPaginatedReports - returns array of PaginatedReport from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].

@@ -29,6 +29,14 @@ type GatewaysServer struct {
 	// HTTP status codes to indicate success: http.StatusCreated
 	AddGatewayRoleAssignment func(ctx context.Context, gatewayID string, addGatewayRoleAssignmentRequest core.AddGatewayRoleAssignmentRequest, options *core.GatewaysClientAddGatewayRoleAssignmentOptions) (resp azfake.Responder[core.GatewaysClientAddGatewayRoleAssignmentResponse], errResp azfake.ErrorResponder)
 
+	// BeginCheckGatewayMemberStatus is the fake for method GatewaysClient.BeginCheckGatewayMemberStatus
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	BeginCheckGatewayMemberStatus func(ctx context.Context, gatewayID string, gatewayMemberID string, options *core.GatewaysClientBeginCheckGatewayMemberStatusOptions) (resp azfake.PollerResponder[core.GatewaysClientCheckGatewayMemberStatusResponse], errResp azfake.ErrorResponder)
+
+	// BeginCheckGatewayStatus is the fake for method GatewaysClient.BeginCheckGatewayStatus
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	BeginCheckGatewayStatus func(ctx context.Context, gatewayID string, options *core.GatewaysClientBeginCheckGatewayStatusOptions) (resp azfake.PollerResponder[core.GatewaysClientCheckGatewayStatusResponse], errResp azfake.ErrorResponder)
+
 	// CreateGateway is the fake for method GatewaysClient.CreateGateway
 	// HTTP status codes to indicate success: http.StatusCreated
 	CreateGateway func(ctx context.Context, createGatewayRequest core.CreateGatewayRequestClassification, options *core.GatewaysClientCreateGatewayOptions) (resp azfake.Responder[core.GatewaysClientCreateGatewayResponse], errResp azfake.ErrorResponder)
@@ -65,6 +73,14 @@ type GatewaysServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListGatewaysPager func(options *core.GatewaysClientListGatewaysOptions) (resp azfake.PagerResponder[core.GatewaysClientListGatewaysResponse])
 
+	// BeginRestartGateway is the fake for method GatewaysClient.BeginRestartGateway
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
+	BeginRestartGateway func(ctx context.Context, gatewayID string, options *core.GatewaysClientBeginRestartGatewayOptions) (resp azfake.PollerResponder[core.GatewaysClientRestartGatewayResponse], errResp azfake.ErrorResponder)
+
+	// BeginShutdownGateway is the fake for method GatewaysClient.BeginShutdownGateway
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
+	BeginShutdownGateway func(ctx context.Context, gatewayID string, options *core.GatewaysClientBeginShutdownGatewayOptions) (resp azfake.PollerResponder[core.GatewaysClientShutdownGatewayResponse], errResp azfake.ErrorResponder)
+
 	// UpdateGateway is the fake for method GatewaysClient.UpdateGateway
 	// HTTP status codes to indicate success: http.StatusOK
 	UpdateGateway func(ctx context.Context, gatewayID string, updateGatewayRequest core.UpdateGatewayRequestClassification, options *core.GatewaysClientUpdateGatewayOptions) (resp azfake.Responder[core.GatewaysClientUpdateGatewayResponse], errResp azfake.ErrorResponder)
@@ -84,8 +100,12 @@ type GatewaysServer struct {
 func NewGatewaysServerTransport(srv *GatewaysServer) *GatewaysServerTransport {
 	return &GatewaysServerTransport{
 		srv:                                srv,
+		beginCheckGatewayMemberStatus:      newTracker[azfake.PollerResponder[core.GatewaysClientCheckGatewayMemberStatusResponse]](),
+		beginCheckGatewayStatus:            newTracker[azfake.PollerResponder[core.GatewaysClientCheckGatewayStatusResponse]](),
 		newListGatewayRoleAssignmentsPager: newTracker[azfake.PagerResponder[core.GatewaysClientListGatewayRoleAssignmentsResponse]](),
 		newListGatewaysPager:               newTracker[azfake.PagerResponder[core.GatewaysClientListGatewaysResponse]](),
+		beginRestartGateway:                newTracker[azfake.PollerResponder[core.GatewaysClientRestartGatewayResponse]](),
+		beginShutdownGateway:               newTracker[azfake.PollerResponder[core.GatewaysClientShutdownGatewayResponse]](),
 	}
 }
 
@@ -93,8 +113,12 @@ func NewGatewaysServerTransport(srv *GatewaysServer) *GatewaysServerTransport {
 // Don't use this type directly, use NewGatewaysServerTransport instead.
 type GatewaysServerTransport struct {
 	srv                                *GatewaysServer
+	beginCheckGatewayMemberStatus      *tracker[azfake.PollerResponder[core.GatewaysClientCheckGatewayMemberStatusResponse]]
+	beginCheckGatewayStatus            *tracker[azfake.PollerResponder[core.GatewaysClientCheckGatewayStatusResponse]]
 	newListGatewayRoleAssignmentsPager *tracker[azfake.PagerResponder[core.GatewaysClientListGatewayRoleAssignmentsResponse]]
 	newListGatewaysPager               *tracker[azfake.PagerResponder[core.GatewaysClientListGatewaysResponse]]
+	beginRestartGateway                *tracker[azfake.PollerResponder[core.GatewaysClientRestartGatewayResponse]]
+	beginShutdownGateway               *tracker[azfake.PollerResponder[core.GatewaysClientShutdownGatewayResponse]]
 }
 
 // Do implements the policy.Transporter interface for GatewaysServerTransport.
@@ -124,6 +148,10 @@ func (g *GatewaysServerTransport) dispatchToMethodFake(req *http.Request, method
 			switch method {
 			case "GatewaysClient.AddGatewayRoleAssignment":
 				res.resp, res.err = g.dispatchAddGatewayRoleAssignment(req)
+			case "GatewaysClient.BeginCheckGatewayMemberStatus":
+				res.resp, res.err = g.dispatchBeginCheckGatewayMemberStatus(req)
+			case "GatewaysClient.BeginCheckGatewayStatus":
+				res.resp, res.err = g.dispatchBeginCheckGatewayStatus(req)
 			case "GatewaysClient.CreateGateway":
 				res.resp, res.err = g.dispatchCreateGateway(req)
 			case "GatewaysClient.DeleteGateway":
@@ -142,6 +170,10 @@ func (g *GatewaysServerTransport) dispatchToMethodFake(req *http.Request, method
 				res.resp, res.err = g.dispatchNewListGatewayRoleAssignmentsPager(req)
 			case "GatewaysClient.NewListGatewaysPager":
 				res.resp, res.err = g.dispatchNewListGatewaysPager(req)
+			case "GatewaysClient.BeginRestartGateway":
+				res.resp, res.err = g.dispatchBeginRestartGateway(req)
+			case "GatewaysClient.BeginShutdownGateway":
+				res.resp, res.err = g.dispatchBeginShutdownGateway(req)
 			case "GatewaysClient.UpdateGateway":
 				res.resp, res.err = g.dispatchUpdateGateway(req)
 			case "GatewaysClient.UpdateGatewayMember":
@@ -200,6 +232,90 @@ func (g *GatewaysServerTransport) dispatchAddGatewayRoleAssignment(req *http.Req
 	if val := server.GetResponse(respr).Location; val != nil {
 		resp.Header.Set("Location", *val)
 	}
+	return resp, nil
+}
+
+func (g *GatewaysServerTransport) dispatchBeginCheckGatewayMemberStatus(req *http.Request) (*http.Response, error) {
+	if g.srv.BeginCheckGatewayMemberStatus == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginCheckGatewayMemberStatus not implemented")}
+	}
+	beginCheckGatewayMemberStatus := g.beginCheckGatewayMemberStatus.get(req)
+	if beginCheckGatewayMemberStatus == nil {
+		const regexStr = `/v1/gateways/(?P<gatewayId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/members/(?P<gatewayMemberId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/checkStatus`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 3 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		gatewayIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("gatewayId")])
+		if err != nil {
+			return nil, err
+		}
+		gatewayMemberIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("gatewayMemberId")])
+		if err != nil {
+			return nil, err
+		}
+		respr, errRespr := g.srv.BeginCheckGatewayMemberStatus(req.Context(), gatewayIDParam, gatewayMemberIDParam, nil)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginCheckGatewayMemberStatus = &respr
+		g.beginCheckGatewayMemberStatus.add(req, beginCheckGatewayMemberStatus)
+	}
+
+	resp, err := server.PollerResponderNext(beginCheckGatewayMemberStatus, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+		g.beginCheckGatewayMemberStatus.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginCheckGatewayMemberStatus) {
+		g.beginCheckGatewayMemberStatus.remove(req)
+	}
+
+	return resp, nil
+}
+
+func (g *GatewaysServerTransport) dispatchBeginCheckGatewayStatus(req *http.Request) (*http.Response, error) {
+	if g.srv.BeginCheckGatewayStatus == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginCheckGatewayStatus not implemented")}
+	}
+	beginCheckGatewayStatus := g.beginCheckGatewayStatus.get(req)
+	if beginCheckGatewayStatus == nil {
+		const regexStr = `/v1/gateways/(?P<gatewayId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/checkStatus`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		gatewayIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("gatewayId")])
+		if err != nil {
+			return nil, err
+		}
+		respr, errRespr := g.srv.BeginCheckGatewayStatus(req.Context(), gatewayIDParam, nil)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginCheckGatewayStatus = &respr
+		g.beginCheckGatewayStatus.add(req, beginCheckGatewayStatus)
+	}
+
+	resp, err := server.PollerResponderNext(beginCheckGatewayStatus, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+		g.beginCheckGatewayStatus.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginCheckGatewayStatus) {
+		g.beginCheckGatewayStatus.remove(req)
+	}
+
 	return resp, nil
 }
 
@@ -501,6 +617,86 @@ func (g *GatewaysServerTransport) dispatchNewListGatewaysPager(req *http.Request
 	if !server.PagerResponderMore(newListGatewaysPager) {
 		g.newListGatewaysPager.remove(req)
 	}
+	return resp, nil
+}
+
+func (g *GatewaysServerTransport) dispatchBeginRestartGateway(req *http.Request) (*http.Response, error) {
+	if g.srv.BeginRestartGateway == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginRestartGateway not implemented")}
+	}
+	beginRestartGateway := g.beginRestartGateway.get(req)
+	if beginRestartGateway == nil {
+		const regexStr = `/v1/gateways/(?P<gatewayId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/restart`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		gatewayIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("gatewayId")])
+		if err != nil {
+			return nil, err
+		}
+		respr, errRespr := g.srv.BeginRestartGateway(req.Context(), gatewayIDParam, nil)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginRestartGateway = &respr
+		g.beginRestartGateway.add(req, beginRestartGateway)
+	}
+
+	resp, err := server.PollerResponderNext(beginRestartGateway, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
+		g.beginRestartGateway.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginRestartGateway) {
+		g.beginRestartGateway.remove(req)
+	}
+
+	return resp, nil
+}
+
+func (g *GatewaysServerTransport) dispatchBeginShutdownGateway(req *http.Request) (*http.Response, error) {
+	if g.srv.BeginShutdownGateway == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginShutdownGateway not implemented")}
+	}
+	beginShutdownGateway := g.beginShutdownGateway.get(req)
+	if beginShutdownGateway == nil {
+		const regexStr = `/v1/gateways/(?P<gatewayId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/shutdown`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		gatewayIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("gatewayId")])
+		if err != nil {
+			return nil, err
+		}
+		respr, errRespr := g.srv.BeginShutdownGateway(req.Context(), gatewayIDParam, nil)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginShutdownGateway = &respr
+		g.beginShutdownGateway.add(req, beginShutdownGateway)
+	}
+
+	resp, err := server.PollerResponderNext(beginShutdownGateway, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
+		g.beginShutdownGateway.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginShutdownGateway) {
+		g.beginShutdownGateway.remove(req)
+	}
+
 	return resp, nil
 }
 

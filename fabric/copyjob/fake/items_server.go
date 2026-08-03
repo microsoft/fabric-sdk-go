@@ -46,6 +46,10 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListCopyJobsPager func(workspaceID string, options *copyjob.ItemsClientListCopyJobsOptions) (resp azfake.PagerResponder[copyjob.ItemsClientListCopyJobsResponse])
 
+	// ResetCopyJob is the fake for method ItemsClient.ResetCopyJob
+	// HTTP status codes to indicate success: http.StatusOK
+	ResetCopyJob func(ctx context.Context, workspaceID string, copyJobID string, resetCopyJobRequest copyjob.EntityResetPayload, options *copyjob.ItemsClientResetCopyJobOptions) (resp azfake.Responder[copyjob.ItemsClientResetCopyJobResponse], errResp azfake.ErrorResponder)
+
 	// UpdateCopyJob is the fake for method ItemsClient.UpdateCopyJob
 	// HTTP status codes to indicate success: http.StatusOK
 	UpdateCopyJob func(ctx context.Context, workspaceID string, copyJobID string, updateCopyJobRequest copyjob.UpdateCopyJobRequest, options *copyjob.ItemsClientUpdateCopyJobOptions) (resp azfake.Responder[copyjob.ItemsClientUpdateCopyJobResponse], errResp azfake.ErrorResponder)
@@ -113,6 +117,8 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 				res.resp, res.err = i.dispatchBeginGetCopyJobDefinition(req)
 			case "ItemsClient.NewListCopyJobsPager":
 				res.resp, res.err = i.dispatchNewListCopyJobsPager(req)
+			case "ItemsClient.ResetCopyJob":
+				res.resp, res.err = i.dispatchResetCopyJob(req)
 			case "ItemsClient.UpdateCopyJob":
 				res.resp, res.err = i.dispatchUpdateCopyJob(req)
 			case "ItemsClient.BeginUpdateCopyJobDefinition":
@@ -377,6 +383,43 @@ func (i *ItemsServerTransport) dispatchNewListCopyJobsPager(req *http.Request) (
 	}
 	if !server.PagerResponderMore(newListCopyJobsPager) {
 		i.newListCopyJobsPager.remove(req)
+	}
+	return resp, nil
+}
+
+func (i *ItemsServerTransport) dispatchResetCopyJob(req *http.Request) (*http.Response, error) {
+	if i.srv.ResetCopyJob == nil {
+		return nil, &nonRetriableError{errors.New("fake for method ResetCopyJob not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/copyJobs/(?P<copyJobId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/resetCopyJob`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[copyjob.EntityResetPayload](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	copyJobIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("copyJobId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := i.srv.ResetCopyJob(req.Context(), workspaceIDParam, copyJobIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
 	}
 	return resp, nil
 }

@@ -6,6 +6,45 @@
 
 package paginatedreport
 
+// ItemsClientBeginCreatePaginatedReportOptions contains the optional parameters for the ItemsClient.BeginCreatePaginatedReport
+// method.
+type ItemsClientBeginCreatePaginatedReportOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// ItemsClientBeginGetPaginatedReportDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetPaginatedReportDefinition
+// method.
+type ItemsClientBeginGetPaginatedReportDefinitionOptions struct {
+	// The format of the paginated report public definition. Supported format: PaginatedReportDefinition. If not provided, PaginatedReportDefinition
+	// is used.
+	Format *string
+
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// ItemsClientBeginUpdatePaginatedReportDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdatePaginatedReportDefinition
+// method.
+type ItemsClientBeginUpdatePaginatedReportDefinitionOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+
+	// When set to true and the .platform file is provided as part of the definition, the item's metadata is updated using the
+	// metadata from the .platform file.
+	UpdateMetadata *bool
+}
+
+// ItemsClientDeletePaginatedReportOptions contains the optional parameters for the ItemsClient.DeletePaginatedReport method.
+type ItemsClientDeletePaginatedReportOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ItemsClientGetPaginatedReportOptions contains the optional parameters for the ItemsClient.GetPaginatedReport method.
+type ItemsClientGetPaginatedReportOptions struct {
+	// placeholder for future optional parameters
+}
+
 // ItemsClientListPaginatedReportsOptions contains the optional parameters for the ItemsClient.NewListPaginatedReportsPager
 // method.
 type ItemsClientListPaginatedReportsOptions struct {

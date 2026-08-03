@@ -10,6 +10,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 
 	"github.com/microsoft/fabric-sdk-go/fabric/apacheairflowjob"
@@ -49,4 +50,27 @@ func ExampleComputeClient_GetApacheAirflowJobComputeBeta() {
 	// 	PoolTemplateName: to.Ptr("StarterPool"),
 	// 	ShutdownPolicy: to.Ptr(apacheairflowjob.ShutdownPolicyOneHourInactivity),
 	// }
+}
+
+// Generated from example definition
+func ExampleComputeClient_BeginUpdateApacheAirflowJobComputeBeta() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := apacheairflowjob.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewComputeClient().BeginUpdateApacheAirflowJobComputeBeta(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", true, apacheairflowjob.AirflowEnvironmentComputeRequest{
+		PoolTemplateID: to.Ptr("a1b2c3d4-e5f6-7890-abcd-ef1234567890"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
 }

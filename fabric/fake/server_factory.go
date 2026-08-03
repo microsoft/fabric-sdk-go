@@ -18,11 +18,14 @@ import (
 	adminfake "github.com/microsoft/fabric-sdk-go/fabric/admin/fake"
 	anomalydetectorfake "github.com/microsoft/fabric-sdk-go/fabric/anomalydetector/fake"
 	apacheairflowjobfake "github.com/microsoft/fabric-sdk-go/fabric/apacheairflowjob/fake"
+	appbackendfake "github.com/microsoft/fabric-sdk-go/fabric/appbackend/fake"
+	azuredatabricksstoragefake "github.com/microsoft/fabric-sdk-go/fabric/azuredatabricksstorage/fake"
 	copyjobfake "github.com/microsoft/fabric-sdk-go/fabric/copyjob/fake"
 	corefake "github.com/microsoft/fabric-sdk-go/fabric/core/fake"
 	cosmosdbdatabasefake "github.com/microsoft/fabric-sdk-go/fabric/cosmosdbdatabase/fake"
 	dashboardfake "github.com/microsoft/fabric-sdk-go/fabric/dashboard/fake"
 	dataagentfake "github.com/microsoft/fabric-sdk-go/fabric/dataagent/fake"
+	databuildtooljobfake "github.com/microsoft/fabric-sdk-go/fabric/databuildtooljob/fake"
 	dataflowfake "github.com/microsoft/fabric-sdk-go/fabric/dataflow/fake"
 	datamartfake "github.com/microsoft/fabric-sdk-go/fabric/datamart/fake"
 	datapipelinefake "github.com/microsoft/fabric-sdk-go/fabric/datapipeline/fake"
@@ -50,6 +53,8 @@ import (
 	notebookfake "github.com/microsoft/fabric-sdk-go/fabric/notebook/fake"
 	ontologyfake "github.com/microsoft/fabric-sdk-go/fabric/ontology/fake"
 	operationsagentfake "github.com/microsoft/fabric-sdk-go/fabric/operationsagent/fake"
+	orgappfake "github.com/microsoft/fabric-sdk-go/fabric/orgapp/fake"
+	orgappaudiencefake "github.com/microsoft/fabric-sdk-go/fabric/orgappaudience/fake"
 	paginatedreportfake "github.com/microsoft/fabric-sdk-go/fabric/paginatedreport/fake"
 	realtimeintelligencefake "github.com/microsoft/fabric-sdk-go/fabric/realtimeintelligence/fake"
 	reflexfake "github.com/microsoft/fabric-sdk-go/fabric/reflex/fake"
@@ -71,11 +76,14 @@ type ServerFactory struct {
 	Admin                          adminfake.ServerFactory
 	AnomalyDetector                anomalydetectorfake.ServerFactory
 	Apache                         apacheairflowjobfake.ServerFactory
+	AppBackend                     appbackendfake.ServerFactory
+	AzureDatabricksStorage         azuredatabricksstoragefake.ServerFactory
 	CopyJob                        copyjobfake.ServerFactory
 	Core                           corefake.ServerFactory
 	Cosmos                         cosmosdbdatabasefake.ServerFactory
 	Dashboard                      dashboardfake.ServerFactory
 	DataAgent                      dataagentfake.ServerFactory
+	DataBuildToolJob               databuildtooljobfake.ServerFactory
 	Dataflow                       dataflowfake.ServerFactory
 	Datamart                       datamartfake.ServerFactory
 	DataPipeline                   datapipelinefake.ServerFactory
@@ -103,6 +111,8 @@ type ServerFactory struct {
 	Notebook                       notebookfake.ServerFactory
 	Ontology                       ontologyfake.ServerFactory
 	OperationsAgent                operationsagentfake.ServerFactory
+	OrgApp                         orgappfake.ServerFactory
+	OrgAppAudience                 orgappaudiencefake.ServerFactory
 	PaginatedReport                paginatedreportfake.ServerFactory
 	Real                           realtimeintelligencefake.ServerFactory
 	Reflex                         reflexfake.ServerFactory
@@ -127,11 +137,14 @@ type ServerFactoryTransport struct {
 	trAdmin                          *adminfake.ServerFactoryTransport
 	trAnomalyDetector                *anomalydetectorfake.ServerFactoryTransport
 	trApache                         *apacheairflowjobfake.ServerFactoryTransport
+	trAppBackend                     *appbackendfake.ServerFactoryTransport
+	trAzureDatabricksStorage         *azuredatabricksstoragefake.ServerFactoryTransport
 	trCopyJob                        *copyjobfake.ServerFactoryTransport
 	trCore                           *corefake.ServerFactoryTransport
 	trCosmos                         *cosmosdbdatabasefake.ServerFactoryTransport
 	trDashboard                      *dashboardfake.ServerFactoryTransport
 	trDataAgent                      *dataagentfake.ServerFactoryTransport
+	trDataBuildToolJob               *databuildtooljobfake.ServerFactoryTransport
 	trDataflow                       *dataflowfake.ServerFactoryTransport
 	trDatamart                       *datamartfake.ServerFactoryTransport
 	trDataPipeline                   *datapipelinefake.ServerFactoryTransport
@@ -159,6 +172,8 @@ type ServerFactoryTransport struct {
 	trNotebook                       *notebookfake.ServerFactoryTransport
 	trOntology                       *ontologyfake.ServerFactoryTransport
 	trOperationsAgent                *operationsagentfake.ServerFactoryTransport
+	trOrgApp                         *orgappfake.ServerFactoryTransport
+	trOrgAppAudience                 *orgappaudiencefake.ServerFactoryTransport
 	trPaginatedReport                *paginatedreportfake.ServerFactoryTransport
 	trReal                           *realtimeintelligencefake.ServerFactoryTransport
 	trReflex                         *reflexfake.ServerFactoryTransport
@@ -211,6 +226,16 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return apacheairflowjobfake.NewServerFactoryTransport(&s.srv.Apache)
 		})
 		resp, err = s.trApache.Do(req)
+	case "appbackend":
+		initServer(s, &s.trAppBackend, func() *appbackendfake.ServerFactoryTransport {
+			return appbackendfake.NewServerFactoryTransport(&s.srv.AppBackend)
+		})
+		resp, err = s.trAppBackend.Do(req)
+	case "azuredatabricksstorage":
+		initServer(s, &s.trAzureDatabricksStorage, func() *azuredatabricksstoragefake.ServerFactoryTransport {
+			return azuredatabricksstoragefake.NewServerFactoryTransport(&s.srv.AzureDatabricksStorage)
+		})
+		resp, err = s.trAzureDatabricksStorage.Do(req)
 	case "copyjob":
 		initServer(s, &s.trCopyJob, func() *copyjobfake.ServerFactoryTransport {
 			return copyjobfake.NewServerFactoryTransport(&s.srv.CopyJob)
@@ -234,6 +259,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return dataagentfake.NewServerFactoryTransport(&s.srv.DataAgent)
 		})
 		resp, err = s.trDataAgent.Do(req)
+	case "databuildtooljob":
+		initServer(s, &s.trDataBuildToolJob, func() *databuildtooljobfake.ServerFactoryTransport {
+			return databuildtooljobfake.NewServerFactoryTransport(&s.srv.DataBuildToolJob)
+		})
+		resp, err = s.trDataBuildToolJob.Do(req)
 	case "dataflow":
 		initServer(s, &s.trDataflow, func() *dataflowfake.ServerFactoryTransport {
 			return dataflowfake.NewServerFactoryTransport(&s.srv.Dataflow)
@@ -367,6 +397,14 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return operationsagentfake.NewServerFactoryTransport(&s.srv.OperationsAgent)
 		})
 		resp, err = s.trOperationsAgent.Do(req)
+	case "orgapp":
+		initServer(s, &s.trOrgApp, func() *orgappfake.ServerFactoryTransport { return orgappfake.NewServerFactoryTransport(&s.srv.OrgApp) })
+		resp, err = s.trOrgApp.Do(req)
+	case "orgappaudience":
+		initServer(s, &s.trOrgAppAudience, func() *orgappaudiencefake.ServerFactoryTransport {
+			return orgappaudiencefake.NewServerFactoryTransport(&s.srv.OrgAppAudience)
+		})
+		resp, err = s.trOrgAppAudience.Do(req)
 	case "paginatedreport":
 		initServer(s, &s.trPaginatedReport, func() *paginatedreportfake.ServerFactoryTransport {
 			return paginatedreportfake.NewServerFactoryTransport(&s.srv.PaginatedReport)

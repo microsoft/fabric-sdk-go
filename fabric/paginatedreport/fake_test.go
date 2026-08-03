@@ -99,6 +99,75 @@ func (testsuite *FakeTestSuite) TestItems_ListPaginatedReports() {
 	}
 }
 
+func (testsuite *FakeTestSuite) TestItems_CreatePaginatedReport() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a paginated report example"},
+	})
+	var exampleWorkspaceID string
+	var exampleCreatePaginatedReportRequest paginatedreport.CreatePaginatedReportRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCreatePaginatedReportRequest = paginatedreport.CreatePaginatedReportRequest{
+		Description: to.Ptr("A quarterly sales report."),
+		Definition: &paginatedreport.Definition{
+			Format: to.Ptr(paginatedreport.DefinitionFormatPaginatedReportDefinition),
+			Parts: []paginatedreport.DefinitionPart{
+				{
+					Path:        to.Ptr("ContosoReport.rdl"),
+					Payload:     to.Ptr("PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4..."),
+					PayloadType: to.Ptr(paginatedreport.PayloadTypeInlineBase64),
+				}},
+		},
+		DisplayName: to.Ptr("ContosoReport"),
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginCreatePaginatedReport = func(ctx context.Context, workspaceID string, createPaginatedReportRequest paginatedreport.CreatePaginatedReportRequest, options *paginatedreport.ItemsClientBeginCreatePaginatedReportOptions) (resp azfake.PollerResponder[paginatedreport.ItemsClientCreatePaginatedReportResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreatePaginatedReportRequest, createPaginatedReportRequest))
+		resp = azfake.PollerResponder[paginatedreport.ItemsClientCreatePaginatedReportResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, paginatedreport.ItemsClientCreatePaginatedReportResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	poller, err := client.BeginCreatePaginatedReport(ctx, exampleWorkspaceID, exampleCreatePaginatedReportRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestItems_GetPaginatedReport() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a paginated report example"},
+	})
+	var exampleWorkspaceID string
+	var examplePaginatedReportID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	examplePaginatedReportID = "cfafbeb1-8037-4d0c-896e-28c4f2e65573"
+
+	exampleRes := paginatedreport.PaginatedReport{
+		Type:        to.Ptr(paginatedreport.ItemTypePaginatedReport),
+		Description: to.Ptr("A quarterly sales report."),
+		DisplayName: to.Ptr("ContosoReport"),
+		ID:          to.Ptr("cfafbeb1-8037-4d0c-896e-28c4f2e65573"),
+		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+	}
+
+	testsuite.serverFactory.ItemsServer.GetPaginatedReport = func(ctx context.Context, workspaceID string, paginatedReportID string, options *paginatedreport.ItemsClientGetPaginatedReportOptions) (resp azfake.Responder[paginatedreport.ItemsClientGetPaginatedReportResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(examplePaginatedReportID, paginatedReportID)
+		resp = azfake.Responder[paginatedreport.ItemsClientGetPaginatedReportResponse]{}
+		resp.SetResponse(http.StatusOK, paginatedreport.ItemsClientGetPaginatedReportResponse{PaginatedReport: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	res, err := client.GetPaginatedReport(ctx, exampleWorkspaceID, examplePaginatedReportID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.PaginatedReport))
+}
+
 func (testsuite *FakeTestSuite) TestItems_UpdatePaginatedReport() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -135,4 +204,112 @@ func (testsuite *FakeTestSuite) TestItems_UpdatePaginatedReport() {
 	res, err := client.UpdatePaginatedReport(ctx, exampleWorkspaceID, examplePaginatedReportID, exampleUpdatePaginatedReportRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.PaginatedReport))
+}
+
+func (testsuite *FakeTestSuite) TestItems_DeletePaginatedReport() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete a paginated report example"},
+	})
+	var exampleWorkspaceID string
+	var examplePaginatedReportID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	examplePaginatedReportID = "cfafbeb1-8037-4d0c-896e-28c4f2e65573"
+
+	testsuite.serverFactory.ItemsServer.DeletePaginatedReport = func(ctx context.Context, workspaceID string, paginatedReportID string, options *paginatedreport.ItemsClientDeletePaginatedReportOptions) (resp azfake.Responder[paginatedreport.ItemsClientDeletePaginatedReportResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(examplePaginatedReportID, paginatedReportID)
+		resp = azfake.Responder[paginatedreport.ItemsClientDeletePaginatedReportResponse]{}
+		resp.SetResponse(http.StatusOK, paginatedreport.ItemsClientDeletePaginatedReportResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	_, err = client.DeletePaginatedReport(ctx, exampleWorkspaceID, examplePaginatedReportID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestItems_GetPaginatedReportDefinition() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a paginated report definition example"},
+	})
+	var exampleWorkspaceID string
+	var examplePaginatedReportID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	examplePaginatedReportID = "cfafbeb1-8037-4d0c-896e-28c4f2e65573"
+
+	exampleRes := paginatedreport.DefinitionResponse{
+		Definition: &paginatedreport.Definition{
+			Parts: []paginatedreport.DefinitionPart{
+				{
+					Path:        to.Ptr("ContosoReport.rdl"),
+					Payload:     to.Ptr("PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4..."),
+					PayloadType: to.Ptr(paginatedreport.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("eyJtZXRhZGF0YSI6eyJ0eXBlIjoiUGFnaW5hdGVkUmVwb3J0In19"),
+					PayloadType: to.Ptr(paginatedreport.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginGetPaginatedReportDefinition = func(ctx context.Context, workspaceID string, paginatedReportID string, options *paginatedreport.ItemsClientBeginGetPaginatedReportDefinitionOptions) (resp azfake.PollerResponder[paginatedreport.ItemsClientGetPaginatedReportDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(examplePaginatedReportID, paginatedReportID)
+		resp = azfake.PollerResponder[paginatedreport.ItemsClientGetPaginatedReportDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, paginatedreport.ItemsClientGetPaginatedReportDefinitionResponse{DefinitionResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	poller, err := client.BeginGetPaginatedReportDefinition(ctx, exampleWorkspaceID, examplePaginatedReportID, &paginatedreport.ItemsClientBeginGetPaginatedReportDefinitionOptions{Format: to.Ptr("PaginatedReportDefinition")})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DefinitionResponse))
+}
+
+func (testsuite *FakeTestSuite) TestItems_UpdatePaginatedReportDefinition() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update a paginated report definition example"},
+	})
+	var exampleWorkspaceID string
+	var examplePaginatedReportID string
+	var exampleUpdatePaginatedReportDefinitionRequest paginatedreport.UpdatePaginatedReportDefinitionRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	examplePaginatedReportID = "cfafbeb1-8037-4d0c-896e-28c4f2e65573"
+	exampleUpdatePaginatedReportDefinitionRequest = paginatedreport.UpdatePaginatedReportDefinitionRequest{
+		Definition: &paginatedreport.Definition{
+			Format: to.Ptr(paginatedreport.DefinitionFormatPaginatedReportDefinition),
+			Parts: []paginatedreport.DefinitionPart{
+				{
+					Path:        to.Ptr("ContosoReport.rdl"),
+					Payload:     to.Ptr("PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4..."),
+					PayloadType: to.Ptr(paginatedreport.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("eyJtZXRhZGF0YSI6eyJ0eXBlIjoiUGFnaW5hdGVkUmVwb3J0In19"),
+					PayloadType: to.Ptr(paginatedreport.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginUpdatePaginatedReportDefinition = func(ctx context.Context, workspaceID string, paginatedReportID string, updatePaginatedReportDefinitionRequest paginatedreport.UpdatePaginatedReportDefinitionRequest, options *paginatedreport.ItemsClientBeginUpdatePaginatedReportDefinitionOptions) (resp azfake.PollerResponder[paginatedreport.ItemsClientUpdatePaginatedReportDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(examplePaginatedReportID, paginatedReportID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdatePaginatedReportDefinitionRequest, updatePaginatedReportDefinitionRequest))
+		resp = azfake.PollerResponder[paginatedreport.ItemsClientUpdatePaginatedReportDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, paginatedreport.ItemsClientUpdatePaginatedReportDefinitionResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	poller, err := client.BeginUpdatePaginatedReportDefinition(ctx, exampleWorkspaceID, examplePaginatedReportID, exampleUpdatePaginatedReportDefinitionRequest, &paginatedreport.ItemsClientBeginUpdatePaginatedReportDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }

@@ -68,7 +68,7 @@ func ExampleItemsClient_NewListApacheAirflowJobsPager() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_BeginCreateApacheAirflowJob() {
+func ExampleItemsClient_BeginCreateApacheAirflowJob_createAnApacheAirflowJobExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -80,6 +80,43 @@ func ExampleItemsClient_BeginCreateApacheAirflowJob() {
 	}
 	poller, err := clientFactory.NewItemsClient().BeginCreateApacheAirflowJob(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", apacheairflowjob.CreateApacheAirflowJobRequest{
 		Description: to.Ptr("An Apache Airflow job description."),
+		DisplayName: to.Ptr("ApacheAirflowJob1"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginCreateApacheAirflowJob_createAnApacheAirflowJobWithPublicDefinitionExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := apacheairflowjob.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginCreateApacheAirflowJob(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", apacheairflowjob.CreateApacheAirflowJobRequest{
+		Description: to.Ptr("An Apache Airflow job description."),
+		Definition: &apacheairflowjob.Definition{
+			Parts: []apacheairflowjob.DefinitionPart{
+				{
+					Path:        to.Ptr("ApacheAirflowJobV1.json"),
+					Payload:     to.Ptr("ewogICJwcm9wZXJ0aWVzIjogewogICAgInR5cGUiOiAiQXBhY2hlQWlyZmxvd0pvYiIsCiAgICAidHlwZVByb3BlcnRpZXMiOiB7CiAgICAgICJhaXJmbG93UHJvcGVydGllcyI6IHsKICAgICAgICAiYWlyZmxvd1ZlcnNpb24iOiAiMi42LjMiLAogICAgICAgICJweXRob25WZXJzaW9uIjogIjMuOCIsCiAgICAgICAgImVudmlyb25tZW50VmFyaWFibGVzIjoge30sCiAgICAgICAgImFpcmZsb3dDb25maWd1cmF0aW9uT3ZlcnJpZGVzIjoge30sCiAgICAgICAgImFpcmZsb3dSZXF1aXJlbWVudHMiOiBbCiAgICAgICAgICAiZmxhc2stYmNyeXB0PT0wLjcuMSIKICAgICAgICBdLAogICAgICAgICJwYWNrYWdlUHJvdmlkZXJQYXRoIjogInBsdWdpbnMiLAogICAgICAgICJlbmFibGVBQURJbnRlZ3JhdGlvbiI6IHRydWUsCiAgICAgICAgImVuYWJsZVRyaWdnZXJlcnMiOiBmYWxzZSwKICAgICAgICAic2VjcmV0cyI6IFtdCiAgICAgIH0sCiAgICAgICJjb21wdXRlUHJvcGVydGllcyI6IHsKICAgICAgICAiY29tcHV0ZVBvb2wiOiAiU3RhcnRlclBvb2wiLAogICAgICAgICJsb2NhdGlvbiI6ICJDZW50cmFsIFVTIiwKICAgICAgICAiY29tcHV0ZVNpemUiOiAiU21hbGwiLAogICAgICAgICJleHRyYU5vZGVzIjogMCwKICAgICAgICAiZW5hYmxlQXZhaWxhYmlsaXR5Wm9uZXMiOiBmYWxzZSwKICAgICAgICAiZW5hYmxlQXV0b3NjYWxlIjogZmFsc2UKICAgICAgfQogICAgfQogIH0KfQ=="),
+					PayloadType: to.Ptr(apacheairflowjob.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ZG90UGxhdGZvcm1CYXNlNjRTdHJpbmc="),
+					PayloadType: to.Ptr(apacheairflowjob.PayloadTypeInlineBase64),
+				}},
+		},
 		DisplayName: to.Ptr("ApacheAirflowJob1"),
 	}, nil)
 	if err != nil {

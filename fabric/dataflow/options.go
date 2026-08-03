@@ -101,6 +101,13 @@ type ItemsClientUpdateDataflowOptions struct {
 // QueryExecutionClientBeginExecuteQueryOptions contains the optional parameters for the QueryExecutionClient.BeginExecuteQuery
 // method.
 type QueryExecutionClientBeginExecuteQueryOptions struct {
+	// The desired media type of the response. See the operation description for the list of supported response formats. Today,
+	// only application/vnd.apache.arrow.stream is supported; when sending this media
+	// type, the pq-arrow-version parameter is required and must be either 1 or 2 (e.g. application/vnd.apache.arrow.stream;pq-arrow-version=1).
+	// If the header is omitted entirely, the default
+	// application/vnd.apache.arrow.stream;pq-arrow-version=1 is used.
+	Accept *string
+
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }

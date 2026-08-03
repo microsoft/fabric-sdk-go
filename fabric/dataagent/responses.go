@@ -35,6 +35,12 @@ type ItemsClientListDataAgentsResponse struct {
 	DataAgents
 }
 
+// ItemsClientPublishDataAgentResponse contains the response from method ItemsClient.PublishDataAgent.
+type ItemsClientPublishDataAgentResponse struct {
+	// Publish DataAgent response.
+	PublishDataAgentResponse
+}
+
 // ItemsClientUpdateDataAgentDefinitionResponse contains the response from method ItemsClient.BeginUpdateDataAgentDefinition.
 type ItemsClientUpdateDataAgentDefinitionResponse struct {
 	// placeholder for future response values
@@ -44,4 +50,137 @@ type ItemsClientUpdateDataAgentDefinitionResponse struct {
 type ItemsClientUpdateDataAgentResponse struct {
 	// A DataAgent object.
 	DataAgent
+}
+
+// PublishedClientGetDatasourceFewshotResponse contains the response from method PublishedClient.GetDatasourceFewshot.
+type PublishedClientGetDatasourceFewshotResponse struct {
+	// A DataAgent fewshot.
+	Fewshot
+}
+
+// PublishedClientGetDatasourceResponse contains the response from method PublishedClient.GetDatasource.
+type PublishedClientGetDatasourceResponse struct {
+	// A DataAgent datasource.
+	DatasourceResponseClassification
+}
+
+// PublishedClientGetSettingsResponse contains the response from method PublishedClient.GetSettings.
+type PublishedClientGetSettingsResponse struct {
+	// The DataAgent settings.
+	SettingsResponse
+}
+
+// PublishedClientListDatasourceElementsResponse contains the response from method PublishedClient.NewListDatasourceElementsPager.
+type PublishedClientListDatasourceElementsResponse struct {
+	// A paginated list of datasource schema elements.
+	DataSourceElements
+}
+
+// PublishedClientListDatasourceFewshotsResponse contains the response from method PublishedClient.NewListDatasourceFewshotsPager.
+type PublishedClientListDatasourceFewshotsResponse struct {
+	// A paginated list of DataAgent fewshots.
+	Fewshots
+}
+
+// PublishedClientListDatasourcesResponse contains the response from method PublishedClient.NewListDatasourcesPager.
+type PublishedClientListDatasourcesResponse struct {
+	// A paginated list of DataAgent datasources.
+	Datasources
+}
+
+// StagingClientCreateDatasourceFewshotResponse contains the response from method StagingClient.CreateDatasourceFewshot.
+type StagingClientCreateDatasourceFewshotResponse struct {
+	// A DataAgent fewshot.
+	Fewshot
+}
+
+// StagingClientCreateDatasourceResponse contains the response from method StagingClient.BeginCreateDatasource.
+type StagingClientCreateDatasourceResponse struct {
+	// A DataAgent datasource.
+	DatasourceResponseClassification
+}
+
+// StagingClientDeleteAllDatasourceFewshotsResponse contains the response from method StagingClient.DeleteAllDatasourceFewshots.
+type StagingClientDeleteAllDatasourceFewshotsResponse struct {
+	// placeholder for future response values
+}
+
+// StagingClientDeleteDatasourceElementResponse contains the response from method StagingClient.DeleteDatasourceElement.
+type StagingClientDeleteDatasourceElementResponse struct {
+	// placeholder for future response values
+}
+
+// StagingClientDeleteDatasourceFewshotResponse contains the response from method StagingClient.DeleteDatasourceFewshot.
+type StagingClientDeleteDatasourceFewshotResponse struct {
+	// placeholder for future response values
+}
+
+// StagingClientDeleteDatasourceResponse contains the response from method StagingClient.DeleteDatasource.
+type StagingClientDeleteDatasourceResponse struct {
+	// placeholder for future response values
+}
+
+// StagingClientGetDatasourceFewshotResponse contains the response from method StagingClient.GetDatasourceFewshot.
+type StagingClientGetDatasourceFewshotResponse struct {
+	// A DataAgent fewshot.
+	Fewshot
+}
+
+// StagingClientGetDatasourceResponse contains the response from method StagingClient.GetDatasource.
+type StagingClientGetDatasourceResponse struct {
+	// A DataAgent datasource.
+	DatasourceResponseClassification
+}
+
+// StagingClientGetSettingsResponse contains the response from method StagingClient.GetSettings.
+type StagingClientGetSettingsResponse struct {
+	// The DataAgent settings.
+	SettingsResponse
+}
+
+// StagingClientListDatasourceElementsResponse contains the response from method StagingClient.NewListDatasourceElementsPager.
+type StagingClientListDatasourceElementsResponse struct {
+	// A paginated list of datasource schema elements.
+	DataSourceElements
+}
+
+// StagingClientListDatasourceFewshotsResponse contains the response from method StagingClient.NewListDatasourceFewshotsPager.
+type StagingClientListDatasourceFewshotsResponse struct {
+	// A paginated list of DataAgent fewshots.
+	Fewshots
+}
+
+// StagingClientListDatasourcesResponse contains the response from method StagingClient.NewListDatasourcesPager.
+type StagingClientListDatasourcesResponse struct {
+	// A paginated list of DataAgent datasources.
+	Datasources
+}
+
+// StagingClientResetResponse contains the response from method StagingClient.Reset.
+type StagingClientResetResponse struct {
+	// placeholder for future response values
+}
+
+// StagingClientUpdateDatasourceElementResponse contains the response from method StagingClient.UpdateDatasourceElement.
+type StagingClientUpdateDatasourceElementResponse struct {
+	// A datasource schema element.
+	DataSourceElement
+}
+
+// StagingClientUpdateDatasourceFewshotResponse contains the response from method StagingClient.UpdateDatasourceFewshot.
+type StagingClientUpdateDatasourceFewshotResponse struct {
+	// A DataAgent fewshot.
+	Fewshot
+}
+
+// StagingClientUpdateDatasourceResponse contains the response from method StagingClient.UpdateDatasource.
+type StagingClientUpdateDatasourceResponse struct {
+	// A DataAgent datasource.
+	DatasourceResponseClassification
+}
+
+// StagingClientUpdateSettingsResponse contains the response from method StagingClient.UpdateSettings.
+type StagingClientUpdateSettingsResponse struct {
+	// The DataAgent settings.
+	SettingsResponse
 }

@@ -8,6 +8,27 @@ package eventstream
 
 import "encoding/json"
 
+func unmarshalCertificateResourceClassification(rawMsg json.RawMessage) (CertificateResourceClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b CertificateResourceClassification
+	switch m["type"] {
+	case string(CertificateResourceTypeKeyVault):
+		b = &KeyVaultCertificateResource{}
+	default:
+		b = &CertificateResource{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
 func unmarshalDestinationResponseClassification(rawMsg json.RawMessage) (DestinationResponseClassification, error) {
 	if rawMsg == nil || string(rawMsg) == "null" {
 		return nil, nil
@@ -26,6 +47,8 @@ func unmarshalDestinationResponseClassification(rawMsg json.RawMessage) (Destina
 		b = &EventhouseDestinationResponse{}
 	case string(DestinationTypeLakehouse):
 		b = &LakehouseDestinationResponse{}
+	case string(DestinationTypeNotebook):
+		b = &NotebookDestinationResponse{}
 	default:
 		b = &DestinationResponse{}
 	}
@@ -99,6 +122,29 @@ func unmarshalGroupByWindowClassification(rawMsg json.RawMessage) (GroupByWindow
 		b = &TumblingWindow{}
 	default:
 		b = &GroupByWindow{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalHTTPPaginationClassification(rawMsg json.RawMessage) (HTTPPaginationClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b HTTPPaginationClassification
+	switch m["type"] {
+	case string(PaginationMethodCursor):
+		b = &CursorPagination{}
+	case string(PaginationMethodPage):
+		b = &PagePagination{}
+	default:
+		b = &HTTPPagination{}
 	}
 	if err := json.Unmarshal(rawMsg, b); err != nil {
 		return nil, err
@@ -311,6 +357,8 @@ func unmarshalSourceResponseClassification(rawMsg json.RawMessage) (SourceRespon
 		b = &AzureEventHubExtendedSourceResponse{}
 	case string(SourceTypeAzureIoTHub):
 		b = &AzureIoTHubSourceResponse{}
+	case string(SourceTypeAzureIoTHubExtended):
+		b = &AzureIoTHubExtendedSourceResponse{}
 	case string(SourceTypeAzureSQLDBCDC):
 		b = &AzureSQLDBCDCSourceResponse{}
 	case string(SourceTypeAzureSQLMIDBCDC):
@@ -321,6 +369,8 @@ func unmarshalSourceResponseClassification(rawMsg json.RawMessage) (SourceRespon
 		b = &ConfluentCloudSourceResponse{}
 	case string(SourceTypeCustomEndpoint):
 		b = &CustomEndpointSourceResponse{}
+	case string(SourceTypeFabricAnomalyDetectionEvents):
+		b = &FabricAnomalyDetectionEventsSourceResponse{}
 	case string(SourceTypeFabricCapacityOverviewEvents):
 		b = &FabricCapacityOverviewEventsSourceResponse{}
 	case string(SourceTypeFabricJobEvents):
@@ -333,12 +383,16 @@ func unmarshalSourceResponseClassification(rawMsg json.RawMessage) (SourceRespon
 		b = &GooglePubSubSourceResponse{}
 	case string(SourceTypeHTTP):
 		b = &HTTPSourceResponse{}
+	case string(SourceTypeMirroredDatabaseChangeFeed):
+		b = &MirroredDatabaseChangeFeedSourceResponse{}
 	case string(SourceTypeMongoDBCDC):
 		b = &MongoDBCDCSourceResponse{}
 	case string(SourceTypeMqtt):
 		b = &MqttSourceResponse{}
 	case string(SourceTypeMySQLCDC):
 		b = &MySQLCDCSourceResponse{}
+	case string(SourceTypeOracleDBCDC):
+		b = &OracleDBCDCSourceResponse{}
 	case string(SourceTypePostgreSQLCDC):
 		b = &PostgreSQLCDCSourceResponse{}
 	case string(SourceTypeRealTimeWeather):

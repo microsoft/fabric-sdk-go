@@ -17,9 +17,30 @@ type PrivateLinkPolicy struct{}
 // Admin APIs are excluded intentionally since they are blocked through workspace PE
 var workspaceIdRegex = regexp.MustCompile(`v1/workspaces/([0-9a-fA-F\-]{36})(/.*)?$`)
 
+const (
+	communicationPolicyPath = "/networking/communicationPolicy"
+)
+
 // NewPrivateLinkPolicy creates a new instance of PrivateLinkPolicy
 func NewPrivateLinkPolicy() *PrivateLinkPolicy {
 	return &PrivateLinkPolicy{}
+}
+
+func workspaceIDFromPath(path string) (string, bool) {
+	matches := workspaceIdRegex.FindStringSubmatch(path)
+	if len(matches) <= 1 {
+		return "", false
+	}
+
+	if isCommunicationPolicyPath(matches[2]) {
+		return "", false
+	}
+
+	return matches[1], true
+}
+
+func isCommunicationPolicyPath(path string) bool {
+	return strings.EqualFold(path, communicationPolicyPath)
 }
 
 // Do implements the policy.Policy interface
@@ -28,10 +49,8 @@ func (p *PrivateLinkPolicy) Do(req *policy.Request) (*http.Response, error) {
 	originalURL := req.Raw().URL
 
 	// Check if the URI matches the pattern
-	matches := workspaceIdRegex.FindStringSubmatch(originalURL.Path)
-	if len(matches) > 1 {
-		// Extract the workspaceId as a string without the dashes
-		workspaceIDStr := matches[1]
+	workspaceIDStr, ok := workspaceIDFromPath(originalURL.Path)
+	if ok {
 		workspaceID, err := uuid.Parse(workspaceIDStr)
 		if err != nil {
 			return req.Next()

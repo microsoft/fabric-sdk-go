@@ -74,6 +74,9 @@ func (testsuite *FakeTestSuite) TestItems_ListDataAgents() {
 					ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
 				},
 				WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+				Properties: &dataagent.Properties{
+					PublishedDescription: to.Ptr("Published via API"),
+				},
 			},
 			{
 				Type:        to.Ptr(dataagent.ItemTypeDataAgent),
@@ -222,6 +225,9 @@ func (testsuite *FakeTestSuite) TestItems_GetDataAgent() {
 			ID: to.Ptr("b7b4f4d9-3f0d-4b3e-8f3d-4f6d3f4f3f4f"),
 		},
 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+		Properties: &dataagent.Properties{
+			PublishedDescription: to.Ptr("Published via API"),
+		},
 	}
 
 	testsuite.serverFactory.ItemsServer.GetDataAgent = func(ctx context.Context, workspaceID string, dataAgentID string, options *dataagent.ItemsClientGetDataAgentOptions) (resp azfake.Responder[dataagent.ItemsClientGetDataAgentResponse], errResp azfake.ErrorResponder) {
@@ -399,4 +405,999 @@ func (testsuite *FakeTestSuite) TestItems_UpdateDataAgentDefinition() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestItems_PublishDataAgent() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Publish DataAgent example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var examplePublishDataAgentRequest dataagent.PublishDataAgentRequest
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	examplePublishDataAgentRequest = dataagent.PublishDataAgentRequest{
+		PublishedDescription: to.Ptr("Production release v2 with improved instructions"),
+	}
+
+	exampleRes := dataagent.PublishDataAgentResponse{
+		PublishedDescription: to.Ptr("Production release v2 with improved instructions"),
+	}
+
+	testsuite.serverFactory.ItemsServer.PublishDataAgent = func(ctx context.Context, workspaceID string, dataAgentID string, publishDataAgentRequest dataagent.PublishDataAgentRequest, options *dataagent.ItemsClientPublishDataAgentOptions) (resp azfake.Responder[dataagent.ItemsClientPublishDataAgentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().True(reflect.DeepEqual(examplePublishDataAgentRequest, publishDataAgentRequest))
+		resp = azfake.Responder[dataagent.ItemsClientPublishDataAgentResponse]{}
+		resp.SetResponse(http.StatusOK, dataagent.ItemsClientPublishDataAgentResponse{PublishDataAgentResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	res, err := client.PublishDataAgent(ctx, exampleWorkspaceID, exampleDataAgentID, examplePublishDataAgentRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.PublishDataAgentResponse))
+}
+
+func (testsuite *FakeTestSuite) TestStaging_GetSettings() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get staging DataAgent settings example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+
+	exampleRes := dataagent.SettingsResponse{
+		AiInstructions: to.Ptr("Always respond in English. Be concise."),
+	}
+
+	testsuite.serverFactory.StagingServer.GetSettings = func(ctx context.Context, workspaceID string, dataAgentID string, options *dataagent.StagingClientGetSettingsOptions) (resp azfake.Responder[dataagent.StagingClientGetSettingsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		resp = azfake.Responder[dataagent.StagingClientGetSettingsResponse]{}
+		resp.SetResponse(http.StatusOK, dataagent.StagingClientGetSettingsResponse{SettingsResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	res, err := client.GetSettings(ctx, exampleWorkspaceID, exampleDataAgentID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.SettingsResponse))
+}
+
+func (testsuite *FakeTestSuite) TestStaging_UpdateSettings() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update staging DataAgent settings example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleUpdateDataAgentSettingsRequest dataagent.UpdateDataAgentSettingsRequest
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleUpdateDataAgentSettingsRequest = dataagent.UpdateDataAgentSettingsRequest{
+		AiInstructions: to.Ptr("Always respond in Spanish."),
+	}
+
+	exampleRes := dataagent.SettingsResponse{
+		AiInstructions: to.Ptr("Always respond in Spanish."),
+	}
+
+	testsuite.serverFactory.StagingServer.UpdateSettings = func(ctx context.Context, workspaceID string, dataAgentID string, updateDataAgentSettingsRequest dataagent.UpdateDataAgentSettingsRequest, options *dataagent.StagingClientUpdateSettingsOptions) (resp azfake.Responder[dataagent.StagingClientUpdateSettingsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateDataAgentSettingsRequest, updateDataAgentSettingsRequest))
+		resp = azfake.Responder[dataagent.StagingClientUpdateSettingsResponse]{}
+		resp.SetResponse(http.StatusOK, dataagent.StagingClientUpdateSettingsResponse{SettingsResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	res, err := client.UpdateSettings(ctx, exampleWorkspaceID, exampleDataAgentID, exampleUpdateDataAgentSettingsRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.SettingsResponse))
+}
+
+func (testsuite *FakeTestSuite) TestStaging_ListDatasources() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List staging DataAgent datasources example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+
+	exampleRes := dataagent.Datasources{
+		Value: []dataagent.DatasourceResponseClassification{
+			&dataagent.FabricItemDatasource{
+				Type:           to.Ptr(dataagent.DatasourceTypeFabricItem),
+				Description:    to.Ptr("Sales data warehouse with order and customer information."),
+				DisplayName:    to.Ptr("SalesWarehouse"),
+				ID:             to.Ptr("70f9282b-1b64-4f08-9e4e-2ab9f0e20e01"),
+				Instructions:   to.Ptr("Use this for document retrieval queries."),
+				FabricItemType: to.Ptr(dataagent.SupportedItemTypeWarehouse),
+				ItemReference: &dataagent.ItemReferenceByID{
+					ReferenceType: to.Ptr(dataagent.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("01234372-7fd9-44d3-bd75-a2718645a82a"),
+					WorkspaceID:   to.Ptr("abdd0d48-2eed-4066-adc4-321a9f6a628e"),
+				},
+			},
+			&dataagent.LakehouseTablesDatasource{
+				Type:         to.Ptr(dataagent.DatasourceTypeLakehouseTables),
+				Description:  to.Ptr("Customer interaction history and support activity."),
+				DisplayName:  to.Ptr("CustomerLakehouse"),
+				ID:           to.Ptr("c1c6d12f-8d2a-4d5b-9ca1-8bb7b42d4a30"),
+				Instructions: to.Ptr("Use this for customer engagement analysis."),
+				LakehouseReference: &dataagent.ItemReferenceByID{
+					ReferenceType: to.Ptr(dataagent.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("b5e7c3a1-2d4f-4890-9a1b-3c5d7e9f0a2b"),
+					WorkspaceID:   to.Ptr("e1f2a3b4-5c6d-7e8f-9a0b-1c2d3e4f5a6b"),
+				},
+			}},
+	}
+
+	testsuite.serverFactory.StagingServer.NewListDatasourcesPager = func(workspaceID string, dataAgentID string, options *dataagent.StagingClientListDatasourcesOptions) (resp azfake.PagerResponder[dataagent.StagingClientListDatasourcesResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		resp = azfake.PagerResponder[dataagent.StagingClientListDatasourcesResponse]{}
+		resp.AddPage(http.StatusOK, dataagent.StagingClientListDatasourcesResponse{Datasources: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	pager := client.NewListDatasourcesPager(exampleWorkspaceID, exampleDataAgentID, &dataagent.StagingClientListDatasourcesOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Datasources))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestStaging_CreateDatasource() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create staging DataAgent datasource example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleCreateDataAgentDatasourceRequest dataagent.CreateDataAgentDatasourceRequest
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleCreateDataAgentDatasourceRequest = dataagent.CreateDataAgentDatasourceRequest{
+		Type: to.Ptr(dataagent.DatasourceTypeLakehouseTables),
+		LakehouseReference: &dataagent.ItemReferenceByID{
+			ReferenceType: to.Ptr(dataagent.ItemReferenceTypeByID),
+			ItemID:        to.Ptr("b5e7c3a1-2d4f-4890-9a1b-3c5d7e9f0a2b"),
+			WorkspaceID:   to.Ptr("e1f2a3b4-5c6d-7e8f-9a0b-1c2d3e4f5a6b"),
+		},
+	}
+
+	testsuite.serverFactory.StagingServer.BeginCreateDatasource = func(ctx context.Context, workspaceID string, dataAgentID string, createDataAgentDatasourceRequest dataagent.CreateDataAgentDatasourceRequest, options *dataagent.StagingClientBeginCreateDatasourceOptions) (resp azfake.PollerResponder[dataagent.StagingClientCreateDatasourceResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateDataAgentDatasourceRequest, createDataAgentDatasourceRequest))
+		resp = azfake.PollerResponder[dataagent.StagingClientCreateDatasourceResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, dataagent.StagingClientCreateDatasourceResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	poller, err := client.BeginCreateDatasource(ctx, exampleWorkspaceID, exampleDataAgentID, exampleCreateDataAgentDatasourceRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create staging DataAgent warehouse datasource example"},
+	})
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleCreateDataAgentDatasourceRequest = dataagent.CreateDataAgentDatasourceRequest{
+		Type: to.Ptr(dataagent.DatasourceTypeFabricItem),
+		ItemReference: &dataagent.ItemReferenceByID{
+			ReferenceType: to.Ptr(dataagent.ItemReferenceTypeByID),
+			ItemID:        to.Ptr("01234372-7fd9-44d3-bd75-a2718645a82a"),
+			WorkspaceID:   to.Ptr("abdd0d48-2eed-4066-adc4-321a9f6a628e"),
+		},
+	}
+
+	testsuite.serverFactory.StagingServer.BeginCreateDatasource = func(ctx context.Context, workspaceID string, dataAgentID string, createDataAgentDatasourceRequest dataagent.CreateDataAgentDatasourceRequest, options *dataagent.StagingClientBeginCreateDatasourceOptions) (resp azfake.PollerResponder[dataagent.StagingClientCreateDatasourceResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateDataAgentDatasourceRequest, createDataAgentDatasourceRequest))
+		resp = azfake.PollerResponder[dataagent.StagingClientCreateDatasourceResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, dataagent.StagingClientCreateDatasourceResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateDatasource(ctx, exampleWorkspaceID, exampleDataAgentID, exampleCreateDataAgentDatasourceRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestStaging_GetDatasource() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get staging DataAgent datasource example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleDatasourceID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleDatasourceID = "70f9282b-1b64-4f08-9e4e-2ab9f0e20e01"
+
+	exampleRes := dataagent.StagingClientGetDatasourceResponse{
+		DatasourceResponseClassification: &dataagent.FabricItemDatasource{
+			Type:           to.Ptr(dataagent.DatasourceTypeFabricItem),
+			Description:    to.Ptr("Sales data warehouse with order and customer information."),
+			DisplayName:    to.Ptr("SalesWarehouse"),
+			ID:             to.Ptr("70f9282b-1b64-4f08-9e4e-2ab9f0e20e01"),
+			Instructions:   to.Ptr("Use this for document retrieval queries."),
+			FabricItemType: to.Ptr(dataagent.SupportedItemTypeWarehouse),
+			ItemReference: &dataagent.ItemReferenceByID{
+				ReferenceType: to.Ptr(dataagent.ItemReferenceTypeByID),
+				ItemID:        to.Ptr("01234372-7fd9-44d3-bd75-a2718645a82a"),
+				WorkspaceID:   to.Ptr("abdd0d48-2eed-4066-adc4-321a9f6a628e"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.StagingServer.GetDatasource = func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, options *dataagent.StagingClientGetDatasourceOptions) (resp azfake.Responder[dataagent.StagingClientGetDatasourceResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleDatasourceID, datasourceID)
+		resp = azfake.Responder[dataagent.StagingClientGetDatasourceResponse]{}
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	res, err := client.GetDatasource(ctx, exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
+}
+
+func (testsuite *FakeTestSuite) TestStaging_UpdateDatasource() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update staging DataAgent datasource example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleDatasourceID string
+	var exampleUpdateDataAgentDatasourceRequest dataagent.UpdateDataAgentDatasourceRequest
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleDatasourceID = "70f9282b-1b64-4f08-9e4e-2ab9f0e20e01"
+	exampleUpdateDataAgentDatasourceRequest = dataagent.UpdateDataAgentDatasourceRequest{
+		Description:  to.Ptr("Sales data warehouse with order and customer information."),
+		Instructions: to.Ptr("Use this for document retrieval queries."),
+	}
+
+	exampleRes := dataagent.StagingClientUpdateDatasourceResponse{
+		DatasourceResponseClassification: &dataagent.FabricItemDatasource{
+			Type:           to.Ptr(dataagent.DatasourceTypeFabricItem),
+			Description:    to.Ptr("Sales data warehouse with order and customer information."),
+			DisplayName:    to.Ptr("SalesWarehouse"),
+			ID:             to.Ptr("70f9282b-1b64-4f08-9e4e-2ab9f0e20e01"),
+			Instructions:   to.Ptr("Use this for document retrieval queries."),
+			FabricItemType: to.Ptr(dataagent.SupportedItemTypeWarehouse),
+			ItemReference: &dataagent.ItemReferenceByID{
+				ReferenceType: to.Ptr(dataagent.ItemReferenceTypeByID),
+				ItemID:        to.Ptr("01234372-7fd9-44d3-bd75-a2718645a82a"),
+				WorkspaceID:   to.Ptr("abdd0d48-2eed-4066-adc4-321a9f6a628e"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.StagingServer.UpdateDatasource = func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, updateDataAgentDatasourceRequest dataagent.UpdateDataAgentDatasourceRequest, options *dataagent.StagingClientUpdateDatasourceOptions) (resp azfake.Responder[dataagent.StagingClientUpdateDatasourceResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleDatasourceID, datasourceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateDataAgentDatasourceRequest, updateDataAgentDatasourceRequest))
+		resp = azfake.Responder[dataagent.StagingClientUpdateDatasourceResponse]{}
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	res, err := client.UpdateDatasource(ctx, exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, exampleUpdateDataAgentDatasourceRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
+}
+
+func (testsuite *FakeTestSuite) TestStaging_DeleteDatasource() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete staging DataAgent datasource example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleDatasourceID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleDatasourceID = "70f9282b-1b64-4f08-9e4e-2ab9f0e20e01"
+
+	testsuite.serverFactory.StagingServer.DeleteDatasource = func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, options *dataagent.StagingClientDeleteDatasourceOptions) (resp azfake.Responder[dataagent.StagingClientDeleteDatasourceResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleDatasourceID, datasourceID)
+		resp = azfake.Responder[dataagent.StagingClientDeleteDatasourceResponse]{}
+		resp.SetResponse(http.StatusOK, dataagent.StagingClientDeleteDatasourceResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	_, err = client.DeleteDatasource(ctx, exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestStaging_ListDatasourceElements() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List staging DataAgent datasource elements example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleDatasourceID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleDatasourceID = "c1c6d12f-8d2a-4d5b-9ca1-8bb7b42d4a30"
+
+	exampleRes := dataagent.DataSourceElements{
+		Value: []dataagent.DataSourceElement{
+			{
+				Type:             to.Ptr(dataagent.ElementTypeSchemas),
+				DisplayName:      to.Ptr("Schemas"),
+				HasSubElements:   to.Ptr(true),
+				ID:               to.Ptr("U2NoZW1hcw=="),
+				IsSelected:       to.Ptr(false),
+				LastSyncDateTime: to.Ptr("2025-06-15T10:30:00Z"),
+				State:            to.Ptr(dataagent.ElementStateAvailable),
+			},
+			{
+				Type:             to.Ptr(dataagent.ElementTypeTables),
+				DisplayName:      to.Ptr("Tables"),
+				HasSubElements:   to.Ptr(true),
+				ID:               to.Ptr("VGFibGVz"),
+				IsSelected:       to.Ptr(false),
+				LastSyncDateTime: to.Ptr("2025-06-15T10:30:00Z"),
+				State:            to.Ptr(dataagent.ElementStateAvailable),
+			}},
+	}
+
+	testsuite.serverFactory.StagingServer.NewListDatasourceElementsPager = func(workspaceID string, dataAgentID string, datasourceID string, options *dataagent.StagingClientListDatasourceElementsOptions) (resp azfake.PagerResponder[dataagent.StagingClientListDatasourceElementsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleDatasourceID, datasourceID)
+		resp = azfake.PagerResponder[dataagent.StagingClientListDatasourceElementsResponse]{}
+		resp.AddPage(http.StatusOK, dataagent.StagingClientListDatasourceElementsResponse{DataSourceElements: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	pager := client.NewListDatasourceElementsPager(exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, &dataagent.StagingClientListDatasourceElementsOptions{RootID: nil,
+		ContinuationToken: nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.DataSourceElements))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestStaging_UpdateDatasourceElement() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update staging DataAgent datasource element example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleDatasourceID string
+	var exampleId string
+	var exampleUpdateDataSourceElementRequest dataagent.UpdateDataSourceElementRequest
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleDatasourceID = "c1c6d12f-8d2a-4d5b-9ca1-8bb7b42d4a30"
+	exampleId = "U2NoZW1hcy9kYm8vVGFibGVzL1RyaXA="
+	exampleUpdateDataSourceElementRequest = dataagent.UpdateDataSourceElementRequest{
+		IsSelected: to.Ptr(true),
+	}
+
+	exampleRes := dataagent.DataSourceElement{
+		Type:             to.Ptr(dataagent.ElementTypeTable),
+		DisplayName:      to.Ptr("Trip"),
+		HasSubElements:   to.Ptr(true),
+		ID:               to.Ptr("U2NoZW1hcy9kYm8vVGFibGVzL1RyaXA="),
+		IsSelected:       to.Ptr(true),
+		LastSyncDateTime: to.Ptr("2025-06-15T10:30:00Z"),
+		State:            to.Ptr(dataagent.ElementStateAvailable),
+	}
+
+	testsuite.serverFactory.StagingServer.UpdateDatasourceElement = func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, id string, updateDataSourceElementRequest dataagent.UpdateDataSourceElementRequest, options *dataagent.StagingClientUpdateDatasourceElementOptions) (resp azfake.Responder[dataagent.StagingClientUpdateDatasourceElementResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleDatasourceID, datasourceID)
+		testsuite.Require().Equal(exampleId, id)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateDataSourceElementRequest, updateDataSourceElementRequest))
+		resp = azfake.Responder[dataagent.StagingClientUpdateDatasourceElementResponse]{}
+		resp.SetResponse(http.StatusOK, dataagent.StagingClientUpdateDatasourceElementResponse{DataSourceElement: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	res, err := client.UpdateDatasourceElement(ctx, exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, exampleId, exampleUpdateDataSourceElementRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DataSourceElement))
+}
+
+func (testsuite *FakeTestSuite) TestStaging_DeleteDatasourceElement() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete staging DataAgent datasource element example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleDatasourceID string
+	var exampleId string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleDatasourceID = "c1c6d12f-8d2a-4d5b-9ca1-8bb7b42d4a30"
+	exampleId = "U2NoZW1hcy9kYm8vVGFibGVzL1RyaXA="
+
+	testsuite.serverFactory.StagingServer.DeleteDatasourceElement = func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, id string, options *dataagent.StagingClientDeleteDatasourceElementOptions) (resp azfake.Responder[dataagent.StagingClientDeleteDatasourceElementResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleDatasourceID, datasourceID)
+		testsuite.Require().Equal(exampleId, id)
+		resp = azfake.Responder[dataagent.StagingClientDeleteDatasourceElementResponse]{}
+		resp.SetResponse(http.StatusOK, dataagent.StagingClientDeleteDatasourceElementResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	_, err = client.DeleteDatasourceElement(ctx, exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, exampleId, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestStaging_ListDatasourceFewshots() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List staging DataAgent datasource fewshots example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleDatasourceID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleDatasourceID = "c1c6d12f-8d2a-4d5b-9ca1-8bb7b42d4a30"
+
+	exampleRes := dataagent.Fewshots{
+		Value: []dataagent.Fewshot{
+			{
+				ID:       to.Ptr("c3f5e2a1-9b8d-4f7e-a6b2-1d0c8e3f9a5b"),
+				Query:    to.Ptr("SELECT COUNT(*) FROM dbo.Trip WHERE MONTH(start_date) = 1"),
+				Question: to.Ptr("How many trips were there in January?"),
+				ValidationStatus: &dataagent.FewshotValidationStatus{
+					Value: to.Ptr(dataagent.FewshotValidationStatusValueValid),
+				},
+			},
+			{
+				ID:       to.Ptr("a1b2c3d4-5e6f-7a8b-9c0d-1e2f3a4b5c6d"),
+				Query:    to.Ptr("SELECT TOP 5 pickup_location_name, COUNT(*) as trip_count FROM dbo.Trip GROUP BY pickup_location_name ORDER BY trip_count DESC"),
+				Question: to.Ptr("What are the top 5 busiest pickup locations?"),
+				ValidationStatus: &dataagent.FewshotValidationStatus{
+					Reason: to.Ptr("Column 'pickup_location_name' does not exist in dbo.Trip."),
+					Value:  to.Ptr(dataagent.FewshotValidationStatusValueInvalid),
+				},
+			}},
+	}
+
+	testsuite.serverFactory.StagingServer.NewListDatasourceFewshotsPager = func(workspaceID string, dataAgentID string, datasourceID string, options *dataagent.StagingClientListDatasourceFewshotsOptions) (resp azfake.PagerResponder[dataagent.StagingClientListDatasourceFewshotsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleDatasourceID, datasourceID)
+		resp = azfake.PagerResponder[dataagent.StagingClientListDatasourceFewshotsResponse]{}
+		resp.AddPage(http.StatusOK, dataagent.StagingClientListDatasourceFewshotsResponse{Fewshots: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	pager := client.NewListDatasourceFewshotsPager(exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, &dataagent.StagingClientListDatasourceFewshotsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Fewshots))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestStaging_CreateDatasourceFewshot() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create staging DataAgent datasource fewshot example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleDatasourceID string
+	var exampleCreateDataAgentFewshotRequest dataagent.CreateDataAgentFewshotRequest
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleDatasourceID = "c1c6d12f-8d2a-4d5b-9ca1-8bb7b42d4a30"
+	exampleCreateDataAgentFewshotRequest = dataagent.CreateDataAgentFewshotRequest{
+		Query:    to.Ptr("SELECT TOP 5 pickup_location, COUNT(*) as trip_count FROM dbo.Trip GROUP BY pickup_location ORDER BY trip_count DESC"),
+		Question: to.Ptr("What are the top 5 busiest pickup locations?"),
+	}
+
+	testsuite.serverFactory.StagingServer.CreateDatasourceFewshot = func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, createDataAgentFewshotRequest dataagent.CreateDataAgentFewshotRequest, options *dataagent.StagingClientCreateDatasourceFewshotOptions) (resp azfake.Responder[dataagent.StagingClientCreateDatasourceFewshotResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleDatasourceID, datasourceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateDataAgentFewshotRequest, createDataAgentFewshotRequest))
+		resp = azfake.Responder[dataagent.StagingClientCreateDatasourceFewshotResponse]{}
+		resp.SetResponse(http.StatusCreated, dataagent.StagingClientCreateDatasourceFewshotResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	_, err = client.CreateDatasourceFewshot(ctx, exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, exampleCreateDataAgentFewshotRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestStaging_GetDatasourceFewshot() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get staging DataAgent datasource fewshot example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleDatasourceID string
+	var exampleFewShotID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleDatasourceID = "c1c6d12f-8d2a-4d5b-9ca1-8bb7b42d4a30"
+	exampleFewShotID = "c3f5e2a1-9b8d-4f7e-a6b2-1d0c8e3f9a5b"
+
+	exampleRes := dataagent.Fewshot{
+		ID:       to.Ptr("a1b2c3d4-5e6f-7a8b-9c0d-1e2f3a4b5c6d"),
+		Query:    to.Ptr("SELECT TOP 5 pickup_location_name, COUNT(*) as trip_count FROM dbo.Trip GROUP BY pickup_location_name ORDER BY trip_count DESC"),
+		Question: to.Ptr("What are the top 5 busiest pickup locations?"),
+		ValidationStatus: &dataagent.FewshotValidationStatus{
+			Reason: to.Ptr("Column 'pickup_location_name' does not exist in dbo.Trip."),
+			Value:  to.Ptr(dataagent.FewshotValidationStatusValueInvalid),
+		},
+	}
+
+	testsuite.serverFactory.StagingServer.GetDatasourceFewshot = func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fewShotID string, options *dataagent.StagingClientGetDatasourceFewshotOptions) (resp azfake.Responder[dataagent.StagingClientGetDatasourceFewshotResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleDatasourceID, datasourceID)
+		testsuite.Require().Equal(exampleFewShotID, fewShotID)
+		resp = azfake.Responder[dataagent.StagingClientGetDatasourceFewshotResponse]{}
+		resp.SetResponse(http.StatusOK, dataagent.StagingClientGetDatasourceFewshotResponse{Fewshot: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	res, err := client.GetDatasourceFewshot(ctx, exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, exampleFewShotID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Fewshot))
+}
+
+func (testsuite *FakeTestSuite) TestStaging_UpdateDatasourceFewshot() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update staging DataAgent datasource fewshot example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleDatasourceID string
+	var exampleFewShotID string
+	var exampleUpdateDataAgentFewshotRequest dataagent.UpdateDataAgentFewshotRequest
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleDatasourceID = "c1c6d12f-8d2a-4d5b-9ca1-8bb7b42d4a30"
+	exampleFewShotID = "c3f5e2a1-9b8d-4f7e-a6b2-1d0c8e3f9a5b"
+	exampleUpdateDataAgentFewshotRequest = dataagent.UpdateDataAgentFewshotRequest{
+		Query: to.Ptr("SELECT COUNT(*) FROM dbo.Trip WHERE MONTH(start_date) = 1 AND YEAR(start_date) = 2024"),
+	}
+
+	exampleRes := dataagent.Fewshot{
+		ID:       to.Ptr("c3f5e2a1-9b8d-4f7e-a6b2-1d0c8e3f9a5b"),
+		Query:    to.Ptr("SELECT COUNT(*) FROM dbo.Trip WHERE MONTH(start_date) = 1 AND YEAR(start_date) = 2024"),
+		Question: to.Ptr("How many trips were there in January?"),
+		ValidationStatus: &dataagent.FewshotValidationStatus{
+			Value: to.Ptr(dataagent.FewshotValidationStatusValueValidating),
+		},
+	}
+
+	testsuite.serverFactory.StagingServer.UpdateDatasourceFewshot = func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fewShotID string, updateDataAgentFewshotRequest dataagent.UpdateDataAgentFewshotRequest, options *dataagent.StagingClientUpdateDatasourceFewshotOptions) (resp azfake.Responder[dataagent.StagingClientUpdateDatasourceFewshotResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleDatasourceID, datasourceID)
+		testsuite.Require().Equal(exampleFewShotID, fewShotID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateDataAgentFewshotRequest, updateDataAgentFewshotRequest))
+		resp = azfake.Responder[dataagent.StagingClientUpdateDatasourceFewshotResponse]{}
+		resp.SetResponse(http.StatusOK, dataagent.StagingClientUpdateDatasourceFewshotResponse{Fewshot: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	res, err := client.UpdateDatasourceFewshot(ctx, exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, exampleFewShotID, exampleUpdateDataAgentFewshotRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Fewshot))
+}
+
+func (testsuite *FakeTestSuite) TestStaging_DeleteDatasourceFewshot() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete staging DataAgent datasource fewshot example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleDatasourceID string
+	var exampleFewShotID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleDatasourceID = "c1c6d12f-8d2a-4d5b-9ca1-8bb7b42d4a30"
+	exampleFewShotID = "c3f5e2a1-9b8d-4f7e-a6b2-1d0c8e3f9a5b"
+
+	testsuite.serverFactory.StagingServer.DeleteDatasourceFewshot = func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fewShotID string, options *dataagent.StagingClientDeleteDatasourceFewshotOptions) (resp azfake.Responder[dataagent.StagingClientDeleteDatasourceFewshotResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleDatasourceID, datasourceID)
+		testsuite.Require().Equal(exampleFewShotID, fewShotID)
+		resp = azfake.Responder[dataagent.StagingClientDeleteDatasourceFewshotResponse]{}
+		resp.SetResponse(http.StatusOK, dataagent.StagingClientDeleteDatasourceFewshotResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	_, err = client.DeleteDatasourceFewshot(ctx, exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, exampleFewShotID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestStaging_DeleteAllDatasourceFewshots() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete all staging DataAgent datasource fewshots example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleDatasourceID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleDatasourceID = "c1c6d12f-8d2a-4d5b-9ca1-8bb7b42d4a30"
+
+	testsuite.serverFactory.StagingServer.DeleteAllDatasourceFewshots = func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, options *dataagent.StagingClientDeleteAllDatasourceFewshotsOptions) (resp azfake.Responder[dataagent.StagingClientDeleteAllDatasourceFewshotsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleDatasourceID, datasourceID)
+		resp = azfake.Responder[dataagent.StagingClientDeleteAllDatasourceFewshotsResponse]{}
+		resp.SetResponse(http.StatusOK, dataagent.StagingClientDeleteAllDatasourceFewshotsResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	_, err = client.DeleteAllDatasourceFewshots(ctx, exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestStaging_Reset() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Reset staging DataAgent example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+
+	testsuite.serverFactory.StagingServer.Reset = func(ctx context.Context, workspaceID string, dataAgentID string, options *dataagent.StagingClientResetOptions) (resp azfake.Responder[dataagent.StagingClientResetResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		resp = azfake.Responder[dataagent.StagingClientResetResponse]{}
+		resp.SetResponse(http.StatusOK, dataagent.StagingClientResetResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	_, err = client.Reset(ctx, exampleWorkspaceID, exampleDataAgentID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestPublished_GetSettings() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get published DataAgent settings example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+
+	exampleRes := dataagent.SettingsResponse{
+		AiInstructions: to.Ptr("Always respond in English. Be concise."),
+	}
+
+	testsuite.serverFactory.PublishedServer.GetSettings = func(ctx context.Context, workspaceID string, dataAgentID string, options *dataagent.PublishedClientGetSettingsOptions) (resp azfake.Responder[dataagent.PublishedClientGetSettingsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		resp = azfake.Responder[dataagent.PublishedClientGetSettingsResponse]{}
+		resp.SetResponse(http.StatusOK, dataagent.PublishedClientGetSettingsResponse{SettingsResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewPublishedClient()
+	res, err := client.GetSettings(ctx, exampleWorkspaceID, exampleDataAgentID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.SettingsResponse))
+}
+
+func (testsuite *FakeTestSuite) TestPublished_ListDatasources() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List published DataAgent datasources example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+
+	exampleRes := dataagent.Datasources{
+		Value: []dataagent.DatasourceResponseClassification{
+			&dataagent.FabricItemDatasource{
+				Type:           to.Ptr(dataagent.DatasourceTypeFabricItem),
+				Description:    to.Ptr("Sales data warehouse with order and customer information."),
+				DisplayName:    to.Ptr("SalesWarehouse"),
+				ID:             to.Ptr("70f9282b-1b64-4f08-9e4e-2ab9f0e20e01"),
+				Instructions:   to.Ptr("Use this for document retrieval queries."),
+				FabricItemType: to.Ptr(dataagent.SupportedItemTypeWarehouse),
+				ItemReference: &dataagent.ItemReferenceByID{
+					ReferenceType: to.Ptr(dataagent.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("01234372-7fd9-44d3-bd75-a2718645a82a"),
+					WorkspaceID:   to.Ptr("abdd0d48-2eed-4066-adc4-321a9f6a628e"),
+				},
+			},
+			&dataagent.LakehouseTablesDatasource{
+				Type:         to.Ptr(dataagent.DatasourceTypeLakehouseTables),
+				Description:  to.Ptr("Customer interaction history and support activity."),
+				DisplayName:  to.Ptr("CustomerLakehouse"),
+				ID:           to.Ptr("c1c6d12f-8d2a-4d5b-9ca1-8bb7b42d4a30"),
+				Instructions: to.Ptr("Use this for customer engagement analysis."),
+				LakehouseReference: &dataagent.ItemReferenceByID{
+					ReferenceType: to.Ptr(dataagent.ItemReferenceTypeByID),
+					ItemID:        to.Ptr("b5e7c3a1-2d4f-4890-9a1b-3c5d7e9f0a2b"),
+					WorkspaceID:   to.Ptr("e1f2a3b4-5c6d-7e8f-9a0b-1c2d3e4f5a6b"),
+				},
+			}},
+	}
+
+	testsuite.serverFactory.PublishedServer.NewListDatasourcesPager = func(workspaceID string, dataAgentID string, options *dataagent.PublishedClientListDatasourcesOptions) (resp azfake.PagerResponder[dataagent.PublishedClientListDatasourcesResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		resp = azfake.PagerResponder[dataagent.PublishedClientListDatasourcesResponse]{}
+		resp.AddPage(http.StatusOK, dataagent.PublishedClientListDatasourcesResponse{Datasources: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewPublishedClient()
+	pager := client.NewListDatasourcesPager(exampleWorkspaceID, exampleDataAgentID, &dataagent.PublishedClientListDatasourcesOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Datasources))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestPublished_GetDatasource() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get published DataAgent datasource example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleDatasourceID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleDatasourceID = "70f9282b-1b64-4f08-9e4e-2ab9f0e20e01"
+
+	exampleRes := dataagent.PublishedClientGetDatasourceResponse{
+		DatasourceResponseClassification: &dataagent.FabricItemDatasource{
+			Type:           to.Ptr(dataagent.DatasourceTypeFabricItem),
+			Description:    to.Ptr("Sales data warehouse with order and customer information."),
+			DisplayName:    to.Ptr("SalesWarehouse"),
+			ID:             to.Ptr("70f9282b-1b64-4f08-9e4e-2ab9f0e20e01"),
+			Instructions:   to.Ptr("Use this for document retrieval queries."),
+			FabricItemType: to.Ptr(dataagent.SupportedItemTypeWarehouse),
+			ItemReference: &dataagent.ItemReferenceByID{
+				ReferenceType: to.Ptr(dataagent.ItemReferenceTypeByID),
+				ItemID:        to.Ptr("01234372-7fd9-44d3-bd75-a2718645a82a"),
+				WorkspaceID:   to.Ptr("abdd0d48-2eed-4066-adc4-321a9f6a628e"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.PublishedServer.GetDatasource = func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, options *dataagent.PublishedClientGetDatasourceOptions) (resp azfake.Responder[dataagent.PublishedClientGetDatasourceResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleDatasourceID, datasourceID)
+		resp = azfake.Responder[dataagent.PublishedClientGetDatasourceResponse]{}
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewPublishedClient()
+	res, err := client.GetDatasource(ctx, exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
+}
+
+func (testsuite *FakeTestSuite) TestPublished_ListDatasourceElements() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List published DataAgent datasource elements example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleDatasourceID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleDatasourceID = "c1c6d12f-8d2a-4d5b-9ca1-8bb7b42d4a30"
+
+	exampleRes := dataagent.DataSourceElements{
+		Value: []dataagent.DataSourceElement{
+			{
+				Type:             to.Ptr(dataagent.ElementTypeSchemas),
+				DisplayName:      to.Ptr("Schemas"),
+				HasSubElements:   to.Ptr(true),
+				ID:               to.Ptr("U2NoZW1hcw=="),
+				IsSelected:       to.Ptr(false),
+				LastSyncDateTime: to.Ptr("2025-06-15T10:30:00Z"),
+				State:            to.Ptr(dataagent.ElementStateAvailable),
+			},
+			{
+				Type:             to.Ptr(dataagent.ElementTypeTables),
+				DisplayName:      to.Ptr("Tables"),
+				HasSubElements:   to.Ptr(true),
+				ID:               to.Ptr("VGFibGVz"),
+				IsSelected:       to.Ptr(false),
+				LastSyncDateTime: to.Ptr("2025-06-15T10:30:00Z"),
+				State:            to.Ptr(dataagent.ElementStateAvailable),
+			}},
+	}
+
+	testsuite.serverFactory.PublishedServer.NewListDatasourceElementsPager = func(workspaceID string, dataAgentID string, datasourceID string, options *dataagent.PublishedClientListDatasourceElementsOptions) (resp azfake.PagerResponder[dataagent.PublishedClientListDatasourceElementsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleDatasourceID, datasourceID)
+		resp = azfake.PagerResponder[dataagent.PublishedClientListDatasourceElementsResponse]{}
+		resp.AddPage(http.StatusOK, dataagent.PublishedClientListDatasourceElementsResponse{DataSourceElements: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewPublishedClient()
+	pager := client.NewListDatasourceElementsPager(exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, &dataagent.PublishedClientListDatasourceElementsOptions{RootID: nil,
+		ContinuationToken: nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.DataSourceElements))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestPublished_ListDatasourceFewshots() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List published DataAgent datasource fewshots example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleDatasourceID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleDatasourceID = "c1c6d12f-8d2a-4d5b-9ca1-8bb7b42d4a30"
+
+	exampleRes := dataagent.Fewshots{
+		Value: []dataagent.Fewshot{
+			{
+				ID:       to.Ptr("c3f5e2a1-9b8d-4f7e-a6b2-1d0c8e3f9a5b"),
+				Query:    to.Ptr("SELECT COUNT(*) FROM dbo.Trip WHERE MONTH(start_date) = 1"),
+				Question: to.Ptr("How many trips were there in January?"),
+				ValidationStatus: &dataagent.FewshotValidationStatus{
+					Value: to.Ptr(dataagent.FewshotValidationStatusValueValid),
+				},
+			},
+			{
+				ID:       to.Ptr("a1b2c3d4-5e6f-7a8b-9c0d-1e2f3a4b5c6d"),
+				Query:    to.Ptr("SELECT TOP 5 pickup_location_name, COUNT(*) as trip_count FROM dbo.Trip GROUP BY pickup_location_name ORDER BY trip_count DESC"),
+				Question: to.Ptr("What are the top 5 busiest pickup locations?"),
+				ValidationStatus: &dataagent.FewshotValidationStatus{
+					Reason: to.Ptr("Column 'pickup_location_name' does not exist in dbo.Trip."),
+					Value:  to.Ptr(dataagent.FewshotValidationStatusValueInvalid),
+				},
+			}},
+	}
+
+	testsuite.serverFactory.PublishedServer.NewListDatasourceFewshotsPager = func(workspaceID string, dataAgentID string, datasourceID string, options *dataagent.PublishedClientListDatasourceFewshotsOptions) (resp azfake.PagerResponder[dataagent.PublishedClientListDatasourceFewshotsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleDatasourceID, datasourceID)
+		resp = azfake.PagerResponder[dataagent.PublishedClientListDatasourceFewshotsResponse]{}
+		resp.AddPage(http.StatusOK, dataagent.PublishedClientListDatasourceFewshotsResponse{Fewshots: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewPublishedClient()
+	pager := client.NewListDatasourceFewshotsPager(exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, &dataagent.PublishedClientListDatasourceFewshotsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Fewshots))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestPublished_GetDatasourceFewshot() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get published DataAgent datasource fewshot example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleDatasourceID string
+	var exampleFewShotID string
+	exampleWorkspaceID = "f089354e-8366-4e18-aea3-4cb4a3a50b48"
+	exampleDataAgentID = "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87"
+	exampleDatasourceID = "c1c6d12f-8d2a-4d5b-9ca1-8bb7b42d4a30"
+	exampleFewShotID = "c3f5e2a1-9b8d-4f7e-a6b2-1d0c8e3f9a5b"
+
+	exampleRes := dataagent.Fewshot{
+		ID:       to.Ptr("a1b2c3d4-5e6f-7a8b-9c0d-1e2f3a4b5c6d"),
+		Query:    to.Ptr("SELECT TOP 5 pickup_location_name, COUNT(*) as trip_count FROM dbo.Trip GROUP BY pickup_location_name ORDER BY trip_count DESC"),
+		Question: to.Ptr("What are the top 5 busiest pickup locations?"),
+		ValidationStatus: &dataagent.FewshotValidationStatus{
+			Reason: to.Ptr("Column 'pickup_location_name' does not exist in dbo.Trip."),
+			Value:  to.Ptr(dataagent.FewshotValidationStatusValueInvalid),
+		},
+	}
+
+	testsuite.serverFactory.PublishedServer.GetDatasourceFewshot = func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fewShotID string, options *dataagent.PublishedClientGetDatasourceFewshotOptions) (resp azfake.Responder[dataagent.PublishedClientGetDatasourceFewshotResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleDatasourceID, datasourceID)
+		testsuite.Require().Equal(exampleFewShotID, fewShotID)
+		resp = azfake.Responder[dataagent.PublishedClientGetDatasourceFewshotResponse]{}
+		resp.SetResponse(http.StatusOK, dataagent.PublishedClientGetDatasourceFewshotResponse{Fewshot: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewPublishedClient()
+	res, err := client.GetDatasourceFewshot(ctx, exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, exampleFewShotID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Fewshot))
 }

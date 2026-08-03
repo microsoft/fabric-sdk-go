@@ -46,6 +46,10 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListDataAgentsPager func(workspaceID string, options *dataagent.ItemsClientListDataAgentsOptions) (resp azfake.PagerResponder[dataagent.ItemsClientListDataAgentsResponse])
 
+	// PublishDataAgent is the fake for method ItemsClient.PublishDataAgent
+	// HTTP status codes to indicate success: http.StatusOK
+	PublishDataAgent func(ctx context.Context, workspaceID string, dataAgentID string, publishDataAgentRequest dataagent.PublishDataAgentRequest, options *dataagent.ItemsClientPublishDataAgentOptions) (resp azfake.Responder[dataagent.ItemsClientPublishDataAgentResponse], errResp azfake.ErrorResponder)
+
 	// UpdateDataAgent is the fake for method ItemsClient.UpdateDataAgent
 	// HTTP status codes to indicate success: http.StatusOK
 	UpdateDataAgent func(ctx context.Context, workspaceID string, dataAgentID string, updateDataAgentRequest dataagent.UpdateDataAgentRequest, options *dataagent.ItemsClientUpdateDataAgentOptions) (resp azfake.Responder[dataagent.ItemsClientUpdateDataAgentResponse], errResp azfake.ErrorResponder)
@@ -113,6 +117,8 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 				res.resp, res.err = i.dispatchBeginGetDataAgentDefinition(req)
 			case "ItemsClient.NewListDataAgentsPager":
 				res.resp, res.err = i.dispatchNewListDataAgentsPager(req)
+			case "ItemsClient.PublishDataAgent":
+				res.resp, res.err = i.dispatchPublishDataAgent(req)
 			case "ItemsClient.UpdateDataAgent":
 				res.resp, res.err = i.dispatchUpdateDataAgent(req)
 			case "ItemsClient.BeginUpdateDataAgentDefinition":
@@ -377,6 +383,43 @@ func (i *ItemsServerTransport) dispatchNewListDataAgentsPager(req *http.Request)
 	}
 	if !server.PagerResponderMore(newListDataAgentsPager) {
 		i.newListDataAgentsPager.remove(req)
+	}
+	return resp, nil
+}
+
+func (i *ItemsServerTransport) dispatchPublishDataAgent(req *http.Request) (*http.Response, error) {
+	if i.srv.PublishDataAgent == nil {
+		return nil, &nonRetriableError{errors.New("fake for method PublishDataAgent not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataAgents/(?P<dataAgentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/staging/publish`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[dataagent.PublishDataAgentRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	dataAgentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("dataAgentId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := i.srv.PublishDataAgent(req.Context(), workspaceIDParam, dataAgentIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).PublishDataAgentResponse, req)
+	if err != nil {
+		return nil, err
 	}
 	return resp, nil
 }

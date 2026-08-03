@@ -28,7 +28,7 @@ type SQLAuditSettingsClient struct {
 }
 
 // GetSQLAuditSettings - PERMISSIONS The caller must have reader or higher item permission.
-// REQUIRED DELEGATED SCOPES SqlEndpoint.Read.All or SqlEndpoint.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
+// REQUIRED DELEGATED SCOPES SQLEndpoint.Read.All or SQLEndpoint.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
