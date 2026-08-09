@@ -57,10 +57,46 @@ func TestWorkspaceIDFromPath(t *testing.T) {
 			expectedOK: false,
 		},
 		{
-			name:       "communicationPolicy with sub-path is not excluded",
+			name:       "communicationPolicy with sub-path is excluded",
 			path:       "/v1/workspaces/12345678-1234-1234-1234-123456789abc/networking/communicationPolicy/settings",
-			expectedID: "12345678-1234-1234-1234-123456789abc",
-			expectedOK: true,
+			expectedID: "",
+			expectedOK: false,
+		},
+		{
+			name:       "communicationPolicy outbound connections excluded",
+			path:       "/v1/workspaces/12345678-1234-1234-1234-123456789abc/networking/communicationPolicy/outbound/connections",
+			expectedID: "",
+			expectedOK: false,
+		},
+		{
+			name:       "communicationPolicy outbound gateways excluded",
+			path:       "/v1/workspaces/12345678-1234-1234-1234-123456789abc/networking/communicationPolicy/outbound/gateways",
+			expectedID: "",
+			expectedOK: false,
+		},
+		{
+			name:       "communicationPolicy outbound git excluded",
+			path:       "/v1/workspaces/12345678-1234-1234-1234-123456789abc/networking/communicationPolicy/outbound/git",
+			expectedID: "",
+			expectedOK: false,
+		},
+		{
+			name:       "communicationPolicy inbound firewall excluded",
+			path:       "/v1/workspaces/12345678-1234-1234-1234-123456789abc/networking/communicationPolicy/inbound/firewall",
+			expectedID: "",
+			expectedOK: false,
+		},
+		{
+			name:       "communicationPolicy inbound azureResources excluded",
+			path:       "/v1/workspaces/12345678-1234-1234-1234-123456789abc/networking/communicationPolicy/inbound/azureResources",
+			expectedID: "",
+			expectedOK: false,
+		},
+		{
+			name:       "communicationPolicy inbound externalDataShares excluded",
+			path:       "/v1/workspaces/12345678-1234-1234-1234-123456789abc/networking/communicationPolicy/inbound/externalDataShares",
+			expectedID: "",
+			expectedOK: false,
 		},
 
 		// --- non-matching paths ---
@@ -139,9 +175,10 @@ func TestIsCommunicationPolicyPath(t *testing.T) {
 		{name: "exact communicationPolicy", path: "/networking/communicationPolicy", expected: true},
 		{name: "unrelated path", path: "/items", expected: false},
 		{name: "empty string", path: "", expected: false},
-		{name: "extra segment after policy", path: "/networking/communicationPolicy/extra", expected: false},
-		{name: "trailing slash", path: "/networking/communicationPolicy/", expected: false},
+		{name: "extra segment after policy", path: "/networking/communicationPolicy/extra", expected: true},
+		{name: "trailing slash", path: "/networking/communicationPolicy/", expected: true},
 		{name: "different casing", path: "/networking/CommunicationPolicy", expected: true},
+		{name: "different casing with sub-path", path: "/networking/CommunicationPolicy/Inbound/Firewall", expected: true},
 		{name: "suffix match (policyExtra)", path: "/networking/communicationPolicyExtra", expected: false},
 	}
 
