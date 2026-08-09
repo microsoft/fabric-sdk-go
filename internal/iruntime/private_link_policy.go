@@ -39,8 +39,13 @@ func workspaceIDFromPath(path string) (string, bool) {
 	return matches[1], true
 }
 
+// isCommunicationPolicyPath reports whether the path is the communication policy
+// endpoint itself or any endpoint nested under it.
 func isCommunicationPolicyPath(path string) bool {
-	return strings.EqualFold(path, communicationPolicyPath)
+	normalized := strings.ToLower(path)
+	prefix := strings.ToLower(communicationPolicyPath)
+
+	return normalized == prefix || strings.HasPrefix(normalized, prefix+"/")
 }
 
 // Do implements the policy.Policy interface
