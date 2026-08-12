@@ -618,3 +618,86 @@ func ExampleGitClient_UpdateMyGitCredentials_updateUsersGitCredentialsToNoneExam
 	// 	},
 	// 	                        }
 }
+
+// Generated from example definition
+func ExampleGitClient_NewListWorkspaceRelationsPager() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewGitClient().NewListWorkspaceRelationsPager("66666666-6666-6666-6666-666666666666", &core.GitClientListWorkspaceRelationsOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.WorkspaceRelations = core.WorkspaceRelations{
+		// 	Value: []core.WorkspaceRelation{
+		// 		{
+		// 			ID: to.Ptr("ffffffff-ffff-ffff-ffff-ffffffffffff"),
+		// 			RelatedWorkspaceID: to.Ptr("88888888-8888-8888-8888-888888888888"),
+		// 			RelationType: to.Ptr(core.WorkspaceRelationTypeBase),
+		// 			WorkspaceID: to.Ptr("66666666-6666-6666-6666-666666666666"),
+		// 		},
+		// 		{
+		// 			ID: to.Ptr("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+		// 			RelatedWorkspaceID: to.Ptr("22222222-2222-2222-2222-222222222222"),
+		// 			RelationType: to.Ptr(core.WorkspaceRelationTypeRelatedWorkspace),
+		// 			WorkspaceID: to.Ptr("66666666-6666-6666-6666-666666666666"),
+		// 		},
+		// 		{
+		// 			ID: to.Ptr("cccccccc-cccc-cccc-cccc-cccccccccccc"),
+		// 			RelatedWorkspaceID: to.Ptr("44444444-4444-4444-4444-444444444444"),
+		// 			RelationType: to.Ptr(core.WorkspaceRelationTypeRelatedWorkspace),
+		// 			WorkspaceID: to.Ptr("66666666-6666-6666-6666-666666666666"),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
+func ExampleGitClient_CreateWorkspaceRelation() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewGitClient().CreateWorkspaceRelation(ctx, "55555555-5555-5555-5555-555555555555", core.CreateWorkspaceRelationRequest{
+		RelatedWorkspaceID: to.Ptr("33333333-3333-3333-3333-333333333333"),
+		RelationType:       to.Ptr(core.WorkspaceRelationTypeBase),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleGitClient_DeleteWorkspaceRelation() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewGitClient().DeleteWorkspaceRelation(ctx, "55555555-5555-5555-5555-555555555555", "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}

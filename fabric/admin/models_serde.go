@@ -1550,6 +1550,64 @@ func (e *ExternalDataShares) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type FirewallRule.
+func (f FirewallRule) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "displayName", f.DisplayName)
+	populate(objectMap, "value", f.Value)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type FirewallRule.
+func (f *FirewallRule) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", f, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "displayName":
+			err = unpopulate(val, "DisplayName", &f.DisplayName)
+			delete(rawMsg, key)
+		case "value":
+			err = unpopulate(val, "Value", &f.Value)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", f, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type FirewallRules.
+func (f FirewallRules) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "rules", f.Rules)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type FirewallRules.
+func (f *FirewallRules) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", f, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "rules":
+			err = unpopulate(val, "Rules", &f.Rules)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", f, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type GatewayAccessRuleMetadata.
 func (g GatewayAccessRuleMetadata) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -2153,6 +2211,53 @@ func (i *ItemsChangeLabelResponse) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type ManagedPrivateEndpoint.
+func (m ManagedPrivateEndpoint) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "connectionState", m.ConnectionState)
+	populate(objectMap, "id", m.ID)
+	populate(objectMap, "name", m.Name)
+	populate(objectMap, "provisioningState", m.ProvisioningState)
+	populate(objectMap, "targetPrivateLinkResourceId", m.TargetPrivateLinkResourceID)
+	populate(objectMap, "targetSubresourceType", m.TargetSubresourceType)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ManagedPrivateEndpoint.
+func (m *ManagedPrivateEndpoint) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", m, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "connectionState":
+			err = unpopulate(val, "ConnectionState", &m.ConnectionState)
+			delete(rawMsg, key)
+		case "id":
+			err = unpopulate(val, "ID", &m.ID)
+			delete(rawMsg, key)
+		case "name":
+			err = unpopulate(val, "Name", &m.Name)
+			delete(rawMsg, key)
+		case "provisioningState":
+			err = unpopulate(val, "ProvisioningState", &m.ProvisioningState)
+			delete(rawMsg, key)
+		case "targetPrivateLinkResourceId":
+			err = unpopulate(val, "TargetPrivateLinkResourceID", &m.TargetPrivateLinkResourceID)
+			delete(rawMsg, key)
+		case "targetSubresourceType":
+			err = unpopulate(val, "TargetSubresourceType", &m.TargetSubresourceType)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", m, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type NetworkCommunicationPolicies.
 func (n NetworkCommunicationPolicies) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -2194,6 +2299,8 @@ func (n NetworkCommunicationPolicyDetails) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "inbound", n.Inbound)
 	populate(objectMap, "outbound", n.Outbound)
 	populate(objectMap, "workspaceId", n.WorkspaceID)
+	populate(objectMap, "workspaceName", n.WorkspaceName)
+	populate(objectMap, "workspaceType", n.WorkspaceType)
 	return json.Marshal(objectMap)
 }
 
@@ -2215,6 +2322,12 @@ func (n *NetworkCommunicationPolicyDetails) UnmarshalJSON(data []byte) error {
 		case "workspaceId":
 			err = unpopulate(val, "WorkspaceID", &n.WorkspaceID)
 			delete(rawMsg, key)
+		case "workspaceName":
+			err = unpopulate(val, "WorkspaceName", &n.WorkspaceName)
+			delete(rawMsg, key)
+		case "workspaceType":
+			err = unpopulate(val, "WorkspaceType", &n.WorkspaceType)
+			delete(rawMsg, key)
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", n, err)
@@ -2226,6 +2339,7 @@ func (n *NetworkCommunicationPolicyDetails) UnmarshalJSON(data []byte) error {
 // MarshalJSON implements the json.Marshaller interface for type NetworkCommunicationPolicyInboundDetails.
 func (n NetworkCommunicationPolicyInboundDetails) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
+	populate(objectMap, "firewall", n.Firewall)
 	populate(objectMap, "publicAccessRules", n.PublicAccessRules)
 	return json.Marshal(objectMap)
 }
@@ -2239,6 +2353,9 @@ func (n *NetworkCommunicationPolicyInboundDetails) UnmarshalJSON(data []byte) er
 	for key, val := range rawMsg {
 		var err error
 		switch key {
+		case "firewall":
+			err = unpopulate(val, "Firewall", &n.Firewall)
+			delete(rawMsg, key)
 		case "publicAccessRules":
 			err = unpopulate(val, "PublicAccessRules", &n.PublicAccessRules)
 			delete(rawMsg, key)
@@ -2256,6 +2373,7 @@ func (n NetworkCommunicationPolicyOutboundDetails) MarshalJSON() ([]byte, error)
 	populate(objectMap, "connections", n.Connections)
 	populate(objectMap, "gateways", n.Gateways)
 	populate(objectMap, "git", n.Git)
+	populate(objectMap, "managedPrivateEndpoints", n.ManagedPrivateEndpoints)
 	populate(objectMap, "publicAccessRules", n.PublicAccessRules)
 	return json.Marshal(objectMap)
 }
@@ -2277,6 +2395,9 @@ func (n *NetworkCommunicationPolicyOutboundDetails) UnmarshalJSON(data []byte) e
 			delete(rawMsg, key)
 		case "git":
 			err = unpopulate(val, "Git", &n.Git)
+			delete(rawMsg, key)
+		case "managedPrivateEndpoints":
+			err = unpopulate(val, "ManagedPrivateEndpoints", &n.ManagedPrivateEndpoints)
 			delete(rawMsg, key)
 		case "publicAccessRules":
 			err = unpopulate(val, "PublicAccessRules", &n.PublicAccessRules)
@@ -2381,6 +2502,41 @@ func (p *Principal) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "type":
 			err = unpopulate(val, "Type", &p.Type)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", p, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type PrivateEndpointConnectionState.
+func (p PrivateEndpointConnectionState) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "actionsRequired", p.ActionsRequired)
+	populate(objectMap, "description", p.Description)
+	populate(objectMap, "status", p.Status)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type PrivateEndpointConnectionState.
+func (p *PrivateEndpointConnectionState) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", p, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "actionsRequired":
+			err = unpopulate(val, "ActionsRequired", &p.ActionsRequired)
+			delete(rawMsg, key)
+		case "description":
+			err = unpopulate(val, "Description", &p.Description)
+			delete(rawMsg, key)
+		case "status":
+			err = unpopulate(val, "Status", &p.Status)
 			delete(rawMsg, key)
 		}
 		if err != nil {

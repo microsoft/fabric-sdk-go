@@ -3659,6 +3659,44 @@ type PublicKey struct {
 	Modulus *string
 }
 
+// RecoverableItem - Recoverable item.
+type RecoverableItem struct {
+	// REQUIRED; The recoverable item type.
+	Type *ItemType
+
+	// READ-ONLY; The recoverable item ID.
+	ID *string
+
+	// READ-ONLY; The UTC retention expiration timestamp for the recoverable item, in ISO 8601 format (for example, '2025-12-31T23:59:59.999Z').
+	RetentionExpirationDateTime *string
+
+	// The recoverable item description.
+	Description *string
+
+	// The recoverable item display name.
+	DisplayName *string
+
+	// READ-ONLY; The parent item ID of the recoverable item.
+	ParentItemID *string
+
+	// READ-ONLY; List of applied tags.
+	Tags []ItemTag
+
+	// READ-ONLY; The workspace ID.
+	WorkspaceID *string
+}
+
+type RecoverableItems struct {
+	// REQUIRED; A list of recoverable items.
+	Value []RecoverableItem
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
 // RelationsEdge - A relation edge between two items.
 type RelationsEdge struct {
 	// READ-ONLY; The identifier of the item that the source item depends on.

@@ -191,18 +191,18 @@ func (c *ClientFactory) NewOneLakeShortcutsClient() *OneLakeShortcutsClient {
 	}
 }
 
-// NewTagsClient creates a new instance of TagsClient.
-func (c *ClientFactory) NewTagsClient() *TagsClient {
-	return &TagsClient{
-		internal: c.internal.WithClientName("core.TagsClient"),
+// NewRecoverableItemsClient creates a new instance of RecoverableItemsClient.
+func (c *ClientFactory) NewRecoverableItemsClient() *RecoverableItemsClient {
+	return &RecoverableItemsClient{
+		internal: c.internal.WithClientName("core.RecoverableItemsClient"),
 		endpoint: c.endpoint,
 	}
 }
 
-// NewWorkspaceRelationsClient creates a new instance of WorkspaceRelationsClient.
-func (c *ClientFactory) NewWorkspaceRelationsClient() *WorkspaceRelationsClient {
-	return &WorkspaceRelationsClient{
-		internal: c.internal.WithClientName("core.WorkspaceRelationsClient"),
+// NewTagsClient creates a new instance of TagsClient.
+func (c *ClientFactory) NewTagsClient() *TagsClient {
+	return &TagsClient{
+		internal: c.internal.WithClientName("core.TagsClient"),
 		endpoint: c.endpoint,
 	}
 }

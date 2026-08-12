@@ -636,6 +636,21 @@ type ExternalDataShares struct {
 	ContinuationURI *string
 }
 
+// FirewallRule - Represents a single IP firewall rule.
+type FirewallRule struct {
+	// READ-ONLY; The display name of the firewall rule.
+	DisplayName *string
+
+	// READ-ONLY; The IP range in start-end format (for example, 0.0.0.0-255.255.255.255) or CIDR notation.
+	Value *string
+}
+
+// FirewallRules - Represents the IP firewall rules configured for a workspace's inbound access protection.
+type FirewallRules struct {
+	// READ-ONLY; A list of IP firewall rules configured for the workspace.
+	Rules []FirewallRule
+}
+
 // GatewayAccessRuleMetadata - Represents a gateway that is allowed for outbound communication. This object is used within
 // the allowedGateways to explicitly authorize outbound access.
 type GatewayAccessRuleMetadata struct {
@@ -872,8 +887,28 @@ type ItemsChangeLabelResponse struct {
 	ItemsChangeLabelStatus []ItemChangeLabelStatus
 }
 
-// NetworkCommunicationPolicies - Network communication policy settings for list of workspaces enabled with either Inbound
-// or Outbound Access Protection.
+// ManagedPrivateEndpoint - Managed private endpoint.
+type ManagedPrivateEndpoint struct {
+	// Endpoint connection state of provisioned endpoints.
+	ConnectionState *PrivateEndpointConnectionState
+
+	// Managed private endpoint Id.
+	ID *string
+
+	// The private endpoint name.
+	Name *string
+
+	// Provisioning state of endpoint.
+	ProvisioningState *PrivateEndpointProvisioningState
+
+	// Resource Id of data source for which private endpoint is created
+	TargetPrivateLinkResourceID *string
+
+	// Sub-resource pointing to Private-link resoure [/azure/private-link/private-endpoint-overview#private-link-resource].
+	TargetSubresourceType *string
+}
+
+// NetworkCommunicationPolicies - A list of network communication policy settings for workspaces in the tenant.
 type NetworkCommunicationPolicies struct {
 	// The token for the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationToken *string
@@ -881,45 +916,57 @@ type NetworkCommunicationPolicies struct {
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
 
-	// Network communication policy settings for list of workspaces enabled with either Inbound or Outbound Access Protection.
+	// A list of network communication policy settings for workspaces in the tenant.
 	Value []NetworkCommunicationPolicyDetails
 }
 
-// NetworkCommunicationPolicyDetails - Represents the details of Network communication policy settings for each workspace.
+// NetworkCommunicationPolicyDetails - Represents the details of network communication policy settings for each workspace.
 type NetworkCommunicationPolicyDetails struct {
-	// REQUIRED; Defines the Inbound access protection settings.
+	// REQUIRED; Defines the inbound access protection settings.
 	Inbound *NetworkCommunicationPolicyInboundDetails
 
-	// REQUIRED; Defines the Outbound access protection settings.
+	// REQUIRED; Defines the outbound access protection settings.
 	Outbound *NetworkCommunicationPolicyOutboundDetails
 
-	// REQUIRED; The workspace ID.
+	// READ-ONLY; The workspace ID.
 	WorkspaceID *string
+
+	// READ-ONLY; The display name of the workspace.
+	WorkspaceName *string
+
+	// READ-ONLY; The workspace type.
+	WorkspaceType *WorkspaceType
 }
 
-// NetworkCommunicationPolicyInboundDetails - Represents the details of Network communication policy settings for each workspace.
+// NetworkCommunicationPolicyInboundDetails - Represents the inbound network communication policy settings for a workspace.
 type NetworkCommunicationPolicyInboundDetails struct {
-	// REQUIRED; The policy for all inbound communications to a workspace
+	// REQUIRED; The policy for all inbound communications to a workspace.
 	PublicAccessRules *NetworkRules
+
+	// The IP firewall rules configured for the workspace's inbound access protection.
+	Firewall *FirewallRules
 }
 
-// NetworkCommunicationPolicyOutboundDetails - Represents the details of Network communication policy settings for each workspace.
+// NetworkCommunicationPolicyOutboundDetails - Represents the outbound network communication policy settings for a workspace.
 type NetworkCommunicationPolicyOutboundDetails struct {
 	// REQUIRED; Represents the complete set of outbound access protection cloud connection rules configured for a workspace as
 	// part of its networking communication policy. This object defines the connection rules
-	// that govern which external endpoints and workspaces are permitted or denied for outbound communication
+	// that govern which external endpoints and workspaces are permitted or denied for outbound communication.
 	Connections *WorkspaceOutboundConnections
 
 	// REQUIRED; Represents the complete set of gateway outbound access protection rules configured for a workspace as part of
 	// its networking communication policy. This object defines the gateway rules that govern
-	// outbound communication
+	// outbound communication.
 	Gateways *WorkspaceOutboundGateways
 
-	// REQUIRED; The policy for all outbound communications to a workspace
+	// REQUIRED; The policy for all outbound communications from a workspace.
 	PublicAccessRules *NetworkRules
 
-	// Represents the Git Outbound policy for the specified as part of its networking communication policy.
+	// Represents the Git outbound policy for the workspace as part of its networking communication policy.
 	Git *NetworkRules
+
+	// READ-ONLY; The managed private endpoints configured for the workspace's outbound access protection.
+	ManagedPrivateEndpoints []ManagedPrivateEndpoint
 }
 
 // NetworkRules - The policy defining access to/from a workspace to/from public networks.
@@ -973,6 +1020,18 @@ type Principal struct {
 
 // GetPrincipal implements the PrincipalClassification interface for type Principal.
 func (p *Principal) GetPrincipal() *Principal { return p }
+
+// PrivateEndpointConnectionState - Private endpoint connection state
+type PrivateEndpointConnectionState struct {
+	// Actions required to establish connection.
+	ActionsRequired *string
+
+	// Description message (if any) provided on approving or rejecting the end point.
+	Description *string
+
+	// Connection status
+	Status *ConnectionStatus
+}
 
 // RemoveAllSharingLinksRequest - Accepts the type of sharing link to be removed for all Fabric items in organization.
 type RemoveAllSharingLinksRequest struct {

@@ -176,6 +176,132 @@ func (client *GitClient) connectCreateRequest(ctx context.Context, workspaceID s
 	return req, nil
 }
 
+// CreateWorkspaceRelation - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// Creates a branching relation between a branch workspace and its base workspace.
+// PERMISSIONS The caller must have an admin role on the branch workspace and a contributor or higher role on the base workspace.
+// REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - createWorkspaceRelationRequest - Create workspace relation request payload.
+//   - options - GitClientCreateWorkspaceRelationOptions contains the optional parameters for the GitClient.CreateWorkspaceRelation
+//     method.
+func (client *GitClient) CreateWorkspaceRelation(ctx context.Context, workspaceID string, createWorkspaceRelationRequest CreateWorkspaceRelationRequest, options *GitClientCreateWorkspaceRelationOptions) (GitClientCreateWorkspaceRelationResponse, error) {
+	var err error
+	const operationName = "core.GitClient.CreateWorkspaceRelation"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.createWorkspaceRelationCreateRequest(ctx, workspaceID, createWorkspaceRelationRequest, options)
+	if err != nil {
+		return GitClientCreateWorkspaceRelationResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return GitClientCreateWorkspaceRelationResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusCreated) {
+		err = NewResponseError(httpResp)
+		return GitClientCreateWorkspaceRelationResponse{}, err
+	}
+	resp, err := client.createWorkspaceRelationHandleResponse(httpResp)
+	return resp, err
+}
+
+// createWorkspaceRelationCreateRequest creates the CreateWorkspaceRelation request.
+func (client *GitClient) createWorkspaceRelationCreateRequest(ctx context.Context, workspaceID string, createWorkspaceRelationRequest CreateWorkspaceRelationRequest, _ *GitClientCreateWorkspaceRelationOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/git/workspaceRelations"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, createWorkspaceRelationRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// createWorkspaceRelationHandleResponse handles the CreateWorkspaceRelation response.
+func (client *GitClient) createWorkspaceRelationHandleResponse(resp *http.Response) (GitClientCreateWorkspaceRelationResponse, error) {
+	result := GitClientCreateWorkspaceRelationResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.WorkspaceRelation); err != nil {
+		return GitClientCreateWorkspaceRelationResponse{}, err
+	}
+	return result, nil
+}
+
+// DeleteWorkspaceRelation - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// Deletes an existing workspace relation between two workspaces, identified by the relation ID. The provided workspace ID
+// can be either a base workspace or a branch workspace.
+// PERMISSIONS The caller must have an admin workspace role on the specified workspace.
+// REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - workspaceRelationID - The workspace relation ID.
+//   - options - GitClientDeleteWorkspaceRelationOptions contains the optional parameters for the GitClient.DeleteWorkspaceRelation
+//     method.
+func (client *GitClient) DeleteWorkspaceRelation(ctx context.Context, workspaceID string, workspaceRelationID string, options *GitClientDeleteWorkspaceRelationOptions) (GitClientDeleteWorkspaceRelationResponse, error) {
+	var err error
+	const operationName = "core.GitClient.DeleteWorkspaceRelation"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.deleteWorkspaceRelationCreateRequest(ctx, workspaceID, workspaceRelationID, options)
+	if err != nil {
+		return GitClientDeleteWorkspaceRelationResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return GitClientDeleteWorkspaceRelationResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return GitClientDeleteWorkspaceRelationResponse{}, err
+	}
+	return GitClientDeleteWorkspaceRelationResponse{}, nil
+}
+
+// deleteWorkspaceRelationCreateRequest creates the DeleteWorkspaceRelation request.
+func (client *GitClient) deleteWorkspaceRelationCreateRequest(ctx context.Context, workspaceID string, workspaceRelationID string, _ *GitClientDeleteWorkspaceRelationOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/git/workspaceRelations/{workspaceRelationId}"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if workspaceRelationID == "" {
+		return nil, errors.New("parameter workspaceRelationID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceRelationId}", url.PathEscape(workspaceRelationID))
+	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
 // Disconnect - PERMISSIONS The caller must have an admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -511,6 +637,74 @@ func (client *GitClient) initializeConnectionCreateRequest(ctx context.Context, 
 		return req, nil
 	}
 	return req, nil
+}
+
+// NewListWorkspaceRelationsPager - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use.
+// This API supports pagination [/rest/api/fabric/articles/pagination].
+// PERMISSIONS The caller must have a viewer or higher workspace role.
+// REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - options - GitClientListWorkspaceRelationsOptions contains the optional parameters for the GitClient.NewListWorkspaceRelationsPager
+//     method.
+func (client *GitClient) NewListWorkspaceRelationsPager(workspaceID string, options *GitClientListWorkspaceRelationsOptions) *runtime.Pager[GitClientListWorkspaceRelationsResponse] {
+	return runtime.NewPager(runtime.PagingHandler[GitClientListWorkspaceRelationsResponse]{
+		More: func(page GitClientListWorkspaceRelationsResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *GitClientListWorkspaceRelationsResponse) (GitClientListWorkspaceRelationsResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "core.GitClient.NewListWorkspaceRelationsPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.listWorkspaceRelationsCreateRequest(ctx, workspaceID, options)
+			}, nil)
+			if err != nil {
+				return GitClientListWorkspaceRelationsResponse{}, err
+			}
+			return client.listWorkspaceRelationsHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
+}
+
+// listWorkspaceRelationsCreateRequest creates the ListWorkspaceRelations request.
+func (client *GitClient) listWorkspaceRelationsCreateRequest(ctx context.Context, workspaceID string, options *GitClientListWorkspaceRelationsOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/git/workspaceRelations"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// listWorkspaceRelationsHandleResponse handles the ListWorkspaceRelations response.
+func (client *GitClient) listWorkspaceRelationsHandleResponse(resp *http.Response) (GitClientListWorkspaceRelationsResponse, error) {
+	result := GitClientListWorkspaceRelationsResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.WorkspaceRelations); err != nil {
+		return GitClientListWorkspaceRelationsResponse{}, err
+	}
+	return result, nil
 }
 
 // BeginUpdateFromGit - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
@@ -970,4 +1164,38 @@ func (client *GitClient) beginUpdateFromGit(ctx context.Context, workspaceID str
 			Tracer:  client.internal.Tracer(),
 		})
 	}
+}
+
+// ListWorkspaceRelations - returns array of WorkspaceRelation from all pages.
+// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
+//
+// This API supports pagination [/rest/api/fabric/articles/pagination].
+//
+// PERMISSIONS The caller must have a viewer or higher workspace role.
+//
+// # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - options - GitClientListWorkspaceRelationsOptions contains the optional parameters for the GitClient.NewListWorkspaceRelationsPager method.
+func (client *GitClient) ListWorkspaceRelations(ctx context.Context, workspaceID string, options *GitClientListWorkspaceRelationsOptions) ([]WorkspaceRelation, error) {
+	pager := client.NewListWorkspaceRelationsPager(workspaceID, options)
+	mapper := func(resp GitClientListWorkspaceRelationsResponse) []WorkspaceRelation {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []WorkspaceRelation{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []WorkspaceRelation{}, err
+	}
+	return list, nil
 }

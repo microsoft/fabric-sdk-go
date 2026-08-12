@@ -64,6 +64,30 @@ func PossibleConnectionAccessActionTypeValues() []ConnectionAccessActionType {
 	}
 }
 
+// ConnectionStatus - Private endpoint connection status. Additional connection status may be added over time.
+type ConnectionStatus string
+
+const (
+	// ConnectionStatusApproved - Endpoint approved
+	ConnectionStatusApproved ConnectionStatus = "Approved"
+	// ConnectionStatusDisconnected - Endpoint disconnected
+	ConnectionStatusDisconnected ConnectionStatus = "Disconnected"
+	// ConnectionStatusPending - Pending approval
+	ConnectionStatusPending ConnectionStatus = "Pending"
+	// ConnectionStatusRejected - Endpoint rejected
+	ConnectionStatusRejected ConnectionStatus = "Rejected"
+)
+
+// PossibleConnectionStatusValues returns the possible values for the ConnectionStatus const type.
+func PossibleConnectionStatusValues() []ConnectionStatus {
+	return []ConnectionStatus{
+		ConnectionStatusApproved,
+		ConnectionStatusDisconnected,
+		ConnectionStatusPending,
+		ConnectionStatusRejected,
+	}
+}
+
 // ContributorsScopeType - The contributor scope. Additional contributor scopes may be added over time.
 type ContributorsScopeType string
 
@@ -357,6 +381,8 @@ const (
 	ItemTypeOrgAppAudience ItemType = "OrgAppAudience"
 	// ItemTypePaginatedReport - PowerBI paginated report.
 	ItemTypePaginatedReport ItemType = "PaginatedReport"
+	// ItemTypePlan - A plan.
+	ItemTypePlan ItemType = "Plan"
 	// ItemTypeReflex - A Reflex.
 	ItemTypeReflex ItemType = "Reflex"
 	// ItemTypeReport - PowerBI report.
@@ -423,6 +449,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeOrgApp,
 		ItemTypeOrgAppAudience,
 		ItemTypePaginatedReport,
+		ItemTypePlan,
 		ItemTypeReflex,
 		ItemTypeReport,
 		ItemTypeSQLDatabase,
@@ -480,6 +507,34 @@ func PossiblePrincipalTypeValues() []PrincipalType {
 		PrincipalTypeServicePrincipal,
 		PrincipalTypeServicePrincipalProfile,
 		PrincipalTypeUser,
+	}
+}
+
+// PrivateEndpointProvisioningState - PrivateEndpointProvisioningState type. Additional Provisioning state may be added over
+// time.
+type PrivateEndpointProvisioningState string
+
+const (
+	// PrivateEndpointProvisioningStateDeleting - Private endpoint deleting
+	PrivateEndpointProvisioningStateDeleting PrivateEndpointProvisioningState = "Deleting"
+	// PrivateEndpointProvisioningStateFailed - Private endpoint provisioning failed
+	PrivateEndpointProvisioningStateFailed PrivateEndpointProvisioningState = "Failed"
+	// PrivateEndpointProvisioningStateProvisioning - Private endpoint in provisioning is in-progress
+	PrivateEndpointProvisioningStateProvisioning PrivateEndpointProvisioningState = "Provisioning"
+	// PrivateEndpointProvisioningStateSucceeded - Private endpoint provisioning Succeeded
+	PrivateEndpointProvisioningStateSucceeded PrivateEndpointProvisioningState = "Succeeded"
+	// PrivateEndpointProvisioningStateUpdating - Private endpoint updating
+	PrivateEndpointProvisioningStateUpdating PrivateEndpointProvisioningState = "Updating"
+)
+
+// PossiblePrivateEndpointProvisioningStateValues returns the possible values for the PrivateEndpointProvisioningState const type.
+func PossiblePrivateEndpointProvisioningStateValues() []PrivateEndpointProvisioningState {
+	return []PrivateEndpointProvisioningState{
+		PrivateEndpointProvisioningStateDeleting,
+		PrivateEndpointProvisioningStateFailed,
+		PrivateEndpointProvisioningStateProvisioning,
+		PrivateEndpointProvisioningStateSucceeded,
+		PrivateEndpointProvisioningStateUpdating,
 	}
 }
 

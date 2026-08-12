@@ -36,8 +36,8 @@ type ServerFactory struct {
 	OneLakeLifecyclePolicyServer      OneLakeLifecyclePolicyServer
 	OneLakeSettingsServer             OneLakeSettingsServer
 	OneLakeShortcutsServer            OneLakeShortcutsServer
+	RecoverableItemsServer            RecoverableItemsServer
 	TagsServer                        TagsServer
-	WorkspaceRelationsServer          WorkspaceRelationsServer
 	WorkspacesServer                  WorkspacesServer
 }
 
@@ -64,8 +64,8 @@ type ServerFactoryTransport struct {
 	trOneLakeLifecyclePolicyServer      *OneLakeLifecyclePolicyServerTransport
 	trOneLakeSettingsServer             *OneLakeSettingsServerTransport
 	trOneLakeShortcutsServer            *OneLakeShortcutsServerTransport
+	trRecoverableItemsServer            *RecoverableItemsServerTransport
 	trTagsServer                        *TagsServerTransport
-	trWorkspaceRelationsServer          *WorkspaceRelationsServerTransport
 	trWorkspacesServer                  *WorkspacesServerTransport
 }
 
@@ -164,14 +164,14 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return NewOneLakeShortcutsServerTransport(&s.srv.OneLakeShortcutsServer)
 		})
 		resp, err = s.trOneLakeShortcutsServer.Do(req)
+	case "RecoverableItemsClient":
+		initServer(s, &s.trRecoverableItemsServer, func() *RecoverableItemsServerTransport {
+			return NewRecoverableItemsServerTransport(&s.srv.RecoverableItemsServer)
+		})
+		resp, err = s.trRecoverableItemsServer.Do(req)
 	case "TagsClient":
 		initServer(s, &s.trTagsServer, func() *TagsServerTransport { return NewTagsServerTransport(&s.srv.TagsServer) })
 		resp, err = s.trTagsServer.Do(req)
-	case "WorkspaceRelationsClient":
-		initServer(s, &s.trWorkspaceRelationsServer, func() *WorkspaceRelationsServerTransport {
-			return NewWorkspaceRelationsServerTransport(&s.srv.WorkspaceRelationsServer)
-		})
-		resp, err = s.trWorkspaceRelationsServer.Do(req)
 	case "WorkspacesClient":
 		initServer(s, &s.trWorkspacesServer, func() *WorkspacesServerTransport { return NewWorkspacesServerTransport(&s.srv.WorkspacesServer) })
 		resp, err = s.trWorkspacesServer.Do(req)

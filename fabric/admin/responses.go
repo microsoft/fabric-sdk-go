@@ -275,7 +275,7 @@ type WorkspacesClientListGitConnectionsResponse struct {
 
 // WorkspacesClientListNetworkingCommunicationPoliciesResponse contains the response from method WorkspacesClient.NewListNetworkingCommunicationPoliciesPager.
 type WorkspacesClientListNetworkingCommunicationPoliciesResponse struct {
-	// Network communication policy settings for list of workspaces enabled with either Inbound or Outbound Access Protection.
+	// A list of network communication policy settings for workspaces in the tenant.
 	NetworkCommunicationPolicies
 }
 

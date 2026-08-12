@@ -19,6 +19,7 @@ import (
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/fake/server"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 
 	"github.com/microsoft/fabric-sdk-go/fabric/core"
 )
@@ -32,6 +33,14 @@ type GitServer struct {
 	// Connect is the fake for method GitClient.Connect
 	// HTTP status codes to indicate success: http.StatusOK
 	Connect func(ctx context.Context, workspaceID string, gitConnectRequest core.GitConnectRequest, options *core.GitClientConnectOptions) (resp azfake.Responder[core.GitClientConnectResponse], errResp azfake.ErrorResponder)
+
+	// CreateWorkspaceRelation is the fake for method GitClient.CreateWorkspaceRelation
+	// HTTP status codes to indicate success: http.StatusCreated
+	CreateWorkspaceRelation func(ctx context.Context, workspaceID string, createWorkspaceRelationRequest core.CreateWorkspaceRelationRequest, options *core.GitClientCreateWorkspaceRelationOptions) (resp azfake.Responder[core.GitClientCreateWorkspaceRelationResponse], errResp azfake.ErrorResponder)
+
+	// DeleteWorkspaceRelation is the fake for method GitClient.DeleteWorkspaceRelation
+	// HTTP status codes to indicate success: http.StatusOK
+	DeleteWorkspaceRelation func(ctx context.Context, workspaceID string, workspaceRelationID string, options *core.GitClientDeleteWorkspaceRelationOptions) (resp azfake.Responder[core.GitClientDeleteWorkspaceRelationResponse], errResp azfake.ErrorResponder)
 
 	// Disconnect is the fake for method GitClient.Disconnect
 	// HTTP status codes to indicate success: http.StatusOK
@@ -53,6 +62,10 @@ type GitServer struct {
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
 	BeginInitializeConnection func(ctx context.Context, workspaceID string, options *core.GitClientBeginInitializeConnectionOptions) (resp azfake.PollerResponder[core.GitClientInitializeConnectionResponse], errResp azfake.ErrorResponder)
 
+	// NewListWorkspaceRelationsPager is the fake for method GitClient.NewListWorkspaceRelationsPager
+	// HTTP status codes to indicate success: http.StatusOK
+	NewListWorkspaceRelationsPager func(workspaceID string, options *core.GitClientListWorkspaceRelationsOptions) (resp azfake.PagerResponder[core.GitClientListWorkspaceRelationsResponse])
+
 	// BeginUpdateFromGit is the fake for method GitClient.BeginUpdateFromGit
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
 	BeginUpdateFromGit func(ctx context.Context, workspaceID string, updateFromGitRequest core.UpdateFromGitRequest, options *core.GitClientBeginUpdateFromGitOptions) (resp azfake.PollerResponder[core.GitClientUpdateFromGitResponse], errResp azfake.ErrorResponder)
@@ -67,22 +80,24 @@ type GitServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewGitServerTransport(srv *GitServer) *GitServerTransport {
 	return &GitServerTransport{
-		srv:                       srv,
-		beginCommitToGit:          newTracker[azfake.PollerResponder[core.GitClientCommitToGitResponse]](),
-		beginGetStatus:            newTracker[azfake.PollerResponder[core.GitClientGetStatusResponse]](),
-		beginInitializeConnection: newTracker[azfake.PollerResponder[core.GitClientInitializeConnectionResponse]](),
-		beginUpdateFromGit:        newTracker[azfake.PollerResponder[core.GitClientUpdateFromGitResponse]](),
+		srv:                            srv,
+		beginCommitToGit:               newTracker[azfake.PollerResponder[core.GitClientCommitToGitResponse]](),
+		beginGetStatus:                 newTracker[azfake.PollerResponder[core.GitClientGetStatusResponse]](),
+		beginInitializeConnection:      newTracker[azfake.PollerResponder[core.GitClientInitializeConnectionResponse]](),
+		newListWorkspaceRelationsPager: newTracker[azfake.PagerResponder[core.GitClientListWorkspaceRelationsResponse]](),
+		beginUpdateFromGit:             newTracker[azfake.PollerResponder[core.GitClientUpdateFromGitResponse]](),
 	}
 }
 
 // GitServerTransport connects instances of core.GitClient to instances of GitServer.
 // Don't use this type directly, use NewGitServerTransport instead.
 type GitServerTransport struct {
-	srv                       *GitServer
-	beginCommitToGit          *tracker[azfake.PollerResponder[core.GitClientCommitToGitResponse]]
-	beginGetStatus            *tracker[azfake.PollerResponder[core.GitClientGetStatusResponse]]
-	beginInitializeConnection *tracker[azfake.PollerResponder[core.GitClientInitializeConnectionResponse]]
-	beginUpdateFromGit        *tracker[azfake.PollerResponder[core.GitClientUpdateFromGitResponse]]
+	srv                            *GitServer
+	beginCommitToGit               *tracker[azfake.PollerResponder[core.GitClientCommitToGitResponse]]
+	beginGetStatus                 *tracker[azfake.PollerResponder[core.GitClientGetStatusResponse]]
+	beginInitializeConnection      *tracker[azfake.PollerResponder[core.GitClientInitializeConnectionResponse]]
+	newListWorkspaceRelationsPager *tracker[azfake.PagerResponder[core.GitClientListWorkspaceRelationsResponse]]
+	beginUpdateFromGit             *tracker[azfake.PollerResponder[core.GitClientUpdateFromGitResponse]]
 }
 
 // Do implements the policy.Transporter interface for GitServerTransport.
@@ -114,6 +129,10 @@ func (g *GitServerTransport) dispatchToMethodFake(req *http.Request, method stri
 				res.resp, res.err = g.dispatchBeginCommitToGit(req)
 			case "GitClient.Connect":
 				res.resp, res.err = g.dispatchConnect(req)
+			case "GitClient.CreateWorkspaceRelation":
+				res.resp, res.err = g.dispatchCreateWorkspaceRelation(req)
+			case "GitClient.DeleteWorkspaceRelation":
+				res.resp, res.err = g.dispatchDeleteWorkspaceRelation(req)
 			case "GitClient.Disconnect":
 				res.resp, res.err = g.dispatchDisconnect(req)
 			case "GitClient.GetConnection":
@@ -124,6 +143,8 @@ func (g *GitServerTransport) dispatchToMethodFake(req *http.Request, method stri
 				res.resp, res.err = g.dispatchBeginGetStatus(req)
 			case "GitClient.BeginInitializeConnection":
 				res.resp, res.err = g.dispatchBeginInitializeConnection(req)
+			case "GitClient.NewListWorkspaceRelationsPager":
+				res.resp, res.err = g.dispatchNewListWorkspaceRelationsPager(req)
 			case "GitClient.BeginUpdateFromGit":
 				res.resp, res.err = g.dispatchBeginUpdateFromGit(req)
 			case "GitClient.UpdateMyGitCredentials":
@@ -210,6 +231,72 @@ func (g *GitServerTransport) dispatchConnect(req *http.Request) (*http.Response,
 		return nil, err
 	}
 	respr, errRespr := g.srv.Connect(req.Context(), workspaceIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (g *GitServerTransport) dispatchCreateWorkspaceRelation(req *http.Request) (*http.Response, error) {
+	if g.srv.CreateWorkspaceRelation == nil {
+		return nil, &nonRetriableError{errors.New("fake for method CreateWorkspaceRelation not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/git/workspaceRelations`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.CreateWorkspaceRelationRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := g.srv.CreateWorkspaceRelation(req.Context(), workspaceIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusCreated}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).WorkspaceRelation, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (g *GitServerTransport) dispatchDeleteWorkspaceRelation(req *http.Request) (*http.Response, error) {
+	if g.srv.DeleteWorkspaceRelation == nil {
+		return nil, &nonRetriableError{errors.New("fake for method DeleteWorkspaceRelation not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/git/workspaceRelations/(?P<workspaceRelationId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	workspaceRelationIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceRelationId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := g.srv.DeleteWorkspaceRelation(req.Context(), workspaceIDParam, workspaceRelationIDParam, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -398,6 +485,55 @@ func (g *GitServerTransport) dispatchBeginInitializeConnection(req *http.Request
 		g.beginInitializeConnection.remove(req)
 	}
 
+	return resp, nil
+}
+
+func (g *GitServerTransport) dispatchNewListWorkspaceRelationsPager(req *http.Request) (*http.Response, error) {
+	if g.srv.NewListWorkspaceRelationsPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListWorkspaceRelationsPager not implemented")}
+	}
+	newListWorkspaceRelationsPager := g.newListWorkspaceRelationsPager.get(req)
+	if newListWorkspaceRelationsPager == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/git/workspaceRelations`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *core.GitClientListWorkspaceRelationsOptions
+		if continuationTokenParam != nil {
+			options = &core.GitClientListWorkspaceRelationsOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := g.srv.NewListWorkspaceRelationsPager(workspaceIDParam, options)
+		newListWorkspaceRelationsPager = &resp
+		g.newListWorkspaceRelationsPager.add(req, newListWorkspaceRelationsPager)
+		server.PagerResponderInjectNextLinks(newListWorkspaceRelationsPager, req, func(page *core.GitClientListWorkspaceRelationsResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
+	}
+	resp, err := server.PagerResponderNext(newListWorkspaceRelationsPager, req)
+	if err != nil {
+		return nil, err
+	}
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		g.newListWorkspaceRelationsPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
+	}
+	if !server.PagerResponderMore(newListWorkspaceRelationsPager) {
+		g.newListWorkspaceRelationsPager.remove(req)
+	}
 	return resp, nil
 }
 

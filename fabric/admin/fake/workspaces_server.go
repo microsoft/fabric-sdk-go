@@ -248,10 +248,16 @@ func (w *WorkspacesServerTransport) dispatchNewListNetworkingCommunicationPolici
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		filterUnescaped, err := url.QueryUnescape(qp.Get("filter"))
+		if err != nil {
+			return nil, err
+		}
+		filterParam := getOptional(filterUnescaped)
 		var options *admin.WorkspacesClientListNetworkingCommunicationPoliciesOptions
-		if continuationTokenParam != nil {
+		if continuationTokenParam != nil || filterParam != nil {
 			options = &admin.WorkspacesClientListNetworkingCommunicationPoliciesOptions{
 				ContinuationToken: continuationTokenParam,
+				Filter:            filterParam,
 			}
 		}
 		resp := w.srv.NewListNetworkingCommunicationPoliciesPager(options)

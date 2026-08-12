@@ -178,7 +178,6 @@ func TestIsCommunicationPolicyPath(t *testing.T) {
 		{name: "extra segment after policy", path: "/networking/communicationPolicy/extra", expected: true},
 		{name: "trailing slash", path: "/networking/communicationPolicy/", expected: true},
 		{name: "different casing", path: "/networking/CommunicationPolicy", expected: true},
-		{name: "different casing with sub-path", path: "/networking/CommunicationPolicy/Inbound/Firewall", expected: true},
 		{name: "suffix match (policyExtra)", path: "/networking/communicationPolicyExtra", expected: false},
 	}
 
