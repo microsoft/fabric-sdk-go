@@ -4275,6 +4275,104 @@ func (testsuite *FakeTestSuite) TestGit_UpdateMyGitCredentials() {
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
 }
 
+func (testsuite *FakeTestSuite) TestGit_ListWorkspaceRelations() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List workspace relations example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "66666666-6666-6666-6666-666666666666"
+
+	exampleRes := core.WorkspaceRelations{
+		Value: []core.WorkspaceRelation{
+			{
+				ID:                 to.Ptr("ffffffff-ffff-ffff-ffff-ffffffffffff"),
+				RelatedWorkspaceID: to.Ptr("88888888-8888-8888-8888-888888888888"),
+				RelationType:       to.Ptr(core.WorkspaceRelationTypeBase),
+				WorkspaceID:        to.Ptr("66666666-6666-6666-6666-666666666666"),
+			},
+			{
+				ID:                 to.Ptr("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+				RelatedWorkspaceID: to.Ptr("22222222-2222-2222-2222-222222222222"),
+				RelationType:       to.Ptr(core.WorkspaceRelationTypeRelatedWorkspace),
+				WorkspaceID:        to.Ptr("66666666-6666-6666-6666-666666666666"),
+			},
+			{
+				ID:                 to.Ptr("cccccccc-cccc-cccc-cccc-cccccccccccc"),
+				RelatedWorkspaceID: to.Ptr("44444444-4444-4444-4444-444444444444"),
+				RelationType:       to.Ptr(core.WorkspaceRelationTypeRelatedWorkspace),
+				WorkspaceID:        to.Ptr("66666666-6666-6666-6666-666666666666"),
+			}},
+	}
+
+	testsuite.serverFactory.GitServer.NewListWorkspaceRelationsPager = func(workspaceID string, options *core.GitClientListWorkspaceRelationsOptions) (resp azfake.PagerResponder[core.GitClientListWorkspaceRelationsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.PagerResponder[core.GitClientListWorkspaceRelationsResponse]{}
+		resp.AddPage(http.StatusOK, core.GitClientListWorkspaceRelationsResponse{WorkspaceRelations: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGitClient()
+	pager := client.NewListWorkspaceRelationsPager(exampleWorkspaceID, &core.GitClientListWorkspaceRelationsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.WorkspaceRelations))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestGit_CreateWorkspaceRelation() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a workspace relation example"},
+	})
+	var exampleWorkspaceID string
+	var exampleCreateWorkspaceRelationRequest core.CreateWorkspaceRelationRequest
+	exampleWorkspaceID = "55555555-5555-5555-5555-555555555555"
+	exampleCreateWorkspaceRelationRequest = core.CreateWorkspaceRelationRequest{
+		RelatedWorkspaceID: to.Ptr("33333333-3333-3333-3333-333333333333"),
+		RelationType:       to.Ptr(core.WorkspaceRelationTypeBase),
+	}
+
+	testsuite.serverFactory.GitServer.CreateWorkspaceRelation = func(ctx context.Context, workspaceID string, createWorkspaceRelationRequest core.CreateWorkspaceRelationRequest, options *core.GitClientCreateWorkspaceRelationOptions) (resp azfake.Responder[core.GitClientCreateWorkspaceRelationResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateWorkspaceRelationRequest, createWorkspaceRelationRequest))
+		resp = azfake.Responder[core.GitClientCreateWorkspaceRelationResponse]{}
+		resp.SetResponse(http.StatusCreated, core.GitClientCreateWorkspaceRelationResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGitClient()
+	_, err = client.CreateWorkspaceRelation(ctx, exampleWorkspaceID, exampleCreateWorkspaceRelationRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestGit_DeleteWorkspaceRelation() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete a workspace relation example"},
+	})
+	var exampleWorkspaceID string
+	var exampleWorkspaceRelationID string
+	exampleWorkspaceID = "55555555-5555-5555-5555-555555555555"
+	exampleWorkspaceRelationID = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+
+	testsuite.serverFactory.GitServer.DeleteWorkspaceRelation = func(ctx context.Context, workspaceID string, workspaceRelationID string, options *core.GitClientDeleteWorkspaceRelationOptions) (resp azfake.Responder[core.GitClientDeleteWorkspaceRelationResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleWorkspaceRelationID, workspaceRelationID)
+		resp = azfake.Responder[core.GitClientDeleteWorkspaceRelationResponse]{}
+		resp.SetResponse(http.StatusOK, core.GitClientDeleteWorkspaceRelationResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewGitClient()
+	_, err = client.DeleteWorkspaceRelation(ctx, exampleWorkspaceID, exampleWorkspaceRelationID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
 func (testsuite *FakeTestSuite) TestCapacities_ListCapacities() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -11381,100 +11479,206 @@ func (testsuite *FakeTestSuite) TestCatalog_Search() {
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.CatalogQueryResponse))
 }
 
-func (testsuite *FakeTestSuite) TestWorkspaceRelations_ListWorkspaceRelations() {
+func (testsuite *FakeTestSuite) TestRecoverableItems_ListRecoverableItems() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"List workspace relations example"},
+		"example-id": {"List recoverable items in workspace by type query parameter example"},
 	})
 	var exampleWorkspaceID string
-	exampleWorkspaceID = "66666666-6666-6666-6666-666666666666"
+	exampleWorkspaceID = "52984ceb-fd5b-4da9-a0c5-2fe9887b509f"
 
-	exampleRes := core.WorkspaceRelations{
-		Value: []core.WorkspaceRelation{
+	exampleRes := core.RecoverableItems{
+		Value: []core.RecoverableItem{
 			{
-				ID:                 to.Ptr("ffffffff-ffff-ffff-ffff-ffffffffffff"),
-				RelatedWorkspaceID: to.Ptr("88888888-8888-8888-8888-888888888888"),
-				RelationType:       to.Ptr(core.WorkspaceRelationTypeBase),
-				WorkspaceID:        to.Ptr("66666666-6666-6666-6666-666666666666"),
-			},
-			{
-				ID:                 to.Ptr("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
-				RelatedWorkspaceID: to.Ptr("22222222-2222-2222-2222-222222222222"),
-				RelationType:       to.Ptr(core.WorkspaceRelationTypeRelatedWorkspace),
-				WorkspaceID:        to.Ptr("66666666-6666-6666-6666-666666666666"),
-			},
-			{
-				ID:                 to.Ptr("cccccccc-cccc-cccc-cccc-cccccccccccc"),
-				RelatedWorkspaceID: to.Ptr("44444444-4444-4444-4444-444444444444"),
-				RelationType:       to.Ptr(core.WorkspaceRelationTypeRelatedWorkspace),
-				WorkspaceID:        to.Ptr("66666666-6666-6666-6666-666666666666"),
+				Type:                        to.Ptr(core.ItemTypeLakehouse),
+				Description:                 to.Ptr("A lakehouse used by the analytics team."),
+				DisplayName:                 to.Ptr("Lakehouse"),
+				ID:                          to.Ptr("ab9e10d6-abee-4b9d-9af0-813a539d75dd"),
+				RetentionExpirationDateTime: to.Ptr("2025-12-31T23:59:59.999Z"),
+				WorkspaceID:                 to.Ptr("52984ceb-fd5b-4da9-a0c5-2fe9887b509f"),
 			}},
 	}
 
-	testsuite.serverFactory.WorkspaceRelationsServer.NewListWorkspaceRelationsPager = func(workspaceID string, options *core.WorkspaceRelationsClientListWorkspaceRelationsOptions) (resp azfake.PagerResponder[core.WorkspaceRelationsClientListWorkspaceRelationsResponse]) {
+	testsuite.serverFactory.RecoverableItemsServer.NewListRecoverableItemsPager = func(workspaceID string, options *core.RecoverableItemsClientListRecoverableItemsOptions) (resp azfake.PagerResponder[core.RecoverableItemsClientListRecoverableItemsResponse]) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
-		resp = azfake.PagerResponder[core.WorkspaceRelationsClientListWorkspaceRelationsResponse]{}
-		resp.AddPage(http.StatusOK, core.WorkspaceRelationsClientListWorkspaceRelationsResponse{WorkspaceRelations: exampleRes}, nil)
+		resp = azfake.PagerResponder[core.RecoverableItemsClientListRecoverableItemsResponse]{}
+		resp.AddPage(http.StatusOK, core.RecoverableItemsClientListRecoverableItemsResponse{RecoverableItems: exampleRes}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewWorkspaceRelationsClient()
-	pager := client.NewListWorkspaceRelationsPager(exampleWorkspaceID, &core.WorkspaceRelationsClientListWorkspaceRelationsOptions{ContinuationToken: nil})
+	client := testsuite.clientFactory.NewRecoverableItemsClient()
+	pager := client.NewListRecoverableItemsPager(exampleWorkspaceID, &core.RecoverableItemsClientListRecoverableItemsOptions{Type: to.Ptr("Lakehouse"),
+		ContinuationToken: nil,
+		RecoverableByMe:   nil,
+	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")
-		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.WorkspaceRelations))
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.RecoverableItems))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List recoverable items in workspace example"},
+	})
+	exampleWorkspaceID = "52984ceb-fd5b-4da9-a0c5-2fe9887b509f"
+
+	exampleRes = core.RecoverableItems{
+		Value: []core.RecoverableItem{
+			{
+				Type:                        to.Ptr(core.ItemTypeLakehouse),
+				Description:                 to.Ptr("A lakehouse used by the analytics team."),
+				DisplayName:                 to.Ptr("Lakehouse"),
+				ID:                          to.Ptr("ab9e10d6-abee-4b9d-9af0-813a539d75dd"),
+				RetentionExpirationDateTime: to.Ptr("2025-12-31T23:59:59.999Z"),
+				WorkspaceID:                 to.Ptr("52984ceb-fd5b-4da9-a0c5-2fe9887b509f"),
+			},
+			{
+				Type:                        to.Ptr(core.ItemTypeSQLEndpoint),
+				Description:                 to.Ptr("A SQL endpoint who is the child of Lakehouse"),
+				DisplayName:                 to.Ptr("SQLEndpoint"),
+				ID:                          to.Ptr("5ecb4bae-c8ef-4979-b8cc-d93118cd0618"),
+				ParentItemID:                to.Ptr("ab9e10d6-abee-4b9d-9af0-813a539d75dd"),
+				RetentionExpirationDateTime: to.Ptr("2025-12-31T23:59:59.999Z"),
+				WorkspaceID:                 to.Ptr("52984ceb-fd5b-4da9-a0c5-2fe9887b509f"),
+			}},
+	}
+
+	testsuite.serverFactory.RecoverableItemsServer.NewListRecoverableItemsPager = func(workspaceID string, options *core.RecoverableItemsClientListRecoverableItemsOptions) (resp azfake.PagerResponder[core.RecoverableItemsClientListRecoverableItemsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.PagerResponder[core.RecoverableItemsClientListRecoverableItemsResponse]{}
+		resp.AddPage(http.StatusOK, core.RecoverableItemsClientListRecoverableItemsResponse{RecoverableItems: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListRecoverableItemsPager(exampleWorkspaceID, &core.RecoverableItemsClientListRecoverableItemsOptions{Type: nil,
+		ContinuationToken: nil,
+		RecoverableByMe:   nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.RecoverableItems))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List recoverable items in workspace with continuation example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+
+	exampleRes = core.RecoverableItems{
+		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/workspaces/cfafbeb1-8037-4d0c-896e-a46fb27ff229/recoverableItems?continuationToken=LDEsMTAwMDAwLDA%3D"),
+		Value: []core.RecoverableItem{
+			{
+				Type:                        to.Ptr(core.ItemTypeLakehouse),
+				Description:                 to.Ptr("A lakehouse used by the analytics team."),
+				DisplayName:                 to.Ptr("Lakehouse"),
+				ID:                          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				RetentionExpirationDateTime: to.Ptr("2025-12-31T23:59:59.999Z"),
+				WorkspaceID:                 to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+			},
+			{
+				Type:                        to.Ptr(core.ItemTypeSQLEndpoint),
+				Description:                 to.Ptr("A SQL Endpoint for refining medical data analysis through machine learning algorithms."),
+				DisplayName:                 to.Ptr("SQLEndpoint"),
+				ID:                          to.Ptr("58fa1eac-9694-4a6b-ba25-3520288e8fea"),
+				RetentionExpirationDateTime: to.Ptr("2025-12-31T23:59:59.999Z"),
+				WorkspaceID:                 to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+			}},
+	}
+
+	testsuite.serverFactory.RecoverableItemsServer.NewListRecoverableItemsPager = func(workspaceID string, options *core.RecoverableItemsClientListRecoverableItemsOptions) (resp azfake.PagerResponder[core.RecoverableItemsClientListRecoverableItemsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.PagerResponder[core.RecoverableItemsClientListRecoverableItemsResponse]{}
+		resp.AddPage(http.StatusOK, core.RecoverableItemsClientListRecoverableItemsResponse{RecoverableItems: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListRecoverableItemsPager(exampleWorkspaceID, &core.RecoverableItemsClientListRecoverableItemsOptions{Type: nil,
+		ContinuationToken: nil,
+		RecoverableByMe:   nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.RecoverableItems))
 		if err == nil {
 			break
 		}
 	}
 }
 
-func (testsuite *FakeTestSuite) TestWorkspaceRelations_CreateWorkspaceRelation() {
+func (testsuite *FakeTestSuite) TestRecoverableItems_DeleteRecoverableItem() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Create a workspace relation example"},
+		"example-id": {"Delete recoverable item example"},
 	})
 	var exampleWorkspaceID string
-	var exampleCreateWorkspaceRelationRequest core.CreateWorkspaceRelationRequest
-	exampleWorkspaceID = "55555555-5555-5555-5555-555555555555"
-	exampleCreateWorkspaceRelationRequest = core.CreateWorkspaceRelationRequest{
-		RelatedWorkspaceID: to.Ptr("33333333-3333-3333-3333-333333333333"),
-		RelationType:       to.Ptr(core.WorkspaceRelationTypeBase),
-	}
+	var exampleItemID string
+	exampleWorkspaceID = "52984ceb-fd5b-4da9-a0c5-2fe9887b509f"
+	exampleItemID = "3546052c-ae64-4526-b1a8-52af7761426f"
 
-	testsuite.serverFactory.WorkspaceRelationsServer.CreateWorkspaceRelation = func(ctx context.Context, workspaceID string, createWorkspaceRelationRequest core.CreateWorkspaceRelationRequest, options *core.WorkspaceRelationsClientCreateWorkspaceRelationOptions) (resp azfake.Responder[core.WorkspaceRelationsClientCreateWorkspaceRelationResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.RecoverableItemsServer.DeleteRecoverableItem = func(ctx context.Context, workspaceID string, itemID string, options *core.RecoverableItemsClientDeleteRecoverableItemOptions) (resp azfake.Responder[core.RecoverableItemsClientDeleteRecoverableItemResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
-		testsuite.Require().True(reflect.DeepEqual(exampleCreateWorkspaceRelationRequest, createWorkspaceRelationRequest))
-		resp = azfake.Responder[core.WorkspaceRelationsClientCreateWorkspaceRelationResponse]{}
-		resp.SetResponse(http.StatusCreated, core.WorkspaceRelationsClientCreateWorkspaceRelationResponse{}, nil)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		resp = azfake.Responder[core.RecoverableItemsClientDeleteRecoverableItemResponse]{}
+		resp.SetResponse(http.StatusOK, core.RecoverableItemsClientDeleteRecoverableItemResponse{}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewWorkspaceRelationsClient()
-	_, err = client.CreateWorkspaceRelation(ctx, exampleWorkspaceID, exampleCreateWorkspaceRelationRequest, nil)
+	client := testsuite.clientFactory.NewRecoverableItemsClient()
+	_, err = client.DeleteRecoverableItem(ctx, exampleWorkspaceID, exampleItemID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
-func (testsuite *FakeTestSuite) TestWorkspaceRelations_DeleteWorkspaceRelation() {
+func (testsuite *FakeTestSuite) TestRecoverableItems_RecoverItem() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Delete a workspace relation example"},
+		"example-id": {"Recover a soft-deleted item example"},
 	})
 	var exampleWorkspaceID string
-	var exampleWorkspaceRelationID string
-	exampleWorkspaceID = "55555555-5555-5555-5555-555555555555"
-	exampleWorkspaceRelationID = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+	var exampleItemID string
+	exampleWorkspaceID = "52984ceb-fd5b-4da9-a0c5-2fe9887b509f"
+	exampleItemID = "3546052c-ae64-4526-b1a8-52af7761426f"
 
-	testsuite.serverFactory.WorkspaceRelationsServer.DeleteWorkspaceRelation = func(ctx context.Context, workspaceID string, workspaceRelationID string, options *core.WorkspaceRelationsClientDeleteWorkspaceRelationOptions) (resp azfake.Responder[core.WorkspaceRelationsClientDeleteWorkspaceRelationResponse], errResp azfake.ErrorResponder) {
+	exampleRes := core.Items{
+		Value: []core.Item{
+			{
+				Type:        to.Ptr(core.ItemTypeLakehouse),
+				Description: to.Ptr("A lakehouse used by the analytics team."),
+				DisplayName: to.Ptr("Lakehouse"),
+				ID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				WorkspaceID: to.Ptr("52984ceb-fd5b-4da9-a0c5-2fe9887b509f"),
+			},
+			{
+				Type:        to.Ptr(core.ItemTypeSQLEndpoint),
+				Description: to.Ptr("A SQL endpoint for refining medical data analysis through machine learning algorithms."),
+				DisplayName: to.Ptr("SQLEndpoint"),
+				ID:          to.Ptr("58fa1eac-9694-4a6b-ba25-3520288e8fea"),
+				WorkspaceID: to.Ptr("52984ceb-fd5b-4da9-a0c5-2fe9887b509f"),
+			}},
+	}
+
+	testsuite.serverFactory.RecoverableItemsServer.BeginRecoverItem = func(ctx context.Context, workspaceID string, itemID string, options *core.RecoverableItemsClientBeginRecoverItemOptions) (resp azfake.PollerResponder[core.RecoverableItemsClientRecoverItemResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
-		testsuite.Require().Equal(exampleWorkspaceRelationID, workspaceRelationID)
-		resp = azfake.Responder[core.WorkspaceRelationsClientDeleteWorkspaceRelationResponse]{}
-		resp.SetResponse(http.StatusOK, core.WorkspaceRelationsClientDeleteWorkspaceRelationResponse{}, nil)
+		testsuite.Require().Equal(exampleItemID, itemID)
+		resp = azfake.PollerResponder[core.RecoverableItemsClientRecoverItemResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, core.RecoverableItemsClientRecoverItemResponse{Items: exampleRes}, nil)
 		return
 	}
 
-	client := testsuite.clientFactory.NewWorkspaceRelationsClient()
-	_, err = client.DeleteWorkspaceRelation(ctx, exampleWorkspaceID, exampleWorkspaceRelationID, nil)
+	client := testsuite.clientFactory.NewRecoverableItemsClient()
+	poller, err := client.BeginRecoverItem(ctx, exampleWorkspaceID, exampleItemID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Items))
 }

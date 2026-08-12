@@ -106,9 +106,7 @@ func (client *OneLakeShortcutsClient) createShortcutHandleResponse(resp *http.Re
 	return result, nil
 }
 
-// BeginCreatesShortcutsInBulk - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use.
-// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// BeginCreatesShortcutsInBulk - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -129,9 +127,7 @@ func (client *OneLakeShortcutsClient) BeginCreatesShortcutsInBulk(ctx context.Co
 	return client.beginCreatesShortcutsInBulk(ctx, workspaceID, itemID, bulkCreateShortcutsRequest, options)
 }
 
-// CreatesShortcutsInBulk - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use.
-// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// CreatesShortcutsInBulk - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -471,8 +467,6 @@ func (client *OneLakeShortcutsClient) resetShortcutCacheCreateRequest(ctx contex
 // Custom code starts below
 
 // CreatesShortcutsInBulk - returns OneLakeShortcutsClientCreatesShortcutsInBulkResponse in sync mode.
-// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
-//
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
 // # REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All

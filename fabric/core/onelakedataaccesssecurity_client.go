@@ -26,9 +26,7 @@ type OneLakeDataAccessSecurityClient struct {
 	endpoint string
 }
 
-// CreateOrUpdateDataAccessRoles - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use.
-// REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// CreateOrUpdateDataAccessRoles - REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -109,9 +107,8 @@ func (client *OneLakeDataAccessSecurityClient) createOrUpdateDataAccessRolesHand
 	return result, nil
 }
 
-// CreateOrUpdateSingleDataAccessRole - > [!NOTE] This API is part of a Preview release and is provided for evaluation and
-// development purposes only. It may change based on feedback and is not recommended for production use.
-// When calling this API, callers must specify true as the value for the query parameter preview.
+// CreateOrUpdateSingleDataAccessRole - When calling this API, callers must specify true as the value for the query parameter
+// preview.
 // PERMISSIONS The caller must have member or higher role on the workspace.
 // REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -195,9 +192,7 @@ func (client *OneLakeDataAccessSecurityClient) createOrUpdateSingleDataAccessRol
 	return result, nil
 }
 
-// DeleteDataAccessRole - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
-// only. It may change based on feedback and is not recommended for production use.
-// When calling this API, callers must specify true as the value for the query parameter preview.
+// DeleteDataAccessRole - When calling this API, callers must specify true as the value for the query parameter preview.
 // PERMISSIONS The caller must have member or higher role on the workspace.
 // REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -258,9 +253,7 @@ func (client *OneLakeDataAccessSecurityClient) deleteDataAccessRoleCreateRequest
 	return req, nil
 }
 
-// GetDataAccessRole - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
-// only. It may change based on feedback and is not recommended for production use.
-// When calling this API, callers must specify true as the value for the query parameter preview.
+// GetDataAccessRole - When calling this API, callers must specify true as the value for the query parameter preview.
 // PERMISSIONS The caller must have member or higher role on the workspace.
 // REQUIRED DELEGATED SCOPES OneLake.Read.All or OneLake.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -340,9 +333,7 @@ func (client *OneLakeDataAccessSecurityClient) getDataAccessRoleHandleResponse(r
 	return result, nil
 }
 
-// ListDataAccessRoles - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
-// only. It may change based on feedback and is not recommended for production use.
-// REQUIRED DELEGATED SCOPES OneLake.Read.All or OneLake.ReadWrite.All
+// ListDataAccessRoles - REQUIRED DELEGATED SCOPES OneLake.Read.All or OneLake.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]

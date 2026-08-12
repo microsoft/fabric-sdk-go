@@ -56,6 +56,7 @@ import (
 	orgappfake "github.com/microsoft/fabric-sdk-go/fabric/orgapp/fake"
 	orgappaudiencefake "github.com/microsoft/fabric-sdk-go/fabric/orgappaudience/fake"
 	paginatedreportfake "github.com/microsoft/fabric-sdk-go/fabric/paginatedreport/fake"
+	planfake "github.com/microsoft/fabric-sdk-go/fabric/plan/fake"
 	realtimeintelligencefake "github.com/microsoft/fabric-sdk-go/fabric/realtimeintelligence/fake"
 	reflexfake "github.com/microsoft/fabric-sdk-go/fabric/reflex/fake"
 	reportfake "github.com/microsoft/fabric-sdk-go/fabric/report/fake"
@@ -114,6 +115,7 @@ type ServerFactory struct {
 	OrgApp                         orgappfake.ServerFactory
 	OrgAppAudience                 orgappaudiencefake.ServerFactory
 	PaginatedReport                paginatedreportfake.ServerFactory
+	Plan                           planfake.ServerFactory
 	Real                           realtimeintelligencefake.ServerFactory
 	Reflex                         reflexfake.ServerFactory
 	Report                         reportfake.ServerFactory
@@ -175,6 +177,7 @@ type ServerFactoryTransport struct {
 	trOrgApp                         *orgappfake.ServerFactoryTransport
 	trOrgAppAudience                 *orgappaudiencefake.ServerFactoryTransport
 	trPaginatedReport                *paginatedreportfake.ServerFactoryTransport
+	trPlan                           *planfake.ServerFactoryTransport
 	trReal                           *realtimeintelligencefake.ServerFactoryTransport
 	trReflex                         *reflexfake.ServerFactoryTransport
 	trReport                         *reportfake.ServerFactoryTransport
@@ -410,6 +413,9 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return paginatedreportfake.NewServerFactoryTransport(&s.srv.PaginatedReport)
 		})
 		resp, err = s.trPaginatedReport.Do(req)
+	case "plan":
+		initServer(s, &s.trPlan, func() *planfake.ServerFactoryTransport { return planfake.NewServerFactoryTransport(&s.srv.Plan) })
+		resp, err = s.trPlan.Do(req)
 	case "realtimeintelligence":
 		initServer(s, &s.trReal, func() *realtimeintelligencefake.ServerFactoryTransport {
 			return realtimeintelligencefake.NewServerFactoryTransport(&s.srv.Real)

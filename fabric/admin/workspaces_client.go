@@ -207,15 +207,19 @@ func (client *WorkspacesClient) listGitConnectionsHandleResponse(resp *http.Resp
 	return result, nil
 }
 
-// NewListNetworkingCommunicationPoliciesPager - This API supports pagination [/rest/api/fabric/articles/pagination] With
-// the continuation token provided in the response, you can get the next set of records.
+// NewListNetworkingCommunicationPoliciesPager - Returns paginated network communication policy details for all workspaces.
+// The response includes inbound access protection settings (public access rules and IP firewall rules), outbound access
+// protection settings (public access rules, connection rules, gateway rules, Git policy, and managed private endpoints),
+// and workspace metadata.
+// This API supports pagination [/rest/api/fabric/articles/pagination]. With the continuation token provided in the response,
+// you can get the next set of records.
 // PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | Yes | |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 // INTERFACE
 //
 // Generated from API version v1
@@ -254,6 +258,9 @@ func (client *WorkspacesClient) listNetworkingCommunicationPoliciesCreateRequest
 	reqQP := req.Raw().URL.Query()
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	if options != nil && options.Filter != nil {
+		reqQP.Set("filter", *options.Filter)
 	}
 	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
@@ -564,7 +571,10 @@ func (client *WorkspacesClient) ListGitConnections(ctx context.Context, options 
 }
 
 // ListNetworkingCommunicationPolicies - returns array of NetworkCommunicationPolicyDetails from all pages.
-// This API supports pagination [/rest/api/fabric/articles/pagination] With the continuation token provided in the response, you can get the next set of records.
+// Returns paginated network communication policy details for all workspaces. The response includes inbound access protection settings (public access rules and IP firewall rules), outbound access
+// protection settings (public access rules, connection rules, gateway rules, Git policy, and managed private endpoints), and workspace metadata.
+//
+// This API supports pagination [/rest/api/fabric/articles/pagination]. With the continuation token provided in the response, you can get the next set of records.
 //
 // PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
 //
@@ -573,7 +583,7 @@ func (client *WorkspacesClient) ListGitConnections(ctx context.Context, options 
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
-// [/entra/identity/managed-identities-azure-resources/overview] | Yes | |
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
 //
 // INTERFACE
 // Generated from API version v1

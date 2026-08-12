@@ -356,6 +356,10 @@ type WorkspacesClientListGitConnectionsOptions struct {
 type WorkspacesClientListNetworkingCommunicationPoliciesOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
+
+	// Filters workspaces by policy direction. Supported filter expressions: inbound/publicAccessRules/defaultAction eq 'deny',
+	// outbound/publicAccessRules/defaultAction eq 'deny', or both combined with or.
+	Filter *string
 }
 
 // WorkspacesClientListWorkspaceAccessDetailsOptions contains the optional parameters for the WorkspacesClient.ListWorkspaceAccessDetails

@@ -388,6 +388,17 @@ type GitClientConnectResponse struct {
 	// placeholder for future response values
 }
 
+// GitClientCreateWorkspaceRelationResponse contains the response from method GitClient.CreateWorkspaceRelation.
+type GitClientCreateWorkspaceRelationResponse struct {
+	// A workspace relation object.
+	WorkspaceRelation
+}
+
+// GitClientDeleteWorkspaceRelationResponse contains the response from method GitClient.DeleteWorkspaceRelation.
+type GitClientDeleteWorkspaceRelationResponse struct {
+	// placeholder for future response values
+}
+
 // GitClientDisconnectResponse contains the response from method GitClient.Disconnect.
 type GitClientDisconnectResponse struct {
 	// placeholder for future response values
@@ -415,6 +426,12 @@ type GitClientGetStatusResponse struct {
 type GitClientInitializeConnectionResponse struct {
 	// Contains the initialize Git connection response data.
 	InitializeGitConnectionResponse
+}
+
+// GitClientListWorkspaceRelationsResponse contains the response from method GitClient.NewListWorkspaceRelationsPager.
+type GitClientListWorkspaceRelationsResponse struct {
+	// A list of workspace relations.
+	WorkspaceRelations
 }
 
 // GitClientUpdateFromGitResponse contains the response from method GitClient.BeginUpdateFromGit.
@@ -727,6 +744,21 @@ type OneLakeShortcutsClientResetShortcutCacheResponse struct {
 	// placeholder for future response values
 }
 
+// RecoverableItemsClientDeleteRecoverableItemResponse contains the response from method RecoverableItemsClient.DeleteRecoverableItem.
+type RecoverableItemsClientDeleteRecoverableItemResponse struct {
+	// placeholder for future response values
+}
+
+// RecoverableItemsClientListRecoverableItemsResponse contains the response from method RecoverableItemsClient.NewListRecoverableItemsPager.
+type RecoverableItemsClientListRecoverableItemsResponse struct {
+	RecoverableItems
+}
+
+// RecoverableItemsClientRecoverItemResponse contains the response from method RecoverableItemsClient.BeginRecoverItem.
+type RecoverableItemsClientRecoverItemResponse struct {
+	Items
+}
+
 // TagsClientApplyTagsResponse contains the response from method TagsClient.ApplyTags.
 type TagsClientApplyTagsResponse struct {
 	// placeholder for future response values
@@ -741,23 +773,6 @@ type TagsClientListTagsResponse struct {
 // TagsClientUnapplyTagsResponse contains the response from method TagsClient.UnapplyTags.
 type TagsClientUnapplyTagsResponse struct {
 	// placeholder for future response values
-}
-
-// WorkspaceRelationsClientCreateWorkspaceRelationResponse contains the response from method WorkspaceRelationsClient.CreateWorkspaceRelation.
-type WorkspaceRelationsClientCreateWorkspaceRelationResponse struct {
-	// A workspace relation object.
-	WorkspaceRelation
-}
-
-// WorkspaceRelationsClientDeleteWorkspaceRelationResponse contains the response from method WorkspaceRelationsClient.DeleteWorkspaceRelation.
-type WorkspaceRelationsClientDeleteWorkspaceRelationResponse struct {
-	// placeholder for future response values
-}
-
-// WorkspaceRelationsClientListWorkspaceRelationsResponse contains the response from method WorkspaceRelationsClient.NewListWorkspaceRelationsPager.
-type WorkspaceRelationsClientListWorkspaceRelationsResponse struct {
-	// A list of workspace relations.
-	WorkspaceRelations
 }
 
 // WorkspacesClientAddWorkspaceRoleAssignmentResponse contains the response from method WorkspacesClient.AddWorkspaceRoleAssignment.

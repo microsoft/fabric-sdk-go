@@ -939,15 +939,88 @@ func (testsuite *FakeTestSuite) TestWorkspaces_RestoreWorkspace() {
 func (testsuite *FakeTestSuite) TestWorkspaces_ListNetworkingCommunicationPolicies() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Get network communication policy settings for list of workspaces enabled with either Inbound or Outbound Access Protection for example"},
+		"example-id": {"List network communication policy settings filtered by inbound policy example"},
 	})
 
 	exampleRes := admin.NetworkCommunicationPolicies{
-		ContinuationToken: to.Ptr("eyJMYXN0U2VlbkNvbm5lY3Rpb25JZCI6NX0="),
-		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/admin/workspaces/networking/communicationpolicies?continuationToken=eyJMYXN0U2VlbkNvbm5lY3Rpb25JZCI6NX0="),
 		Value: []admin.NetworkCommunicationPolicyDetails{
 			{
 				Inbound: &admin.NetworkCommunicationPolicyInboundDetails{
+					Firewall: &admin.FirewallRules{
+						Rules: []admin.FirewallRule{
+							{
+								DisplayName: to.Ptr("CorpNet"),
+								Value:       to.Ptr("10.0.0.0-10.255.255.255"),
+							}},
+					},
+					PublicAccessRules: &admin.NetworkRules{
+						DefaultAction: to.Ptr(admin.NetworkAccessRuleDeny),
+					},
+				},
+				Outbound: &admin.NetworkCommunicationPolicyOutboundDetails{
+					Connections: &admin.WorkspaceOutboundConnections{
+						DefaultAction: to.Ptr(admin.ConnectionAccessActionTypeAllow),
+						Rules:         []admin.OutboundConnectionRule{},
+					},
+					Gateways: &admin.WorkspaceOutboundGateways{
+						AllowedGateways: []admin.GatewayAccessRuleMetadata{},
+						DefaultAction:   to.Ptr(admin.GatewayAccessActionTypeAllow),
+					},
+					Git: &admin.NetworkRules{
+						DefaultAction: to.Ptr(admin.NetworkAccessRuleAllow),
+					},
+					ManagedPrivateEndpoints: []admin.ManagedPrivateEndpoint{},
+					PublicAccessRules: &admin.NetworkRules{
+						DefaultAction: to.Ptr(admin.NetworkAccessRuleAllow),
+					},
+				},
+				WorkspaceID:   to.Ptr("fa9ad228-3e6b-44d4-b5f4-e275f337afa9"),
+				WorkspaceName: to.Ptr("Finance Analytics"),
+				WorkspaceType: to.Ptr(admin.WorkspaceTypeWorkspace),
+			}},
+	}
+
+	testsuite.serverFactory.WorkspacesServer.NewListNetworkingCommunicationPoliciesPager = func(options *admin.WorkspacesClientListNetworkingCommunicationPoliciesOptions) (resp azfake.PagerResponder[admin.WorkspacesClientListNetworkingCommunicationPoliciesResponse]) {
+		resp = azfake.PagerResponder[admin.WorkspacesClientListNetworkingCommunicationPoliciesResponse]{}
+		resp.AddPage(http.StatusOK, admin.WorkspacesClientListNetworkingCommunicationPoliciesResponse{NetworkCommunicationPolicies: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewWorkspacesClient()
+	pager := client.NewListNetworkingCommunicationPoliciesPager(&admin.WorkspacesClientListNetworkingCommunicationPoliciesOptions{ContinuationToken: nil,
+		Filter: to.Ptr("inbound/publicAccessRules/defaultAction eq 'deny'"),
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.NetworkCommunicationPolicies))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List network communication policy settings for all workspaces example"},
+	})
+
+	exampleRes = admin.NetworkCommunicationPolicies{
+		ContinuationToken: to.Ptr("eyJMYXN0U2VlbkNvbm5lY3Rpb25JZCI6NX0%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/admin/workspaces/networking/communicationpolicies?continuationToken=eyJMYXN0U2VlbkNvbm5lY3Rpb25JZCI6NX0%3D"),
+		Value: []admin.NetworkCommunicationPolicyDetails{
+			{
+				Inbound: &admin.NetworkCommunicationPolicyInboundDetails{
+					Firewall: &admin.FirewallRules{
+						Rules: []admin.FirewallRule{
+							{
+								DisplayName: to.Ptr("CorpNet"),
+								Value:       to.Ptr("10.0.0.0-10.255.255.255"),
+							},
+							{
+								DisplayName: to.Ptr("VPN"),
+								Value:       to.Ptr("172.16.0.0-172.31.255.255"),
+							}},
+					},
 					PublicAccessRules: &admin.NetworkRules{
 						DefaultAction: to.Ptr(admin.NetworkAccessRuleDeny),
 					},
@@ -971,10 +1044,6 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ListNetworkingCommunicationPolici
 									}},
 								ConnectionType: to.Ptr("lakehouse"),
 								DefaultAction:  to.Ptr(admin.ConnectionAccessActionTypeDeny),
-							},
-							{
-								ConnectionType: to.Ptr("Maria DB"),
-								DefaultAction:  to.Ptr(admin.ConnectionAccessActionTypeAllow),
 							}},
 					},
 					Gateways: &admin.WorkspaceOutboundGateways{
@@ -987,11 +1056,53 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ListNetworkingCommunicationPolici
 					Git: &admin.NetworkRules{
 						DefaultAction: to.Ptr(admin.NetworkAccessRuleDeny),
 					},
+					ManagedPrivateEndpoints: []admin.ManagedPrivateEndpoint{
+						{
+							Name: to.Ptr("SqlProdEndpoint"),
+							ConnectionState: &admin.PrivateEndpointConnectionState{
+								Description:     to.Ptr("Auto-approved"),
+								ActionsRequired: to.Ptr("None"),
+								Status:          to.Ptr(admin.ConnectionStatusApproved),
+							},
+							ID:                          to.Ptr("f3d04593-28fe-409e-a568-ebffbea69f37"),
+							ProvisioningState:           to.Ptr(admin.PrivateEndpointProvisioningStateSucceeded),
+							TargetPrivateLinkResourceID: to.Ptr("/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-prod/providers/Microsoft.Sql/servers/sql-prod-server"),
+							TargetSubresourceType:       to.Ptr("sqlServer"),
+						}},
 					PublicAccessRules: &admin.NetworkRules{
 						DefaultAction: to.Ptr(admin.NetworkAccessRuleDeny),
 					},
 				},
-				WorkspaceID: to.Ptr("fa9ad228-3e6b-44d4-b5f4-e275f337afa9"),
+				WorkspaceID:   to.Ptr("fa9ad228-3e6b-44d4-b5f4-e275f337afa9"),
+				WorkspaceName: to.Ptr("Finance Analytics"),
+				WorkspaceType: to.Ptr(admin.WorkspaceTypeWorkspace),
+			},
+			{
+				Inbound: &admin.NetworkCommunicationPolicyInboundDetails{
+					PublicAccessRules: &admin.NetworkRules{
+						DefaultAction: to.Ptr(admin.NetworkAccessRuleAllow),
+					},
+				},
+				Outbound: &admin.NetworkCommunicationPolicyOutboundDetails{
+					Connections: &admin.WorkspaceOutboundConnections{
+						DefaultAction: to.Ptr(admin.ConnectionAccessActionTypeAllow),
+						Rules:         []admin.OutboundConnectionRule{},
+					},
+					Gateways: &admin.WorkspaceOutboundGateways{
+						AllowedGateways: []admin.GatewayAccessRuleMetadata{},
+						DefaultAction:   to.Ptr(admin.GatewayAccessActionTypeAllow),
+					},
+					Git: &admin.NetworkRules{
+						DefaultAction: to.Ptr(admin.NetworkAccessRuleAllow),
+					},
+					ManagedPrivateEndpoints: []admin.ManagedPrivateEndpoint{},
+					PublicAccessRules: &admin.NetworkRules{
+						DefaultAction: to.Ptr(admin.NetworkAccessRuleAllow),
+					},
+				},
+				WorkspaceID:   to.Ptr("b2c3d4e5-f6a7-4890-abcd-ef1234567890"),
+				WorkspaceName: to.Ptr("Marketing Reports"),
+				WorkspaceType: to.Ptr(admin.WorkspaceTypeWorkspace),
 			}},
 	}
 
@@ -1001,8 +1112,9 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ListNetworkingCommunicationPolici
 		return
 	}
 
-	client := testsuite.clientFactory.NewWorkspacesClient()
-	pager := client.NewListNetworkingCommunicationPoliciesPager(&admin.WorkspacesClientListNetworkingCommunicationPoliciesOptions{ContinuationToken: nil})
+	pager = client.NewListNetworkingCommunicationPoliciesPager(&admin.WorkspacesClientListNetworkingCommunicationPoliciesOptions{ContinuationToken: nil,
+		Filter: nil,
+	})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")

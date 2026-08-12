@@ -436,6 +436,16 @@ type GitClientConnectOptions struct {
 	// placeholder for future optional parameters
 }
 
+// GitClientCreateWorkspaceRelationOptions contains the optional parameters for the GitClient.CreateWorkspaceRelation method.
+type GitClientCreateWorkspaceRelationOptions struct {
+	// placeholder for future optional parameters
+}
+
+// GitClientDeleteWorkspaceRelationOptions contains the optional parameters for the GitClient.DeleteWorkspaceRelation method.
+type GitClientDeleteWorkspaceRelationOptions struct {
+	// placeholder for future optional parameters
+}
+
 // GitClientDisconnectOptions contains the optional parameters for the GitClient.Disconnect method.
 type GitClientDisconnectOptions struct {
 	// placeholder for future optional parameters
@@ -449,6 +459,13 @@ type GitClientGetConnectionOptions struct {
 // GitClientGetMyGitCredentialsOptions contains the optional parameters for the GitClient.GetMyGitCredentials method.
 type GitClientGetMyGitCredentialsOptions struct {
 	// placeholder for future optional parameters
+}
+
+// GitClientListWorkspaceRelationsOptions contains the optional parameters for the GitClient.NewListWorkspaceRelationsPager
+// method.
+type GitClientListWorkspaceRelationsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
 }
 
 // GitClientUpdateMyGitCredentialsOptions contains the optional parameters for the GitClient.UpdateMyGitCredentials method.
@@ -817,6 +834,32 @@ type OneLakeShortcutsClientListShortcutsOptions struct {
 	ParentPath *string
 }
 
+// RecoverableItemsClientBeginRecoverItemOptions contains the optional parameters for the RecoverableItemsClient.BeginRecoverItem
+// method.
+type RecoverableItemsClientBeginRecoverItemOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// RecoverableItemsClientDeleteRecoverableItemOptions contains the optional parameters for the RecoverableItemsClient.DeleteRecoverableItem
+// method.
+type RecoverableItemsClientDeleteRecoverableItemOptions struct {
+	// placeholder for future optional parameters
+}
+
+// RecoverableItemsClientListRecoverableItemsOptions contains the optional parameters for the RecoverableItemsClient.NewListRecoverableItemsPager
+// method.
+type RecoverableItemsClientListRecoverableItemsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+
+	// When set to true, only items that can be immediately recovered by the caller are returned.
+	RecoverableByMe *bool
+
+	// The recoverable item's type.
+	Type *string
+}
+
 // TagsClientApplyTagsOptions contains the optional parameters for the TagsClient.ApplyTags method.
 type TagsClientApplyTagsOptions struct {
 	// placeholder for future optional parameters
@@ -831,25 +874,6 @@ type TagsClientListTagsOptions struct {
 // TagsClientUnapplyTagsOptions contains the optional parameters for the TagsClient.UnapplyTags method.
 type TagsClientUnapplyTagsOptions struct {
 	// placeholder for future optional parameters
-}
-
-// WorkspaceRelationsClientCreateWorkspaceRelationOptions contains the optional parameters for the WorkspaceRelationsClient.CreateWorkspaceRelation
-// method.
-type WorkspaceRelationsClientCreateWorkspaceRelationOptions struct {
-	// placeholder for future optional parameters
-}
-
-// WorkspaceRelationsClientDeleteWorkspaceRelationOptions contains the optional parameters for the WorkspaceRelationsClient.DeleteWorkspaceRelation
-// method.
-type WorkspaceRelationsClientDeleteWorkspaceRelationOptions struct {
-	// placeholder for future optional parameters
-}
-
-// WorkspaceRelationsClientListWorkspaceRelationsOptions contains the optional parameters for the WorkspaceRelationsClient.NewListWorkspaceRelationsPager
-// method.
-type WorkspaceRelationsClientListWorkspaceRelationsOptions struct {
-	// A token for retrieving the next page of results.
-	ContinuationToken *string
 }
 
 // WorkspacesClientAddWorkspaceRoleAssignmentOptions contains the optional parameters for the WorkspacesClient.AddWorkspaceRoleAssignment
