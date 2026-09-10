@@ -20,6 +20,9 @@ import (
 
 const defaultApiEndpoint = "https://api.fabric.microsoft.com"
 
+// ServiceName identifies Microsoft Fabric in a cloud.Configuration Services map.
+const ServiceName cloud.ServiceName = "Microsoft.Fabric"
+
 // ClientOptions contains optional settings for ServiceClient.
 type ClientOptions struct {
 	azcore.ClientOptions
@@ -45,11 +48,6 @@ type ServiceClient struct {
 //   - endpoint - pass nil to accept the default values.
 //   - options - pass nil to accept the default values.
 func NewServiceClient(credential azcore.TokenCredential, version string, endpoint *string, options *ClientOptions) (*ServiceClient, error) {
-	apiEndpoint, err := getEndpoint(endpoint)
-	if err != nil {
-		return nil, err
-	}
-
 	var useWorkspacePrivateLinks bool = false // Default: private links disabled
 
 	if options == nil {
@@ -62,7 +60,23 @@ func NewServiceClient(credential azcore.TokenCredential, version string, endpoin
 		options.Cloud = cloud.AzurePublic
 	}
 
-	authPolicy := runtime.NewBearerTokenPolicy(credential, []string{"https://api.fabric.microsoft.com/.default"}, nil)
+	service := options.Cloud.Services[ServiceName]
+	if service.Audience == "" {
+		authority := strings.TrimRight(options.Cloud.ActiveDirectoryAuthorityHost, "/")
+		if authority != "" && !strings.EqualFold(authority, strings.TrimRight(cloud.AzurePublic.ActiveDirectoryAuthorityHost, "/")) {
+			return nil, errors.New("configure the Microsoft.Fabric audience in ClientOptions.Cloud.Services for this cloud")
+		}
+		service.Audience = defaultApiEndpoint
+	}
+	if endpoint == nil && service.Endpoint != "" {
+		endpoint = &service.Endpoint
+	}
+	apiEndpoint, err := getEndpoint(endpoint)
+	if err != nil {
+		return nil, err
+	}
+
+	authPolicy := runtime.NewBearerTokenPolicy(credential, []string{strings.TrimRight(service.Audience, "/") + "/.default"}, nil)
 	plOpts := runtime.PipelineOptions{
 		PerRetry: []policy.Policy{authPolicy},
 		Tracing: runtime.TracingOptions{

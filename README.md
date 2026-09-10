@@ -54,6 +54,46 @@ Explore all [Credential Types](https://pkg.go.dev/github.com/Azure/azure-sdk-for
 > [!NOTE]
 > `DefaultAzureCredential` is intended to simplify getting started with the SDK by handling common scenarios with reasonable default behaviors. Developers who want more control or whose scenario isn't served by the default settings should use other credential types. Read more in the [Key concept](https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/azidentity#readme-key-concepts) section.
 
+### Sovereign and custom clouds
+
+Configure the credential's authority host for the target cloud and provide Fabric's
+service endpoint and token audience in `ClientOptions.Cloud.Services[fabric.ServiceName]`.
+The audience is the resource identifier, without `/.default`. Use the endpoint and
+audience published for your Fabric environment; the SDK does not assume that a
+sovereign cloud has the same endpoints or service availability as the public cloud.
+
+```go
+cloudConfig := cloud.Configuration{
+    ActiveDirectoryAuthorityHost: cloud.AzureGovernment.ActiveDirectoryAuthorityHost,
+    Services: map[cloud.ServiceName]cloud.ServiceConfiguration{
+        fabric.ServiceName: {
+            Endpoint: fabricEndpoint,
+            Audience: fabricAudience,
+        },
+    },
+}
+cred, err := azidentity.NewDefaultAzureCredential(&azidentity.DefaultAzureCredentialOptions{
+    ClientOptions: azcore.ClientOptions{Cloud: cloudConfig},
+})
+if err != nil {
+    // handle error
+}
+client, err := fabric.NewClient(cred, nil, &fabric.ClientOptions{
+    ClientOptions: azcore.ClientOptions{Cloud: cloudConfig},
+})
+```
+
+The imports are `sdk/azcore`, `sdk/azcore/cloud`, and `sdk/azidentity` from
+`github.com/Azure/azure-sdk-for-go`, plus `github.com/microsoft/fabric-sdk-go/fabric`.
+Replace `fabricEndpoint` and `fabricAudience` with your environment's values.
+The same cloud configuration works with the service-specific client factories.
+
+An explicit endpoint argument overrides the cloud's service endpoint, but does not
+change its token audience. Workspace private links also leave the audience unchanged.
+The public-cloud endpoint and audience remain the defaults. A non-public authority
+without a configured Fabric audience returns an error rather than requesting a
+public-cloud token.
+
 ### Microsoft Entra ID app
 
 A Microsoft Entra ID app controls access levels for your Fabric services. Before you can make any calls, you'll have to register a Microsoft Entra ID app. The app allows you to:
