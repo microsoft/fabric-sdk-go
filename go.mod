@@ -3,7 +3,7 @@ module github.com/microsoft/fabric-sdk-go
 go 1.25.12
 
 require (
-	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.23.1
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.23.2
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.14.1
 	github.com/stretchr/testify v1.12.1
 )
