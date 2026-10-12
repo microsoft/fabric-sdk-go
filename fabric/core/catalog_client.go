@@ -26,15 +26,19 @@ type CatalogClient struct {
 // A CatalogEntry is a discoverable metadata representation of a Microsoft Fabric entity, currently scoped to workspace items.
 // Catalog entries are intended for metadata discovery only and do not grant
 // access to underlying data or item content.
+// PERMISSIONS The caller can only discover catalog entries for workspaces and items that the caller is authorized to access.
 // REQUIRED DELEGATED SCOPES Catalog.Read.All
+// LIMITATIONS
+// * continuationToken must not be combined with search or filter. The token already carries those values from the originating
+// request.
+//
+// * pageSize must be between 1 and 1000.
+//
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
 // and Managed identities
 // [/entra/identity/managed-identities-azure-resources/overview] | Yes |
-// LIMITATIONS
-// * The search functionality is currently scoped to specific Fabric item types. The following item types are not supported:
-// Dashboard, Dataflow (Gen1), Dataflow (Gen2).
 // INTERFACE
 // If the operation fails it returns an *core.ResponseError type.
 //

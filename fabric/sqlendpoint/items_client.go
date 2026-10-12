@@ -177,6 +177,8 @@ func (client *ItemsClient) listSQLEndpointsHandleResponse(resp *http.Response) (
 }
 
 // BeginRefreshSQLEndpointMetadata - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// When tables is provided in the request body, only the specified tables are refreshed. When omitted or empty, all tables
+// are refreshed.
 // PERMISSIONS The caller must have contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -197,6 +199,8 @@ func (client *ItemsClient) BeginRefreshSQLEndpointMetadata(ctx context.Context, 
 }
 
 // RefreshSQLEndpointMetadata - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// When tables is provided in the request body, only the specified tables are refreshed. When omitted or empty, all tables
+// are refreshed.
 // PERMISSIONS The caller must have contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -258,6 +262,8 @@ func (client *ItemsClient) refreshSQLEndpointMetadataCreateRequest(ctx context.C
 
 // RefreshSQLEndpointMetadata - returns ItemsClientRefreshSQLEndpointMetadataResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// When tables is provided in the request body, only the specified tables are refreshed. When omitted or empty, all tables are refreshed.
 //
 // PERMISSIONS The caller must have contributor or higher workspace role.
 //

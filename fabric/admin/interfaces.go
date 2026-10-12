@@ -24,6 +24,15 @@ type BaseWorkloadAssignmentClassification interface {
 	GetBaseWorkloadAssignment() *BaseWorkloadAssignment
 }
 
+// ConditionClassification provides polymorphic access to related types.
+// Call the interface's GetCondition() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *Condition, *DynamicCondition, *StaticCondition
+type ConditionClassification interface {
+	// GetCondition returns the Condition content of the underlying type.
+	GetCondition() *Condition
+}
+
 // CreateWorkloadBaseAssignmentRequestClassification provides polymorphic access to related types.
 // Call the interface's GetCreateWorkloadBaseAssignmentRequest() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
@@ -34,6 +43,15 @@ type CreateWorkloadBaseAssignmentRequestClassification interface {
 	GetCreateWorkloadBaseAssignmentRequest() *CreateWorkloadBaseAssignmentRequest
 }
 
+// EffectClassification provides polymorphic access to related types.
+// Call the interface's GetEffect() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *AllowEffect, *Effect
+type EffectClassification interface {
+	// GetEffect returns the Effect content of the underlying type.
+	GetEffect() *Effect
+}
+
 // GitProviderDetailsClassification provides polymorphic access to related types.
 // Call the interface's GetGitProviderDetails() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
@@ -41,6 +59,15 @@ type CreateWorkloadBaseAssignmentRequestClassification interface {
 type GitProviderDetailsClassification interface {
 	// GetGitProviderDetails returns the GitProviderDetails content of the underlying type.
 	GetGitProviderDetails() *GitProviderDetails
+}
+
+// PredicateClassification provides polymorphic access to related types.
+// Call the interface's GetPredicate() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *AnyOfPredicate, *NoneOfPredicate, *Predicate
+type PredicateClassification interface {
+	// GetPredicate returns the Predicate content of the underlying type.
+	GetPredicate() *Predicate
 }
 
 // PrincipalClassification provides polymorphic access to related types.

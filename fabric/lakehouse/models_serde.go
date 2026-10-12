@@ -957,6 +957,7 @@ func (l Lakehouse) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", l.DisplayName)
 	populate(objectMap, "folderId", l.FolderID)
 	populate(objectMap, "id", l.ID)
+	populate(objectMap, "logicalId", l.LogicalID)
 	populate(objectMap, "properties", l.Properties)
 	populate(objectMap, "sensitivityLabel", l.SensitivityLabel)
 	populate(objectMap, "tags", l.Tags)
@@ -988,6 +989,9 @@ func (l *Lakehouse) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &l.ID)
+			delete(rawMsg, key)
+		case "logicalId":
+			err = unpopulate(val, "LogicalID", &l.LogicalID)
 			delete(rawMsg, key)
 		case "properties":
 			err = unpopulate(val, "Properties", &l.Properties)

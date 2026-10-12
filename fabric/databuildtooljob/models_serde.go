@@ -182,6 +182,7 @@ func (d DataBuildToolJob) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", d.DisplayName)
 	populate(objectMap, "folderId", d.FolderID)
 	populate(objectMap, "id", d.ID)
+	populate(objectMap, "logicalId", d.LogicalID)
 	populate(objectMap, "properties", d.Properties)
 	populate(objectMap, "sensitivityLabel", d.SensitivityLabel)
 	populate(objectMap, "tags", d.Tags)
@@ -213,6 +214,9 @@ func (d *DataBuildToolJob) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &d.ID)
+			delete(rawMsg, key)
+		case "logicalId":
+			err = unpopulate(val, "LogicalID", &d.LogicalID)
 			delete(rawMsg, key)
 		case "properties":
 			err = unpopulate(val, "Properties", &d.Properties)

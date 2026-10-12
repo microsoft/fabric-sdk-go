@@ -32,11 +32,14 @@ type ItemsClient struct {
 
 // BeginCreateOntology - > [!NOTE] Ontology item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create ontology with definition, refer to Ontology definition [/rest/api/fabric/articles/item-management/definitions/ontology-definition].
-// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
+// To create an ontology with a definition, refer to Ontology definition [/rest/api/fabric/articles/item-management/definitions/ontology-definition].
+// If definition is omitted, the created ontology uses generation 2. If definition is provided, the generation is resolved
+// from the definition parts. The resolved generation is returned in the read-only
+// properties.generation property.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
-// * To create an ontology the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
+// * To create an ontology, the workspace must be on a supported Fabric capacity. For more information, see Microsoft Fabric
 // license types [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -48,7 +51,7 @@ type ItemsClient struct {
 //
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
-//   - createOntologyRequest - Create item request payload.
+//   - createOntologyRequest - Create ontology request payload.
 //   - options - ItemsClientBeginCreateOntologyOptions contains the optional parameters for the ItemsClient.BeginCreateOntology
 //     method.
 func (client *ItemsClient) BeginCreateOntology(ctx context.Context, workspaceID string, createOntologyRequest CreateOntologyRequest, options *ItemsClientBeginCreateOntologyOptions) (*runtime.Poller[ItemsClientCreateOntologyResponse], error) {
@@ -57,11 +60,14 @@ func (client *ItemsClient) BeginCreateOntology(ctx context.Context, workspaceID 
 
 // CreateOntology - > [!NOTE] Ontology item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create ontology with definition, refer to Ontology definition [/rest/api/fabric/articles/item-management/definitions/ontology-definition].
-// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
+// To create an ontology with a definition, refer to Ontology definition [/rest/api/fabric/articles/item-management/definitions/ontology-definition].
+// If definition is omitted, the created ontology uses generation 2. If definition is provided, the generation is resolved
+// from the definition parts. The resolved generation is returned in the read-only
+// properties.generation property.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
-// * To create an ontology the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric
+// * To create an ontology, the workspace must be on a supported Fabric capacity. For more information, see Microsoft Fabric
 // license types [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -172,6 +178,7 @@ func (client *ItemsClient) deleteOntologyCreateRequest(ctx context.Context, work
 }
 
 // GetOntology - > [!NOTE] Ontology item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// The response includes the resolved ontology generation in the read-only properties.generation property.
 // PERMISSIONS The caller must have read permissions for the ontology.
 // REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -321,6 +328,7 @@ func (client *ItemsClient) getOntologyDefinitionCreateRequest(ctx context.Contex
 
 // NewListOntologiesPager - > [!NOTE] Ontology item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // This API supports pagination [/rest/api/fabric/articles/pagination].
+// Each returned ontology includes its resolved generation in the read-only properties.generation property.
 // PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -553,14 +561,18 @@ func (client *ItemsClient) updateOntologyDefinitionCreateRequest(ctx context.Con
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// To create ontology with definition, refer to Ontology definition [/rest/api/fabric/articles/item-management/definitions/ontology-definition].
+// To create an ontology with a definition, refer to Ontology definition [/rest/api/fabric/articles/item-management/definitions/ontology-definition].
 //
-// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
-// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
+// If definition is omitted, the created ontology uses generation 2. If definition is provided, the generation is resolved from the definition parts. The resolved generation is returned in the read-only
+// properties.generation property.
+//
+// PERMISSIONS The caller must have a contributor workspace role.
+//
+// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 //
 // LIMITATIONS
 //
-//   - To create an ontology the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric license types [/fabric/enterprise/licenses#microsoft-fabric-license-types].
+//   - To create an ontology, the workspace must be on a supported Fabric capacity. For more information, see Microsoft Fabric license types [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
@@ -570,7 +582,7 @@ func (client *ItemsClient) updateOntologyDefinitionCreateRequest(ctx context.Con
 // INTERFACE
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
-//   - createOntologyRequest - Create item request payload.
+//   - createOntologyRequest - Create ontology request payload.
 //   - options - ItemsClientBeginCreateOntologyOptions contains the optional parameters for the ItemsClient.BeginCreateOntology method.
 func (client *ItemsClient) CreateOntology(ctx context.Context, workspaceID string, createOntologyRequest CreateOntologyRequest, options *ItemsClientBeginCreateOntologyOptions) (ItemsClientCreateOntologyResponse, error) {
 	result, err := iruntime.NewLRO(client.BeginCreateOntology(ctx, workspaceID, createOntologyRequest, options)).Sync(ctx)
@@ -777,6 +789,8 @@ func (client *ItemsClient) beginUpdateOntologyDefinition(ctx context.Context, wo
 // >  [!NOTE] Ontology item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 //
 // This API supports pagination [/rest/api/fabric/articles/pagination].
+//
+// Each returned ontology includes its resolved generation in the read-only properties.generation property.
 //
 // PERMISSIONS The caller must have a viewer workspace role.
 //

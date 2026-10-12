@@ -14,6 +14,7 @@ import (
 	"net/url"
 	"reflect"
 	"regexp"
+	"strconv"
 	"strings"
 
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
@@ -50,6 +51,10 @@ type GitServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetConnection func(ctx context.Context, workspaceID string, options *core.GitClientGetConnectionOptions) (resp azfake.Responder[core.GitClientGetConnectionResponse], errResp azfake.ErrorResponder)
 
+	// GetConnectionSettings is the fake for method GitClient.GetConnectionSettings
+	// HTTP status codes to indicate success: http.StatusOK
+	GetConnectionSettings func(ctx context.Context, workspaceID string, options *core.GitClientGetConnectionSettingsOptions) (resp azfake.Responder[core.GitClientGetConnectionSettingsResponse], errResp azfake.ErrorResponder)
+
 	// GetMyGitCredentials is the fake for method GitClient.GetMyGitCredentials
 	// HTTP status codes to indicate success: http.StatusOK
 	GetMyGitCredentials func(ctx context.Context, workspaceID string, options *core.GitClientGetMyGitCredentialsOptions) (resp azfake.Responder[core.GitClientGetMyGitCredentialsResponse], errResp azfake.ErrorResponder)
@@ -65,6 +70,10 @@ type GitServer struct {
 	// NewListWorkspaceRelationsPager is the fake for method GitClient.NewListWorkspaceRelationsPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListWorkspaceRelationsPager func(workspaceID string, options *core.GitClientListWorkspaceRelationsOptions) (resp azfake.PagerResponder[core.GitClientListWorkspaceRelationsResponse])
+
+	// UpdateConnectionSettings is the fake for method GitClient.UpdateConnectionSettings
+	// HTTP status codes to indicate success: http.StatusOK
+	UpdateConnectionSettings func(ctx context.Context, workspaceID string, updateGitConnectionSettingsRequest core.UpdateGitConnectionSettingsRequest, options *core.GitClientUpdateConnectionSettingsOptions) (resp azfake.Responder[core.GitClientUpdateConnectionSettingsResponse], errResp azfake.ErrorResponder)
 
 	// BeginUpdateFromGit is the fake for method GitClient.BeginUpdateFromGit
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
@@ -137,6 +146,8 @@ func (g *GitServerTransport) dispatchToMethodFake(req *http.Request, method stri
 				res.resp, res.err = g.dispatchDisconnect(req)
 			case "GitClient.GetConnection":
 				res.resp, res.err = g.dispatchGetConnection(req)
+			case "GitClient.GetConnectionSettings":
+				res.resp, res.err = g.dispatchGetConnectionSettings(req)
 			case "GitClient.GetMyGitCredentials":
 				res.resp, res.err = g.dispatchGetMyGitCredentials(req)
 			case "GitClient.BeginGetStatus":
@@ -145,6 +156,8 @@ func (g *GitServerTransport) dispatchToMethodFake(req *http.Request, method stri
 				res.resp, res.err = g.dispatchBeginInitializeConnection(req)
 			case "GitClient.NewListWorkspaceRelationsPager":
 				res.resp, res.err = g.dispatchNewListWorkspaceRelationsPager(req)
+			case "GitClient.UpdateConnectionSettings":
+				res.resp, res.err = g.dispatchUpdateConnectionSettings(req)
 			case "GitClient.BeginUpdateFromGit":
 				res.resp, res.err = g.dispatchBeginUpdateFromGit(req)
 			case "GitClient.UpdateMyGitCredentials":
@@ -369,6 +382,35 @@ func (g *GitServerTransport) dispatchGetConnection(req *http.Request) (*http.Res
 	return resp, nil
 }
 
+func (g *GitServerTransport) dispatchGetConnectionSettings(req *http.Request) (*http.Response, error) {
+	if g.srv.GetConnectionSettings == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetConnectionSettings not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/git/connectionSettings`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := g.srv.GetConnectionSettings(req.Context(), workspaceIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).GitConnectionSettings, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
 func (g *GitServerTransport) dispatchGetMyGitCredentials(req *http.Request) (*http.Response, error) {
 	if g.srv.GetMyGitCredentials == nil {
 		return nil, &nonRetriableError{errors.New("fake for method GetMyGitCredentials not implemented")}
@@ -410,11 +452,26 @@ func (g *GitServerTransport) dispatchBeginGetStatus(req *http.Request) (*http.Re
 		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
+		qp := req.URL.Query()
 		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 		if err != nil {
 			return nil, err
 		}
-		respr, errRespr := g.srv.BeginGetStatus(req.Context(), workspaceIDParam, nil)
+		includeFilesDetailsUnescaped, err := url.QueryUnescape(qp.Get("includeFilesDetails"))
+		if err != nil {
+			return nil, err
+		}
+		includeFilesDetailsParam, err := parseOptional(includeFilesDetailsUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		var options *core.GitClientBeginGetStatusOptions
+		if includeFilesDetailsParam != nil {
+			options = &core.GitClientBeginGetStatusOptions{
+				IncludeFilesDetails: includeFilesDetailsParam,
+			}
+		}
+		respr, errRespr := g.srv.BeginGetStatus(req.Context(), workspaceIDParam, options)
 		if respErr := server.GetError(errRespr, req); respErr != nil {
 			return nil, respErr
 		}
@@ -533,6 +590,39 @@ func (g *GitServerTransport) dispatchNewListWorkspaceRelationsPager(req *http.Re
 	}
 	if !server.PagerResponderMore(newListWorkspaceRelationsPager) {
 		g.newListWorkspaceRelationsPager.remove(req)
+	}
+	return resp, nil
+}
+
+func (g *GitServerTransport) dispatchUpdateConnectionSettings(req *http.Request) (*http.Response, error) {
+	if g.srv.UpdateConnectionSettings == nil {
+		return nil, &nonRetriableError{errors.New("fake for method UpdateConnectionSettings not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/git/connectionSettings`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.UpdateGitConnectionSettingsRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := g.srv.UpdateConnectionSettings(req.Context(), workspaceIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).GitConnectionSettings, req)
+	if err != nil {
+		return nil, err
 	}
 	return resp, nil
 }

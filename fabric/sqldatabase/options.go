@@ -29,9 +29,9 @@ type ItemsClientBeginRevalidateCMKOptions struct {
 	ResumeToken string
 }
 
-// ItemsClientBeginUpdateSQLDatabasesDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateSQLDatabasesDefinition
+// ItemsClientBeginUpdateSQLDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateSQLDatabaseDefinition
 // method.
-type ItemsClientBeginUpdateSQLDatabasesDefinitionOptions struct {
+type ItemsClientBeginUpdateSQLDatabaseDefinitionOptions struct {
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 

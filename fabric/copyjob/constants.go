@@ -27,6 +27,54 @@ func PossibleGroupTypeValues() []GroupType {
 	}
 }
 
+// InvokeType - The item job invoke type. Additional invokeTypes may be added over time.
+type InvokeType string
+
+const (
+	// InvokeTypeManual - Job is invoked manually
+	InvokeTypeManual InvokeType = "Manual"
+	// InvokeTypeScheduled - Job is scheduled
+	InvokeTypeScheduled InvokeType = "Scheduled"
+)
+
+// PossibleInvokeTypeValues returns the possible values for the InvokeType const type.
+func PossibleInvokeTypeValues() []InvokeType {
+	return []InvokeType{
+		InvokeTypeManual,
+		InvokeTypeScheduled,
+	}
+}
+
+// ItemJobStatus - The item job status. Additional statuses may be added over time.
+type ItemJobStatus string
+
+const (
+	// ItemJobStatusCancelled - Job cancelled
+	ItemJobStatusCancelled ItemJobStatus = "Cancelled"
+	// ItemJobStatusCompleted - Job completed
+	ItemJobStatusCompleted ItemJobStatus = "Completed"
+	// ItemJobStatusDeduped - A job instance of the same job type is already running and this job instance is skipped
+	ItemJobStatusDeduped ItemJobStatus = "Deduped"
+	// ItemJobStatusFailed - Job failed
+	ItemJobStatusFailed ItemJobStatus = "Failed"
+	// ItemJobStatusInProgress - Job in progress
+	ItemJobStatusInProgress ItemJobStatus = "InProgress"
+	// ItemJobStatusNotStarted - Job not started
+	ItemJobStatusNotStarted ItemJobStatus = "NotStarted"
+)
+
+// PossibleItemJobStatusValues returns the possible values for the ItemJobStatus const type.
+func PossibleItemJobStatusValues() []ItemJobStatus {
+	return []ItemJobStatus{
+		ItemJobStatusCancelled,
+		ItemJobStatusCompleted,
+		ItemJobStatusDeduped,
+		ItemJobStatusFailed,
+		ItemJobStatusInProgress,
+		ItemJobStatusNotStarted,
+	}
+}
+
 // ItemType - The type of the item. Additional item types may be added over time.
 type ItemType string
 
@@ -111,6 +159,8 @@ const (
 	ItemTypePaginatedReport ItemType = "PaginatedReport"
 	// ItemTypePlan - A plan.
 	ItemTypePlan ItemType = "Plan"
+	// ItemTypePolicySet - A PolicySet.
+	ItemTypePolicySet ItemType = "PolicySet"
 	// ItemTypeReflex - A Reflex.
 	ItemTypeReflex ItemType = "Reflex"
 	// ItemTypeReport - PowerBI report.
@@ -178,6 +228,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeOrgAppAudience,
 		ItemTypePaginatedReport,
 		ItemTypePlan,
+		ItemTypePolicySet,
 		ItemTypeReflex,
 		ItemTypeReport,
 		ItemTypeSQLDatabase,

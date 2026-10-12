@@ -158,6 +158,41 @@ func (c *CustomLibrary) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type CustomLivePoolSettings.
+func (c CustomLivePoolSettings) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "clusterIdleTimeout", c.ClusterIdleTimeout)
+	populate(objectMap, "customLivePoolLifespan", c.CustomLivePoolLifespan)
+	populate(objectMap, "maxClustersToHydrate", c.MaxClustersToHydrate)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CustomLivePoolSettings.
+func (c *CustomLivePoolSettings) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "clusterIdleTimeout":
+			err = unpopulate(val, "ClusterIdleTimeout", &c.ClusterIdleTimeout)
+			delete(rawMsg, key)
+		case "customLivePoolLifespan":
+			err = unpopulate(val, "CustomLivePoolLifespan", &c.CustomLivePoolLifespan)
+			delete(rawMsg, key)
+		case "maxClustersToHydrate":
+			err = unpopulate(val, "MaxClustersToHydrate", &c.MaxClustersToHydrate)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type Definition.
 func (d Definition) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -329,6 +364,7 @@ func (e Environment) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", e.DisplayName)
 	populate(objectMap, "folderId", e.FolderID)
 	populate(objectMap, "id", e.ID)
+	populate(objectMap, "logicalId", e.LogicalID)
 	populate(objectMap, "properties", e.Properties)
 	populate(objectMap, "sensitivityLabel", e.SensitivityLabel)
 	populate(objectMap, "tags", e.Tags)
@@ -360,6 +396,9 @@ func (e *Environment) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &e.ID)
+			delete(rawMsg, key)
+		case "logicalId":
+			err = unpopulate(val, "LogicalID", &e.LogicalID)
 			delete(rawMsg, key)
 		case "properties":
 			err = unpopulate(val, "Properties", &e.Properties)
@@ -524,6 +563,7 @@ func (g *GroupPrincipalGroupDetails) UnmarshalJSON(data []byte) error {
 func (i InstancePool) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "id", i.ID)
+	populate(objectMap, "maxClustersToHydrateLimit", i.MaxClustersToHydrateLimit)
 	populate(objectMap, "name", i.Name)
 	populate(objectMap, "type", i.Type)
 	return json.Marshal(objectMap)
@@ -540,6 +580,9 @@ func (i *InstancePool) UnmarshalJSON(data []byte) error {
 		switch key {
 		case "id":
 			err = unpopulate(val, "ID", &i.ID)
+			delete(rawMsg, key)
+		case "maxClustersToHydrateLimit":
+			err = unpopulate(val, "MaxClustersToHydrateLimit", &i.MaxClustersToHydrateLimit)
 			delete(rawMsg, key)
 		case "name":
 			err = unpopulate(val, "Name", &i.Name)
@@ -1012,6 +1055,8 @@ func (s *ServicePrincipalProfilePrincipalServicePrincipalProfileDetails) Unmarsh
 // MarshalJSON implements the json.Marshaller interface for type SparkCompute.
 func (s SparkCompute) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
+	populate(objectMap, "customLivePoolSettings", s.CustomLivePoolSettings)
+	populate(objectMap, "customLivePoolSupport", s.CustomLivePoolSupport)
 	populate(objectMap, "driverCores", s.DriverCores)
 	populate(objectMap, "driverMemory", s.DriverMemory)
 	populate(objectMap, "dynamicExecutorAllocation", s.DynamicExecutorAllocation)
@@ -1032,6 +1077,12 @@ func (s *SparkCompute) UnmarshalJSON(data []byte) error {
 	for key, val := range rawMsg {
 		var err error
 		switch key {
+		case "customLivePoolSettings":
+			err = unpopulate(val, "CustomLivePoolSettings", &s.CustomLivePoolSettings)
+			delete(rawMsg, key)
+		case "customLivePoolSupport":
+			err = unpopulate(val, "CustomLivePoolSupport", &s.CustomLivePoolSupport)
+			delete(rawMsg, key)
 		case "driverCores":
 			err = unpopulate(val, "DriverCores", &s.DriverCores)
 			delete(rawMsg, key)
@@ -1265,6 +1316,8 @@ func (u *UpdateEnvironmentRequest) UnmarshalJSON(data []byte) error {
 // MarshalJSON implements the json.Marshaller interface for type UpdateEnvironmentSparkComputeRequest.
 func (u UpdateEnvironmentSparkComputeRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
+	populate(objectMap, "customLivePoolSettings", u.CustomLivePoolSettings)
+	populate(objectMap, "customLivePoolSupport", u.CustomLivePoolSupport)
 	populate(objectMap, "driverCores", u.DriverCores)
 	populate(objectMap, "driverMemory", u.DriverMemory)
 	populate(objectMap, "dynamicExecutorAllocation", u.DynamicExecutorAllocation)
@@ -1285,6 +1338,12 @@ func (u *UpdateEnvironmentSparkComputeRequest) UnmarshalJSON(data []byte) error 
 	for key, val := range rawMsg {
 		var err error
 		switch key {
+		case "customLivePoolSettings":
+			err = unpopulate(val, "CustomLivePoolSettings", &u.CustomLivePoolSettings)
+			delete(rawMsg, key)
+		case "customLivePoolSupport":
+			err = unpopulate(val, "CustomLivePoolSupport", &u.CustomLivePoolSupport)
+			delete(rawMsg, key)
 		case "driverCores":
 			err = unpopulate(val, "DriverCores", &u.DriverCores)
 			delete(rawMsg, key)

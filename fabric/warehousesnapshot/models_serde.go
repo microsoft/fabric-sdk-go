@@ -616,6 +616,7 @@ func (w WarehouseSnapshot) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", w.DisplayName)
 	populate(objectMap, "folderId", w.FolderID)
 	populate(objectMap, "id", w.ID)
+	populate(objectMap, "logicalId", w.LogicalID)
 	populate(objectMap, "properties", w.Properties)
 	populate(objectMap, "sensitivityLabel", w.SensitivityLabel)
 	populate(objectMap, "tags", w.Tags)
@@ -647,6 +648,9 @@ func (w *WarehouseSnapshot) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &w.ID)
+			delete(rawMsg, key)
+		case "logicalId":
+			err = unpopulate(val, "LogicalID", &w.LogicalID)
 			delete(rawMsg, key)
 		case "properties":
 			err = unpopulate(val, "Properties", &w.Properties)

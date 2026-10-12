@@ -57,6 +57,7 @@ import (
 	orgappaudiencefake "github.com/microsoft/fabric-sdk-go/fabric/orgappaudience/fake"
 	paginatedreportfake "github.com/microsoft/fabric-sdk-go/fabric/paginatedreport/fake"
 	planfake "github.com/microsoft/fabric-sdk-go/fabric/plan/fake"
+	policysetfake "github.com/microsoft/fabric-sdk-go/fabric/policyset/fake"
 	realtimeintelligencefake "github.com/microsoft/fabric-sdk-go/fabric/realtimeintelligence/fake"
 	reflexfake "github.com/microsoft/fabric-sdk-go/fabric/reflex/fake"
 	reportfake "github.com/microsoft/fabric-sdk-go/fabric/report/fake"
@@ -116,6 +117,7 @@ type ServerFactory struct {
 	OrgAppAudience                 orgappaudiencefake.ServerFactory
 	PaginatedReport                paginatedreportfake.ServerFactory
 	Plan                           planfake.ServerFactory
+	Policy                         policysetfake.ServerFactory
 	Real                           realtimeintelligencefake.ServerFactory
 	Reflex                         reflexfake.ServerFactory
 	Report                         reportfake.ServerFactory
@@ -178,6 +180,7 @@ type ServerFactoryTransport struct {
 	trOrgAppAudience                 *orgappaudiencefake.ServerFactoryTransport
 	trPaginatedReport                *paginatedreportfake.ServerFactoryTransport
 	trPlan                           *planfake.ServerFactoryTransport
+	trPolicy                         *policysetfake.ServerFactoryTransport
 	trReal                           *realtimeintelligencefake.ServerFactoryTransport
 	trReflex                         *reflexfake.ServerFactoryTransport
 	trReport                         *reportfake.ServerFactoryTransport
@@ -416,6 +419,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	case "plan":
 		initServer(s, &s.trPlan, func() *planfake.ServerFactoryTransport { return planfake.NewServerFactoryTransport(&s.srv.Plan) })
 		resp, err = s.trPlan.Do(req)
+	case "policyset":
+		initServer(s, &s.trPolicy, func() *policysetfake.ServerFactoryTransport {
+			return policysetfake.NewServerFactoryTransport(&s.srv.Policy)
+		})
+		resp, err = s.trPolicy.Do(req)
 	case "realtimeintelligence":
 		initServer(s, &s.trReal, func() *realtimeintelligencefake.ServerFactoryTransport {
 			return realtimeintelligencefake.NewServerFactoryTransport(&s.srv.Real)

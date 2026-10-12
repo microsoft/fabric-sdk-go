@@ -705,6 +705,7 @@ func (v VariableLibrary) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", v.DisplayName)
 	populate(objectMap, "folderId", v.FolderID)
 	populate(objectMap, "id", v.ID)
+	populate(objectMap, "logicalId", v.LogicalID)
 	populate(objectMap, "properties", v.Properties)
 	populate(objectMap, "sensitivityLabel", v.SensitivityLabel)
 	populate(objectMap, "tags", v.Tags)
@@ -736,6 +737,9 @@ func (v *VariableLibrary) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &v.ID)
+			delete(rawMsg, key)
+		case "logicalId":
+			err = unpopulate(val, "LogicalID", &v.LogicalID)
 			delete(rawMsg, key)
 		case "properties":
 			err = unpopulate(val, "Properties", &v.Properties)

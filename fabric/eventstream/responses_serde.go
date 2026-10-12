@@ -6,6 +6,16 @@
 
 package eventstream
 
+// UnmarshalJSON implements the json.Unmarshaller interface for type TopologyClientGetEventstreamDestinationConnectionResponse.
+func (t *TopologyClientGetEventstreamDestinationConnectionResponse) UnmarshalJSON(data []byte) error {
+	res, err := unmarshalEndpointConnectionClassification(data)
+	if err != nil {
+		return err
+	}
+	t.EndpointConnectionClassification = res
+	return nil
+}
+
 // UnmarshalJSON implements the json.Unmarshaller interface for type TopologyClientGetEventstreamDestinationResponse.
 func (t *TopologyClientGetEventstreamDestinationResponse) UnmarshalJSON(data []byte) error {
 	res, err := unmarshalDestinationResponseClassification(data)
@@ -13,6 +23,16 @@ func (t *TopologyClientGetEventstreamDestinationResponse) UnmarshalJSON(data []b
 		return err
 	}
 	t.DestinationResponseClassification = res
+	return nil
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type TopologyClientGetEventstreamSourceConnectionResponse.
+func (t *TopologyClientGetEventstreamSourceConnectionResponse) UnmarshalJSON(data []byte) error {
+	res, err := unmarshalEndpointConnectionClassification(data)
+	if err != nil {
+		return err
+	}
+	t.EndpointConnectionClassification = res
 	return nil
 }
 

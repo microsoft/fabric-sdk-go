@@ -339,10 +339,8 @@ func (client *WorkspacesClient) listWorkspaceAccessDetailsHandleResponse(resp *h
 	return result, nil
 }
 
-// NewListWorkspacesPager - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use.
-// This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records can be returned per request.
-// With the continuation token provided in the response, you can get the next
+// NewListWorkspacesPager - This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records
+// can be returned per request. With the continuation token provided in the response, you can get the next
 // 10,000 records.
 // PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
@@ -605,8 +603,6 @@ func (client *WorkspacesClient) ListNetworkingCommunicationPolicies(ctx context.
 }
 
 // ListWorkspaces - returns array of Workspace from all pages.
-// >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
-//
 // This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records can be returned per request. With the continuation token provided in the response, you can get the next
 // 10,000 records.
 //

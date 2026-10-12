@@ -87,3 +87,15 @@ type QueryExecutionClientExecuteQueryResponse struct {
 	// Body contains the streaming response.
 	Body io.ReadCloser
 }
+
+// UpgradeClientListReadinessResponse contains the response from method UpgradeClient.NewListReadinessPager.
+type UpgradeClientListReadinessResponse struct {
+	// A paginated list of Gen1 dataflow upgrade readiness results.
+	UpgradeReadinessList
+}
+
+// UpgradeClientUpgradeDataflowsResponse contains the response from method UpgradeClient.BeginUpgradeDataflows.
+type UpgradeClientUpgradeDataflowsResponse struct {
+	// The result of a Gen1 dataflow upgrade batch.
+	UpgradeResult
+}

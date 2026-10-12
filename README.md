@@ -12,7 +12,7 @@ This project provides a data-plane Go SDK for [Microsoft Fabric](https://www.mic
 
 ### Prerequisites
 
-* Go, version `1.23` or higher - [Install Go](https://go.dev/doc/install)
+* Go, version `1.26` or higher - [Install Go](https://go.dev/doc/install)
 * [Microsoft Fabric](https://learn.microsoft.com/fabric/get-started/microsoft-fabric-overview)
 
 ### Install modules
@@ -50,6 +50,38 @@ if err != nil {
 ```
 
 Explore all [Credential Types](https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/azidentity#readme-credential-types) from `azidentity` module to choose the ones that best suit your needs.
+
+### Cloud configuration
+
+The default client options target Public cloud. For any other environment, define a `cloud.Configuration` with a Fabric service entry and pass the same configuration to both the `azidentity` credential options and the Fabric client options. The credential uses `ActiveDirectoryAuthorityHost`; the Fabric client uses the configured endpoint and token audience.
+
+The Azure SDK built-in configurations don't include Fabric service values. The following example configures Public cloud by using `fabric.ServiceName`:
+
+```go
+public := cloud.Configuration{
+  ActiveDirectoryAuthorityHost: cloud.AzurePublic.ActiveDirectoryAuthorityHost,
+  Services: map[cloud.ServiceName]cloud.ServiceConfiguration{
+    fabric.ServiceName: {
+      Endpoint: "https://api.fabric.microsoft.com",
+      Audience: "https://api.fabric.microsoft.com",
+    },
+  },
+}
+
+cred, err := azidentity.NewDefaultAzureCredential(&azidentity.DefaultAzureCredentialOptions{
+  ClientOptions: azcore.ClientOptions{Cloud: public},
+})
+if err != nil {
+  // handle error
+}
+
+client, err := fabric.NewClient(cred, nil, &fabric.ClientOptions{
+  ClientOptions: azcore.ClientOptions{Cloud: public},
+})
+if err != nil {
+  // handle error
+}
+```
 
 > [!NOTE]
 > `DefaultAzureCredential` is intended to simplify getting started with the SDK by handling common scenarios with reasonable default behaviors. Developers who want more control or whose scenario isn't served by the default settings should use other credential types. Read more in the [Key concept](https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/azidentity#readme-key-concepts) section.

@@ -70,3 +70,11 @@ func (c *ClientFactory) NewQueryExecutionClient() *QueryExecutionClient {
 		endpoint: c.endpoint,
 	}
 }
+
+// NewUpgradeClient creates a new instance of UpgradeClient.
+func (c *ClientFactory) NewUpgradeClient() *UpgradeClient {
+	return &UpgradeClient{
+		internal: c.internal.WithClientName("dataflow.UpgradeClient"),
+		endpoint: c.endpoint,
+	}
+}

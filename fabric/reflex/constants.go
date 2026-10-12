@@ -111,6 +111,8 @@ const (
 	ItemTypePaginatedReport ItemType = "PaginatedReport"
 	// ItemTypePlan - A plan.
 	ItemTypePlan ItemType = "Plan"
+	// ItemTypePolicySet - A PolicySet.
+	ItemTypePolicySet ItemType = "PolicySet"
 	// ItemTypeReflex - A Reflex.
 	ItemTypeReflex ItemType = "Reflex"
 	// ItemTypeReport - PowerBI report.
@@ -178,6 +180,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeOrgAppAudience,
 		ItemTypePaginatedReport,
 		ItemTypePlan,
+		ItemTypePolicySet,
 		ItemTypeReflex,
 		ItemTypeReport,
 		ItemTypeSQLDatabase,
@@ -189,6 +192,49 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeVariableLibrary,
 		ItemTypeWarehouse,
 		ItemTypeWarehouseSnapshot,
+	}
+}
+
+// KustoScalarDataType - The KQL scalar data type of a column in the activations query result table. Additional KustoScalarDataType
+// values may be added over time.
+type KustoScalarDataType string
+
+const (
+	// KustoScalarDataTypeBool - A boolean value (true or false).
+	KustoScalarDataTypeBool KustoScalarDataType = "Bool"
+	// KustoScalarDataTypeDateTime - A date and time value.
+	KustoScalarDataTypeDateTime KustoScalarDataType = "DateTime"
+	// KustoScalarDataTypeDecimal - A 128-bit decimal number.
+	KustoScalarDataTypeDecimal KustoScalarDataType = "Decimal"
+	// KustoScalarDataTypeDynamic - A dynamic value (JSON-like structure).
+	KustoScalarDataTypeDynamic KustoScalarDataType = "Dynamic"
+	// KustoScalarDataTypeGUID - A globally unique identifier.
+	KustoScalarDataTypeGUID KustoScalarDataType = "Guid"
+	// KustoScalarDataTypeInt - A 32-bit signed integer.
+	KustoScalarDataTypeInt KustoScalarDataType = "Int"
+	// KustoScalarDataTypeLong - A 64-bit signed integer.
+	KustoScalarDataTypeLong KustoScalarDataType = "Long"
+	// KustoScalarDataTypeReal - A 64-bit floating point number.
+	KustoScalarDataTypeReal KustoScalarDataType = "Real"
+	// KustoScalarDataTypeString - A UTF-8 string value.
+	KustoScalarDataTypeString KustoScalarDataType = "String"
+	// KustoScalarDataTypeTimeSpan - A time interval value.
+	KustoScalarDataTypeTimeSpan KustoScalarDataType = "TimeSpan"
+)
+
+// PossibleKustoScalarDataTypeValues returns the possible values for the KustoScalarDataType const type.
+func PossibleKustoScalarDataTypeValues() []KustoScalarDataType {
+	return []KustoScalarDataType{
+		KustoScalarDataTypeBool,
+		KustoScalarDataTypeDateTime,
+		KustoScalarDataTypeDecimal,
+		KustoScalarDataTypeDynamic,
+		KustoScalarDataTypeGUID,
+		KustoScalarDataTypeInt,
+		KustoScalarDataTypeLong,
+		KustoScalarDataTypeReal,
+		KustoScalarDataTypeString,
+		KustoScalarDataTypeTimeSpan,
 	}
 }
 

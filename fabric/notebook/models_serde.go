@@ -309,6 +309,41 @@ func (e *EntireTenantPrincipal) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type ErrorParameter.
+func (e ErrorParameter) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "message", e.Message)
+	populate(objectMap, "name", e.Name)
+	populate(objectMap, "value", e.Value)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ErrorParameter.
+func (e *ErrorParameter) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", e, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "message":
+			err = unpopulate(val, "Message", &e.Message)
+			delete(rawMsg, key)
+		case "name":
+			err = unpopulate(val, "Name", &e.Name)
+			delete(rawMsg, key)
+		case "value":
+			err = unpopulate(val, "Value", &e.Value)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", e, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type ErrorRelatedResource.
 func (e ErrorRelatedResource) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -347,6 +382,7 @@ func (e ErrorResponse) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "isRetriable", e.IsRetriable)
 	populate(objectMap, "message", e.Message)
 	populate(objectMap, "moreDetails", e.MoreDetails)
+	populate(objectMap, "parameters", e.Parameters)
 	populate(objectMap, "relatedResource", e.RelatedResource)
 	populate(objectMap, "requestId", e.RequestID)
 	return json.Marshal(objectMap)
@@ -373,6 +409,9 @@ func (e *ErrorResponse) UnmarshalJSON(data []byte) error {
 		case "moreDetails":
 			err = unpopulate(val, "MoreDetails", &e.MoreDetails)
 			delete(rawMsg, key)
+		case "parameters":
+			err = unpopulate(val, "Parameters", &e.Parameters)
+			delete(rawMsg, key)
 		case "relatedResource":
 			err = unpopulate(val, "RelatedResource", &e.RelatedResource)
 			delete(rawMsg, key)
@@ -392,6 +431,7 @@ func (e ErrorResponseDetails) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "errorCode", e.ErrorCode)
 	populate(objectMap, "message", e.Message)
+	populate(objectMap, "parameters", e.Parameters)
 	populate(objectMap, "relatedResource", e.RelatedResource)
 	return json.Marshal(objectMap)
 }
@@ -410,6 +450,9 @@ func (e *ErrorResponseDetails) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "message":
 			err = unpopulate(val, "Message", &e.Message)
+			delete(rawMsg, key)
+		case "parameters":
+			err = unpopulate(val, "Parameters", &e.Parameters)
 			delete(rawMsg, key)
 		case "relatedResource":
 			err = unpopulate(val, "RelatedResource", &e.RelatedResource)
@@ -554,6 +597,7 @@ func (h *HighConcurrencyModeStatus) UnmarshalJSON(data []byte) error {
 func (i InstancePool) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "id", i.ID)
+	populate(objectMap, "maxClustersToHydrateLimit", i.MaxClustersToHydrateLimit)
 	populate(objectMap, "name", i.Name)
 	populate(objectMap, "type", i.Type)
 	return json.Marshal(objectMap)
@@ -570,6 +614,9 @@ func (i *InstancePool) UnmarshalJSON(data []byte) error {
 		switch key {
 		case "id":
 			err = unpopulate(val, "ID", &i.ID)
+			delete(rawMsg, key)
+		case "maxClustersToHydrateLimit":
+			err = unpopulate(val, "MaxClustersToHydrateLimit", &i.MaxClustersToHydrateLimit)
 			delete(rawMsg, key)
 		case "name":
 			err = unpopulate(val, "Name", &i.Name)
@@ -1172,6 +1219,7 @@ func (n Notebook) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", n.DisplayName)
 	populate(objectMap, "folderId", n.FolderID)
 	populate(objectMap, "id", n.ID)
+	populate(objectMap, "logicalId", n.LogicalID)
 	populate(objectMap, "sensitivityLabel", n.SensitivityLabel)
 	populate(objectMap, "tags", n.Tags)
 	populate(objectMap, "type", n.Type)
@@ -1202,6 +1250,9 @@ func (n *Notebook) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &n.ID)
+			delete(rawMsg, key)
+		case "logicalId":
+			err = unpopulate(val, "LogicalID", &n.LogicalID)
 			delete(rawMsg, key)
 		case "sensitivityLabel":
 			err = unpopulate(val, "SensitivityLabel", &n.SensitivityLabel)

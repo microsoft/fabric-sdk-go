@@ -138,11 +138,8 @@ func (client *ItemsClient) associateIdentityBetaCreateRequest(ctx context.Contex
 	return req, nil
 }
 
-// BeginBulkExportItemDefinitionsBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use. When calling this
-// API, callers must specify true as the value for the query parameter beta.
-// Exports item definitions from multiple items in a workspace in a single operation. This API supports long running operations
-// (LRO) [/rest/api/fabric/articles/long-running-operation]. You can export
+// BeginBulkExportItemDefinitions - Exports item definitions from multiple items in a workspace in a single operation. This
+// API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation]. You can export
 // all supported item definitions or selectively export specific items from the specified workspace. To see the supported
 // item types, see Item definition overview
 // [/rest/api/fabric/articles/item-management/definitions/item-definition-overview].
@@ -150,6 +147,11 @@ func (client *ItemsClient) associateIdentityBetaCreateRequest(ctx context.Contex
 // When exporting all items in a workspace: Only the Items that the caller has both read and write permissions for are exported.
 // When exporting specific items: The caller must have read and write permissions for all specified items.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All.
+// LIMITATIONS The following limitations apply:
+// * The maximum supported request payload size is 128 MB.
+// * If the request includes one or more Fabric item types, the workspace must be assigned to a Fabric capacity (F SKU, including
+// Fabric Trial). Power BI Premium capacities are supported only for Power
+// BI items and aren't sufficient for Fabric items.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -162,18 +164,15 @@ func (client *ItemsClient) associateIdentityBetaCreateRequest(ctx context.Contex
 //
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
-//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
-//   - options - ItemsClientBeginBulkExportItemDefinitionsBetaOptions contains the optional parameters for the ItemsClient.BeginBulkExportItemDefinitionsBeta
+//   - bulkExportItemDefinitionsRequest - The requested items to export their item definition.
+//   - options - ItemsClientBeginBulkExportItemDefinitionsOptions contains the optional parameters for the ItemsClient.BeginBulkExportItemDefinitions
 //     method.
-func (client *ItemsClient) BeginBulkExportItemDefinitionsBeta(ctx context.Context, workspaceID string, beta bool, options *ItemsClientBeginBulkExportItemDefinitionsBetaOptions) (*runtime.Poller[ItemsClientBulkExportItemDefinitionsBetaResponse], error) {
-	return client.beginBulkExportItemDefinitionsBeta(ctx, workspaceID, beta, options)
+func (client *ItemsClient) BeginBulkExportItemDefinitions(ctx context.Context, workspaceID string, bulkExportItemDefinitionsRequest BulkExportItemDefinitionsRequest, options *ItemsClientBeginBulkExportItemDefinitionsOptions) (*runtime.Poller[ItemsClientBulkExportItemDefinitionsResponse], error) {
+	return client.beginBulkExportItemDefinitions(ctx, workspaceID, bulkExportItemDefinitionsRequest, options)
 }
 
-// BulkExportItemDefinitionsBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use. When calling this
-// API, callers must specify true as the value for the query parameter beta.
-// Exports item definitions from multiple items in a workspace in a single operation. This API supports long running operations
-// (LRO) [/rest/api/fabric/articles/long-running-operation]. You can export
+// BulkExportItemDefinitions - Exports item definitions from multiple items in a workspace in a single operation. This API
+// supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation]. You can export
 // all supported item definitions or selectively export specific items from the specified workspace. To see the supported
 // item types, see Item definition overview
 // [/rest/api/fabric/articles/item-management/definitions/item-definition-overview].
@@ -181,6 +180,11 @@ func (client *ItemsClient) BeginBulkExportItemDefinitionsBeta(ctx context.Contex
 // When exporting all items in a workspace: Only the Items that the caller has both read and write permissions for are exported.
 // When exporting specific items: The caller must have read and write permissions for all specified items.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All.
+// LIMITATIONS The following limitations apply:
+// * The maximum supported request payload size is 128 MB.
+// * If the request includes one or more Fabric item types, the workspace must be assigned to a Fabric capacity (F SKU, including
+// Fabric Trial). Power BI Premium capacities are supported only for Power
+// BI items and aren't sufficient for Fabric items.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -192,13 +196,13 @@ func (client *ItemsClient) BeginBulkExportItemDefinitionsBeta(ctx context.Contex
 // If the operation fails it returns an *core.ResponseError type.
 //
 // Generated from API version v1
-func (client *ItemsClient) bulkExportItemDefinitionsBeta(ctx context.Context, workspaceID string, beta bool, options *ItemsClientBeginBulkExportItemDefinitionsBetaOptions) (*http.Response, error) {
+func (client *ItemsClient) bulkExportItemDefinitions(ctx context.Context, workspaceID string, bulkExportItemDefinitionsRequest BulkExportItemDefinitionsRequest, options *ItemsClientBeginBulkExportItemDefinitionsOptions) (*http.Response, error) {
 	var err error
-	const operationName = "core.ItemsClient.BeginBulkExportItemDefinitionsBeta"
+	const operationName = "core.ItemsClient.BeginBulkExportItemDefinitions"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.bulkExportItemDefinitionsBetaCreateRequest(ctx, workspaceID, beta, options)
+	req, err := client.bulkExportItemDefinitionsCreateRequest(ctx, workspaceID, bulkExportItemDefinitionsRequest, options)
 	if err != nil {
 		return nil, err
 	}
@@ -213,8 +217,8 @@ func (client *ItemsClient) bulkExportItemDefinitionsBeta(ctx context.Context, wo
 	return httpResp, nil
 }
 
-// bulkExportItemDefinitionsBetaCreateRequest creates the BulkExportItemDefinitionsBeta request.
-func (client *ItemsClient) bulkExportItemDefinitionsBetaCreateRequest(ctx context.Context, workspaceID string, beta bool, options *ItemsClientBeginBulkExportItemDefinitionsBetaOptions) (*policy.Request, error) {
+// bulkExportItemDefinitionsCreateRequest creates the BulkExportItemDefinitions request.
+func (client *ItemsClient) bulkExportItemDefinitionsCreateRequest(ctx context.Context, workspaceID string, bulkExportItemDefinitionsRequest BulkExportItemDefinitionsRequest, _ *ItemsClientBeginBulkExportItemDefinitionsOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/items/bulkExportDefinitions"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -224,30 +228,26 @@ func (client *ItemsClient) bulkExportItemDefinitionsBetaCreateRequest(ctx contex
 	if err != nil {
 		return nil, err
 	}
-	reqQP := req.Raw().URL.Query()
-	reqQP.Set("beta", strconv.FormatBool(beta))
-	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
-	if options != nil && options.BulkExportItemDefinitionsRequest != nil {
-		if err := runtime.MarshalAsJSON(req, *options.BulkExportItemDefinitionsRequest); err != nil {
-			return nil, err
-		}
-		return req, nil
+	if err := runtime.MarshalAsJSON(req, bulkExportItemDefinitionsRequest); err != nil {
+		return nil, err
 	}
 	return req, nil
 }
 
-// BeginBulkImportItemDefinitionsBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use. When calling this
-// API, callers must specify true as the value for the query parameter beta.
-// Imports item definitions for multiple items into a workspace in a single operation. This API supports long running operations
-// (LRO) [/rest/api/fabric/articles/long-running-operation]. Each item
+// BeginBulkImportItemDefinitions - Imports item definitions for multiple items into a workspace in a single operation. This
+// API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation]. Each item
 // definition in the request will be processed, creating new items or updating existing ones as determined by the system based
 // on whether the item already exists. To see the supported item types, see
 // Item definition overview [/rest/api/fabric/articles/item-management/definitions/item-definition-overview].
 // PERMISSIONS The caller must have a contributor or higher role for the workspace.
 // The caller must have read and write permissions for each item being updated.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All.
+// LIMITATIONS The following limitations apply:
+// * The maximum supported request payload size is 128 MB.
+// * If the request includes one or more Fabric item types, the workspace must be assigned to a Fabric capacity (F SKU, including
+// Fabric Trial). Power BI Premium capacities are supported only for Power
+// BI items and aren't sufficient for Fabric items.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -260,24 +260,26 @@ func (client *ItemsClient) bulkExportItemDefinitionsBetaCreateRequest(ctx contex
 //
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
-//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
-//   - options - ItemsClientBeginBulkImportItemDefinitionsBetaOptions contains the optional parameters for the ItemsClient.BeginBulkImportItemDefinitionsBeta
+//   - bulkImportItemDefinitionsRequest - Import item definitions request payload.
+//   - options - ItemsClientBeginBulkImportItemDefinitionsOptions contains the optional parameters for the ItemsClient.BeginBulkImportItemDefinitions
 //     method.
-func (client *ItemsClient) BeginBulkImportItemDefinitionsBeta(ctx context.Context, workspaceID string, beta bool, options *ItemsClientBeginBulkImportItemDefinitionsBetaOptions) (*runtime.Poller[ItemsClientBulkImportItemDefinitionsBetaResponse], error) {
-	return client.beginBulkImportItemDefinitionsBeta(ctx, workspaceID, beta, options)
+func (client *ItemsClient) BeginBulkImportItemDefinitions(ctx context.Context, workspaceID string, bulkImportItemDefinitionsRequest BulkImportItemDefinitionsRequest, options *ItemsClientBeginBulkImportItemDefinitionsOptions) (*runtime.Poller[ItemsClientBulkImportItemDefinitionsResponse], error) {
+	return client.beginBulkImportItemDefinitions(ctx, workspaceID, bulkImportItemDefinitionsRequest, options)
 }
 
-// BulkImportItemDefinitionsBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use. When calling this
-// API, callers must specify true as the value for the query parameter beta.
-// Imports item definitions for multiple items into a workspace in a single operation. This API supports long running operations
-// (LRO) [/rest/api/fabric/articles/long-running-operation]. Each item
+// BulkImportItemDefinitions - Imports item definitions for multiple items into a workspace in a single operation. This API
+// supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation]. Each item
 // definition in the request will be processed, creating new items or updating existing ones as determined by the system based
 // on whether the item already exists. To see the supported item types, see
 // Item definition overview [/rest/api/fabric/articles/item-management/definitions/item-definition-overview].
 // PERMISSIONS The caller must have a contributor or higher role for the workspace.
 // The caller must have read and write permissions for each item being updated.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All.
+// LIMITATIONS The following limitations apply:
+// * The maximum supported request payload size is 128 MB.
+// * If the request includes one or more Fabric item types, the workspace must be assigned to a Fabric capacity (F SKU, including
+// Fabric Trial). Power BI Premium capacities are supported only for Power
+// BI items and aren't sufficient for Fabric items.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -289,13 +291,13 @@ func (client *ItemsClient) BeginBulkImportItemDefinitionsBeta(ctx context.Contex
 // If the operation fails it returns an *core.ResponseError type.
 //
 // Generated from API version v1
-func (client *ItemsClient) bulkImportItemDefinitionsBeta(ctx context.Context, workspaceID string, beta bool, options *ItemsClientBeginBulkImportItemDefinitionsBetaOptions) (*http.Response, error) {
+func (client *ItemsClient) bulkImportItemDefinitions(ctx context.Context, workspaceID string, bulkImportItemDefinitionsRequest BulkImportItemDefinitionsRequest, options *ItemsClientBeginBulkImportItemDefinitionsOptions) (*http.Response, error) {
 	var err error
-	const operationName = "core.ItemsClient.BeginBulkImportItemDefinitionsBeta"
+	const operationName = "core.ItemsClient.BeginBulkImportItemDefinitions"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.bulkImportItemDefinitionsBetaCreateRequest(ctx, workspaceID, beta, options)
+	req, err := client.bulkImportItemDefinitionsCreateRequest(ctx, workspaceID, bulkImportItemDefinitionsRequest, options)
 	if err != nil {
 		return nil, err
 	}
@@ -310,8 +312,8 @@ func (client *ItemsClient) bulkImportItemDefinitionsBeta(ctx context.Context, wo
 	return httpResp, nil
 }
 
-// bulkImportItemDefinitionsBetaCreateRequest creates the BulkImportItemDefinitionsBeta request.
-func (client *ItemsClient) bulkImportItemDefinitionsBetaCreateRequest(ctx context.Context, workspaceID string, beta bool, options *ItemsClientBeginBulkImportItemDefinitionsBetaOptions) (*policy.Request, error) {
+// bulkImportItemDefinitionsCreateRequest creates the BulkImportItemDefinitions request.
+func (client *ItemsClient) bulkImportItemDefinitionsCreateRequest(ctx context.Context, workspaceID string, bulkImportItemDefinitionsRequest BulkImportItemDefinitionsRequest, _ *ItemsClientBeginBulkImportItemDefinitionsOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/items/bulkImportDefinitions"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -321,21 +323,15 @@ func (client *ItemsClient) bulkImportItemDefinitionsBetaCreateRequest(ctx contex
 	if err != nil {
 		return nil, err
 	}
-	reqQP := req.Raw().URL.Query()
-	reqQP.Set("beta", strconv.FormatBool(beta))
-	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
-	if options != nil && options.BulkImportItemDefinitionsRequest != nil {
-		if err := runtime.MarshalAsJSON(req, *options.BulkImportItemDefinitionsRequest); err != nil {
-			return nil, err
-		}
-		return req, nil
+	if err := runtime.MarshalAsJSON(req, bulkImportItemDefinitionsRequest); err != nil {
+		return nil, err
 	}
 	return req, nil
 }
 
-// BulkMoveItems - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
-// only. It may change based on feedback and is not recommended for production use.
+// BulkMoveItems - Moves multiple items to a folder. Child items are moved with their parent items. You can't move a child
+// item without its parent item.
 // PERMISSIONS The caller must have contributor or higher role on the workspace.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
 // LIMITATIONS A single request can't contain more than 50 items.
@@ -419,6 +415,9 @@ func (client *ItemsClient) bulkMoveItemsHandleResponse(resp *http.Response) (Ite
 // * To create a PowerBI item, the user must have the appropriate license. For more information see Microsoft Fabric license
 // types [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 // * When creating an item, use either creationPayload or definition, but do not use both at the same time.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -456,6 +455,9 @@ func (client *ItemsClient) BeginCreateItem(ctx context.Context, workspaceID stri
 // * To create a PowerBI item, the user must have the appropriate license. For more information see Microsoft Fabric license
 // types [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 // * When creating an item, use either creationPayload or definition, but do not use both at the same time.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -520,6 +522,9 @@ func (client *ItemsClient) createItemCreateRequest(ctx context.Context, workspac
 //
 // for more information about scopes, see scopes article [/rest/api/fabric/articles/scopes].
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -662,6 +667,9 @@ func (client *ItemsClient) getDownstreamRelationsBetaHandleResponse(resp *http.R
 //
 // for more information about scopes, see: scopes article [/rest/api/fabric/articles/scopes].
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 500 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -989,6 +997,9 @@ func (client *ItemsClient) listItemConnectionsHandleResponse(resp *http.Response
 // NewListItemsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 500 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1063,8 +1074,8 @@ func (client *ItemsClient) listItemsHandleResponse(resp *http.Response) (ItemsCl
 	return result, nil
 }
 
-// MoveItem - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only.
-// It may change based on feedback and is not recommended for production use.
+// MoveItem - Moves the specified item to a folder within the same workspace. Child items are moved with their parent item.
+// You can't move a child item without its parent item.
 // PERMISSIONS The caller must have contributor or higher role on the workspace.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -1144,6 +1155,9 @@ func (client *ItemsClient) moveItemHandleResponse(resp *http.Response) (ItemsCli
 //
 // for more information about scopes, see: scopes article [/rest/api/fabric/articles/scopes].
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1317,6 +1331,86 @@ func (client *ItemsClient) updateItemDefinitionCreateRequest(ctx context.Context
 	return req, nil
 }
 
+// UpdateLogicalID - Corresponding item instances share the same logical ID. Use this operation to resolve logical ID conflicts.
+// Before changing the logical ID, review any automations that rely on its current value and
+// update them as needed. Otherwise, those automations might fail to locate the item or fail because of a duplicate display
+// name. For more information, see Resolve logical ID conflicts in Microsoft
+// Fabric [/fabric/cicd/git-integration/logical-id-conflict-resolution].
+// PERMISSIONS The caller must have read and write permissions for the item.
+// REQUIRED DELEGATED SCOPES For item APIs, use one of the following scope types:
+// * Generic scope: Item.ReadWrite.All.
+// * Specific scope: itemType.ReadWrite.All (for example, Notebook.ReadWrite.All).
+// For more information about scopes, see Scopes [/rest/api/fabric/articles/scopes].
+// LIMITATIONS
+// * The logical ID can't be an empty GUID (00000000-0000-0000-0000-000000000000).
+// * The logical ID must be unique within the workspace.
+// * The operation isn't supported while a CI/CD operation is active in the workspace.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - itemID - The item ID.
+//   - updateLogicalIDRequest - Update logical ID request payload.
+//   - options - ItemsClientUpdateLogicalIDOptions contains the optional parameters for the ItemsClient.UpdateLogicalID method.
+func (client *ItemsClient) UpdateLogicalID(ctx context.Context, workspaceID string, itemID string, updateLogicalIDRequest UpdateLogicalIDRequest, options *ItemsClientUpdateLogicalIDOptions) (ItemsClientUpdateLogicalIDResponse, error) {
+	var err error
+	const operationName = "core.ItemsClient.UpdateLogicalID"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateLogicalIDCreateRequest(ctx, workspaceID, itemID, updateLogicalIDRequest, options)
+	if err != nil {
+		return ItemsClientUpdateLogicalIDResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return ItemsClientUpdateLogicalIDResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return ItemsClientUpdateLogicalIDResponse{}, err
+	}
+	resp, err := client.updateLogicalIDHandleResponse(httpResp)
+	return resp, err
+}
+
+// updateLogicalIDCreateRequest creates the UpdateLogicalID request.
+func (client *ItemsClient) updateLogicalIDCreateRequest(ctx context.Context, workspaceID string, itemID string, updateLogicalIDRequest UpdateLogicalIDRequest, _ *ItemsClientUpdateLogicalIDOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/items/{itemId}/logicalId"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if itemID == "" {
+		return nil, errors.New("parameter itemID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{itemId}", url.PathEscape(itemID))
+	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateLogicalIDRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// updateLogicalIDHandleResponse handles the UpdateLogicalID response.
+func (client *ItemsClient) updateLogicalIDHandleResponse(resp *http.Response) (ItemsClientUpdateLogicalIDResponse, error) {
+	result := ItemsClientUpdateLogicalIDResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.LogicalIDResponse); err != nil {
+		return ItemsClientUpdateLogicalIDResponse{}, err
+	}
+	return result, nil
+}
+
 // Custom code starts below
 
 // AssociateIdentityBeta - returns ItemsClientAssociateIdentityBetaResponse in sync mode.
@@ -1403,10 +1497,7 @@ func (client *ItemsClient) beginAssociateIdentityBeta(ctx context.Context, works
 	}
 }
 
-// BulkExportItemDefinitionsBeta - returns ItemsClientBulkExportItemDefinitionsBetaResponse in sync mode.
-// >  [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use. When calling this
-// API, callers must specify true as the value for the query parameter beta.
-//
+// BulkExportItemDefinitions - returns ItemsClientBulkExportItemDefinitionsResponse in sync mode.
 // Exports item definitions from multiple items in a workspace in a single operation. This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation]. You can export
 // all supported item definitions or selectively export specific items from the specified workspace. To see the supported item types, see Item definition overview
 // [/rest/api/fabric/articles/item-management/definitions/item-definition-overview].
@@ -1419,6 +1510,12 @@ func (client *ItemsClient) beginAssociateIdentityBeta(ctx context.Context, works
 //
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All.
 //
+// LIMITATIONS The following limitations apply:
+//
+//   - The maximum supported request payload size is 128 MB.
+//   - If the request includes one or more Fabric item types, the workspace must be assigned to a Fabric capacity (F SKU, including Fabric Trial). Power BI Premium capacities are supported only for Power
+//     BI items and aren't sufficient for Fabric items.
+//
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
@@ -1428,24 +1525,24 @@ func (client *ItemsClient) beginAssociateIdentityBeta(ctx context.Context, works
 // INTERFACE
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
-//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
-//   - options - ItemsClientBeginBulkExportItemDefinitionsBetaOptions contains the optional parameters for the ItemsClient.BeginBulkExportItemDefinitionsBeta method.
-func (client *ItemsClient) BulkExportItemDefinitionsBeta(ctx context.Context, workspaceID string, beta bool, options *ItemsClientBeginBulkExportItemDefinitionsBetaOptions) (ItemsClientBulkExportItemDefinitionsBetaResponse, error) {
-	result, err := iruntime.NewLRO(client.BeginBulkExportItemDefinitionsBeta(ctx, workspaceID, beta, options)).Sync(ctx)
+//   - bulkExportItemDefinitionsRequest - The requested items to export their item definition.
+//   - options - ItemsClientBeginBulkExportItemDefinitionsOptions contains the optional parameters for the ItemsClient.BeginBulkExportItemDefinitions method.
+func (client *ItemsClient) BulkExportItemDefinitions(ctx context.Context, workspaceID string, bulkExportItemDefinitionsRequest BulkExportItemDefinitionsRequest, options *ItemsClientBeginBulkExportItemDefinitionsOptions) (ItemsClientBulkExportItemDefinitionsResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginBulkExportItemDefinitions(ctx, workspaceID, bulkExportItemDefinitionsRequest, options)).Sync(ctx)
 	if err != nil {
 		var azcoreRespError *azcore.ResponseError
 		if errors.As(err, &azcoreRespError) {
-			return ItemsClientBulkExportItemDefinitionsBetaResponse{}, NewResponseError(azcoreRespError.RawResponse)
+			return ItemsClientBulkExportItemDefinitionsResponse{}, NewResponseError(azcoreRespError.RawResponse)
 		}
-		return ItemsClientBulkExportItemDefinitionsBetaResponse{}, err
+		return ItemsClientBulkExportItemDefinitionsResponse{}, err
 	}
 	return result, err
 }
 
-// beginBulkExportItemDefinitionsBeta creates the bulkExportItemDefinitionsBeta request.
-func (client *ItemsClient) beginBulkExportItemDefinitionsBeta(ctx context.Context, workspaceID string, beta bool, options *ItemsClientBeginBulkExportItemDefinitionsBetaOptions) (*runtime.Poller[ItemsClientBulkExportItemDefinitionsBetaResponse], error) {
+// beginBulkExportItemDefinitions creates the bulkExportItemDefinitions request.
+func (client *ItemsClient) beginBulkExportItemDefinitions(ctx context.Context, workspaceID string, bulkExportItemDefinitionsRequest BulkExportItemDefinitionsRequest, options *ItemsClientBeginBulkExportItemDefinitionsOptions) (*runtime.Poller[ItemsClientBulkExportItemDefinitionsResponse], error) {
 	if options == nil || options.ResumeToken == "" {
-		resp, err := client.bulkExportItemDefinitionsBeta(ctx, workspaceID, beta, options)
+		resp, err := client.bulkExportItemDefinitions(ctx, workspaceID, bulkExportItemDefinitionsRequest, options)
 		if err != nil {
 			var azcoreRespError *azcore.ResponseError
 			if errors.As(err, &azcoreRespError) {
@@ -1453,7 +1550,7 @@ func (client *ItemsClient) beginBulkExportItemDefinitionsBeta(ctx context.Contex
 			}
 			return nil, err
 		}
-		handler, err := locasync.NewPollerHandler[ItemsClientBulkExportItemDefinitionsBetaResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		handler, err := locasync.NewPollerHandler[ItemsClientBulkExportItemDefinitionsResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
 		if err != nil {
 			var azcoreRespError *azcore.ResponseError
 			if errors.As(err, &azcoreRespError) {
@@ -1461,13 +1558,13 @@ func (client *ItemsClient) beginBulkExportItemDefinitionsBeta(ctx context.Contex
 			}
 			return nil, err
 		}
-		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientBulkExportItemDefinitionsBetaResponse]{
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientBulkExportItemDefinitionsResponse]{
 			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
 			Handler:       handler,
 			Tracer:        client.internal.Tracer(),
 		})
 	} else {
-		handler, err := locasync.NewPollerHandler[ItemsClientBulkExportItemDefinitionsBetaResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		handler, err := locasync.NewPollerHandler[ItemsClientBulkExportItemDefinitionsResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
 		if err != nil {
 			var azcoreRespError *azcore.ResponseError
 			if errors.As(err, &azcoreRespError) {
@@ -1475,17 +1572,14 @@ func (client *ItemsClient) beginBulkExportItemDefinitionsBeta(ctx context.Contex
 			}
 			return nil, err
 		}
-		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientBulkExportItemDefinitionsBetaResponse]{
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientBulkExportItemDefinitionsResponse]{
 			Handler: handler,
 			Tracer:  client.internal.Tracer(),
 		})
 	}
 }
 
-// BulkImportItemDefinitionsBeta - returns ItemsClientBulkImportItemDefinitionsBetaResponse in sync mode.
-// >  [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use. When calling this
-// API, callers must specify true as the value for the query parameter beta.
-//
+// BulkImportItemDefinitions - returns ItemsClientBulkImportItemDefinitionsResponse in sync mode.
 // Imports item definitions for multiple items into a workspace in a single operation. This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation]. Each item
 // definition in the request will be processed, creating new items or updating existing ones as determined by the system based on whether the item already exists. To see the supported item types, see
 // Item definition overview [/rest/api/fabric/articles/item-management/definitions/item-definition-overview].
@@ -1496,6 +1590,12 @@ func (client *ItemsClient) beginBulkExportItemDefinitionsBeta(ctx context.Contex
 //
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All.
 //
+// LIMITATIONS The following limitations apply:
+//
+//   - The maximum supported request payload size is 128 MB.
+//   - If the request includes one or more Fabric item types, the workspace must be assigned to a Fabric capacity (F SKU, including Fabric Trial). Power BI Premium capacities are supported only for Power
+//     BI items and aren't sufficient for Fabric items.
+//
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
@@ -1505,24 +1605,24 @@ func (client *ItemsClient) beginBulkExportItemDefinitionsBeta(ctx context.Contex
 // INTERFACE
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
-//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
-//   - options - ItemsClientBeginBulkImportItemDefinitionsBetaOptions contains the optional parameters for the ItemsClient.BeginBulkImportItemDefinitionsBeta method.
-func (client *ItemsClient) BulkImportItemDefinitionsBeta(ctx context.Context, workspaceID string, beta bool, options *ItemsClientBeginBulkImportItemDefinitionsBetaOptions) (ItemsClientBulkImportItemDefinitionsBetaResponse, error) {
-	result, err := iruntime.NewLRO(client.BeginBulkImportItemDefinitionsBeta(ctx, workspaceID, beta, options)).Sync(ctx)
+//   - bulkImportItemDefinitionsRequest - Import item definitions request payload.
+//   - options - ItemsClientBeginBulkImportItemDefinitionsOptions contains the optional parameters for the ItemsClient.BeginBulkImportItemDefinitions method.
+func (client *ItemsClient) BulkImportItemDefinitions(ctx context.Context, workspaceID string, bulkImportItemDefinitionsRequest BulkImportItemDefinitionsRequest, options *ItemsClientBeginBulkImportItemDefinitionsOptions) (ItemsClientBulkImportItemDefinitionsResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginBulkImportItemDefinitions(ctx, workspaceID, bulkImportItemDefinitionsRequest, options)).Sync(ctx)
 	if err != nil {
 		var azcoreRespError *azcore.ResponseError
 		if errors.As(err, &azcoreRespError) {
-			return ItemsClientBulkImportItemDefinitionsBetaResponse{}, NewResponseError(azcoreRespError.RawResponse)
+			return ItemsClientBulkImportItemDefinitionsResponse{}, NewResponseError(azcoreRespError.RawResponse)
 		}
-		return ItemsClientBulkImportItemDefinitionsBetaResponse{}, err
+		return ItemsClientBulkImportItemDefinitionsResponse{}, err
 	}
 	return result, err
 }
 
-// beginBulkImportItemDefinitionsBeta creates the bulkImportItemDefinitionsBeta request.
-func (client *ItemsClient) beginBulkImportItemDefinitionsBeta(ctx context.Context, workspaceID string, beta bool, options *ItemsClientBeginBulkImportItemDefinitionsBetaOptions) (*runtime.Poller[ItemsClientBulkImportItemDefinitionsBetaResponse], error) {
+// beginBulkImportItemDefinitions creates the bulkImportItemDefinitions request.
+func (client *ItemsClient) beginBulkImportItemDefinitions(ctx context.Context, workspaceID string, bulkImportItemDefinitionsRequest BulkImportItemDefinitionsRequest, options *ItemsClientBeginBulkImportItemDefinitionsOptions) (*runtime.Poller[ItemsClientBulkImportItemDefinitionsResponse], error) {
 	if options == nil || options.ResumeToken == "" {
-		resp, err := client.bulkImportItemDefinitionsBeta(ctx, workspaceID, beta, options)
+		resp, err := client.bulkImportItemDefinitions(ctx, workspaceID, bulkImportItemDefinitionsRequest, options)
 		if err != nil {
 			var azcoreRespError *azcore.ResponseError
 			if errors.As(err, &azcoreRespError) {
@@ -1530,7 +1630,7 @@ func (client *ItemsClient) beginBulkImportItemDefinitionsBeta(ctx context.Contex
 			}
 			return nil, err
 		}
-		handler, err := locasync.NewPollerHandler[ItemsClientBulkImportItemDefinitionsBetaResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		handler, err := locasync.NewPollerHandler[ItemsClientBulkImportItemDefinitionsResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
 		if err != nil {
 			var azcoreRespError *azcore.ResponseError
 			if errors.As(err, &azcoreRespError) {
@@ -1538,13 +1638,13 @@ func (client *ItemsClient) beginBulkImportItemDefinitionsBeta(ctx context.Contex
 			}
 			return nil, err
 		}
-		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientBulkImportItemDefinitionsBetaResponse]{
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientBulkImportItemDefinitionsResponse]{
 			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
 			Handler:       handler,
 			Tracer:        client.internal.Tracer(),
 		})
 	} else {
-		handler, err := locasync.NewPollerHandler[ItemsClientBulkImportItemDefinitionsBetaResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		handler, err := locasync.NewPollerHandler[ItemsClientBulkImportItemDefinitionsResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
 		if err != nil {
 			var azcoreRespError *azcore.ResponseError
 			if errors.As(err, &azcoreRespError) {
@@ -1552,7 +1652,7 @@ func (client *ItemsClient) beginBulkImportItemDefinitionsBeta(ctx context.Contex
 			}
 			return nil, err
 		}
-		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientBulkImportItemDefinitionsBetaResponse]{
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientBulkImportItemDefinitionsResponse]{
 			Handler: handler,
 			Tracer:  client.internal.Tracer(),
 		})
@@ -1580,6 +1680,9 @@ func (client *ItemsClient) beginBulkImportItemDefinitionsBeta(ctx context.Contex
 //     [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 //   - To create a PowerBI item, the user must have the appropriate license. For more information see Microsoft Fabric license types [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 //   - When creating an item, use either creationPayload or definition, but do not use both at the same time.
+//
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 200 calls/min |
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
@@ -1852,6 +1955,9 @@ func (client *ItemsClient) ListItemConnections(ctx context.Context, workspaceID 
 // PERMISSIONS The caller must have a viewer workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+//
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 500 calls/min |
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

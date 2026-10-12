@@ -321,6 +321,8 @@ func (o Ontology) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", o.DisplayName)
 	populate(objectMap, "folderId", o.FolderID)
 	populate(objectMap, "id", o.ID)
+	populate(objectMap, "logicalId", o.LogicalID)
+	populate(objectMap, "properties", o.Properties)
 	populate(objectMap, "sensitivityLabel", o.SensitivityLabel)
 	populate(objectMap, "tags", o.Tags)
 	populate(objectMap, "type", o.Type)
@@ -351,6 +353,12 @@ func (o *Ontology) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &o.ID)
+			delete(rawMsg, key)
+		case "logicalId":
+			err = unpopulate(val, "LogicalID", &o.LogicalID)
+			delete(rawMsg, key)
+		case "properties":
+			err = unpopulate(val, "Properties", &o.Properties)
 			delete(rawMsg, key)
 		case "sensitivityLabel":
 			err = unpopulate(val, "SensitivityLabel", &o.SensitivityLabel)
@@ -398,6 +406,33 @@ func (p *Principal) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "type":
 			err = unpopulate(val, "Type", &p.Type)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", p, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type Properties.
+func (p Properties) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "generation", p.Generation)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type Properties.
+func (p *Properties) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", p, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "generation":
+			err = unpopulate(val, "Generation", &p.Generation)
 			delete(rawMsg, key)
 		}
 		if err != nil {

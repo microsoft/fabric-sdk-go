@@ -44,6 +44,18 @@ func (e *EntireTenantPrincipal) GetPrincipal() *Principal {
 	}
 }
 
+// ErrorParameter - A structured parameter providing additional machine-readable context about an error.
+type ErrorParameter struct {
+	// READ-ONLY; A human-readable description of the parameter's meaning.
+	Message *string
+
+	// READ-ONLY; The parameter identifier.
+	Name *string
+
+	// READ-ONLY; The parameter value.
+	Value *string
+}
+
 // ErrorRelatedResource - The error related resource details object.
 type ErrorRelatedResource struct {
 	// READ-ONLY; The resource ID that's involved in the error.
@@ -61,6 +73,9 @@ type ErrorResponseDetails struct {
 
 	// READ-ONLY; A human readable representation of the error.
 	Message *string
+
+	// READ-ONLY; Structured parameters providing additional machine-readable context about the error.
+	Parameters []ErrorParameter
 
 	// READ-ONLY; The error related resource details.
 	RelatedResource *ErrorRelatedResource
@@ -120,14 +135,25 @@ type Principal struct {
 // GetPrincipal implements the PrincipalClassification interface for type Principal.
 func (p *Principal) GetPrincipal() *Principal { return p }
 
-// RefreshMetadataRequest - Refresh SQL analaytics endpoint request payload.
+// RefreshMetadataRequest - The request payload for refreshing a SQL analytics endpoint.
 type RefreshMetadataRequest struct {
-	// When set to true, this property instructs the system to drop and recreate all tables on SQL analytics endpoint during the
-	// refresh process. Use this option if you need to fully rebuild tables from
-	// their source definitions, for example to resolve inconsistencies or ensure a clean refresh. The default value is false.
+	// When set to true, this property instructs the system to drop and recreate all tables on the SQL analytics endpoint during
+	// the refresh process. Use this option if you need to fully rebuild tables from
+	// their source definitions, for example, to resolve inconsistencies or ensure a clean refresh. When combined with tables,
+	// the sync state reset is scoped only to the specified tables. The default value
+	// is false.
 	RecreateTables *bool
 
-	// The request duration before timing out. The default value is 15 minutes.
+	// When provided, scopes the refresh to only the listed tables. When omitted or empty, all tables are refreshed. Each entry
+	// specifies a schema and one or more table names to refresh under that schema.
+	// The maximum number of tables that can be synchronized in a single request is 25. Table resolution depends on whether the
+	// SQL endpoint's parent item is schema-enabled. For schema-enabled items, tables
+	// are resolved using the caller-provided schema. For non-schema-enabled items, all tables resolve under the default schema
+	// regardless of the caller-provided schema value; tables under a non-default
+	// schema cannot be resolved and will be reported with a DeltaTableNotFound error.
+	Tables []TableDefinition
+
+	// The amount of time the request can run before timing out. Defaults to 15 minutes, with a maximum of 24 hours.
 	Timeout *Duration
 }
 
@@ -141,10 +167,46 @@ type SQLAuditSettings struct {
 
 	// REQUIRED; Audit settings state type.
 	State *AuditSettingsState
+
+	// READ-ONLY; The predicate expression that determines whether an audit event is processed. Specify only the <predicate_expression>
+	// value; don't include the WHERE keyword. The expression uses the following syntax
+	// from CREATE SERVER AUDIT (Transact-SQL) [https://learn.microsoft.com/sql/t-sql/statements/create-server-audit-transact-sql?view=sql-server-ver17]:
+	// <predicate_expression> ::=
+	// { [ NOT ] <predicate_factor>
+	// [ { AND | OR } [ NOT ] { <predicate_factor> } ] [ ,... n ] }
+	// <predicate_factor> ::=
+	// event_field_name { = | < > | != | > | >= | < | <= | LIKE }
+	// { number | 'string' }
+	// Event field names correspond to the audit record columns documented in sys.fngetaudit_file (Transact-SQL)
+	// [https://learn.microsoft.com/sql/relational-databases/system-functions/sys-fn-get-audit-file-transact-sql?view=sql-server-ver17&tabs=sqlserver].
+	// All documented fields can be used except file_name,
+	// audit_file_offset, and event_time. Although action_id and class_type are returned as strings, they can only be compared
+	// with numeric values in a predicate. String comparisons don't perform implicit
+	// type conversion. The maximum expression length is 3,000 characters. An empty string means that no predicate is applied.
+	PredicateExpression *string
 }
 
 // SQLAuditSettingsUpdate - Audit settings update request.
 type SQLAuditSettingsUpdate struct {
+	// The predicate expression that determines whether an audit event is processed. Specify only the <predicate_expression> value;
+	// don't include the WHERE keyword. The expression uses the following syntax
+	// from CREATE SERVER AUDIT (Transact-SQL) [https://learn.microsoft.com/sql/t-sql/statements/create-server-audit-transact-sql?view=sql-server-ver17]:
+	// <predicate_expression> ::=
+	// { [ NOT ] <predicate_factor>
+	// [ { AND | OR } [ NOT ] { <predicate_factor> } ] [ ,... n ] }
+	// <predicate_factor> ::=
+	// event_field_name { = | < > | != | > | >= | < | <= | LIKE }
+	// { number | 'string' }
+	// Event field names correspond to the audit record columns documented in sys.fngetaudit_file (Transact-SQL)
+	// [https://learn.microsoft.com/sql/relational-databases/system-functions/sys-fn-get-audit-file-transact-sql?view=sql-server-ver17&tabs=sqlserver].
+	// All documented fields can be used except file_name,
+	// audit_file_offset, and event_time. Although action_id and class_type are returned as strings, they can only be compared
+	// with numeric values in a predicate. String comparisons don't perform implicit
+	// type conversion. The maximum expression length is 3,000 characters. When SQL auditing is enabled for the first time, omitting
+	// this property applies no predicate. On subsequent updates, omitting this
+	// property leaves the existing predicate unchanged. Specify an empty string to remove the existing predicate.
+	PredicateExpression *string
+
 	// Retention days.
 	RetentionDays *int32
 
@@ -171,6 +233,10 @@ type SQLEndpoint struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; The item's logical identifier. Corresponding item instances share the same logical ID. The value is null when
+	// no logical ID has been assigned.
+	LogicalID *string
 
 	// READ-ONLY; The item sensitivity label.
 	SensitivityLabel *SensitivityLabel
@@ -261,6 +327,15 @@ type ServicePrincipalProfilePrincipalServicePrincipalProfileDetails struct {
 	ParentPrincipal PrincipalClassification
 }
 
+// TableDefinition - A pair of schema and table names for scoping a selective refresh.
+type TableDefinition struct {
+	// REQUIRED; The schema name for table resolution. Must not be a reserved system schema.
+	Schema *string
+
+	// REQUIRED; One or more table names to refresh under the specified schema.
+	TableNames []string
+}
+
 // TableSyncStatus - A table synchronization status object.
 type TableSyncStatus struct {
 	// REQUIRED; The date and time when the table synchronization completed in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
@@ -275,7 +350,8 @@ type TableSyncStatus struct {
 	// REQUIRED; Whether the table synchronized without errors.
 	Status *SyncStatus
 
-	// REQUIRED; The name of the table that synchronized.
+	// REQUIRED; The name of the table that synchronized. For schema-enabled items, the table name is prefixed with the schema
+	// name (e.g., "schema.tableName").
 	TableName *string
 
 	// The error response details

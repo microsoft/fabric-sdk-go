@@ -54,6 +54,16 @@ type Definition struct {
 	Format *string
 }
 
+// DefinitionOptions - Options that apply when creating a semantic model with a definition or updating a semantic model's
+// definition.
+type DefinitionOptions struct {
+	// Whether to allow purging the semantic model's existing data when applying the updated definition. Some definition changes
+	// require existing data to be cleared; set this to true to allow those changes
+	// to proceed, in which case any data that can't be retained under the new definition is purged. After the operation completes,
+	// refresh the semantic model to reload the data. Default value is false.
+	AllowPurgeData *bool
+}
+
 // DefinitionPart - Semantic model definition part object.
 type DefinitionPart struct {
 	// The semantic model part path.
@@ -178,6 +188,10 @@ type SemanticModel struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item's logical identifier. Corresponding item instances share the same logical ID. The value is null when
+	// no logical ID has been assigned.
+	LogicalID *string
+
 	// READ-ONLY; The item sensitivity label.
 	SensitivityLabel *SensitivityLabel
 
@@ -282,6 +296,9 @@ type UpdateSemanticModelDefinitionRequest struct {
 	// for more details on the structure of the Semantic model
 	// definition.
 	Definition *Definition
+
+	// Options for the semantic model whose definition is being updated.
+	Options *DefinitionOptions
 }
 
 // UpdateSemanticModelRequest - Update semantic model request.

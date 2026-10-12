@@ -18,11 +18,29 @@ type CertificateResourceClassification interface {
 // DestinationResponseClassification provides polymorphic access to related types.
 // Call the interface's GetDestinationResponse() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
-// - *ActivatorDestinationResponse, *CustomEndpointDestinationResponse, *DestinationResponse, *EventhouseDestinationResponse,
-// - *LakehouseDestinationResponse, *NotebookDestinationResponse
+// - *ActivatorDestinationResponse, *BusinessEventsDestinationResponse, *CustomEndpointDestinationResponse, *DestinationResponse,
+// - *EventhouseDestinationResponse, *LakehouseDestinationResponse, *NotebookDestinationResponse
 type DestinationResponseClassification interface {
 	// GetDestinationResponse returns the DestinationResponse content of the underlying type.
 	GetDestinationResponse() *DestinationResponse
+}
+
+// EndpointAuthenticationClassification provides polymorphic access to related types.
+// Call the interface's GetEndpointAuthentication() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *EndpointAuthentication, *OAuthBearerAuthentication, *PlainAuthentication
+type EndpointAuthenticationClassification interface {
+	// GetEndpointAuthentication returns the EndpointAuthentication content of the underlying type.
+	GetEndpointAuthentication() *EndpointAuthentication
+}
+
+// EndpointConnectionClassification provides polymorphic access to related types.
+// Call the interface's GetEndpointConnection() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *CustomEndpointConnection, *EndpointConnection, *KafkaEndpointConnection
+type EndpointConnectionClassification interface {
+	// GetEndpointConnection returns the EndpointConnection content of the underlying type.
+	GetEndpointConnection() *EndpointConnection
 }
 
 // EventhouseDestinationPropertiesClassification provides polymorphic access to related types.
@@ -104,12 +122,13 @@ type SolacePubSubSourcePropertiesClassification interface {
 // - *AmazonKinesisSourceResponse, *AmazonMSKKafkaSourceResponse, *ApacheKafkaSourceResponse, *AzureBlobStorageEventsSourceResponse,
 // - *AzureCosmosDBCDCSourceResponse, *AzureDataExplorerSourceResponse, *AzureEventGridNamespaceSourceResponse, *AzureEventHubExtendedSourceResponse,
 // - *AzureEventHubSourceResponse, *AzureIoTHubExtendedSourceResponse, *AzureIoTHubSourceResponse, *AzureSQLDBCDCSourceResponse,
-// - *AzureSQLMIDBCDCSourceResponse, *AzureServiceBusSourceResponse, *ConfluentCloudSourceResponse, *CustomEndpointSourceResponse,
-// - *FabricAnomalyDetectionEventsSourceResponse, *FabricCapacityOverviewEventsSourceResponse, *FabricJobEventsSourceResponse,
-// - *FabricOneLakeEventsSourceResponse, *FabricWorkspaceItemEventsSourceResponse, *GooglePubSubSourceResponse, *HTTPSourceResponse,
-// - *MirroredDatabaseChangeFeedSourceResponse, *MongoDBCDCSourceResponse, *MqttSourceResponse, *MySQLCDCSourceResponse, *OracleDBCDCSourceResponse,
-// - *PostgreSQLCDCSourceResponse, *RealTimeWeatherSourceResponse, *SQLServerOnVMDBCDCSourceResponse, *SampleDataSourceResponse,
-// - *SolacePubSubSourceResponse, *SourceResponse
+// - *AzureSQLMIDBCDCSourceResponse, *AzureServiceBusSourceResponse, *ConfluentCloudSourceResponse, *CriblSourceResponse,
+// - *CustomEndpointSourceResponse, *FabricAnomalyDetectionEventsSourceResponse, *FabricCapacityOperationEventsSourceResponse,
+// - *FabricCapacityOverviewEventsSourceResponse, *FabricJobEventsSourceResponse, *FabricOneLakeEventsSourceResponse, *FabricWorkspaceItemEventsSourceResponse,
+// - *GooglePubSubSourceResponse, *HTTPSourceResponse, *LakehouseChangeFeedSourceResponse, *MirroredDatabaseChangeFeedSourceResponse,
+// - *MongoDBCDCSourceResponse, *MqttSourceResponse, *MySQLCDCSourceResponse, *OracleDBCDCSourceResponse, *PostgreSQLCDCSourceResponse,
+// - *RealTimeWeatherSourceResponse, *ReferenceLakehouseSourceResponse, *SAPDatasphereSourceResponse, *SQLServerOnVMDBCDCSourceResponse,
+// - *SampleDataSourceResponse, *SolacePubSubSourceResponse, *SourceResponse
 type SourceResponseClassification interface {
 	// GetSourceResponse returns the SourceResponse content of the underlying type.
 	GetSourceResponse() *SourceResponse

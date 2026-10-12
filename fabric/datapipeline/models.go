@@ -113,6 +113,10 @@ type DataPipeline struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item's logical identifier. Corresponding item instances share the same logical ID. The value is null when
+	// no logical ID has been assigned.
+	LogicalID *string
+
 	// READ-ONLY; The item sensitivity label.
 	SensitivityLabel *SensitivityLabel
 
@@ -205,6 +209,18 @@ func (e *EntireTenantPrincipal) GetPrincipal() *Principal {
 	}
 }
 
+// ErrorParameter - A structured parameter providing additional machine-readable context about an error.
+type ErrorParameter struct {
+	// READ-ONLY; A human-readable description of the parameter's meaning.
+	Message *string
+
+	// READ-ONLY; The parameter identifier.
+	Name *string
+
+	// READ-ONLY; The parameter value.
+	Value *string
+}
+
 // ErrorRelatedResource - The error related resource details object.
 type ErrorRelatedResource struct {
 	// READ-ONLY; The resource ID that's involved in the error.
@@ -229,6 +245,9 @@ type ErrorResponse struct {
 	// READ-ONLY; List of additional error details.
 	MoreDetails []ErrorResponseDetails
 
+	// READ-ONLY; Structured parameters providing additional machine-readable context about the error.
+	Parameters []ErrorParameter
+
 	// READ-ONLY; The error related resource details.
 	RelatedResource *ErrorRelatedResource
 
@@ -245,6 +264,9 @@ type ErrorResponseDetails struct {
 	// READ-ONLY; A human readable representation of the error.
 	Message *string
 
+	// READ-ONLY; Structured parameters providing additional machine-readable context about the error.
+	Parameters []ErrorParameter
+
 	// READ-ONLY; The error related resource details.
 	RelatedResource *ErrorRelatedResource
 }
@@ -253,6 +275,9 @@ type ErrorResponseDetails struct {
 type ExecuteJobInstance struct {
 	// Job end time in UTC
 	EndTimeUTC *string
+
+	// Error response when job is failed
+	FailureReason *ErrorResponse
 
 	// Job instance Id
 	ID *string
@@ -274,9 +299,6 @@ type ExecuteJobInstance struct {
 
 	// The item job status. Additional statuses may be added over time.
 	Status *ItemJobStatus
-
-	// READ-ONLY; Error response when job is failed
-	FailureReason *ErrorResponse
 }
 
 // ExecuteJobInstances - A list of data pipeline execute job instances.

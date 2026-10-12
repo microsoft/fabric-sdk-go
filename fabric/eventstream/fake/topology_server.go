@@ -215,7 +215,7 @@ func (t *TopologyServerTransport) dispatchGetEventstreamDestinationConnection(re
 	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
 	}
-	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).DestinationConnectionResponse, req)
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).EndpointConnectionClassification, req)
 	if err != nil {
 		return nil, err
 	}
@@ -289,7 +289,7 @@ func (t *TopologyServerTransport) dispatchGetEventstreamSourceConnection(req *ht
 	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
 	}
-	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).SourceConnectionResponse, req)
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).EndpointConnectionClassification, req)
 	if err != nil {
 		return nil, err
 	}

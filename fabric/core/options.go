@@ -11,11 +11,23 @@ type CapacitiesClientGetCapacityOptions struct {
 	// placeholder for future optional parameters
 }
 
+// CapacitiesClientGetOverageConfigurationOptions contains the optional parameters for the CapacitiesClient.GetOverageConfiguration
+// method.
+type CapacitiesClientGetOverageConfigurationOptions struct {
+	// placeholder for future optional parameters
+}
+
 // CapacitiesClientListCapacitiesOptions contains the optional parameters for the CapacitiesClient.NewListCapacitiesPager
 // method.
 type CapacitiesClientListCapacitiesOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
+}
+
+// CapacitiesClientUpdateOverageConfigurationOptions contains the optional parameters for the CapacitiesClient.UpdateOverageConfiguration
+// method.
+type CapacitiesClientUpdateOverageConfigurationOptions struct {
+	// placeholder for future optional parameters
 }
 
 // CatalogClientSearchOptions contains the optional parameters for the CatalogClient.Search method.
@@ -411,6 +423,9 @@ type GitClientBeginCommitToGitOptions struct {
 
 // GitClientBeginGetStatusOptions contains the optional parameters for the GitClient.BeginGetStatus method.
 type GitClientBeginGetStatusOptions struct {
+	// When true, each item change in the response includes a fileChanges array with per-file change details.
+	IncludeFilesDetails *bool
+
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
@@ -456,6 +471,11 @@ type GitClientGetConnectionOptions struct {
 	// placeholder for future optional parameters
 }
 
+// GitClientGetConnectionSettingsOptions contains the optional parameters for the GitClient.GetConnectionSettings method.
+type GitClientGetConnectionSettingsOptions struct {
+	// placeholder for future optional parameters
+}
+
 // GitClientGetMyGitCredentialsOptions contains the optional parameters for the GitClient.GetMyGitCredentials method.
 type GitClientGetMyGitCredentialsOptions struct {
 	// placeholder for future optional parameters
@@ -466,6 +486,11 @@ type GitClientGetMyGitCredentialsOptions struct {
 type GitClientListWorkspaceRelationsOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
+}
+
+// GitClientUpdateConnectionSettingsOptions contains the optional parameters for the GitClient.UpdateConnectionSettings method.
+type GitClientUpdateConnectionSettingsOptions struct {
+	// placeholder for future optional parameters
 }
 
 // GitClientUpdateMyGitCredentialsOptions contains the optional parameters for the GitClient.UpdateMyGitCredentials method.
@@ -480,22 +505,16 @@ type ItemsClientBeginAssociateIdentityBetaOptions struct {
 	ResumeToken string
 }
 
-// ItemsClientBeginBulkExportItemDefinitionsBetaOptions contains the optional parameters for the ItemsClient.BeginBulkExportItemDefinitionsBeta
+// ItemsClientBeginBulkExportItemDefinitionsOptions contains the optional parameters for the ItemsClient.BeginBulkExportItemDefinitions
 // method.
-type ItemsClientBeginBulkExportItemDefinitionsBetaOptions struct {
-	// The requested items to export their item definition.
-	BulkExportItemDefinitionsRequest *BulkExportItemDefinitionsRequest
-
+type ItemsClientBeginBulkExportItemDefinitionsOptions struct {
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
 
-// ItemsClientBeginBulkImportItemDefinitionsBetaOptions contains the optional parameters for the ItemsClient.BeginBulkImportItemDefinitionsBeta
+// ItemsClientBeginBulkImportItemDefinitionsOptions contains the optional parameters for the ItemsClient.BeginBulkImportItemDefinitions
 // method.
-type ItemsClientBeginBulkImportItemDefinitionsBetaOptions struct {
-	// Import item definitions request payload.
-	BulkImportItemDefinitionsRequest *BulkImportItemDefinitionsRequest
-
+type ItemsClientBeginBulkImportItemDefinitionsOptions struct {
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
@@ -594,6 +613,11 @@ type ItemsClientMoveItemOptions struct {
 
 // ItemsClientUpdateItemOptions contains the optional parameters for the ItemsClient.UpdateItem method.
 type ItemsClientUpdateItemOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ItemsClientUpdateLogicalIDOptions contains the optional parameters for the ItemsClient.UpdateLogicalID method.
+type ItemsClientUpdateLogicalIDOptions struct {
 	// placeholder for future optional parameters
 }
 
@@ -775,6 +799,12 @@ type OneLakeSettingsClientGetSettingsOptions struct {
 	// placeholder for future optional parameters
 }
 
+// OneLakeSettingsClientModifyAccessTimeTrackingOptions contains the optional parameters for the OneLakeSettingsClient.ModifyAccessTimeTracking
+// method.
+type OneLakeSettingsClientModifyAccessTimeTrackingOptions struct {
+	// placeholder for future optional parameters
+}
+
 // OneLakeSettingsClientModifyDefaultTierOptions contains the optional parameters for the OneLakeSettingsClient.ModifyDefaultTier
 // method.
 type OneLakeSettingsClientModifyDefaultTierOptions struct {
@@ -858,6 +888,18 @@ type RecoverableItemsClientListRecoverableItemsOptions struct {
 
 	// The recoverable item's type.
 	Type *string
+}
+
+// SurgeProtectionClientGetCapacitySurgeProtectionOptions contains the optional parameters for the SurgeProtectionClient.GetCapacitySurgeProtection
+// method.
+type SurgeProtectionClientGetCapacitySurgeProtectionOptions struct {
+	// placeholder for future optional parameters
+}
+
+// SurgeProtectionClientUpdateCapacitySurgeProtectionOptions contains the optional parameters for the SurgeProtectionClient.UpdateCapacitySurgeProtection
+// method.
+type SurgeProtectionClientUpdateCapacitySurgeProtectionOptions struct {
+	// placeholder for future optional parameters
 }
 
 // TagsClientApplyTagsOptions contains the optional parameters for the TagsClient.ApplyTags method.

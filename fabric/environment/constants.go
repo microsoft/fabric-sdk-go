@@ -6,6 +6,25 @@
 
 package environment
 
+// CustomLivePoolSupport - Flag controlling whether live pool support is active. Additional CustomLivePoolSupport values may
+// be added over time.
+type CustomLivePoolSupport string
+
+const (
+	// CustomLivePoolSupportDisabled - Live pool support is inactive. Configuration is retained.
+	CustomLivePoolSupportDisabled CustomLivePoolSupport = "Disabled"
+	// CustomLivePoolSupportEnabled - Live pool support is active.
+	CustomLivePoolSupportEnabled CustomLivePoolSupport = "Enabled"
+)
+
+// PossibleCustomLivePoolSupportValues returns the possible values for the CustomLivePoolSupport const type.
+func PossibleCustomLivePoolSupportValues() []CustomLivePoolSupport {
+	return []CustomLivePoolSupport{
+		CustomLivePoolSupportDisabled,
+		CustomLivePoolSupportEnabled,
+	}
+}
+
 // CustomPoolMemory - Custom pool memory for Spark driver or Spark executor. Additional CustomPoolMemory types may be added
 // over time.
 type CustomPoolMemory string
@@ -157,6 +176,8 @@ const (
 	ItemTypePaginatedReport ItemType = "PaginatedReport"
 	// ItemTypePlan - A plan.
 	ItemTypePlan ItemType = "Plan"
+	// ItemTypePolicySet - A PolicySet.
+	ItemTypePolicySet ItemType = "PolicySet"
 	// ItemTypeReflex - A Reflex.
 	ItemTypeReflex ItemType = "Reflex"
 	// ItemTypeReport - PowerBI report.
@@ -224,6 +245,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeOrgAppAudience,
 		ItemTypePaginatedReport,
 		ItemTypePlan,
+		ItemTypePolicySet,
 		ItemTypeReflex,
 		ItemTypeReport,
 		ItemTypeSQLDatabase,

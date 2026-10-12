@@ -14,6 +14,72 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 )
 
+// MarshalJSON implements the json.Marshaller interface for type ActivationsColumn.
+func (a ActivationsColumn) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "columnName", a.ColumnName)
+	populate(objectMap, "columnType", a.ColumnType)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ActivationsColumn.
+func (a *ActivationsColumn) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", a, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "columnName":
+			err = unpopulate(val, "ColumnName", &a.ColumnName)
+			delete(rawMsg, key)
+		case "columnType":
+			err = unpopulate(val, "ColumnType", &a.ColumnType)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", a, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type ActivationsTable.
+func (a ActivationsTable) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "columns", a.Columns)
+	populate(objectMap, "rows", a.Rows)
+	populate(objectMap, "tableName", a.TableName)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ActivationsTable.
+func (a *ActivationsTable) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", a, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "columns":
+			err = unpopulate(val, "Columns", &a.Columns)
+			delete(rawMsg, key)
+		case "rows":
+			err = unpopulate(val, "Rows", &a.Rows)
+			delete(rawMsg, key)
+		case "tableName":
+			err = unpopulate(val, "TableName", &a.TableName)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", a, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type CreateReflexRequest.
 func (c CreateReflexRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -317,6 +383,60 @@ func (p *Principal) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type QueryActivationsRequest.
+func (q QueryActivationsRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "query", q.Query)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type QueryActivationsRequest.
+func (q *QueryActivationsRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", q, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "query":
+			err = unpopulate(val, "Query", &q.Query)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", q, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type QueryActivationsResponse.
+func (q QueryActivationsResponse) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "tables", q.Tables)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type QueryActivationsResponse.
+func (q *QueryActivationsResponse) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", q, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "tables":
+			err = unpopulate(val, "Tables", &q.Tables)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", q, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type Reflex.
 func (r Reflex) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -325,6 +445,7 @@ func (r Reflex) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", r.DisplayName)
 	populate(objectMap, "folderId", r.FolderID)
 	populate(objectMap, "id", r.ID)
+	populate(objectMap, "logicalId", r.LogicalID)
 	populate(objectMap, "sensitivityLabel", r.SensitivityLabel)
 	populate(objectMap, "tags", r.Tags)
 	populate(objectMap, "type", r.Type)
@@ -355,6 +476,9 @@ func (r *Reflex) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &r.ID)
+			delete(rawMsg, key)
+		case "logicalId":
+			err = unpopulate(val, "LogicalID", &r.LogicalID)
 			delete(rawMsg, key)
 		case "sensitivityLabel":
 			err = unpopulate(val, "SensitivityLabel", &r.SensitivityLabel)

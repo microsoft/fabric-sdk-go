@@ -182,6 +182,7 @@ func (d DataPipeline) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", d.DisplayName)
 	populate(objectMap, "folderId", d.FolderID)
 	populate(objectMap, "id", d.ID)
+	populate(objectMap, "logicalId", d.LogicalID)
 	populate(objectMap, "sensitivityLabel", d.SensitivityLabel)
 	populate(objectMap, "tags", d.Tags)
 	populate(objectMap, "type", d.Type)
@@ -212,6 +213,9 @@ func (d *DataPipeline) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &d.ID)
+			delete(rawMsg, key)
+		case "logicalId":
+			err = unpopulate(val, "LogicalID", &d.LogicalID)
 			delete(rawMsg, key)
 		case "sensitivityLabel":
 			err = unpopulate(val, "SensitivityLabel", &d.SensitivityLabel)
@@ -427,6 +431,41 @@ func (e *EntireTenantPrincipal) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type ErrorParameter.
+func (e ErrorParameter) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "message", e.Message)
+	populate(objectMap, "name", e.Name)
+	populate(objectMap, "value", e.Value)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ErrorParameter.
+func (e *ErrorParameter) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", e, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "message":
+			err = unpopulate(val, "Message", &e.Message)
+			delete(rawMsg, key)
+		case "name":
+			err = unpopulate(val, "Name", &e.Name)
+			delete(rawMsg, key)
+		case "value":
+			err = unpopulate(val, "Value", &e.Value)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", e, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type ErrorRelatedResource.
 func (e ErrorRelatedResource) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -465,6 +504,7 @@ func (e ErrorResponse) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "isRetriable", e.IsRetriable)
 	populate(objectMap, "message", e.Message)
 	populate(objectMap, "moreDetails", e.MoreDetails)
+	populate(objectMap, "parameters", e.Parameters)
 	populate(objectMap, "relatedResource", e.RelatedResource)
 	populate(objectMap, "requestId", e.RequestID)
 	return json.Marshal(objectMap)
@@ -491,6 +531,9 @@ func (e *ErrorResponse) UnmarshalJSON(data []byte) error {
 		case "moreDetails":
 			err = unpopulate(val, "MoreDetails", &e.MoreDetails)
 			delete(rawMsg, key)
+		case "parameters":
+			err = unpopulate(val, "Parameters", &e.Parameters)
+			delete(rawMsg, key)
 		case "relatedResource":
 			err = unpopulate(val, "RelatedResource", &e.RelatedResource)
 			delete(rawMsg, key)
@@ -510,6 +553,7 @@ func (e ErrorResponseDetails) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "errorCode", e.ErrorCode)
 	populate(objectMap, "message", e.Message)
+	populate(objectMap, "parameters", e.Parameters)
 	populate(objectMap, "relatedResource", e.RelatedResource)
 	return json.Marshal(objectMap)
 }
@@ -528,6 +572,9 @@ func (e *ErrorResponseDetails) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "message":
 			err = unpopulate(val, "Message", &e.Message)
+			delete(rawMsg, key)
+		case "parameters":
+			err = unpopulate(val, "Parameters", &e.Parameters)
 			delete(rawMsg, key)
 		case "relatedResource":
 			err = unpopulate(val, "RelatedResource", &e.RelatedResource)

@@ -217,10 +217,46 @@ type SQLAuditSettings struct {
 
 	// REQUIRED; Audit settings state type.
 	State *AuditSettingsState
+
+	// READ-ONLY; The predicate expression that determines whether an audit event is processed. Specify only the <predicate_expression>
+	// value; don't include the WHERE keyword. The expression uses the following syntax
+	// from CREATE SERVER AUDIT (Transact-SQL) [https://learn.microsoft.com/sql/t-sql/statements/create-server-audit-transact-sql?view=sql-server-ver17]:
+	// <predicate_expression> ::=
+	// { [ NOT ] <predicate_factor>
+	// [ { AND | OR } [ NOT ] { <predicate_factor> } ] [ ,... n ] }
+	// <predicate_factor> ::=
+	// event_field_name { = | < > | != | > | >= | < | <= | LIKE }
+	// { number | 'string' }
+	// Event field names correspond to the audit record columns documented in sys.fngetaudit_file (Transact-SQL)
+	// [https://learn.microsoft.com/sql/relational-databases/system-functions/sys-fn-get-audit-file-transact-sql?view=sql-server-ver17&tabs=sqlserver].
+	// All documented fields can be used except file_name,
+	// audit_file_offset, and event_time. Although action_id and class_type are returned as strings, they can only be compared
+	// with numeric values in a predicate. String comparisons don't perform implicit
+	// type conversion. The maximum expression length is 3,000 characters. An empty string means that no predicate is applied.
+	PredicateExpression *string
 }
 
 // SQLAuditSettingsUpdate - Audit settings update request.
 type SQLAuditSettingsUpdate struct {
+	// The predicate expression that determines whether an audit event is processed. Specify only the <predicate_expression> value;
+	// don't include the WHERE keyword. The expression uses the following syntax
+	// from CREATE SERVER AUDIT (Transact-SQL) [https://learn.microsoft.com/sql/t-sql/statements/create-server-audit-transact-sql?view=sql-server-ver17]:
+	// <predicate_expression> ::=
+	// { [ NOT ] <predicate_factor>
+	// [ { AND | OR } [ NOT ] { <predicate_factor> } ] [ ,... n ] }
+	// <predicate_factor> ::=
+	// event_field_name { = | < > | != | > | >= | < | <= | LIKE }
+	// { number | 'string' }
+	// Event field names correspond to the audit record columns documented in sys.fngetaudit_file (Transact-SQL)
+	// [https://learn.microsoft.com/sql/relational-databases/system-functions/sys-fn-get-audit-file-transact-sql?view=sql-server-ver17&tabs=sqlserver].
+	// All documented fields can be used except file_name,
+	// audit_file_offset, and event_time. Although action_id and class_type are returned as strings, they can only be compared
+	// with numeric values in a predicate. String comparisons don't perform implicit
+	// type conversion. The maximum expression length is 3,000 characters. When SQL auditing is enabled for the first time, omitting
+	// this property applies no predicate. On subsequent updates, omitting this
+	// property leaves the existing predicate unchanged. Specify an empty string to remove the existing predicate.
+	PredicateExpression *string
+
 	// Retention days.
 	RetentionDays *int32
 
@@ -395,6 +431,10 @@ type Warehouse struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; The item's logical identifier. Corresponding item instances share the same logical ID. The value is null when
+	// no logical ID has been assigned.
+	LogicalID *string
 
 	// READ-ONLY; The item sensitivity label.
 	SensitivityLabel *SensitivityLabel

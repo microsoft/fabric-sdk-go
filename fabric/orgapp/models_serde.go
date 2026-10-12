@@ -224,6 +224,7 @@ func (o OrgApp) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", o.DisplayName)
 	populate(objectMap, "folderId", o.FolderID)
 	populate(objectMap, "id", o.ID)
+	populate(objectMap, "logicalId", o.LogicalID)
 	populate(objectMap, "properties", o.Properties)
 	populate(objectMap, "sensitivityLabel", o.SensitivityLabel)
 	populate(objectMap, "tags", o.Tags)
@@ -255,6 +256,9 @@ func (o *OrgApp) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &o.ID)
+			delete(rawMsg, key)
+		case "logicalId":
+			err = unpopulate(val, "LogicalID", &o.LogicalID)
 			delete(rawMsg, key)
 		case "properties":
 			err = unpopulate(val, "Properties", &o.Properties)

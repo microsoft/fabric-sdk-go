@@ -38,6 +38,53 @@ type AccessEntityResponse struct {
 	ContinuationURI *string
 }
 
+// ActivePolicySetWithRulesResponse - The active policy set response.
+type ActivePolicySetWithRulesResponse struct {
+	// The policy set description.
+	Description *string
+
+	// The policy set display name.
+	DisplayName *string
+
+	// A list of policy rules.
+	PolicyRules []PolicyRule
+
+	// READ-ONLY; The policy set ID.
+	ID *string
+
+	// READ-ONLY; The workspace ID.
+	WorkspaceID *string
+}
+
+// AllowEffect - Allow effect.
+type AllowEffect struct {
+	// REQUIRED; Effect type. Additional types may be added over time.
+	Type *EffectType
+}
+
+// GetEffect implements the EffectClassification interface for type AllowEffect.
+func (a *AllowEffect) GetEffect() *Effect {
+	return &Effect{
+		Type: a.Type,
+	}
+}
+
+// AnyOfPredicate - Predicate that matches when any of the provided values match.
+type AnyOfPredicate struct {
+	// REQUIRED; The predicate operator.
+	Operator *OperatorType
+
+	// REQUIRED; List of values to compare against the targeted property.
+	Values []string
+}
+
+// GetPredicate implements the PredicateClassification interface for type AnyOfPredicate.
+func (a *AnyOfPredicate) GetPredicate() *Predicate {
+	return &Predicate{
+		Operator: a.Operator,
+	}
+}
+
 // AssignDomainWorkspacesByCapacitiesRequest - The request payload for assigning workspaces to a domain by capacity.
 type AssignDomainWorkspacesByCapacitiesRequest struct {
 	// The capacity IDs.
@@ -204,6 +251,15 @@ type CapacityTenantSettingsByCapacityIDResponse struct {
 	// A list of tenant settings that were overridden by capacity admin for given capacityId.
 	Value []CapacityTenantSetting
 }
+
+// Condition - A policy rule condition object.
+type Condition struct {
+	// REQUIRED; Condition type. Additional types may be added over time.
+	Type *ConditionType
+}
+
+// GetCondition implements the ConditionClassification interface for type Condition.
+func (c *Condition) GetCondition() *Condition { return c }
 
 // ConnectionRuleEndpointMetadata - Represents a single endpoint-level exception rule that allows outbound communication to
 // a specific external domain or host. This object is used within the allowedEndpoints array of a connection rule
@@ -514,6 +570,34 @@ type DomainsResponsePreview struct {
 	// The list of domains.
 	Domains []DomainPreview
 }
+
+// DynamicCondition - Dynamic condition that evaluates a target property using a predicate.
+type DynamicCondition struct {
+	// REQUIRED; The predicate that defines the operator and operand(s) for evaluating the targeted property.
+	Predicate PredicateClassification
+
+	// REQUIRED; Dot-separated target property path to evaluate.
+	TargetProperty *string
+
+	// REQUIRED; Condition type. Additional types may be added over time.
+	Type *ConditionType
+}
+
+// GetCondition implements the ConditionClassification interface for type DynamicCondition.
+func (d *DynamicCondition) GetCondition() *Condition {
+	return &Condition{
+		Type: d.Type,
+	}
+}
+
+// Effect - A policy rule effect object.
+type Effect struct {
+	// REQUIRED; Effect type. Additional types may be added over time.
+	Type *EffectType
+}
+
+// GetEffect implements the EffectClassification interface for type Effect.
+func (e *Effect) GetEffect() *Effect { return e }
 
 // Encryption - Workspace encryption details using a customer-managed key (CMK).
 type Encryption struct {
@@ -977,6 +1061,22 @@ type NetworkRules struct {
 	DefaultAction *NetworkAccessRule
 }
 
+// NoneOfPredicate - Predicate that matches when none of the provided values match.
+type NoneOfPredicate struct {
+	// REQUIRED; The predicate operator.
+	Operator *OperatorType
+
+	// REQUIRED; List of values to compare against the targeted property.
+	Values []string
+}
+
+// GetPredicate implements the PredicateClassification interface for type NoneOfPredicate.
+func (n *NoneOfPredicate) GetPredicate() *Predicate {
+	return &Predicate{
+		Operator: n.Operator,
+	}
+}
+
 // OutboundConnectionRule - Defines an outbound access rule for a specific cloud connection.
 type OutboundConnectionRule struct {
 	// REQUIRED; Specifies the cloud connection type to which the rule applies. The behavior and applicability of other rule properties
@@ -1005,6 +1105,45 @@ type OutboundConnectionRule struct {
 	// each connection type and complements the global fallback behavior defined by defaultAction.
 	DefaultAction *ConnectionAccessActionType
 }
+
+// PolicyRule - Policy rule object.
+type PolicyRule struct {
+	// REQUIRED; The policy rule conditions, all conditions must be met.
+	Conditions []ConditionClassification
+
+	// REQUIRED; The policy rule description.
+	Description *string
+
+	// REQUIRED; The policy rule display name.
+	DisplayName *string
+
+	// REQUIRED; The list of effects to apply when all conditions are met.
+	Effects []EffectClassification
+
+	// REQUIRED; The policy rule policy type.
+	Policy *PolicyType
+
+	// READ-ONLY; The creation date time in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	CreatedDateTime *string
+
+	// READ-ONLY; The policy rule ID.
+	ID *string
+
+	// READ-ONLY; The last modification date time in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	LastModifiedDateTime *string
+
+	// READ-ONLY; The user who last modified the policy rule.
+	ModifiedByUser PrincipalClassification
+}
+
+// Predicate - A policy rule predicate object.
+type Predicate struct {
+	// REQUIRED; The predicate operator.
+	Operator *OperatorType
+}
+
+// GetPredicate implements the PredicateClassification interface for type Predicate.
+func (p *Predicate) GetPredicate() *Predicate { return p }
 
 // Principal - Represents an identity or a Microsoft Entra group.
 type Principal struct {
@@ -1133,6 +1272,22 @@ type SetLabelsRequest struct {
 	// Although the admin sets the label, the delegated user is marked as the label
 	// issuer. Only principals of type 'User' are supported.
 	DelegatedPrincipal PrincipalClassification
+}
+
+// StaticCondition - Static boolean condition.
+type StaticCondition struct {
+	// REQUIRED; Condition type. Additional types may be added over time.
+	Type *ConditionType
+
+	// REQUIRED; The static value.
+	Value *bool
+}
+
+// GetCondition implements the ConditionClassification interface for type StaticCondition.
+func (s *StaticCondition) GetCondition() *Condition {
+	return &Condition{
+		Type: s.Type,
+	}
 }
 
 // SyncRoleAssignmentsToSubdomainsRequest - The request payload for syncing domain members to subdomains.
@@ -1548,11 +1703,11 @@ type Workspace struct {
 
 // WorkspaceAccessDetail - Workspace permission details.
 type WorkspaceAccessDetail struct {
+	// Workspace type.
+	Type *WorkspaceType
+
 	// The workspace role.
 	WorkspaceRole *WorkspaceRole
-
-	// READ-ONLY; Workspace type.
-	Type *WorkspaceType
 }
 
 // WorkspaceAccessDetails - User access details for the workspace.

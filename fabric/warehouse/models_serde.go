@@ -535,6 +535,7 @@ func (r *RestorePoints) UnmarshalJSON(data []byte) error {
 func (s SQLAuditSettings) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "auditActionsAndGroups", s.AuditActionsAndGroups)
+	populate(objectMap, "predicateExpression", s.PredicateExpression)
 	populate(objectMap, "retentionDays", s.RetentionDays)
 	populate(objectMap, "state", s.State)
 	return json.Marshal(objectMap)
@@ -551,6 +552,9 @@ func (s *SQLAuditSettings) UnmarshalJSON(data []byte) error {
 		switch key {
 		case "auditActionsAndGroups":
 			err = unpopulate(val, "AuditActionsAndGroups", &s.AuditActionsAndGroups)
+			delete(rawMsg, key)
+		case "predicateExpression":
+			err = unpopulate(val, "PredicateExpression", &s.PredicateExpression)
 			delete(rawMsg, key)
 		case "retentionDays":
 			err = unpopulate(val, "RetentionDays", &s.RetentionDays)
@@ -569,6 +573,7 @@ func (s *SQLAuditSettings) UnmarshalJSON(data []byte) error {
 // MarshalJSON implements the json.Marshaller interface for type SQLAuditSettingsUpdate.
 func (s SQLAuditSettingsUpdate) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
+	populate(objectMap, "predicateExpression", s.PredicateExpression)
 	populate(objectMap, "retentionDays", s.RetentionDays)
 	populate(objectMap, "state", s.State)
 	return json.Marshal(objectMap)
@@ -583,6 +588,9 @@ func (s *SQLAuditSettingsUpdate) UnmarshalJSON(data []byte) error {
 	for key, val := range rawMsg {
 		var err error
 		switch key {
+		case "predicateExpression":
+			err = unpopulate(val, "PredicateExpression", &s.PredicateExpression)
+			delete(rawMsg, key)
 		case "retentionDays":
 			err = unpopulate(val, "RetentionDays", &s.RetentionDays)
 			delete(rawMsg, key)
@@ -985,6 +993,7 @@ func (w Warehouse) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", w.DisplayName)
 	populate(objectMap, "folderId", w.FolderID)
 	populate(objectMap, "id", w.ID)
+	populate(objectMap, "logicalId", w.LogicalID)
 	populate(objectMap, "properties", w.Properties)
 	populate(objectMap, "sensitivityLabel", w.SensitivityLabel)
 	populate(objectMap, "tags", w.Tags)
@@ -1016,6 +1025,9 @@ func (w *Warehouse) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &w.ID)
+			delete(rawMsg, key)
+		case "logicalId":
+			err = unpopulate(val, "LogicalID", &w.LogicalID)
 			delete(rawMsg, key)
 		case "properties":
 			err = unpopulate(val, "Properties", &w.Properties)

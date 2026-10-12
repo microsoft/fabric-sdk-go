@@ -9,16 +9,12 @@ package iruntime
 import (
 	"errors"
 	"net/url"
-	"reflect"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
-	"github.com/Azure/azure-sdk-for-go/sdk/azcore/cloud"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 )
-
-const defaultApiEndpoint = "https://api.fabric.microsoft.com"
 
 // ClientOptions contains optional settings for ServiceClient.
 type ClientOptions struct {
@@ -45,11 +41,6 @@ type ServiceClient struct {
 //   - endpoint - pass nil to accept the default values.
 //   - options - pass nil to accept the default values.
 func NewServiceClient(credential azcore.TokenCredential, version string, endpoint *string, options *ClientOptions) (*ServiceClient, error) {
-	apiEndpoint, err := getEndpoint(endpoint)
-	if err != nil {
-		return nil, err
-	}
-
 	var useWorkspacePrivateLinks bool = false // Default: private links disabled
 
 	if options == nil {
@@ -58,11 +49,18 @@ func NewServiceClient(credential azcore.TokenCredential, version string, endpoin
 
 	useWorkspacePrivateLinks = options.UseWorkspacePrivateLinks
 
-	if reflect.ValueOf(options.Cloud).IsZero() {
-		options.Cloud = cloud.AzurePublic
+	configuration, service, err := resolveCloud(options.Cloud)
+	if err != nil {
+		return nil, err
+	}
+	options.Cloud = configuration
+
+	apiEndpoint, err := getEndpoint(endpoint, service.Endpoint)
+	if err != nil {
+		return nil, err
 	}
 
-	authPolicy := runtime.NewBearerTokenPolicy(credential, []string{"https://api.fabric.microsoft.com/.default"}, nil)
+	authPolicy := runtime.NewBearerTokenPolicy(credential, []string{strings.TrimRight(service.Audience, "/") + "/.default"}, nil)
 	plOpts := runtime.PipelineOptions{
 		PerRetry: []policy.Policy{authPolicy},
 		Tracing: runtime.TracingOptions{
@@ -88,8 +86,8 @@ func NewServiceClient(credential azcore.TokenCredential, version string, endpoin
 	}, nil
 }
 
-func getEndpoint(endpoint *string) (string, error) {
-	apiEndpoint := defaultApiEndpoint
+func getEndpoint(endpoint *string, defaultEndpoint string) (string, error) {
+	apiEndpoint := defaultEndpoint
 	if endpoint != nil {
 		apiEndpoint = *endpoint
 	}

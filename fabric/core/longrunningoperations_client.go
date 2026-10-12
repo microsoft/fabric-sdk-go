@@ -29,6 +29,9 @@ type LongRunningOperationsClient struct {
 // GetOperationResult - You get the operationId from x-ms-operation-id header return by the API that initiated the operation.
 // PERMISSIONS Same as the permissions required for the API that initiated the operation.
 // REQUIRED DELEGATED SCOPE Same as the scopes required for the API that initiated the operation.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified quota for Long-Running operations APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500
+// calls/min | | API limit | 500 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -83,6 +86,9 @@ func (client *LongRunningOperationsClient) getOperationResultCreateRequest(ctx c
 // [/rest/api/fabric/core/long-running-operations/get-operation-result] to retrieve the result.
 // PERMISSIONS Same as the permissions required for the API that initiated the operation.
 // REQUIRED DELEGATED SCOPE Same as the scopes required for the API that initiated the operation.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified quota for Long-Running operations APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500
+// calls/min | | API limit | 500 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]

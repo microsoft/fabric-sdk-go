@@ -6,6 +6,19 @@
 
 package copyjob
 
+// BackgroundJobsClientListExecuteJobInstancesOptions contains the optional parameters for the BackgroundJobsClient.NewListExecuteJobInstancesPager
+// method.
+type BackgroundJobsClientListExecuteJobInstancesOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// BackgroundJobsClientRunOnDemandExecuteOptions contains the optional parameters for the BackgroundJobsClient.RunOnDemandExecute
+// method.
+type BackgroundJobsClientRunOnDemandExecuteOptions struct {
+	// placeholder for future optional parameters
+}
+
 // ItemsClientBeginCreateCopyJobOptions contains the optional parameters for the ItemsClient.BeginCreateCopyJob method.
 type ItemsClientBeginCreateCopyJobOptions struct {
 	// Resumes the long-running operation from the provided token.

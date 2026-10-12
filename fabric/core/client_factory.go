@@ -199,6 +199,14 @@ func (c *ClientFactory) NewRecoverableItemsClient() *RecoverableItemsClient {
 	}
 }
 
+// NewSurgeProtectionClient creates a new instance of SurgeProtectionClient.
+func (c *ClientFactory) NewSurgeProtectionClient() *SurgeProtectionClient {
+	return &SurgeProtectionClient{
+		internal: c.internal.WithClientName("core.SurgeProtectionClient"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewTagsClient creates a new instance of TagsClient.
 func (c *ClientFactory) NewTagsClient() *TagsClient {
 	return &TagsClient{

@@ -22,6 +22,7 @@ func (c CosmosDBDatabase) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", c.DisplayName)
 	populate(objectMap, "folderId", c.FolderID)
 	populate(objectMap, "id", c.ID)
+	populate(objectMap, "logicalId", c.LogicalID)
 	populate(objectMap, "properties", c.Properties)
 	populate(objectMap, "sensitivityLabel", c.SensitivityLabel)
 	populate(objectMap, "tags", c.Tags)
@@ -53,6 +54,9 @@ func (c *CosmosDBDatabase) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &c.ID)
+			delete(rawMsg, key)
+		case "logicalId":
+			err = unpopulate(val, "LogicalID", &c.LogicalID)
 			delete(rawMsg, key)
 		case "properties":
 			err = unpopulate(val, "Properties", &c.Properties)

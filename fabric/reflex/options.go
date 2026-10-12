@@ -6,6 +6,11 @@
 
 package reflex
 
+// ActivationsClientQueryActivationsOptions contains the optional parameters for the ActivationsClient.QueryActivations method.
+type ActivationsClientQueryActivationsOptions struct {
+	// placeholder for future optional parameters
+}
+
 // ItemsClientBeginCreateReflexOptions contains the optional parameters for the ItemsClient.BeginCreateReflex method.
 type ItemsClientBeginCreateReflexOptions struct {
 	// Resumes the long-running operation from the provided token.

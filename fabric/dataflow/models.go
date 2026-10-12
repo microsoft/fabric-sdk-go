@@ -156,6 +156,10 @@ type Dataflow struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item's logical identifier. Corresponding item instances share the same logical ID. The value is null when
+	// no logical ID has been assigned.
+	LogicalID *string
+
 	// READ-ONLY; The item sensitivity label.
 	SensitivityLabel *SensitivityLabel
 
@@ -363,6 +367,43 @@ func (e *EntireTenantPrincipal) GetPrincipal() *Principal {
 	}
 }
 
+// ErrorParameter - A structured parameter providing additional machine-readable context about an error.
+type ErrorParameter struct {
+	// READ-ONLY; A human-readable description of the parameter's meaning.
+	Message *string
+
+	// READ-ONLY; The parameter identifier.
+	Name *string
+
+	// READ-ONLY; The parameter value.
+	Value *string
+}
+
+// ErrorRelatedResource - The error related resource details object.
+type ErrorRelatedResource struct {
+	// READ-ONLY; The resource ID that's involved in the error.
+	ResourceID *string
+
+	// READ-ONLY; The type of the resource that's involved in the error.
+	ResourceType *string
+}
+
+// ErrorResponseDetails - The error response details.
+type ErrorResponseDetails struct {
+	// READ-ONLY; A specific identifier that provides information about an error condition, allowing for standardized communication
+	// between our service and its users.
+	ErrorCode *string
+
+	// READ-ONLY; A human readable representation of the error.
+	Message *string
+
+	// READ-ONLY; Structured parameters providing additional machine-readable context about the error.
+	Parameters []ErrorParameter
+
+	// READ-ONLY; The error related resource details.
+	RelatedResource *ErrorRelatedResource
+}
+
 // ExecuteQueryRequest - Request payload for executing a query against a dataflow.
 type ExecuteQueryRequest struct {
 	// REQUIRED; The name of the query to execute from the dataflow (or from the custom mashup document if provided).
@@ -379,6 +420,12 @@ type ExecutionPayload struct {
 
 	// A list of parameters to override during execution.
 	Parameters []ItemJobParameter
+}
+
+// Gen1DataflowUpgradeTarget - A Gen1 dataflow targeted for an in-place upgrade.
+type Gen1DataflowUpgradeTarget struct {
+	// REQUIRED; The identifier of the Gen1 dataflow to upgrade. The dataflow must belong to the specified workspace.
+	ID *string
 }
 
 // GroupPrincipal - Represents a security group.
@@ -458,6 +505,73 @@ type ItemTag struct {
 
 	// REQUIRED; The tag ID.
 	ID *string
+}
+
+// Migration - The migration result for a Gen1 dataflow.
+type Migration struct {
+	// READ-ONLY; The readiness verdict evaluated for the dataflow during the upgrade. This property does not report UpgradeUnavailable;
+	// a readiness result that predicts failure is reported as NeedsAttention because
+	// the migration status and migration error describe the actual outcome.
+	AssessmentStatus *UpgradeReadinessStatus
+
+	// READ-ONLY; The identifier of the dataflow, which is preserved by a successful in-place upgrade.
+	DataflowID *string
+
+	// READ-ONLY; The source Gen1 dataflow display name.
+	DataflowName *string
+
+	// READ-ONLY; The migration outcome for the dataflow.
+	MigrationStatus *MigrationStatus
+
+	// READ-ONLY; The resulting Dataflow Gen2 display name, which may differ from the source display name.
+	TargetDataflowName *string
+
+	// READ-ONLY; The identifier of the workspace containing the dataflow.
+	WorkspaceID *string
+
+	// READ-ONLY; The display name of the workspace containing the dataflow.
+	WorkspaceName *string
+
+	// READ-ONLY; The time when the dataflow migration reached a terminal state. This property is omitted when the time is not
+	// available. When present, the value is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	MigrationEndDateTime *time.Time
+
+	// READ-ONLY; The failure detail for the dataflow migration. This property is present only when the migration status is Failed,
+	// and isRetriable is always included. The requestId contains the upgrade operation ID.
+	// The error code is one of InsufficientPrivileges, DataflowNotFound, DataflowBusy, DataflowRequiresChanges, CapacityOrLicenseNotSupported,
+	// or UpgradeFailed.
+	MigrationError *MigrationError
+
+	// READ-ONLY; The changes required before the dataflow can be upgraded. This property is omitted when no changes are required.
+	RequiredActions []UpgradeRequiredAction
+}
+
+// MigrationError - The failure detail for the dataflow migration. This property is present only when the migration status
+// is Failed, and isRetriable is always included. The requestId contains the upgrade operation ID.
+// The error code is one of InsufficientPrivileges, DataflowNotFound, DataflowBusy, DataflowRequiresChanges, CapacityOrLicenseNotSupported,
+// or UpgradeFailed.
+type MigrationError struct {
+	// READ-ONLY; A specific identifier that provides information about an error condition, allowing for standardized communication
+	// between our service and its users.
+	ErrorCode *string
+
+	// READ-ONLY; A human readable representation of the error.
+	Message *string
+
+	// READ-ONLY; When true, the request can be retried. Use the Retry-After response header to determine the delay, if available.
+	IsRetriable *bool
+
+	// READ-ONLY; List of additional error details.
+	MoreDetails []ErrorResponseDetails
+
+	// READ-ONLY; Structured parameters providing additional machine-readable context about the error.
+	Parameters []ErrorParameter
+
+	// READ-ONLY; The error related resource details.
+	RelatedResource *ErrorRelatedResource
+
+	// READ-ONLY; ID of the request associated with the error.
+	RequestID *string
 }
 
 // MonthlyOccurrence - Specifies the day for triggering jobs
@@ -791,6 +905,87 @@ type UpdateDataflowRequest struct {
 
 	// The Dataflow display name. The display name must follow naming rules according to item type.
 	DisplayName *string
+}
+
+// UpgradeGen1DataflowsRequest - The request payload for upgrading Gen1 dataflows.
+type UpgradeGen1DataflowsRequest struct {
+	// REQUIRED; The Gen1 dataflows to upgrade in the specified workspace.
+	Dataflows []Gen1DataflowUpgradeTarget
+}
+
+// UpgradeReadiness - The upgrade readiness assessment for a Gen1 dataflow.
+type UpgradeReadiness struct {
+	// READ-ONLY; The display name of the Gen1 dataflow.
+	DisplayName *string
+
+	// READ-ONLY; The identifier of the assessed Gen1 dataflow.
+	ID *string
+
+	// READ-ONLY; The overall readiness verdict for the dataflow. The value is the highest severity among the reasons in this
+	// order: UpgradeUnavailable, NeedsAttention, and ReadyToMigrate. Unknown is not an aggregation
+	// outcome and means the readiness assessment could not be completed.
+	Status *UpgradeReadinessStatus
+
+	// READ-ONLY; The reasons behind the readiness verdict. This property is omitted when the status is ReadyToMigrate and is
+	// always present when the status is Unknown.
+	Reasons []UpgradeReadinessReason
+}
+
+// UpgradeReadinessList - A paginated list of Gen1 dataflow upgrade readiness results.
+type UpgradeReadinessList struct {
+	// READ-ONLY; The Gen1 dataflow upgrade readiness results.
+	Value []UpgradeReadiness
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
+// UpgradeReadinessReason - A reason contributing to a Gen1 dataflow upgrade readiness verdict.
+type UpgradeReadinessReason struct {
+	// READ-ONLY; The stable code identifying the readiness reason.
+	Code *UpgradeReasonCode
+
+	// READ-ONLY; The human-readable message accompanying the reason code.
+	Message *string
+
+	// READ-ONLY; The readiness severity contributed by this reason.
+	Status *UpgradeReadinessStatus
+}
+
+// UpgradeRequiredAction - A change required before a Gen1 dataflow can be upgraded.
+type UpgradeRequiredAction struct {
+	// READ-ONLY; The stable reason code identifying the required change.
+	Code *UpgradeReasonCode
+
+	// READ-ONLY; The human-readable description of the required change.
+	Message *string
+
+	// READ-ONLY; The readiness severity contributed by this required action.
+	Status *UpgradeReadinessStatus
+}
+
+// UpgradeResult - The result of a Gen1 dataflow upgrade batch.
+type UpgradeResult struct {
+	// READ-ONLY; The migration result for each requested dataflow.
+	Migrations []Migration
+
+	// READ-ONLY; The roll-up counts for the upgrade batch.
+	Summary *UpgradeSummary
+}
+
+// UpgradeSummary - The roll-up counts for a Gen1 dataflow upgrade batch.
+type UpgradeSummary struct {
+	// READ-ONLY; The number of dataflows that failed to upgrade.
+	FailedCount *int32
+
+	// READ-ONLY; The number of dataflows that were upgraded successfully.
+	SucceededCount *int32
+
+	// READ-ONLY; The total number of dataflows in the request.
+	TotalCount *int32
 }
 
 // UserPrincipal - Represents a Microsoft Entra user principal.

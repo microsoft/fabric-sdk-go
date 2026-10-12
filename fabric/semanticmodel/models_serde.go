@@ -150,6 +150,33 @@ func (d *Definition) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type DefinitionOptions.
+func (d DefinitionOptions) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "allowPurgeData", d.AllowPurgeData)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type DefinitionOptions.
+func (d *DefinitionOptions) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", d, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "allowPurgeData":
+			err = unpopulate(val, "AllowPurgeData", &d.AllowPurgeData)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", d, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type DefinitionPart.
 func (d DefinitionPart) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -418,6 +445,7 @@ func (s SemanticModel) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", s.DisplayName)
 	populate(objectMap, "folderId", s.FolderID)
 	populate(objectMap, "id", s.ID)
+	populate(objectMap, "logicalId", s.LogicalID)
 	populate(objectMap, "sensitivityLabel", s.SensitivityLabel)
 	populate(objectMap, "tags", s.Tags)
 	populate(objectMap, "type", s.Type)
@@ -448,6 +476,9 @@ func (s *SemanticModel) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &s.ID)
+			delete(rawMsg, key)
+		case "logicalId":
+			err = unpopulate(val, "LogicalID", &s.LogicalID)
 			delete(rawMsg, key)
 		case "sensitivityLabel":
 			err = unpopulate(val, "SensitivityLabel", &s.SensitivityLabel)
@@ -698,6 +729,7 @@ func (s *ServicePrincipalProfilePrincipalServicePrincipalProfileDetails) Unmarsh
 func (u UpdateSemanticModelDefinitionRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "definition", u.Definition)
+	populate(objectMap, "options", u.Options)
 	return json.Marshal(objectMap)
 }
 
@@ -712,6 +744,9 @@ func (u *UpdateSemanticModelDefinitionRequest) UnmarshalJSON(data []byte) error 
 		switch key {
 		case "definition":
 			err = unpopulate(val, "Definition", &u.Definition)
+			delete(rawMsg, key)
+		case "options":
+			err = unpopulate(val, "Options", &u.Options)
 			delete(rawMsg, key)
 		}
 		if err != nil {

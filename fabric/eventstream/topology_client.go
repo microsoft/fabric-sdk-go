@@ -162,7 +162,7 @@ func (client *TopologyClient) getEventstreamDestinationConnectionCreateRequest(c
 // getEventstreamDestinationConnectionHandleResponse handles the GetEventstreamDestinationConnection response.
 func (client *TopologyClient) getEventstreamDestinationConnectionHandleResponse(resp *http.Response) (TopologyClientGetEventstreamDestinationConnectionResponse, error) {
 	result := TopologyClientGetEventstreamDestinationConnectionResponse{}
-	if err := runtime.UnmarshalAsJSON(resp, &result.DestinationConnectionResponse); err != nil {
+	if err := runtime.UnmarshalAsJSON(resp, &result); err != nil {
 		return TopologyClientGetEventstreamDestinationConnectionResponse{}, err
 	}
 	return result, nil
@@ -240,7 +240,7 @@ func (client *TopologyClient) getEventstreamSourceHandleResponse(resp *http.Resp
 
 // GetEventstreamSourceConnection - PERMISSIONS The caller must have read and write permissions for the eventstream.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
-// LIMITATIONS Only custom endpoints sources are supported.
+// LIMITATIONS Only custom endpoint, Cribl, and SAP Datasphere sources are supported.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -303,7 +303,7 @@ func (client *TopologyClient) getEventstreamSourceConnectionCreateRequest(ctx co
 // getEventstreamSourceConnectionHandleResponse handles the GetEventstreamSourceConnection response.
 func (client *TopologyClient) getEventstreamSourceConnectionHandleResponse(resp *http.Response) (TopologyClientGetEventstreamSourceConnectionResponse, error) {
 	result := TopologyClientGetEventstreamSourceConnectionResponse{}
-	if err := runtime.UnmarshalAsJSON(resp, &result.SourceConnectionResponse); err != nil {
+	if err := runtime.UnmarshalAsJSON(resp, &result); err != nil {
 		return TopologyClientGetEventstreamSourceConnectionResponse{}, err
 	}
 	return result, nil

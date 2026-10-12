@@ -146,6 +146,22 @@ type LabelsClientBulkSetLabelsResponse struct {
 	ItemsChangeLabelResponse
 }
 
+// PolicySetsClientActivateResponse contains the response from method PolicySetsClient.Activate.
+type PolicySetsClientActivateResponse struct {
+	// placeholder for future response values
+}
+
+// PolicySetsClientDeactivateResponse contains the response from method PolicySetsClient.Deactivate.
+type PolicySetsClientDeactivateResponse struct {
+	// placeholder for future response values
+}
+
+// PolicySetsClientGetActiveBetaResponse contains the response from method PolicySetsClient.GetActiveBeta.
+type PolicySetsClientGetActiveBetaResponse struct {
+	// The active policy set response.
+	ActivePolicySetWithRulesResponse
+}
+
 // SharingLinksClientBulkRemoveSharingLinksResponse contains the response from method SharingLinksClient.BeginBulkRemoveSharingLinks.
 type SharingLinksClientBulkRemoveSharingLinksResponse struct {
 	// A list of the unique IDs and sharing links removal status of the Fabric items in remove sharing links request
