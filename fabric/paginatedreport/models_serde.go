@@ -20,6 +20,7 @@ func (c CreatePaginatedReportRequest) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "definition", c.Definition)
 	populate(objectMap, "description", c.Description)
 	populate(objectMap, "displayName", c.DisplayName)
+	populate(objectMap, "folderId", c.FolderID)
 	return json.Marshal(objectMap)
 }
 
@@ -40,6 +41,9 @@ func (c *CreatePaginatedReportRequest) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "displayName":
 			err = unpopulate(val, "DisplayName", &c.DisplayName)
+			delete(rawMsg, key)
+		case "folderId":
+			err = unpopulate(val, "FolderID", &c.FolderID)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -282,6 +286,7 @@ func (p PaginatedReport) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", p.DisplayName)
 	populate(objectMap, "folderId", p.FolderID)
 	populate(objectMap, "id", p.ID)
+	populate(objectMap, "logicalId", p.LogicalID)
 	populate(objectMap, "sensitivityLabel", p.SensitivityLabel)
 	populate(objectMap, "tags", p.Tags)
 	populate(objectMap, "type", p.Type)
@@ -312,6 +317,9 @@ func (p *PaginatedReport) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &p.ID)
+			delete(rawMsg, key)
+		case "logicalId":
+			err = unpopulate(val, "LogicalID", &p.LogicalID)
 			delete(rawMsg, key)
 		case "sensitivityLabel":
 			err = unpopulate(val, "SensitivityLabel", &p.SensitivityLabel)

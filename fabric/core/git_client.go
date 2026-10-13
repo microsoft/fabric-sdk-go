@@ -11,6 +11,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -32,9 +33,9 @@ type GitClient struct {
 // To use this API, the caller's Git credentials must be configured using Update My Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials]
 // API. You can use the Get My Git Credentials
 // [/rest/api/fabric/core/git/get-my-git-credentials] API to check the Git credentials configuration.
-// You can choose to commit all changes or only specific changed items. To sync the workspace for the first time, use this
-// API after the Connect [/rest/api/fabric/core/git/connect] and Initialize
-// Connection [/rest/api/fabric/core/git/initialize-connection] APIs.
+// You can choose to commit all changes, specific items, or specific files within items using the FileLevelSelective mode.
+// To sync the workspace for the first time, use this API after the Connect
+// [/rest/api/fabric/core/git/connect] and Initialize Connection [/rest/api/fabric/core/git/initialize-connection] APIs.
 // PERMISSIONS The caller must have a contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.GitCommit.All.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -59,9 +60,9 @@ func (client *GitClient) BeginCommitToGit(ctx context.Context, workspaceID strin
 // To use this API, the caller's Git credentials must be configured using Update My Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials]
 // API. You can use the Get My Git Credentials
 // [/rest/api/fabric/core/git/get-my-git-credentials] API to check the Git credentials configuration.
-// You can choose to commit all changes or only specific changed items. To sync the workspace for the first time, use this
-// API after the Connect [/rest/api/fabric/core/git/connect] and Initialize
-// Connection [/rest/api/fabric/core/git/initialize-connection] APIs.
+// You can choose to commit all changes, specific items, or specific files within items using the FileLevelSelective mode.
+// To sync the workspace for the first time, use this API after the Connect
+// [/rest/api/fabric/core/git/connect] and Initialize Connection [/rest/api/fabric/core/git/initialize-connection] APIs.
 // PERMISSIONS The caller must have a contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.GitCommit.All.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -410,6 +411,70 @@ func (client *GitClient) getConnectionHandleResponse(resp *http.Response) (GitCl
 	return result, nil
 }
 
+// GetConnectionSettings - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use. Learn more
+// [/fabric/fundamentals/preview].
+// Returns the connection settings for a Git-connected workspace.
+// PERMISSIONS The caller must have a contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - options - GitClientGetConnectionSettingsOptions contains the optional parameters for the GitClient.GetConnectionSettings
+//     method.
+func (client *GitClient) GetConnectionSettings(ctx context.Context, workspaceID string, options *GitClientGetConnectionSettingsOptions) (GitClientGetConnectionSettingsResponse, error) {
+	var err error
+	const operationName = "core.GitClient.GetConnectionSettings"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getConnectionSettingsCreateRequest(ctx, workspaceID, options)
+	if err != nil {
+		return GitClientGetConnectionSettingsResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return GitClientGetConnectionSettingsResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return GitClientGetConnectionSettingsResponse{}, err
+	}
+	resp, err := client.getConnectionSettingsHandleResponse(httpResp)
+	return resp, err
+}
+
+// getConnectionSettingsCreateRequest creates the GetConnectionSettings request.
+func (client *GitClient) getConnectionSettingsCreateRequest(ctx context.Context, workspaceID string, _ *GitClientGetConnectionSettingsOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/git/connectionSettings"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getConnectionSettingsHandleResponse handles the GetConnectionSettings response.
+func (client *GitClient) getConnectionSettingsHandleResponse(resp *http.Response) (GitClientGetConnectionSettingsResponse, error) {
+	result := GitClientGetConnectionSettingsResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.GitConnectionSettings); err != nil {
+		return GitClientGetConnectionSettingsResponse{}, err
+	}
+	return result, nil
+}
+
 // GetMyGitCredentials - Indicates how the user's credentials are obtained for accessing the relevant Git provider, automatically
 // or through configured connection. If the user's credentials aren't configured, go to Update My
 // Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials] API.
@@ -536,7 +601,7 @@ func (client *GitClient) getStatus(ctx context.Context, workspaceID string, opti
 }
 
 // getStatusCreateRequest creates the GetStatus request.
-func (client *GitClient) getStatusCreateRequest(ctx context.Context, workspaceID string, _ *GitClientBeginGetStatusOptions) (*policy.Request, error) {
+func (client *GitClient) getStatusCreateRequest(ctx context.Context, workspaceID string, options *GitClientBeginGetStatusOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/git/status"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -546,6 +611,11 @@ func (client *GitClient) getStatusCreateRequest(ctx context.Context, workspaceID
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.IncludeFilesDetails != nil {
+		reqQP.Set("includeFilesDetails", strconv.FormatBool(*options.IncludeFilesDetails))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }
@@ -703,6 +773,75 @@ func (client *GitClient) listWorkspaceRelationsHandleResponse(resp *http.Respons
 	result := GitClientListWorkspaceRelationsResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.WorkspaceRelations); err != nil {
 		return GitClientListWorkspaceRelationsResponse{}, err
+	}
+	return result, nil
+}
+
+// UpdateConnectionSettings - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development
+// purposes only. It may change based on feedback and is not recommended for production use. Learn more
+// [/fabric/fundamentals/preview].
+// Updates the connection settings for a Git-connected workspace. Only properties included in the request body are updated;
+// omitted properties remain unchanged.
+// PERMISSIONS The caller must have an admin role for the workspace.
+// REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - updateGitConnectionSettingsRequest - The update connection settings request payload.
+//   - options - GitClientUpdateConnectionSettingsOptions contains the optional parameters for the GitClient.UpdateConnectionSettings
+//     method.
+func (client *GitClient) UpdateConnectionSettings(ctx context.Context, workspaceID string, updateGitConnectionSettingsRequest UpdateGitConnectionSettingsRequest, options *GitClientUpdateConnectionSettingsOptions) (GitClientUpdateConnectionSettingsResponse, error) {
+	var err error
+	const operationName = "core.GitClient.UpdateConnectionSettings"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateConnectionSettingsCreateRequest(ctx, workspaceID, updateGitConnectionSettingsRequest, options)
+	if err != nil {
+		return GitClientUpdateConnectionSettingsResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return GitClientUpdateConnectionSettingsResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return GitClientUpdateConnectionSettingsResponse{}, err
+	}
+	resp, err := client.updateConnectionSettingsHandleResponse(httpResp)
+	return resp, err
+}
+
+// updateConnectionSettingsCreateRequest creates the UpdateConnectionSettings request.
+func (client *GitClient) updateConnectionSettingsCreateRequest(ctx context.Context, workspaceID string, updateGitConnectionSettingsRequest UpdateGitConnectionSettingsRequest, _ *GitClientUpdateConnectionSettingsOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/git/connectionSettings"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateGitConnectionSettingsRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// updateConnectionSettingsHandleResponse handles the UpdateConnectionSettings response.
+func (client *GitClient) updateConnectionSettingsHandleResponse(resp *http.Response) (GitClientUpdateConnectionSettingsResponse, error) {
+	result := GitClientUpdateConnectionSettingsResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.GitConnectionSettings); err != nil {
+		return GitClientUpdateConnectionSettingsResponse{}, err
 	}
 	return result, nil
 }
@@ -871,8 +1010,8 @@ func (client *GitClient) updateMyGitCredentialsHandleResponse(resp *http.Respons
 // To use this API, the caller's Git credentials must be configured using Update My Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials] API. You can use the Get My Git Credentials
 // [/rest/api/fabric/core/git/get-my-git-credentials] API to check the Git credentials configuration.
 //
-// You can choose to commit all changes or only specific changed items. To sync the workspace for the first time, use this API after the Connect [/rest/api/fabric/core/git/connect] and Initialize
-// Connection [/rest/api/fabric/core/git/initialize-connection] APIs.
+// You can choose to commit all changes, specific items, or specific files within items using the FileLevelSelective mode. To sync the workspace for the first time, use this API after the Connect
+// [/rest/api/fabric/core/git/connect] and Initialize Connection [/rest/api/fabric/core/git/initialize-connection] APIs.
 //
 // PERMISSIONS The caller must have a contributor or higher workspace role.
 //

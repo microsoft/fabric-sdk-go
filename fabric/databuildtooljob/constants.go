@@ -161,6 +161,8 @@ const (
 	ItemTypePaginatedReport ItemType = "PaginatedReport"
 	// ItemTypePlan - A plan.
 	ItemTypePlan ItemType = "Plan"
+	// ItemTypePolicySet - A PolicySet.
+	ItemTypePolicySet ItemType = "PolicySet"
 	// ItemTypeReflex - A Reflex.
 	ItemTypeReflex ItemType = "Reflex"
 	// ItemTypeReport - PowerBI report.
@@ -228,6 +230,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeOrgAppAudience,
 		ItemTypePaginatedReport,
 		ItemTypePlan,
+		ItemTypePolicySet,
 		ItemTypeReflex,
 		ItemTypeReport,
 		ItemTypeSQLDatabase,

@@ -290,6 +290,7 @@ func (k KQLDashboard) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", k.DisplayName)
 	populate(objectMap, "folderId", k.FolderID)
 	populate(objectMap, "id", k.ID)
+	populate(objectMap, "logicalId", k.LogicalID)
 	populate(objectMap, "sensitivityLabel", k.SensitivityLabel)
 	populate(objectMap, "tags", k.Tags)
 	populate(objectMap, "type", k.Type)
@@ -320,6 +321,9 @@ func (k *KQLDashboard) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &k.ID)
+			delete(rawMsg, key)
+		case "logicalId":
+			err = unpopulate(val, "LogicalID", &k.LogicalID)
 			delete(rawMsg, key)
 		case "sensitivityLabel":
 			err = unpopulate(val, "SensitivityLabel", &k.SensitivityLabel)

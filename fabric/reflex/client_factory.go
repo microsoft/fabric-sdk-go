@@ -47,6 +47,14 @@ func NewClientFactoryWithClient(client fabric.Client) *ClientFactory {
 	}
 }
 
+// NewActivationsClient creates a new instance of ActivationsClient.
+func (c *ClientFactory) NewActivationsClient() *ActivationsClient {
+	return &ActivationsClient{
+		internal: c.internal.WithClientName("reflex.ActivationsClient"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewItemsClient creates a new instance of ItemsClient.
 func (c *ClientFactory) NewItemsClient() *ItemsClient {
 	return &ItemsClient{

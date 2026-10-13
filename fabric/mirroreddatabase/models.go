@@ -78,6 +78,18 @@ func (e *EntireTenantPrincipal) GetPrincipal() *Principal {
 	}
 }
 
+// ErrorParameter - A structured parameter providing additional machine-readable context about an error.
+type ErrorParameter struct {
+	// READ-ONLY; A human-readable description of the parameter's meaning.
+	Message *string
+
+	// READ-ONLY; The parameter identifier.
+	Name *string
+
+	// READ-ONLY; The parameter value.
+	Value *string
+}
+
 // ErrorRelatedResource - The error related resource details object.
 type ErrorRelatedResource struct {
 	// READ-ONLY; The resource ID that's involved in the error.
@@ -102,6 +114,9 @@ type ErrorResponse struct {
 	// READ-ONLY; List of additional error details.
 	MoreDetails []ErrorResponseDetails
 
+	// READ-ONLY; Structured parameters providing additional machine-readable context about the error.
+	Parameters []ErrorParameter
+
 	// READ-ONLY; The error related resource details.
 	RelatedResource *ErrorRelatedResource
 
@@ -117,6 +132,9 @@ type ErrorResponseDetails struct {
 
 	// READ-ONLY; A human readable representation of the error.
 	Message *string
+
+	// READ-ONLY; Structured parameters providing additional machine-readable context about the error.
+	Parameters []ErrorParameter
 
 	// READ-ONLY; The error related resource details.
 	RelatedResource *ErrorRelatedResource
@@ -184,6 +202,10 @@ type MirroredDatabase struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item's logical identifier. Corresponding item instances share the same logical ID. The value is null when
+	// no logical ID has been assigned.
+	LogicalID *string
+
 	// READ-ONLY; The item sensitivity label.
 	SensitivityLabel *SensitivityLabel
 
@@ -211,7 +233,7 @@ type MirroringStatusResponse struct {
 	// REQUIRED; The status of mirroring
 	Status *MirroringStatus
 
-	// READ-ONLY; Error is set if error happens in mirroring
+	// Error is set if error happens in mirroring
 	Error *ErrorResponse
 }
 
@@ -355,6 +377,9 @@ type TableMirroringStatusResponse struct {
 	// REQUIRED; The mirroring status type of table.
 	Status *TableMirroringStatus
 
+	// Table level error is set if error happens in mirroring for this table
+	Error *ErrorResponse
+
 	// The mirroring metrics of table.
 	Metrics *TableMirroringMetrics
 
@@ -363,9 +388,6 @@ type TableMirroringStatusResponse struct {
 
 	// Source table name.
 	SourceTableName *string
-
-	// READ-ONLY; Table level error is set if error happens in mirroring for this table
-	Error *ErrorResponse
 }
 
 // TablesMirroringStatusResponse - A paginated list of table mirroring statuses.

@@ -6,6 +6,17 @@
 
 package copyjob
 
+// BackgroundJobsClientListExecuteJobInstancesResponse contains the response from method BackgroundJobsClient.NewListExecuteJobInstancesPager.
+type BackgroundJobsClientListExecuteJobInstancesResponse struct {
+	// A list of CopyJob execute job instances.
+	ExecuteJobInstances
+}
+
+// BackgroundJobsClientRunOnDemandExecuteResponse contains the response from method BackgroundJobsClient.RunOnDemandExecute.
+type BackgroundJobsClientRunOnDemandExecuteResponse struct {
+	// placeholder for future response values
+}
+
 // ItemsClientCreateCopyJobResponse contains the response from method ItemsClient.BeginCreateCopyJob.
 type ItemsClientCreateCopyJobResponse struct {
 	// A CopyJob object.

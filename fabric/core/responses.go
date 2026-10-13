@@ -14,9 +14,21 @@ type CapacitiesClientGetCapacityResponse struct {
 	Capacity
 }
 
+// CapacitiesClientGetOverageConfigurationResponse contains the response from method CapacitiesClient.GetOverageConfiguration.
+type CapacitiesClientGetOverageConfigurationResponse struct {
+	// The overage configuration for a capacity.
+	CapacityOverageConfiguration
+}
+
 // CapacitiesClientListCapacitiesResponse contains the response from method CapacitiesClient.NewListCapacitiesPager.
 type CapacitiesClientListCapacitiesResponse struct {
 	Capacities
+}
+
+// CapacitiesClientUpdateOverageConfigurationResponse contains the response from method CapacitiesClient.UpdateOverageConfiguration.
+type CapacitiesClientUpdateOverageConfigurationResponse struct {
+	// The overage configuration for a capacity.
+	CapacityOverageConfiguration
 }
 
 // CatalogClientSearchResponse contains the response from method CatalogClient.Search.
@@ -410,6 +422,12 @@ type GitClientGetConnectionResponse struct {
 	GitConnection
 }
 
+// GitClientGetConnectionSettingsResponse contains the response from method GitClient.GetConnectionSettings.
+type GitClientGetConnectionSettingsResponse struct {
+	// Contains the Git connection settings.
+	GitConnectionSettings
+}
+
 // GitClientGetMyGitCredentialsResponse contains the response from method GitClient.GetMyGitCredentials.
 type GitClientGetMyGitCredentialsResponse struct {
 	// The Git credentials configuration.
@@ -434,6 +452,12 @@ type GitClientListWorkspaceRelationsResponse struct {
 	WorkspaceRelations
 }
 
+// GitClientUpdateConnectionSettingsResponse contains the response from method GitClient.UpdateConnectionSettings.
+type GitClientUpdateConnectionSettingsResponse struct {
+	// Contains the Git connection settings.
+	GitConnectionSettings
+}
+
 // GitClientUpdateFromGitResponse contains the response from method GitClient.BeginUpdateFromGit.
 type GitClientUpdateFromGitResponse struct {
 	// placeholder for future response values
@@ -451,14 +475,14 @@ type ItemsClientAssociateIdentityBetaResponse struct {
 	UpdateItemIdentityResponse
 }
 
-// ItemsClientBulkExportItemDefinitionsBetaResponse contains the response from method ItemsClient.BeginBulkExportItemDefinitionsBeta.
-type ItemsClientBulkExportItemDefinitionsBetaResponse struct {
+// ItemsClientBulkExportItemDefinitionsResponse contains the response from method ItemsClient.BeginBulkExportItemDefinitions.
+type ItemsClientBulkExportItemDefinitionsResponse struct {
 	// Bulk export item definitions response by definitions' parts.
 	BulkExportItemDefinitionsResponse
 }
 
-// ItemsClientBulkImportItemDefinitionsBetaResponse contains the response from method ItemsClient.BeginBulkImportItemDefinitionsBeta.
-type ItemsClientBulkImportItemDefinitionsBetaResponse struct {
+// ItemsClientBulkImportItemDefinitionsResponse contains the response from method ItemsClient.BeginBulkImportItemDefinitions.
+type ItemsClientBulkImportItemDefinitionsResponse struct {
 	// Bulk import item definitions response payload.
 	BulkImportItemDefinitionsResponse
 }
@@ -527,6 +551,12 @@ type ItemsClientUpdateItemDefinitionResponse struct {
 type ItemsClientUpdateItemResponse struct {
 	// An item object.
 	Item
+}
+
+// ItemsClientUpdateLogicalIDResponse contains the response from method ItemsClient.UpdateLogicalID.
+type ItemsClientUpdateLogicalIDResponse struct {
+	// Logical ID response.
+	LogicalIDResponse
 }
 
 // JobSchedulerClientCancelItemJobInstanceResponse contains the response from method JobSchedulerClient.CancelItemJobInstance.
@@ -690,6 +720,11 @@ type OneLakeSettingsClientGetSettingsResponse struct {
 	GetOneLakeSettingsResponse
 }
 
+// OneLakeSettingsClientModifyAccessTimeTrackingResponse contains the response from method OneLakeSettingsClient.ModifyAccessTimeTracking.
+type OneLakeSettingsClientModifyAccessTimeTrackingResponse struct {
+	// placeholder for future response values
+}
+
 // OneLakeSettingsClientModifyDefaultTierResponse contains the response from method OneLakeSettingsClient.ModifyDefaultTier.
 type OneLakeSettingsClientModifyDefaultTierResponse struct {
 	// Response for modifying the default OneLake access tier.
@@ -757,6 +792,20 @@ type RecoverableItemsClientListRecoverableItemsResponse struct {
 // RecoverableItemsClientRecoverItemResponse contains the response from method RecoverableItemsClient.BeginRecoverItem.
 type RecoverableItemsClientRecoverItemResponse struct {
 	Items
+}
+
+// SurgeProtectionClientGetCapacitySurgeProtectionResponse contains the response from method SurgeProtectionClient.GetCapacitySurgeProtection.
+type SurgeProtectionClientGetCapacitySurgeProtectionResponse struct {
+	// Represents the surge protection configuration for a capacity. A capacity with no configured surge protection is represented
+	// by `state` set to `Disabled` with the threshold properties omitted.
+	CapacitySurgeProtection
+}
+
+// SurgeProtectionClientUpdateCapacitySurgeProtectionResponse contains the response from method SurgeProtectionClient.UpdateCapacitySurgeProtection.
+type SurgeProtectionClientUpdateCapacitySurgeProtectionResponse struct {
+	// Represents the surge protection configuration for a capacity. A capacity with no configured surge protection is represented
+	// by `state` set to `Disabled` with the threshold properties omitted.
+	CapacitySurgeProtection
 }
 
 // TagsClientApplyTagsResponse contains the response from method TagsClient.ApplyTags.

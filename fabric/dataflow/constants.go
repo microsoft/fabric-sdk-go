@@ -163,6 +163,8 @@ const (
 	ItemTypePaginatedReport ItemType = "PaginatedReport"
 	// ItemTypePlan - A plan.
 	ItemTypePlan ItemType = "Plan"
+	// ItemTypePolicySet - A PolicySet.
+	ItemTypePolicySet ItemType = "PolicySet"
 	// ItemTypeReflex - A Reflex.
 	ItemTypeReflex ItemType = "Reflex"
 	// ItemTypeReport - PowerBI report.
@@ -230,6 +232,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeOrgAppAudience,
 		ItemTypePaginatedReport,
 		ItemTypePlan,
+		ItemTypePolicySet,
 		ItemTypeReflex,
 		ItemTypeReport,
 		ItemTypeSQLDatabase,
@@ -241,6 +244,28 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeVariableLibrary,
 		ItemTypeWarehouse,
 		ItemTypeWarehouseSnapshot,
+	}
+}
+
+// MigrationStatus - The outcome of a Gen1 dataflow migration. Additional DataflowMigrationStatus types may be added over
+// time.
+type MigrationStatus string
+
+const (
+	// MigrationStatusFailed - The dataflow failed to upgrade.
+	MigrationStatusFailed MigrationStatus = "Failed"
+	// MigrationStatusSucceeded - The dataflow was upgraded successfully.
+	MigrationStatusSucceeded MigrationStatus = "Succeeded"
+	// MigrationStatusUnknown - The migration outcome was not populated and indicates a service defect if returned.
+	MigrationStatusUnknown MigrationStatus = "Unknown"
+)
+
+// PossibleDataflowMigrationStatusValues returns the possible values for the MigrationStatus const type.
+func PossibleDataflowMigrationStatusValues() []MigrationStatus {
+	return []MigrationStatus{
+		MigrationStatusFailed,
+		MigrationStatusSucceeded,
+		MigrationStatusUnknown,
 	}
 }
 
@@ -399,6 +424,80 @@ const (
 func PossibleTypeValues() []Type {
 	return []Type{
 		TypeAutomatic,
+	}
+}
+
+// UpgradeReadinessStatus - The Gen1 dataflow upgrade readiness status. Additional DataflowUpgradeReadinessStatus types may
+// be added over time.
+type UpgradeReadinessStatus string
+
+const (
+	// UpgradeReadinessStatusNeedsAttention - The upgrade is expected to succeed, but follow-up changes may be needed or the upgrade
+	// may adjust the dataflow automatically.
+	UpgradeReadinessStatusNeedsAttention UpgradeReadinessStatus = "NeedsAttention"
+	// UpgradeReadinessStatusReadyToMigrate - The upgrade is expected to succeed without changes before or after the upgrade.
+	UpgradeReadinessStatusReadyToMigrate UpgradeReadinessStatus = "ReadyToMigrate"
+	// UpgradeReadinessStatusUnknown - The readiness assessment could not be completed and should be reported for investigation.
+	UpgradeReadinessStatusUnknown UpgradeReadinessStatus = "Unknown"
+	// UpgradeReadinessStatusUpgradeUnavailable - The upgrade is expected to fail until the reported reasons are resolved.
+	UpgradeReadinessStatusUpgradeUnavailable UpgradeReadinessStatus = "UpgradeUnavailable"
+)
+
+// PossibleDataflowUpgradeReadinessStatusValues returns the possible values for the UpgradeReadinessStatus const type.
+func PossibleDataflowUpgradeReadinessStatusValues() []UpgradeReadinessStatus {
+	return []UpgradeReadinessStatus{
+		UpgradeReadinessStatusNeedsAttention,
+		UpgradeReadinessStatusReadyToMigrate,
+		UpgradeReadinessStatusUnknown,
+		UpgradeReadinessStatusUpgradeUnavailable,
+	}
+}
+
+// UpgradeReasonCode - The reason for a Gen1 dataflow upgrade readiness result. Additional DataflowUpgradeReasonCode types
+// may be added over time.
+type UpgradeReasonCode string
+
+const (
+	// UpgradeReasonCodeAssessmentUnavailable - The readiness assessment could not run and should be reported for investigation.
+	UpgradeReasonCodeAssessmentUnavailable UpgradeReasonCode = "AssessmentUnavailable"
+	// UpgradeReasonCodeDisplayNameAlreadyInUse - The sanitized display name is already in use and is prefixed during the upgrade.
+	UpgradeReasonCodeDisplayNameAlreadyInUse UpgradeReasonCode = "DisplayNameAlreadyInUse"
+	// UpgradeReasonCodeExceedsGen2QueryLimit - The dataflow has more load-enabled queries than Dataflow Gen2 supports.
+	UpgradeReasonCodeExceedsGen2QueryLimit UpgradeReasonCode = "ExceedsGen2QueryLimit"
+	// UpgradeReasonCodeHasByolAsStorage - The dataflow uses bring-your-own-lake storage.
+	UpgradeReasonCodeHasByolAsStorage UpgradeReasonCode = "HasByolAsStorage"
+	// UpgradeReasonCodeHasIncrementalRefresh - The dataflow uses incremental refresh.
+	UpgradeReasonCodeHasIncrementalRefresh UpgradeReasonCode = "HasIncrementalRefresh"
+	// UpgradeReasonCodeHasLinkedEntities - The dataflow has linked entities.
+	UpgradeReasonCodeHasLinkedEntities UpgradeReasonCode = "HasLinkedEntities"
+	// UpgradeReasonCodeHasUnresolvedConnections - One or more data source connections could not be resolved and must be recreated
+	// or rebound before the upgrade.
+	UpgradeReasonCodeHasUnresolvedConnections UpgradeReasonCode = "HasUnresolvedConnections"
+	// UpgradeReasonCodeHasUnsupportedNameCharacters - The display name contains characters that are unsupported by Dataflow Gen2
+	// and are sanitized during the upgrade.
+	UpgradeReasonCodeHasUnsupportedNameCharacters UpgradeReasonCode = "HasUnsupportedNameCharacters"
+	// UpgradeReasonCodeIsReferencedByLinkedEntities - The dataflow is referenced by linked entities in other dataflows.
+	UpgradeReasonCodeIsReferencedByLinkedEntities UpgradeReasonCode = "IsReferencedByLinkedEntities"
+	// UpgradeReasonCodeMightBeAccessedByDirectQuery - The dataflow might be accessed through DirectQuery.
+	UpgradeReasonCodeMightBeAccessedByDirectQuery UpgradeReasonCode = "MightBeAccessedByDirectQuery"
+	// UpgradeReasonCodeServiceThrottled - The readiness assessment was throttled and may succeed when retried later.
+	UpgradeReasonCodeServiceThrottled UpgradeReasonCode = "ServiceThrottled"
+)
+
+// PossibleDataflowUpgradeReasonCodeValues returns the possible values for the UpgradeReasonCode const type.
+func PossibleDataflowUpgradeReasonCodeValues() []UpgradeReasonCode {
+	return []UpgradeReasonCode{
+		UpgradeReasonCodeAssessmentUnavailable,
+		UpgradeReasonCodeDisplayNameAlreadyInUse,
+		UpgradeReasonCodeExceedsGen2QueryLimit,
+		UpgradeReasonCodeHasByolAsStorage,
+		UpgradeReasonCodeHasIncrementalRefresh,
+		UpgradeReasonCodeHasLinkedEntities,
+		UpgradeReasonCodeHasUnresolvedConnections,
+		UpgradeReasonCodeHasUnsupportedNameCharacters,
+		UpgradeReasonCodeIsReferencedByLinkedEntities,
+		UpgradeReasonCodeMightBeAccessedByDirectQuery,
+		UpgradeReasonCodeServiceThrottled,
 	}
 }
 

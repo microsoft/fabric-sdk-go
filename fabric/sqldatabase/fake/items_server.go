@@ -58,9 +58,9 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	UpdateSQLDatabase func(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseRequest sqldatabase.UpdateSQLDatabaseRequest, options *sqldatabase.ItemsClientUpdateSQLDatabaseOptions) (resp azfake.Responder[sqldatabase.ItemsClientUpdateSQLDatabaseResponse], errResp azfake.ErrorResponder)
 
-	// BeginUpdateSQLDatabasesDefinition is the fake for method ItemsClient.BeginUpdateSQLDatabasesDefinition
+	// BeginUpdateSQLDatabaseDefinition is the fake for method ItemsClient.BeginUpdateSQLDatabaseDefinition
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
-	BeginUpdateSQLDatabasesDefinition func(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseDefinitionRequest sqldatabase.UpdateSQLDatabaseDefinitionRequest, options *sqldatabase.ItemsClientBeginUpdateSQLDatabasesDefinitionOptions) (resp azfake.PollerResponder[sqldatabase.ItemsClientUpdateSQLDatabasesDefinitionResponse], errResp azfake.ErrorResponder)
+	BeginUpdateSQLDatabaseDefinition func(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseDefinitionRequest sqldatabase.UpdateSQLDatabaseDefinitionRequest, options *sqldatabase.ItemsClientBeginUpdateSQLDatabaseDefinitionOptions) (resp azfake.PollerResponder[sqldatabase.ItemsClientUpdateSQLDatabaseDefinitionResponse], errResp azfake.ErrorResponder)
 }
 
 // NewItemsServerTransport creates a new instance of ItemsServerTransport with the provided implementation.
@@ -68,24 +68,24 @@ type ItemsServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewItemsServerTransport(srv *ItemsServer) *ItemsServerTransport {
 	return &ItemsServerTransport{
-		srv:                               srv,
-		beginCreateSQLDatabase:            newTracker[azfake.PollerResponder[sqldatabase.ItemsClientCreateSQLDatabaseResponse]](),
-		beginGetSQLDatabaseDefinition:     newTracker[azfake.PollerResponder[sqldatabase.ItemsClientGetSQLDatabaseDefinitionResponse]](),
-		newListSQLDatabasesPager:          newTracker[azfake.PagerResponder[sqldatabase.ItemsClientListSQLDatabasesResponse]](),
-		beginRevalidateCMK:                newTracker[azfake.PollerResponder[sqldatabase.ItemsClientRevalidateCMKResponse]](),
-		beginUpdateSQLDatabasesDefinition: newTracker[azfake.PollerResponder[sqldatabase.ItemsClientUpdateSQLDatabasesDefinitionResponse]](),
+		srv:                              srv,
+		beginCreateSQLDatabase:           newTracker[azfake.PollerResponder[sqldatabase.ItemsClientCreateSQLDatabaseResponse]](),
+		beginGetSQLDatabaseDefinition:    newTracker[azfake.PollerResponder[sqldatabase.ItemsClientGetSQLDatabaseDefinitionResponse]](),
+		newListSQLDatabasesPager:         newTracker[azfake.PagerResponder[sqldatabase.ItemsClientListSQLDatabasesResponse]](),
+		beginRevalidateCMK:               newTracker[azfake.PollerResponder[sqldatabase.ItemsClientRevalidateCMKResponse]](),
+		beginUpdateSQLDatabaseDefinition: newTracker[azfake.PollerResponder[sqldatabase.ItemsClientUpdateSQLDatabaseDefinitionResponse]](),
 	}
 }
 
 // ItemsServerTransport connects instances of sqldatabase.ItemsClient to instances of ItemsServer.
 // Don't use this type directly, use NewItemsServerTransport instead.
 type ItemsServerTransport struct {
-	srv                               *ItemsServer
-	beginCreateSQLDatabase            *tracker[azfake.PollerResponder[sqldatabase.ItemsClientCreateSQLDatabaseResponse]]
-	beginGetSQLDatabaseDefinition     *tracker[azfake.PollerResponder[sqldatabase.ItemsClientGetSQLDatabaseDefinitionResponse]]
-	newListSQLDatabasesPager          *tracker[azfake.PagerResponder[sqldatabase.ItemsClientListSQLDatabasesResponse]]
-	beginRevalidateCMK                *tracker[azfake.PollerResponder[sqldatabase.ItemsClientRevalidateCMKResponse]]
-	beginUpdateSQLDatabasesDefinition *tracker[azfake.PollerResponder[sqldatabase.ItemsClientUpdateSQLDatabasesDefinitionResponse]]
+	srv                              *ItemsServer
+	beginCreateSQLDatabase           *tracker[azfake.PollerResponder[sqldatabase.ItemsClientCreateSQLDatabaseResponse]]
+	beginGetSQLDatabaseDefinition    *tracker[azfake.PollerResponder[sqldatabase.ItemsClientGetSQLDatabaseDefinitionResponse]]
+	newListSQLDatabasesPager         *tracker[azfake.PagerResponder[sqldatabase.ItemsClientListSQLDatabasesResponse]]
+	beginRevalidateCMK               *tracker[azfake.PollerResponder[sqldatabase.ItemsClientRevalidateCMKResponse]]
+	beginUpdateSQLDatabaseDefinition *tracker[azfake.PollerResponder[sqldatabase.ItemsClientUpdateSQLDatabaseDefinitionResponse]]
 }
 
 // Do implements the policy.Transporter interface for ItemsServerTransport.
@@ -129,8 +129,8 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 				res.resp, res.err = i.dispatchBeginRevalidateCMK(req)
 			case "ItemsClient.UpdateSQLDatabase":
 				res.resp, res.err = i.dispatchUpdateSQLDatabase(req)
-			case "ItemsClient.BeginUpdateSQLDatabasesDefinition":
-				res.resp, res.err = i.dispatchBeginUpdateSQLDatabasesDefinition(req)
+			case "ItemsClient.BeginUpdateSQLDatabaseDefinition":
+				res.resp, res.err = i.dispatchBeginUpdateSQLDatabaseDefinition(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -526,12 +526,12 @@ func (i *ItemsServerTransport) dispatchUpdateSQLDatabase(req *http.Request) (*ht
 	return resp, nil
 }
 
-func (i *ItemsServerTransport) dispatchBeginUpdateSQLDatabasesDefinition(req *http.Request) (*http.Response, error) {
-	if i.srv.BeginUpdateSQLDatabasesDefinition == nil {
-		return nil, &nonRetriableError{errors.New("fake for method BeginUpdateSQLDatabasesDefinition not implemented")}
+func (i *ItemsServerTransport) dispatchBeginUpdateSQLDatabaseDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginUpdateSQLDatabaseDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginUpdateSQLDatabaseDefinition not implemented")}
 	}
-	beginUpdateSQLDatabasesDefinition := i.beginUpdateSQLDatabasesDefinition.get(req)
-	if beginUpdateSQLDatabasesDefinition == nil {
+	beginUpdateSQLDatabaseDefinition := i.beginUpdateSQLDatabaseDefinition.get(req)
+	if beginUpdateSQLDatabaseDefinition == nil {
 		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/sqlDatabases/(?P<sqlDatabaseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
@@ -559,31 +559,31 @@ func (i *ItemsServerTransport) dispatchBeginUpdateSQLDatabasesDefinition(req *ht
 		if err != nil {
 			return nil, err
 		}
-		var options *sqldatabase.ItemsClientBeginUpdateSQLDatabasesDefinitionOptions
+		var options *sqldatabase.ItemsClientBeginUpdateSQLDatabaseDefinitionOptions
 		if updateMetadataParam != nil {
-			options = &sqldatabase.ItemsClientBeginUpdateSQLDatabasesDefinitionOptions{
+			options = &sqldatabase.ItemsClientBeginUpdateSQLDatabaseDefinitionOptions{
 				UpdateMetadata: updateMetadataParam,
 			}
 		}
-		respr, errRespr := i.srv.BeginUpdateSQLDatabasesDefinition(req.Context(), workspaceIDParam, sqlDatabaseIDParam, body, options)
+		respr, errRespr := i.srv.BeginUpdateSQLDatabaseDefinition(req.Context(), workspaceIDParam, sqlDatabaseIDParam, body, options)
 		if respErr := server.GetError(errRespr, req); respErr != nil {
 			return nil, respErr
 		}
-		beginUpdateSQLDatabasesDefinition = &respr
-		i.beginUpdateSQLDatabasesDefinition.add(req, beginUpdateSQLDatabasesDefinition)
+		beginUpdateSQLDatabaseDefinition = &respr
+		i.beginUpdateSQLDatabaseDefinition.add(req, beginUpdateSQLDatabaseDefinition)
 	}
 
-	resp, err := server.PollerResponderNext(beginUpdateSQLDatabasesDefinition, req)
+	resp, err := server.PollerResponderNext(beginUpdateSQLDatabaseDefinition, req)
 	if err != nil {
 		return nil, err
 	}
 
 	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
-		i.beginUpdateSQLDatabasesDefinition.remove(req)
+		i.beginUpdateSQLDatabaseDefinition.remove(req)
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
 	}
-	if !server.PollerResponderMore(beginUpdateSQLDatabasesDefinition) {
-		i.beginUpdateSQLDatabasesDefinition.remove(req)
+	if !server.PollerResponderMore(beginUpdateSQLDatabaseDefinition) {
+		i.beginUpdateSQLDatabaseDefinition.remove(req)
 	}
 
 	return resp, nil

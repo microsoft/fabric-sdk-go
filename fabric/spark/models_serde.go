@@ -473,6 +473,7 @@ func (h *HighConcurrencyProperties) UnmarshalJSON(data []byte) error {
 func (i InstancePool) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "id", i.ID)
+	populate(objectMap, "maxClustersToHydrateLimit", i.MaxClustersToHydrateLimit)
 	populate(objectMap, "name", i.Name)
 	populate(objectMap, "type", i.Type)
 	return json.Marshal(objectMap)
@@ -489,6 +490,9 @@ func (i *InstancePool) UnmarshalJSON(data []byte) error {
 		switch key {
 		case "id":
 			err = unpopulate(val, "ID", &i.ID)
+			delete(rawMsg, key)
+		case "maxClustersToHydrateLimit":
+			err = unpopulate(val, "MaxClustersToHydrateLimit", &i.MaxClustersToHydrateLimit)
 			delete(rawMsg, key)
 		case "name":
 			err = unpopulate(val, "Name", &i.Name)

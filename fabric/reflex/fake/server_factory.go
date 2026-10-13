@@ -18,15 +18,17 @@ import (
 
 // ServerFactory is a fake server for instances of the reflex.ClientFactory type.
 type ServerFactory struct {
-	ItemsServer ItemsServer
+	ActivationsServer ActivationsServer
+	ItemsServer       ItemsServer
 }
 
 // ServerFactoryTransport connects instances of reflex.ClientFactory to instances of ServerFactory.
 // Don't use this type directly, use NewServerFactoryTransport instead.
 type ServerFactoryTransport struct {
-	srv           *ServerFactory
-	trMu          sync.Mutex
-	trItemsServer *ItemsServerTransport
+	srv                 *ServerFactory
+	trMu                sync.Mutex
+	trActivationsServer *ActivationsServerTransport
+	trItemsServer       *ItemsServerTransport
 }
 
 // NewServerFactoryTransport creates a new instance of ServerFactoryTransport with the provided implementation.
@@ -52,6 +54,9 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	var err error
 
 	switch client {
+	case "ActivationsClient":
+		initServer(s, &s.trActivationsServer, func() *ActivationsServerTransport { return NewActivationsServerTransport(&s.srv.ActivationsServer) })
+		resp, err = s.trActivationsServer.Do(req)
 	case "ItemsClient":
 		initServer(s, &s.trItemsServer, func() *ItemsServerTransport { return NewItemsServerTransport(&s.srv.ItemsServer) })
 		resp, err = s.trItemsServer.Do(req)

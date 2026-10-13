@@ -27,9 +27,8 @@ type BackgroundJobsClient struct {
 	endpoint string
 }
 
-// CreateRefreshMaterializedLakeViewsSchedule - > [!NOTE] This API is part of a Preview release and is provided for evaluation
-// and development purposes only. It may change based on feedback and is not recommended for production use.
-// REQUIRED DELEGATED SCOPES: (Lakehouse.Execute.All or Item.Execute.All) and (Lakehouse.ReadWrite.All or Item.ReadWrite.All)
+// CreateRefreshMaterializedLakeViewsSchedule - PERMISSIONS The caller must have a contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES (Lakehouse.Execute.All or Item.Execute.All) and (Lakehouse.ReadWrite.All or Item.ReadWrite.All)
 // LIMITATIONS
 // * A lakehouse can create maximum 20 schedulers.
 // * Materialized Lake View supports only one active refresh schedule per lineage.
@@ -103,8 +102,7 @@ func (client *BackgroundJobsClient) createRefreshMaterializedLakeViewsScheduleHa
 	return result, nil
 }
 
-// DeleteRefreshMaterializedLakeViewsSchedule - > [!NOTE] This API is part of a Preview release and is provided for evaluation
-// and development purposes only. It may change based on feedback and is not recommended for production use.
+// DeleteRefreshMaterializedLakeViewsSchedule - PERMISSIONS The caller must have a contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Lakehouse.ReadWrite.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -164,11 +162,10 @@ func (client *BackgroundJobsClient) deleteRefreshMaterializedLakeViewsScheduleCr
 	return req, nil
 }
 
-// RunOnDemandRefreshMaterializedLakeViews - > [!NOTE] This API is part of a Preview release and is provided for evaluation
-// and development purposes only. It may change based on feedback and is not recommended for production use.
-// [!NOTE] The URL for this API has been updated to include the job type as part of the path, replacing the previous use of
-// a query parameter. For backward compatibility, invocations using the query
+// RunOnDemandRefreshMaterializedLakeViews - > [!NOTE] The URL for this API has been updated to include the job type as part
+// of the path, replacing the previous use of a query parameter. For backward compatibility, invocations using the query
 // parameter are still supported.
+// PERMISSIONS The caller must have a contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Lakehouse.Execute.All or Item.Execute.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -286,9 +283,8 @@ func (client *BackgroundJobsClient) runOnDemandTableMaintenanceCreateRequest(ctx
 	return req, nil
 }
 
-// UpdateRefreshMaterializedLakeViewsSchedule - > [!NOTE] This API is part of a Preview release and is provided for evaluation
-// and development purposes only. It may change based on feedback and is not recommended for production use.
-// REQUIRED DELEGATED SCOPES: (Lakehouse.Execute.All or Item.Execute.All) and (Lakehouse.ReadWrite.All or Item.ReadWrite.All)
+// UpdateRefreshMaterializedLakeViewsSchedule - PERMISSIONS The caller must have a contributor or higher workspace role.
+// REQUIRED DELEGATED SCOPES (Lakehouse.Execute.All or Item.Execute.All) and (Lakehouse.ReadWrite.All or Item.ReadWrite.All)
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]

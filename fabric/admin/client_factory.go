@@ -79,6 +79,14 @@ func (c *ClientFactory) NewLabelsClient() *LabelsClient {
 	}
 }
 
+// NewPolicySetsClient creates a new instance of PolicySetsClient.
+func (c *ClientFactory) NewPolicySetsClient() *PolicySetsClient {
+	return &PolicySetsClient{
+		internal: c.internal.WithClientName("admin.PolicySetsClient"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewSharingLinksClient creates a new instance of SharingLinksClient.
 func (c *ClientFactory) NewSharingLinksClient() *SharingLinksClient {
 	return &SharingLinksClient{

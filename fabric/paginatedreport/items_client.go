@@ -35,10 +35,6 @@ type ItemsClient struct {
 // article.
 // PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES PaginatedReport.ReadWrite.All or Item.ReadWrite.All
-// LIMITATIONS
-// * Creating a paginated report in a subfolder is not supported. The paginated report is created at the workspace root level.
-// To place a paginated report in a subfolder, use the Update Definition API
-// which supports subfolders.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -61,10 +57,6 @@ func (client *ItemsClient) BeginCreatePaginatedReport(ctx context.Context, works
 // article.
 // PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES PaginatedReport.ReadWrite.All or Item.ReadWrite.All
-// LIMITATIONS
-// * Creating a paginated report in a subfolder is not supported. The paginated report is created at the workspace root level.
-// To place a paginated report in a subfolder, use the Update Definition API
-// which supports subfolders.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -542,11 +534,6 @@ func (client *ItemsClient) updatePaginatedReportDefinitionCreateRequest(ctx cont
 // PERMISSIONS The caller must have a contributor workspace role.
 //
 // # REQUIRED DELEGATED SCOPES PaginatedReport.ReadWrite.All or Item.ReadWrite.All
-//
-// LIMITATIONS
-//
-//   - Creating a paginated report in a subfolder is not supported. The paginated report is created at the workspace root level. To place a paginated report in a subfolder, use the Update Definition API
-//     which supports subfolders.
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

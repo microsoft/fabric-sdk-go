@@ -863,12 +863,76 @@ type BaseSQLServerCDCSourceProperties struct {
 	// The comma-separated list of columns to exclude from capture.
 	ExcludedColumns *string
 
+	// The query executed on the source database when a heartbeat is sent.
+	HeartbeatActionQuery *string
+
+	// The interval in milliseconds between heartbeat messages.
+	HeartbeatIntervalMs *int32
+
 	// Specifies how the initial snapshot of data is taken (for example, initial load, initial only, or no data).
 	SnapshotMode *SnapshotMode
 
 	// The snapshot select statement overrides. Each entry specifies a table and a custom SELECT statement to use for the initial
 	// snapshot.
 	SnapshotSelectStatementOverrides []SnapshotSelectStatementOverrideItem
+
+	// Indicates whether schema history stores data definition language statements only for captured tables.
+	StoreOnlyCapturedTablesDdl *bool
+}
+
+// BusinessEventsDestinationProperties - Represents the Business Events destination properties.
+type BusinessEventsDestinationProperties struct {
+	// REQUIRED; The identifier of the business event type defined by the target Event Schema Set.
+	BusinessEventTypeID *string
+
+	// REQUIRED; The target Event Schema Set item identifier.
+	ItemID *string
+
+	// REQUIRED; The workspace containing the target Event Schema Set item.
+	WorkspaceID *string
+
+	// The serialization applied to incoming destination data.
+	InputSerialization SerializationInfoClassification
+}
+
+// BusinessEventsDestinationResponse - Represents a Business Events destination response.
+type BusinessEventsDestinationResponse struct {
+	// REQUIRED; A list of the references to the input nodes of the destination.
+	InputNodes []NodeReference
+
+	// REQUIRED; The unique name of the destination.
+	Name *string
+
+	// REQUIRED; The properties of the Business Events destination.
+	Properties *BusinessEventsDestinationProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the destination.
+	Type *DestinationType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the destination.
+	ID *string
+
+	// The input schemas of the destination.
+	InputSchemas []InputSchema
+}
+
+// GetDestinationResponse implements the DestinationResponseClassification interface for type BusinessEventsDestinationResponse.
+func (b *BusinessEventsDestinationResponse) GetDestinationResponse() *DestinationResponse {
+	return &DestinationResponse{
+		Error:        b.Error,
+		ID:           b.ID,
+		InputNodes:   b.InputNodes,
+		InputSchemas: b.InputSchemas,
+		Name:         b.Name,
+		Status:       b.Status,
+		Type:         b.Type,
+	}
 }
 
 // CSVSerializationInfo - CSV serialization information.
@@ -919,8 +983,8 @@ func (c *CertificateResource) GetCertificateResource() *CertificateResource { re
 
 // ClientCertificate - Represents the client certificate settings.
 type ClientCertificate struct {
-	// The certificate resource.
-	Certificate CertificateResourceClassification
+	// The client certificate resource.
+	CertificateResource CertificateResourceClassification
 
 	// The TLS certificate revocation mode. Additional modes may be added over time.
 	RevocationMode *TLSRevocationMode
@@ -1007,6 +1071,42 @@ type CreateEventstreamRequest struct {
 	SensitivityLabelSettings *SensitivityLabelSettings
 }
 
+// CriblSourceResponse - Represents a Cribl source response.
+type CriblSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Cribl source.
+	Properties any
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type CriblSourceResponse.
+func (c *CriblSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        c.Error,
+		ID:           c.ID,
+		InputSchemas: c.InputSchemas,
+		Name:         c.Name,
+		Status:       c.Status,
+		Type:         c.Type,
+	}
+}
+
 // CursorPagination - The cursor-based HTTP pagination configuration.
 type CursorPagination struct {
 	// REQUIRED; The JSON Pointer expression to extract the cursor value from the HTTP response body.
@@ -1022,6 +1122,31 @@ type CursorPagination struct {
 // GetHTTPPagination implements the HTTPPaginationClassification interface for type CursorPagination.
 func (c *CursorPagination) GetHTTPPagination() *HTTPPagination {
 	return &HTTPPagination{
+		Type: c.Type,
+	}
+}
+
+// CustomEndpointConnection - Represents a custom endpoint connection.
+type CustomEndpointConnection struct {
+	// REQUIRED; The endpoint connection shape.
+	Type *EndpointConnectionType
+
+	// The access keys.
+	AccessKeys *AccessKeys
+
+	// The consumer group name.
+	ConsumerGroupName *string
+
+	// The name of the Event Hub.
+	EventHubName *string
+
+	// The fully qualified namespace of the Event Hub.
+	FullyQualifiedNamespace *string
+}
+
+// GetEndpointConnection implements the EndpointConnectionClassification interface for type CustomEndpointConnection.
+func (c *CustomEndpointConnection) GetEndpointConnection() *EndpointConnection {
+	return &EndpointConnection{
 		Type: c.Type,
 	}
 }
@@ -1204,21 +1329,6 @@ func (d *DerivedStreamResponse) GetStreamResponse() *StreamResponse {
 	}
 }
 
-// DestinationConnectionResponse - Represents the connection information for an eventstream destination.
-type DestinationConnectionResponse struct {
-	// REQUIRED; The consumer group name.
-	ConsumerGroupName *string
-
-	// REQUIRED; The name of the EventHub.
-	EventHubName *string
-
-	// REQUIRED; The fully qualified namespace of the EventHub.
-	FullyQualifiedNamespace *string
-
-	// The access keys.
-	AccessKeys *AccessKeys
-}
-
 // DestinationResponse - Represents an Eventstream destination response.
 type DestinationResponse struct {
 	// REQUIRED; A list of the references to the input nodes of the destination.
@@ -1245,6 +1355,25 @@ type DestinationResponse struct {
 
 // GetDestinationResponse implements the DestinationResponseClassification interface for type DestinationResponse.
 func (d *DestinationResponse) GetDestinationResponse() *DestinationResponse { return d }
+
+// EndpointAuthentication - The base authentication mechanism for an endpoint connection. The concrete type is indicated by
+// the saslMechanism discriminator.
+type EndpointAuthentication struct {
+	// REQUIRED; The SASL authentication mechanism. Additional authentication mechanisms may be added over time.
+	SaslMechanism *AuthenticationMechanism
+}
+
+// GetEndpointAuthentication implements the EndpointAuthenticationClassification interface for type EndpointAuthentication.
+func (e *EndpointAuthentication) GetEndpointAuthentication() *EndpointAuthentication { return e }
+
+// EndpointConnection - Represents the connection information for an eventstream source or destination endpoint.
+type EndpointConnection struct {
+	// REQUIRED; The endpoint connection shape.
+	Type *EndpointConnectionType
+}
+
+// GetEndpointConnection implements the EndpointConnectionClassification interface for type EndpointConnection.
+func (e *EndpointConnection) GetEndpointConnection() *EndpointConnection { return e }
 
 // EntireTenantPrincipal - Represents a tenant principal
 type EntireTenantPrincipal struct {
@@ -1416,6 +1545,10 @@ type Eventstream struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item's logical identifier. Corresponding item instances share the same logical ID. The value is null when
+	// no logical ID has been assigned.
+	LogicalID *string
+
 	// READ-ONLY; The item sensitivity label.
 	SensitivityLabel *SensitivityLabel
 
@@ -1532,12 +1665,66 @@ func (f *FabricAnomalyDetectionEventsSourceResponse) GetSourceResponse() *Source
 	}
 }
 
+// FabricCapacityOperationEventsSourceProperties - Fabric Capacity Operation Events source properties.
+type FabricCapacityOperationEventsSourceProperties struct {
+	// REQUIRED; The event scope.
+	EventScope *EventScope
+
+	// The capacity identifier.
+	CapacityID *string
+
+	// The Azure Event Grid advanced filters to apply. Each entry is an advanced filter object as defined by Azure Event Grid.
+	// For details, see
+	// https://learn.microsoft.com/azure/event-grid/event-filtering#advanced-filtering.
+	Filters []any
+
+	// The list of event types to include. Supported values: Microsoft.Fabric.Capacity.OperationStarted, Microsoft.Fabric.Capacity.OperationCompleted.
+	// Additional event types may be added over time.
+	IncludedEventTypes []string
+}
+
+// FabricCapacityOperationEventsSourceResponse - Fabric Capacity Operation Events source response.
+type FabricCapacityOperationEventsSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Fabric Capacity Operation Events source.
+	Properties *FabricCapacityOperationEventsSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type FabricCapacityOperationEventsSourceResponse.
+func (f *FabricCapacityOperationEventsSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        f.Error,
+		ID:           f.ID,
+		InputSchemas: f.InputSchemas,
+		Name:         f.Name,
+		Status:       f.Status,
+		Type:         f.Type,
+	}
+}
+
 // FabricCapacityOverviewEventsSourceProperties - Fabric Capacity Overview Events source properties.
 type FabricCapacityOverviewEventsSourceProperties struct {
 	// REQUIRED; The capacity identifier.
 	CapacityID *string
 
-	// REQUIRED
+	// REQUIRED; The event scope.
 	EventScope *EventScope
 
 	// The Azure Event Grid advanced filters to apply. Each entry is an advanced filter object as defined by Azure Event Grid.
@@ -1588,7 +1775,7 @@ func (f *FabricCapacityOverviewEventsSourceResponse) GetSourceResponse() *Source
 
 // FabricJobEventsSourceProperties - Fabric Job Events source properties.
 type FabricJobEventsSourceProperties struct {
-	// REQUIRED
+	// REQUIRED; The event scope.
 	EventScope *EventScope
 
 	// REQUIRED; The item identifier.
@@ -1704,7 +1891,7 @@ func (f *FabricOneLakeEventsSourceResponse) GetSourceResponse() *SourceResponse 
 
 // FabricWorkspaceItemEventsSourceProperties - Fabric Workspace Item Events source properties.
 type FabricWorkspaceItemEventsSourceProperties struct {
-	// REQUIRED
+	// REQUIRED; The event scope.
 	EventScope *EventScope
 
 	// REQUIRED; The workspace identifier.
@@ -2154,6 +2341,31 @@ type JoinOperatorProperties struct {
 	JoinOn []JoinOn
 }
 
+// KafkaEndpointConnection - Represents a Kafka endpoint connection.
+type KafkaEndpointConnection struct {
+	// REQUIRED; The endpoint connection shape.
+	Type *EndpointConnectionType
+
+	// The available authentication mechanisms.
+	Authentications []EndpointAuthenticationClassification
+
+	// The Kafka bootstrap server address, including port.
+	BootstrapServer *string
+
+	// The Kafka security protocol.
+	SecurityProtocol *SecurityProtocol
+
+	// The Kafka topic name.
+	TopicName *string
+}
+
+// GetEndpointConnection implements the EndpointConnectionClassification interface for type KafkaEndpointConnection.
+func (k *KafkaEndpointConnection) GetEndpointConnection() *EndpointConnection {
+	return &EndpointConnection{
+		Type: k.Type,
+	}
+}
+
 type KeyStringValuePair struct {
 	// REQUIRED; The key.
 	Key *string
@@ -2178,6 +2390,55 @@ type KeyVaultCertificateResource struct {
 func (k *KeyVaultCertificateResource) GetCertificateResource() *CertificateResource {
 	return &CertificateResource{
 		Type: k.Type,
+	}
+}
+
+// LakehouseChangeFeedSourceProperties - Represents the Lakehouse Change Feed source properties.
+type LakehouseChangeFeedSourceProperties struct {
+	// REQUIRED; The Lakehouse item identifier.
+	ItemID *string
+
+	// REQUIRED; The list of table names whose changes are consumed. Currently, only ["*"] (all tables) is supported. Specific
+	// table selection will be supported in a future release.
+	TableNames []string
+
+	// REQUIRED; The workspace containing the Lakehouse.
+	WorkspaceID *string
+}
+
+// LakehouseChangeFeedSourceResponse - Represents a Lakehouse Change Feed source response.
+type LakehouseChangeFeedSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Lakehouse Change Feed source.
+	Properties *LakehouseChangeFeedSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type LakehouseChangeFeedSourceResponse.
+func (l *LakehouseChangeFeedSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        l.Error,
+		ID:           l.ID,
+		InputSchemas: l.InputSchemas,
+		Name:         l.Name,
+		Status:       l.Status,
+		Type:         l.Type,
 	}
 }
 
@@ -2534,6 +2795,9 @@ type MySQLCDCSourceProperties struct {
 
 	// Specifies how the initial snapshot of data is taken (for example, initial load, initial only, or no data).
 	SnapshotMode *SnapshotMode
+
+	// Indicates whether schema history stores data definition language statements only for captured tables.
+	StoreOnlyCapturedTablesDdl *bool
 }
 
 // MySQLCDCSourceResponse - MySQL CDC source response.
@@ -2627,6 +2891,22 @@ func (n *NotebookDestinationResponse) GetDestinationResponse() *DestinationRespo
 	}
 }
 
+// OAuthBearerAuthentication - Represents the OAuthBearer SASL authentication mechanism.
+type OAuthBearerAuthentication struct {
+	// REQUIRED; The SASL authentication mechanism. Additional authentication mechanisms may be added over time.
+	SaslMechanism *AuthenticationMechanism
+
+	// REQUIRED; The OAuth scope.
+	Scope *string
+}
+
+// GetEndpointAuthentication implements the EndpointAuthenticationClassification interface for type OAuthBearerAuthentication.
+func (o *OAuthBearerAuthentication) GetEndpointAuthentication() *EndpointAuthentication {
+	return &EndpointAuthentication{
+		SaslMechanism: o.SaslMechanism,
+	}
+}
+
 // Operator - Represents an Eventstream operator.
 type Operator struct {
 	// REQUIRED; A list of the references to the input nodes of the operator.
@@ -2667,6 +2947,9 @@ type OracleDBCDCSourceProperties struct {
 
 	// Specifies the criteria for performing a snapshot when the connector starts.
 	SnapshotMode *SnapshotMode
+
+	// Indicates whether schema history stores data definition language statements only for captured tables.
+	StoreOnlyCapturedTablesDdl *bool
 
 	// The list of fully qualified table names to capture changes from. When not specified, all tables in the database are captured.
 	TableNames []string
@@ -2727,6 +3010,28 @@ func (p *PagePagination) GetHTTPPagination() *HTTPPagination {
 	}
 }
 
+// PlainAuthentication - Represents the Plain SASL authentication mechanism.
+type PlainAuthentication struct {
+	// REQUIRED; The primary connection string.
+	PrimaryConnectionString *string
+
+	// REQUIRED; The SASL authentication mechanism. Additional authentication mechanisms may be added over time.
+	SaslMechanism *AuthenticationMechanism
+
+	// The SASL JAAS configuration string.
+	SaslJaasConfig *string
+
+	// The secondary connection string for key rotation.
+	SecondaryConnectionString *string
+}
+
+// GetEndpointAuthentication implements the EndpointAuthenticationClassification interface for type PlainAuthentication.
+func (p *PlainAuthentication) GetEndpointAuthentication() *EndpointAuthentication {
+	return &EndpointAuthentication{
+		SaslMechanism: p.SaslMechanism,
+	}
+}
+
 // PostgreSQLCDCSourceProperties - PostgreSQL CDC source properties.
 type PostgreSQLCDCSourceProperties struct {
 	// REQUIRED; The SQL CDC data connection identifier.
@@ -2743,6 +3048,9 @@ type PostgreSQLCDCSourceProperties struct {
 
 	// The heartbeat action query. A SQL statement executed periodically to keep the replication slot active.
 	HeartbeatActionQuery *string
+
+	// The interval in milliseconds between heartbeat messages.
+	HeartbeatIntervalMs *int32
 
 	// The port number. Default is 5432.
 	Port *int32
@@ -2857,10 +3165,113 @@ func (r *RealTimeWeatherSourceResponse) GetSourceResponse() *SourceResponse {
 	}
 }
 
+// ReferenceLakehouseSourceProperties - Reference Lakehouse source properties. The schema and table are identified by absoluteOneLakePath;
+// workspaceId and itemId are still required for OneLake authorization and must match the
+// workspaceId/itemId segments embedded in the URL.
+// Note that a Reference Lakehouse source can only be used as input to a Join operator (or to a SQL operator when its reference-input
+// feature is enabled). When joined, the other input must be a streaming
+// source and at least one joinOn key is required, with joinOn.left referencing a streaming column and joinOn.right referencing
+// a reference column; duration is not used and a LeftOuter join preserves the
+// streaming side.
+type ReferenceLakehouseSourceProperties struct {
+	// REQUIRED; Absolute OneLake DFS URL to the delta table, in the form https://onelake.dfs.fabric.microsoft.com/{workspaceId}/{itemId}/Tables/{schema}/{table}.
+	// The schema and table segments identify the reference
+	// table; workspaceId and itemId segments must match the workspaceId and itemId properties.
+	AbsoluteOneLakePath *string
+
+	// The Lakehouse item identifier.
+	ItemID *string
+
+	// The columns to include from the delta table. When omitted, all columns are included.
+	ReferencedColumns []string
+
+	// Refresh rate for the reference data snapshot, as a .NET TimeSpan-formatted string ("hh:mm:ss", e.g. "00:05:00" for 5 minutes).
+	// Must be at least 00:00:00 (static, no refresh) and less than 24 hours.
+	// When omitted, the reference data is treated as static (no refresh). OneLake operations are billed separately, so an explicit
+	// non-zero refresh rate has cost implications.
+	RefreshRate *string
+
+	// The Lakehouse workspace identifier.
+	WorkspaceID *string
+}
+
+// ReferenceLakehouseSourceResponse - Reference Lakehouse source response. Reference data sources provide point-in-time snapshots
+// from a Lakehouse delta table used for enrichment joins.
+type ReferenceLakehouseSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Reference Lakehouse source.
+	Properties *ReferenceLakehouseSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type ReferenceLakehouseSourceResponse.
+func (r *ReferenceLakehouseSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        r.Error,
+		ID:           r.ID,
+		InputSchemas: r.InputSchemas,
+		Name:         r.Name,
+		Status:       r.Status,
+		Type:         r.Type,
+	}
+}
+
 // RenameProperties - Properties for a rename operation.
 type RenameProperties struct {
 	// REQUIRED; Represents a reference to a column.
 	Column *ColumnReferenceExpression
+}
+
+// SAPDatasphereSourceResponse - Represents an SAP Datasphere source response.
+type SAPDatasphereSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the SAP Datasphere source.
+	Properties any
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type SAPDatasphereSourceResponse.
+func (s *SAPDatasphereSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        s.Error,
+		ID:           s.ID,
+		InputSchemas: s.InputSchemas,
+		Name:         s.Name,
+		Status:       s.Status,
+		Type:         s.Type,
+	}
 }
 
 // SQLOperator - SQL operator.
@@ -3173,6 +3584,9 @@ type SolacePubSubQueueSourceProperties struct {
 
 	// Indicates whether to map user properties from Solace message to Kafka record headers.
 	MapUserProperties *bool
+
+	// The TLS and mutual TLS settings for the Solace PubSub connection.
+	TLSSettings *TLSSettings
 }
 
 // GetSolacePubSubSourceProperties implements the SolacePubSubSourcePropertiesClassification interface for type SolacePubSubQueueSourceProperties.
@@ -3183,6 +3597,7 @@ func (s *SolacePubSubQueueSourceProperties) GetSolacePubSubSourceProperties() *S
 		MapUserProperties:   s.MapUserProperties,
 		MessageVPNName:      s.MessageVPNName,
 		PubSubType:          s.PubSubType,
+		TLSSettings:         s.TLSSettings,
 	}
 }
 
@@ -3202,6 +3617,9 @@ type SolacePubSubSourceProperties struct {
 
 	// Indicates whether to map user properties from Solace message to Kafka record headers.
 	MapUserProperties *bool
+
+	// The TLS and mutual TLS settings for the Solace PubSub connection.
+	TLSSettings *TLSSettings
 }
 
 // GetSolacePubSubSourceProperties implements the SolacePubSubSourcePropertiesClassification interface for type SolacePubSubSourceProperties.
@@ -3264,6 +3682,9 @@ type SolacePubSubTopicsSourceProperties struct {
 
 	// Indicates whether to map user properties from Solace message to Kafka record headers.
 	MapUserProperties *bool
+
+	// The TLS and mutual TLS settings for the Solace PubSub connection.
+	TLSSettings *TLSSettings
 }
 
 // GetSolacePubSubSourceProperties implements the SolacePubSubSourcePropertiesClassification interface for type SolacePubSubTopicsSourceProperties.
@@ -3274,19 +3695,8 @@ func (s *SolacePubSubTopicsSourceProperties) GetSolacePubSubSourceProperties() *
 		MapUserProperties:   s.MapUserProperties,
 		MessageVPNName:      s.MessageVPNName,
 		PubSubType:          s.PubSubType,
+		TLSSettings:         s.TLSSettings,
 	}
-}
-
-// SourceConnectionResponse - Represents the connection information for an eventstream source.
-type SourceConnectionResponse struct {
-	// REQUIRED; The name of the EventHub.
-	EventHubName *string
-
-	// REQUIRED; The fully qualified namespace of the EventHub.
-	FullyQualifiedNamespace *string
-
-	// The access keys.
-	AccessKeys *AccessKeys
 }
 
 // SourceResponse - Represents an Eventstream source response.
@@ -3364,8 +3774,8 @@ type TrustCACertificate struct {
 	// the client can connect even if the broker's certificate does not match its hostname.
 	VerifyHostname *bool
 
-	// The certificate resource.
-	Certificate CertificateResourceClassification
+	// The trusted CA certificate resource.
+	CertificateResource CertificateResourceClassification
 
 	// The cipher suites to use for the TLS connection.
 	CipherSuites *string

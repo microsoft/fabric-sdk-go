@@ -51,6 +51,24 @@ func PossibleAggregationFunctionValues() []AggregationFunction {
 	}
 }
 
+// AuthenticationMechanism - The SASL authentication mechanism. Additional authentication mechanisms may be added over time.
+type AuthenticationMechanism string
+
+const (
+	// AuthenticationMechanismOAuthBearer - The OAuthBearer SASL mechanism.
+	AuthenticationMechanismOAuthBearer AuthenticationMechanism = "OAuthBearer"
+	// AuthenticationMechanismPlain - The Plain SASL mechanism.
+	AuthenticationMechanismPlain AuthenticationMechanism = "Plain"
+)
+
+// PossibleAuthenticationMechanismValues returns the possible values for the AuthenticationMechanism const type.
+func PossibleAuthenticationMechanismValues() []AuthenticationMechanism {
+	return []AuthenticationMechanism{
+		AuthenticationMechanismOAuthBearer,
+		AuthenticationMechanismPlain,
+	}
+}
+
 // AutoOffsetReset - The auto offset reset property. Default is None.
 type AutoOffsetReset string
 
@@ -239,6 +257,8 @@ type DestinationType string
 const (
 	// DestinationTypeActivator - The Activator destination type.
 	DestinationTypeActivator DestinationType = "Activator"
+	// DestinationTypeBusinessEvents - The Business Events destination type.
+	DestinationTypeBusinessEvents DestinationType = "BusinessEvents"
 	// DestinationTypeCustomEndpoint - The CustomEndpoint destination type.
 	DestinationTypeCustomEndpoint DestinationType = "CustomEndpoint"
 	// DestinationTypeEventhouse - The Eventhouse destination type.
@@ -253,6 +273,7 @@ const (
 func PossibleDestinationTypeValues() []DestinationType {
 	return []DestinationType{
 		DestinationTypeActivator,
+		DestinationTypeBusinessEvents,
 		DestinationTypeCustomEndpoint,
 		DestinationTypeEventhouse,
 		DestinationTypeLakehouse,
@@ -275,6 +296,25 @@ func PossibleEncodingValues() []Encoding {
 	}
 }
 
+// EndpointConnectionType - The endpoint connection shape. Additional endpoint connection types may be added over time.
+type EndpointConnectionType string
+
+const (
+	// EndpointConnectionTypeCustomEndpoint - The custom endpoint connection shape.
+	EndpointConnectionTypeCustomEndpoint EndpointConnectionType = "CustomEndpoint"
+	// EndpointConnectionTypeKafkaEndpoint - The Kafka endpoint connection shape.
+	EndpointConnectionTypeKafkaEndpoint EndpointConnectionType = "KafkaEndpoint"
+)
+
+// PossibleEndpointConnectionTypeValues returns the possible values for the EndpointConnectionType const type.
+func PossibleEndpointConnectionTypeValues() []EndpointConnectionType {
+	return []EndpointConnectionType{
+		EndpointConnectionTypeCustomEndpoint,
+		EndpointConnectionTypeKafkaEndpoint,
+	}
+}
+
+// EventScope - The event scope.
 type EventScope string
 
 const (
@@ -529,6 +569,8 @@ const (
 	ItemTypePaginatedReport ItemType = "PaginatedReport"
 	// ItemTypePlan - A plan.
 	ItemTypePlan ItemType = "Plan"
+	// ItemTypePolicySet - A PolicySet.
+	ItemTypePolicySet ItemType = "PolicySet"
 	// ItemTypeReflex - A Reflex.
 	ItemTypeReflex ItemType = "Reflex"
 	// ItemTypeReport - PowerBI report.
@@ -596,6 +638,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeOrgAppAudience,
 		ItemTypePaginatedReport,
 		ItemTypePlan,
+		ItemTypePolicySet,
 		ItemTypeReflex,
 		ItemTypeReport,
 		ItemTypeSQLDatabase,
@@ -982,7 +1025,7 @@ func PossibleSaslMechanismValues() []SaslMechanism {
 	}
 }
 
-// SecurityProtocol - The security protocol.
+// SecurityProtocol - The Kafka security protocol.
 type SecurityProtocol string
 
 const (
@@ -1160,10 +1203,14 @@ const (
 	SourceTypeAzureServiceBus SourceType = "AzureServiceBus"
 	// SourceTypeConfluentCloud - The Confluent Cloud source type.
 	SourceTypeConfluentCloud SourceType = "ConfluentCloud"
+	// SourceTypeCribl - The Cribl source type.
+	SourceTypeCribl SourceType = "Cribl"
 	// SourceTypeCustomEndpoint - The Custom Endpoint source type.
 	SourceTypeCustomEndpoint SourceType = "CustomEndpoint"
 	// SourceTypeFabricAnomalyDetectionEvents - The Fabric Anomaly Detection Events source type.
 	SourceTypeFabricAnomalyDetectionEvents SourceType = "FabricAnomalyDetectionEvents"
+	// SourceTypeFabricCapacityOperationEvents - The Fabric Capacity Operation Events source type.
+	SourceTypeFabricCapacityOperationEvents SourceType = "FabricCapacityOperationEvents"
 	// SourceTypeFabricCapacityOverviewEvents - The Fabric Capacity Overview Events source type.
 	SourceTypeFabricCapacityOverviewEvents SourceType = "FabricCapacityOverviewEvents"
 	// SourceTypeFabricJobEvents - The Fabric Job Events source type.
@@ -1176,6 +1223,8 @@ const (
 	SourceTypeGooglePubSub SourceType = "GooglePubSub"
 	// SourceTypeHTTP - The HTTP source type.
 	SourceTypeHTTP SourceType = "Http"
+	// SourceTypeLakehouseChangeFeed - The Lakehouse Change Feed source type.
+	SourceTypeLakehouseChangeFeed SourceType = "LakehouseChangeFeed"
 	// SourceTypeMirroredDatabaseChangeFeed - The Mirrored Database Change Feed source type.
 	SourceTypeMirroredDatabaseChangeFeed SourceType = "MirroredDatabaseChangeFeed"
 	// SourceTypeMongoDBCDC - The MongoDB CDC source type.
@@ -1190,6 +1239,11 @@ const (
 	SourceTypePostgreSQLCDC SourceType = "PostgreSQLCDC"
 	// SourceTypeRealTimeWeather - The Real Time Weather source type.
 	SourceTypeRealTimeWeather SourceType = "RealTimeWeather"
+	// SourceTypeReferenceLakehouse - The Reference Lakehouse source type. Provides a point-in-time snapshot from a Lakehouse
+	// delta table for enrichment joins.
+	SourceTypeReferenceLakehouse SourceType = "ReferenceLakehouse"
+	// SourceTypeSAPDatasphere - The SAP Datasphere source type.
+	SourceTypeSAPDatasphere SourceType = "SAPDatasphere"
 	// SourceTypeSQLServerOnVMDBCDC - The SQL Server on VM DB CDC source type.
 	SourceTypeSQLServerOnVMDBCDC SourceType = "SQLServerOnVMDBCDC"
 	// SourceTypeSampleData - The Sample Data source type.
@@ -1216,14 +1270,17 @@ func PossibleSourceTypeValues() []SourceType {
 		SourceTypeAzureSQLMIDBCDC,
 		SourceTypeAzureServiceBus,
 		SourceTypeConfluentCloud,
+		SourceTypeCribl,
 		SourceTypeCustomEndpoint,
 		SourceTypeFabricAnomalyDetectionEvents,
+		SourceTypeFabricCapacityOperationEvents,
 		SourceTypeFabricCapacityOverviewEvents,
 		SourceTypeFabricJobEvents,
 		SourceTypeFabricOneLakeEvents,
 		SourceTypeFabricWorkspaceItemEvents,
 		SourceTypeGooglePubSub,
 		SourceTypeHTTP,
+		SourceTypeLakehouseChangeFeed,
 		SourceTypeMirroredDatabaseChangeFeed,
 		SourceTypeMongoDBCDC,
 		SourceTypeMqtt,
@@ -1231,6 +1288,8 @@ func PossibleSourceTypeValues() []SourceType {
 		SourceTypeOracleDBCDC,
 		SourceTypePostgreSQLCDC,
 		SourceTypeRealTimeWeather,
+		SourceTypeReferenceLakehouse,
+		SourceTypeSAPDatasphere,
 		SourceTypeSQLServerOnVMDBCDC,
 		SourceTypeSampleData,
 		SourceTypeSolacePubSub,

@@ -16,6 +16,9 @@ type CreatePaginatedReportRequest struct {
 
 	// The paginated report description. Maximum length is 256 characters.
 	Description *string
+
+	// The folder ID. If not specified or null, the paginated report is created with the workspace as its folder.
+	FolderID *string
 }
 
 // Definition - Paginated report public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/paginatedreport-definition]
@@ -129,6 +132,10 @@ type PaginatedReport struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; The item's logical identifier. Corresponding item instances share the same logical ID. The value is null when
+	// no logical ID has been assigned.
+	LogicalID *string
 
 	// READ-ONLY; The item sensitivity label.
 	SensitivityLabel *SensitivityLabel

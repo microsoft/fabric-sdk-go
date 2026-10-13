@@ -21,6 +21,7 @@ type ServerFactory struct {
 	BackgroundJobsServer BackgroundJobsServer
 	ItemsServer          ItemsServer
 	QueryExecutionServer QueryExecutionServer
+	UpgradeServer        UpgradeServer
 }
 
 // ServerFactoryTransport connects instances of dataflow.ClientFactory to instances of ServerFactory.
@@ -31,6 +32,7 @@ type ServerFactoryTransport struct {
 	trBackgroundJobsServer *BackgroundJobsServerTransport
 	trItemsServer          *ItemsServerTransport
 	trQueryExecutionServer *QueryExecutionServerTransport
+	trUpgradeServer        *UpgradeServerTransport
 }
 
 // NewServerFactoryTransport creates a new instance of ServerFactoryTransport with the provided implementation.
@@ -69,6 +71,9 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return NewQueryExecutionServerTransport(&s.srv.QueryExecutionServer)
 		})
 		resp, err = s.trQueryExecutionServer.Do(req)
+	case "UpgradeClient":
+		initServer(s, &s.trUpgradeServer, func() *UpgradeServerTransport { return NewUpgradeServerTransport(&s.srv.UpgradeServer) })
+		resp, err = s.trUpgradeServer.Do(req)
 	default:
 		err = fmt.Errorf("unhandled client %s", client)
 	}

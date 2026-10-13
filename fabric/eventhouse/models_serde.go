@@ -224,6 +224,7 @@ func (e Eventhouse) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", e.DisplayName)
 	populate(objectMap, "folderId", e.FolderID)
 	populate(objectMap, "id", e.ID)
+	populate(objectMap, "logicalId", e.LogicalID)
 	populate(objectMap, "properties", e.Properties)
 	populate(objectMap, "sensitivityLabel", e.SensitivityLabel)
 	populate(objectMap, "tags", e.Tags)
@@ -255,6 +256,9 @@ func (e *Eventhouse) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &e.ID)
+			delete(rawMsg, key)
+		case "logicalId":
+			err = unpopulate(val, "LogicalID", &e.LogicalID)
 			delete(rawMsg, key)
 		case "properties":
 			err = unpopulate(val, "Properties", &e.Properties)

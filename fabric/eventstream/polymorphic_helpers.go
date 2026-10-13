@@ -41,6 +41,8 @@ func unmarshalDestinationResponseClassification(rawMsg json.RawMessage) (Destina
 	switch m["type"] {
 	case string(DestinationTypeActivator):
 		b = &ActivatorDestinationResponse{}
+	case string(DestinationTypeBusinessEvents):
+		b = &BusinessEventsDestinationResponse{}
 	case string(DestinationTypeCustomEndpoint):
 		b = &CustomEndpointDestinationResponse{}
 	case string(DestinationTypeEventhouse):
@@ -75,6 +77,71 @@ func unmarshalDestinationResponseClassificationArray(rawMsg json.RawMessage) ([]
 		fArray[index] = f
 	}
 	return fArray, nil
+}
+
+func unmarshalEndpointAuthenticationClassification(rawMsg json.RawMessage) (EndpointAuthenticationClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b EndpointAuthenticationClassification
+	switch m["saslMechanism"] {
+	case string(AuthenticationMechanismOAuthBearer):
+		b = &OAuthBearerAuthentication{}
+	case string(AuthenticationMechanismPlain):
+		b = &PlainAuthentication{}
+	default:
+		b = &EndpointAuthentication{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalEndpointAuthenticationClassificationArray(rawMsg json.RawMessage) ([]EndpointAuthenticationClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var rawMessages []json.RawMessage
+	if err := json.Unmarshal(rawMsg, &rawMessages); err != nil {
+		return nil, err
+	}
+	fArray := make([]EndpointAuthenticationClassification, len(rawMessages))
+	for index, rawMessage := range rawMessages {
+		f, err := unmarshalEndpointAuthenticationClassification(rawMessage)
+		if err != nil {
+			return nil, err
+		}
+		fArray[index] = f
+	}
+	return fArray, nil
+}
+
+func unmarshalEndpointConnectionClassification(rawMsg json.RawMessage) (EndpointConnectionClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b EndpointConnectionClassification
+	switch m["type"] {
+	case string(EndpointConnectionTypeCustomEndpoint):
+		b = &CustomEndpointConnection{}
+	case string(EndpointConnectionTypeKafkaEndpoint):
+		b = &KafkaEndpointConnection{}
+	default:
+		b = &EndpointConnection{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
 }
 
 func unmarshalEventhouseDestinationPropertiesClassification(rawMsg json.RawMessage) (EventhouseDestinationPropertiesClassification, error) {
@@ -367,10 +434,14 @@ func unmarshalSourceResponseClassification(rawMsg json.RawMessage) (SourceRespon
 		b = &AzureServiceBusSourceResponse{}
 	case string(SourceTypeConfluentCloud):
 		b = &ConfluentCloudSourceResponse{}
+	case string(SourceTypeCribl):
+		b = &CriblSourceResponse{}
 	case string(SourceTypeCustomEndpoint):
 		b = &CustomEndpointSourceResponse{}
 	case string(SourceTypeFabricAnomalyDetectionEvents):
 		b = &FabricAnomalyDetectionEventsSourceResponse{}
+	case string(SourceTypeFabricCapacityOperationEvents):
+		b = &FabricCapacityOperationEventsSourceResponse{}
 	case string(SourceTypeFabricCapacityOverviewEvents):
 		b = &FabricCapacityOverviewEventsSourceResponse{}
 	case string(SourceTypeFabricJobEvents):
@@ -383,6 +454,8 @@ func unmarshalSourceResponseClassification(rawMsg json.RawMessage) (SourceRespon
 		b = &GooglePubSubSourceResponse{}
 	case string(SourceTypeHTTP):
 		b = &HTTPSourceResponse{}
+	case string(SourceTypeLakehouseChangeFeed):
+		b = &LakehouseChangeFeedSourceResponse{}
 	case string(SourceTypeMirroredDatabaseChangeFeed):
 		b = &MirroredDatabaseChangeFeedSourceResponse{}
 	case string(SourceTypeMongoDBCDC):
@@ -397,6 +470,10 @@ func unmarshalSourceResponseClassification(rawMsg json.RawMessage) (SourceRespon
 		b = &PostgreSQLCDCSourceResponse{}
 	case string(SourceTypeRealTimeWeather):
 		b = &RealTimeWeatherSourceResponse{}
+	case string(SourceTypeReferenceLakehouse):
+		b = &ReferenceLakehouseSourceResponse{}
+	case string(SourceTypeSAPDatasphere):
+		b = &SAPDatasphereSourceResponse{}
 	case string(SourceTypeSQLServerOnVMDBCDC):
 		b = &SQLServerOnVMDBCDCSourceResponse{}
 	case string(SourceTypeSampleData):

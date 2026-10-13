@@ -197,6 +197,7 @@ func (m Map) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", m.DisplayName)
 	populate(objectMap, "folderId", m.FolderID)
 	populate(objectMap, "id", m.ID)
+	populate(objectMap, "logicalId", m.LogicalID)
 	populate(objectMap, "sensitivityLabel", m.SensitivityLabel)
 	populate(objectMap, "tags", m.Tags)
 	populate(objectMap, "type", m.Type)
@@ -227,6 +228,9 @@ func (m *Map) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &m.ID)
+			delete(rawMsg, key)
+		case "logicalId":
+			err = unpopulate(val, "LogicalID", &m.LogicalID)
 			delete(rawMsg, key)
 		case "sensitivityLabel":
 			err = unpopulate(val, "SensitivityLabel", &m.SensitivityLabel)

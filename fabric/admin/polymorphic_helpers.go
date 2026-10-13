@@ -75,6 +75,88 @@ func unmarshalBaseWorkloadAssignmentClassificationArray(rawMsg json.RawMessage) 
 	return fArray, nil
 }
 
+func unmarshalConditionClassification(rawMsg json.RawMessage) (ConditionClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b ConditionClassification
+	switch m["type"] {
+	case string(ConditionTypeDynamic):
+		b = &DynamicCondition{}
+	case string(ConditionTypeStatic):
+		b = &StaticCondition{}
+	default:
+		b = &Condition{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalConditionClassificationArray(rawMsg json.RawMessage) ([]ConditionClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var rawMessages []json.RawMessage
+	if err := json.Unmarshal(rawMsg, &rawMessages); err != nil {
+		return nil, err
+	}
+	fArray := make([]ConditionClassification, len(rawMessages))
+	for index, rawMessage := range rawMessages {
+		f, err := unmarshalConditionClassification(rawMessage)
+		if err != nil {
+			return nil, err
+		}
+		fArray[index] = f
+	}
+	return fArray, nil
+}
+
+func unmarshalEffectClassification(rawMsg json.RawMessage) (EffectClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b EffectClassification
+	switch m["type"] {
+	case string(EffectTypeAllow):
+		b = &AllowEffect{}
+	default:
+		b = &Effect{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalEffectClassificationArray(rawMsg json.RawMessage) ([]EffectClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var rawMessages []json.RawMessage
+	if err := json.Unmarshal(rawMsg, &rawMessages); err != nil {
+		return nil, err
+	}
+	fArray := make([]EffectClassification, len(rawMessages))
+	for index, rawMessage := range rawMessages {
+		f, err := unmarshalEffectClassification(rawMessage)
+		if err != nil {
+			return nil, err
+		}
+		fArray[index] = f
+	}
+	return fArray, nil
+}
+
 func unmarshalGitProviderDetailsClassification(rawMsg json.RawMessage) (GitProviderDetailsClassification, error) {
 	if rawMsg == nil || string(rawMsg) == "null" {
 		return nil, nil
@@ -91,6 +173,29 @@ func unmarshalGitProviderDetailsClassification(rawMsg json.RawMessage) (GitProvi
 		b = &GitHubDetails{}
 	default:
 		b = &GitProviderDetails{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalPredicateClassification(rawMsg json.RawMessage) (PredicateClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b PredicateClassification
+	switch m["operator"] {
+	case string(OperatorTypeAnyOf):
+		b = &AnyOfPredicate{}
+	case string(OperatorTypeNoneOf):
+		b = &NoneOfPredicate{}
+	default:
+		b = &Predicate{}
 	}
 	if err := json.Unmarshal(rawMsg, b); err != nil {
 		return nil, err

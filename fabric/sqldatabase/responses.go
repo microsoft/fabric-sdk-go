@@ -46,15 +46,15 @@ type ItemsClientRevalidateCMKResponse struct {
 	// placeholder for future response values
 }
 
+// ItemsClientUpdateSQLDatabaseDefinitionResponse contains the response from method ItemsClient.BeginUpdateSQLDatabaseDefinition.
+type ItemsClientUpdateSQLDatabaseDefinitionResponse struct {
+	// placeholder for future response values
+}
+
 // ItemsClientUpdateSQLDatabaseResponse contains the response from method ItemsClient.UpdateSQLDatabase.
 type ItemsClientUpdateSQLDatabaseResponse struct {
 	// A SQL database object.
 	SQLDatabase
-}
-
-// ItemsClientUpdateSQLDatabasesDefinitionResponse contains the response from method ItemsClient.BeginUpdateSQLDatabasesDefinition.
-type ItemsClientUpdateSQLDatabasesDefinitionResponse struct {
-	// placeholder for future response values
 }
 
 // MirroringClientStartMirroringResponse contains the response from method MirroringClient.StartMirroring.

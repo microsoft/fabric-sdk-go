@@ -6,6 +6,12 @@
 
 package reflex
 
+// ActivationsClientQueryActivationsResponse contains the response from method ActivationsClient.QueryActivations.
+type ActivationsClientQueryActivationsResponse struct {
+	// Query activations response. Contains one result table per statement in the query, in source-text order.
+	QueryActivationsResponse
+}
+
 // ItemsClientCreateReflexResponse contains the response from method ItemsClient.BeginCreateReflex.
 type ItemsClientCreateReflexResponse struct {
 	// A Reflex object.

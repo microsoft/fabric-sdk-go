@@ -29,6 +29,10 @@ type OneLakeSettingsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetSettings func(ctx context.Context, workspaceID string, options *core.OneLakeSettingsClientGetSettingsOptions) (resp azfake.Responder[core.OneLakeSettingsClientGetSettingsResponse], errResp azfake.ErrorResponder)
 
+	// ModifyAccessTimeTracking is the fake for method OneLakeSettingsClient.ModifyAccessTimeTracking
+	// HTTP status codes to indicate success: http.StatusOK
+	ModifyAccessTimeTracking func(ctx context.Context, workspaceID string, modifyAccessTimeTrackingRequest core.ModifyAccessTimeTrackingRequest, options *core.OneLakeSettingsClientModifyAccessTimeTrackingOptions) (resp azfake.Responder[core.OneLakeSettingsClientModifyAccessTimeTrackingResponse], errResp azfake.ErrorResponder)
+
 	// ModifyDefaultTier is the fake for method OneLakeSettingsClient.ModifyDefaultTier
 	// HTTP status codes to indicate success: http.StatusOK
 	ModifyDefaultTier func(ctx context.Context, workspaceID string, defaultTier core.OneLakeAccessTier, options *core.OneLakeSettingsClientModifyDefaultTierOptions) (resp azfake.Responder[core.OneLakeSettingsClientModifyDefaultTierResponse], errResp azfake.ErrorResponder)
@@ -86,6 +90,8 @@ func (o *OneLakeSettingsServerTransport) dispatchToMethodFake(req *http.Request,
 			switch method {
 			case "OneLakeSettingsClient.GetSettings":
 				res.resp, res.err = o.dispatchGetSettings(req)
+			case "OneLakeSettingsClient.ModifyAccessTimeTracking":
+				res.resp, res.err = o.dispatchModifyAccessTimeTracking(req)
 			case "OneLakeSettingsClient.ModifyDefaultTier":
 				res.resp, res.err = o.dispatchModifyDefaultTier(req)
 			case "OneLakeSettingsClient.BeginModifyDiagnostics":
@@ -134,6 +140,39 @@ func (o *OneLakeSettingsServerTransport) dispatchGetSettings(req *http.Request) 
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
 	}
 	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).GetOneLakeSettingsResponse, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (o *OneLakeSettingsServerTransport) dispatchModifyAccessTimeTracking(req *http.Request) (*http.Response, error) {
+	if o.srv.ModifyAccessTimeTracking == nil {
+		return nil, &nonRetriableError{errors.New("fake for method ModifyAccessTimeTracking not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/onelake/settings/modifyAccessTimeTracking`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.ModifyAccessTimeTrackingRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := o.srv.ModifyAccessTimeTracking(req.Context(), workspaceIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
 	if err != nil {
 		return nil, err
 	}

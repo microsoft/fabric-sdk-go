@@ -123,6 +123,7 @@ func (g GraphQuerySet) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", g.DisplayName)
 	populate(objectMap, "folderId", g.FolderID)
 	populate(objectMap, "id", g.ID)
+	populate(objectMap, "logicalId", g.LogicalID)
 	populate(objectMap, "sensitivityLabel", g.SensitivityLabel)
 	populate(objectMap, "tags", g.Tags)
 	populate(objectMap, "type", g.Type)
@@ -153,6 +154,9 @@ func (g *GraphQuerySet) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &g.ID)
+			delete(rawMsg, key)
+		case "logicalId":
+			err = unpopulate(val, "LogicalID", &g.LogicalID)
 			delete(rawMsg, key)
 		case "sensitivityLabel":
 			err = unpopulate(val, "SensitivityLabel", &g.SensitivityLabel)

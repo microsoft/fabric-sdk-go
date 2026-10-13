@@ -22,6 +22,7 @@ type ServerFactory struct {
 	ExternalDataSharesProviderServer ExternalDataSharesProviderServer
 	ItemsServer                      ItemsServer
 	LabelsServer                     LabelsServer
+	PolicySetsServer                 PolicySetsServer
 	SharingLinksServer               SharingLinksServer
 	TagsServer                       TagsServer
 	TenantsServer                    TenantsServer
@@ -39,6 +40,7 @@ type ServerFactoryTransport struct {
 	trExternalDataSharesProviderServer *ExternalDataSharesProviderServerTransport
 	trItemsServer                      *ItemsServerTransport
 	trLabelsServer                     *LabelsServerTransport
+	trPolicySetsServer                 *PolicySetsServerTransport
 	trSharingLinksServer               *SharingLinksServerTransport
 	trTagsServer                       *TagsServerTransport
 	trTenantsServer                    *TenantsServerTransport
@@ -84,6 +86,9 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	case "LabelsClient":
 		initServer(s, &s.trLabelsServer, func() *LabelsServerTransport { return NewLabelsServerTransport(&s.srv.LabelsServer) })
 		resp, err = s.trLabelsServer.Do(req)
+	case "PolicySetsClient":
+		initServer(s, &s.trPolicySetsServer, func() *PolicySetsServerTransport { return NewPolicySetsServerTransport(&s.srv.PolicySetsServer) })
+		resp, err = s.trPolicySetsServer.Do(req)
 	case "SharingLinksClient":
 		initServer(s, &s.trSharingLinksServer, func() *SharingLinksServerTransport { return NewSharingLinksServerTransport(&s.srv.SharingLinksServer) })
 		resp, err = s.trSharingLinksServer.Do(req)

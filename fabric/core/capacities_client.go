@@ -86,6 +86,68 @@ func (client *CapacitiesClient) getCapacityHandleResponse(resp *http.Response) (
 	return result, nil
 }
 
+// GetOverageConfiguration - > [!NOTE] Capacity overage configuration is currently in Preview.
+// PERMISSIONS The caller must have admin permissions on the capacity.
+// REQUIRED DELEGATED SCOPES Capacity.Read.All or Capacity.ReadWrite.All
+// LIMITATIONS None.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - options - CapacitiesClientGetOverageConfigurationOptions contains the optional parameters for the CapacitiesClient.GetOverageConfiguration
+//     method.
+func (client *CapacitiesClient) GetOverageConfiguration(ctx context.Context, capacityID string, options *CapacitiesClientGetOverageConfigurationOptions) (CapacitiesClientGetOverageConfigurationResponse, error) {
+	var err error
+	const operationName = "core.CapacitiesClient.GetOverageConfiguration"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getOverageConfigurationCreateRequest(ctx, capacityID, options)
+	if err != nil {
+		return CapacitiesClientGetOverageConfigurationResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return CapacitiesClientGetOverageConfigurationResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return CapacitiesClientGetOverageConfigurationResponse{}, err
+	}
+	resp, err := client.getOverageConfigurationHandleResponse(httpResp)
+	return resp, err
+}
+
+// getOverageConfigurationCreateRequest creates the GetOverageConfiguration request.
+func (client *CapacitiesClient) getOverageConfigurationCreateRequest(ctx context.Context, capacityID string, _ *CapacitiesClientGetOverageConfigurationOptions) (*policy.Request, error) {
+	urlPath := "/v1/capacities/{capacityId}/overageConfiguration"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getOverageConfigurationHandleResponse handles the GetOverageConfiguration response.
+func (client *CapacitiesClient) getOverageConfigurationHandleResponse(resp *http.Response) (CapacitiesClientGetOverageConfigurationResponse, error) {
+	result := CapacitiesClientGetOverageConfigurationResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.CapacityOverageConfiguration); err != nil {
+		return CapacitiesClientGetOverageConfigurationResponse{}, err
+	}
+	return result, nil
+}
+
 // NewListCapacitiesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // REQUIRED DELEGATED SCOPES Capacity.Read.All or Capacity.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -142,6 +204,72 @@ func (client *CapacitiesClient) listCapacitiesHandleResponse(resp *http.Response
 	result := CapacitiesClientListCapacitiesResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.Capacities); err != nil {
 		return CapacitiesClientListCapacitiesResponse{}, err
+	}
+	return result, nil
+}
+
+// UpdateOverageConfiguration - > [!NOTE] Capacity overage configuration is currently in Preview.
+// PERMISSIONS The caller must have admin permissions on the capacity.
+// REQUIRED DELEGATED SCOPES Capacity.ReadWrite.All
+// LIMITATIONS None.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - updateOverageConfigurationRequest - The update overage configuration request payload.
+//   - options - CapacitiesClientUpdateOverageConfigurationOptions contains the optional parameters for the CapacitiesClient.UpdateOverageConfiguration
+//     method.
+func (client *CapacitiesClient) UpdateOverageConfiguration(ctx context.Context, capacityID string, updateOverageConfigurationRequest UpdateCapacityOverageConfigurationRequest, options *CapacitiesClientUpdateOverageConfigurationOptions) (CapacitiesClientUpdateOverageConfigurationResponse, error) {
+	var err error
+	const operationName = "core.CapacitiesClient.UpdateOverageConfiguration"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateOverageConfigurationCreateRequest(ctx, capacityID, updateOverageConfigurationRequest, options)
+	if err != nil {
+		return CapacitiesClientUpdateOverageConfigurationResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return CapacitiesClientUpdateOverageConfigurationResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return CapacitiesClientUpdateOverageConfigurationResponse{}, err
+	}
+	resp, err := client.updateOverageConfigurationHandleResponse(httpResp)
+	return resp, err
+}
+
+// updateOverageConfigurationCreateRequest creates the UpdateOverageConfiguration request.
+func (client *CapacitiesClient) updateOverageConfigurationCreateRequest(ctx context.Context, capacityID string, updateOverageConfigurationRequest UpdateCapacityOverageConfigurationRequest, _ *CapacitiesClientUpdateOverageConfigurationOptions) (*policy.Request, error) {
+	urlPath := "/v1/capacities/{capacityId}/overageConfiguration"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateOverageConfigurationRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// updateOverageConfigurationHandleResponse handles the UpdateOverageConfiguration response.
+func (client *CapacitiesClient) updateOverageConfigurationHandleResponse(resp *http.Response) (CapacitiesClientUpdateOverageConfigurationResponse, error) {
+	result := CapacitiesClientUpdateOverageConfigurationResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.CapacityOverageConfiguration); err != nil {
+		return CapacitiesClientUpdateOverageConfigurationResponse{}, err
 	}
 	return result, nil
 }

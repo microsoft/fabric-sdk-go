@@ -1,6 +1,6 @@
 module github.com/microsoft/fabric-sdk-go
 
-go 1.25.12
+go 1.26.0
 
 require (
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.23.2
@@ -16,12 +16,9 @@ require (
 	github.com/kylelemons/godebug v1.1.0 // indirect
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c // indirect
 	go.yaml.in/yaml/v3 v3.0.5 // indirect
+	golang.org/x/crypto v0.55.0 // indirect
 	golang.org/x/net v0.58.0 // indirect
 	golang.org/x/sync v0.22.0 // indirect
 	golang.org/x/sys v0.47.0 // indirect
 	golang.org/x/text v0.41.0 // indirect
 )
-
-// Pin transitive dependency above azidentity's requirement to pull in the CVE fix.
-// Remove once a direct dependency requires x/crypto >= v0.54.0 on its own.
-require golang.org/x/crypto v0.55.0 // indirect

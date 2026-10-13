@@ -48,8 +48,8 @@ type ItemsClientUpdateEventstreamResponse struct {
 
 // TopologyClientGetEventstreamDestinationConnectionResponse contains the response from method TopologyClient.GetEventstreamDestinationConnection.
 type TopologyClientGetEventstreamDestinationConnectionResponse struct {
-	// Represents the connection information for an eventstream destination.
-	DestinationConnectionResponse
+	// Represents the connection information for an eventstream source or destination endpoint.
+	EndpointConnectionClassification
 }
 
 // TopologyClientGetEventstreamDestinationResponse contains the response from method TopologyClient.GetEventstreamDestination.
@@ -60,8 +60,8 @@ type TopologyClientGetEventstreamDestinationResponse struct {
 
 // TopologyClientGetEventstreamSourceConnectionResponse contains the response from method TopologyClient.GetEventstreamSourceConnection.
 type TopologyClientGetEventstreamSourceConnectionResponse struct {
-	// Represents the connection information for an eventstream source.
-	SourceConnectionResponse
+	// Represents the connection information for an eventstream source or destination endpoint.
+	EndpointConnectionClassification
 }
 
 // TopologyClientGetEventstreamSourceResponse contains the response from method TopologyClient.GetEventstreamSource.

@@ -89,6 +89,63 @@ func (client *OneLakeSettingsClient) getSettingsHandleResponse(resp *http.Respon
 	return result, nil
 }
 
+// ModifyAccessTimeTracking - Enables or disables Azure Storage LastAccessTime tracking for OneLake files in the workspace.
+// When enabled, file reads and writes update the file's last access timestamp; metadata-only operations,
+// such as checking properties, metadata, or tags, do not. Changes take effect immediately.
+// PERMISSIONS The caller must have an admin workspace role.
+// REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - modifyAccessTimeTrackingRequest - The modify access time tracking request object.
+//   - options - OneLakeSettingsClientModifyAccessTimeTrackingOptions contains the optional parameters for the OneLakeSettingsClient.ModifyAccessTimeTracking
+//     method.
+func (client *OneLakeSettingsClient) ModifyAccessTimeTracking(ctx context.Context, workspaceID string, modifyAccessTimeTrackingRequest ModifyAccessTimeTrackingRequest, options *OneLakeSettingsClientModifyAccessTimeTrackingOptions) (OneLakeSettingsClientModifyAccessTimeTrackingResponse, error) {
+	var err error
+	const operationName = "core.OneLakeSettingsClient.ModifyAccessTimeTracking"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.modifyAccessTimeTrackingCreateRequest(ctx, workspaceID, modifyAccessTimeTrackingRequest, options)
+	if err != nil {
+		return OneLakeSettingsClientModifyAccessTimeTrackingResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return OneLakeSettingsClientModifyAccessTimeTrackingResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return OneLakeSettingsClientModifyAccessTimeTrackingResponse{}, err
+	}
+	return OneLakeSettingsClientModifyAccessTimeTrackingResponse{}, nil
+}
+
+// modifyAccessTimeTrackingCreateRequest creates the ModifyAccessTimeTracking request.
+func (client *OneLakeSettingsClient) modifyAccessTimeTrackingCreateRequest(ctx context.Context, workspaceID string, modifyAccessTimeTrackingRequest ModifyAccessTimeTrackingRequest, _ *OneLakeSettingsClientModifyAccessTimeTrackingOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/onelake/settings/modifyAccessTimeTracking"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, modifyAccessTimeTrackingRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // ModifyDefaultTier - All files without an explicitly set tier will be moved to the new default tier. You will be billed
 // for any transactions resulting from movement between tiers.
 // PERMISSIONS The caller must have an admin workspace role.

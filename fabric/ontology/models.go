@@ -134,6 +134,9 @@ type Ontology struct {
 	// The item display name.
 	DisplayName *string
 
+	// The ontology properties.
+	Properties *Properties
+
 	// READ-ONLY; The item's default identity.
 	DefaultIdentity PrincipalClassification
 
@@ -142,6 +145,10 @@ type Ontology struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; The item's logical identifier. Corresponding item instances share the same logical ID. The value is null when
+	// no logical ID has been assigned.
+	LogicalID *string
 
 	// READ-ONLY; The item sensitivity label.
 	SensitivityLabel *SensitivityLabel
@@ -167,6 +174,13 @@ type Principal struct {
 
 // GetPrincipal implements the PrincipalClassification interface for type Principal.
 func (p *Principal) GetPrincipal() *Principal { return p }
+
+// Properties - The properties of an ontology item.
+type Properties struct {
+	// READ-ONLY; The resolved ontology generation (1 or 2). The value reflects the generation created, regardless of creation
+	// mode.
+	Generation *int32
+}
 
 // SensitivityLabel - Represents a sensitivity label applied to an item.
 type SensitivityLabel struct {

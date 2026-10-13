@@ -37,6 +37,7 @@ type ServerFactory struct {
 	OneLakeSettingsServer             OneLakeSettingsServer
 	OneLakeShortcutsServer            OneLakeShortcutsServer
 	RecoverableItemsServer            RecoverableItemsServer
+	SurgeProtectionServer             SurgeProtectionServer
 	TagsServer                        TagsServer
 	WorkspacesServer                  WorkspacesServer
 }
@@ -65,6 +66,7 @@ type ServerFactoryTransport struct {
 	trOneLakeSettingsServer             *OneLakeSettingsServerTransport
 	trOneLakeShortcutsServer            *OneLakeShortcutsServerTransport
 	trRecoverableItemsServer            *RecoverableItemsServerTransport
+	trSurgeProtectionServer             *SurgeProtectionServerTransport
 	trTagsServer                        *TagsServerTransport
 	trWorkspacesServer                  *WorkspacesServerTransport
 }
@@ -169,6 +171,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return NewRecoverableItemsServerTransport(&s.srv.RecoverableItemsServer)
 		})
 		resp, err = s.trRecoverableItemsServer.Do(req)
+	case "SurgeProtectionClient":
+		initServer(s, &s.trSurgeProtectionServer, func() *SurgeProtectionServerTransport {
+			return NewSurgeProtectionServerTransport(&s.srv.SurgeProtectionServer)
+		})
+		resp, err = s.trSurgeProtectionServer.Do(req)
 	case "TagsClient":
 		initServer(s, &s.trTagsServer, func() *TagsServerTransport { return NewTagsServerTransport(&s.srv.TagsServer) })
 		resp, err = s.trTagsServer.Do(req)

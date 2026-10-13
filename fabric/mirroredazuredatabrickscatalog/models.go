@@ -69,7 +69,7 @@ type DatabricksCatalogs struct {
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
 
-	// READ-ONLY; Error is set if unable to fetch catalogs
+	// Error is set if unable to fetch catalogs
 	Error *ErrorResponse
 }
 
@@ -96,7 +96,7 @@ type DatabricksSchemas struct {
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
 
-	// READ-ONLY; Error is set if unable to fetch schemas
+	// Error is set if unable to fetch schemas
 	Error *ErrorResponse
 }
 
@@ -129,7 +129,7 @@ type DatabricksTables struct {
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
 
-	// READ-ONLY; Error is set if unable to fetch tables
+	// Error is set if unable to fetch tables
 	Error *ErrorResponse
 }
 
@@ -174,6 +174,18 @@ type ErrorInfo struct {
 	ErrorDetails *string
 }
 
+// ErrorParameter - A structured parameter providing additional machine-readable context about an error.
+type ErrorParameter struct {
+	// READ-ONLY; A human-readable description of the parameter's meaning.
+	Message *string
+
+	// READ-ONLY; The parameter identifier.
+	Name *string
+
+	// READ-ONLY; The parameter value.
+	Value *string
+}
+
 // ErrorRelatedResource - The error related resource details object.
 type ErrorRelatedResource struct {
 	// READ-ONLY; The resource ID that's involved in the error.
@@ -198,6 +210,9 @@ type ErrorResponse struct {
 	// READ-ONLY; List of additional error details.
 	MoreDetails []ErrorResponseDetails
 
+	// READ-ONLY; Structured parameters providing additional machine-readable context about the error.
+	Parameters []ErrorParameter
+
 	// READ-ONLY; The error related resource details.
 	RelatedResource *ErrorRelatedResource
 
@@ -213,6 +228,9 @@ type ErrorResponseDetails struct {
 
 	// READ-ONLY; A human readable representation of the error.
 	Message *string
+
+	// READ-ONLY; Structured parameters providing additional machine-readable context about the error.
+	Parameters []ErrorParameter
 
 	// READ-ONLY; The error related resource details.
 	RelatedResource *ErrorRelatedResource
@@ -279,6 +297,10 @@ type MirroredAzureDatabricksCatalog struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; The item's logical identifier. Corresponding item instances share the same logical ID. The value is null when
+	// no logical ID has been assigned.
+	LogicalID *string
 
 	// READ-ONLY; The item sensitivity label.
 	SensitivityLabel *SensitivityLabel

@@ -67,6 +67,22 @@ func (c *CustomLibrary) GetLibrary() *Library {
 	}
 }
 
+// CustomLivePoolSettings - Live pool hydration settings on the environment's spark compute.
+type CustomLivePoolSettings struct {
+	// Idle-time threshold after which a hydrated cluster is released, using the ISO 8601 duration format. Minimum: PT20M. Maximum:
+	// PT24H.
+	ClusterIdleTimeout *string
+
+	// Maximum lifetime of a live pool activation, using the ISO 8601 duration format. The live pool job runs for this duration
+	// and then terminates. Minimum: PT30M. Maximum: PT24H.
+	CustomLivePoolLifespan *string
+
+	// Maximum number of clusters to pre-hydrate during each activation cycle. Minimum: 1. The maximum allowed value is determined
+	// by the capacity size and is exposed on the instance pool settings as
+	// InstancePool.maxClustersToHydrateLimit.
+	MaxClustersToHydrate *int32
+}
+
 // Definition - Environment public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/environment-definition]
 // for more details on the structure of the Environment
 // definition.
@@ -156,6 +172,10 @@ type Environment struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item's logical identifier. Corresponding item instances share the same logical ID. The value is null when
+	// no logical ID has been assigned.
+	LogicalID *string
+
 	// READ-ONLY; The item sensitivity label.
 	SensitivityLabel *SensitivityLabel
 
@@ -238,6 +258,10 @@ type InstancePool struct {
 
 	// Instance pool type.
 	Type *CustomPoolType
+
+	// READ-ONLY; Server-computed upper bound for the live pool maxClustersToHydrate setting, determined by the capacity size
+	// associated with this pool.
+	MaxClustersToHydrateLimit *int32
 }
 
 // ItemTag - Represents a tag applied on an item.
@@ -407,6 +431,13 @@ type ServicePrincipalProfilePrincipalServicePrincipalProfileDetails struct {
 }
 
 type SparkCompute struct {
+	// Live pool hydration settings. Controls how clusters are pre-hydrated when live pool support is enabled.
+	CustomLivePoolSettings *CustomLivePoolSettings
+
+	// Controls whether the live pool is enabled. When Enabled, clusters are pre-hydrated according to the hydration settings
+	// so that workloads start without cold-start latency.
+	CustomLivePoolSupport *CustomLivePoolSupport
+
 	// Spark driver core. Must be one of the following values: 4, 8, 16, 32, 64.
 	DriverCores *int32
 
@@ -498,6 +529,13 @@ type UpdateEnvironmentRequest struct {
 }
 
 type UpdateEnvironmentSparkComputeRequest struct {
+	// Live pool hydration settings. Pass null to remove the hydration settings entirely. Omit to leave the existing value unchanged.
+	CustomLivePoolSettings *CustomLivePoolSettings
+
+	// Controls whether the live pool is active. Setting Disabled turns it off but retains the hydration settings. Omit to leave
+	// the existing value unchanged.
+	CustomLivePoolSupport *CustomLivePoolSupport
+
 	// Spark driver core. Must be one of the following values: 4, 8, 16, 32, 64.
 	DriverCores *int32
 

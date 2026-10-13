@@ -43,6 +43,8 @@ func unmarshalCatalogEntryClassification(rawMsg json.RawMessage) (CatalogEntryCl
 	switch m["catalogEntryType"] {
 	case string(CatalogEntryTypeFabricItem):
 		b = &ItemCatalogEntry{}
+	case string(CatalogEntryTypeWorkspace):
+		b = &WorkspaceCatalogEntry{}
 	default:
 		b = &CatalogEntry{}
 	}

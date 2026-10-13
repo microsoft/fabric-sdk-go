@@ -40,6 +40,24 @@ func PossibleCategoryValues() []Category {
 	}
 }
 
+// ConditionType - Condition type. Additional types may be added over time.
+type ConditionType string
+
+const (
+	// ConditionTypeDynamic - Dynamic condition that evaluates a target property against a list of values.
+	ConditionTypeDynamic ConditionType = "Dynamic"
+	// ConditionTypeStatic - Static boolean condition.
+	ConditionTypeStatic ConditionType = "Static"
+)
+
+// PossibleConditionTypeValues returns the possible values for the ConditionType const type.
+func PossibleConditionTypeValues() []ConditionType {
+	return []ConditionType{
+		ConditionTypeDynamic,
+		ConditionTypeStatic,
+	}
+}
+
 // ConnectionAccessActionType - Defines the access control behavior for outbound connections. This enum is used for the field
 // defaultAction to specify whether outbound communication should be allowed or denied by default. This type
 // enables both global and connection-specific control over outbound access, helping enforce secure and predictable network
@@ -147,6 +165,21 @@ func PossibleDomainRoleValues() []DomainRole {
 	return []DomainRole{
 		DomainRoleAdmin,
 		DomainRoleContributor,
+	}
+}
+
+// EffectType - Effect type. Additional types may be added over time.
+type EffectType string
+
+const (
+	// EffectTypeAllow - Allow effect.
+	EffectTypeAllow EffectType = "Allow"
+)
+
+// PossibleEffectTypeValues returns the possible values for the EffectType const type.
+func PossibleEffectTypeValues() []EffectType {
+	return []EffectType{
+		EffectTypeAllow,
 	}
 }
 
@@ -383,6 +416,8 @@ const (
 	ItemTypePaginatedReport ItemType = "PaginatedReport"
 	// ItemTypePlan - A plan.
 	ItemTypePlan ItemType = "Plan"
+	// ItemTypePolicySet - A PolicySet.
+	ItemTypePolicySet ItemType = "PolicySet"
 	// ItemTypeReflex - A Reflex.
 	ItemTypeReflex ItemType = "Reflex"
 	// ItemTypeReport - PowerBI report.
@@ -450,6 +485,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeOrgAppAudience,
 		ItemTypePaginatedReport,
 		ItemTypePlan,
+		ItemTypePolicySet,
 		ItemTypeReflex,
 		ItemTypeReport,
 		ItemTypeSQLDatabase,
@@ -480,6 +516,44 @@ func PossibleNetworkAccessRuleValues() []NetworkAccessRule {
 	return []NetworkAccessRule{
 		NetworkAccessRuleAllow,
 		NetworkAccessRuleDeny,
+	}
+}
+
+// OperatorType - Operator type. Additional types may be added over time.
+type OperatorType string
+
+const (
+	// OperatorTypeAnyOf - AnyOf operator.
+	OperatorTypeAnyOf OperatorType = "AnyOf"
+	// OperatorTypeNoneOf - NoneOf operator.
+	OperatorTypeNoneOf OperatorType = "NoneOf"
+)
+
+// PossibleOperatorTypeValues returns the possible values for the OperatorType const type.
+func PossibleOperatorTypeValues() []OperatorType {
+	return []OperatorType{
+		OperatorTypeAnyOf,
+		OperatorTypeNoneOf,
+	}
+}
+
+// PolicyType - Policy. Additional types may be added over time.
+type PolicyType string
+
+const (
+	// PolicyTypeItemCreation - ItemCreation policy. Refer to this [article](/fabric/governance/fabric-policies-item-creation)
+	// for more details.
+	PolicyTypeItemCreation PolicyType = "ItemCreation"
+	// PolicyTypeWorkspaceSettingsEditing - WorkspaceSettingsEditing policy. Refer to this [article](/fabric/governance/fabric-policies-edit-workspace-settings)
+	// for more details.
+	PolicyTypeWorkspaceSettingsEditing PolicyType = "WorkspaceSettingsEditing"
+)
+
+// PossiblePolicyTypeValues returns the possible values for the PolicyType const type.
+func PossiblePolicyTypeValues() []PolicyType {
+	return []PolicyType{
+		PolicyTypeItemCreation,
+		PolicyTypeWorkspaceSettingsEditing,
 	}
 }
 

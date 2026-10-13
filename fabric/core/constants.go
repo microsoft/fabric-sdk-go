@@ -6,6 +6,26 @@
 
 package core
 
+// AccessTimeTrackingStatus - The status of OneLake access time tracking. When enabled, Azure Storage updates the LastAccessTime
+// property on file reads and writes. Additional status values may be added over time.
+type AccessTimeTrackingStatus string
+
+const (
+	// AccessTimeTrackingStatusDisabled - Access time tracking is disabled. LastAccessTime is not updated on file access.
+	AccessTimeTrackingStatusDisabled AccessTimeTrackingStatus = "Disabled"
+	// AccessTimeTrackingStatusEnabled - Access time tracking is enabled. Azure Storage updates LastAccessTime on file reads and
+	// writes.
+	AccessTimeTrackingStatusEnabled AccessTimeTrackingStatus = "Enabled"
+)
+
+// PossibleAccessTimeTrackingStatusValues returns the possible values for the AccessTimeTrackingStatus const type.
+func PossibleAccessTimeTrackingStatusValues() []AccessTimeTrackingStatus {
+	return []AccessTimeTrackingStatus{
+		AccessTimeTrackingStatusDisabled,
+		AccessTimeTrackingStatusEnabled,
+	}
+}
+
 // AttributeName - Specifies the name of the attribute that is being evaluated for access permissions. AttributeName can be
 // Path or Action. Additional attributeName types may be added over time.
 type AttributeName string
@@ -64,6 +84,24 @@ func PossibleCapacityAssignmentProgressValues() []CapacityAssignmentProgress {
 		CapacityAssignmentProgressCompleted,
 		CapacityAssignmentProgressFailed,
 		CapacityAssignmentProgressInProgress,
+	}
+}
+
+// CapacityOverageState - The state of overage. Additional overage states may be added over time.
+type CapacityOverageState string
+
+const (
+	// CapacityOverageStateDisabled - Overage is disabled for the capacity.
+	CapacityOverageStateDisabled CapacityOverageState = "Disabled"
+	// CapacityOverageStateEnabled - Overage is enabled for the capacity.
+	CapacityOverageStateEnabled CapacityOverageState = "Enabled"
+)
+
+// PossibleCapacityOverageStateValues returns the possible values for the CapacityOverageState const type.
+func PossibleCapacityOverageStateValues() []CapacityOverageState {
+	return []CapacityOverageState{
+		CapacityOverageStateDisabled,
+		CapacityOverageStateEnabled,
 	}
 }
 
@@ -272,12 +310,15 @@ type CatalogEntryType string
 const (
 	// CatalogEntryTypeFabricItem - A Fabric item catalog entry type.
 	CatalogEntryTypeFabricItem CatalogEntryType = "FabricItem"
+	// CatalogEntryTypeWorkspace - A workspace catalog entry type.
+	CatalogEntryTypeWorkspace CatalogEntryType = "Workspace"
 )
 
 // PossibleCatalogEntryTypeValues returns the possible values for the CatalogEntryType const type.
 func PossibleCatalogEntryTypeValues() []CatalogEntryType {
 	return []CatalogEntryType{
 		CatalogEntryTypeFabricItem,
+		CatalogEntryTypeWorkspace,
 	}
 }
 
@@ -338,7 +379,11 @@ type CommitMode string
 const (
 	// CommitModeAll - Commit all uncommitted changes. The caller is not required to provide the list of items to commit.
 	CommitModeAll CommitMode = "All"
-	// CommitModeSelective - Commit a specified items list that has uncommitted changes.
+	// CommitModeFileLevelSelective - Commit specified files within specified items. Use the `itemsWithFileSelection` property
+	// to specify items and files.
+	CommitModeFileLevelSelective CommitMode = "FileLevelSelective"
+	// CommitModeSelective - Commit a specified list of items that have uncommitted changes. Use the `items` property to specify
+	// items.
 	CommitModeSelective CommitMode = "Selective"
 )
 
@@ -346,6 +391,7 @@ const (
 func PossibleCommitModeValues() []CommitMode {
 	return []CommitMode{
 		CommitModeAll,
+		CommitModeFileLevelSelective,
 		CommitModeSelective,
 	}
 }
@@ -941,6 +987,26 @@ func PossibleGatewayUpgradeStateValues() []GatewayUpgradeState {
 	}
 }
 
+// GitAdditionalBranchChangingRoles - The additional workspace roles beyond admin that are allowed to change the connected
+// Git branch. Additional values may be added over time.
+type GitAdditionalBranchChangingRoles string
+
+const (
+	// GitAdditionalBranchChangingRolesMemberAndContributor - Members and contributors can also change branches in addition to
+	// admins.
+	GitAdditionalBranchChangingRolesMemberAndContributor GitAdditionalBranchChangingRoles = "MemberAndContributor"
+	// GitAdditionalBranchChangingRolesNone - No additional roles beyond admin can change branches. This is the default.
+	GitAdditionalBranchChangingRolesNone GitAdditionalBranchChangingRoles = "None"
+)
+
+// PossibleGitAdditionalBranchChangingRolesValues returns the possible values for the GitAdditionalBranchChangingRoles const type.
+func PossibleGitAdditionalBranchChangingRolesValues() []GitAdditionalBranchChangingRoles {
+	return []GitAdditionalBranchChangingRoles{
+		GitAdditionalBranchChangingRolesMemberAndContributor,
+		GitAdditionalBranchChangingRolesNone,
+	}
+}
+
 // GitConnectionState - Git connection state. Additional connection state types may be added over time.
 type GitConnectionState string
 
@@ -1410,6 +1476,8 @@ const (
 	ItemTypePaginatedReport ItemType = "PaginatedReport"
 	// ItemTypePlan - A plan.
 	ItemTypePlan ItemType = "Plan"
+	// ItemTypePolicySet - A PolicySet.
+	ItemTypePolicySet ItemType = "PolicySet"
 	// ItemTypeReflex - A Reflex.
 	ItemTypeReflex ItemType = "Reflex"
 	// ItemTypeReport - PowerBI report.
@@ -1477,6 +1545,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeOrgAppAudience,
 		ItemTypePaginatedReport,
 		ItemTypePlan,
+		ItemTypePolicySet,
 		ItemTypeReflex,
 		ItemTypeReport,
 		ItemTypeSQLDatabase,
@@ -1912,6 +1981,25 @@ func PossibleStatusValues() []Status {
 	}
 }
 
+// SurgeProtectionState - The state of surge protection on a capacity. Additional SurgeProtectionState values may be added
+// over time.
+type SurgeProtectionState string
+
+const (
+	// SurgeProtectionStateDisabled - Surge protection is disabled and no thresholds are enforced.
+	SurgeProtectionStateDisabled SurgeProtectionState = "Disabled"
+	// SurgeProtectionStateEnabled - Surge protection is enabled and the configured thresholds are enforced.
+	SurgeProtectionStateEnabled SurgeProtectionState = "Enabled"
+)
+
+// PossibleSurgeProtectionStateValues returns the possible values for the SurgeProtectionState const type.
+func PossibleSurgeProtectionStateValues() []SurgeProtectionState {
+	return []SurgeProtectionState{
+		SurgeProtectionStateDisabled,
+		SurgeProtectionStateEnabled,
+	}
+}
+
 // TagScopeType - Denotes tag scope. Additional tag scopes may be added over time.
 type TagScopeType string
 
@@ -2026,6 +2114,22 @@ func PossibleWeekIndexValues() []WeekIndex {
 		WeekIndexFourth,
 		WeekIndexSecond,
 		WeekIndexThird,
+	}
+}
+
+// WorkspaceCatalogEntryType - The type reported on a workspace catalog entry. Additional WorkspaceCatalogEntryType types
+// may be added over time.
+type WorkspaceCatalogEntryType string
+
+const (
+	// WorkspaceCatalogEntryTypeWorkspace - A workspace.
+	WorkspaceCatalogEntryTypeWorkspace WorkspaceCatalogEntryType = "Workspace"
+)
+
+// PossibleWorkspaceCatalogEntryTypeValues returns the possible values for the WorkspaceCatalogEntryType const type.
+func PossibleWorkspaceCatalogEntryTypeValues() []WorkspaceCatalogEntryType {
+	return []WorkspaceCatalogEntryType{
+		WorkspaceCatalogEntryTypeWorkspace,
 	}
 }
 

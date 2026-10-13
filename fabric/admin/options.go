@@ -203,6 +203,22 @@ type LabelsClientBulkSetLabelsOptions struct {
 	// placeholder for future optional parameters
 }
 
+// PolicySetsClientActivateOptions contains the optional parameters for the PolicySetsClient.Activate method.
+type PolicySetsClientActivateOptions struct {
+	// When true, allow to replace existing active PolicySet. Default: false.
+	AllowReplace *bool
+}
+
+// PolicySetsClientDeactivateOptions contains the optional parameters for the PolicySetsClient.Deactivate method.
+type PolicySetsClientDeactivateOptions struct {
+	// placeholder for future optional parameters
+}
+
+// PolicySetsClientGetActiveBetaOptions contains the optional parameters for the PolicySetsClient.GetActiveBeta method.
+type PolicySetsClientGetActiveBetaOptions struct {
+	// placeholder for future optional parameters
+}
+
 // SharingLinksClientBeginBulkRemoveSharingLinksOptions contains the optional parameters for the SharingLinksClient.BeginBulkRemoveSharingLinks
 // method.
 type SharingLinksClientBeginBulkRemoveSharingLinksOptions struct {

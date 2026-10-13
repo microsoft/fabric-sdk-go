@@ -310,6 +310,9 @@ type BulkImportItemDefinitionsRequestOptions struct {
 	// due to a name duplication conflict.
 	// Default value is false
 	AllowPairingByName *bool
+
+	// Per-item options. Each entry targets its item by logical ID and applies its options to that item.
+	ItemOptionsByLogicalID []ItemOptionsByLogicalIDEntry
 }
 
 // BulkImportItemDefinitionsResponse - Bulk import item definitions response payload.
@@ -392,6 +395,31 @@ type Capacity struct {
 	State *CapacityState
 }
 
+// CapacityOverageConfiguration - The overage configuration for a capacity.
+type CapacityOverageConfiguration struct {
+	// READ-ONLY; The overage state. When the state is Disabled, thresholdCapacityUnitHours is reset to 0.
+	State *CapacityOverageState
+
+	// READ-ONLY; The capacity unit hours threshold for overage. Valid range is 0 to 240000.
+	ThresholdCapacityUnitHours *int32
+}
+
+// CapacitySurgeProtection - Represents the surge protection configuration for a capacity. A capacity with no configured surge
+// protection is represented by state set to Disabled with the threshold properties omitted.
+type CapacitySurgeProtection struct {
+	// The 24-hour background utilization percentage at which surge protection deactivates. Present only when state is Enabled.
+	// Must be greater than 5 and strictly less than rejectionThreshold.
+	RecoveryThreshold *int32
+
+	// The 24-hour background utilization percentage at which background operations are rejected. Present only when state is Enabled.
+	// Valid range: 15-100.
+	RejectionThreshold *int32
+
+	// The state of surge protection for background operations on the capacity. Additional SurgeProtectionState values may be
+	// added over time.
+	State *SurgeProtectionState
+}
+
 // CatalogEntry - A catalog entry object.
 type CatalogEntry struct {
 	// REQUIRED; The catalog entry type.
@@ -412,29 +440,60 @@ func (c *CatalogEntry) GetCatalogEntry() *CatalogEntry { return c }
 
 // CatalogQueryRequest - The query for the search.
 type CatalogQueryRequest struct {
-	// The continuationToken for the next page.
+	// The continuation token for the next page.
+	// A continuation token carries forward the search, filter, and pageSize of the original request, so it may be sent on its
+	// own. It must not be combined with search or filter in the same request; doing so
+	// returns an error.
 	ContinuationToken *string
 
-	// The filter for the search. Currently the filter supports filter by type of entries. Additional filter options may be added
-	// over time.
+	// The filter for the search. Additional filter options may be added over time.
+	// The filter parameter supports the following properties:
+	// * Type: Matches the type property of a catalog entry, for example Report, Lakehouse, or Workspace. A single filter can
+	// specify at most 500 Type values, each up to 50 characters long.
+	//
+	//
+	// * WorkspaceId: The ID of the workspace that contains the catalog entry. A single filter can specify at most 12 WorkspaceId
+	// values, each of which must be a valid GUID.
+	//
+	//
 	// The filter parameter supports the following operators to refine results:
-	// * eq : Equals; matches the exact value.
+	// * eq: Equals; matches the exact value.
 	//
 	//
-	// * ne : Not Equals; excludes the specified value.
+	// * ne: Not Equals; excludes the specified value.
 	//
 	//
-	// * or : Logical OR; matches if any of the conditions are true.
+	// * and: Logical AND; matches only if all of the conditions are true.
 	//
 	//
-	// * ( ) : Parentheses; groups expressions to define logical hierarchy.
+	// * or: Logical OR; matches if any of the conditions are true.
+	//
+	//
+	// * ( ): Parentheses; groups expressions to define logical hierarchy.
 	Filter *string
 
-	// The page size that needs to be returned. Page size must be between 1 and 1000.
+	// The page size that needs to be returned. Page size must be between 1 and 1000. Defaults to 50.
 	PageSize *int32
 
-	// The text query for the search. This field supports searching across the display name, workspace display name and description
+	// The text query for the search. This field supports searching across the display name, workspace display name, and description
 	// of the CatalogEntry.
+	// The search field supports the following operators:
+	// * " " : Double quotes; match the enclosed words as an exact phrase.
+	//
+	//
+	// * * : Asterisk; wildcard matching zero or more characters.
+	//
+	//
+	// * ? : Question mark; wildcard matching a single character.
+	//
+	//
+	// * && : Double ampersands; require every search term.
+	//
+	//
+	// * Underscores are treated as part of a search term; no escaping is required.
+	//
+	//
+	// * Other special characters are ignored and treated as separators.
 	Search *string
 }
 
@@ -487,9 +546,15 @@ type CommitToGitRequest struct {
 	// default Git provider comment.
 	Comment *string
 
-	// Specific items to commit. This is relevant only for Selective commit mode. The items can be retrieved from the Git Status
+	// Specific items to commit. This is relevant only for the Selective commit mode. Mutually exclusive with itemsWithFileSelection.
+	// The items can be retrieved from the Git Status
 	// [/rest/api/fabric/core/git/get-status] API.
 	Items []ItemIdentifier
+
+	// Items with per-file selection for the FileLevelSelective commit mode. Mutually exclusive with items. Each entry specifies
+	// an item and optionally a list of file paths to commit. If selectedFiles is
+	// null or empty for an item, all files for that item are committed.
+	ItemsWithFileSelection []ItemIdentifierWithFileSelection
 
 	// Full SHA hash that the workspace is synced to. The hash can be retrieved from the Git Status [/rest/api/fabric/core/git/get-status]
 	// API.
@@ -1055,6 +1120,12 @@ type CreateItemRequest struct {
 	// The folder ID. If not specified or null, the item is created with the workspace as its folder.
 	FolderID *string
 
+	// Options for the item being created. Only honored when a definition is also provided; supplying options without definition
+	// results in a BadRequest error. Property names are option names valid for the
+	// item type; values are the option values. For the options supported by a specific item type, see that item type's Update-Definition
+	// API documentation.
+	Options any
+
 	// The sensitivity label settings for the item.
 	SensitivityLabelSettings *SensitivityLabelSettings
 }
@@ -1173,11 +1244,11 @@ type CreateShortcutResponse struct {
 	// REQUIRED; The status of create shortcut. Additional status may be added over time.
 	Status *Status
 
+	// The error details in case the operation is in failed state
+	Error *ErrorResponse
+
 	// An object containing the shortcut properties and created shortcut name.
 	Result *Shortcut
-
-	// READ-ONLY; The error details in case the operation is in failed state
-	Error *ErrorResponse
 }
 
 // CreateShortcutResponseRequest - An object that contains the original shortcut name and path
@@ -1306,17 +1377,17 @@ type CreateVirtualNetworkGatewayRequest struct {
 	// REQUIRED; The Azure virtual network resource.
 	VirtualNetworkAzureResource *VirtualNetworkAzureResource
 
-	// The maximum number of member gateways. A number between 1 and 9. Cannot be used together with numberOfMemberGateways. minMemberGatewayCount
-	// must also be specified. maxMemberGatewayCount value must be
+	// The maximum number of member gateways. A number between 1 and 11. Cannot be used together with numberOfMemberGateways.
+	// minMemberGatewayCount must also be specified. maxMemberGatewayCount value must be
 	// greater than or equal to minMemberGatewayCount value.
 	MaxMemberGatewayCount *int32
 
-	// The minimum number of member gateways. A number between 1 and 9. Cannot be used together with numberOfMemberGateways. maxMemberGatewayCount
-	// must also be specified. minMemberGatewayCount value must be
+	// The minimum number of member gateways. A number between 1 and 11. Cannot be used together with numberOfMemberGateways.
+	// maxMemberGatewayCount must also be specified. minMemberGatewayCount value must be
 	// less than or equal to maxMemberGatewayCount value.
 	MinMemberGatewayCount *int32
 
-	// The number of member gateways. A number between 1 and 9. Cannot be used together with maxMemberGatewayCount and minMemberGatewayCount.
+	// The number of member gateways. A number between 1 and 11. Cannot be used together with maxMemberGatewayCount and minMemberGatewayCount.
 	NumberOfMemberGateways *int32
 }
 
@@ -1599,29 +1670,32 @@ type DeploymentExecutionPlan struct {
 
 // DeploymentExecutionStep - A deployment execution step.
 type DeploymentExecutionStep struct {
-	// READ-ONLY; The deployment step description.
-	Description *string
+	// REQUIRED; The source and target items of the step.
+	SourceAndTarget *DeploymentSourceAndTarget
+
+	// Is an item new, different or identical to items in the target stage before deployment.
+	PreDeploymentDiffState *ItemPreDeploymentDiffState
 
 	// READ-ONLY; The step index.
 	Index *int32
 
-	// READ-ONLY; The source and target items of the step.
-	SourceAndTarget *DeploymentSourceAndTarget
+	// The error details. Only applicable if the deployment pipeline operation failed.
+	Error *ErrorResponse
+
+	// READ-ONLY; The deployment step description.
+	Description *string
 
 	// READ-ONLY; The status of the deployment pipeline operation. Additional statuses may be added over time.
 	Status *DeploymentPipelineOperationStatus
-
-	// READ-ONLY; The error details. Only applicable if the deployment pipeline operation failed.
-	Error *ErrorResponse
-
-	// READ-ONLY; Is an item new, different or identical to items in the target stage before deployment.
-	PreDeploymentDiffState *ItemPreDeploymentDiffState
 }
 
 // DeploymentOptions - Deployment configuration options for the deployment.
 type DeploymentOptions struct {
 	// Indicates whether cross region deployment is enabled. True - enabled, False - disabled. Default value is false.
 	AllowCrossRegionDeployment *bool
+
+	// Per-item deployment options. Each entry targets its item by source item ID and applies its options to that item.
+	ItemOptionsBySourceItemID []ItemOptionsBySourceItemIDEntry
 }
 
 // DeploymentPipeline - A Fabric deployment pipeline.
@@ -1678,6 +1752,10 @@ type DeploymentPipelineOperation struct {
 	// The principal that performed the deployment pipeline operation.
 	PerformedBy PrincipalClassification
 
+	// The number of deployed items in the source stage, that are new, identical or different to items in the target stage, before
+	// deployment.
+	PreDeploymentDiffInformation *PreDeploymentDiffInformation
+
 	// READ-ONLY; The operation ID.
 	ID *string
 
@@ -1695,10 +1773,6 @@ type DeploymentPipelineOperation struct {
 
 	// READ-ONLY; The date and time that the operation started.
 	ExecutionStartTime *time.Time
-
-	// READ-ONLY; The number of deployed items in the source stage, that are new, identical or different to items in the target
-	// stage, before deployment.
-	PreDeploymentDiffInformation *PreDeploymentDiffInformation
 
 	// READ-ONLY; The ID of a source deployment pipeline stage.
 	SourceStageID *string
@@ -1709,12 +1783,6 @@ type DeploymentPipelineOperation struct {
 
 // DeploymentPipelineOperationExtendedInfo - A Fabric deployment pipeline operation.
 type DeploymentPipelineOperationExtendedInfo struct {
-	// A note representing a description of the operation.
-	Note *DeploymentPipelineOperationNote
-
-	// The principal that performed the deployment pipeline operation.
-	PerformedBy PrincipalClassification
-
 	// READ-ONLY; The operation ID.
 	ID *string
 
@@ -1727,18 +1795,24 @@ type DeploymentPipelineOperationExtendedInfo struct {
 	// READ-ONLY; The operation type. Additional types may be added over time.
 	Type *DeploymentPipelineOperationType
 
+	// The deployment execution plan.
+	ExecutionPlan *DeploymentExecutionPlan
+
+	// A note representing a description of the operation.
+	Note *DeploymentPipelineOperationNote
+
+	// The principal that performed the deployment pipeline operation.
+	PerformedBy PrincipalClassification
+
+	// The number of deployed items in the source stage, that are new, identical or different to items in the target stage, before
+	// deployment.
+	PreDeploymentDiffInformation *PreDeploymentDiffInformation
+
 	// READ-ONLY; The date and time that the operation ended.
 	ExecutionEndTime *time.Time
 
-	// READ-ONLY; The deployment execution plan.
-	ExecutionPlan *DeploymentExecutionPlan
-
 	// READ-ONLY; The date and time that the operation started.
 	ExecutionStartTime *time.Time
-
-	// READ-ONLY; The number of deployed items in the source stage, that are new, identical or different to items in the target
-	// stage, before deployment.
-	PreDeploymentDiffInformation *PreDeploymentDiffInformation
 
 	// READ-ONLY; The ID of a source deployment pipeline stage.
 	SourceStageID *string
@@ -1985,6 +2059,18 @@ func (e *EntireTenantPrincipal) GetPrincipal() *Principal {
 	}
 }
 
+// ErrorParameter - A structured parameter providing additional machine-readable context about an error.
+type ErrorParameter struct {
+	// READ-ONLY; A human-readable description of the parameter's meaning.
+	Message *string
+
+	// READ-ONLY; The parameter identifier.
+	Name *string
+
+	// READ-ONLY; The parameter value.
+	Value *string
+}
+
 // ErrorRelatedResource - The error related resource details object.
 type ErrorRelatedResource struct {
 	// READ-ONLY; The resource ID that's involved in the error.
@@ -2009,6 +2095,9 @@ type ErrorResponse struct {
 	// READ-ONLY; List of additional error details.
 	MoreDetails []ErrorResponseDetails
 
+	// READ-ONLY; Structured parameters providing additional machine-readable context about the error.
+	Parameters []ErrorParameter
+
 	// READ-ONLY; The error related resource details.
 	RelatedResource *ErrorRelatedResource
 
@@ -2024,6 +2113,9 @@ type ErrorResponseDetails struct {
 
 	// READ-ONLY; A human readable representation of the error.
 	Message *string
+
+	// READ-ONLY; Structured parameters providing additional machine-readable context about the error.
+	Parameters []ErrorParameter
 
 	// READ-ONLY; The error related resource details.
 	RelatedResource *ErrorRelatedResource
@@ -2314,12 +2406,18 @@ type GetOneLakeSettingsResponseLifecycle struct {
 
 	// REQUIRED; Indicates whether there is at least one active lifecycle rule in the workspace.
 	Policy *OneLakeLifecyclePolicyStatus
+
+	// Indicates whether Azure Storage access time tracking (LastAccessTime updates) is enabled for OneLake files in the workspace.
+	AccessTimeTracking *AccessTimeTrackingStatus
 }
 
 // GitConnectRequest - Contains the Git connect request data.
 type GitConnectRequest struct {
 	// REQUIRED; The Git provider details.
 	GitProviderDetails GitProviderDetailsClassification
+
+	// Optional connection settings to apply at connection time. If omitted, defaults apply.
+	ConnectionSettings *GitConnectionSettings
 
 	// User-specific Git credentials for authentication to the GitProvider. These credentials are not shared with other workspace
 	// contributors. For GitHub, this property is required. For AzureDevOps, this
@@ -2342,6 +2440,12 @@ type GitConnection struct {
 	GitConnectionType *GitConnectionType
 }
 
+// GitConnectionSettings - Contains the Git connection settings.
+type GitConnectionSettings struct {
+	// The additional workspace roles beyond admin that are allowed to change the connected Git branch.
+	AdditionalRolesAuthorizedToChangeBranch *GitAdditionalBranchChangingRoles
+}
+
 // GitCredentials - The Git credentials.
 type GitCredentials struct {
 	// REQUIRED; The Git credentials source.
@@ -2361,6 +2465,21 @@ type GitCredentialsConfigurationResponse struct {
 // GitCredentialsConfigurationResponse.
 func (g *GitCredentialsConfigurationResponse) GetGitCredentialsConfigurationResponse() *GitCredentialsConfigurationResponse {
 	return g
+}
+
+// GitFileChange - Contains information about a file-level change within an item.
+type GitFileChange struct {
+	// READ-ONLY; The conflict state for this file.
+	ConflictType *ConflictType
+
+	// READ-ONLY; The file path relative to the item root. It uses forward slashes and has no leading slash.
+	Path *string
+
+	// READ-ONLY; Change on the remote Git side.
+	RemoteChange *ChangeType
+
+	// READ-ONLY; Change on the workspace side.
+	WorkspaceChange *ChangeType
 }
 
 // GitHubDetails - GitHub provider details.
@@ -2584,6 +2703,10 @@ type Item struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item's logical identifier. Corresponding item instances share the same logical ID. The value is null when
+	// no logical ID has been assigned.
+	LogicalID *string
+
 	// READ-ONLY; The item sensitivity label.
 	SensitivityLabel *SensitivityLabel
 
@@ -2609,7 +2732,7 @@ type ItemAssignmentStatus struct {
 	ParentItemID *string
 }
 
-// ItemCatalogEntry - A Fabric item type of catalog entry.
+// ItemCatalogEntry - The catalog metadata representation of a Fabric item.
 type ItemCatalogEntry struct {
 	// REQUIRED; The catalog entry type.
 	CatalogEntryType *CatalogEntryType
@@ -2654,6 +2777,10 @@ type ItemChange struct {
 
 	// READ-ONLY; The item metadata.
 	ItemMetadata *ItemMetadata
+
+	// READ-ONLY; A list of file-level changes within the item. Only populated when the includeFilesDetails query parameter is
+	// set to true.
+	FileChanges []GitFileChange
 
 	// READ-ONLY; Change on the remote Git side.
 	RemoteChange *ChangeType
@@ -2746,10 +2873,29 @@ type ItemIdentifier struct {
 	ObjectID *string
 }
 
+// ItemIdentifierWithFileSelection - Contains the item identifier with optional file-level selection for commit operations.
+type ItemIdentifierWithFileSelection struct {
+	// The logical ID of the item. When the logical ID isn't available because the item is not yet added to the workspace, you
+	// can use the object ID.
+	LogicalID *string
+
+	// The object ID of the item. When the object ID isn't available because the item was deleted from the workspace, you can
+	// use the logical ID.
+	ObjectID *string
+
+	// File paths to commit, relative to the item root. Paths use forward slashes only, no leading slash, full file paths only
+	// (no directories or wildcards), no empty or whitespace-only segments, and
+	// segments cannot end with a dot or trailing whitespace. If null or empty, all files for this item are committed.
+	SelectedFiles []string
+}
+
 // ItemJobInstance - An object representing item job instance
 type ItemJobInstance struct {
 	// Job end time in UTC
 	EndTimeUTC *string
+
+	// Error response when job is failed
+	FailureReason *ErrorResponse
 
 	// Job instance Id
 	ID *string
@@ -2771,9 +2917,6 @@ type ItemJobInstance struct {
 
 	// The item job status. Additional statuses may be added over time.
 	Status *ItemJobStatus
-
-	// READ-ONLY; Error response when job is failed
-	FailureReason *ErrorResponse
 }
 
 type ItemJobInstances struct {
@@ -2798,6 +2941,30 @@ type ItemMetadata struct {
 
 	// READ-ONLY; The item type.
 	ItemType *ItemType
+}
+
+// ItemOptionsByLogicalIDEntry - A per-item options entry that targets its item by logical ID. Each targeted item may appear
+// at most once.
+type ItemOptionsByLogicalIDEntry struct {
+	// REQUIRED; The logical ID of the target item.
+	LogicalID *string
+
+	// REQUIRED; The options for the targeted item. Property names are option names valid for the item type; values are the option
+	// values. For the options supported by a specific item type, see that item type's
+	// Update-Definition API documentation.
+	Options any
+}
+
+// ItemOptionsBySourceItemIDEntry - A per-item options entry that targets its item by source item ID. Each targeted item may
+// appear at most once.
+type ItemOptionsBySourceItemIDEntry struct {
+	// REQUIRED; The options for the targeted item. Property names are option names valid for the item type; values are the option
+	// values. For the options supported by a specific item type, see that item type's
+	// Update-Definition API documentation.
+	Options any
+
+	// REQUIRED; The source item ID of the target item.
+	SourceItemID *string
 }
 
 // ItemReference - An item reference object.
@@ -3038,6 +3205,12 @@ type ListSupportedConnectionTypesResponse struct {
 	ContinuationURI *string
 }
 
+// LogicalIDResponse - Logical ID response.
+type LogicalIDResponse struct {
+	// READ-ONLY; The logical ID of the item.
+	LogicalID *string
+}
+
 // ManagedPrivateEndpoint - Managed private endpoint.
 type ManagedPrivateEndpoint struct {
 	// Endpoint connection state of provisioned endpoints.
@@ -3090,6 +3263,12 @@ type MicrosoftEntraMember struct {
 
 	// The type of Microsoft Entra ID object. Additional objectType types may be added over time.
 	ObjectType *ObjectType
+}
+
+// ModifyAccessTimeTrackingRequest - Modify OneLake access time tracking request.
+type ModifyAccessTimeTrackingRequest struct {
+	// REQUIRED; The desired access time tracking status.
+	Status *AccessTimeTrackingStatus
 }
 
 // ModifyOneLakeWorkspaceDefaultTierResponse - Response for modifying the default OneLake access tier.
@@ -3476,11 +3655,11 @@ type OperationState struct {
 	// REQUIRED; The current status of the operation. Additional operation statuses may be added over time.
 	Status *LongRunningOperationStatus
 
+	// The error details in case the operation is in failed state
+	Error *ErrorResponse
+
 	// Operation progress as a percentage
 	PercentComplete *int32
-
-	// READ-ONLY; The error details in case the operation is in failed state
-	Error *ErrorResponse
 }
 
 // OrdinalWeekday - Specifies the ordinal week and weekday to trigger the job. The value must be a valid date. Otherwise,
@@ -4230,6 +4409,35 @@ type UnapplyWorkspaceTagsRequest struct {
 	Tags []string
 }
 
+// UpdateCapacityOverageConfigurationRequest - The overage configuration update request payload. At least one property must
+// be provided. When state is set to Disabled, thresholdCapacityUnitHours is automatically reset to 0. When state is set to
+// Enabled, a thresholdCapacityUnitHours greater than 0 must be supplied (either in the same request or already configured).
+// Setting thresholdCapacityUnitHours to 0 automatically disables overage.
+type UpdateCapacityOverageConfigurationRequest struct {
+	// The overage state. When set to Disabled, thresholdCapacityUnitHours is automatically reset to 0.
+	State *CapacityOverageState
+
+	// The capacity unit hours threshold for overage. Valid range is 0 to 240000. Setting to 0 automatically disables overage.
+	ThresholdCapacityUnitHours *int32
+}
+
+// UpdateCapacitySurgeProtectionRequest - The request payload for updating a capacity's surge protection configuration. Omitting
+// a property leaves it unchanged. When state transitions from Disabled to Enabled on an unconfigured capacity, both
+// rejectionThreshold and recoveryThreshold must be provided in the same request. When state is set to Disabled, the persisted
+// threshold values are cleared.
+type UpdateCapacitySurgeProtectionRequest struct {
+	// The 24-hour background utilization percentage at which surge protection deactivates. Must be greater than 5 and strictly
+	// less than rejectionThreshold.
+	RecoveryThreshold *int32
+
+	// The 24-hour background utilization percentage at which background operations are rejected. Valid range: 15-100.
+	RejectionThreshold *int32
+
+	// Set to Enabled to enable surge protection or Disabled to disable it and clear the persisted threshold values. Additional
+	// SurgeProtectionState values may be added over time.
+	State *SurgeProtectionState
+}
+
 // UpdateConnectionRequest - The base object of update connection request.
 type UpdateConnectionRequest struct {
 	// REQUIRED; The connectivity type of the connection.
@@ -4326,6 +4534,12 @@ type UpdateGatewayRoleAssignmentRequest struct {
 	Role *GatewayRole
 }
 
+// UpdateGitConnectionSettingsRequest - Contains the request data to update the Git connection settings.
+type UpdateGitConnectionSettingsRequest struct {
+	// The additional workspace roles beyond admin that are allowed to change the connected Git branch.
+	AdditionalRolesAuthorizedToChangeBranch *GitAdditionalBranchChangingRoles
+}
+
 // UpdateGitCredentialsRequest - Contains the request data to update the Git credentials configuration.
 type UpdateGitCredentialsRequest struct {
 	// REQUIRED; The Git credentials source.
@@ -4384,6 +4598,11 @@ func (u *UpdateGitCredentialsToNoneRequest) GetUpdateGitCredentialsRequest() *Up
 type UpdateItemDefinitionRequest struct {
 	// REQUIRED; An item definition object.
 	Definition *ItemDefinition
+
+	// Options for the item whose definition is being updated. Property names are option names valid for the item type; values
+	// are the option values. For the options supported by a specific item type, see
+	// that item type's Update-Definition API documentation.
+	Options any
 }
 
 // UpdateItemIdentityRequest - Associate identity request payload.
@@ -4405,6 +4624,12 @@ type UpdateItemRequest struct {
 
 	// The item display name. The display name must follow naming rules according to item type.
 	DisplayName *string
+}
+
+// UpdateLogicalIDRequest - Update logical ID request payload.
+type UpdateLogicalIDRequest struct {
+	// REQUIRED; The logical ID to update for the item.
+	LogicalID *string
 }
 
 type UpdateOnPremisesGatewayConnectionRequest struct {
@@ -4511,6 +4736,9 @@ type UpdateOptions struct {
 	// override items is not specified or is provided as false, the update operation
 	// will not start. Default value is false.
 	AllowOverrideItems *bool
+
+	// Per-item update options. Each entry targets its item by logical ID and applies its options to that item.
+	ItemOptionsByLogicalID []ItemOptionsByLogicalIDEntry
 }
 
 type UpdatePersonalCloudConnectionRequest struct {
@@ -4649,17 +4877,17 @@ type UpdateVirtualNetworkGatewayRequest struct {
 	// 30, 60, 90, 120, 150, 240, 360, 480, 720, 1440.
 	InactivityMinutesBeforeSleep *int32
 
-	// The maximum number of member gateways. A number between 1 and 9. Cannot be used together with numberOfMemberGateways. minMemberGatewayCount
-	// must also be specified. maxMemberGatewayCount value must be
+	// The maximum number of member gateways. A number between 1 and 11. Cannot be used together with numberOfMemberGateways.
+	// minMemberGatewayCount must also be specified. maxMemberGatewayCount value must be
 	// greater than or equal to minMemberGatewayCount value.
 	MaxMemberGatewayCount *int32
 
-	// The minimum number of member gateways. A number between 1 and 9. Cannot be used together with numberOfMemberGateways. maxMemberGatewayCount
-	// must also be specified. minMemberGatewayCount value must be
+	// The minimum number of member gateways. A number between 1 and 11. Cannot be used together with numberOfMemberGateways.
+	// maxMemberGatewayCount must also be specified. minMemberGatewayCount value must be
 	// less than or equal to maxMemberGatewayCount value.
 	MinMemberGatewayCount *int32
 
-	// The number of member gateways. A number between 1 and 9. Cannot be used together with maxMemberGatewayCount and minMemberGatewayCount.
+	// The number of member gateways. A number between 1 and 11. Cannot be used together with maxMemberGatewayCount and minMemberGatewayCount.
 	NumberOfMemberGateways *int32
 }
 
@@ -4745,7 +4973,7 @@ type VirtualNetworkGateway struct {
 	// REQUIRED; The minutes of inactivity before the virtual network gateway goes into auto-sleep.
 	InactivityMinutesBeforeSleep *int32
 
-	// REQUIRED; The number of member gateways. A number between 1 and 9.
+	// REQUIRED; The number of member gateways. A number between 1 and 11.
 	NumberOfMemberGateways *int32
 
 	// REQUIRED; The type of the gateway.
@@ -4757,10 +4985,10 @@ type VirtualNetworkGateway struct {
 	// The object ID of the Fabric license capacity.
 	CapacityID *string
 
-	// The maximum number of member gateways. A number between 1 and 9.
+	// The maximum number of member gateways. A number between 1 and 11.
 	MaxMemberGatewayCount *int32
 
-	// The minimum number of member gateways. A number between 1 and 9.
+	// The minimum number of member gateways. A number between 1 and 11.
 	MinMemberGatewayCount *int32
 }
 
@@ -4916,6 +5144,34 @@ type WorkspaceAppliedTag struct {
 
 	// REQUIRED; The tag ID.
 	ID *string
+}
+
+// WorkspaceCatalogEntry - The catalog metadata representation of a Fabric workspace.
+type WorkspaceCatalogEntry struct {
+	// REQUIRED; The catalog entry type.
+	CatalogEntryType *CatalogEntryType
+
+	// REQUIRED; The catalog entry display name.
+	DisplayName *string
+
+	// REQUIRED; The objectId of the catalog entry.
+	ID *string
+
+	// REQUIRED; The catalog entry type. Always Workspace for workspace catalog entries.
+	Type *WorkspaceCatalogEntryType
+
+	// The description of the catalog entry.
+	Description *string
+}
+
+// GetCatalogEntry implements the CatalogEntryClassification interface for type WorkspaceCatalogEntry.
+func (w *WorkspaceCatalogEntry) GetCatalogEntry() *CatalogEntry {
+	return &CatalogEntry{
+		CatalogEntryType: w.CatalogEntryType,
+		Description:      w.Description,
+		DisplayName:      w.DisplayName,
+		ID:               w.ID,
+	}
 }
 
 // WorkspaceConflictResolution - The basic conflict resolution data.

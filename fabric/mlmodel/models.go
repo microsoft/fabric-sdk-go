@@ -77,6 +77,9 @@ type EndpointVersionInfoFailureDetails struct {
 	// READ-ONLY; A human readable representation of the error.
 	Message *string
 
+	// READ-ONLY; Structured parameters providing additional machine-readable context about the error.
+	Parameters []ErrorParameter
+
 	// READ-ONLY; The error related resource details.
 	RelatedResource *ErrorRelatedResource
 }
@@ -112,6 +115,18 @@ func (e *EntireTenantPrincipal) GetPrincipal() *Principal {
 		ID:          e.ID,
 		Type:        e.Type,
 	}
+}
+
+// ErrorParameter - A structured parameter providing additional machine-readable context about an error.
+type ErrorParameter struct {
+	// READ-ONLY; A human-readable description of the parameter's meaning.
+	Message *string
+
+	// READ-ONLY; The parameter identifier.
+	Name *string
+
+	// READ-ONLY; The parameter value.
+	Value *string
 }
 
 // ErrorRelatedResource - The error related resource details object.
@@ -181,6 +196,10 @@ type MLModel struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; The item's logical identifier. Corresponding item instances share the same logical ID. The value is null when
+	// no logical ID has been assigned.
+	LogicalID *string
 
 	// READ-ONLY; The item sensitivity label.
 	SensitivityLabel *SensitivityLabel

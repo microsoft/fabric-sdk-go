@@ -29,9 +29,17 @@ type CapacitiesServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetCapacity func(ctx context.Context, capacityID string, options *core.CapacitiesClientGetCapacityOptions) (resp azfake.Responder[core.CapacitiesClientGetCapacityResponse], errResp azfake.ErrorResponder)
 
+	// GetOverageConfiguration is the fake for method CapacitiesClient.GetOverageConfiguration
+	// HTTP status codes to indicate success: http.StatusOK
+	GetOverageConfiguration func(ctx context.Context, capacityID string, options *core.CapacitiesClientGetOverageConfigurationOptions) (resp azfake.Responder[core.CapacitiesClientGetOverageConfigurationResponse], errResp azfake.ErrorResponder)
+
 	// NewListCapacitiesPager is the fake for method CapacitiesClient.NewListCapacitiesPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListCapacitiesPager func(options *core.CapacitiesClientListCapacitiesOptions) (resp azfake.PagerResponder[core.CapacitiesClientListCapacitiesResponse])
+
+	// UpdateOverageConfiguration is the fake for method CapacitiesClient.UpdateOverageConfiguration
+	// HTTP status codes to indicate success: http.StatusOK
+	UpdateOverageConfiguration func(ctx context.Context, capacityID string, updateOverageConfigurationRequest core.UpdateCapacityOverageConfigurationRequest, options *core.CapacitiesClientUpdateOverageConfigurationOptions) (resp azfake.Responder[core.CapacitiesClientUpdateOverageConfigurationResponse], errResp azfake.ErrorResponder)
 }
 
 // NewCapacitiesServerTransport creates a new instance of CapacitiesServerTransport with the provided implementation.
@@ -78,8 +86,12 @@ func (c *CapacitiesServerTransport) dispatchToMethodFake(req *http.Request, meth
 			switch method {
 			case "CapacitiesClient.GetCapacity":
 				res.resp, res.err = c.dispatchGetCapacity(req)
+			case "CapacitiesClient.GetOverageConfiguration":
+				res.resp, res.err = c.dispatchGetOverageConfiguration(req)
 			case "CapacitiesClient.NewListCapacitiesPager":
 				res.resp, res.err = c.dispatchNewListCapacitiesPager(req)
+			case "CapacitiesClient.UpdateOverageConfiguration":
+				res.resp, res.err = c.dispatchUpdateOverageConfiguration(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -128,6 +140,35 @@ func (c *CapacitiesServerTransport) dispatchGetCapacity(req *http.Request) (*htt
 	return resp, nil
 }
 
+func (c *CapacitiesServerTransport) dispatchGetOverageConfiguration(req *http.Request) (*http.Response, error) {
+	if c.srv.GetOverageConfiguration == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetOverageConfiguration not implemented")}
+	}
+	const regexStr = `/v1/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/overageConfiguration`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := c.srv.GetOverageConfiguration(req.Context(), capacityIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).CapacityOverageConfiguration, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
 func (c *CapacitiesServerTransport) dispatchNewListCapacitiesPager(req *http.Request) (*http.Response, error) {
 	if c.srv.NewListCapacitiesPager == nil {
 		return nil, &nonRetriableError{errors.New("fake for method NewListCapacitiesPager not implemented")}
@@ -163,6 +204,39 @@ func (c *CapacitiesServerTransport) dispatchNewListCapacitiesPager(req *http.Req
 	}
 	if !server.PagerResponderMore(newListCapacitiesPager) {
 		c.newListCapacitiesPager.remove(req)
+	}
+	return resp, nil
+}
+
+func (c *CapacitiesServerTransport) dispatchUpdateOverageConfiguration(req *http.Request) (*http.Response, error) {
+	if c.srv.UpdateOverageConfiguration == nil {
+		return nil, &nonRetriableError{errors.New("fake for method UpdateOverageConfiguration not implemented")}
+	}
+	const regexStr = `/v1/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/overageConfiguration`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.UpdateCapacityOverageConfigurationRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := c.srv.UpdateOverageConfiguration(req.Context(), capacityIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).CapacityOverageConfiguration, req)
+	if err != nil {
+		return nil, err
 	}
 	return resp, nil
 }

@@ -26,6 +26,10 @@ type CopyJob struct {
 	// READ-ONLY; The item ID.
 	ID *string
 
+	// READ-ONLY; The item's logical identifier. Corresponding item instances share the same logical ID. The value is null when
+	// no logical ID has been assigned.
+	LogicalID *string
+
 	// READ-ONLY; The item sensitivity label.
 	SensitivityLabel *SensitivityLabel
 
@@ -128,6 +132,110 @@ type EntityResetPayload struct {
 
 	// Whether to reset all CopyJob entities.
 	ResetAllCopyJobEntities *bool
+}
+
+// ErrorParameter - A structured parameter providing additional machine-readable context about an error.
+type ErrorParameter struct {
+	// READ-ONLY; A human-readable description of the parameter's meaning.
+	Message *string
+
+	// READ-ONLY; The parameter identifier.
+	Name *string
+
+	// READ-ONLY; The parameter value.
+	Value *string
+}
+
+// ErrorRelatedResource - The error related resource details object.
+type ErrorRelatedResource struct {
+	// READ-ONLY; The resource ID that's involved in the error.
+	ResourceID *string
+
+	// READ-ONLY; The type of the resource that's involved in the error.
+	ResourceType *string
+}
+
+// ErrorResponse - The error response.
+type ErrorResponse struct {
+	// READ-ONLY; A specific identifier that provides information about an error condition, allowing for standardized communication
+	// between our service and its users.
+	ErrorCode *string
+
+	// READ-ONLY; A human readable representation of the error.
+	Message *string
+
+	// READ-ONLY; When true, the request can be retried. Use the Retry-After response header to determine the delay, if available.
+	IsRetriable *bool
+
+	// READ-ONLY; List of additional error details.
+	MoreDetails []ErrorResponseDetails
+
+	// READ-ONLY; Structured parameters providing additional machine-readable context about the error.
+	Parameters []ErrorParameter
+
+	// READ-ONLY; The error related resource details.
+	RelatedResource *ErrorRelatedResource
+
+	// READ-ONLY; ID of the request associated with the error.
+	RequestID *string
+}
+
+// ErrorResponseDetails - The error response details.
+type ErrorResponseDetails struct {
+	// READ-ONLY; A specific identifier that provides information about an error condition, allowing for standardized communication
+	// between our service and its users.
+	ErrorCode *string
+
+	// READ-ONLY; A human readable representation of the error.
+	Message *string
+
+	// READ-ONLY; Structured parameters providing additional machine-readable context about the error.
+	Parameters []ErrorParameter
+
+	// READ-ONLY; The error related resource details.
+	RelatedResource *ErrorRelatedResource
+}
+
+// ExecuteJobInstance - A CopyJob execute job instance.
+type ExecuteJobInstance struct {
+	// Job end time in UTC
+	EndTimeUTC *string
+
+	// Error response when job is failed
+	FailureReason *ErrorResponse
+
+	// Job instance Id
+	ID *string
+
+	// The item job invoke type. Additional invokeTypes may be added over time.
+	InvokeType *InvokeType
+
+	// Item Id
+	ItemID *string
+
+	// Job type
+	JobType *string
+
+	// Root activity id to trace requests across services
+	RootActivityID *string
+
+	// Job start time in UTC
+	StartTimeUTC *string
+
+	// The item job status. Additional statuses may be added over time.
+	Status *ItemJobStatus
+}
+
+// ExecuteJobInstances - A list of CopyJob execute job instances.
+type ExecuteJobInstances struct {
+	// READ-ONLY; A list of CopyJob execute job instances.
+	Value []ExecuteJobInstance
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
 }
 
 // GroupPrincipal - Represents a security group.

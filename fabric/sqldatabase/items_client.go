@@ -601,7 +601,7 @@ func (client *ItemsClient) updateSQLDatabaseHandleResponse(resp *http.Response) 
 	return result, nil
 }
 
-// BeginUpdateSQLDatabasesDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// BeginUpdateSQLDatabaseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the SQL database's definition, does not affect its sensitivity label.
 // PERMISSIONS The caller must have read and write permissions for the SQL database.
 // REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
@@ -617,13 +617,13 @@ func (client *ItemsClient) updateSQLDatabaseHandleResponse(resp *http.Response) 
 //   - workspaceID - The workspace ID.
 //   - sqlDatabaseID - The SQL database ID.
 //   - updateSQLDatabaseDefinitionRequest - Update SQL database definition request payload.
-//   - options - ItemsClientBeginUpdateSQLDatabasesDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateSQLDatabasesDefinition
+//   - options - ItemsClientBeginUpdateSQLDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateSQLDatabaseDefinition
 //     method.
-func (client *ItemsClient) BeginUpdateSQLDatabasesDefinition(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseDefinitionRequest UpdateSQLDatabaseDefinitionRequest, options *ItemsClientBeginUpdateSQLDatabasesDefinitionOptions) (*runtime.Poller[ItemsClientUpdateSQLDatabasesDefinitionResponse], error) {
-	return client.beginUpdateSQLDatabasesDefinition(ctx, workspaceID, sqlDatabaseID, updateSQLDatabaseDefinitionRequest, options)
+func (client *ItemsClient) BeginUpdateSQLDatabaseDefinition(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseDefinitionRequest UpdateSQLDatabaseDefinitionRequest, options *ItemsClientBeginUpdateSQLDatabaseDefinitionOptions) (*runtime.Poller[ItemsClientUpdateSQLDatabaseDefinitionResponse], error) {
+	return client.beginUpdateSQLDatabaseDefinition(ctx, workspaceID, sqlDatabaseID, updateSQLDatabaseDefinitionRequest, options)
 }
 
-// UpdateSQLDatabasesDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// UpdateSQLDatabaseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Updating the SQL database's definition, does not affect its sensitivity label.
 // PERMISSIONS The caller must have read and write permissions for the SQL database.
 // REQUIRED DELEGATED SCOPES SQLDatabase.ReadWrite.All or Item.ReadWrite.All
@@ -636,13 +636,13 @@ func (client *ItemsClient) BeginUpdateSQLDatabasesDefinition(ctx context.Context
 // If the operation fails it returns an *core.ResponseError type.
 //
 // Generated from API version v1
-func (client *ItemsClient) updateSQLDatabasesDefinition(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseDefinitionRequest UpdateSQLDatabaseDefinitionRequest, options *ItemsClientBeginUpdateSQLDatabasesDefinitionOptions) (*http.Response, error) {
+func (client *ItemsClient) updateSQLDatabaseDefinition(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseDefinitionRequest UpdateSQLDatabaseDefinitionRequest, options *ItemsClientBeginUpdateSQLDatabaseDefinitionOptions) (*http.Response, error) {
 	var err error
-	const operationName = "sqldatabase.ItemsClient.BeginUpdateSQLDatabasesDefinition"
+	const operationName = "sqldatabase.ItemsClient.BeginUpdateSQLDatabaseDefinition"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.updateSQLDatabasesDefinitionCreateRequest(ctx, workspaceID, sqlDatabaseID, updateSQLDatabaseDefinitionRequest, options)
+	req, err := client.updateSQLDatabaseDefinitionCreateRequest(ctx, workspaceID, sqlDatabaseID, updateSQLDatabaseDefinitionRequest, options)
 	if err != nil {
 		return nil, err
 	}
@@ -657,8 +657,8 @@ func (client *ItemsClient) updateSQLDatabasesDefinition(ctx context.Context, wor
 	return httpResp, nil
 }
 
-// updateSQLDatabasesDefinitionCreateRequest creates the UpdateSQLDatabasesDefinition request.
-func (client *ItemsClient) updateSQLDatabasesDefinitionCreateRequest(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseDefinitionRequest UpdateSQLDatabaseDefinitionRequest, options *ItemsClientBeginUpdateSQLDatabasesDefinitionOptions) (*policy.Request, error) {
+// updateSQLDatabaseDefinitionCreateRequest creates the UpdateSQLDatabaseDefinition request.
+func (client *ItemsClient) updateSQLDatabaseDefinitionCreateRequest(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseDefinitionRequest UpdateSQLDatabaseDefinitionRequest, options *ItemsClientBeginUpdateSQLDatabaseDefinitionOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/sqlDatabases/{sqlDatabaseId}/updateDefinition"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -904,7 +904,7 @@ func (client *ItemsClient) beginRevalidateCMK(ctx context.Context, workspaceID s
 	}
 }
 
-// UpdateSQLDatabasesDefinition - returns ItemsClientUpdateSQLDatabasesDefinitionResponse in sync mode.
+// UpdateSQLDatabaseDefinition - returns ItemsClientUpdateSQLDatabaseDefinitionResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
 // Updating the SQL database's definition, does not affect its sensitivity label.
@@ -923,23 +923,23 @@ func (client *ItemsClient) beginRevalidateCMK(ctx context.Context, workspaceID s
 //   - workspaceID - The workspace ID.
 //   - sqlDatabaseID - The SQL database ID.
 //   - updateSQLDatabaseDefinitionRequest - Update SQL database definition request payload.
-//   - options - ItemsClientBeginUpdateSQLDatabasesDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateSQLDatabasesDefinition method.
-func (client *ItemsClient) UpdateSQLDatabasesDefinition(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseDefinitionRequest UpdateSQLDatabaseDefinitionRequest, options *ItemsClientBeginUpdateSQLDatabasesDefinitionOptions) (ItemsClientUpdateSQLDatabasesDefinitionResponse, error) {
-	result, err := iruntime.NewLRO(client.BeginUpdateSQLDatabasesDefinition(ctx, workspaceID, sqlDatabaseID, updateSQLDatabaseDefinitionRequest, options)).Sync(ctx)
+//   - options - ItemsClientBeginUpdateSQLDatabaseDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateSQLDatabaseDefinition method.
+func (client *ItemsClient) UpdateSQLDatabaseDefinition(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseDefinitionRequest UpdateSQLDatabaseDefinitionRequest, options *ItemsClientBeginUpdateSQLDatabaseDefinitionOptions) (ItemsClientUpdateSQLDatabaseDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginUpdateSQLDatabaseDefinition(ctx, workspaceID, sqlDatabaseID, updateSQLDatabaseDefinitionRequest, options)).Sync(ctx)
 	if err != nil {
 		var azcoreRespError *azcore.ResponseError
 		if errors.As(err, &azcoreRespError) {
-			return ItemsClientUpdateSQLDatabasesDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+			return ItemsClientUpdateSQLDatabaseDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
 		}
-		return ItemsClientUpdateSQLDatabasesDefinitionResponse{}, err
+		return ItemsClientUpdateSQLDatabaseDefinitionResponse{}, err
 	}
 	return result, err
 }
 
-// beginUpdateSQLDatabasesDefinition creates the updateSQLDatabasesDefinition request.
-func (client *ItemsClient) beginUpdateSQLDatabasesDefinition(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseDefinitionRequest UpdateSQLDatabaseDefinitionRequest, options *ItemsClientBeginUpdateSQLDatabasesDefinitionOptions) (*runtime.Poller[ItemsClientUpdateSQLDatabasesDefinitionResponse], error) {
+// beginUpdateSQLDatabaseDefinition creates the updateSQLDatabaseDefinition request.
+func (client *ItemsClient) beginUpdateSQLDatabaseDefinition(ctx context.Context, workspaceID string, sqlDatabaseID string, updateSQLDatabaseDefinitionRequest UpdateSQLDatabaseDefinitionRequest, options *ItemsClientBeginUpdateSQLDatabaseDefinitionOptions) (*runtime.Poller[ItemsClientUpdateSQLDatabaseDefinitionResponse], error) {
 	if options == nil || options.ResumeToken == "" {
-		resp, err := client.updateSQLDatabasesDefinition(ctx, workspaceID, sqlDatabaseID, updateSQLDatabaseDefinitionRequest, options)
+		resp, err := client.updateSQLDatabaseDefinition(ctx, workspaceID, sqlDatabaseID, updateSQLDatabaseDefinitionRequest, options)
 		if err != nil {
 			var azcoreRespError *azcore.ResponseError
 			if errors.As(err, &azcoreRespError) {
@@ -947,7 +947,7 @@ func (client *ItemsClient) beginUpdateSQLDatabasesDefinition(ctx context.Context
 			}
 			return nil, err
 		}
-		handler, err := locasync.NewPollerHandler[ItemsClientUpdateSQLDatabasesDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateSQLDatabaseDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
 		if err != nil {
 			var azcoreRespError *azcore.ResponseError
 			if errors.As(err, &azcoreRespError) {
@@ -955,13 +955,13 @@ func (client *ItemsClient) beginUpdateSQLDatabasesDefinition(ctx context.Context
 			}
 			return nil, err
 		}
-		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientUpdateSQLDatabasesDefinitionResponse]{
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientUpdateSQLDatabaseDefinitionResponse]{
 			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
 			Handler:       handler,
 			Tracer:        client.internal.Tracer(),
 		})
 	} else {
-		handler, err := locasync.NewPollerHandler[ItemsClientUpdateSQLDatabasesDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateSQLDatabaseDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
 		if err != nil {
 			var azcoreRespError *azcore.ResponseError
 			if errors.As(err, &azcoreRespError) {
@@ -969,7 +969,7 @@ func (client *ItemsClient) beginUpdateSQLDatabasesDefinition(ctx context.Context
 			}
 			return nil, err
 		}
-		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientUpdateSQLDatabasesDefinitionResponse]{
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientUpdateSQLDatabaseDefinitionResponse]{
 			Handler: handler,
 			Tracer:  client.internal.Tracer(),
 		})

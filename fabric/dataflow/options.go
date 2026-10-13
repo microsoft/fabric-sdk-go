@@ -111,3 +111,19 @@ type QueryExecutionClientBeginExecuteQueryOptions struct {
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
+
+// UpgradeClientBeginUpgradeDataflowsOptions contains the optional parameters for the UpgradeClient.BeginUpgradeDataflows
+// method.
+type UpgradeClientBeginUpgradeDataflowsOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// UpgradeClientListReadinessOptions contains the optional parameters for the UpgradeClient.NewListReadinessPager method.
+type UpgradeClientListReadinessOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+
+	// The maximum number of results per page. The value must be between 1 and 30. When omitted, the server selects the page size.
+	PageSize *int32
+}

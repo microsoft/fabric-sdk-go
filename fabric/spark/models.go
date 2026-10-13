@@ -195,6 +195,10 @@ type InstancePool struct {
 
 	// Instance pool type.
 	Type *CustomPoolType
+
+	// READ-ONLY; Server-computed upper bound for the live pool maxClustersToHydrate setting, determined by the capacity size
+	// associated with this pool.
+	MaxClustersToHydrateLimit *int32
 }
 
 // ItemReference - An item reference object.

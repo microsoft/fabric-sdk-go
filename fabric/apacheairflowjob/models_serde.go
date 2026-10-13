@@ -384,6 +384,7 @@ func (a ApacheAirflowJob) MarshalJSON() ([]byte, error) {
 	populate(objectMap, "displayName", a.DisplayName)
 	populate(objectMap, "folderId", a.FolderID)
 	populate(objectMap, "id", a.ID)
+	populate(objectMap, "logicalId", a.LogicalID)
 	populate(objectMap, "sensitivityLabel", a.SensitivityLabel)
 	populate(objectMap, "tags", a.Tags)
 	populate(objectMap, "type", a.Type)
@@ -414,6 +415,9 @@ func (a *ApacheAirflowJob) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "id":
 			err = unpopulate(val, "ID", &a.ID)
+			delete(rawMsg, key)
+		case "logicalId":
+			err = unpopulate(val, "LogicalID", &a.LogicalID)
 			delete(rawMsg, key)
 		case "sensitivityLabel":
 			err = unpopulate(val, "SensitivityLabel", &a.SensitivityLabel)

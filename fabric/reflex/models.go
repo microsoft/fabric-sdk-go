@@ -6,6 +6,27 @@
 
 package reflex
 
+// ActivationsColumn - Describes a column in the activations query result table.
+type ActivationsColumn struct {
+	// READ-ONLY; The name of the column.
+	ColumnName *string
+
+	// READ-ONLY; The KQL scalar data type of the column.
+	ColumnType *KustoScalarDataType
+}
+
+// ActivationsTable - A single result table returned by an activations query.
+type ActivationsTable struct {
+	// READ-ONLY; An array describing the columns of the result table.
+	Columns []ActivationsColumn
+
+	// READ-ONLY; An array of row arrays. Each inner array contains values positionally aligned with the columns array.
+	Rows [][]any
+
+	// READ-ONLY; The name of the result table. For a standard query, the primary result table is named PrimaryResult.
+	TableName *string
+}
+
 // CreateReflexRequest - Create Reflex request payload.
 type CreateReflexRequest struct {
 	// REQUIRED; The Reflex display name. The display name must follow naming rules according to item type.
@@ -128,6 +149,23 @@ type Principal struct {
 // GetPrincipal implements the PrincipalClassification interface for type Principal.
 func (p *Principal) GetPrincipal() *Principal { return p }
 
+// QueryActivationsRequest - Query activations request payload.
+type QueryActivationsRequest struct {
+	// REQUIRED; The KQL query string to execute against the activation records. Supports standard KQL data queries (e.g., table
+	// queries, union, filtering, aggregation) and limited management commands (.show tables,
+	// .show table {tableName} cslschema). Wildcard union (e.g. union *) is not supported.
+	Query *string
+}
+
+// QueryActivationsResponse - Query activations response. Contains one result table per statement in the query, in source-text
+// order.
+type QueryActivationsResponse struct {
+	// READ-ONLY; An array of result tables. A single-statement query returns one table; a multi-statement query (for example
+	// a .show table {tableName} cslschema command chained with a data query) returns one table per
+	// statement, in source-text order.
+	Tables []ActivationsTable
+}
+
 // Reflex - A Reflex object.
 type Reflex struct {
 	// REQUIRED; The item type.
@@ -147,6 +185,10 @@ type Reflex struct {
 
 	// READ-ONLY; The item ID.
 	ID *string
+
+	// READ-ONLY; The item's logical identifier. Corresponding item instances share the same logical ID. The value is null when
+	// no logical ID has been assigned.
+	LogicalID *string
 
 	// READ-ONLY; The item sensitivity label.
 	SensitivityLabel *SensitivityLabel
