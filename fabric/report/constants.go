@@ -27,6 +27,24 @@ func PossibleGroupTypeValues() []GroupType {
 	}
 }
 
+// ItemReferenceType - The item reference type. Additional ItemReferenceType types may be added over time.
+type ItemReferenceType string
+
+const (
+	// ItemReferenceTypeByID - The item is referenced by its ID.
+	ItemReferenceTypeByID ItemReferenceType = "ById"
+	// ItemReferenceTypeByVariable - The item is referenced by a variable.
+	ItemReferenceTypeByVariable ItemReferenceType = "ByVariable"
+)
+
+// PossibleItemReferenceTypeValues returns the possible values for the ItemReferenceType const type.
+func PossibleItemReferenceTypeValues() []ItemReferenceType {
+	return []ItemReferenceType{
+		ItemReferenceTypeByID,
+		ItemReferenceTypeByVariable,
+	}
+}
+
 // ItemType - The type of the item. Additional item types may be added over time.
 type ItemType string
 
@@ -55,6 +73,8 @@ const (
 	ItemTypeDataflow ItemType = "Dataflow"
 	// ItemTypeDatamart - PowerBI datamart.
 	ItemTypeDatamart ItemType = "Datamart"
+	// ItemTypeDeploymentPlan - A Deployment plan.
+	ItemTypeDeploymentPlan ItemType = "DeploymentPlan"
 	// ItemTypeDigitalTwinBuilder - A DigitalTwinBuilder.
 	ItemTypeDigitalTwinBuilder ItemType = "DigitalTwinBuilder"
 	// ItemTypeDigitalTwinBuilderFlow - A Digital Twin Builder Flow.
@@ -95,6 +115,8 @@ const (
 	ItemTypeMirroredDatabase ItemType = "MirroredDatabase"
 	// ItemTypeMirroredWarehouse - A mirrored warehouse.
 	ItemTypeMirroredWarehouse ItemType = "MirroredWarehouse"
+	// ItemTypeMonitoring - A Monitoring item.
+	ItemTypeMonitoring ItemType = "Monitoring"
 	// ItemTypeMountedDataFactory - A MountedDataFactory.
 	ItemTypeMountedDataFactory ItemType = "MountedDataFactory"
 	// ItemTypeNotebook - A notebook.
@@ -152,6 +174,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
 		ItemTypeDatamart,
+		ItemTypeDeploymentPlan,
 		ItemTypeDigitalTwinBuilder,
 		ItemTypeDigitalTwinBuilderFlow,
 		ItemTypeEnvironment,
@@ -172,6 +195,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeMirroredCatalog,
 		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
+		ItemTypeMonitoring,
 		ItemTypeMountedDataFactory,
 		ItemTypeNotebook,
 		ItemTypeOntology,

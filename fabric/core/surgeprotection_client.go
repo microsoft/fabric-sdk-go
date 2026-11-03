@@ -16,6 +16,8 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
+
+	"github.com/microsoft/fabric-sdk-go/internal/iruntime"
 )
 
 // SurgeProtectionClient contains the methods for the SurgeProtection group.
@@ -23,6 +25,524 @@ import (
 type SurgeProtectionClient struct {
 	internal *azcore.Client
 	endpoint string
+}
+
+// CreateActorAutoDetectionRule - Creates an actor auto-detection rule on the specified capacity. If a rule with the same
+// actors subject to the rule already exists on the capacity, the request returns a conflict response.
+// PERMISSIONS The caller must have administrator permissions on the capacity.
+// REQUIRED DELEGATED SCOPES Capacity.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - createActorAutoDetectionRuleRequest - The request payload for creating an actor auto-detection rule.
+//   - options - SurgeProtectionClientCreateActorAutoDetectionRuleOptions contains the optional parameters for the SurgeProtectionClient.CreateActorAutoDetectionRule
+//     method.
+func (client *SurgeProtectionClient) CreateActorAutoDetectionRule(ctx context.Context, capacityID string, createActorAutoDetectionRuleRequest CreateActorAutoDetectionRuleRequest, options *SurgeProtectionClientCreateActorAutoDetectionRuleOptions) (SurgeProtectionClientCreateActorAutoDetectionRuleResponse, error) {
+	var err error
+	const operationName = "core.SurgeProtectionClient.CreateActorAutoDetectionRule"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.createActorAutoDetectionRuleCreateRequest(ctx, capacityID, createActorAutoDetectionRuleRequest, options)
+	if err != nil {
+		return SurgeProtectionClientCreateActorAutoDetectionRuleResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return SurgeProtectionClientCreateActorAutoDetectionRuleResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusCreated) {
+		err = NewResponseError(httpResp)
+		return SurgeProtectionClientCreateActorAutoDetectionRuleResponse{}, err
+	}
+	resp, err := client.createActorAutoDetectionRuleHandleResponse(httpResp)
+	return resp, err
+}
+
+// createActorAutoDetectionRuleCreateRequest creates the CreateActorAutoDetectionRule request.
+func (client *SurgeProtectionClient) createActorAutoDetectionRuleCreateRequest(ctx context.Context, capacityID string, createActorAutoDetectionRuleRequest CreateActorAutoDetectionRuleRequest, _ *SurgeProtectionClientCreateActorAutoDetectionRuleOptions) (*policy.Request, error) {
+	urlPath := "/v1/capacities/{capacityId}/surgeProtection/actorAutoDetectionRules"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, createActorAutoDetectionRuleRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// createActorAutoDetectionRuleHandleResponse handles the CreateActorAutoDetectionRule response.
+func (client *SurgeProtectionClient) createActorAutoDetectionRuleHandleResponse(resp *http.Response) (SurgeProtectionClientCreateActorAutoDetectionRuleResponse, error) {
+	result := SurgeProtectionClientCreateActorAutoDetectionRuleResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.ActorAutoDetectionRule); err != nil {
+		return SurgeProtectionClientCreateActorAutoDetectionRuleResponse{}, err
+	}
+	return result, nil
+}
+
+// CreateBlockedActor - Creates a blocked actor on the specified capacity. The actor's background operations will be rejected
+// regardless of capacity utilization.
+// Upsert-by-actor semantics: If the specified actor is already blocked on this capacity, the existing record's expirationPolicy
+// is overwritten with the values from this request and the updated record is
+// returned with 200 OK. If the actor is new, the record is created and returned with 201 Created.
+// When expirationPolicy.policyType is ExpireAfterDate, enforcement stops immediately when expirationPolicy.expireAfterDateTime
+// passes. The record may remain visible via List and Get until an
+// asynchronous background garbage-collection job removes it.
+// PERMISSIONS The caller must be a capacity admin.
+// REQUIRED DELEGATED SCOPES Capacity.ReadWrite.All
+// LIMITATIONS
+// * Each capacity can hold a maximum of 1,000 surge-protection items combined across blocked actors, mission critical actors,
+// and detection rules.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - createBlockedActorRequest - Create blocked actor request payload.
+//   - options - SurgeProtectionClientCreateBlockedActorOptions contains the optional parameters for the SurgeProtectionClient.CreateBlockedActor
+//     method.
+func (client *SurgeProtectionClient) CreateBlockedActor(ctx context.Context, capacityID string, createBlockedActorRequest CreateBlockedActorRequest, options *SurgeProtectionClientCreateBlockedActorOptions) (SurgeProtectionClientCreateBlockedActorResponse, error) {
+	var err error
+	const operationName = "core.SurgeProtectionClient.CreateBlockedActor"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.createBlockedActorCreateRequest(ctx, capacityID, createBlockedActorRequest, options)
+	if err != nil {
+		return SurgeProtectionClientCreateBlockedActorResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return SurgeProtectionClientCreateBlockedActorResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusCreated) {
+		err = NewResponseError(httpResp)
+		return SurgeProtectionClientCreateBlockedActorResponse{}, err
+	}
+	resp, err := client.createBlockedActorHandleResponse(httpResp)
+	return resp, err
+}
+
+// createBlockedActorCreateRequest creates the CreateBlockedActor request.
+func (client *SurgeProtectionClient) createBlockedActorCreateRequest(ctx context.Context, capacityID string, createBlockedActorRequest CreateBlockedActorRequest, _ *SurgeProtectionClientCreateBlockedActorOptions) (*policy.Request, error) {
+	urlPath := "/v1/capacities/{capacityId}/surgeProtection/blockedActors"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, createBlockedActorRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// createBlockedActorHandleResponse handles the CreateBlockedActor response.
+func (client *SurgeProtectionClient) createBlockedActorHandleResponse(resp *http.Response) (SurgeProtectionClientCreateBlockedActorResponse, error) {
+	result := SurgeProtectionClientCreateBlockedActorResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.BlockedActor); err != nil {
+		return SurgeProtectionClientCreateBlockedActorResponse{}, err
+	}
+	return result, nil
+}
+
+// CreateMissionCriticalActor - Creates a mission critical actor on the specified capacity. The actor's operations will be
+// shielded from surge-protection rejection.
+// Idempotent no-op semantics: If the specified actor is already mission critical on this capacity, the existing record is
+// returned unchanged with 200 OK. If the actor is new, the record is created and
+// returned with 201 Created.
+// PERMISSIONS The caller must be a capacity admin.
+// REQUIRED DELEGATED SCOPES Capacity.ReadWrite.All
+// LIMITATIONS
+// * Each capacity can hold a maximum of 1,000 surge-protection items combined across blocked actors, mission critical actors,
+// and detection rules.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - createMissionCriticalActorRequest - Create mission critical actor request payload.
+//   - options - SurgeProtectionClientCreateMissionCriticalActorOptions contains the optional parameters for the SurgeProtectionClient.CreateMissionCriticalActor
+//     method.
+func (client *SurgeProtectionClient) CreateMissionCriticalActor(ctx context.Context, capacityID string, createMissionCriticalActorRequest CreateMissionCriticalActorRequest, options *SurgeProtectionClientCreateMissionCriticalActorOptions) (SurgeProtectionClientCreateMissionCriticalActorResponse, error) {
+	var err error
+	const operationName = "core.SurgeProtectionClient.CreateMissionCriticalActor"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.createMissionCriticalActorCreateRequest(ctx, capacityID, createMissionCriticalActorRequest, options)
+	if err != nil {
+		return SurgeProtectionClientCreateMissionCriticalActorResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return SurgeProtectionClientCreateMissionCriticalActorResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusCreated) {
+		err = NewResponseError(httpResp)
+		return SurgeProtectionClientCreateMissionCriticalActorResponse{}, err
+	}
+	resp, err := client.createMissionCriticalActorHandleResponse(httpResp)
+	return resp, err
+}
+
+// createMissionCriticalActorCreateRequest creates the CreateMissionCriticalActor request.
+func (client *SurgeProtectionClient) createMissionCriticalActorCreateRequest(ctx context.Context, capacityID string, createMissionCriticalActorRequest CreateMissionCriticalActorRequest, _ *SurgeProtectionClientCreateMissionCriticalActorOptions) (*policy.Request, error) {
+	urlPath := "/v1/capacities/{capacityId}/surgeProtection/missionCriticalActors"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, createMissionCriticalActorRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// createMissionCriticalActorHandleResponse handles the CreateMissionCriticalActor response.
+func (client *SurgeProtectionClient) createMissionCriticalActorHandleResponse(resp *http.Response) (SurgeProtectionClientCreateMissionCriticalActorResponse, error) {
+	result := SurgeProtectionClientCreateMissionCriticalActorResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.MissionCriticalActor); err != nil {
+		return SurgeProtectionClientCreateMissionCriticalActorResponse{}, err
+	}
+	return result, nil
+}
+
+// DeleteActorAutoDetectionRule - Deletes the specified actor auto-detection rule from the capacity. If this is the only rule,
+// auto-detection is disabled for the capacity. Deleting a rule does not clear existing blocks. Actors blocked
+// for a specified number of hours remain blocked until the originally scheduled expiration time, and actors blocked indefinitely
+// remain blocked until an admin manually unblocks them.
+// PERMISSIONS The caller must have administrator permissions on the capacity.
+// REQUIRED DELEGATED SCOPES Capacity.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - actorAutoDetectionRuleID - The actor auto-detection rule ID.
+//   - options - SurgeProtectionClientDeleteActorAutoDetectionRuleOptions contains the optional parameters for the SurgeProtectionClient.DeleteActorAutoDetectionRule
+//     method.
+func (client *SurgeProtectionClient) DeleteActorAutoDetectionRule(ctx context.Context, capacityID string, actorAutoDetectionRuleID string, options *SurgeProtectionClientDeleteActorAutoDetectionRuleOptions) (SurgeProtectionClientDeleteActorAutoDetectionRuleResponse, error) {
+	var err error
+	const operationName = "core.SurgeProtectionClient.DeleteActorAutoDetectionRule"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.deleteActorAutoDetectionRuleCreateRequest(ctx, capacityID, actorAutoDetectionRuleID, options)
+	if err != nil {
+		return SurgeProtectionClientDeleteActorAutoDetectionRuleResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return SurgeProtectionClientDeleteActorAutoDetectionRuleResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return SurgeProtectionClientDeleteActorAutoDetectionRuleResponse{}, err
+	}
+	return SurgeProtectionClientDeleteActorAutoDetectionRuleResponse{}, nil
+}
+
+// deleteActorAutoDetectionRuleCreateRequest creates the DeleteActorAutoDetectionRule request.
+func (client *SurgeProtectionClient) deleteActorAutoDetectionRuleCreateRequest(ctx context.Context, capacityID string, actorAutoDetectionRuleID string, _ *SurgeProtectionClientDeleteActorAutoDetectionRuleOptions) (*policy.Request, error) {
+	urlPath := "/v1/capacities/{capacityId}/surgeProtection/actorAutoDetectionRules/{actorAutoDetectionRuleId}"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	if actorAutoDetectionRuleID == "" {
+		return nil, errors.New("parameter actorAutoDetectionRuleID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{actorAutoDetectionRuleId}", url.PathEscape(actorAutoDetectionRuleID))
+	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// DeleteBlockedActor - Deletes the specified blocked actor from the capacity. The actor's background operations will no longer
+// be blocked.
+// PERMISSIONS The caller must be a capacity admin.
+// REQUIRED DELEGATED SCOPES Capacity.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - blockedActorID - The blocked actor ID.
+//   - options - SurgeProtectionClientDeleteBlockedActorOptions contains the optional parameters for the SurgeProtectionClient.DeleteBlockedActor
+//     method.
+func (client *SurgeProtectionClient) DeleteBlockedActor(ctx context.Context, capacityID string, blockedActorID string, options *SurgeProtectionClientDeleteBlockedActorOptions) (SurgeProtectionClientDeleteBlockedActorResponse, error) {
+	var err error
+	const operationName = "core.SurgeProtectionClient.DeleteBlockedActor"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.deleteBlockedActorCreateRequest(ctx, capacityID, blockedActorID, options)
+	if err != nil {
+		return SurgeProtectionClientDeleteBlockedActorResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return SurgeProtectionClientDeleteBlockedActorResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return SurgeProtectionClientDeleteBlockedActorResponse{}, err
+	}
+	return SurgeProtectionClientDeleteBlockedActorResponse{}, nil
+}
+
+// deleteBlockedActorCreateRequest creates the DeleteBlockedActor request.
+func (client *SurgeProtectionClient) deleteBlockedActorCreateRequest(ctx context.Context, capacityID string, blockedActorID string, _ *SurgeProtectionClientDeleteBlockedActorOptions) (*policy.Request, error) {
+	urlPath := "/v1/capacities/{capacityId}/surgeProtection/blockedActors/{blockedActorId}"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	if blockedActorID == "" {
+		return nil, errors.New("parameter blockedActorID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{blockedActorId}", url.PathEscape(blockedActorID))
+	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// DeleteMissionCriticalActor - Deletes the specified mission critical actor from the capacity. The actor will no longer be
+// shielded from surge-protection rejection.
+// PERMISSIONS The caller must be a capacity admin.
+// REQUIRED DELEGATED SCOPES Capacity.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - missionCriticalActorID - The mission critical actor ID.
+//   - options - SurgeProtectionClientDeleteMissionCriticalActorOptions contains the optional parameters for the SurgeProtectionClient.DeleteMissionCriticalActor
+//     method.
+func (client *SurgeProtectionClient) DeleteMissionCriticalActor(ctx context.Context, capacityID string, missionCriticalActorID string, options *SurgeProtectionClientDeleteMissionCriticalActorOptions) (SurgeProtectionClientDeleteMissionCriticalActorResponse, error) {
+	var err error
+	const operationName = "core.SurgeProtectionClient.DeleteMissionCriticalActor"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.deleteMissionCriticalActorCreateRequest(ctx, capacityID, missionCriticalActorID, options)
+	if err != nil {
+		return SurgeProtectionClientDeleteMissionCriticalActorResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return SurgeProtectionClientDeleteMissionCriticalActorResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return SurgeProtectionClientDeleteMissionCriticalActorResponse{}, err
+	}
+	return SurgeProtectionClientDeleteMissionCriticalActorResponse{}, nil
+}
+
+// deleteMissionCriticalActorCreateRequest creates the DeleteMissionCriticalActor request.
+func (client *SurgeProtectionClient) deleteMissionCriticalActorCreateRequest(ctx context.Context, capacityID string, missionCriticalActorID string, _ *SurgeProtectionClientDeleteMissionCriticalActorOptions) (*policy.Request, error) {
+	urlPath := "/v1/capacities/{capacityId}/surgeProtection/missionCriticalActors/{missionCriticalActorId}"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	if missionCriticalActorID == "" {
+		return nil, errors.New("parameter missionCriticalActorID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{missionCriticalActorId}", url.PathEscape(missionCriticalActorID))
+	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// GetActorAutoDetectionRule - Returns the specified actor auto-detection rule on the capacity.
+// PERMISSIONS The caller must have administrator permissions on the capacity.
+// REQUIRED DELEGATED SCOPES Capacity.Read.All or Capacity.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - actorAutoDetectionRuleID - The actor auto-detection rule ID.
+//   - options - SurgeProtectionClientGetActorAutoDetectionRuleOptions contains the optional parameters for the SurgeProtectionClient.GetActorAutoDetectionRule
+//     method.
+func (client *SurgeProtectionClient) GetActorAutoDetectionRule(ctx context.Context, capacityID string, actorAutoDetectionRuleID string, options *SurgeProtectionClientGetActorAutoDetectionRuleOptions) (SurgeProtectionClientGetActorAutoDetectionRuleResponse, error) {
+	var err error
+	const operationName = "core.SurgeProtectionClient.GetActorAutoDetectionRule"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getActorAutoDetectionRuleCreateRequest(ctx, capacityID, actorAutoDetectionRuleID, options)
+	if err != nil {
+		return SurgeProtectionClientGetActorAutoDetectionRuleResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return SurgeProtectionClientGetActorAutoDetectionRuleResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return SurgeProtectionClientGetActorAutoDetectionRuleResponse{}, err
+	}
+	resp, err := client.getActorAutoDetectionRuleHandleResponse(httpResp)
+	return resp, err
+}
+
+// getActorAutoDetectionRuleCreateRequest creates the GetActorAutoDetectionRule request.
+func (client *SurgeProtectionClient) getActorAutoDetectionRuleCreateRequest(ctx context.Context, capacityID string, actorAutoDetectionRuleID string, _ *SurgeProtectionClientGetActorAutoDetectionRuleOptions) (*policy.Request, error) {
+	urlPath := "/v1/capacities/{capacityId}/surgeProtection/actorAutoDetectionRules/{actorAutoDetectionRuleId}"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	if actorAutoDetectionRuleID == "" {
+		return nil, errors.New("parameter actorAutoDetectionRuleID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{actorAutoDetectionRuleId}", url.PathEscape(actorAutoDetectionRuleID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getActorAutoDetectionRuleHandleResponse handles the GetActorAutoDetectionRule response.
+func (client *SurgeProtectionClient) getActorAutoDetectionRuleHandleResponse(resp *http.Response) (SurgeProtectionClientGetActorAutoDetectionRuleResponse, error) {
+	result := SurgeProtectionClientGetActorAutoDetectionRuleResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.ActorAutoDetectionRule); err != nil {
+		return SurgeProtectionClientGetActorAutoDetectionRuleResponse{}, err
+	}
+	return result, nil
+}
+
+// GetBlockedActor - Returns the specified blocked actor on the capacity.
+// PERMISSIONS The caller must be a capacity admin.
+// REQUIRED DELEGATED SCOPES Capacity.Read.All or Capacity.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - blockedActorID - The blocked actor ID.
+//   - options - SurgeProtectionClientGetBlockedActorOptions contains the optional parameters for the SurgeProtectionClient.GetBlockedActor
+//     method.
+func (client *SurgeProtectionClient) GetBlockedActor(ctx context.Context, capacityID string, blockedActorID string, options *SurgeProtectionClientGetBlockedActorOptions) (SurgeProtectionClientGetBlockedActorResponse, error) {
+	var err error
+	const operationName = "core.SurgeProtectionClient.GetBlockedActor"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getBlockedActorCreateRequest(ctx, capacityID, blockedActorID, options)
+	if err != nil {
+		return SurgeProtectionClientGetBlockedActorResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return SurgeProtectionClientGetBlockedActorResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return SurgeProtectionClientGetBlockedActorResponse{}, err
+	}
+	resp, err := client.getBlockedActorHandleResponse(httpResp)
+	return resp, err
+}
+
+// getBlockedActorCreateRequest creates the GetBlockedActor request.
+func (client *SurgeProtectionClient) getBlockedActorCreateRequest(ctx context.Context, capacityID string, blockedActorID string, _ *SurgeProtectionClientGetBlockedActorOptions) (*policy.Request, error) {
+	urlPath := "/v1/capacities/{capacityId}/surgeProtection/blockedActors/{blockedActorId}"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	if blockedActorID == "" {
+		return nil, errors.New("parameter blockedActorID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{blockedActorId}", url.PathEscape(blockedActorID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getBlockedActorHandleResponse handles the GetBlockedActor response.
+func (client *SurgeProtectionClient) getBlockedActorHandleResponse(resp *http.Response) (SurgeProtectionClientGetBlockedActorResponse, error) {
+	result := SurgeProtectionClientGetBlockedActorResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.BlockedActor); err != nil {
+		return SurgeProtectionClientGetBlockedActorResponse{}, err
+	}
+	return result, nil
 }
 
 // GetCapacitySurgeProtection - Surge protection lets a capacity administrator set utilization thresholds that proactively
@@ -84,6 +604,422 @@ func (client *SurgeProtectionClient) getCapacitySurgeProtectionHandleResponse(re
 	result := SurgeProtectionClientGetCapacitySurgeProtectionResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.CapacitySurgeProtection); err != nil {
 		return SurgeProtectionClientGetCapacitySurgeProtectionResponse{}, err
+	}
+	return result, nil
+}
+
+// GetMissionCriticalActor - Returns the specified mission critical actor on the capacity.
+// PERMISSIONS The caller must be a capacity admin.
+// REQUIRED DELEGATED SCOPES Capacity.Read.All or Capacity.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - missionCriticalActorID - The mission critical actor ID.
+//   - options - SurgeProtectionClientGetMissionCriticalActorOptions contains the optional parameters for the SurgeProtectionClient.GetMissionCriticalActor
+//     method.
+func (client *SurgeProtectionClient) GetMissionCriticalActor(ctx context.Context, capacityID string, missionCriticalActorID string, options *SurgeProtectionClientGetMissionCriticalActorOptions) (SurgeProtectionClientGetMissionCriticalActorResponse, error) {
+	var err error
+	const operationName = "core.SurgeProtectionClient.GetMissionCriticalActor"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getMissionCriticalActorCreateRequest(ctx, capacityID, missionCriticalActorID, options)
+	if err != nil {
+		return SurgeProtectionClientGetMissionCriticalActorResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return SurgeProtectionClientGetMissionCriticalActorResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return SurgeProtectionClientGetMissionCriticalActorResponse{}, err
+	}
+	resp, err := client.getMissionCriticalActorHandleResponse(httpResp)
+	return resp, err
+}
+
+// getMissionCriticalActorCreateRequest creates the GetMissionCriticalActor request.
+func (client *SurgeProtectionClient) getMissionCriticalActorCreateRequest(ctx context.Context, capacityID string, missionCriticalActorID string, _ *SurgeProtectionClientGetMissionCriticalActorOptions) (*policy.Request, error) {
+	urlPath := "/v1/capacities/{capacityId}/surgeProtection/missionCriticalActors/{missionCriticalActorId}"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	if missionCriticalActorID == "" {
+		return nil, errors.New("parameter missionCriticalActorID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{missionCriticalActorId}", url.PathEscape(missionCriticalActorID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getMissionCriticalActorHandleResponse handles the GetMissionCriticalActor response.
+func (client *SurgeProtectionClient) getMissionCriticalActorHandleResponse(resp *http.Response) (SurgeProtectionClientGetMissionCriticalActorResponse, error) {
+	result := SurgeProtectionClientGetMissionCriticalActorResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.MissionCriticalActor); err != nil {
+		return SurgeProtectionClientGetMissionCriticalActorResponse{}, err
+	}
+	return result, nil
+}
+
+// NewListActorAutoDetectionRulesPager - Returns all actor auto-detection rules on the specified capacity.
+// This API supports pagination [/rest/api/fabric/articles/pagination].
+// PERMISSIONS The caller must have administrator permissions on the capacity.
+// REQUIRED DELEGATED SCOPES Capacity.Read.All or Capacity.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - options - SurgeProtectionClientListActorAutoDetectionRulesOptions contains the optional parameters for the SurgeProtectionClient.NewListActorAutoDetectionRulesPager
+//     method.
+func (client *SurgeProtectionClient) NewListActorAutoDetectionRulesPager(capacityID string, options *SurgeProtectionClientListActorAutoDetectionRulesOptions) *runtime.Pager[SurgeProtectionClientListActorAutoDetectionRulesResponse] {
+	return runtime.NewPager(runtime.PagingHandler[SurgeProtectionClientListActorAutoDetectionRulesResponse]{
+		More: func(page SurgeProtectionClientListActorAutoDetectionRulesResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *SurgeProtectionClientListActorAutoDetectionRulesResponse) (SurgeProtectionClientListActorAutoDetectionRulesResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "core.SurgeProtectionClient.NewListActorAutoDetectionRulesPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.listActorAutoDetectionRulesCreateRequest(ctx, capacityID, options)
+			}, nil)
+			if err != nil {
+				return SurgeProtectionClientListActorAutoDetectionRulesResponse{}, err
+			}
+			return client.listActorAutoDetectionRulesHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
+}
+
+// listActorAutoDetectionRulesCreateRequest creates the ListActorAutoDetectionRules request.
+func (client *SurgeProtectionClient) listActorAutoDetectionRulesCreateRequest(ctx context.Context, capacityID string, options *SurgeProtectionClientListActorAutoDetectionRulesOptions) (*policy.Request, error) {
+	urlPath := "/v1/capacities/{capacityId}/surgeProtection/actorAutoDetectionRules"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// listActorAutoDetectionRulesHandleResponse handles the ListActorAutoDetectionRules response.
+func (client *SurgeProtectionClient) listActorAutoDetectionRulesHandleResponse(resp *http.Response) (SurgeProtectionClientListActorAutoDetectionRulesResponse, error) {
+	result := SurgeProtectionClientListActorAutoDetectionRulesResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.ListActorAutoDetectionRulesResponse); err != nil {
+		return SurgeProtectionClientListActorAutoDetectionRulesResponse{}, err
+	}
+	return result, nil
+}
+
+// NewListBlockedActorsPager - Returns a paginated list of blocked actors on the specified capacity.
+// Blocked actors whose expirationPolicy.expireAfterDateTime has passed may still appear in the list until a background garbage-collection
+// job removes them; enforcement has already stopped for those
+// entries.
+// This API supports pagination [/rest/api/fabric/articles/pagination].
+// PERMISSIONS The caller must be a capacity admin.
+// REQUIRED DELEGATED SCOPES Capacity.Read.All or Capacity.ReadWrite.All
+// LIMITATIONS
+// * Each capacity can hold a maximum of 1,000 surge-protection items combined across blocked actors, mission critical actors,
+// and detection rules.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - options - SurgeProtectionClientListBlockedActorsOptions contains the optional parameters for the SurgeProtectionClient.NewListBlockedActorsPager
+//     method.
+func (client *SurgeProtectionClient) NewListBlockedActorsPager(capacityID string, options *SurgeProtectionClientListBlockedActorsOptions) *runtime.Pager[SurgeProtectionClientListBlockedActorsResponse] {
+	return runtime.NewPager(runtime.PagingHandler[SurgeProtectionClientListBlockedActorsResponse]{
+		More: func(page SurgeProtectionClientListBlockedActorsResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *SurgeProtectionClientListBlockedActorsResponse) (SurgeProtectionClientListBlockedActorsResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "core.SurgeProtectionClient.NewListBlockedActorsPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.listBlockedActorsCreateRequest(ctx, capacityID, options)
+			}, nil)
+			if err != nil {
+				return SurgeProtectionClientListBlockedActorsResponse{}, err
+			}
+			return client.listBlockedActorsHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
+}
+
+// listBlockedActorsCreateRequest creates the ListBlockedActors request.
+func (client *SurgeProtectionClient) listBlockedActorsCreateRequest(ctx context.Context, capacityID string, options *SurgeProtectionClientListBlockedActorsOptions) (*policy.Request, error) {
+	urlPath := "/v1/capacities/{capacityId}/surgeProtection/blockedActors"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// listBlockedActorsHandleResponse handles the ListBlockedActors response.
+func (client *SurgeProtectionClient) listBlockedActorsHandleResponse(resp *http.Response) (SurgeProtectionClientListBlockedActorsResponse, error) {
+	result := SurgeProtectionClientListBlockedActorsResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.BlockedActors); err != nil {
+		return SurgeProtectionClientListBlockedActorsResponse{}, err
+	}
+	return result, nil
+}
+
+// NewListMissionCriticalActorsPager - Returns a paginated list of mission critical actors on the specified capacity.
+// This API supports pagination [/rest/api/fabric/articles/pagination].
+// PERMISSIONS The caller must be a capacity admin.
+// REQUIRED DELEGATED SCOPES Capacity.Read.All or Capacity.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - options - SurgeProtectionClientListMissionCriticalActorsOptions contains the optional parameters for the SurgeProtectionClient.NewListMissionCriticalActorsPager
+//     method.
+func (client *SurgeProtectionClient) NewListMissionCriticalActorsPager(capacityID string, options *SurgeProtectionClientListMissionCriticalActorsOptions) *runtime.Pager[SurgeProtectionClientListMissionCriticalActorsResponse] {
+	return runtime.NewPager(runtime.PagingHandler[SurgeProtectionClientListMissionCriticalActorsResponse]{
+		More: func(page SurgeProtectionClientListMissionCriticalActorsResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *SurgeProtectionClientListMissionCriticalActorsResponse) (SurgeProtectionClientListMissionCriticalActorsResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "core.SurgeProtectionClient.NewListMissionCriticalActorsPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.listMissionCriticalActorsCreateRequest(ctx, capacityID, options)
+			}, nil)
+			if err != nil {
+				return SurgeProtectionClientListMissionCriticalActorsResponse{}, err
+			}
+			return client.listMissionCriticalActorsHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
+}
+
+// listMissionCriticalActorsCreateRequest creates the ListMissionCriticalActors request.
+func (client *SurgeProtectionClient) listMissionCriticalActorsCreateRequest(ctx context.Context, capacityID string, options *SurgeProtectionClientListMissionCriticalActorsOptions) (*policy.Request, error) {
+	urlPath := "/v1/capacities/{capacityId}/surgeProtection/missionCriticalActors"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// listMissionCriticalActorsHandleResponse handles the ListMissionCriticalActors response.
+func (client *SurgeProtectionClient) listMissionCriticalActorsHandleResponse(resp *http.Response) (SurgeProtectionClientListMissionCriticalActorsResponse, error) {
+	result := SurgeProtectionClientListMissionCriticalActorsResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.MissionCriticalActors); err != nil {
+		return SurgeProtectionClientListMissionCriticalActorsResponse{}, err
+	}
+	return result, nil
+}
+
+// UpdateActorAutoDetectionRule - Updates the specified actor auto-detection rule. Only the capacity unit consumption threshold
+// percentage and block duration can be updated. The actors subject to the rule cannot be changed after
+// creation. Omitting a property leaves it unchanged. When the block duration is provided, it replaces the entire existing
+// block-duration configuration.
+// PERMISSIONS The caller must have administrator permissions on the capacity.
+// REQUIRED DELEGATED SCOPES Capacity.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - actorAutoDetectionRuleID - The actor auto-detection rule ID.
+//   - updateActorAutoDetectionRuleRequest - The request payload for updating an actor auto-detection rule.
+//   - options - SurgeProtectionClientUpdateActorAutoDetectionRuleOptions contains the optional parameters for the SurgeProtectionClient.UpdateActorAutoDetectionRule
+//     method.
+func (client *SurgeProtectionClient) UpdateActorAutoDetectionRule(ctx context.Context, capacityID string, actorAutoDetectionRuleID string, updateActorAutoDetectionRuleRequest UpdateActorAutoDetectionRuleRequest, options *SurgeProtectionClientUpdateActorAutoDetectionRuleOptions) (SurgeProtectionClientUpdateActorAutoDetectionRuleResponse, error) {
+	var err error
+	const operationName = "core.SurgeProtectionClient.UpdateActorAutoDetectionRule"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateActorAutoDetectionRuleCreateRequest(ctx, capacityID, actorAutoDetectionRuleID, updateActorAutoDetectionRuleRequest, options)
+	if err != nil {
+		return SurgeProtectionClientUpdateActorAutoDetectionRuleResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return SurgeProtectionClientUpdateActorAutoDetectionRuleResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return SurgeProtectionClientUpdateActorAutoDetectionRuleResponse{}, err
+	}
+	resp, err := client.updateActorAutoDetectionRuleHandleResponse(httpResp)
+	return resp, err
+}
+
+// updateActorAutoDetectionRuleCreateRequest creates the UpdateActorAutoDetectionRule request.
+func (client *SurgeProtectionClient) updateActorAutoDetectionRuleCreateRequest(ctx context.Context, capacityID string, actorAutoDetectionRuleID string, updateActorAutoDetectionRuleRequest UpdateActorAutoDetectionRuleRequest, _ *SurgeProtectionClientUpdateActorAutoDetectionRuleOptions) (*policy.Request, error) {
+	urlPath := "/v1/capacities/{capacityId}/surgeProtection/actorAutoDetectionRules/{actorAutoDetectionRuleId}"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	if actorAutoDetectionRuleID == "" {
+		return nil, errors.New("parameter actorAutoDetectionRuleID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{actorAutoDetectionRuleId}", url.PathEscape(actorAutoDetectionRuleID))
+	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateActorAutoDetectionRuleRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// updateActorAutoDetectionRuleHandleResponse handles the UpdateActorAutoDetectionRule response.
+func (client *SurgeProtectionClient) updateActorAutoDetectionRuleHandleResponse(resp *http.Response) (SurgeProtectionClientUpdateActorAutoDetectionRuleResponse, error) {
+	result := SurgeProtectionClientUpdateActorAutoDetectionRuleResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.ActorAutoDetectionRule); err != nil {
+		return SurgeProtectionClientUpdateActorAutoDetectionRuleResponse{}, err
+	}
+	return result, nil
+}
+
+// UpdateBlockedActor - Updates the expiration configuration of the specified blocked actor.
+// PERMISSIONS The caller must be a capacity admin.
+// REQUIRED DELEGATED SCOPES Capacity.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - blockedActorID - The blocked actor ID.
+//   - updateBlockedActorRequest - Update blocked actor request payload.
+//   - options - SurgeProtectionClientUpdateBlockedActorOptions contains the optional parameters for the SurgeProtectionClient.UpdateBlockedActor
+//     method.
+func (client *SurgeProtectionClient) UpdateBlockedActor(ctx context.Context, capacityID string, blockedActorID string, updateBlockedActorRequest UpdateBlockedActorRequest, options *SurgeProtectionClientUpdateBlockedActorOptions) (SurgeProtectionClientUpdateBlockedActorResponse, error) {
+	var err error
+	const operationName = "core.SurgeProtectionClient.UpdateBlockedActor"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateBlockedActorCreateRequest(ctx, capacityID, blockedActorID, updateBlockedActorRequest, options)
+	if err != nil {
+		return SurgeProtectionClientUpdateBlockedActorResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return SurgeProtectionClientUpdateBlockedActorResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return SurgeProtectionClientUpdateBlockedActorResponse{}, err
+	}
+	resp, err := client.updateBlockedActorHandleResponse(httpResp)
+	return resp, err
+}
+
+// updateBlockedActorCreateRequest creates the UpdateBlockedActor request.
+func (client *SurgeProtectionClient) updateBlockedActorCreateRequest(ctx context.Context, capacityID string, blockedActorID string, updateBlockedActorRequest UpdateBlockedActorRequest, _ *SurgeProtectionClientUpdateBlockedActorOptions) (*policy.Request, error) {
+	urlPath := "/v1/capacities/{capacityId}/surgeProtection/blockedActors/{blockedActorId}"
+	if capacityID == "" {
+		return nil, errors.New("parameter capacityID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{capacityId}", url.PathEscape(capacityID))
+	if blockedActorID == "" {
+		return nil, errors.New("parameter blockedActorID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{blockedActorId}", url.PathEscape(blockedActorID))
+	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateBlockedActorRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// updateBlockedActorHandleResponse handles the UpdateBlockedActor response.
+func (client *SurgeProtectionClient) updateBlockedActorHandleResponse(resp *http.Response) (SurgeProtectionClientUpdateBlockedActorResponse, error) {
+	result := SurgeProtectionClientUpdateBlockedActorResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.BlockedActor); err != nil {
+		return SurgeProtectionClientUpdateBlockedActorResponse{}, err
 	}
 	return result, nil
 }
@@ -154,3 +1090,112 @@ func (client *SurgeProtectionClient) updateCapacitySurgeProtectionHandleResponse
 }
 
 // Custom code starts below
+
+// ListActorAutoDetectionRules - returns array of ActorAutoDetectionRule from all pages.
+// Returns all actor auto-detection rules on the specified capacity.
+//
+// This API supports pagination [/rest/api/fabric/articles/pagination].
+//
+// PERMISSIONS The caller must have administrator permissions on the capacity.
+//
+// # REQUIRED DELEGATED SCOPES Capacity.Read.All or Capacity.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - options - SurgeProtectionClientListActorAutoDetectionRulesOptions contains the optional parameters for the SurgeProtectionClient.NewListActorAutoDetectionRulesPager method.
+func (client *SurgeProtectionClient) ListActorAutoDetectionRules(ctx context.Context, capacityID string, options *SurgeProtectionClientListActorAutoDetectionRulesOptions) ([]ActorAutoDetectionRule, error) {
+	pager := client.NewListActorAutoDetectionRulesPager(capacityID, options)
+	mapper := func(resp SurgeProtectionClientListActorAutoDetectionRulesResponse) []ActorAutoDetectionRule {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []ActorAutoDetectionRule{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []ActorAutoDetectionRule{}, err
+	}
+	return list, nil
+}
+
+// ListBlockedActors - returns array of BlockedActor from all pages.
+// Returns a paginated list of blocked actors on the specified capacity.
+//
+// Blocked actors whose expirationPolicy.expireAfterDateTime has passed may still appear in the list until a background garbage-collection job removes them; enforcement has already stopped for those
+// entries.
+//
+// This API supports pagination [/rest/api/fabric/articles/pagination].
+//
+// PERMISSIONS The caller must be a capacity admin.
+//
+// # REQUIRED DELEGATED SCOPES Capacity.Read.All or Capacity.ReadWrite.All
+//
+// LIMITATIONS
+//
+//   - Each capacity can hold a maximum of 1,000 surge-protection items combined across blocked actors, mission critical actors, and detection rules.
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - options - SurgeProtectionClientListBlockedActorsOptions contains the optional parameters for the SurgeProtectionClient.NewListBlockedActorsPager method.
+func (client *SurgeProtectionClient) ListBlockedActors(ctx context.Context, capacityID string, options *SurgeProtectionClientListBlockedActorsOptions) ([]BlockedActor, error) {
+	pager := client.NewListBlockedActorsPager(capacityID, options)
+	mapper := func(resp SurgeProtectionClientListBlockedActorsResponse) []BlockedActor {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []BlockedActor{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []BlockedActor{}, err
+	}
+	return list, nil
+}
+
+// ListMissionCriticalActors - returns array of MissionCriticalActor from all pages.
+// Returns a paginated list of mission critical actors on the specified capacity.
+//
+// This API supports pagination [/rest/api/fabric/articles/pagination].
+//
+// PERMISSIONS The caller must be a capacity admin.
+//
+// # REQUIRED DELEGATED SCOPES Capacity.Read.All or Capacity.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - capacityID - The capacity ID.
+//   - options - SurgeProtectionClientListMissionCriticalActorsOptions contains the optional parameters for the SurgeProtectionClient.NewListMissionCriticalActorsPager method.
+func (client *SurgeProtectionClient) ListMissionCriticalActors(ctx context.Context, capacityID string, options *SurgeProtectionClientListMissionCriticalActorsOptions) ([]MissionCriticalActor, error) {
+	pager := client.NewListMissionCriticalActorsPager(capacityID, options)
+	mapper := func(resp SurgeProtectionClientListMissionCriticalActorsResponse) []MissionCriticalActor {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []MissionCriticalActor{}, NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []MissionCriticalActor{}, err
+	}
+	return list, nil
+}

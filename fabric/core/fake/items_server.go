@@ -311,6 +311,7 @@ func (i *ItemsServerTransport) dispatchBeginBulkImportItemDefinitions(req *http.
 		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
+		qp := req.URL.Query()
 		body, err := server.UnmarshalRequestAsJSON[core.BulkImportItemDefinitionsRequest](req)
 		if err != nil {
 			return nil, err
@@ -319,7 +320,21 @@ func (i *ItemsServerTransport) dispatchBeginBulkImportItemDefinitions(req *http.
 		if err != nil {
 			return nil, err
 		}
-		respr, errRespr := i.srv.BeginBulkImportItemDefinitions(req.Context(), workspaceIDParam, body, nil)
+		betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
+		if err != nil {
+			return nil, err
+		}
+		betaParam, err := parseOptional(betaUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		var options *core.ItemsClientBeginBulkImportItemDefinitionsOptions
+		if betaParam != nil {
+			options = &core.ItemsClientBeginBulkImportItemDefinitionsOptions{
+				Beta: betaParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginBulkImportItemDefinitions(req.Context(), workspaceIDParam, body, options)
 		if respErr := server.GetError(errRespr, req); respErr != nil {
 			return nil, respErr
 		}

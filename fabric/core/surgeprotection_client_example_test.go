@@ -145,3 +145,584 @@ func ExampleSurgeProtectionClient_UpdateCapacitySurgeProtection_enableSurgeProte
 	// 	State: to.Ptr(core.SurgeProtectionStateEnabled),
 	// }
 }
+
+// Generated from example definition
+func ExampleSurgeProtectionClient_CreateBlockedActor_createABlockedActorThatIsAlreadyBlockedExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewSurgeProtectionClient().CreateBlockedActor(ctx, "96f3f0ff-4fe2-4712-b61b-05a456ba9357", core.CreateBlockedActorRequest{
+		ActorDetails: &core.WorkspaceActorDetails{
+			ActorType:   to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+			WorkspaceID: to.Ptr("a1f2c3d4-e5f6-7890-abcd-1234567890ef"),
+		},
+		ExpirationPolicy: &core.NeverExpireBlockedActorExpirationPolicy{
+			PolicyType: to.Ptr(core.BlockedActorExpirationPolicyTypeNeverExpire),
+		},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.BlockedActor = core.BlockedActor{
+	// 	ActorDetails: &core.WorkspaceActorDetails{
+	// 		ActorType: to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+	// 		WorkspaceID: to.Ptr("a1f2c3d4-e5f6-7890-abcd-1234567890ef"),
+	// 	},
+	// 	ExpirationPolicy: &core.NeverExpireBlockedActorExpirationPolicy{
+	// 		PolicyType: to.Ptr(core.BlockedActorExpirationPolicyTypeNeverExpire),
+	// 	},
+	// 	ID: to.Ptr("11223344-5566-7788-99aa-bbccddeeff00"),
+	// }
+}
+
+// Generated from example definition
+func ExampleSurgeProtectionClient_CreateBlockedActor_createANewBlockedActorExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewSurgeProtectionClient().CreateBlockedActor(ctx, "96f3f0ff-4fe2-4712-b61b-05a456ba9357", core.CreateBlockedActorRequest{
+		ActorDetails: &core.WorkspaceActorDetails{
+			ActorType:   to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+			WorkspaceID: to.Ptr("a1f2c3d4-e5f6-7890-abcd-1234567890ef"),
+		},
+		ExpirationPolicy: &core.ExpireAfterDateBlockedActorExpirationPolicy{
+			PolicyType:          to.Ptr(core.BlockedActorExpirationPolicyTypeExpireAfterDate),
+			ExpireAfterDateTime: to.Ptr("2026-07-15T18:00:00Z"),
+		},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleSurgeProtectionClient_NewListBlockedActorsPager() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewSurgeProtectionClient().NewListBlockedActorsPager("96f3f0ff-4fe2-4712-b61b-05a456ba9357", &core.SurgeProtectionClientListBlockedActorsOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.BlockedActors = core.BlockedActors{
+		// 	ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		// 	ContinuationURI: to.Ptr("https://api.fabric.microsoft.com/v1/capacities/96f3f0ff-4fe2-4712-b61b-05a456ba9357/surgeProtection/blockedActors?continuationToken='LDEsMTAwMDAwLDA%3D'"),
+		// 	Value: []core.BlockedActor{
+		// 		{
+		// 			ActorDetails: &core.WorkspaceActorDetails{
+		// 				ActorType: to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+		// 				WorkspaceID: to.Ptr("a1f2c3d4-e5f6-7890-abcd-1234567890ef"),
+		// 			},
+		// 			ExpirationPolicy: &core.ExpireAfterDateBlockedActorExpirationPolicy{
+		// 				PolicyType: to.Ptr(core.BlockedActorExpirationPolicyTypeExpireAfterDate),
+		// 				ExpireAfterDateTime: to.Ptr("2026-07-15T18:00:00Z"),
+		// 			},
+		// 			ID: to.Ptr("11223344-5566-7788-99aa-bbccddeeff00"),
+		// 		},
+		// 		{
+		// 			ActorDetails: &core.WorkspaceActorDetails{
+		// 				ActorType: to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+		// 				WorkspaceID: to.Ptr("c3d4e5f6-a7b8-9012-cdef-3456789012ab"),
+		// 			},
+		// 			ExpirationPolicy: &core.NeverExpireBlockedActorExpirationPolicy{
+		// 				PolicyType: to.Ptr(core.BlockedActorExpirationPolicyTypeNeverExpire),
+		// 			},
+		// 			ID: to.Ptr("22334455-6677-8899-aabb-ccddeeff0011"),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
+func ExampleSurgeProtectionClient_GetBlockedActor() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewSurgeProtectionClient().GetBlockedActor(ctx, "96f3f0ff-4fe2-4712-b61b-05a456ba9357", "11223344-5566-7788-99aa-bbccddeeff00", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.BlockedActor = core.BlockedActor{
+	// 	ActorDetails: &core.WorkspaceActorDetails{
+	// 		ActorType: to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+	// 		WorkspaceID: to.Ptr("a1f2c3d4-e5f6-7890-abcd-1234567890ef"),
+	// 	},
+	// 	ExpirationPolicy: &core.ExpireAfterDateBlockedActorExpirationPolicy{
+	// 		PolicyType: to.Ptr(core.BlockedActorExpirationPolicyTypeExpireAfterDate),
+	// 		ExpireAfterDateTime: to.Ptr("2026-07-15T18:00:00Z"),
+	// 	},
+	// 	ID: to.Ptr("11223344-5566-7788-99aa-bbccddeeff00"),
+	// }
+}
+
+// Generated from example definition
+func ExampleSurgeProtectionClient_UpdateBlockedActor() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewSurgeProtectionClient().UpdateBlockedActor(ctx, "96f3f0ff-4fe2-4712-b61b-05a456ba9357", "11223344-5566-7788-99aa-bbccddeeff00", core.UpdateBlockedActorRequest{
+		ExpirationPolicy: &core.NeverExpireBlockedActorExpirationPolicy{
+			PolicyType: to.Ptr(core.BlockedActorExpirationPolicyTypeNeverExpire),
+		},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.BlockedActor = core.BlockedActor{
+	// 	ActorDetails: &core.WorkspaceActorDetails{
+	// 		ActorType: to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+	// 		WorkspaceID: to.Ptr("a1f2c3d4-e5f6-7890-abcd-1234567890ef"),
+	// 	},
+	// 	ExpirationPolicy: &core.NeverExpireBlockedActorExpirationPolicy{
+	// 		PolicyType: to.Ptr(core.BlockedActorExpirationPolicyTypeNeverExpire),
+	// 	},
+	// 	ID: to.Ptr("11223344-5566-7788-99aa-bbccddeeff00"),
+	// }
+}
+
+// Generated from example definition
+func ExampleSurgeProtectionClient_DeleteBlockedActor() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewSurgeProtectionClient().DeleteBlockedActor(ctx, "96f3f0ff-4fe2-4712-b61b-05a456ba9357", "11223344-5566-7788-99aa-bbccddeeff00", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleSurgeProtectionClient_CreateMissionCriticalActor_createAMissionCriticalActorThatAlreadyExistsExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewSurgeProtectionClient().CreateMissionCriticalActor(ctx, "96f3f0ff-4fe2-4712-b61b-05a456ba9357", core.CreateMissionCriticalActorRequest{
+		ActorDetails: &core.WorkspaceActorDetails{
+			ActorType:   to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+			WorkspaceID: to.Ptr("b2c3d4e5-f6a7-8901-bcde-2345678901fa"),
+		},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.MissionCriticalActor = core.MissionCriticalActor{
+	// 	ActorDetails: &core.WorkspaceActorDetails{
+	// 		ActorType: to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+	// 		WorkspaceID: to.Ptr("b2c3d4e5-f6a7-8901-bcde-2345678901fa"),
+	// 	},
+	// 	ID: to.Ptr("33445566-7788-99aa-bbcc-ddeeff001122"),
+	// }
+}
+
+// Generated from example definition
+func ExampleSurgeProtectionClient_CreateMissionCriticalActor_createANewMissionCriticalActorExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewSurgeProtectionClient().CreateMissionCriticalActor(ctx, "96f3f0ff-4fe2-4712-b61b-05a456ba9357", core.CreateMissionCriticalActorRequest{
+		ActorDetails: &core.WorkspaceActorDetails{
+			ActorType:   to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+			WorkspaceID: to.Ptr("b2c3d4e5-f6a7-8901-bcde-2345678901fa"),
+		},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleSurgeProtectionClient_NewListMissionCriticalActorsPager() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewSurgeProtectionClient().NewListMissionCriticalActorsPager("96f3f0ff-4fe2-4712-b61b-05a456ba9357", &core.SurgeProtectionClientListMissionCriticalActorsOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.MissionCriticalActors = core.MissionCriticalActors{
+		// 	ContinuationToken: to.Ptr("MiwxMDAwMDAsMQ%3D%3D"),
+		// 	ContinuationURI: to.Ptr("https://api.fabric.microsoft.com/v1/capacities/96f3f0ff-4fe2-4712-b61b-05a456ba9357/surgeProtection/missionCriticalActors?continuationToken='MiwxMDAwMDAsMQ%3D%3D'"),
+		// 	Value: []core.MissionCriticalActor{
+		// 		{
+		// 			ActorDetails: &core.WorkspaceActorDetails{
+		// 				ActorType: to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+		// 				WorkspaceID: to.Ptr("b2c3d4e5-f6a7-8901-bcde-2345678901fa"),
+		// 			},
+		// 			ID: to.Ptr("33445566-7788-99aa-bbcc-ddeeff001122"),
+		// 		},
+		// 		{
+		// 			ActorDetails: &core.WorkspaceActorDetails{
+		// 				ActorType: to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+		// 				WorkspaceID: to.Ptr("d4e5f6a7-b8c9-0123-def4-567890abcdef"),
+		// 			},
+		// 			ID: to.Ptr("44556677-8899-aabb-ccdd-eeff00112233"),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
+func ExampleSurgeProtectionClient_GetMissionCriticalActor() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewSurgeProtectionClient().GetMissionCriticalActor(ctx, "96f3f0ff-4fe2-4712-b61b-05a456ba9357", "33445566-7788-99aa-bbcc-ddeeff001122", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.MissionCriticalActor = core.MissionCriticalActor{
+	// 	ActorDetails: &core.WorkspaceActorDetails{
+	// 		ActorType: to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+	// 		WorkspaceID: to.Ptr("b2c3d4e5-f6a7-8901-bcde-2345678901fa"),
+	// 	},
+	// 	ID: to.Ptr("33445566-7788-99aa-bbcc-ddeeff001122"),
+	// }
+}
+
+// Generated from example definition
+func ExampleSurgeProtectionClient_DeleteMissionCriticalActor() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewSurgeProtectionClient().DeleteMissionCriticalActor(ctx, "96f3f0ff-4fe2-4712-b61b-05a456ba9357", "33445566-7788-99aa-bbcc-ddeeff001122", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleSurgeProtectionClient_CreateActorAutoDetectionRule_createAnActorAutoDetectionRuleWithAnHoursBlockDuration() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewSurgeProtectionClient().CreateActorAutoDetectionRule(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", core.CreateActorAutoDetectionRuleRequest{
+		ActorsSubjectToRule: &core.ActorAutoDetectionRuleAllWorkspaces{
+			Type: to.Ptr(core.ActorAutoDetectionRuleActorsSubjectToRuleKindAllWorkspaces),
+		},
+		BlockDuration: &core.ActorAutoDetectionRuleHoursBlockDuration{
+			Type:  to.Ptr(core.ActorAutoDetectionRuleBlockDurationKindHours),
+			Hours: to.Ptr[int32](24),
+		},
+		CapacityUnitsConsumptionThresholdPercentage: to.Ptr[int32](25),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleSurgeProtectionClient_CreateActorAutoDetectionRule_createAnActorAutoDetectionRuleWithAnIndefiniteBlockDuration() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewSurgeProtectionClient().CreateActorAutoDetectionRule(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", core.CreateActorAutoDetectionRuleRequest{
+		ActorsSubjectToRule: &core.ActorAutoDetectionRuleAllWorkspaces{
+			Type: to.Ptr(core.ActorAutoDetectionRuleActorsSubjectToRuleKindAllWorkspaces),
+		},
+		BlockDuration: &core.ActorAutoDetectionRuleIndefiniteBlockDuration{
+			Type: to.Ptr(core.ActorAutoDetectionRuleBlockDurationKindIndefinite),
+		},
+		CapacityUnitsConsumptionThresholdPercentage: to.Ptr[int32](50),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleSurgeProtectionClient_NewListActorAutoDetectionRulesPager() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewSurgeProtectionClient().NewListActorAutoDetectionRulesPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", &core.SurgeProtectionClientListActorAutoDetectionRulesOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.ListActorAutoDetectionRulesResponse = core.ListActorAutoDetectionRulesResponse{
+		// 	Value: []core.ActorAutoDetectionRule{
+		// 		{
+		// 			ActorsSubjectToRule: &core.ActorAutoDetectionRuleAllWorkspaces{
+		// 				Type: to.Ptr(core.ActorAutoDetectionRuleActorsSubjectToRuleKindAllWorkspaces),
+		// 			},
+		// 			BlockDuration: &core.ActorAutoDetectionRuleHoursBlockDuration{
+		// 				Type: to.Ptr(core.ActorAutoDetectionRuleBlockDurationKindHours),
+		// 				Hours: to.Ptr[int32](24),
+		// 			},
+		// 			CapacityUnitsConsumptionThresholdPercentage: to.Ptr[int32](25),
+		// 			ID: to.Ptr("a1f0c3e4-5b6d-7890-abcd-ef1234567890"),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
+func ExampleSurgeProtectionClient_GetActorAutoDetectionRule() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewSurgeProtectionClient().GetActorAutoDetectionRule(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "a1f0c3e4-5b6d-7890-abcd-ef1234567890", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.ActorAutoDetectionRule = core.ActorAutoDetectionRule{
+	// 	ActorsSubjectToRule: &core.ActorAutoDetectionRuleAllWorkspaces{
+	// 		Type: to.Ptr(core.ActorAutoDetectionRuleActorsSubjectToRuleKindAllWorkspaces),
+	// 	},
+	// 	BlockDuration: &core.ActorAutoDetectionRuleHoursBlockDuration{
+	// 		Type: to.Ptr(core.ActorAutoDetectionRuleBlockDurationKindHours),
+	// 		Hours: to.Ptr[int32](24),
+	// 	},
+	// 	CapacityUnitsConsumptionThresholdPercentage: to.Ptr[int32](25),
+	// 	ID: to.Ptr("a1f0c3e4-5b6d-7890-abcd-ef1234567890"),
+	// }
+}
+
+// Generated from example definition
+func ExampleSurgeProtectionClient_UpdateActorAutoDetectionRule_updateAnActorAutoDetectionRuleExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewSurgeProtectionClient().UpdateActorAutoDetectionRule(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "a1f0c3e4-5b6d-7890-abcd-ef1234567890", core.UpdateActorAutoDetectionRuleRequest{
+		BlockDuration: &core.ActorAutoDetectionRuleHoursBlockDuration{
+			Type:  to.Ptr(core.ActorAutoDetectionRuleBlockDurationKindHours),
+			Hours: to.Ptr[int32](48),
+		},
+		CapacityUnitsConsumptionThresholdPercentage: to.Ptr[int32](15),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.ActorAutoDetectionRule = core.ActorAutoDetectionRule{
+	// 	ActorsSubjectToRule: &core.ActorAutoDetectionRuleAllWorkspaces{
+	// 		Type: to.Ptr(core.ActorAutoDetectionRuleActorsSubjectToRuleKindAllWorkspaces),
+	// 	},
+	// 	BlockDuration: &core.ActorAutoDetectionRuleHoursBlockDuration{
+	// 		Type: to.Ptr(core.ActorAutoDetectionRuleBlockDurationKindHours),
+	// 		Hours: to.Ptr[int32](48),
+	// 	},
+	// 	CapacityUnitsConsumptionThresholdPercentage: to.Ptr[int32](15),
+	// 	ID: to.Ptr("a1f0c3e4-5b6d-7890-abcd-ef1234567890"),
+	// }
+}
+
+// Generated from example definition
+func ExampleSurgeProtectionClient_UpdateActorAutoDetectionRule_updateAnActorAutoDetectionRuleWithAnIndefiniteBlockDuration() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewSurgeProtectionClient().UpdateActorAutoDetectionRule(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "a1f0c3e4-5b6d-7890-abcd-ef1234567890", core.UpdateActorAutoDetectionRuleRequest{
+		BlockDuration: &core.ActorAutoDetectionRuleIndefiniteBlockDuration{
+			Type: to.Ptr(core.ActorAutoDetectionRuleBlockDurationKindIndefinite),
+		},
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.ActorAutoDetectionRule = core.ActorAutoDetectionRule{
+	// 	ActorsSubjectToRule: &core.ActorAutoDetectionRuleAllWorkspaces{
+	// 		Type: to.Ptr(core.ActorAutoDetectionRuleActorsSubjectToRuleKindAllWorkspaces),
+	// 	},
+	// 	BlockDuration: &core.ActorAutoDetectionRuleIndefiniteBlockDuration{
+	// 		Type: to.Ptr(core.ActorAutoDetectionRuleBlockDurationKindIndefinite),
+	// 	},
+	// 	CapacityUnitsConsumptionThresholdPercentage: to.Ptr[int32](25),
+	// 	ID: to.Ptr("a1f0c3e4-5b6d-7890-abcd-ef1234567890"),
+	// }
+}
+
+// Generated from example definition
+func ExampleSurgeProtectionClient_UpdateActorAutoDetectionRule_updateOnlyAnActorAutoDetectionRuleThreshold() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewSurgeProtectionClient().UpdateActorAutoDetectionRule(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "a1f0c3e4-5b6d-7890-abcd-ef1234567890", core.UpdateActorAutoDetectionRuleRequest{
+		CapacityUnitsConsumptionThresholdPercentage: to.Ptr[int32](40),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.ActorAutoDetectionRule = core.ActorAutoDetectionRule{
+	// 	ActorsSubjectToRule: &core.ActorAutoDetectionRuleAllWorkspaces{
+	// 		Type: to.Ptr(core.ActorAutoDetectionRuleActorsSubjectToRuleKindAllWorkspaces),
+	// 	},
+	// 	BlockDuration: &core.ActorAutoDetectionRuleHoursBlockDuration{
+	// 		Type: to.Ptr(core.ActorAutoDetectionRuleBlockDurationKindHours),
+	// 		Hours: to.Ptr[int32](24),
+	// 	},
+	// 	CapacityUnitsConsumptionThresholdPercentage: to.Ptr[int32](40),
+	// 	ID: to.Ptr("a1f0c3e4-5b6d-7890-abcd-ef1234567890"),
+	// }
+}
+
+// Generated from example definition
+func ExampleSurgeProtectionClient_DeleteActorAutoDetectionRule() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewSurgeProtectionClient().DeleteActorAutoDetectionRule(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "a1f0c3e4-5b6d-7890-abcd-ef1234567890", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}

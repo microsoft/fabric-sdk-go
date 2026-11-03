@@ -232,6 +232,10 @@ func (client *ItemsClient) getKQLDashboardHandleResponse(resp *http.Response) (I
 // BeginGetKQLDashboardDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must have read and write permissions for the KQL dashboard.
 // REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
+// LIMITATIONS To retrieve the definition of a KQL dashboard item protected by an encrypted sensitivity label, the caller
+// must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -252,6 +256,10 @@ func (client *ItemsClient) BeginGetKQLDashboardDefinition(ctx context.Context, w
 // GetKQLDashboardDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must have read and write permissions for the KQL dashboard.
 // REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
+// LIMITATIONS To retrieve the definition of a KQL dashboard item protected by an encrypted sensitivity label, the caller
+// must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -608,6 +616,9 @@ func (client *ItemsClient) beginCreateKQLDashboard(ctx context.Context, workspac
 // PERMISSIONS The caller must have read and write permissions for the KQL dashboard.
 //
 // # REQUIRED DELEGATED SCOPES KQLDashboard.ReadWrite.All or Item.ReadWrite.All
+//
+// LIMITATIONS To retrieve the definition of a KQL dashboard item protected by an encrypted sensitivity label, the caller must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in Microsoft Purview [/purview/purview].
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

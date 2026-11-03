@@ -6,6 +6,54 @@
 
 package admin
 
+// ConnectionsClientAddConnectionRoleAssignmentOptions contains the optional parameters for the ConnectionsClient.AddConnectionRoleAssignment
+// method.
+type ConnectionsClientAddConnectionRoleAssignmentOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ConnectionsClientDeleteConnectionOptions contains the optional parameters for the ConnectionsClient.DeleteConnection method.
+type ConnectionsClientDeleteConnectionOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ConnectionsClientDeleteConnectionRoleAssignmentOptions contains the optional parameters for the ConnectionsClient.DeleteConnectionRoleAssignment
+// method.
+type ConnectionsClientDeleteConnectionRoleAssignmentOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ConnectionsClientGetConnectionOptions contains the optional parameters for the ConnectionsClient.GetConnection method.
+type ConnectionsClientGetConnectionOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ConnectionsClientGetConnectionRoleAssignmentOptions contains the optional parameters for the ConnectionsClient.GetConnectionRoleAssignment
+// method.
+type ConnectionsClientGetConnectionRoleAssignmentOptions struct {
+	// placeholder for future optional parameters
+}
+
+// ConnectionsClientListConnectionRoleAssignmentsOptions contains the optional parameters for the ConnectionsClient.NewListConnectionRoleAssignmentsPager
+// method.
+type ConnectionsClientListConnectionRoleAssignmentsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// ConnectionsClientListConnectionsOptions contains the optional parameters for the ConnectionsClient.NewListConnectionsPager
+// method.
+type ConnectionsClientListConnectionsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// ConnectionsClientUpdateConnectionRoleAssignmentOptions contains the optional parameters for the ConnectionsClient.UpdateConnectionRoleAssignment
+// method.
+type ConnectionsClientUpdateConnectionRoleAssignmentOptions struct {
+	// placeholder for future optional parameters
+}
+
 // DomainsClientAssignDomainWorkspacesByIDsOptions contains the optional parameters for the DomainsClient.AssignDomainWorkspacesByIDs
 // method.
 type DomainsClientAssignDomainWorkspacesByIDsOptions struct {

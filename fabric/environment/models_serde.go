@@ -726,6 +726,219 @@ func (l *Library) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type PoolActivation.
+func (p PoolActivation) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "cancellationReason", p.CancellationReason)
+	populate(objectMap, "capacityId", p.CapacityID)
+	populate(objectMap, "clusterIdleTimeout", p.ClusterIdleTimeout)
+	populate(objectMap, "customLivePoolLifespan", p.CustomLivePoolLifespan)
+	populate(objectMap, "endDateTime", p.EndDateTime)
+	populate(objectMap, "isRecurring", p.IsRecurring)
+	populate(objectMap, "jobInstanceId", p.JobInstanceID)
+	populate(objectMap, "jobType", p.JobType)
+	populate(objectMap, "maxClustersToHydrate", p.MaxClustersToHydrate)
+	populate(objectMap, "name", p.Name)
+	populate(objectMap, "runtimeVersion", p.RuntimeVersion)
+	populate(objectMap, "scheduledEndDateTime", p.ScheduledEndDateTime)
+	populate(objectMap, "scheduledStartDateTime", p.ScheduledStartDateTime)
+	populate(objectMap, "startDateTime", p.StartDateTime)
+	populate(objectMap, "state", p.State)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type PoolActivation.
+func (p *PoolActivation) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", p, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "cancellationReason":
+			err = unpopulate(val, "CancellationReason", &p.CancellationReason)
+			delete(rawMsg, key)
+		case "capacityId":
+			err = unpopulate(val, "CapacityID", &p.CapacityID)
+			delete(rawMsg, key)
+		case "clusterIdleTimeout":
+			err = unpopulate(val, "ClusterIdleTimeout", &p.ClusterIdleTimeout)
+			delete(rawMsg, key)
+		case "customLivePoolLifespan":
+			err = unpopulate(val, "CustomLivePoolLifespan", &p.CustomLivePoolLifespan)
+			delete(rawMsg, key)
+		case "endDateTime":
+			err = unpopulate(val, "EndDateTime", &p.EndDateTime)
+			delete(rawMsg, key)
+		case "isRecurring":
+			err = unpopulate(val, "IsRecurring", &p.IsRecurring)
+			delete(rawMsg, key)
+		case "jobInstanceId":
+			err = unpopulate(val, "JobInstanceID", &p.JobInstanceID)
+			delete(rawMsg, key)
+		case "jobType":
+			err = unpopulate(val, "JobType", &p.JobType)
+			delete(rawMsg, key)
+		case "maxClustersToHydrate":
+			err = unpopulate(val, "MaxClustersToHydrate", &p.MaxClustersToHydrate)
+			delete(rawMsg, key)
+		case "name":
+			err = unpopulate(val, "Name", &p.Name)
+			delete(rawMsg, key)
+		case "runtimeVersion":
+			err = unpopulate(val, "RuntimeVersion", &p.RuntimeVersion)
+			delete(rawMsg, key)
+		case "scheduledEndDateTime":
+			err = unpopulate(val, "ScheduledEndDateTime", &p.ScheduledEndDateTime)
+			delete(rawMsg, key)
+		case "scheduledStartDateTime":
+			err = unpopulate(val, "ScheduledStartDateTime", &p.ScheduledStartDateTime)
+			delete(rawMsg, key)
+		case "startDateTime":
+			err = unpopulate(val, "StartDateTime", &p.StartDateTime)
+			delete(rawMsg, key)
+		case "state":
+			err = unpopulate(val, "State", &p.State)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", p, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type PoolActivationDetails.
+func (p PoolActivationDetails) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "cancellationReason", p.CancellationReason)
+	populate(objectMap, "capacityId", p.CapacityID)
+	populate(objectMap, "clusterIdleTimeout", p.ClusterIdleTimeout)
+	populate(objectMap, "customLivePoolLifespan", p.CustomLivePoolLifespan)
+	populate(objectMap, "endDateTime", p.EndDateTime)
+	populate(objectMap, "isRecurring", p.IsRecurring)
+	populate(objectMap, "jobInstanceId", p.JobInstanceID)
+	populate(objectMap, "jobType", p.JobType)
+	populate(objectMap, "maxClustersToHydrate", p.MaxClustersToHydrate)
+	populate(objectMap, "name", p.Name)
+	populate(objectMap, "poolName", p.PoolName)
+	populate(objectMap, "resourceStatusSummary", p.ResourceStatusSummary)
+	populate(objectMap, "runtimeVersion", p.RuntimeVersion)
+	populate(objectMap, "scheduledEndDateTime", p.ScheduledEndDateTime)
+	populate(objectMap, "scheduledStartDateTime", p.ScheduledStartDateTime)
+	populate(objectMap, "sparkConfiguration", p.SparkConfiguration)
+	populate(objectMap, "startDateTime", p.StartDateTime)
+	populate(objectMap, "state", p.State)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type PoolActivationDetails.
+func (p *PoolActivationDetails) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", p, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "cancellationReason":
+			err = unpopulate(val, "CancellationReason", &p.CancellationReason)
+			delete(rawMsg, key)
+		case "capacityId":
+			err = unpopulate(val, "CapacityID", &p.CapacityID)
+			delete(rawMsg, key)
+		case "clusterIdleTimeout":
+			err = unpopulate(val, "ClusterIdleTimeout", &p.ClusterIdleTimeout)
+			delete(rawMsg, key)
+		case "customLivePoolLifespan":
+			err = unpopulate(val, "CustomLivePoolLifespan", &p.CustomLivePoolLifespan)
+			delete(rawMsg, key)
+		case "endDateTime":
+			err = unpopulate(val, "EndDateTime", &p.EndDateTime)
+			delete(rawMsg, key)
+		case "isRecurring":
+			err = unpopulate(val, "IsRecurring", &p.IsRecurring)
+			delete(rawMsg, key)
+		case "jobInstanceId":
+			err = unpopulate(val, "JobInstanceID", &p.JobInstanceID)
+			delete(rawMsg, key)
+		case "jobType":
+			err = unpopulate(val, "JobType", &p.JobType)
+			delete(rawMsg, key)
+		case "maxClustersToHydrate":
+			err = unpopulate(val, "MaxClustersToHydrate", &p.MaxClustersToHydrate)
+			delete(rawMsg, key)
+		case "name":
+			err = unpopulate(val, "Name", &p.Name)
+			delete(rawMsg, key)
+		case "poolName":
+			err = unpopulate(val, "PoolName", &p.PoolName)
+			delete(rawMsg, key)
+		case "resourceStatusSummary":
+			err = unpopulate(val, "ResourceStatusSummary", &p.ResourceStatusSummary)
+			delete(rawMsg, key)
+		case "runtimeVersion":
+			err = unpopulate(val, "RuntimeVersion", &p.RuntimeVersion)
+			delete(rawMsg, key)
+		case "scheduledEndDateTime":
+			err = unpopulate(val, "ScheduledEndDateTime", &p.ScheduledEndDateTime)
+			delete(rawMsg, key)
+		case "scheduledStartDateTime":
+			err = unpopulate(val, "ScheduledStartDateTime", &p.ScheduledStartDateTime)
+			delete(rawMsg, key)
+		case "sparkConfiguration":
+			err = unpopulate(val, "SparkConfiguration", &p.SparkConfiguration)
+			delete(rawMsg, key)
+		case "startDateTime":
+			err = unpopulate(val, "StartDateTime", &p.StartDateTime)
+			delete(rawMsg, key)
+		case "state":
+			err = unpopulate(val, "State", &p.State)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", p, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type PoolActivations.
+func (p PoolActivations) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "continuationToken", p.ContinuationToken)
+	populate(objectMap, "continuationUri", p.ContinuationURI)
+	populate(objectMap, "value", p.Value)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type PoolActivations.
+func (p *PoolActivations) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", p, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "continuationToken":
+			err = unpopulate(val, "ContinuationToken", &p.ContinuationToken)
+			delete(rawMsg, key)
+		case "continuationUri":
+			err = unpopulate(val, "ContinuationURI", &p.ContinuationURI)
+			delete(rawMsg, key)
+		case "value":
+			err = unpopulate(val, "Value", &p.Value)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", p, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type Principal.
 func (p Principal) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -853,6 +1066,61 @@ func (r *RemoveExternalLibrariesRequest) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "version":
 			err = unpopulate(val, "Version", &r.Version)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", r, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type ResourceStatusSummary.
+func (r ResourceStatusSummary) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "acquired", r.Acquired)
+	populate(objectMap, "cancelled", r.Cancelled)
+	populate(objectMap, "deactivated", r.Deactivated)
+	populate(objectMap, "expired", r.Expired)
+	populate(objectMap, "failed", r.Failed)
+	populate(objectMap, "ready", r.Ready)
+	populate(objectMap, "starting", r.Starting)
+	populate(objectMap, "stopping", r.Stopping)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ResourceStatusSummary.
+func (r *ResourceStatusSummary) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", r, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "acquired":
+			err = unpopulate(val, "Acquired", &r.Acquired)
+			delete(rawMsg, key)
+		case "cancelled":
+			err = unpopulate(val, "Cancelled", &r.Cancelled)
+			delete(rawMsg, key)
+		case "deactivated":
+			err = unpopulate(val, "Deactivated", &r.Deactivated)
+			delete(rawMsg, key)
+		case "expired":
+			err = unpopulate(val, "Expired", &r.Expired)
+			delete(rawMsg, key)
+		case "failed":
+			err = unpopulate(val, "Failed", &r.Failed)
+			delete(rawMsg, key)
+		case "ready":
+			err = unpopulate(val, "Ready", &r.Ready)
+			delete(rawMsg, key)
+		case "starting":
+			err = unpopulate(val, "Starting", &r.Starting)
+			delete(rawMsg, key)
+		case "stopping":
+			err = unpopulate(val, "Stopping", &r.Stopping)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -1161,6 +1429,53 @@ func (s *SparkComputePreview) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "sparkProperties":
 			err = unpopulate(val, "SparkProperties", &s.SparkProperties)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", s, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type SparkConfiguration.
+func (s SparkConfiguration) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "driverCores", s.DriverCores)
+	populate(objectMap, "driverMemory", s.DriverMemory)
+	populate(objectMap, "executorCores", s.ExecutorCores)
+	populate(objectMap, "executorMemory", s.ExecutorMemory)
+	populate(objectMap, "isDynamicAllocationEnabled", s.IsDynamicAllocationEnabled)
+	populate(objectMap, "numExecutors", s.NumExecutors)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type SparkConfiguration.
+func (s *SparkConfiguration) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", s, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "driverCores":
+			err = unpopulate(val, "DriverCores", &s.DriverCores)
+			delete(rawMsg, key)
+		case "driverMemory":
+			err = unpopulate(val, "DriverMemory", &s.DriverMemory)
+			delete(rawMsg, key)
+		case "executorCores":
+			err = unpopulate(val, "ExecutorCores", &s.ExecutorCores)
+			delete(rawMsg, key)
+		case "executorMemory":
+			err = unpopulate(val, "ExecutorMemory", &s.ExecutorMemory)
+			delete(rawMsg, key)
+		case "isDynamicAllocationEnabled":
+			err = unpopulate(val, "IsDynamicAllocationEnabled", &s.IsDynamicAllocationEnabled)
+			delete(rawMsg, key)
+		case "numExecutors":
+			err = unpopulate(val, "NumExecutors", &s.NumExecutors)
 			delete(rawMsg, key)
 		}
 		if err != nil {

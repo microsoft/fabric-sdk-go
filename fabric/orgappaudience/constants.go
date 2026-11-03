@@ -55,6 +55,8 @@ const (
 	ItemTypeDataflow ItemType = "Dataflow"
 	// ItemTypeDatamart - PowerBI datamart.
 	ItemTypeDatamart ItemType = "Datamart"
+	// ItemTypeDeploymentPlan - A Deployment plan.
+	ItemTypeDeploymentPlan ItemType = "DeploymentPlan"
 	// ItemTypeDigitalTwinBuilder - A DigitalTwinBuilder.
 	ItemTypeDigitalTwinBuilder ItemType = "DigitalTwinBuilder"
 	// ItemTypeDigitalTwinBuilderFlow - A Digital Twin Builder Flow.
@@ -95,6 +97,8 @@ const (
 	ItemTypeMirroredDatabase ItemType = "MirroredDatabase"
 	// ItemTypeMirroredWarehouse - A mirrored warehouse.
 	ItemTypeMirroredWarehouse ItemType = "MirroredWarehouse"
+	// ItemTypeMonitoring - A Monitoring item.
+	ItemTypeMonitoring ItemType = "Monitoring"
 	// ItemTypeMountedDataFactory - A MountedDataFactory.
 	ItemTypeMountedDataFactory ItemType = "MountedDataFactory"
 	// ItemTypeNotebook - A notebook.
@@ -152,6 +156,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
 		ItemTypeDatamart,
+		ItemTypeDeploymentPlan,
 		ItemTypeDigitalTwinBuilder,
 		ItemTypeDigitalTwinBuilderFlow,
 		ItemTypeEnvironment,
@@ -172,6 +177,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeMirroredCatalog,
 		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
+		ItemTypeMonitoring,
 		ItemTypeMountedDataFactory,
 		ItemTypeNotebook,
 		ItemTypeOntology,

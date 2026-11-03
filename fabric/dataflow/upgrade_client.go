@@ -120,6 +120,7 @@ func (client *UpgradeClient) listReadinessHandleResponse(resp *http.Response) (U
 // REQUIRED DELEGATED SCOPES Dataflow.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * Each request must contain between 1 and 50 dataflows from the specified workspace.
+// * The request body must not exceed 13 KiB (13,312 bytes), including whitespace.
 // * Upgrades run in place and do not support cross-workspace targets.
 // * Cancellation is not supported.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -152,6 +153,7 @@ func (client *UpgradeClient) BeginUpgradeDataflows(ctx context.Context, workspac
 // REQUIRED DELEGATED SCOPES Dataflow.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * Each request must contain between 1 and 50 dataflows from the specified workspace.
+// * The request body must not exceed 13 KiB (13,312 bytes), including whitespace.
 // * Upgrades run in place and do not support cross-workspace targets.
 // * Cancellation is not supported.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -221,6 +223,7 @@ func (client *UpgradeClient) upgradeDataflowsCreateRequest(ctx context.Context, 
 // LIMITATIONS
 //
 //   - Each request must contain between 1 and 50 dataflows from the specified workspace.
+//   - The request body must not exceed 13 KiB (13,312 bytes), including whitespace.
 //   - Upgrades run in place and do not support cross-workspace targets.
 //   - Cancellation is not supported.
 //

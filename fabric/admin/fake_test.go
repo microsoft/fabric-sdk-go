@@ -3502,3 +3502,406 @@ func (testsuite *FakeTestSuite) TestPolicySets_GetActiveBeta() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ActivePolicySetWithRulesResponse))
 }
+
+func (testsuite *FakeTestSuite) TestConnections_ListConnections() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List connections as admin example"},
+	})
+
+	exampleRes := admin.ListConnectionsResponse{
+		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/connections?continuationToken=LDEsMTAwMDAwLDA%3D"),
+		Value: []admin.ConnectionClassification{
+			&admin.ShareableCloudConnection{
+				ConnectionDetails: &admin.ListConnectionDetails{
+					Type: to.Ptr("Web"),
+					Path: to.Ptr("https://www.contoso.com"),
+				},
+				ConnectionRecency: &admin.ConnectionRecency{
+					CreatedDateTime:              to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-23T16:22:20.000Z"); return t }()),
+					LastBoundDateTime:            to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-26T16:22:20.000Z"); return t }()),
+					LastCredentialUsedDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-27T16:22:20.000Z"); return t }()),
+					MyLastBoundDateTime:          to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-24T16:22:20.000Z"); return t }()),
+					MyLastCredentialUsedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-25T16:22:20.000Z"); return t }()),
+				},
+				ConnectivityType: to.Ptr(admin.ConnectivityTypeShareableCloud),
+				CredentialDetails: &admin.ListCredentialDetails{
+					ConnectionEncryption: to.Ptr(admin.ConnectionEncryptionNotEncrypted),
+					SingleSignOnType:     to.Ptr(admin.SingleSignOnTypeNone),
+					SkipTestConnection:   to.Ptr(false),
+					CredentialType:       to.Ptr(admin.CredentialTypeAnonymous),
+				},
+				DisplayName:  to.Ptr("ContosoConnection1"),
+				GatewayID:    to.Ptr("8f72eea3-d989-4a5a-aeed-02b3aaa2ddd0"),
+				ID:           to.Ptr("6952a7b2-aea3-414f-9d85-6c0fe5d34539"),
+				PrivacyLevel: to.Ptr(admin.PrivacyLevelPublic),
+			},
+			&admin.OnPremisesGatewayConnection{
+				ConnectionDetails: &admin.ListConnectionDetails{
+					Type: to.Ptr("SQL"),
+					Path: to.Ptr("contoso.database.windows.net;sales"),
+				},
+				ConnectionRecency: &admin.ConnectionRecency{
+					CreatedDateTime:              to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-23T16:22:20.000Z"); return t }()),
+					LastBoundDateTime:            to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-26T16:22:20.000Z"); return t }()),
+					LastCredentialUsedDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-27T16:22:20.000Z"); return t }()),
+					MyLastBoundDateTime:          to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-24T16:22:20.000Z"); return t }()),
+					MyLastCredentialUsedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2023-05-25T16:22:20.000Z"); return t }()),
+				},
+				ConnectivityType: to.Ptr(admin.ConnectivityTypeOnPremisesGateway),
+				CredentialDetails: &admin.ListCredentialDetails{
+					ConnectionEncryption: to.Ptr(admin.ConnectionEncryptionAny),
+					SingleSignOnType:     to.Ptr(admin.SingleSignOnTypeNone),
+					SkipTestConnection:   to.Ptr(false),
+					CredentialType:       to.Ptr(admin.CredentialTypeBasic),
+				},
+				DisplayName:  to.Ptr("ContosoConnection2"),
+				GatewayID:    to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
+				ID:           to.Ptr("f6a39b76-9816-4e4b-b93a-f42e405017b7"),
+				PrivacyLevel: to.Ptr(admin.PrivacyLevelOrganizational),
+			},
+			&admin.StreamingVirtualNetworkGatewayConnection{
+				ConnectionDetails: &admin.ListConnectionDetails{
+					Type: to.Ptr("SQL"),
+					Path: to.Ptr("contoso.database.windows.net;marketing"),
+				},
+				ConnectivityType: to.Ptr(admin.ConnectivityTypeStreamingVirtualNetworkGateway),
+				CredentialDetails: &admin.ListCredentialDetails{
+					ConnectionEncryption: to.Ptr(admin.ConnectionEncryptionEncrypted),
+					SingleSignOnType:     to.Ptr(admin.SingleSignOnTypeNone),
+					SkipTestConnection:   to.Ptr(false),
+					CredentialType:       to.Ptr(admin.CredentialTypeBasic),
+				},
+				DisplayName:  to.Ptr("ContosoStreamingVirtualNetworkGatewayConnection"),
+				GatewayID:    to.Ptr("3f8d6a4b-1c2e-4f5a-9b7c-2d6e8f1a3b9d"),
+				ID:           to.Ptr("a3b4c5d6-7e8f-4a5b-9c0d-1e2f3a4b5c6d"),
+				PrivacyLevel: to.Ptr(admin.PrivacyLevelOrganizational),
+			}},
+	}
+
+	testsuite.serverFactory.ConnectionsServer.NewListConnectionsPager = func(options *admin.ConnectionsClientListConnectionsOptions) (resp azfake.PagerResponder[admin.ConnectionsClientListConnectionsResponse]) {
+		resp = azfake.PagerResponder[admin.ConnectionsClientListConnectionsResponse]{}
+		resp.AddPage(http.StatusOK, admin.ConnectionsClientListConnectionsResponse{ListConnectionsResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewConnectionsClient()
+	pager := client.NewListConnectionsPager(&admin.ConnectionsClientListConnectionsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.ListConnectionsResponse))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestConnections_GetConnection() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get connection as admin example"},
+	})
+	var exampleConnectionID string
+	exampleConnectionID = "f6a39b76-9816-4e4b-b93a-f42e405017b7"
+
+	exampleRes := admin.ConnectionsClientGetConnectionResponse{
+		ConnectionClassification: &admin.OnPremisesGatewayConnection{
+			ConnectionDetails: &admin.ListConnectionDetails{
+				Type: to.Ptr("SQL"),
+				Path: to.Ptr("contoso.database.windows.net;sales"),
+			},
+			ConnectivityType: to.Ptr(admin.ConnectivityTypeOnPremisesGateway),
+			CredentialDetails: &admin.ListCredentialDetails{
+				ConnectionEncryption: to.Ptr(admin.ConnectionEncryptionNotEncrypted),
+				SingleSignOnType:     to.Ptr(admin.SingleSignOnTypeNone),
+				SkipTestConnection:   to.Ptr(false),
+				CredentialType:       to.Ptr(admin.CredentialTypeBasic),
+			},
+			DisplayName:  to.Ptr("ContosoConnection"),
+			GatewayID:    to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
+			ID:           to.Ptr("f6a39b76-9816-4e4b-b93a-f42e405017b7"),
+			PrivacyLevel: to.Ptr(admin.PrivacyLevelOrganizational),
+		},
+	}
+
+	testsuite.serverFactory.ConnectionsServer.GetConnection = func(ctx context.Context, connectionID string, options *admin.ConnectionsClientGetConnectionOptions) (resp azfake.Responder[admin.ConnectionsClientGetConnectionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		resp = azfake.Responder[admin.ConnectionsClientGetConnectionResponse]{}
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewConnectionsClient()
+	res, err := client.GetConnection(ctx, exampleConnectionID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
+}
+
+func (testsuite *FakeTestSuite) TestConnections_DeleteConnection() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete connection as admin example"},
+	})
+	var exampleConnectionID string
+	exampleConnectionID = "536f7c95-1b4e-4d3a-8e7f-9c2d5a6b8e01"
+
+	testsuite.serverFactory.ConnectionsServer.DeleteConnection = func(ctx context.Context, connectionID string, options *admin.ConnectionsClientDeleteConnectionOptions) (resp azfake.Responder[admin.ConnectionsClientDeleteConnectionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		resp = azfake.Responder[admin.ConnectionsClientDeleteConnectionResponse]{}
+		resp.SetResponse(http.StatusOK, admin.ConnectionsClientDeleteConnectionResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewConnectionsClient()
+	_, err = client.DeleteConnection(ctx, exampleConnectionID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestConnections_ListConnectionRoleAssignments() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List connection role assignments as admin example"},
+	})
+	var exampleConnectionID string
+	exampleConnectionID = "9558d649-84f1-4b7e-850a-59b5d0ae95eb"
+
+	exampleRes := admin.ConnectionRoleAssignments{
+		Value: []admin.ConnectionRoleAssignment{
+			{
+				ID: to.Ptr("1c15c348-dd88-4065-8f25-57581c216bcf"),
+				Principal: &admin.UserPrincipal{
+					Type: to.Ptr(admin.PrincipalTypeUser),
+					ID:   to.Ptr("1c15c348-dd88-4065-8f25-57581c216bcf"),
+				},
+				Role: to.Ptr(admin.ConnectionRoleOwner),
+			},
+			{
+				ID: to.Ptr("d3a7dbf7-6641-48f2-851e-d71bbf9d90c4"),
+				Principal: &admin.GroupPrincipal{
+					Type: to.Ptr(admin.PrincipalTypeGroup),
+					ID:   to.Ptr("d3a7dbf7-6641-48f2-851e-d71bbf9d90c4"),
+				},
+				Role: to.Ptr(admin.ConnectionRoleOwner),
+			},
+			{
+				ID: to.Ptr("48ba22da-4431-4da4-8b70-3401685bf9e5"),
+				Principal: &admin.GroupPrincipal{
+					Type: to.Ptr(admin.PrincipalTypeGroup),
+					ID:   to.Ptr("48ba22da-4431-4da4-8b70-3401685bf9e5"),
+				},
+				Role: to.Ptr(admin.ConnectionRoleUser),
+			},
+			{
+				ID: to.Ptr("1dfa1747-ce76-4caf-99c8-360b95f9f17a"),
+				Principal: &admin.UserPrincipal{
+					Type: to.Ptr(admin.PrincipalTypeUser),
+					ID:   to.Ptr("1dfa1747-ce76-4caf-99c8-360b95f9f17a"),
+				},
+				Role: to.Ptr(admin.ConnectionRoleUserWithReshare),
+			}},
+	}
+
+	testsuite.serverFactory.ConnectionsServer.NewListConnectionRoleAssignmentsPager = func(connectionID string, options *admin.ConnectionsClientListConnectionRoleAssignmentsOptions) (resp azfake.PagerResponder[admin.ConnectionsClientListConnectionRoleAssignmentsResponse]) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		resp = azfake.PagerResponder[admin.ConnectionsClientListConnectionRoleAssignmentsResponse]{}
+		resp.AddPage(http.StatusOK, admin.ConnectionsClientListConnectionRoleAssignmentsResponse{ConnectionRoleAssignments: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewConnectionsClient()
+	pager := client.NewListConnectionRoleAssignmentsPager(exampleConnectionID, &admin.ConnectionsClientListConnectionRoleAssignmentsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.ConnectionRoleAssignments))
+		if err == nil {
+			break
+		}
+	}
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List connection role assignments with continuation as admin example"},
+	})
+	exampleConnectionID = "9558d649-84f1-4b7e-850a-59b5d0ae95eb"
+
+	exampleRes = admin.ConnectionRoleAssignments{
+		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/admin/connections/9558d649-84f1-4b7e-850a-59b5d0ae95eb/roleAssignments?continuationToken=LDEsMTAwMDAwLDA%3D"),
+		Value: []admin.ConnectionRoleAssignment{
+			{
+				ID: to.Ptr("1c15c348-dd88-4065-8f25-57581c216bcf"),
+				Principal: &admin.UserPrincipal{
+					Type: to.Ptr(admin.PrincipalTypeUser),
+					ID:   to.Ptr("1c15c348-dd88-4065-8f25-57581c216bcf"),
+				},
+				Role: to.Ptr(admin.ConnectionRoleOwner),
+			},
+			{
+				ID: to.Ptr("d3a7dbf7-6641-48f2-851e-d71bbf9d90c4"),
+				Principal: &admin.GroupPrincipal{
+					Type: to.Ptr(admin.PrincipalTypeGroup),
+					ID:   to.Ptr("d3a7dbf7-6641-48f2-851e-d71bbf9d90c4"),
+				},
+				Role: to.Ptr(admin.ConnectionRoleOwner),
+			},
+			{
+				ID: to.Ptr("48ba22da-4431-4da4-8b70-3401685bf9e5"),
+				Principal: &admin.GroupPrincipal{
+					Type: to.Ptr(admin.PrincipalTypeGroup),
+					ID:   to.Ptr("48ba22da-4431-4da4-8b70-3401685bf9e5"),
+				},
+				Role: to.Ptr(admin.ConnectionRoleUser),
+			},
+			{
+				ID: to.Ptr("1dfa1747-ce76-4caf-99c8-360b95f9f17a"),
+				Principal: &admin.UserPrincipal{
+					Type: to.Ptr(admin.PrincipalTypeUser),
+					ID:   to.Ptr("1dfa1747-ce76-4caf-99c8-360b95f9f17a"),
+				},
+				Role: to.Ptr(admin.ConnectionRoleUserWithReshare),
+			}},
+	}
+
+	testsuite.serverFactory.ConnectionsServer.NewListConnectionRoleAssignmentsPager = func(connectionID string, options *admin.ConnectionsClientListConnectionRoleAssignmentsOptions) (resp azfake.PagerResponder[admin.ConnectionsClientListConnectionRoleAssignmentsResponse]) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		resp = azfake.PagerResponder[admin.ConnectionsClientListConnectionRoleAssignmentsResponse]{}
+		resp.AddPage(http.StatusOK, admin.ConnectionsClientListConnectionRoleAssignmentsResponse{ConnectionRoleAssignments: exampleRes}, nil)
+		return
+	}
+
+	pager = client.NewListConnectionRoleAssignmentsPager(exampleConnectionID, &admin.ConnectionsClientListConnectionRoleAssignmentsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.ConnectionRoleAssignments))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestConnections_AddConnectionRoleAssignment() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Add connection role assignment as admin example"},
+	})
+	var exampleConnectionID string
+	var exampleAddAdminConnectionRoleAssignmentRequest admin.AddAdminConnectionRoleAssignmentRequest
+	exampleConnectionID = "f3a2e6af-d048-4f85-94d9-b3d16140df05"
+	exampleAddAdminConnectionRoleAssignmentRequest = admin.AddAdminConnectionRoleAssignmentRequest{
+		Principal: &admin.UserPrincipal{
+			Type: to.Ptr(admin.PrincipalTypeUser),
+			ID:   to.Ptr("6a002b3d-e4ec-43df-8c08-e8eb7547d9dd"),
+		},
+		Role: to.Ptr(admin.AssignableAdminConnectionRoleOwner),
+	}
+
+	testsuite.serverFactory.ConnectionsServer.AddConnectionRoleAssignment = func(ctx context.Context, connectionID string, addAdminConnectionRoleAssignmentRequest admin.AddAdminConnectionRoleAssignmentRequest, options *admin.ConnectionsClientAddConnectionRoleAssignmentOptions) (resp azfake.Responder[admin.ConnectionsClientAddConnectionRoleAssignmentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		testsuite.Require().True(reflect.DeepEqual(exampleAddAdminConnectionRoleAssignmentRequest, addAdminConnectionRoleAssignmentRequest))
+		resp = azfake.Responder[admin.ConnectionsClientAddConnectionRoleAssignmentResponse]{}
+		resp.SetResponse(http.StatusCreated, admin.ConnectionsClientAddConnectionRoleAssignmentResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewConnectionsClient()
+	_, err = client.AddConnectionRoleAssignment(ctx, exampleConnectionID, exampleAddAdminConnectionRoleAssignmentRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestConnections_GetConnectionRoleAssignment() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get connection role assignment as admin example"},
+	})
+	var exampleConnectionID string
+	var exampleConnectionRoleAssignmentID string
+	exampleConnectionID = "4bbb41c0-1dcc-4a8c-aff5-c681a3d10208"
+	exampleConnectionRoleAssignmentID = "43970761-afc9-4428-ae6e-3b08bef098ff"
+
+	exampleRes := admin.ConnectionRoleAssignment{
+		ID: to.Ptr("43970761-afc9-4428-ae6e-3b08bef098ff"),
+		Principal: &admin.UserPrincipal{
+			Type: to.Ptr(admin.PrincipalTypeUser),
+			ID:   to.Ptr("43970761-afc9-4428-ae6e-3b08bef098ff"),
+		},
+		Role: to.Ptr(admin.ConnectionRoleOwner),
+	}
+
+	testsuite.serverFactory.ConnectionsServer.GetConnectionRoleAssignment = func(ctx context.Context, connectionID string, connectionRoleAssignmentID string, options *admin.ConnectionsClientGetConnectionRoleAssignmentOptions) (resp azfake.Responder[admin.ConnectionsClientGetConnectionRoleAssignmentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		testsuite.Require().Equal(exampleConnectionRoleAssignmentID, connectionRoleAssignmentID)
+		resp = azfake.Responder[admin.ConnectionsClientGetConnectionRoleAssignmentResponse]{}
+		resp.SetResponse(http.StatusOK, admin.ConnectionsClientGetConnectionRoleAssignmentResponse{ConnectionRoleAssignment: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewConnectionsClient()
+	res, err := client.GetConnectionRoleAssignment(ctx, exampleConnectionID, exampleConnectionRoleAssignmentID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ConnectionRoleAssignment))
+}
+
+func (testsuite *FakeTestSuite) TestConnections_UpdateConnectionRoleAssignment() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update connection role assignment as admin example"},
+	})
+	var exampleConnectionID string
+	var exampleConnectionRoleAssignmentID string
+	var exampleUpdateAdminConnectionRoleAssignmentRequest admin.UpdateAdminConnectionRoleAssignmentRequest
+	exampleConnectionID = "fe8e181d-dbb8-471a-99f0-fdbf0a2ad4fd"
+	exampleConnectionRoleAssignmentID = "43970761-afc9-4428-ae6e-3b08bef098ff"
+	exampleUpdateAdminConnectionRoleAssignmentRequest = admin.UpdateAdminConnectionRoleAssignmentRequest{
+		Role: to.Ptr(admin.AssignableAdminConnectionRoleOwner),
+	}
+
+	exampleRes := admin.ConnectionRoleAssignment{
+		ID: to.Ptr("43970761-afc9-4428-ae6e-3b08bef098ff"),
+		Principal: &admin.UserPrincipal{
+			Type: to.Ptr(admin.PrincipalTypeUser),
+			ID:   to.Ptr("43970761-afc9-4428-ae6e-3b08bef098ff"),
+		},
+		Role: to.Ptr(admin.ConnectionRoleOwner),
+	}
+
+	testsuite.serverFactory.ConnectionsServer.UpdateConnectionRoleAssignment = func(ctx context.Context, connectionID string, connectionRoleAssignmentID string, updateAdminConnectionRoleAssignmentRequest admin.UpdateAdminConnectionRoleAssignmentRequest, options *admin.ConnectionsClientUpdateConnectionRoleAssignmentOptions) (resp azfake.Responder[admin.ConnectionsClientUpdateConnectionRoleAssignmentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		testsuite.Require().Equal(exampleConnectionRoleAssignmentID, connectionRoleAssignmentID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateAdminConnectionRoleAssignmentRequest, updateAdminConnectionRoleAssignmentRequest))
+		resp = azfake.Responder[admin.ConnectionsClientUpdateConnectionRoleAssignmentResponse]{}
+		resp.SetResponse(http.StatusOK, admin.ConnectionsClientUpdateConnectionRoleAssignmentResponse{ConnectionRoleAssignment: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewConnectionsClient()
+	res, err := client.UpdateConnectionRoleAssignment(ctx, exampleConnectionID, exampleConnectionRoleAssignmentID, exampleUpdateAdminConnectionRoleAssignmentRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ConnectionRoleAssignment))
+}
+
+func (testsuite *FakeTestSuite) TestConnections_DeleteConnectionRoleAssignment() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete connection role assignment as admin example"},
+	})
+	var exampleConnectionID string
+	var exampleConnectionRoleAssignmentID string
+	exampleConnectionID = "a06fbff3-09e1-4958-a92b-2a7550459762"
+	exampleConnectionRoleAssignmentID = "b7439ed7-7331-4c59-b2bb-f4f917e61979"
+
+	testsuite.serverFactory.ConnectionsServer.DeleteConnectionRoleAssignment = func(ctx context.Context, connectionID string, connectionRoleAssignmentID string, options *admin.ConnectionsClientDeleteConnectionRoleAssignmentOptions) (resp azfake.Responder[admin.ConnectionsClientDeleteConnectionRoleAssignmentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleConnectionID, connectionID)
+		testsuite.Require().Equal(exampleConnectionRoleAssignmentID, connectionRoleAssignmentID)
+		resp = azfake.Responder[admin.ConnectionsClientDeleteConnectionRoleAssignmentResponse]{}
+		resp.SetResponse(http.StatusOK, admin.ConnectionsClientDeleteConnectionRoleAssignmentResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewConnectionsClient()
+	_, err = client.DeleteConnectionRoleAssignment(ctx, exampleConnectionID, exampleConnectionRoleAssignmentID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}

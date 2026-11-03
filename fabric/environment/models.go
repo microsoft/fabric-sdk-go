@@ -306,6 +306,131 @@ type Library struct {
 // GetLibrary implements the LibraryClassification interface for type Library.
 func (l *Library) GetLibrary() *Library { return l }
 
+// PoolActivation - A pool activation object.
+type PoolActivation struct {
+	// The reason for cancellation, if applicable.
+	CancellationReason *string
+
+	// The capacity identifier.
+	CapacityID *string
+
+	// Idle-time threshold after which a hydrated cluster is released, using the ISO 8601 duration format. Minimum: PT20M. Maximum:
+	// PT24H.
+	ClusterIdleTimeout *string
+
+	// Maximum lifetime of a live pool activation, using the ISO 8601 duration format. The live pool job runs for this duration
+	// and then terminates. Minimum: PT30M. Maximum: PT24H.
+	CustomLivePoolLifespan *string
+
+	// The actual end time in UTC, using the YYYY-MM-DDTHH:mm:ssZ format. Omitted if the activation is ongoing.
+	EndDateTime *string
+
+	// Whether the activation recurs on a schedule.
+	IsRecurring *bool
+
+	// The pool activation job instance identifier.
+	JobInstanceID *string
+
+	// The monitoring job type classification.
+	JobType *string
+
+	// Maximum number of clusters to pre-hydrate during each activation cycle. Minimum: 1. The maximum allowed value is determined
+	// by the capacity size and is exposed on the instance pool settings as
+	// InstancePool.maxClustersToHydrateLimit.
+	MaxClustersToHydrate *int32
+
+	// The pool activation name.
+	Name *string
+
+	// The Fabric runtime version used for the activation.
+	RuntimeVersion *string
+
+	// The scheduled end time in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	ScheduledEndDateTime *string
+
+	// The scheduled start time in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	ScheduledStartDateTime *string
+
+	// The actual start time in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	StartDateTime *string
+
+	// The current lifecycle state of the activation.
+	State *State
+}
+
+// PoolActivationDetails - A pool activation details object with extended diagnostic properties.
+type PoolActivationDetails struct {
+	// REQUIRED; The Spark configuration for the activation. Always present in the Get pool activation detail response.
+	SparkConfiguration *SparkConfiguration
+
+	// The reason for cancellation, if applicable.
+	CancellationReason *string
+
+	// The capacity identifier.
+	CapacityID *string
+
+	// Idle-time threshold after which a hydrated cluster is released, using the ISO 8601 duration format. Minimum: PT20M. Maximum:
+	// PT24H.
+	ClusterIdleTimeout *string
+
+	// Maximum lifetime of a live pool activation, using the ISO 8601 duration format. The live pool job runs for this duration
+	// and then terminates. Minimum: PT30M. Maximum: PT24H.
+	CustomLivePoolLifespan *string
+
+	// The actual end time in UTC, using the YYYY-MM-DDTHH:mm:ssZ format. Omitted if the activation is ongoing.
+	EndDateTime *string
+
+	// Whether the activation recurs on a schedule.
+	IsRecurring *bool
+
+	// The pool activation job instance identifier.
+	JobInstanceID *string
+
+	// The monitoring job type classification.
+	JobType *string
+
+	// Maximum number of clusters to pre-hydrate during each activation cycle. Minimum: 1. The maximum allowed value is determined
+	// by the capacity size and is exposed on the instance pool settings as
+	// InstancePool.maxClustersToHydrateLimit.
+	MaxClustersToHydrate *int32
+
+	// The pool activation name.
+	Name *string
+
+	// The pool display name.
+	PoolName *string
+
+	// The summary of activation resources grouped by lifecycle status.
+	ResourceStatusSummary *ResourceStatusSummary
+
+	// The Fabric runtime version used for the activation.
+	RuntimeVersion *string
+
+	// The scheduled end time in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	ScheduledEndDateTime *string
+
+	// The scheduled start time in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	ScheduledStartDateTime *string
+
+	// The actual start time in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	StartDateTime *string
+
+	// The current lifecycle state of the activation.
+	State *State
+}
+
+// PoolActivations - A paginated list of pool activations.
+type PoolActivations struct {
+	// REQUIRED; A list of pool activations.
+	Value []PoolActivation
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
 // Principal - Represents an identity or a Microsoft Entra group.
 type Principal struct {
 	// REQUIRED; The principal's ID.
@@ -352,6 +477,33 @@ type RemoveExternalLibrariesRequest struct {
 
 	// REQUIRED; The version of external library.
 	Version *string
+}
+
+// ResourceStatusSummary - The summary of custom live pool activation resources grouped by user-facing lifecycle status.
+type ResourceStatusSummary struct {
+	// The number of resources acquired by (actively assigned to) a session.
+	Acquired *int32
+
+	// The number of resources cancelled before completion.
+	Cancelled *int32
+
+	// The number of resources intentionally deactivated by policy.
+	Deactivated *int32
+
+	// The number of resources that exceeded their lifetime.
+	Expired *int32
+
+	// The number of resources that failed to provision.
+	Failed *int32
+
+	// The number of resources warmed up and available.
+	Ready *int32
+
+	// The number of resources currently provisioning.
+	Starting *int32
+
+	// The number of resources being decommissioned.
+	Stopping *int32
 }
 
 // SensitivityLabel - Represents a sensitivity label applied to an item.
@@ -488,6 +640,28 @@ type SparkComputePreview struct {
 	// Spark properties. The dictionary-based contract for defining Spark properties will be deprecated on January 31, 2026. Please
 	// migrate to using a list of key-value pairs instead.
 	SparkProperties any
+}
+
+// SparkConfiguration - The Spark configuration for a pool activation.
+type SparkConfiguration struct {
+	// The number of CPU cores allocated to the driver.
+	DriverCores *int32
+
+	// The driver memory allocation including the unit suffix, for example 7g or 28g.
+	DriverMemory *string
+
+	// The number of CPU cores allocated to each executor.
+	ExecutorCores *int32
+
+	// The executor memory allocation including the unit suffix, for example 7g or 28g.
+	ExecutorMemory *string
+
+	// Whether dynamic allocation was enabled for the activation. When false, the activation used a fixed executor count from
+	// numExecutors and no dynamic scaling was applied.
+	IsDynamicAllocationEnabled *bool
+
+	// The number of executors.
+	NumExecutors *int32
 }
 
 // SparkLibraries - Spark libraries.

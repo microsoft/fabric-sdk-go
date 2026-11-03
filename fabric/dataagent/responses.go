@@ -6,6 +6,8 @@
 
 package dataagent
 
+import "io"
+
 // ItemsClientCreateDataAgentResponse contains the response from method ItemsClient.BeginCreateDataAgent.
 type ItemsClientCreateDataAgentResponse struct {
 	// A DataAgent object.
@@ -52,6 +54,12 @@ type ItemsClientUpdateDataAgentResponse struct {
 	DataAgent
 }
 
+// PublishedClientDownloadDatasourceTopicResponse contains the response from method PublishedClient.DownloadDatasourceTopic.
+type PublishedClientDownloadDatasourceTopicResponse struct {
+	// Body contains the streaming response.
+	Body io.ReadCloser
+}
+
 // PublishedClientGetDatasourceFewshotResponse contains the response from method PublishedClient.GetDatasourceFewshot.
 type PublishedClientGetDatasourceFewshotResponse struct {
 	// A DataAgent fewshot.
@@ -80,6 +88,12 @@ type PublishedClientListDatasourceElementsResponse struct {
 type PublishedClientListDatasourceFewshotsResponse struct {
 	// A paginated list of DataAgent fewshots.
 	Fewshots
+}
+
+// PublishedClientListDatasourceTopicsResponse contains the response from method PublishedClient.NewListDatasourceTopicsPager.
+type PublishedClientListDatasourceTopicsResponse struct {
+	// A paginated list of DataAgent topics.
+	Topics
 }
 
 // PublishedClientListDatasourcesResponse contains the response from method PublishedClient.NewListDatasourcesPager.
@@ -120,6 +134,23 @@ type StagingClientDeleteDatasourceResponse struct {
 	// placeholder for future response values
 }
 
+// StagingClientDeleteDatasourceTopicResponse contains the response from method StagingClient.DeleteDatasourceTopic.
+type StagingClientDeleteDatasourceTopicResponse struct {
+	// placeholder for future response values
+}
+
+// StagingClientDownloadDatasourceTopicResponse contains the response from method StagingClient.DownloadDatasourceTopic.
+type StagingClientDownloadDatasourceTopicResponse struct {
+	// Body contains the streaming response.
+	Body io.ReadCloser
+}
+
+// StagingClientFormatDatasourceTopicResponse contains the response from method StagingClient.BeginFormatDatasourceTopic.
+type StagingClientFormatDatasourceTopicResponse struct {
+	// Body contains the streaming response.
+	Body io.ReadCloser
+}
+
 // StagingClientGetDatasourceFewshotResponse contains the response from method StagingClient.GetDatasourceFewshot.
 type StagingClientGetDatasourceFewshotResponse struct {
 	// A DataAgent fewshot.
@@ -148,6 +179,12 @@ type StagingClientListDatasourceElementsResponse struct {
 type StagingClientListDatasourceFewshotsResponse struct {
 	// A paginated list of DataAgent fewshots.
 	Fewshots
+}
+
+// StagingClientListDatasourceTopicsResponse contains the response from method StagingClient.NewListDatasourceTopicsPager.
+type StagingClientListDatasourceTopicsResponse struct {
+	// A paginated list of DataAgent topics.
+	Topics
 }
 
 // StagingClientListDatasourcesResponse contains the response from method StagingClient.NewListDatasourcesPager.
@@ -183,4 +220,9 @@ type StagingClientUpdateDatasourceResponse struct {
 type StagingClientUpdateSettingsResponse struct {
 	// The DataAgent settings.
 	SettingsResponse
+}
+
+// StagingClientUploadDatasourceTopicWithTextResponse contains the response from method StagingClient.UploadDatasourceTopicWithText.
+type StagingClientUploadDatasourceTopicWithTextResponse struct {
+	// placeholder for future response values
 }

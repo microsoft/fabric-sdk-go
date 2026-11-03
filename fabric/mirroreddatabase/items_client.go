@@ -225,6 +225,10 @@ func (client *ItemsClient) getMirroredDatabaseHandleResponse(resp *http.Response
 // BeginGetMirroredDatabaseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must have read and write permissions for the mirrored database.
 // REQUIRED DELEGATED SCOPES MirroredDatabase.ReadWrite.All or Item.ReadWrite.All
+// LIMITATIONS To retrieve the definition of a mirrored database item protected by an encrypted sensitivity label, the caller
+// must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -245,6 +249,10 @@ func (client *ItemsClient) BeginGetMirroredDatabaseDefinition(ctx context.Contex
 // GetMirroredDatabaseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must have read and write permissions for the mirrored database.
 // REQUIRED DELEGATED SCOPES MirroredDatabase.ReadWrite.All or Item.ReadWrite.All
+// LIMITATIONS To retrieve the definition of a mirrored database item protected by an encrypted sensitivity label, the caller
+// must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -524,6 +532,9 @@ func (client *ItemsClient) updateMirroredDatabaseDefinitionCreateRequest(ctx con
 // PERMISSIONS The caller must have read and write permissions for the mirrored database.
 //
 // # REQUIRED DELEGATED SCOPES MirroredDatabase.ReadWrite.All or Item.ReadWrite.All
+//
+// LIMITATIONS To retrieve the definition of a mirrored database item protected by an encrypted sensitivity label, the caller must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in Microsoft Purview [/purview/purview].
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

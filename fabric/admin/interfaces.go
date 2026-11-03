@@ -33,6 +33,16 @@ type ConditionClassification interface {
 	GetCondition() *Condition
 }
 
+// ConnectionClassification provides polymorphic access to related types.
+// Call the interface's GetConnection() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *Connection, *OnPremisesGatewayConnection, *OnPremisesGatewayPersonalConnection, *PersonalCloudConnection, *ShareableCloudConnection,
+// - *StreamingVirtualNetworkGatewayConnection, *VirtualNetworkGatewayConnection
+type ConnectionClassification interface {
+	// GetConnection returns the Connection content of the underlying type.
+	GetConnection() *Connection
+}
+
 // CreateWorkloadBaseAssignmentRequestClassification provides polymorphic access to related types.
 // Call the interface's GetCreateWorkloadBaseAssignmentRequest() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:

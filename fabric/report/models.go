@@ -8,11 +8,15 @@ package report
 
 // CreateReportRequest - Create report request payload.
 type CreateReportRequest struct {
-	// REQUIRED; The report public definition.
-	Definition *Definition
-
 	// REQUIRED; The report display name. The display name must follow naming rules according to item type.
 	DisplayName *string
+
+	// The creation payload for creating a report connected to an existing semantic model. Either definition or creationPayload
+	// is required. You can't use both at the same time.
+	CreationPayload *CreationPayload
+
+	// The report public definition. Either definition or creationPayload is required. You can't use both at the same time.
+	Definition *Definition
 
 	// The report description. Maximum length is 256 characters.
 	Description *string
@@ -22,6 +26,12 @@ type CreateReportRequest struct {
 
 	// The sensitivity label settings for the report.
 	SensitivityLabelSettings *SensitivityLabelSettings
+}
+
+// CreationPayload - Creation payload for creating a report without a definition.
+type CreationPayload struct {
+	// REQUIRED; A reference to the semantic model to connect the report to. The semantic model must be accessible to the caller.
+	SemanticModelReference *ItemReferenceByID
 }
 
 // Definition - Report public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/report-definition]
@@ -102,6 +112,52 @@ func (g *GroupPrincipal) GetPrincipal() *Principal {
 type GroupPrincipalGroupDetails struct {
 	// The type of the group. Additional group types may be added over time.
 	GroupType *GroupType
+}
+
+// ItemReference - An item reference object.
+type ItemReference struct {
+	// REQUIRED; The item reference type.
+	ReferenceType *ItemReferenceType
+}
+
+// GetItemReference implements the ItemReferenceClassification interface for type ItemReference.
+func (i *ItemReference) GetItemReference() *ItemReference { return i }
+
+// ItemReferenceByID - An item reference by ID object.
+type ItemReferenceByID struct {
+	// REQUIRED; The ID of the item.
+	ItemID *string
+
+	// REQUIRED; The item reference type.
+	ReferenceType *ItemReferenceType
+
+	// REQUIRED; The workspace ID of the item.
+	WorkspaceID *string
+}
+
+// GetItemReference implements the ItemReferenceClassification interface for type ItemReferenceByID.
+func (i *ItemReferenceByID) GetItemReference() *ItemReference {
+	return &ItemReference{
+		ReferenceType: i.ReferenceType,
+	}
+}
+
+// ItemReferenceByVariable - An item reference by variable.
+type ItemReferenceByVariable struct {
+	// REQUIRED; The item reference type.
+	ReferenceType *ItemReferenceType
+
+	// REQUIRED; A variable reference string that specifies the Variable Library and the variable name inside it. Format: $(/**/_VarLibrary_/_VarName_)
+	// for a Variable Library named VarLibrary and a variable named
+	// VarName.
+	VariableReference *string
+}
+
+// GetItemReference implements the ItemReferenceClassification interface for type ItemReferenceByVariable.
+func (i *ItemReferenceByVariable) GetItemReference() *ItemReference {
+	return &ItemReference{
+		ReferenceType: i.ReferenceType,
+	}
 }
 
 // ItemTag - Represents a tag applied on an item.

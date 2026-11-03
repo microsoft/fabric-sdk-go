@@ -8,6 +8,50 @@ package core
 
 import "encoding/json"
 
+func unmarshalActorAutoDetectionRuleActorsSubjectToRuleClassification(rawMsg json.RawMessage) (ActorAutoDetectionRuleActorsSubjectToRuleClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b ActorAutoDetectionRuleActorsSubjectToRuleClassification
+	switch m["type"] {
+	case string(ActorAutoDetectionRuleActorsSubjectToRuleKindAllWorkspaces):
+		b = &ActorAutoDetectionRuleAllWorkspaces{}
+	default:
+		b = &ActorAutoDetectionRuleActorsSubjectToRule{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalActorAutoDetectionRuleBlockDurationClassification(rawMsg json.RawMessage) (ActorAutoDetectionRuleBlockDurationClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b ActorAutoDetectionRuleBlockDurationClassification
+	switch m["type"] {
+	case string(ActorAutoDetectionRuleBlockDurationKindHours):
+		b = &ActorAutoDetectionRuleHoursBlockDuration{}
+	case string(ActorAutoDetectionRuleBlockDurationKindIndefinite):
+		b = &ActorAutoDetectionRuleIndefiniteBlockDuration{}
+	default:
+		b = &ActorAutoDetectionRuleBlockDuration{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
 func unmarshalBaseExternalDataShareRecipientClassification(rawMsg json.RawMessage) (BaseExternalDataShareRecipientClassification, error) {
 	if rawMsg == nil || string(rawMsg) == "null" {
 		return nil, nil
@@ -24,6 +68,29 @@ func unmarshalBaseExternalDataShareRecipientClassification(rawMsg json.RawMessag
 		b = &ExternalDataShareUserRecipient{}
 	default:
 		b = &BaseExternalDataShareRecipient{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalBlockedActorExpirationPolicyClassification(rawMsg json.RawMessage) (BlockedActorExpirationPolicyClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b BlockedActorExpirationPolicyClassification
+	switch m["policyType"] {
+	case string(BlockedActorExpirationPolicyTypeExpireAfterDate):
+		b = &ExpireAfterDateBlockedActorExpirationPolicy{}
+	case string(BlockedActorExpirationPolicyTypeNeverExpire):
+		b = &NeverExpireBlockedActorExpirationPolicy{}
+	default:
+		b = &BlockedActorExpirationPolicy{}
 	}
 	if err := json.Unmarshal(rawMsg, b); err != nil {
 		return nil, err
@@ -207,6 +274,29 @@ func unmarshalCredentialsClassification(rawMsg json.RawMessage) (CredentialsClas
 		b = &WorkspaceIdentityCredentials{}
 	default:
 		b = &Credentials{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalDeploymentPlanReferenceClassification(rawMsg json.RawMessage) (DeploymentPlanReferenceClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b DeploymentPlanReferenceClassification
+	switch m["referenceType"] {
+	case string(DeploymentPlanReferenceTypeByItemID):
+		b = &DeploymentPlanReferenceByItemID{}
+	case string(DeploymentPlanReferenceTypeByLogicalID):
+		b = &DeploymentPlanReferenceByLogicalID{}
+	default:
+		b = &DeploymentPlanReference{}
 	}
 	if err := json.Unmarshal(rawMsg, b); err != nil {
 		return nil, err
@@ -468,6 +558,27 @@ func unmarshalScheduleConfigClassification(rawMsg json.RawMessage) (ScheduleConf
 		b = &WeeklyScheduleConfig{}
 	default:
 		b = &ScheduleConfig{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalSurgeProtectionActorDetailsClassification(rawMsg json.RawMessage) (SurgeProtectionActorDetailsClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b SurgeProtectionActorDetailsClassification
+	switch m["actorType"] {
+	case string(SurgeProtectionActorTypeWorkspace):
+		b = &WorkspaceActorDetails{}
+	default:
+		b = &SurgeProtectionActorDetails{}
 	}
 	if err := json.Unmarshal(rawMsg, b); err != nil {
 		return nil, err

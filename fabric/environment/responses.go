@@ -6,6 +6,8 @@
 
 package environment
 
+import "io"
+
 // ItemsClientCancelPublishEnvironmentResponse contains the response from method ItemsClient.CancelPublishEnvironment.
 type ItemsClientCancelPublishEnvironmentResponse struct {
 	// Environment properties.
@@ -64,6 +66,18 @@ type ItemsClientUpdateEnvironmentResponse struct {
 	Environment
 }
 
+// PoolActivationsClientGetPoolActivationResponse contains the response from method PoolActivationsClient.GetPoolActivation.
+type PoolActivationsClientGetPoolActivationResponse struct {
+	// A pool activation details object with extended diagnostic properties.
+	PoolActivationDetails
+}
+
+// PoolActivationsClientListPoolActivationsResponse contains the response from method PoolActivationsClient.NewListPoolActivationsPager.
+type PoolActivationsClientListPoolActivationsResponse struct {
+	// A paginated list of pool activations.
+	PoolActivations
+}
+
 // PublishedClientExportExternalLibrariesResponse contains the response from method PublishedClient.ExportExternalLibraries.
 type PublishedClientExportExternalLibrariesResponse struct {
 	// placeholder for future response values
@@ -104,6 +118,12 @@ type StagingClientDeleteCustomLibraryResponse struct {
 // StagingClientExportExternalLibrariesResponse contains the response from method StagingClient.ExportExternalLibraries.
 type StagingClientExportExternalLibrariesResponse struct {
 	// placeholder for future response values
+}
+
+// StagingClientGetPublishLogResponse contains the response from method StagingClient.GetPublishLog.
+type StagingClientGetPublishLogResponse struct {
+	// Body contains the streaming response.
+	Body io.ReadCloser
 }
 
 // StagingClientGetSparkComputeBetaResponse contains the response from method StagingClient.GetSparkComputeBeta.

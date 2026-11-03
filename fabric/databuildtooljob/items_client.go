@@ -32,7 +32,7 @@ type ItemsClient struct {
 
 // BeginCreateDataBuildToolJob - > [!NOTE] DataBuildToolJob item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create a DataBuildToolJob with a definition, refer to DataBuildToolJob [/rest/api/fabric/articles/item-management/definitions/data-build-tool-job-definition]
+// To create a DataBuildToolJob with a definition, refer to DataBuildToolJob [/rest/api/fabric/articles/item-management/definitions/dbtjob-definition]
 // article.
 // PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
@@ -59,7 +59,7 @@ func (client *ItemsClient) BeginCreateDataBuildToolJob(ctx context.Context, work
 
 // CreateDataBuildToolJob - > [!NOTE] DataBuildToolJob item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create a DataBuildToolJob with a definition, refer to DataBuildToolJob [/rest/api/fabric/articles/item-management/definitions/data-build-tool-job-definition]
+// To create a DataBuildToolJob with a definition, refer to DataBuildToolJob [/rest/api/fabric/articles/item-management/definitions/dbtjob-definition]
 // article.
 // PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
@@ -242,6 +242,10 @@ func (client *ItemsClient) getDataBuildToolJobHandleResponse(resp *http.Response
 // When you get a DataBuildToolJob's definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the DataBuildToolJob.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
+// LIMITATIONS To retrieve the definition of a Data build tool job item protected by an encrypted sensitivity label, the caller
+// must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -264,6 +268,10 @@ func (client *ItemsClient) BeginGetDataBuildToolJobDefinition(ctx context.Contex
 // When you get a DataBuildToolJob's definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the DataBuildToolJob.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
+// LIMITATIONS To retrieve the definition of a Data build tool job item protected by an encrypted sensitivity label, the caller
+// must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -553,7 +561,7 @@ func (client *ItemsClient) updateDataBuildToolJobDefinitionCreateRequest(ctx con
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// To create a DataBuildToolJob with a definition, refer to DataBuildToolJob [/rest/api/fabric/articles/item-management/definitions/data-build-tool-job-definition] article.
+// To create a DataBuildToolJob with a definition, refer to DataBuildToolJob [/rest/api/fabric/articles/item-management/definitions/dbtjob-definition] article.
 //
 // PERMISSIONS The caller must have a contributor workspace role.
 //
@@ -636,6 +644,9 @@ func (client *ItemsClient) beginCreateDataBuildToolJob(ctx context.Context, work
 // PERMISSIONS The caller must have read and write permissions for the DataBuildToolJob.
 //
 // # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
+//
+// LIMITATIONS To retrieve the definition of a Data build tool job item protected by an encrypted sensitivity label, the caller must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in Microsoft Purview [/purview/purview].
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

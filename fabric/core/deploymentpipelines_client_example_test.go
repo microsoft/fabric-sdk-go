@@ -1020,6 +1020,37 @@ func ExampleDeploymentPipelinesClient_NewListDeploymentPipelineStageItemsPager_e
 }
 
 // Generated from example definition
+func ExampleDeploymentPipelinesClient_BeginDeployStageContent_exampleOfDeployingFabricItemsFromADeploymentPipelineStageUsingADeploymentPlan() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewDeploymentPipelinesClient().BeginDeployStageContent(ctx, "a5ded933-57b7-41f4-b072-ed4c1f9d5824", core.DeployRequest{
+		Note: to.Ptr("Deploying with orchestrated deployment plan"),
+		Options: &core.DeploymentOptions{
+			DeploymentPlan: &core.DeploymentPlanReferenceByItemID{
+				ReferenceType: to.Ptr(core.DeploymentPlanReferenceTypeByItemID),
+				ItemID:        to.Ptr("b2c3d4e5-f6a7-8901-bcde-f12345678901"),
+			},
+		},
+		SourceStageID: to.Ptr("db1577e0-0132-4d6d-92b9-952c359988f2"),
+		TargetStageID: to.Ptr("f1c39546-6282-4590-8af3-847a6226ad16"),
+	}, &core.DeploymentPipelinesClientBeginDeployStageContentOptions{Beta: nil})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
 func ExampleDeploymentPipelinesClient_BeginDeployStageContent_exampleOfDeployingAllFabricItemsSuchAsReportsOrDashboardsFromADeploymentPipelineStage() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -1034,7 +1065,7 @@ func ExampleDeploymentPipelinesClient_BeginDeployStageContent_exampleOfDeploying
 		Note:          to.Ptr("Deploying business ready items"),
 		SourceStageID: to.Ptr("db1577e0-0132-4d6d-92b9-952c359988f2"),
 		TargetStageID: to.Ptr("f1c39546-6282-4590-8af3-847a6226ad16"),
-	}, nil)
+	}, &core.DeploymentPipelinesClientBeginDeployStageContentOptions{Beta: nil})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -1080,7 +1111,7 @@ func ExampleDeploymentPipelinesClient_BeginDeployStageContent_exampleOfDeploying
 		Note:          to.Ptr("Deploying business ready items"),
 		SourceStageID: to.Ptr("db1577e0-0132-4d6d-92b9-952c359988f2"),
 		TargetStageID: to.Ptr("f1c39546-6282-4590-8af3-847a6226ad16"),
-	}, nil)
+	}, &core.DeploymentPipelinesClientBeginDeployStageContentOptions{Beta: nil})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -1120,7 +1151,7 @@ func ExampleDeploymentPipelinesClient_BeginDeployStageContent_exampleOfDeploying
 		},
 		SourceStageID: to.Ptr("db1577e0-0132-4d6d-92b9-952c359988f2"),
 		TargetStageID: to.Ptr("f1c39546-6282-4590-8af3-847a6226ad16"),
-	}, nil)
+	}, &core.DeploymentPipelinesClientBeginDeployStageContentOptions{Beta: nil})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

@@ -174,6 +174,79 @@ func (testsuite *FakeTestSuite) TestItems_CreateWarehouse() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a warehouse with definition (dacpac) example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCreateWarehouseRequest = warehouse.CreateWarehouseRequest{
+		Description: to.Ptr("A warehouse description."),
+		Definition: &warehouse.Definition{
+			Format: to.Ptr("dacpac"),
+			Parts: []warehouse.DefinitionPart{
+				{
+					Path:        to.Ptr("definition.dacpac"),
+					Payload:     to.Ptr("UEsDBBQAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAGRlZmluaXRpb24uZGFjcGFj"),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				}},
+		},
+		DisplayName: to.Ptr("Warehouse 1"),
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginCreateWarehouse = func(ctx context.Context, workspaceID string, createWarehouseRequest warehouse.CreateWarehouseRequest, options *warehouse.ItemsClientBeginCreateWarehouseOptions) (resp azfake.PollerResponder[warehouse.ItemsClientCreateWarehouseResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateWarehouseRequest, createWarehouseRequest))
+		resp = azfake.PollerResponder[warehouse.ItemsClientCreateWarehouseResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, warehouse.ItemsClientCreateWarehouseResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateWarehouse(ctx, exampleWorkspaceID, exampleCreateWarehouseRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a warehouse with definition (sqlproj) example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCreateWarehouseRequest = warehouse.CreateWarehouseRequest{
+		Description: to.Ptr("A warehouse description."),
+		Definition: &warehouse.Definition{
+			Parts: []warehouse.DefinitionPart{
+				{
+					Path:        to.Ptr("sqldw.sqlproj"),
+					Payload:     to.Ptr("PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjxQcm9qZWN0IERlZmF1bHRUYXJnZXRzPSJCdWlsZCI+DQogIDxTZGs+TWljcm9zb2Z0LkJ1aWxkLlNxbC9TZGsNCiAgPC9TZGs+DQo8L1Byb2plY3Q+"),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("dbo/Tables/Table1.sql"),
+					Payload:     to.Ptr("Q1JFQVRFIFRBQkxFIFtkYm9dLltUYWJsZTFdIChbSWRdIElOVCBOT1QgTlVMTCwgW05hbWVdIE5WQVJDSEFSKDEwMCkp"),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".sharedqueries/query.sql"),
+					Payload:     to.Ptr("U0VMRUNUIFtJZF0sIFtOYW1lXSBGUk9NIFtkYm9dLltUYWJsZTFd"),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				}},
+		},
+		DisplayName: to.Ptr("Warehouse 1"),
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginCreateWarehouse = func(ctx context.Context, workspaceID string, createWarehouseRequest warehouse.CreateWarehouseRequest, options *warehouse.ItemsClientBeginCreateWarehouseOptions) (resp azfake.PollerResponder[warehouse.ItemsClientCreateWarehouseResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateWarehouseRequest, createWarehouseRequest))
+		resp = azfake.PollerResponder[warehouse.ItemsClientCreateWarehouseResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, warehouse.ItemsClientCreateWarehouseResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateWarehouse(ctx, exampleWorkspaceID, exampleCreateWarehouseRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestItems_GetWarehouse() {
@@ -333,6 +406,349 @@ func (testsuite *FakeTestSuite) TestItems_GetConnectionString() {
 	})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ConnectionStringResponse))
+}
+
+func (testsuite *FakeTestSuite) TestItems_GetWarehouseDefinition() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a warehouse public definition in DACPAC format example"},
+	})
+	var exampleWorkspaceID string
+	var exampleWarehouseID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleWarehouseID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	exampleRes := warehouse.DefinitionResponse{
+		Definition: &warehouse.Definition{
+			Parts: []warehouse.DefinitionPart{
+				{
+					Path:        to.Ptr("definition.dacpac"),
+					Payload:     to.Ptr("UEsDBBQAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAGRlZmluaXRpb24uZGFjcGFj"),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ewogICIkc2NoZW1hIjogImh0dHBzOi8vZGV2ZWxvcGVyLm1pY3Jvc29mdC5jb20vanNvbi1zY2hlbWFzL2ZhYnJpYy9naXRJbnRlZ3JhdGlvbi9wbGF0Zm9ybVByb3BlcnRpZXMvMi4wLjAvc2NoZW1hLmpzb24iLAogICJtZXRhZGF0YSI6IHsKICAgICJ0eXBlIjogIldhcmVob3VzZSIsCiAgICAiZGlzcGxheU5hbWUiOiAiV2FyZWhvdXNlXzEiCiAgfSwKICAiY29uZmlnIjogewogICAgInZlcnNpb24iOiAiMi4wIiwKICAgICJsb2dpY2FsSWQiOiAiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIgogIH0KfQ=="),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginGetWarehouseDefinition = func(ctx context.Context, workspaceID string, warehouseID string, options *warehouse.ItemsClientBeginGetWarehouseDefinitionOptions) (resp azfake.PollerResponder[warehouse.ItemsClientGetWarehouseDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleWarehouseID, warehouseID)
+		resp = azfake.PollerResponder[warehouse.ItemsClientGetWarehouseDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, warehouse.ItemsClientGetWarehouseDefinitionResponse{DefinitionResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	poller, err := client.BeginGetWarehouseDefinition(ctx, exampleWorkspaceID, exampleWarehouseID, &warehouse.ItemsClientBeginGetWarehouseDefinitionOptions{Format: to.Ptr(warehouse.DefinitionFormatDacpac)})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DefinitionResponse))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a warehouse public definition in SQL project format example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleWarehouseID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	exampleRes = warehouse.DefinitionResponse{
+		Definition: &warehouse.Definition{
+			Parts: []warehouse.DefinitionPart{
+				{
+					Path:        to.Ptr("sqldw.sqlproj"),
+					Payload:     to.Ptr("PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjxQcm9qZWN0IERlZmF1bHRUYXJnZXRzPSJCdWlsZCI+DQogIDxTZGs+TWljcm9zb2Z0LkJ1aWxkLlNxbC9TZGsNCiAgPC9TZGs+DQo8L1Byb2plY3Q+"),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("dbo/Tables/Table1.sql"),
+					Payload:     to.Ptr("Q1JFQVRFIFRBQkxFIFtkYm9dLltUYWJsZTFdIChbSWRdIElOVCBOT1QgTlVMTCwgW05hbWVdIE5WQVJDSEFSKDEwMCkp"),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".sharedqueries/query.sql"),
+					Payload:     to.Ptr("U0VMRUNUIFtJZF0sIFtOYW1lXSBGUk9NIFtkYm9dLltUYWJsZTFd"),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginGetWarehouseDefinition = func(ctx context.Context, workspaceID string, warehouseID string, options *warehouse.ItemsClientBeginGetWarehouseDefinitionOptions) (resp azfake.PollerResponder[warehouse.ItemsClientGetWarehouseDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleWarehouseID, warehouseID)
+		resp = azfake.PollerResponder[warehouse.ItemsClientGetWarehouseDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, warehouse.ItemsClientGetWarehouseDefinitionResponse{DefinitionResponse: exampleRes}, nil)
+		return
+	}
+
+	poller, err = client.BeginGetWarehouseDefinition(ctx, exampleWorkspaceID, exampleWarehouseID, &warehouse.ItemsClientBeginGetWarehouseDefinitionOptions{Format: to.Ptr(warehouse.DefinitionFormatSqlproj)})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DefinitionResponse))
+}
+
+func (testsuite *FakeTestSuite) TestItems_UpdateWarehouseDefinition() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update a warehouse public definition in DACPAC format example"},
+	})
+	var exampleWorkspaceID string
+	var exampleWarehouseID string
+	var exampleUpdateWarehouseDefinitionRequest warehouse.UpdateWarehouseDefinitionRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleWarehouseID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleUpdateWarehouseDefinitionRequest = warehouse.UpdateWarehouseDefinitionRequest{
+		Definition: &warehouse.Definition{
+			Format: to.Ptr("dacpac"),
+			Parts: []warehouse.DefinitionPart{
+				{
+					Path:        to.Ptr("definition.dacpac"),
+					Payload:     to.Ptr("UEsDBBQAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAGRlZmluaXRpb24uZGFjcGFj"),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ewogICIkc2NoZW1hIjogImh0dHBzOi8vZGV2ZWxvcGVyLm1pY3Jvc29mdC5jb20vanNvbi1zY2hlbWFzL2ZhYnJpYy9naXRJbnRlZ3JhdGlvbi9wbGF0Zm9ybVByb3BlcnRpZXMvMi4wLjAvc2NoZW1hLmpzb24iLAogICJtZXRhZGF0YSI6IHsKICAgICJ0eXBlIjogIldhcmVob3VzZSIsCiAgICAiZGlzcGxheU5hbWUiOiAiV2FyZWhvdXNlXzEiCiAgfSwKICAiY29uZmlnIjogewogICAgInZlcnNpb24iOiAiMi4wIiwKICAgICJsb2dpY2FsSWQiOiAiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIgogIH0KfQ=="),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginUpdateWarehouseDefinition = func(ctx context.Context, workspaceID string, warehouseID string, updateWarehouseDefinitionRequest warehouse.UpdateWarehouseDefinitionRequest, options *warehouse.ItemsClientBeginUpdateWarehouseDefinitionOptions) (resp azfake.PollerResponder[warehouse.ItemsClientUpdateWarehouseDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleWarehouseID, warehouseID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateWarehouseDefinitionRequest, updateWarehouseDefinitionRequest))
+		resp = azfake.PollerResponder[warehouse.ItemsClientUpdateWarehouseDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, warehouse.ItemsClientUpdateWarehouseDefinitionResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewItemsClient()
+	poller, err := client.BeginUpdateWarehouseDefinition(ctx, exampleWorkspaceID, exampleWarehouseID, exampleUpdateWarehouseDefinitionRequest, &warehouse.ItemsClientBeginUpdateWarehouseDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update a warehouse public definition in SQL project format example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleWarehouseID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleUpdateWarehouseDefinitionRequest = warehouse.UpdateWarehouseDefinitionRequest{
+		Definition: &warehouse.Definition{
+			Format: to.Ptr("sqlproj"),
+			Parts: []warehouse.DefinitionPart{
+				{
+					Path:        to.Ptr("sqldw.sqlproj"),
+					Payload:     to.Ptr("PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjxQcm9qZWN0IERlZmF1bHRUYXJnZXRzPSJCdWlsZCI+DQogIDxTZGs+TWljcm9zb2Z0LkJ1aWxkLlNxbC9TZGsNCiAgPC9TZGs+DQo8L1Byb2plY3Q+"),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("dbo/Tables/Table1.sql"),
+					Payload:     to.Ptr("Q1JFQVRFIFRBQkxFIFtkYm9dLltUYWJsZTFdIChbSWRdIElOVCBOT1QgTlVMTCwgW05hbWVdIE5WQVJDSEFSKDEwMCkp"),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".sharedqueries/query.sql"),
+					Payload:     to.Ptr("U0VMRUNUIFtJZF0sIFtOYW1lXSBGUk9NIFtkYm9dLltUYWJsZTFd"),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ewogICIkc2NoZW1hIjogImh0dHBzOi8vZGV2ZWxvcGVyLm1pY3Jvc29mdC5jb20vanNvbi1zY2hlbWFzL2ZhYnJpYy9naXRJbnRlZ3JhdGlvbi9wbGF0Zm9ybVByb3BlcnRpZXMvMi4wLjAvc2NoZW1hLmpzb24iLAogICJtZXRhZGF0YSI6IHsKICAgICJ0eXBlIjogIldhcmVob3VzZSIsCiAgICAiZGlzcGxheU5hbWUiOiAiV2FyZWhvdXNlXzEiCiAgfSwKICAiY29uZmlnIjogewogICAgInZlcnNpb24iOiAiMi4wIiwKICAgICJsb2dpY2FsSWQiOiAiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIgogIH0KfQ=="),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				}},
+		},
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginUpdateWarehouseDefinition = func(ctx context.Context, workspaceID string, warehouseID string, updateWarehouseDefinitionRequest warehouse.UpdateWarehouseDefinitionRequest, options *warehouse.ItemsClientBeginUpdateWarehouseDefinitionOptions) (resp azfake.PollerResponder[warehouse.ItemsClientUpdateWarehouseDefinitionResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleWarehouseID, warehouseID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateWarehouseDefinitionRequest, updateWarehouseDefinitionRequest))
+		resp = azfake.PollerResponder[warehouse.ItemsClientUpdateWarehouseDefinitionResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, warehouse.ItemsClientUpdateWarehouseDefinitionResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginUpdateWarehouseDefinition(ctx, exampleWorkspaceID, exampleWarehouseID, exampleUpdateWarehouseDefinitionRequest, &warehouse.ItemsClientBeginUpdateWarehouseDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestSQLPools_GetSQLPoolsConfiguration() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get SQL Pools example"},
+	})
+	var exampleWorkspaceID string
+	exampleWorkspaceID = "a97f3e88-9f0a-4183-b1d9-31e6eb00e778"
+
+	exampleRes := warehouse.SQLPoolsConfigurationResponse{
+		CustomSQLPools: []warehouse.CustomSQLPool{
+			{
+				Name: to.Ptr("ETL"),
+				Classifier: &warehouse.CustomSQLPoolClassifier{
+					Type: to.Ptr(warehouse.CustomSQLPoolClassifierTypeApplicationName),
+					Value: []string{
+						"ETL",
+						"Load",
+						"Pipeline"},
+				},
+				IsDefault:             to.Ptr(false),
+				MaxResourcePercentage: to.Ptr[int32](30),
+				OptimizeForReads:      to.Ptr(false),
+			},
+			{
+				Name: to.Ptr("Reporting"),
+				Classifier: &warehouse.CustomSQLPoolClassifier{
+					Type: to.Ptr(warehouse.CustomSQLPoolClassifierTypeApplicationName),
+					Value: []string{
+						"Reports"},
+				},
+				IsDefault:             to.Ptr(false),
+				MaxResourcePercentage: to.Ptr[int32](30),
+				OptimizeForReads:      to.Ptr(true),
+			},
+			{
+				Name: to.Ptr("Default"),
+				Classifier: &warehouse.CustomSQLPoolClassifier{
+					Type: to.Ptr(warehouse.CustomSQLPoolClassifierTypeApplicationName),
+					Value: []string{
+						"Default"},
+				},
+				IsDefault:             to.Ptr(true),
+				MaxResourcePercentage: to.Ptr[int32](40),
+				OptimizeForReads:      to.Ptr(false),
+			}},
+		CustomSQLPoolsEnabled: to.Ptr(true),
+	}
+
+	testsuite.serverFactory.SQLPoolsServer.GetSQLPoolsConfiguration = func(ctx context.Context, workspaceID string, options *warehouse.SQLPoolsClientGetSQLPoolsConfigurationOptions) (resp azfake.Responder[warehouse.SQLPoolsClientGetSQLPoolsConfigurationResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		resp = azfake.Responder[warehouse.SQLPoolsClientGetSQLPoolsConfigurationResponse]{}
+		resp.SetResponse(http.StatusOK, warehouse.SQLPoolsClientGetSQLPoolsConfigurationResponse{SQLPoolsConfigurationResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewSQLPoolsClient()
+	res, err := client.GetSQLPoolsConfiguration(ctx, exampleWorkspaceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.SQLPoolsConfigurationResponse))
+}
+
+func (testsuite *FakeTestSuite) TestSQLPools_UpdateSQLPoolsConfiguration() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Disable SQL Pools and delete all existing pools example"},
+	})
+	var exampleWorkspaceID string
+	var exampleUpdateSQLPoolsConfigurationRequest warehouse.UpdateSQLPoolsConfigurationRequest
+	exampleWorkspaceID = "a97f3e88-9f0a-4183-b1d9-31e6eb00e778"
+	exampleUpdateSQLPoolsConfigurationRequest = warehouse.UpdateSQLPoolsConfigurationRequest{
+		CustomSQLPools:        []warehouse.CustomSQLPool{},
+		CustomSQLPoolsEnabled: to.Ptr(false),
+	}
+
+	testsuite.serverFactory.SQLPoolsServer.UpdateSQLPoolsConfiguration = func(ctx context.Context, workspaceID string, updateSQLPoolsConfigurationRequest warehouse.UpdateSQLPoolsConfigurationRequest, options *warehouse.SQLPoolsClientUpdateSQLPoolsConfigurationOptions) (resp azfake.Responder[warehouse.SQLPoolsClientUpdateSQLPoolsConfigurationResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateSQLPoolsConfigurationRequest, updateSQLPoolsConfigurationRequest))
+		resp = azfake.Responder[warehouse.SQLPoolsClientUpdateSQLPoolsConfigurationResponse]{}
+		resp.SetResponse(http.StatusOK, warehouse.SQLPoolsClientUpdateSQLPoolsConfigurationResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewSQLPoolsClient()
+	_, err = client.UpdateSQLPoolsConfiguration(ctx, exampleWorkspaceID, exampleUpdateSQLPoolsConfigurationRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Enable SQL Pools and setup pools' configuration example"},
+	})
+	exampleWorkspaceID = "a97f3e88-9f0a-4183-b1d9-31e6eb00e778"
+	exampleUpdateSQLPoolsConfigurationRequest = warehouse.UpdateSQLPoolsConfigurationRequest{
+		CustomSQLPools: []warehouse.CustomSQLPool{
+			{
+				Name: to.Ptr("ETL"),
+				Classifier: &warehouse.CustomSQLPoolClassifier{
+					Type: to.Ptr(warehouse.CustomSQLPoolClassifierTypeApplicationName),
+					Value: []string{
+						"ETL",
+						"Load",
+						"Pipeline"},
+				},
+				IsDefault:             to.Ptr(false),
+				MaxResourcePercentage: to.Ptr[int32](20),
+				OptimizeForReads:      to.Ptr(false),
+			},
+			{
+				Name: to.Ptr("Reporting"),
+				Classifier: &warehouse.CustomSQLPoolClassifier{
+					Type: to.Ptr(warehouse.CustomSQLPoolClassifierTypeApplicationName),
+					Value: []string{
+						"Reports"},
+				},
+				IsDefault:             to.Ptr(false),
+				MaxResourcePercentage: to.Ptr[int32](30),
+				OptimizeForReads:      to.Ptr(true),
+			},
+			{
+				Name:                  to.Ptr("Adhoc"),
+				IsDefault:             to.Ptr(true),
+				MaxResourcePercentage: to.Ptr[int32](50),
+				OptimizeForReads:      to.Ptr(false),
+			}},
+		CustomSQLPoolsEnabled: to.Ptr(true),
+	}
+
+	testsuite.serverFactory.SQLPoolsServer.UpdateSQLPoolsConfiguration = func(ctx context.Context, workspaceID string, updateSQLPoolsConfigurationRequest warehouse.UpdateSQLPoolsConfigurationRequest, options *warehouse.SQLPoolsClientUpdateSQLPoolsConfigurationOptions) (resp azfake.Responder[warehouse.SQLPoolsClientUpdateSQLPoolsConfigurationResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateSQLPoolsConfigurationRequest, updateSQLPoolsConfigurationRequest))
+		resp = azfake.Responder[warehouse.SQLPoolsClientUpdateSQLPoolsConfigurationResponse]{}
+		resp.SetResponse(http.StatusOK, warehouse.SQLPoolsClientUpdateSQLPoolsConfigurationResponse{}, nil)
+		return
+	}
+
+	_, err = client.UpdateSQLPoolsConfiguration(ctx, exampleWorkspaceID, exampleUpdateSQLPoolsConfigurationRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update SQL Pools example"},
+	})
+	exampleWorkspaceID = "a97f3e88-9f0a-4183-b1d9-31e6eb00e778"
+	exampleUpdateSQLPoolsConfigurationRequest = warehouse.UpdateSQLPoolsConfigurationRequest{
+		CustomSQLPools: []warehouse.CustomSQLPool{
+			{
+				Name:                  to.Ptr("ETL"),
+				MaxResourcePercentage: to.Ptr[int32](20),
+			},
+			{
+				Name: to.Ptr("Adhoc"),
+			},
+			{
+				Name: to.Ptr("Reporting"),
+			}},
+		CustomSQLPoolsEnabled: to.Ptr(true),
+	}
+
+	testsuite.serverFactory.SQLPoolsServer.UpdateSQLPoolsConfiguration = func(ctx context.Context, workspaceID string, updateSQLPoolsConfigurationRequest warehouse.UpdateSQLPoolsConfigurationRequest, options *warehouse.SQLPoolsClientUpdateSQLPoolsConfigurationOptions) (resp azfake.Responder[warehouse.SQLPoolsClientUpdateSQLPoolsConfigurationResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateSQLPoolsConfigurationRequest, updateSQLPoolsConfigurationRequest))
+		resp = azfake.Responder[warehouse.SQLPoolsClientUpdateSQLPoolsConfigurationResponse]{}
+		resp.SetResponse(http.StatusOK, warehouse.SQLPoolsClientUpdateSQLPoolsConfigurationResponse{}, nil)
+		return
+	}
+
+	_, err = client.UpdateSQLPoolsConfiguration(ctx, exampleWorkspaceID, exampleUpdateSQLPoolsConfigurationRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestSQLAuditSettings_UpdateSQLAuditSettings() {

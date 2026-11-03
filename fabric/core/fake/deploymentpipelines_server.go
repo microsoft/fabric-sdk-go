@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
@@ -366,6 +367,7 @@ func (d *DeploymentPipelinesServerTransport) dispatchBeginDeployStageContent(req
 		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
+		qp := req.URL.Query()
 		body, err := server.UnmarshalRequestAsJSON[core.DeployRequest](req)
 		if err != nil {
 			return nil, err
@@ -374,7 +376,21 @@ func (d *DeploymentPipelinesServerTransport) dispatchBeginDeployStageContent(req
 		if err != nil {
 			return nil, err
 		}
-		respr, errRespr := d.srv.BeginDeployStageContent(req.Context(), deploymentPipelineIDParam, body, nil)
+		betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
+		if err != nil {
+			return nil, err
+		}
+		betaParam, err := parseOptional(betaUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		var options *core.DeploymentPipelinesClientBeginDeployStageContentOptions
+		if betaParam != nil {
+			options = &core.DeploymentPipelinesClientBeginDeployStageContentOptions{
+				Beta: betaParam,
+			}
+		}
+		respr, errRespr := d.srv.BeginDeployStageContent(req.Context(), deploymentPipelineIDParam, body, options)
 		if respErr := server.GetError(errRespr, req); respErr != nil {
 			return nil, respErr
 		}

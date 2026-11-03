@@ -28,8 +28,11 @@ type CreateWarehouseRequest struct {
 	// REQUIRED; The warehouse display name. The display name must follow naming rules according to item type.
 	DisplayName *string
 
-	// The warehouse creation payload. Use creationPayload. You can't use definition or creationPayload at the same time.
+	// The warehouse creation payload. You cannot use definition and creationPayload at the same time.
 	CreationPayload *CreationPayload
+
+	// The warehouse definition. You cannot use definition and creationPayload at the same time.
+	Definition *Definition
 
 	// The warehouse description. Maximum length is 256 characters.
 	Description *string
@@ -76,6 +79,37 @@ type CustomSQLPoolClassifier struct {
 
 	// REQUIRED; List of strings.
 	Value []string
+}
+
+// Definition - The warehouse public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/warehouse-definition]
+// for more details on the structure of the warehouse
+// definition.
+type Definition struct {
+	// REQUIRED; A list of definition parts.
+	Parts []DefinitionPart
+
+	// The format of the warehouse definition. Supported formats: dacpac and sqlproj. If no format is provided, sqlproj is used.
+	Format *string
+}
+
+// DefinitionPart - Warehouse definition part object.
+type DefinitionPart struct {
+	// REQUIRED; The warehouse public definition part path.
+	Path *string
+
+	// REQUIRED; The warehouse public definition part payload.
+	Payload *string
+
+	// REQUIRED; The payload type.
+	PayloadType *PayloadType
+}
+
+// DefinitionResponse - The warehouse public definition response.
+type DefinitionResponse struct {
+	// READ-ONLY; The warehouse public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/warehouse-definition]
+	// for more details on the structure of the warehouse
+	// definition.
+	Definition *Definition
 }
 
 // EntireTenantPrincipal - Represents a tenant principal
@@ -368,6 +402,14 @@ type UpdateSQLPoolsConfigurationRequest struct {
 	// Indicates whether the SQL pools configuration is enabled. When set to false, the configuration is disabled but preserved.
 	// Re-enabling it restores the previously saved configuration.
 	CustomSQLPoolsEnabled *bool
+}
+
+// UpdateWarehouseDefinitionRequest - Update warehouse public definition request payload.
+type UpdateWarehouseDefinitionRequest struct {
+	// REQUIRED; The warehouse public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/warehouse-definition]
+	// for more details on the structure of the warehouse
+	// definition.
+	Definition *Definition
 }
 
 // UpdateWarehouseRequest - Update warehouse request.

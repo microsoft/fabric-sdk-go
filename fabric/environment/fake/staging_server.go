@@ -38,6 +38,10 @@ type StagingServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	ExportExternalLibraries func(ctx context.Context, workspaceID string, environmentID string, options *environment.StagingClientExportExternalLibrariesOptions) (resp azfake.Responder[environment.StagingClientExportExternalLibrariesResponse], errResp azfake.ErrorResponder)
 
+	// GetPublishLog is the fake for method StagingClient.GetPublishLog
+	// HTTP status codes to indicate success: http.StatusOK
+	GetPublishLog func(ctx context.Context, workspaceID string, environmentID string, options *environment.StagingClientGetPublishLogOptions) (resp azfake.Responder[environment.StagingClientGetPublishLogResponse], errResp azfake.ErrorResponder)
+
 	// GetSparkCompute is the fake for method StagingClient.GetSparkCompute
 	// HTTP status codes to indicate success: http.StatusOK
 	GetSparkCompute func(ctx context.Context, workspaceID string, environmentID string, beta bool, options *environment.StagingClientGetSparkComputeOptions) (resp azfake.Responder[environment.StagingClientGetSparkComputeResponse], errResp azfake.ErrorResponder)
@@ -127,6 +131,8 @@ func (s *StagingServerTransport) dispatchToMethodFake(req *http.Request, method 
 				res.resp, res.err = s.dispatchDeleteCustomLibraryBeta(req)
 			case "StagingClient.ExportExternalLibraries":
 				res.resp, res.err = s.dispatchExportExternalLibraries(req)
+			case "StagingClient.GetPublishLog":
+				res.resp, res.err = s.dispatchGetPublishLog(req)
 			case "StagingClient.GetSparkCompute":
 				res.resp, res.err = s.dispatchGetSparkCompute(req)
 			case "StagingClient.GetSparkComputeBeta":
@@ -268,6 +274,42 @@ func (s *StagingServerTransport) dispatchExportExternalLibraries(req *http.Reque
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
 	}
 	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (s *StagingServerTransport) dispatchGetPublishLog(req *http.Request) (*http.Response, error) {
+	if s.srv.GetPublishLog == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetPublishLog not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/environments/(?P<environmentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/staging/publish/log`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	environmentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("environmentId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := s.srv.GetPublishLog(req.Context(), workspaceIDParam, environmentIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, &server.ResponseOptions{
+		Body:        server.GetResponse(respr).Body,
+		ContentType: req.Header.Get("Content-Type"),
+	})
 	if err != nil {
 		return nil, err
 	}

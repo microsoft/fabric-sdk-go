@@ -26,6 +26,63 @@ func PossibleAccessTimeTrackingStatusValues() []AccessTimeTrackingStatus {
 	}
 }
 
+// ActorAutoDetectionRuleActorsSubjectToRuleKind - The kind of actors that are subject to an actor auto-detection rule. Additional
+// actor auto-detection rule actors subject to rule kinds may be added over time.
+type ActorAutoDetectionRuleActorsSubjectToRuleKind string
+
+const (
+	// ActorAutoDetectionRuleActorsSubjectToRuleKindAllWorkspaces - All workspaces on the capacity are subject to the rule.
+	ActorAutoDetectionRuleActorsSubjectToRuleKindAllWorkspaces ActorAutoDetectionRuleActorsSubjectToRuleKind = "AllWorkspaces"
+)
+
+// PossibleActorAutoDetectionRuleActorsSubjectToRuleKindValues returns the possible values for the ActorAutoDetectionRuleActorsSubjectToRuleKind const type.
+func PossibleActorAutoDetectionRuleActorsSubjectToRuleKindValues() []ActorAutoDetectionRuleActorsSubjectToRuleKind {
+	return []ActorAutoDetectionRuleActorsSubjectToRuleKind{
+		ActorAutoDetectionRuleActorsSubjectToRuleKindAllWorkspaces,
+	}
+}
+
+// ActorAutoDetectionRuleBlockDurationKind - The kind of block duration for an actor auto-detection rule. Additional actor
+// auto-detection rule block duration kinds may be added over time.
+type ActorAutoDetectionRuleBlockDurationKind string
+
+const (
+	// ActorAutoDetectionRuleBlockDurationKindHours - The actor remains blocked for a specified number of hours.
+	ActorAutoDetectionRuleBlockDurationKindHours ActorAutoDetectionRuleBlockDurationKind = "Hours"
+	// ActorAutoDetectionRuleBlockDurationKindIndefinite - The actor remains blocked until manually unblocked by an admin.
+	ActorAutoDetectionRuleBlockDurationKindIndefinite ActorAutoDetectionRuleBlockDurationKind = "Indefinite"
+)
+
+// PossibleActorAutoDetectionRuleBlockDurationKindValues returns the possible values for the ActorAutoDetectionRuleBlockDurationKind const type.
+func PossibleActorAutoDetectionRuleBlockDurationKindValues() []ActorAutoDetectionRuleBlockDurationKind {
+	return []ActorAutoDetectionRuleBlockDurationKind{
+		ActorAutoDetectionRuleBlockDurationKindHours,
+		ActorAutoDetectionRuleBlockDurationKindIndefinite,
+	}
+}
+
+// AssignableConnectionRole - A connection role that can be assigned to a principal. Additional connection roles may be added
+// over time.
+type AssignableConnectionRole string
+
+const (
+	// AssignableConnectionRoleOwner - Enables ownership access for the connection.
+	AssignableConnectionRoleOwner AssignableConnectionRole = "Owner"
+	// AssignableConnectionRoleUser - Enables user access for the connection.
+	AssignableConnectionRoleUser AssignableConnectionRole = "User"
+	// AssignableConnectionRoleUserWithReshare - Enables user with resharing access for the connection.
+	AssignableConnectionRoleUserWithReshare AssignableConnectionRole = "UserWithReshare"
+)
+
+// PossibleAssignableConnectionRoleValues returns the possible values for the AssignableConnectionRole const type.
+func PossibleAssignableConnectionRoleValues() []AssignableConnectionRole {
+	return []AssignableConnectionRole{
+		AssignableConnectionRoleOwner,
+		AssignableConnectionRoleUser,
+		AssignableConnectionRoleUserWithReshare,
+	}
+}
+
 // AttributeName - Specifies the name of the attribute that is being evaluated for access permissions. AttributeName can be
 // Path or Action. Additional attributeName types may be added over time.
 type AttributeName string
@@ -42,6 +99,25 @@ func PossibleAttributeNameValues() []AttributeName {
 	return []AttributeName{
 		AttributeNameAction,
 		AttributeNamePath,
+	}
+}
+
+// BlockedActorExpirationPolicyType - The type of expiration policy. Additional BlockedActorExpirationPolicyType values may
+// be added over time.
+type BlockedActorExpirationPolicyType string
+
+const (
+	// BlockedActorExpirationPolicyTypeExpireAfterDate - The block expires at the date and time specified in `expireAfterDateTime`.
+	BlockedActorExpirationPolicyTypeExpireAfterDate BlockedActorExpirationPolicyType = "ExpireAfterDate"
+	// BlockedActorExpirationPolicyTypeNeverExpire - The block does not expire automatically.
+	BlockedActorExpirationPolicyTypeNeverExpire BlockedActorExpirationPolicyType = "NeverExpire"
+)
+
+// PossibleBlockedActorExpirationPolicyTypeValues returns the possible values for the BlockedActorExpirationPolicyType const type.
+func PossibleBlockedActorExpirationPolicyTypeValues() []BlockedActorExpirationPolicyType {
+	return []BlockedActorExpirationPolicyType{
+		BlockedActorExpirationPolicyTypeExpireAfterDate,
+		BlockedActorExpirationPolicyTypeNeverExpire,
 	}
 }
 
@@ -497,12 +573,15 @@ func PossibleConnectionEncryptionValues() []ConnectionEncryption {
 	}
 }
 
-// ConnectionRole - A Connection role. Additional connection roles may be added over time.
+// ConnectionRole - A connection role. Additional connection roles may be added over time.
 type ConnectionRole string
 
 const (
 	// ConnectionRoleOwner - Enables ownership access for the connection.
 	ConnectionRoleOwner ConnectionRole = "Owner"
+	// ConnectionRolePendingOwner - Ownership of the connection is not yet effective; the principal must update the connection
+	// credentials (using [Update Connection API](/rest/api/fabric/core/connections/update-connection)) to make it effective.
+	ConnectionRolePendingOwner ConnectionRole = "PendingOwner"
 	// ConnectionRoleUser - Enables user access for the connection.
 	ConnectionRoleUser ConnectionRole = "User"
 	// ConnectionRoleUserWithReshare - Enables user with resharing access for the connection.
@@ -513,6 +592,7 @@ const (
 func PossibleConnectionRoleValues() []ConnectionRole {
 	return []ConnectionRole{
 		ConnectionRoleOwner,
+		ConnectionRolePendingOwner,
 		ConnectionRoleUser,
 		ConnectionRoleUserWithReshare,
 	}
@@ -777,6 +857,25 @@ const (
 func PossibleDeploymentPipelineRoleValues() []DeploymentPipelineRole {
 	return []DeploymentPipelineRole{
 		DeploymentPipelineRoleAdmin,
+	}
+}
+
+// DeploymentPlanReferenceType - The deployment plan reference type. Additional DeploymentPlanReferenceType types may be added
+// over time.
+type DeploymentPlanReferenceType string
+
+const (
+	// DeploymentPlanReferenceTypeByItemID - The deployment plan is referenced by its item ID.
+	DeploymentPlanReferenceTypeByItemID DeploymentPlanReferenceType = "ByItemId"
+	// DeploymentPlanReferenceTypeByLogicalID - The deployment plan is referenced by its logical ID.
+	DeploymentPlanReferenceTypeByLogicalID DeploymentPlanReferenceType = "ByLogicalId"
+)
+
+// PossibleDeploymentPlanReferenceTypeValues returns the possible values for the DeploymentPlanReferenceType const type.
+func PossibleDeploymentPlanReferenceTypeValues() []DeploymentPlanReferenceType {
+	return []DeploymentPlanReferenceType{
+		DeploymentPlanReferenceTypeByItemID,
+		DeploymentPlanReferenceTypeByLogicalID,
 	}
 }
 
@@ -1420,6 +1519,8 @@ const (
 	ItemTypeDataflow ItemType = "Dataflow"
 	// ItemTypeDatamart - PowerBI datamart.
 	ItemTypeDatamart ItemType = "Datamart"
+	// ItemTypeDeploymentPlan - A Deployment plan.
+	ItemTypeDeploymentPlan ItemType = "DeploymentPlan"
 	// ItemTypeDigitalTwinBuilder - A DigitalTwinBuilder.
 	ItemTypeDigitalTwinBuilder ItemType = "DigitalTwinBuilder"
 	// ItemTypeDigitalTwinBuilderFlow - A Digital Twin Builder Flow.
@@ -1460,6 +1561,8 @@ const (
 	ItemTypeMirroredDatabase ItemType = "MirroredDatabase"
 	// ItemTypeMirroredWarehouse - A mirrored warehouse.
 	ItemTypeMirroredWarehouse ItemType = "MirroredWarehouse"
+	// ItemTypeMonitoring - A Monitoring item.
+	ItemTypeMonitoring ItemType = "Monitoring"
 	// ItemTypeMountedDataFactory - A MountedDataFactory.
 	ItemTypeMountedDataFactory ItemType = "MountedDataFactory"
 	// ItemTypeNotebook - A notebook.
@@ -1517,6 +1620,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
 		ItemTypeDatamart,
+		ItemTypeDeploymentPlan,
 		ItemTypeDigitalTwinBuilder,
 		ItemTypeDigitalTwinBuilderFlow,
 		ItemTypeEnvironment,
@@ -1537,6 +1641,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeMirroredCatalog,
 		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
+		ItemTypeMonitoring,
 		ItemTypeMountedDataFactory,
 		ItemTypeNotebook,
 		ItemTypeOntology,
@@ -1622,30 +1727,6 @@ func PossibleNetworkAccessRuleValues() []NetworkAccessRule {
 	return []NetworkAccessRule{
 		NetworkAccessRuleAllow,
 		NetworkAccessRuleDeny,
-	}
-}
-
-// ObjectType - The type of Microsoft Entra ID object. Additional objectType types may be added over time.
-type ObjectType string
-
-const (
-	// ObjectTypeGroup - Attribute name Group
-	ObjectTypeGroup ObjectType = "Group"
-	// ObjectTypeManagedIdentity - Attribute name ManagedIdentity
-	ObjectTypeManagedIdentity ObjectType = "ManagedIdentity"
-	// ObjectTypeServicePrincipal - Attribute name ServicePrincipal
-	ObjectTypeServicePrincipal ObjectType = "ServicePrincipal"
-	// ObjectTypeUser - Attribute name User
-	ObjectTypeUser ObjectType = "User"
-)
-
-// PossibleObjectTypeValues returns the possible values for the ObjectType const type.
-func PossibleObjectTypeValues() []ObjectType {
-	return []ObjectType{
-		ObjectTypeGroup,
-		ObjectTypeManagedIdentity,
-		ObjectTypeServicePrincipal,
-		ObjectTypeUser,
 	}
 }
 
@@ -1978,6 +2059,21 @@ func PossibleStatusValues() []Status {
 	return []Status{
 		StatusFailed,
 		StatusSucceeded,
+	}
+}
+
+// SurgeProtectionActorType - The type of the actor. Additional SurgeProtectionActorType values may be added over time.
+type SurgeProtectionActorType string
+
+const (
+	// SurgeProtectionActorTypeWorkspace - The actor is a workspace.
+	SurgeProtectionActorTypeWorkspace SurgeProtectionActorType = "Workspace"
+)
+
+// PossibleSurgeProtectionActorTypeValues returns the possible values for the SurgeProtectionActorType const type.
+func PossibleSurgeProtectionActorTypeValues() []SurgeProtectionActorType {
+	return []SurgeProtectionActorType{
+		SurgeProtectionActorTypeWorkspace,
 	}
 }
 

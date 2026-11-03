@@ -17,6 +17,7 @@ import (
 // MarshalJSON implements the json.Marshaller interface for type CreateReportRequest.
 func (c CreateReportRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
+	populate(objectMap, "creationPayload", c.CreationPayload)
 	populate(objectMap, "definition", c.Definition)
 	populate(objectMap, "description", c.Description)
 	populate(objectMap, "displayName", c.DisplayName)
@@ -34,6 +35,9 @@ func (c *CreateReportRequest) UnmarshalJSON(data []byte) error {
 	for key, val := range rawMsg {
 		var err error
 		switch key {
+		case "creationPayload":
+			err = unpopulate(val, "CreationPayload", &c.CreationPayload)
+			delete(rawMsg, key)
 		case "definition":
 			err = unpopulate(val, "Definition", &c.Definition)
 			delete(rawMsg, key)
@@ -48,6 +52,33 @@ func (c *CreateReportRequest) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "sensitivityLabelSettings":
 			err = unpopulate(val, "SensitivityLabelSettings", &c.SensitivityLabelSettings)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", c, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type CreationPayload.
+func (c CreationPayload) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "semanticModelReference", c.SemanticModelReference)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type CreationPayload.
+func (c *CreationPayload) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", c, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "semanticModelReference":
+			err = unpopulate(val, "SemanticModelReference", &c.SemanticModelReference)
 			delete(rawMsg, key)
 		}
 		if err != nil {
@@ -246,6 +277,99 @@ func (g *GroupPrincipalGroupDetails) UnmarshalJSON(data []byte) error {
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", g, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type ItemReference.
+func (i ItemReference) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["referenceType"] = i.ReferenceType
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ItemReference.
+func (i *ItemReference) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", i, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "referenceType":
+			err = unpopulate(val, "ReferenceType", &i.ReferenceType)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", i, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type ItemReferenceByID.
+func (i ItemReferenceByID) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "itemId", i.ItemID)
+	objectMap["referenceType"] = ItemReferenceTypeByID
+	populate(objectMap, "workspaceId", i.WorkspaceID)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ItemReferenceByID.
+func (i *ItemReferenceByID) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", i, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "itemId":
+			err = unpopulate(val, "ItemID", &i.ItemID)
+			delete(rawMsg, key)
+		case "referenceType":
+			err = unpopulate(val, "ReferenceType", &i.ReferenceType)
+			delete(rawMsg, key)
+		case "workspaceId":
+			err = unpopulate(val, "WorkspaceID", &i.WorkspaceID)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", i, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type ItemReferenceByVariable.
+func (i ItemReferenceByVariable) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["referenceType"] = ItemReferenceTypeByVariable
+	populate(objectMap, "variableReference", i.VariableReference)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ItemReferenceByVariable.
+func (i *ItemReferenceByVariable) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", i, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "referenceType":
+			err = unpopulate(val, "ReferenceType", &i.ReferenceType)
+			delete(rawMsg, key)
+		case "variableReference":
+			err = unpopulate(val, "VariableReference", &i.VariableReference)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", i, err)
 		}
 	}
 	return nil

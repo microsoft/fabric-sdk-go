@@ -129,6 +129,11 @@ type DeploymentPipelinesClientAssignWorkspaceToStageOptions struct {
 // DeploymentPipelinesClientBeginDeployStageContentOptions contains the optional parameters for the DeploymentPipelinesClient.BeginDeployStageContent
 // method.
 type DeploymentPipelinesClientBeginDeployStageContentOptions struct {
+	// Set to true to enable Beta functionality, including deployment plan support. When omitted or set to false, only generally
+	// available functionality is accessible and deployment plan input is not
+	// accepted.
+	Beta *bool
+
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
@@ -442,6 +447,11 @@ type GitClientBeginInitializeConnectionOptions struct {
 
 // GitClientBeginUpdateFromGitOptions contains the optional parameters for the GitClient.BeginUpdateFromGit method.
 type GitClientBeginUpdateFromGitOptions struct {
+	// Set to true to enable Beta functionality, including deployment plan support. When omitted or set to false, only generally
+	// available functionality is accessible and deployment plan input is not
+	// accepted.
+	Beta *bool
+
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
@@ -515,6 +525,11 @@ type ItemsClientBeginBulkExportItemDefinitionsOptions struct {
 // ItemsClientBeginBulkImportItemDefinitionsOptions contains the optional parameters for the ItemsClient.BeginBulkImportItemDefinitions
 // method.
 type ItemsClientBeginBulkImportItemDefinitionsOptions struct {
+	// Set to true to enable Beta functionality, including deployment plan support. When omitted or set to false, only generally
+	// available functionality is accessible and deployment plan input is not
+	// accepted.
+	Beta *bool
+
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
@@ -890,9 +905,96 @@ type RecoverableItemsClientListRecoverableItemsOptions struct {
 	Type *string
 }
 
+// SurgeProtectionClientCreateActorAutoDetectionRuleOptions contains the optional parameters for the SurgeProtectionClient.CreateActorAutoDetectionRule
+// method.
+type SurgeProtectionClientCreateActorAutoDetectionRuleOptions struct {
+	// placeholder for future optional parameters
+}
+
+// SurgeProtectionClientCreateBlockedActorOptions contains the optional parameters for the SurgeProtectionClient.CreateBlockedActor
+// method.
+type SurgeProtectionClientCreateBlockedActorOptions struct {
+	// placeholder for future optional parameters
+}
+
+// SurgeProtectionClientCreateMissionCriticalActorOptions contains the optional parameters for the SurgeProtectionClient.CreateMissionCriticalActor
+// method.
+type SurgeProtectionClientCreateMissionCriticalActorOptions struct {
+	// placeholder for future optional parameters
+}
+
+// SurgeProtectionClientDeleteActorAutoDetectionRuleOptions contains the optional parameters for the SurgeProtectionClient.DeleteActorAutoDetectionRule
+// method.
+type SurgeProtectionClientDeleteActorAutoDetectionRuleOptions struct {
+	// placeholder for future optional parameters
+}
+
+// SurgeProtectionClientDeleteBlockedActorOptions contains the optional parameters for the SurgeProtectionClient.DeleteBlockedActor
+// method.
+type SurgeProtectionClientDeleteBlockedActorOptions struct {
+	// placeholder for future optional parameters
+}
+
+// SurgeProtectionClientDeleteMissionCriticalActorOptions contains the optional parameters for the SurgeProtectionClient.DeleteMissionCriticalActor
+// method.
+type SurgeProtectionClientDeleteMissionCriticalActorOptions struct {
+	// placeholder for future optional parameters
+}
+
+// SurgeProtectionClientGetActorAutoDetectionRuleOptions contains the optional parameters for the SurgeProtectionClient.GetActorAutoDetectionRule
+// method.
+type SurgeProtectionClientGetActorAutoDetectionRuleOptions struct {
+	// placeholder for future optional parameters
+}
+
+// SurgeProtectionClientGetBlockedActorOptions contains the optional parameters for the SurgeProtectionClient.GetBlockedActor
+// method.
+type SurgeProtectionClientGetBlockedActorOptions struct {
+	// placeholder for future optional parameters
+}
+
 // SurgeProtectionClientGetCapacitySurgeProtectionOptions contains the optional parameters for the SurgeProtectionClient.GetCapacitySurgeProtection
 // method.
 type SurgeProtectionClientGetCapacitySurgeProtectionOptions struct {
+	// placeholder for future optional parameters
+}
+
+// SurgeProtectionClientGetMissionCriticalActorOptions contains the optional parameters for the SurgeProtectionClient.GetMissionCriticalActor
+// method.
+type SurgeProtectionClientGetMissionCriticalActorOptions struct {
+	// placeholder for future optional parameters
+}
+
+// SurgeProtectionClientListActorAutoDetectionRulesOptions contains the optional parameters for the SurgeProtectionClient.NewListActorAutoDetectionRulesPager
+// method.
+type SurgeProtectionClientListActorAutoDetectionRulesOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// SurgeProtectionClientListBlockedActorsOptions contains the optional parameters for the SurgeProtectionClient.NewListBlockedActorsPager
+// method.
+type SurgeProtectionClientListBlockedActorsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// SurgeProtectionClientListMissionCriticalActorsOptions contains the optional parameters for the SurgeProtectionClient.NewListMissionCriticalActorsPager
+// method.
+type SurgeProtectionClientListMissionCriticalActorsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
+// SurgeProtectionClientUpdateActorAutoDetectionRuleOptions contains the optional parameters for the SurgeProtectionClient.UpdateActorAutoDetectionRule
+// method.
+type SurgeProtectionClientUpdateActorAutoDetectionRuleOptions struct {
+	// placeholder for future optional parameters
+}
+
+// SurgeProtectionClientUpdateBlockedActorOptions contains the optional parameters for the SurgeProtectionClient.UpdateBlockedActor
+// method.
+type SurgeProtectionClientUpdateBlockedActorOptions struct {
 	// placeholder for future optional parameters
 }
 

@@ -42,6 +42,10 @@ type ItemsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	GetWarehouse func(ctx context.Context, workspaceID string, warehouseID string, options *warehouse.ItemsClientGetWarehouseOptions) (resp azfake.Responder[warehouse.ItemsClientGetWarehouseResponse], errResp azfake.ErrorResponder)
 
+	// BeginGetWarehouseDefinition is the fake for method ItemsClient.BeginGetWarehouseDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	BeginGetWarehouseDefinition func(ctx context.Context, workspaceID string, warehouseID string, options *warehouse.ItemsClientBeginGetWarehouseDefinitionOptions) (resp azfake.PollerResponder[warehouse.ItemsClientGetWarehouseDefinitionResponse], errResp azfake.ErrorResponder)
+
 	// NewListWarehousesPager is the fake for method ItemsClient.NewListWarehousesPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListWarehousesPager func(workspaceID string, options *warehouse.ItemsClientListWarehousesOptions) (resp azfake.PagerResponder[warehouse.ItemsClientListWarehousesResponse])
@@ -49,6 +53,10 @@ type ItemsServer struct {
 	// UpdateWarehouse is the fake for method ItemsClient.UpdateWarehouse
 	// HTTP status codes to indicate success: http.StatusOK
 	UpdateWarehouse func(ctx context.Context, workspaceID string, warehouseID string, updateWarehouseRequest warehouse.UpdateWarehouseRequest, options *warehouse.ItemsClientUpdateWarehouseOptions) (resp azfake.Responder[warehouse.ItemsClientUpdateWarehouseResponse], errResp azfake.ErrorResponder)
+
+	// BeginUpdateWarehouseDefinition is the fake for method ItemsClient.BeginUpdateWarehouseDefinition
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
+	BeginUpdateWarehouseDefinition func(ctx context.Context, workspaceID string, warehouseID string, updateWarehouseDefinitionRequest warehouse.UpdateWarehouseDefinitionRequest, options *warehouse.ItemsClientBeginUpdateWarehouseDefinitionOptions) (resp azfake.PollerResponder[warehouse.ItemsClientUpdateWarehouseDefinitionResponse], errResp azfake.ErrorResponder)
 }
 
 // NewItemsServerTransport creates a new instance of ItemsServerTransport with the provided implementation.
@@ -56,18 +64,22 @@ type ItemsServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewItemsServerTransport(srv *ItemsServer) *ItemsServerTransport {
 	return &ItemsServerTransport{
-		srv:                    srv,
-		beginCreateWarehouse:   newTracker[azfake.PollerResponder[warehouse.ItemsClientCreateWarehouseResponse]](),
-		newListWarehousesPager: newTracker[azfake.PagerResponder[warehouse.ItemsClientListWarehousesResponse]](),
+		srv:                            srv,
+		beginCreateWarehouse:           newTracker[azfake.PollerResponder[warehouse.ItemsClientCreateWarehouseResponse]](),
+		beginGetWarehouseDefinition:    newTracker[azfake.PollerResponder[warehouse.ItemsClientGetWarehouseDefinitionResponse]](),
+		newListWarehousesPager:         newTracker[azfake.PagerResponder[warehouse.ItemsClientListWarehousesResponse]](),
+		beginUpdateWarehouseDefinition: newTracker[azfake.PollerResponder[warehouse.ItemsClientUpdateWarehouseDefinitionResponse]](),
 	}
 }
 
 // ItemsServerTransport connects instances of warehouse.ItemsClient to instances of ItemsServer.
 // Don't use this type directly, use NewItemsServerTransport instead.
 type ItemsServerTransport struct {
-	srv                    *ItemsServer
-	beginCreateWarehouse   *tracker[azfake.PollerResponder[warehouse.ItemsClientCreateWarehouseResponse]]
-	newListWarehousesPager *tracker[azfake.PagerResponder[warehouse.ItemsClientListWarehousesResponse]]
+	srv                            *ItemsServer
+	beginCreateWarehouse           *tracker[azfake.PollerResponder[warehouse.ItemsClientCreateWarehouseResponse]]
+	beginGetWarehouseDefinition    *tracker[azfake.PollerResponder[warehouse.ItemsClientGetWarehouseDefinitionResponse]]
+	newListWarehousesPager         *tracker[azfake.PagerResponder[warehouse.ItemsClientListWarehousesResponse]]
+	beginUpdateWarehouseDefinition *tracker[azfake.PollerResponder[warehouse.ItemsClientUpdateWarehouseDefinitionResponse]]
 }
 
 // Do implements the policy.Transporter interface for ItemsServerTransport.
@@ -103,10 +115,14 @@ func (i *ItemsServerTransport) dispatchToMethodFake(req *http.Request, method st
 				res.resp, res.err = i.dispatchGetConnectionString(req)
 			case "ItemsClient.GetWarehouse":
 				res.resp, res.err = i.dispatchGetWarehouse(req)
+			case "ItemsClient.BeginGetWarehouseDefinition":
+				res.resp, res.err = i.dispatchBeginGetWarehouseDefinition(req)
 			case "ItemsClient.NewListWarehousesPager":
 				res.resp, res.err = i.dispatchNewListWarehousesPager(req)
 			case "ItemsClient.UpdateWarehouse":
 				res.resp, res.err = i.dispatchUpdateWarehouse(req)
+			case "ItemsClient.BeginUpdateWarehouseDefinition":
+				res.resp, res.err = i.dispatchBeginUpdateWarehouseDefinition(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -302,6 +318,62 @@ func (i *ItemsServerTransport) dispatchGetWarehouse(req *http.Request) (*http.Re
 	return resp, nil
 }
 
+func (i *ItemsServerTransport) dispatchBeginGetWarehouseDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginGetWarehouseDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginGetWarehouseDefinition not implemented")}
+	}
+	beginGetWarehouseDefinition := i.beginGetWarehouseDefinition.get(req)
+	if beginGetWarehouseDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/warehouses/(?P<warehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/getDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 3 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		warehouseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("warehouseId")])
+		if err != nil {
+			return nil, err
+		}
+		formatUnescaped, err := url.QueryUnescape(qp.Get("format"))
+		if err != nil {
+			return nil, err
+		}
+		formatParam := getOptional(warehouse.DefinitionFormat(formatUnescaped))
+		var options *warehouse.ItemsClientBeginGetWarehouseDefinitionOptions
+		if formatParam != nil {
+			options = &warehouse.ItemsClientBeginGetWarehouseDefinitionOptions{
+				Format: formatParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginGetWarehouseDefinition(req.Context(), workspaceIDParam, warehouseIDParam, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginGetWarehouseDefinition = &respr
+		i.beginGetWarehouseDefinition.add(req, beginGetWarehouseDefinition)
+	}
+
+	resp, err := server.PollerResponderNext(beginGetWarehouseDefinition, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+		i.beginGetWarehouseDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginGetWarehouseDefinition) {
+		i.beginGetWarehouseDefinition.remove(req)
+	}
+
+	return resp, nil
+}
+
 func (i *ItemsServerTransport) dispatchNewListWarehousesPager(req *http.Request) (*http.Response, error) {
 	if i.srv.NewListWarehousesPager == nil {
 		return nil, &nonRetriableError{errors.New("fake for method NewListWarehousesPager not implemented")}
@@ -400,6 +472,69 @@ func (i *ItemsServerTransport) dispatchUpdateWarehouse(req *http.Request) (*http
 	if err != nil {
 		return nil, err
 	}
+	return resp, nil
+}
+
+func (i *ItemsServerTransport) dispatchBeginUpdateWarehouseDefinition(req *http.Request) (*http.Response, error) {
+	if i.srv.BeginUpdateWarehouseDefinition == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginUpdateWarehouseDefinition not implemented")}
+	}
+	beginUpdateWarehouseDefinition := i.beginUpdateWarehouseDefinition.get(req)
+	if beginUpdateWarehouseDefinition == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/warehouses/(?P<warehouseId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/updateDefinition`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 3 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		body, err := server.UnmarshalRequestAsJSON[warehouse.UpdateWarehouseDefinitionRequest](req)
+		if err != nil {
+			return nil, err
+		}
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		warehouseIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("warehouseId")])
+		if err != nil {
+			return nil, err
+		}
+		updateMetadataUnescaped, err := url.QueryUnescape(qp.Get("updateMetadata"))
+		if err != nil {
+			return nil, err
+		}
+		updateMetadataParam, err := parseOptional(updateMetadataUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		var options *warehouse.ItemsClientBeginUpdateWarehouseDefinitionOptions
+		if updateMetadataParam != nil {
+			options = &warehouse.ItemsClientBeginUpdateWarehouseDefinitionOptions{
+				UpdateMetadata: updateMetadataParam,
+			}
+		}
+		respr, errRespr := i.srv.BeginUpdateWarehouseDefinition(req.Context(), workspaceIDParam, warehouseIDParam, body, options)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginUpdateWarehouseDefinition = &respr
+		i.beginUpdateWarehouseDefinition.add(req, beginUpdateWarehouseDefinition)
+	}
+
+	resp, err := server.PollerResponderNext(beginUpdateWarehouseDefinition, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
+		i.beginUpdateWarehouseDefinition.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginUpdateWarehouseDefinition) {
+		i.beginUpdateWarehouseDefinition.remove(req)
+	}
+
 	return resp, nil
 }
 

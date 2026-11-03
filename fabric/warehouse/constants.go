@@ -69,6 +69,8 @@ const (
 	// CustomSQLPoolClassifierTypeApplicationNameRegex - Refers to a regular expression pattern used to match the application
 	// names applied to the SQL pool.
 	CustomSQLPoolClassifierTypeApplicationNameRegex CustomSQLPoolClassifierType = "Application Name Regex"
+	// CustomSQLPoolClassifierTypeStatementType - Refers to SQL statement types applied to the SQL pool.
+	CustomSQLPoolClassifierTypeStatementType CustomSQLPoolClassifierType = "Statement Type"
 )
 
 // PossibleCustomSQLPoolClassifierTypeValues returns the possible values for the CustomSQLPoolClassifierType const type.
@@ -76,6 +78,24 @@ func PossibleCustomSQLPoolClassifierTypeValues() []CustomSQLPoolClassifierType {
 	return []CustomSQLPoolClassifierType{
 		CustomSQLPoolClassifierTypeApplicationName,
 		CustomSQLPoolClassifierTypeApplicationNameRegex,
+		CustomSQLPoolClassifierTypeStatementType,
+	}
+}
+
+type DefinitionFormat string
+
+const (
+	// DefinitionFormatDacpac - The warehouse definition in DACPAC format.
+	DefinitionFormatDacpac DefinitionFormat = "dacpac"
+	// DefinitionFormatSqlproj - The warehouse definition in SQL project format.
+	DefinitionFormatSqlproj DefinitionFormat = "sqlproj"
+)
+
+// PossibleWarehouseDefinitionFormatValues returns the possible values for the DefinitionFormat const type.
+func PossibleWarehouseDefinitionFormatValues() []DefinitionFormat {
+	return []DefinitionFormat{
+		DefinitionFormatDacpac,
+		DefinitionFormatSqlproj,
 	}
 }
 
@@ -128,6 +148,8 @@ const (
 	ItemTypeDataflow ItemType = "Dataflow"
 	// ItemTypeDatamart - PowerBI datamart.
 	ItemTypeDatamart ItemType = "Datamart"
+	// ItemTypeDeploymentPlan - A Deployment plan.
+	ItemTypeDeploymentPlan ItemType = "DeploymentPlan"
 	// ItemTypeDigitalTwinBuilder - A DigitalTwinBuilder.
 	ItemTypeDigitalTwinBuilder ItemType = "DigitalTwinBuilder"
 	// ItemTypeDigitalTwinBuilderFlow - A Digital Twin Builder Flow.
@@ -168,6 +190,8 @@ const (
 	ItemTypeMirroredDatabase ItemType = "MirroredDatabase"
 	// ItemTypeMirroredWarehouse - A mirrored warehouse.
 	ItemTypeMirroredWarehouse ItemType = "MirroredWarehouse"
+	// ItemTypeMonitoring - A Monitoring item.
+	ItemTypeMonitoring ItemType = "Monitoring"
 	// ItemTypeMountedDataFactory - A MountedDataFactory.
 	ItemTypeMountedDataFactory ItemType = "MountedDataFactory"
 	// ItemTypeNotebook - A notebook.
@@ -225,6 +249,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
 		ItemTypeDatamart,
+		ItemTypeDeploymentPlan,
 		ItemTypeDigitalTwinBuilder,
 		ItemTypeDigitalTwinBuilderFlow,
 		ItemTypeEnvironment,
@@ -245,6 +270,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeMirroredCatalog,
 		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
+		ItemTypeMonitoring,
 		ItemTypeMountedDataFactory,
 		ItemTypeNotebook,
 		ItemTypeOntology,
@@ -265,6 +291,21 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeVariableLibrary,
 		ItemTypeWarehouse,
 		ItemTypeWarehouseSnapshot,
+	}
+}
+
+// PayloadType - The type of the definition part payload. Additional payload types may be added over time.
+type PayloadType string
+
+const (
+	// PayloadTypeInlineBase64 - Inline Base 64.
+	PayloadTypeInlineBase64 PayloadType = "InlineBase64"
+)
+
+// PossiblePayloadTypeValues returns the possible values for the PayloadType const type.
+func PossiblePayloadTypeValues() []PayloadType {
+	return []PayloadType{
+		PayloadTypeInlineBase64,
 	}
 }
 

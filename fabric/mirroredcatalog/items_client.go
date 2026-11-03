@@ -32,10 +32,9 @@ type ItemsClient struct {
 
 // BeginCreateMirroredCatalog - > [!NOTE] MirroredCatalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create MirroredCatalog with a public definition, refer to MirroredCatalog [/rest/api/fabric/articles/item-management/definitions/mirrored-catalog]
+// To create MirroredCatalog with a public definition, refer to the MirroredCatalog [/rest/api/fabric/articles/item-management/definitions/mirrored-catalog-definition]
 // article.
-// PERMISSIONS
-// The caller must have a contributor workspace role.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
 // * To create a MirroredCatalog the workspace must be on a supported Fabric capacity. For more information see: Microsoft
@@ -61,10 +60,9 @@ func (client *ItemsClient) BeginCreateMirroredCatalog(ctx context.Context, works
 
 // CreateMirroredCatalog - > [!NOTE] MirroredCatalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create MirroredCatalog with a public definition, refer to MirroredCatalog [/rest/api/fabric/articles/item-management/definitions/mirrored-catalog]
+// To create MirroredCatalog with a public definition, refer to the MirroredCatalog [/rest/api/fabric/articles/item-management/definitions/mirrored-catalog-definition]
 // article.
-// PERMISSIONS
-// The caller must have a contributor workspace role.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
 // * To create a MirroredCatalog the workspace must be on a supported Fabric capacity. For more information see: Microsoft
@@ -246,6 +244,10 @@ func (client *ItemsClient) getMirroredCatalogHandleResponse(resp *http.Response)
 // When you get a MirroredCatalog's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the mirrored catalog.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
+// LIMITATIONS To retrieve the definition of a mirrored catalog item protected by an encrypted sensitivity label, the caller
+// must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -268,6 +270,10 @@ func (client *ItemsClient) BeginGetMirroredCatalogDefinition(ctx context.Context
 // When you get a MirroredCatalog's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the mirrored catalog.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
+// LIMITATIONS To retrieve the definition of a mirrored catalog item protected by an encrypted sensitivity label, the caller
+// must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -563,10 +569,9 @@ func (client *ItemsClient) updateMirroredCatalogDefinitionCreateRequest(ctx cont
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// To create MirroredCatalog with a public definition, refer to MirroredCatalog [/rest/api/fabric/articles/item-management/definitions/mirrored-catalog] article.
+// To create MirroredCatalog with a public definition, refer to the MirroredCatalog [/rest/api/fabric/articles/item-management/definitions/mirrored-catalog-definition] article.
 //
-// PERMISSIONS
-// The caller must have a contributor workspace role.
+// PERMISSIONS The caller must have a contributor workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 //
@@ -648,6 +653,9 @@ func (client *ItemsClient) beginCreateMirroredCatalog(ctx context.Context, works
 // PERMISSIONS The caller must have read and write permissions for the mirrored catalog.
 //
 // # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
+//
+// LIMITATIONS To retrieve the definition of a mirrored catalog item protected by an encrypted sensitivity label, the caller must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in Microsoft Purview [/purview/purview].
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

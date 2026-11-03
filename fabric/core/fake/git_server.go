@@ -639,6 +639,7 @@ func (g *GitServerTransport) dispatchBeginUpdateFromGit(req *http.Request) (*htt
 		if len(matches) < 2 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
+		qp := req.URL.Query()
 		body, err := server.UnmarshalRequestAsJSON[core.UpdateFromGitRequest](req)
 		if err != nil {
 			return nil, err
@@ -647,7 +648,21 @@ func (g *GitServerTransport) dispatchBeginUpdateFromGit(req *http.Request) (*htt
 		if err != nil {
 			return nil, err
 		}
-		respr, errRespr := g.srv.BeginUpdateFromGit(req.Context(), workspaceIDParam, body, nil)
+		betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
+		if err != nil {
+			return nil, err
+		}
+		betaParam, err := parseOptional(betaUnescaped, strconv.ParseBool)
+		if err != nil {
+			return nil, err
+		}
+		var options *core.GitClientBeginUpdateFromGitOptions
+		if betaParam != nil {
+			options = &core.GitClientBeginUpdateFromGitOptions{
+				Beta: betaParam,
+			}
+		}
+		respr, errRespr := g.srv.BeginUpdateFromGit(req.Context(), workspaceIDParam, body, options)
 		if respErr := server.GetError(errRespr, req); respErr != nil {
 			return nil, respErr
 		}

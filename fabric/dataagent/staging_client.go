@@ -16,6 +16,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/streaming"
 
 	"github.com/microsoft/fabric-sdk-go/fabric/core"
 	"github.com/microsoft/fabric-sdk-go/internal/iruntime"
@@ -444,6 +445,234 @@ func (client *StagingClient) deleteDatasourceFewshotCreateRequest(ctx context.Co
 	return req, nil
 }
 
+// DeleteDatasourceTopic - > [!NOTE] Data Agent configuration management is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// Removes a topic file from the staging area.
+// PERMISSIONS The caller must have contributor or higher permissions for the DataAgent.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All or DataAgent.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataAgentID - The DataAgent ID.
+//   - datasourceID - The datasource ID.
+//   - fileName - The topic file name (e.g., "company-policies.md"). Must end with the .md extension.
+//   - options - StagingClientDeleteDatasourceTopicOptions contains the optional parameters for the StagingClient.DeleteDatasourceTopic
+//     method.
+func (client *StagingClient) DeleteDatasourceTopic(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fileName string, options *StagingClientDeleteDatasourceTopicOptions) (StagingClientDeleteDatasourceTopicResponse, error) {
+	var err error
+	const operationName = "dataagent.StagingClient.DeleteDatasourceTopic"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.deleteDatasourceTopicCreateRequest(ctx, workspaceID, dataAgentID, datasourceID, fileName, options)
+	if err != nil {
+		return StagingClientDeleteDatasourceTopicResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return StagingClientDeleteDatasourceTopicResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return StagingClientDeleteDatasourceTopicResponse{}, err
+	}
+	return StagingClientDeleteDatasourceTopicResponse{}, nil
+}
+
+// deleteDatasourceTopicCreateRequest creates the DeleteDatasourceTopic request.
+func (client *StagingClient) deleteDatasourceTopicCreateRequest(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fileName string, options *StagingClientDeleteDatasourceTopicOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/dataAgents/{dataAgentId}/staging/datasources/{datasourceId}/topics"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if dataAgentID == "" {
+		return nil, errors.New("parameter dataAgentID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{dataAgentId}", url.PathEscape(dataAgentID))
+	if datasourceID == "" {
+		return nil, errors.New("parameter datasourceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{datasourceId}", url.PathEscape(datasourceID))
+	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("fileName", fileName)
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if options != nil && options.IfMatch != nil {
+		req.Raw().Header["If-Match"] = []string{*options.IfMatch}
+	}
+	return req, nil
+}
+
+// DownloadDatasourceTopic - > [!NOTE] Data Agent configuration management is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// Returns the raw markdown content of the topic file.
+// PERMISSIONS The caller must have read permissions for the DataAgent.
+// REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All or DataAgent.Read.All or DataAgent.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataAgentID - The DataAgent ID.
+//   - datasourceID - The datasource ID.
+//   - fileName - The topic file name (e.g., "company-policies.md"). Must end with the .md extension.
+//   - options - StagingClientDownloadDatasourceTopicOptions contains the optional parameters for the StagingClient.DownloadDatasourceTopic
+//     method.
+func (client *StagingClient) DownloadDatasourceTopic(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fileName string, options *StagingClientDownloadDatasourceTopicOptions) (StagingClientDownloadDatasourceTopicResponse, error) {
+	var err error
+	const operationName = "dataagent.StagingClient.DownloadDatasourceTopic"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.downloadDatasourceTopicCreateRequest(ctx, workspaceID, dataAgentID, datasourceID, fileName, options)
+	if err != nil {
+		return StagingClientDownloadDatasourceTopicResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return StagingClientDownloadDatasourceTopicResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return StagingClientDownloadDatasourceTopicResponse{}, err
+	}
+	return StagingClientDownloadDatasourceTopicResponse{Body: httpResp.Body}, nil
+}
+
+// downloadDatasourceTopicCreateRequest creates the DownloadDatasourceTopic request.
+func (client *StagingClient) downloadDatasourceTopicCreateRequest(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fileName string, _ *StagingClientDownloadDatasourceTopicOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/dataAgents/{dataAgentId}/staging/datasources/{datasourceId}/topics/content"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if dataAgentID == "" {
+		return nil, errors.New("parameter dataAgentID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{dataAgentId}", url.PathEscape(dataAgentID))
+	if datasourceID == "" {
+		return nil, errors.New("parameter datasourceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{datasourceId}", url.PathEscape(datasourceID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("fileName", fileName)
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	runtime.SkipBodyDownload(req)
+	req.Raw().Header["Accept"] = []string{"application/octet-stream"}
+	return req, nil
+}
+
+// BeginFormatDatasourceTopic - > [!NOTE] Data Agent configuration management is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Returns a formatted version of the specified topic file content. The formatted content includes proper YAML frontmatter
+// (name, description) and structured markdown. If no frontmatter exists, name and
+// description are auto-generated from the content. The original file is not modified — the caller must upload the returned
+// content using the PUT endpoint to apply the formatting.
+// PERMISSIONS The caller must have read permissions for the DataAgent.
+// REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All or DataAgent.Read.All or DataAgent.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataAgentID - The DataAgent ID.
+//   - datasourceID - The datasource ID.
+//   - fileName - The topic file name (e.g., "company-policies.md"). Must end with the .md extension.
+//   - options - StagingClientBeginFormatDatasourceTopicOptions contains the optional parameters for the StagingClient.BeginFormatDatasourceTopic
+//     method.
+func (client *StagingClient) BeginFormatDatasourceTopic(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fileName string, options *StagingClientBeginFormatDatasourceTopicOptions) (*runtime.Poller[StagingClientFormatDatasourceTopicResponse], error) {
+	return client.beginFormatDatasourceTopic(ctx, workspaceID, dataAgentID, datasourceID, fileName, options)
+}
+
+// FormatDatasourceTopic - > [!NOTE] Data Agent configuration management is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Returns a formatted version of the specified topic file content. The formatted content includes proper YAML frontmatter
+// (name, description) and structured markdown. If no frontmatter exists, name and
+// description are auto-generated from the content. The original file is not modified — the caller must upload the returned
+// content using the PUT endpoint to apply the formatting.
+// PERMISSIONS The caller must have read permissions for the DataAgent.
+// REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All or DataAgent.Read.All or DataAgent.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *StagingClient) formatDatasourceTopic(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fileName string, options *StagingClientBeginFormatDatasourceTopicOptions) (*http.Response, error) {
+	var err error
+	const operationName = "dataagent.StagingClient.BeginFormatDatasourceTopic"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.formatDatasourceTopicCreateRequest(ctx, workspaceID, dataAgentID, datasourceID, fileName, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// formatDatasourceTopicCreateRequest creates the FormatDatasourceTopic request.
+func (client *StagingClient) formatDatasourceTopicCreateRequest(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fileName string, _ *StagingClientBeginFormatDatasourceTopicOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/dataAgents/{dataAgentId}/staging/datasources/{datasourceId}/topics/format"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if dataAgentID == "" {
+		return nil, errors.New("parameter dataAgentID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{dataAgentId}", url.PathEscape(dataAgentID))
+	if datasourceID == "" {
+		return nil, errors.New("parameter datasourceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{datasourceId}", url.PathEscape(datasourceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("fileName", fileName)
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	runtime.SkipBodyDownload(req)
+	req.Raw().Header["Accept"] = []string{"application/octet-stream"}
+	return req, nil
+}
+
 // GetDatasource - > [!NOTE] Data Agent configuration management is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // PERMISSIONS The caller must have read permissions for the DataAgent.
 // REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All or DataAgent.Read.All or DataAgent.ReadWrite.All
@@ -810,6 +1039,85 @@ func (client *StagingClient) listDatasourceFewshotsHandleResponse(resp *http.Res
 	result := StagingClientListDatasourceFewshotsResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.Fewshots); err != nil {
 		return StagingClientListDatasourceFewshotsResponse{}, err
+	}
+	return result, nil
+}
+
+// NewListDatasourceTopicsPager - > [!NOTE] Data Agent configuration management is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// This API supports pagination [/rest/api/fabric/articles/pagination].
+// Returns a paginated list of topic file names for the specified datasource. To retrieve the content of a specific topic,
+// use the download endpoint with the fileName.
+// PERMISSIONS The caller must have read permissions for the DataAgent.
+// REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All or DataAgent.Read.All or DataAgent.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataAgentID - The DataAgent ID.
+//   - datasourceID - The datasource ID.
+//   - options - StagingClientListDatasourceTopicsOptions contains the optional parameters for the StagingClient.NewListDatasourceTopicsPager
+//     method.
+func (client *StagingClient) NewListDatasourceTopicsPager(workspaceID string, dataAgentID string, datasourceID string, options *StagingClientListDatasourceTopicsOptions) *runtime.Pager[StagingClientListDatasourceTopicsResponse] {
+	return runtime.NewPager(runtime.PagingHandler[StagingClientListDatasourceTopicsResponse]{
+		More: func(page StagingClientListDatasourceTopicsResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *StagingClientListDatasourceTopicsResponse) (StagingClientListDatasourceTopicsResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "dataagent.StagingClient.NewListDatasourceTopicsPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.listDatasourceTopicsCreateRequest(ctx, workspaceID, dataAgentID, datasourceID, options)
+			}, nil)
+			if err != nil {
+				return StagingClientListDatasourceTopicsResponse{}, err
+			}
+			return client.listDatasourceTopicsHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
+}
+
+// listDatasourceTopicsCreateRequest creates the ListDatasourceTopics request.
+func (client *StagingClient) listDatasourceTopicsCreateRequest(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, options *StagingClientListDatasourceTopicsOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/dataAgents/{dataAgentId}/staging/datasources/{datasourceId}/topics"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if dataAgentID == "" {
+		return nil, errors.New("parameter dataAgentID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{dataAgentId}", url.PathEscape(dataAgentID))
+	if datasourceID == "" {
+		return nil, errors.New("parameter datasourceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{datasourceId}", url.PathEscape(datasourceID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// listDatasourceTopicsHandleResponse handles the ListDatasourceTopics response.
+func (client *StagingClient) listDatasourceTopicsHandleResponse(resp *http.Response) (StagingClientListDatasourceTopicsResponse, error) {
+	result := StagingClientListDatasourceTopicsResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.Topics); err != nil {
+		return StagingClientListDatasourceTopicsResponse{}, err
 	}
 	return result, nil
 }
@@ -1249,6 +1557,81 @@ func (client *StagingClient) updateSettingsHandleResponse(resp *http.Response) (
 	return result, nil
 }
 
+// UploadDatasourceTopicWithText - > [!NOTE] Data Agent configuration management is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// Creates or replaces a topic file in the staging area. The file content must be markdown format. If a file with the same
+// name already exists, it is replaced.
+// PERMISSIONS The caller must have contributor or higher permissions for the DataAgent.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All or DataAgent.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataAgentID - The DataAgent ID.
+//   - datasourceID - The datasource ID.
+//   - fileName - The topic file name (e.g., "company-policies.md"). Must end with the .md extension.
+//   - content - The markdown content of the topic file. May include YAML frontmatter with name and description fields.
+//   - options - StagingClientUploadDatasourceTopicWithTextOptions contains the optional parameters for the StagingClient.UploadDatasourceTopicWithText
+//     method.
+func (client *StagingClient) UploadDatasourceTopicWithText(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fileName string, content string, options *StagingClientUploadDatasourceTopicWithTextOptions) (StagingClientUploadDatasourceTopicWithTextResponse, error) {
+	var err error
+	const operationName = "dataagent.StagingClient.UploadDatasourceTopicWithText"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.uploadDatasourceTopicWithTextCreateRequest(ctx, workspaceID, dataAgentID, datasourceID, fileName, content, options)
+	if err != nil {
+		return StagingClientUploadDatasourceTopicWithTextResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return StagingClientUploadDatasourceTopicWithTextResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return StagingClientUploadDatasourceTopicWithTextResponse{}, err
+	}
+	return StagingClientUploadDatasourceTopicWithTextResponse{}, nil
+}
+
+// uploadDatasourceTopicWithTextCreateRequest creates the UploadDatasourceTopicWithText request.
+func (client *StagingClient) uploadDatasourceTopicWithTextCreateRequest(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fileName string, content string, options *StagingClientUploadDatasourceTopicWithTextOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/dataAgents/{dataAgentId}/staging/datasources/{datasourceId}/topics"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if dataAgentID == "" {
+		return nil, errors.New("parameter dataAgentID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{dataAgentId}", url.PathEscape(dataAgentID))
+	if datasourceID == "" {
+		return nil, errors.New("parameter datasourceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{datasourceId}", url.PathEscape(datasourceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPut, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("fileName", fileName)
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if options != nil && options.IfMatch != nil {
+		req.Raw().Header["If-Match"] = []string{*options.IfMatch}
+	}
+	body := streaming.NopCloser(strings.NewReader(content))
+	if err := req.SetBody(body, "text/markdown"); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // Custom code starts below
 
 // CreateDatasource - returns StagingClientCreateDatasourceResponse in sync mode.
@@ -1325,6 +1708,82 @@ func (client *StagingClient) beginCreateDatasource(ctx context.Context, workspac
 	}
 }
 
+// FormatDatasourceTopic - returns StagingClientFormatDatasourceTopicResponse in sync mode.
+// >  [!NOTE] Data Agent configuration management is currently in Preview (learn more [/fabric/fundamentals/preview]).
+//
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// Returns a formatted version of the specified topic file content. The formatted content includes proper YAML frontmatter (name, description) and structured markdown. If no frontmatter exists, name and
+// description are auto-generated from the content. The original file is not modified — the caller must upload the returned content using the PUT endpoint to apply the formatting.
+//
+// PERMISSIONS The caller must have read permissions for the DataAgent.
+//
+// # REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All or DataAgent.Read.All or DataAgent.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataAgentID - The DataAgent ID.
+//   - datasourceID - The datasource ID.
+//   - fileName - The topic file name (e.g., "company-policies.md"). Must end with the .md extension.
+//   - options - StagingClientBeginFormatDatasourceTopicOptions contains the optional parameters for the StagingClient.BeginFormatDatasourceTopic method.
+func (client *StagingClient) FormatDatasourceTopic(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fileName string, options *StagingClientBeginFormatDatasourceTopicOptions) (StagingClientFormatDatasourceTopicResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginFormatDatasourceTopic(ctx, workspaceID, dataAgentID, datasourceID, fileName, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return StagingClientFormatDatasourceTopicResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return StagingClientFormatDatasourceTopicResponse{}, err
+	}
+	return result, err
+}
+
+// beginFormatDatasourceTopic creates the formatDatasourceTopic request.
+func (client *StagingClient) beginFormatDatasourceTopic(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fileName string, options *StagingClientBeginFormatDatasourceTopicOptions) (*runtime.Poller[StagingClientFormatDatasourceTopicResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.formatDatasourceTopic(ctx, workspaceID, dataAgentID, datasourceID, fileName, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[StagingClientFormatDatasourceTopicResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[StagingClientFormatDatasourceTopicResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[StagingClientFormatDatasourceTopicResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[StagingClientFormatDatasourceTopicResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
 // ListDatasourceElements - returns array of DataSourceElement from all pages.
 // >  [!NOTE] Data Agent configuration management is currently in Preview (learn more [/fabric/fundamentals/preview]).
 //
@@ -1395,6 +1854,44 @@ func (client *StagingClient) ListDatasourceFewshots(ctx context.Context, workspa
 			return []Fewshot{}, core.NewResponseError(azcoreRespError.RawResponse)
 		}
 		return []Fewshot{}, err
+	}
+	return list, nil
+}
+
+// ListDatasourceTopics - returns array of Topic from all pages.
+// >  [!NOTE] Data Agent configuration management is currently in Preview (learn more [/fabric/fundamentals/preview]).
+//
+// This API supports pagination [/rest/api/fabric/articles/pagination].
+//
+// Returns a paginated list of topic file names for the specified datasource. To retrieve the content of a specific topic, use the download endpoint with the fileName.
+//
+// PERMISSIONS The caller must have read permissions for the DataAgent.
+//
+// # REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All or DataAgent.Read.All or DataAgent.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataAgentID - The DataAgent ID.
+//   - datasourceID - The datasource ID.
+//   - options - StagingClientListDatasourceTopicsOptions contains the optional parameters for the StagingClient.NewListDatasourceTopicsPager method.
+func (client *StagingClient) ListDatasourceTopics(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, options *StagingClientListDatasourceTopicsOptions) ([]Topic, error) {
+	pager := client.NewListDatasourceTopicsPager(workspaceID, dataAgentID, datasourceID, options)
+	mapper := func(resp StagingClientListDatasourceTopicsResponse) []Topic {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []Topic{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []Topic{}, err
 	}
 	return list, nil
 }

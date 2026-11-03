@@ -13,7 +13,6 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
-	"strconv"
 	"strings"
 
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
@@ -25,13 +24,13 @@ import (
 
 // SQLPoolsServer is a fake server for instances of the warehouse.SQLPoolsClient type.
 type SQLPoolsServer struct {
-	// GetSQLPoolsConfigurationBeta is the fake for method SQLPoolsClient.GetSQLPoolsConfigurationBeta
+	// GetSQLPoolsConfiguration is the fake for method SQLPoolsClient.GetSQLPoolsConfiguration
 	// HTTP status codes to indicate success: http.StatusOK
-	GetSQLPoolsConfigurationBeta func(ctx context.Context, workspaceID string, beta bool, options *warehouse.SQLPoolsClientGetSQLPoolsConfigurationBetaOptions) (resp azfake.Responder[warehouse.SQLPoolsClientGetSQLPoolsConfigurationBetaResponse], errResp azfake.ErrorResponder)
+	GetSQLPoolsConfiguration func(ctx context.Context, workspaceID string, options *warehouse.SQLPoolsClientGetSQLPoolsConfigurationOptions) (resp azfake.Responder[warehouse.SQLPoolsClientGetSQLPoolsConfigurationResponse], errResp azfake.ErrorResponder)
 
-	// UpdateSQLPoolsConfigurationBeta is the fake for method SQLPoolsClient.UpdateSQLPoolsConfigurationBeta
+	// UpdateSQLPoolsConfiguration is the fake for method SQLPoolsClient.UpdateSQLPoolsConfiguration
 	// HTTP status codes to indicate success: http.StatusOK
-	UpdateSQLPoolsConfigurationBeta func(ctx context.Context, workspaceID string, beta bool, updateSQLPoolsConfigurationRequest warehouse.UpdateSQLPoolsConfigurationRequest, options *warehouse.SQLPoolsClientUpdateSQLPoolsConfigurationBetaOptions) (resp azfake.Responder[warehouse.SQLPoolsClientUpdateSQLPoolsConfigurationBetaResponse], errResp azfake.ErrorResponder)
+	UpdateSQLPoolsConfiguration func(ctx context.Context, workspaceID string, updateSQLPoolsConfigurationRequest warehouse.UpdateSQLPoolsConfigurationRequest, options *warehouse.SQLPoolsClientUpdateSQLPoolsConfigurationOptions) (resp azfake.Responder[warehouse.SQLPoolsClientUpdateSQLPoolsConfigurationResponse], errResp azfake.ErrorResponder)
 }
 
 // NewSQLPoolsServerTransport creates a new instance of SQLPoolsServerTransport with the provided implementation.
@@ -72,10 +71,10 @@ func (s *SQLPoolsServerTransport) dispatchToMethodFake(req *http.Request, method
 		}
 		if !intercepted {
 			switch method {
-			case "SQLPoolsClient.GetSQLPoolsConfigurationBeta":
-				res.resp, res.err = s.dispatchGetSQLPoolsConfigurationBeta(req)
-			case "SQLPoolsClient.UpdateSQLPoolsConfigurationBeta":
-				res.resp, res.err = s.dispatchUpdateSQLPoolsConfigurationBeta(req)
+			case "SQLPoolsClient.GetSQLPoolsConfiguration":
+				res.resp, res.err = s.dispatchGetSQLPoolsConfiguration(req)
+			case "SQLPoolsClient.UpdateSQLPoolsConfiguration":
+				res.resp, res.err = s.dispatchUpdateSQLPoolsConfiguration(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -95,9 +94,9 @@ func (s *SQLPoolsServerTransport) dispatchToMethodFake(req *http.Request, method
 	}
 }
 
-func (s *SQLPoolsServerTransport) dispatchGetSQLPoolsConfigurationBeta(req *http.Request) (*http.Response, error) {
-	if s.srv.GetSQLPoolsConfigurationBeta == nil {
-		return nil, &nonRetriableError{errors.New("fake for method GetSQLPoolsConfigurationBeta not implemented")}
+func (s *SQLPoolsServerTransport) dispatchGetSQLPoolsConfiguration(req *http.Request) (*http.Response, error) {
+	if s.srv.GetSQLPoolsConfiguration == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetSQLPoolsConfiguration not implemented")}
 	}
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/warehouses/sqlPoolsConfiguration`
 	regex := regexp.MustCompile(regexStr)
@@ -105,20 +104,11 @@ func (s *SQLPoolsServerTransport) dispatchGetSQLPoolsConfigurationBeta(req *http
 	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
-	qp := req.URL.Query()
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 	if err != nil {
 		return nil, err
 	}
-	betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
-	if err != nil {
-		return nil, err
-	}
-	betaParam, err := strconv.ParseBool(betaUnescaped)
-	if err != nil {
-		return nil, err
-	}
-	respr, errRespr := s.srv.GetSQLPoolsConfigurationBeta(req.Context(), workspaceIDParam, betaParam, nil)
+	respr, errRespr := s.srv.GetSQLPoolsConfiguration(req.Context(), workspaceIDParam, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -133,9 +123,9 @@ func (s *SQLPoolsServerTransport) dispatchGetSQLPoolsConfigurationBeta(req *http
 	return resp, nil
 }
 
-func (s *SQLPoolsServerTransport) dispatchUpdateSQLPoolsConfigurationBeta(req *http.Request) (*http.Response, error) {
-	if s.srv.UpdateSQLPoolsConfigurationBeta == nil {
-		return nil, &nonRetriableError{errors.New("fake for method UpdateSQLPoolsConfigurationBeta not implemented")}
+func (s *SQLPoolsServerTransport) dispatchUpdateSQLPoolsConfiguration(req *http.Request) (*http.Response, error) {
+	if s.srv.UpdateSQLPoolsConfiguration == nil {
+		return nil, &nonRetriableError{errors.New("fake for method UpdateSQLPoolsConfiguration not implemented")}
 	}
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/warehouses/sqlPoolsConfiguration`
 	regex := regexp.MustCompile(regexStr)
@@ -143,7 +133,6 @@ func (s *SQLPoolsServerTransport) dispatchUpdateSQLPoolsConfigurationBeta(req *h
 	if len(matches) < 2 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
-	qp := req.URL.Query()
 	body, err := server.UnmarshalRequestAsJSON[warehouse.UpdateSQLPoolsConfigurationRequest](req)
 	if err != nil {
 		return nil, err
@@ -152,15 +141,7 @@ func (s *SQLPoolsServerTransport) dispatchUpdateSQLPoolsConfigurationBeta(req *h
 	if err != nil {
 		return nil, err
 	}
-	betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
-	if err != nil {
-		return nil, err
-	}
-	betaParam, err := strconv.ParseBool(betaUnescaped)
-	if err != nil {
-		return nil, err
-	}
-	respr, errRespr := s.srv.UpdateSQLPoolsConfigurationBeta(req.Context(), workspaceIDParam, betaParam, body, nil)
+	respr, errRespr := s.srv.UpdateSQLPoolsConfiguration(req.Context(), workspaceIDParam, body, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}

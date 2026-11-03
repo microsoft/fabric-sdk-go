@@ -18,19 +18,21 @@ import (
 
 // ServerFactory is a fake server for instances of the environment.ClientFactory type.
 type ServerFactory struct {
-	ItemsServer     ItemsServer
-	PublishedServer PublishedServer
-	StagingServer   StagingServer
+	ItemsServer           ItemsServer
+	PoolActivationsServer PoolActivationsServer
+	PublishedServer       PublishedServer
+	StagingServer         StagingServer
 }
 
 // ServerFactoryTransport connects instances of environment.ClientFactory to instances of ServerFactory.
 // Don't use this type directly, use NewServerFactoryTransport instead.
 type ServerFactoryTransport struct {
-	srv               *ServerFactory
-	trMu              sync.Mutex
-	trItemsServer     *ItemsServerTransport
-	trPublishedServer *PublishedServerTransport
-	trStagingServer   *StagingServerTransport
+	srv                     *ServerFactory
+	trMu                    sync.Mutex
+	trItemsServer           *ItemsServerTransport
+	trPoolActivationsServer *PoolActivationsServerTransport
+	trPublishedServer       *PublishedServerTransport
+	trStagingServer         *StagingServerTransport
 }
 
 // NewServerFactoryTransport creates a new instance of ServerFactoryTransport with the provided implementation.
@@ -59,6 +61,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	case "ItemsClient":
 		initServer(s, &s.trItemsServer, func() *ItemsServerTransport { return NewItemsServerTransport(&s.srv.ItemsServer) })
 		resp, err = s.trItemsServer.Do(req)
+	case "PoolActivationsClient":
+		initServer(s, &s.trPoolActivationsServer, func() *PoolActivationsServerTransport {
+			return NewPoolActivationsServerTransport(&s.srv.PoolActivationsServer)
+		})
+		resp, err = s.trPoolActivationsServer.Do(req)
 	case "PublishedClient":
 		initServer(s, &s.trPublishedServer, func() *PublishedServerTransport { return NewPublishedServerTransport(&s.srv.PublishedServer) })
 		resp, err = s.trPublishedServer.Do(req)

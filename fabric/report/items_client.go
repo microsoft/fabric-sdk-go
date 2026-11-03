@@ -31,8 +31,14 @@ type ItemsClient struct {
 }
 
 // BeginCreateReport - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// This API requires a definition [/rest/api/fabric/articles/item-management/definitions/report-definition].
-// PERMISSIONS The caller must have a contributor workspace role.
+// The API supports two creation modes: (1) provide a definition for full control over the report structure, or (2) provide
+// a creationPayload with a semanticModelReference to create an empty report
+// connected to an existing semantic model. Either definition or creationPayload is required. You can't use both at the same
+// time.
+// PERMISSIONS The caller must have a contributor workspace role. When creating a report with a creationPayload that references
+// a semantic model via semanticModelReference, the caller must also have read
+// access to the referenced semantic model, including when that semantic model resides in a different workspace (cross-workspace
+// reference).
 // REQUIRED DELEGATED SCOPES Report.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a report item, the user must have the appropriate license. For more information see: Microsoft Fabric license
@@ -54,8 +60,14 @@ func (client *ItemsClient) BeginCreateReport(ctx context.Context, workspaceID st
 }
 
 // CreateReport - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// This API requires a definition [/rest/api/fabric/articles/item-management/definitions/report-definition].
-// PERMISSIONS The caller must have a contributor workspace role.
+// The API supports two creation modes: (1) provide a definition for full control over the report structure, or (2) provide
+// a creationPayload with a semanticModelReference to create an empty report
+// connected to an existing semantic model. Either definition or creationPayload is required. You can't use both at the same
+// time.
+// PERMISSIONS The caller must have a contributor workspace role. When creating a report with a creationPayload that references
+// a semantic model via semanticModelReference, the caller must also have read
+// access to the referenced semantic model, including when that semantic model resides in a different workspace (cross-workspace
+// reference).
 // REQUIRED DELEGATED SCOPES Report.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a report item, the user must have the appropriate license. For more information see: Microsoft Fabric license
@@ -235,7 +247,10 @@ func (client *ItemsClient) getReportHandleResponse(resp *http.Response) (ItemsCl
 // When you get a report's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the report.
 // REQUIRED DELEGATED SCOPES Report.ReadWrite.All or Item.ReadWrite.All
-// LIMITATIONS This API is blocked for a report with an encrypted sensitivity label.
+// LIMITATIONS To retrieve the definition of a report item protected by an encrypted sensitivity label, the caller must have
+// sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -257,7 +272,10 @@ func (client *ItemsClient) BeginGetReportDefinition(ctx context.Context, workspa
 // When you get a report's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the report.
 // REQUIRED DELEGATED SCOPES Report.ReadWrite.All or Item.ReadWrite.All
-// LIMITATIONS This API is blocked for a report with an encrypted sensitivity label.
+// LIMITATIONS To retrieve the definition of a report item protected by an encrypted sensitivity label, the caller must have
+// sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -539,9 +557,11 @@ func (client *ItemsClient) updateReportDefinitionCreateRequest(ctx context.Conte
 // CreateReport - returns ItemsClientCreateReportResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// This API requires a definition [/rest/api/fabric/articles/item-management/definitions/report-definition].
+// The API supports two creation modes: (1) provide a definition for full control over the report structure, or (2) provide a creationPayload with a semanticModelReference to create an empty report
+// connected to an existing semantic model. Either definition or creationPayload is required. You can't use both at the same time.
 //
-// PERMISSIONS The caller must have a contributor workspace role.
+// PERMISSIONS The caller must have a contributor workspace role. When creating a report with a creationPayload that references a semantic model via semanticModelReference, the caller must also have read
+// access to the referenced semantic model, including when that semantic model resides in a different workspace (cross-workspace reference).
 //
 // # REQUIRED DELEGATED SCOPES Report.ReadWrite.All or Item.ReadWrite.All
 //
@@ -620,7 +640,8 @@ func (client *ItemsClient) beginCreateReport(ctx context.Context, workspaceID st
 //
 // # REQUIRED DELEGATED SCOPES Report.ReadWrite.All or Item.ReadWrite.All
 //
-// LIMITATIONS This API is blocked for a report with an encrypted sensitivity label.
+// LIMITATIONS To retrieve the definition of a report item protected by an encrypted sensitivity label, the caller must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in Microsoft Purview [/purview/purview].
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

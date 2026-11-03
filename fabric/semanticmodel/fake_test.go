@@ -143,6 +143,58 @@ func (testsuite *FakeTestSuite) TestItems_CreateSemanticModel() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a semantic model with OneLake tables example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCreateSemanticModelRequest = semanticmodel.CreateSemanticModelRequest{
+		Description: to.Ptr("A semantic model connected to lakehouse tables."),
+		CreationPayload: &semanticmodel.CreationPayload{
+			OneLakeTables: []string{
+				"https://onelake.dfs.fabric.microsoft.com/aaaa0000-bb11-2222-33cc-444444dddddd/cccc0000-dd11-2222-33ee-444444ffffff/Tables/dim_customer",
+				"https://onelake.dfs.fabric.microsoft.com/aaaa0000-bb11-2222-33cc-444444dddddd/cccc0000-dd11-2222-33ee-444444ffffff/Tables/sales/dim_product",
+				"https://onelake.dfs.fabric.microsoft.com/1111aaaa-bb22-3333-44cc-555555eeeeee/2222bbbb-cc33-4444-55dd-666666ffffff/Tables/dim_region"},
+		},
+		DisplayName: to.Ptr("Sales Analytics Model"),
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginCreateSemanticModel = func(ctx context.Context, workspaceID string, createSemanticModelRequest semanticmodel.CreateSemanticModelRequest, options *semanticmodel.ItemsClientBeginCreateSemanticModelOptions) (resp azfake.PollerResponder[semanticmodel.ItemsClientCreateSemanticModelResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateSemanticModelRequest, createSemanticModelRequest))
+		resp = azfake.PollerResponder[semanticmodel.ItemsClientCreateSemanticModelResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, semanticmodel.ItemsClientCreateSemanticModelResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateSemanticModel(ctx, exampleWorkspaceID, exampleCreateSemanticModelRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create an empty semantic model example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCreateSemanticModelRequest = semanticmodel.CreateSemanticModelRequest{
+		Description: to.Ptr("An empty semantic model."),
+		DisplayName: to.Ptr("SemanticModel 1"),
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginCreateSemanticModel = func(ctx context.Context, workspaceID string, createSemanticModelRequest semanticmodel.CreateSemanticModelRequest, options *semanticmodel.ItemsClientBeginCreateSemanticModelOptions) (resp azfake.PollerResponder[semanticmodel.ItemsClientCreateSemanticModelResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateSemanticModelRequest, createSemanticModelRequest))
+		resp = azfake.PollerResponder[semanticmodel.ItemsClientCreateSemanticModelResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, semanticmodel.ItemsClientCreateSemanticModelResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateSemanticModel(ctx, exampleWorkspaceID, exampleCreateSemanticModelRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestItems_GetSemanticModel() {

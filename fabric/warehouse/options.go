@@ -12,6 +12,28 @@ type ItemsClientBeginCreateWarehouseOptions struct {
 	ResumeToken string
 }
 
+// ItemsClientBeginGetWarehouseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetWarehouseDefinition
+// method.
+type ItemsClientBeginGetWarehouseDefinitionOptions struct {
+	// The format of the warehouse public definition. Supported formats: dacpac and sqlproj. If no format is provided, sqlproj
+	// is used. Additional warehouse definition formats may be added over time.
+	Format *DefinitionFormat
+
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// ItemsClientBeginUpdateWarehouseDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateWarehouseDefinition
+// method.
+type ItemsClientBeginUpdateWarehouseDefinitionOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+
+	// When set to true and the .platform file is provided as part of the definition, the item's metadata is updated using the
+	// metadata in the .platform file.
+	UpdateMetadata *bool
+}
+
 // ItemsClientDeleteWarehouseOptions contains the optional parameters for the ItemsClient.DeleteWarehouse method.
 type ItemsClientDeleteWarehouseOptions struct {
 	// Specifies whether to perform a hard delete. When set to true, the item is permanently deleted and cannot be recovered.
@@ -111,14 +133,14 @@ type SQLAuditSettingsClientUpdateSQLAuditSettingsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// SQLPoolsClientGetSQLPoolsConfigurationBetaOptions contains the optional parameters for the SQLPoolsClient.GetSQLPoolsConfigurationBeta
+// SQLPoolsClientGetSQLPoolsConfigurationOptions contains the optional parameters for the SQLPoolsClient.GetSQLPoolsConfiguration
 // method.
-type SQLPoolsClientGetSQLPoolsConfigurationBetaOptions struct {
+type SQLPoolsClientGetSQLPoolsConfigurationOptions struct {
 	// placeholder for future optional parameters
 }
 
-// SQLPoolsClientUpdateSQLPoolsConfigurationBetaOptions contains the optional parameters for the SQLPoolsClient.UpdateSQLPoolsConfigurationBeta
+// SQLPoolsClientUpdateSQLPoolsConfigurationOptions contains the optional parameters for the SQLPoolsClient.UpdateSQLPoolsConfiguration
 // method.
-type SQLPoolsClientUpdateSQLPoolsConfigurationBetaOptions struct {
+type SQLPoolsClientUpdateSQLPoolsConfigurationOptions struct {
 	// placeholder for future optional parameters
 }

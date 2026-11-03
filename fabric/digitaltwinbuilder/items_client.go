@@ -245,7 +245,10 @@ func (client *ItemsClient) getDigitalTwinBuilderHandleResponse(resp *http.Respon
 // When you get a digitaltwinbuilder public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the digital twin builder.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
-// LIMITATIONS This API is blocked for a digitaltwinbuilder with an encrypted sensitivity label.
+// LIMITATIONS To retrieve the definition of a Digital twin builder item protected by an encrypted sensitivity label, the
+// caller must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -268,7 +271,10 @@ func (client *ItemsClient) BeginGetDigitalTwinBuilderDefinition(ctx context.Cont
 // When you get a digitaltwinbuilder public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the digital twin builder.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
-// LIMITATIONS This API is blocked for a digitaltwinbuilder with an encrypted sensitivity label.
+// LIMITATIONS To retrieve the definition of a Digital twin builder item protected by an encrypted sensitivity label, the
+// caller must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -641,7 +647,8 @@ func (client *ItemsClient) beginCreateDigitalTwinBuilder(ctx context.Context, wo
 //
 // # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 //
-// LIMITATIONS This API is blocked for a digitaltwinbuilder with an encrypted sensitivity label.
+// LIMITATIONS To retrieve the definition of a Digital twin builder item protected by an encrypted sensitivity label, the caller must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in Microsoft Purview [/purview/purview].
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

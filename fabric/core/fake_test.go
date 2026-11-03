@@ -315,7 +315,12 @@ func (testsuite *FakeTestSuite) TestWorkspaces_GetWorkspace() {
 			DfsEndpoint:  to.Ptr("https://eastus-onelake.dfs.fabric.microsoft.com"),
 		},
 		WorkspaceIdentity: &core.WorkspaceIdentity{
-			ApplicationID:      to.Ptr("00a4a8f9-78d3-41b3-b87a-6ae5271c8d0d"),
+			ApplicationID: to.Ptr("00a4a8f9-78d3-41b3-b87a-6ae5271c8d0d"),
+			IdentityReference: &core.ItemReferenceByID{
+				ReferenceType: to.Ptr(core.ItemReferenceTypeByID),
+				ItemID:        to.Ptr("4a1d86e3-d740-4610-b32d-7bae87d33e9d"),
+				WorkspaceID:   to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
+			},
 			ServicePrincipalID: to.Ptr("5ba4ae58-d402-45c6-a848-0253e834fd78"),
 		},
 	}
@@ -352,7 +357,12 @@ func (testsuite *FakeTestSuite) TestWorkspaces_GetWorkspace() {
 			DfsEndpoint:  to.Ptr("https://cfafbeb180374d0c896ea46fb27ff227.zcf.dfs.fabric.microsoft.com"),
 		},
 		WorkspaceIdentity: &core.WorkspaceIdentity{
-			ApplicationID:      to.Ptr("00a4a8f9-78d3-41b3-b87a-6ae5271c8d0d"),
+			ApplicationID: to.Ptr("00a4a8f9-78d3-41b3-b87a-6ae5271c8d0d"),
+			IdentityReference: &core.ItemReferenceByID{
+				ReferenceType: to.Ptr(core.ItemReferenceTypeByID),
+				ItemID:        to.Ptr("4a1d86e3-d740-4610-b32d-7bae87d33e9d"),
+				WorkspaceID:   to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
+			},
 			ServicePrincipalID: to.Ptr("5ba4ae58-d402-45c6-a848-0253e834fd78"),
 		},
 	}
@@ -759,7 +769,12 @@ func (testsuite *FakeTestSuite) TestWorkspaces_ProvisionIdentity() {
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
 
 	exampleRes := core.WorkspaceIdentity{
-		ApplicationID:      to.Ptr("00a4a8f9-78d3-41b3-b87a-6ae5271c8d0d"),
+		ApplicationID: to.Ptr("00a4a8f9-78d3-41b3-b87a-6ae5271c8d0d"),
+		IdentityReference: &core.ItemReferenceByID{
+			ReferenceType: to.Ptr(core.ItemReferenceTypeByID),
+			ItemID:        to.Ptr("4a1d86e3-d740-4610-b32d-7bae87d33e9d"),
+			WorkspaceID:   to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
+		},
 		ServicePrincipalID: to.Ptr("5ba4ae58-d402-45c6-a848-0253e834fd78"),
 	}
 
@@ -2439,9 +2454,56 @@ func (testsuite *FakeTestSuite) TestItems_BulkImportItemDefinitions() {
 	}
 
 	client := testsuite.clientFactory.NewItemsClient()
-	poller, err := client.BeginBulkImportItemDefinitions(ctx, exampleWorkspaceID, exampleBulkImportItemDefinitionsRequest, nil)
+	poller, err := client.BeginBulkImportItemDefinitions(ctx, exampleWorkspaceID, exampleBulkImportItemDefinitionsRequest, &core.ItemsClientBeginBulkImportItemDefinitionsOptions{Beta: nil})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	res, err := poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.BulkImportItemDefinitionsResponse))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Bulk import item definitions with deployment plan example"},
+	})
+	exampleWorkspaceID = "24d305d1-9db8-4785-b038-714e07e7394f"
+	exampleBulkImportItemDefinitionsRequest = core.BulkImportItemDefinitionsRequest{
+		DefinitionParts: []core.ItemDefinitionPart{
+			{
+				Path:        to.Ptr("/Folder1/Folder2/MyReport.Report/.platform"),
+				Payload:     to.Ptr("ewogICIkc2NoZW1hIjogImh0dHBzOi8vZGV2ZWxvcGVyLm1pY3Jvc29mdC5jb20vanNvbi1zY2hlbWFzL2ZhYnJpYy9naXRJbnRlZ3JhdGlvbi9wbGF0Zm9ybVByb3BlcnRpZXMvMi4wLjAvc2NoZW1hLmpzb24iLAogICJtZXRhZGF0YSI6IHsKICAgICJ0eXBlIjogIlJlcG9ydCIsCiAgICAiZGlzcGxheU5hbWUiOiAiTXlSZXBvcnQiCiAgfSwKICAiY29uZmlnIjogewogICAgInZlcnNpb24iOiAiMi4wIiwKICAgICJsb2dpY2FsSWQiOiAiODg0MzZlNjUtNmVkMS04MTg1LTQ5ZmYtZjYxMDc3ZmM3M2Q0IgogIH0KfQ=="),
+				PayloadType: to.Ptr(core.PayloadTypeInlineBase64),
+			}},
+		Options: &core.BulkImportItemDefinitionsRequestOptions{
+			AllowPairingByName: to.Ptr(true),
+			DeploymentPlan: &core.DeploymentPlanReferenceByLogicalID{
+				ReferenceType: to.Ptr(core.DeploymentPlanReferenceTypeByLogicalID),
+				LogicalID:     to.Ptr("a1b2c3d4-e5f6-7890-abcd-ef1234567890"),
+			},
+		},
+	}
+
+	exampleRes = core.BulkImportItemDefinitionsResponse{
+		ImportItemDefinitionsDetails: []core.ImportItemDefinitionsDetails{
+			{
+				ItemDisplayName: to.Ptr("MyReport"),
+				ItemID:          to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+				ItemLogicalID:   to.Ptr("88436e65-6ed1-8185-49ff-f61077fc73d4"),
+				ItemType:        to.Ptr(core.ItemTypeReport),
+				OperationStatus: to.Ptr(core.ImportItemDefinitionOperationStatusSucceeded),
+				OperationType:   to.Ptr(core.ItemDefinitionOperationTypeCreate),
+			}},
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginBulkImportItemDefinitions = func(ctx context.Context, workspaceID string, bulkImportItemDefinitionsRequest core.BulkImportItemDefinitionsRequest, options *core.ItemsClientBeginBulkImportItemDefinitionsOptions) (resp azfake.PollerResponder[core.ItemsClientBulkImportItemDefinitionsResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleBulkImportItemDefinitionsRequest, bulkImportItemDefinitionsRequest))
+		resp = azfake.PollerResponder[core.ItemsClientBulkImportItemDefinitionsResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, core.ItemsClientBulkImportItemDefinitionsResponse{BulkImportItemDefinitionsResponse: exampleRes}, nil)
+		return
+	}
+
+	poller, err = client.BeginBulkImportItemDefinitions(ctx, exampleWorkspaceID, exampleBulkImportItemDefinitionsRequest, &core.ItemsClientBeginBulkImportItemDefinitionsOptions{Beta: to.Ptr(true)})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	res, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.BulkImportItemDefinitionsResponse))
 
@@ -2482,7 +2544,7 @@ func (testsuite *FakeTestSuite) TestItems_BulkImportItemDefinitions() {
 		return
 	}
 
-	poller, err = client.BeginBulkImportItemDefinitions(ctx, exampleWorkspaceID, exampleBulkImportItemDefinitionsRequest, nil)
+	poller, err = client.BeginBulkImportItemDefinitions(ctx, exampleWorkspaceID, exampleBulkImportItemDefinitionsRequest, &core.ItemsClientBeginBulkImportItemDefinitionsOptions{Beta: to.Ptr(true)})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
@@ -4003,7 +4065,7 @@ func (testsuite *FakeTestSuite) TestGit_UpdateFromGit() {
 	}
 
 	client := testsuite.clientFactory.NewGitClient()
-	poller, err := client.BeginUpdateFromGit(ctx, exampleWorkspaceID, exampleUpdateFromGitRequest, nil)
+	poller, err := client.BeginUpdateFromGit(ctx, exampleWorkspaceID, exampleUpdateFromGitRequest, &core.GitClientBeginUpdateFromGitOptions{Beta: nil})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
@@ -4033,7 +4095,41 @@ func (testsuite *FakeTestSuite) TestGit_UpdateFromGit() {
 		return
 	}
 
-	poller, err = client.BeginUpdateFromGit(ctx, exampleWorkspaceID, exampleUpdateFromGitRequest, nil)
+	poller, err = client.BeginUpdateFromGit(ctx, exampleWorkspaceID, exampleUpdateFromGitRequest, &core.GitClientBeginUpdateFromGitOptions{Beta: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update a workspace using data from a Git with a deployment plan example"},
+	})
+	exampleWorkspaceID = "1565e6a3-c020-4c0c-dda7-92bafe99eec5"
+	exampleUpdateFromGitRequest = core.UpdateFromGitRequest{
+		ConflictResolution: &core.WorkspaceConflictResolution{
+			ConflictResolutionPolicy: to.Ptr(core.ConflictResolutionPolicyPreferWorkspace),
+			ConflictResolutionType:   to.Ptr(core.ConflictResolutionTypeWorkspace),
+		},
+		Options: &core.UpdateOptions{
+			AllowOverrideItems: to.Ptr(true),
+			DeploymentPlan: &core.DeploymentPlanReferenceByLogicalID{
+				ReferenceType: to.Ptr(core.DeploymentPlanReferenceTypeByLogicalID),
+				LogicalID:     to.Ptr("a1b2c3d4-e5f6-7890-abcd-ef1234567890"),
+			},
+		},
+		RemoteCommitHash: to.Ptr("7d03b2918bf6aa62f96d0a4307293f3853201705"),
+		WorkspaceHead:    to.Ptr("eaa737b48cda41b37ffefac772ea48f6fed3eac4"),
+	}
+
+	testsuite.serverFactory.GitServer.BeginUpdateFromGit = func(ctx context.Context, workspaceID string, updateFromGitRequest core.UpdateFromGitRequest, options *core.GitClientBeginUpdateFromGitOptions) (resp azfake.PollerResponder[core.GitClientUpdateFromGitResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateFromGitRequest, updateFromGitRequest))
+		resp = azfake.PollerResponder[core.GitClientUpdateFromGitResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, core.GitClientUpdateFromGitResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginUpdateFromGit(ctx, exampleWorkspaceID, exampleUpdateFromGitRequest, &core.GitClientBeginUpdateFromGitOptions{Beta: nil})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
@@ -4963,6 +5059,668 @@ func (testsuite *FakeTestSuite) TestSurgeProtection_UpdateCapacitySurgeProtectio
 	res, err = client.UpdateCapacitySurgeProtection(ctx, exampleCapacityID, exampleUpdateCapacitySurgeProtectionRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.CapacitySurgeProtection))
+}
+
+func (testsuite *FakeTestSuite) TestSurgeProtection_CreateBlockedActor() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a blocked actor that is already blocked example"},
+	})
+	var exampleCapacityID string
+	var exampleCreateBlockedActorRequest core.CreateBlockedActorRequest
+	exampleCapacityID = "96f3f0ff-4fe2-4712-b61b-05a456ba9357"
+	exampleCreateBlockedActorRequest = core.CreateBlockedActorRequest{
+		ActorDetails: &core.WorkspaceActorDetails{
+			ActorType:   to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+			WorkspaceID: to.Ptr("a1f2c3d4-e5f6-7890-abcd-1234567890ef"),
+		},
+		ExpirationPolicy: &core.NeverExpireBlockedActorExpirationPolicy{
+			PolicyType: to.Ptr(core.BlockedActorExpirationPolicyTypeNeverExpire),
+		},
+	}
+
+	exampleRes := core.BlockedActor{
+		ActorDetails: &core.WorkspaceActorDetails{
+			ActorType:   to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+			WorkspaceID: to.Ptr("a1f2c3d4-e5f6-7890-abcd-1234567890ef"),
+		},
+		ExpirationPolicy: &core.NeverExpireBlockedActorExpirationPolicy{
+			PolicyType: to.Ptr(core.BlockedActorExpirationPolicyTypeNeverExpire),
+		},
+		ID: to.Ptr("11223344-5566-7788-99aa-bbccddeeff00"),
+	}
+
+	testsuite.serverFactory.SurgeProtectionServer.CreateBlockedActor = func(ctx context.Context, capacityID string, createBlockedActorRequest core.CreateBlockedActorRequest, options *core.SurgeProtectionClientCreateBlockedActorOptions) (resp azfake.Responder[core.SurgeProtectionClientCreateBlockedActorResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateBlockedActorRequest, createBlockedActorRequest))
+		resp = azfake.Responder[core.SurgeProtectionClientCreateBlockedActorResponse]{}
+		resp.SetResponse(http.StatusOK, core.SurgeProtectionClientCreateBlockedActorResponse{BlockedActor: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewSurgeProtectionClient()
+	res, err := client.CreateBlockedActor(ctx, exampleCapacityID, exampleCreateBlockedActorRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.BlockedActor))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a new blocked actor example"},
+	})
+	exampleCapacityID = "96f3f0ff-4fe2-4712-b61b-05a456ba9357"
+	exampleCreateBlockedActorRequest = core.CreateBlockedActorRequest{
+		ActorDetails: &core.WorkspaceActorDetails{
+			ActorType:   to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+			WorkspaceID: to.Ptr("a1f2c3d4-e5f6-7890-abcd-1234567890ef"),
+		},
+		ExpirationPolicy: &core.ExpireAfterDateBlockedActorExpirationPolicy{
+			PolicyType:          to.Ptr(core.BlockedActorExpirationPolicyTypeExpireAfterDate),
+			ExpireAfterDateTime: to.Ptr("2026-07-15T18:00:00Z"),
+		},
+	}
+
+	testsuite.serverFactory.SurgeProtectionServer.CreateBlockedActor = func(ctx context.Context, capacityID string, createBlockedActorRequest core.CreateBlockedActorRequest, options *core.SurgeProtectionClientCreateBlockedActorOptions) (resp azfake.Responder[core.SurgeProtectionClientCreateBlockedActorResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateBlockedActorRequest, createBlockedActorRequest))
+		resp = azfake.Responder[core.SurgeProtectionClientCreateBlockedActorResponse]{}
+		resp.SetResponse(http.StatusOK, core.SurgeProtectionClientCreateBlockedActorResponse{}, nil)
+		return
+	}
+
+	_, err = client.CreateBlockedActor(ctx, exampleCapacityID, exampleCreateBlockedActorRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestSurgeProtection_ListBlockedActors() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List blocked actors example"},
+	})
+	var exampleCapacityID string
+	exampleCapacityID = "96f3f0ff-4fe2-4712-b61b-05a456ba9357"
+
+	exampleRes := core.BlockedActors{
+		ContinuationToken: to.Ptr("LDEsMTAwMDAwLDA%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/capacities/96f3f0ff-4fe2-4712-b61b-05a456ba9357/surgeProtection/blockedActors?continuationToken='LDEsMTAwMDAwLDA%3D'"),
+		Value: []core.BlockedActor{
+			{
+				ActorDetails: &core.WorkspaceActorDetails{
+					ActorType:   to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+					WorkspaceID: to.Ptr("a1f2c3d4-e5f6-7890-abcd-1234567890ef"),
+				},
+				ExpirationPolicy: &core.ExpireAfterDateBlockedActorExpirationPolicy{
+					PolicyType:          to.Ptr(core.BlockedActorExpirationPolicyTypeExpireAfterDate),
+					ExpireAfterDateTime: to.Ptr("2026-07-15T18:00:00Z"),
+				},
+				ID: to.Ptr("11223344-5566-7788-99aa-bbccddeeff00"),
+			},
+			{
+				ActorDetails: &core.WorkspaceActorDetails{
+					ActorType:   to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+					WorkspaceID: to.Ptr("c3d4e5f6-a7b8-9012-cdef-3456789012ab"),
+				},
+				ExpirationPolicy: &core.NeverExpireBlockedActorExpirationPolicy{
+					PolicyType: to.Ptr(core.BlockedActorExpirationPolicyTypeNeverExpire),
+				},
+				ID: to.Ptr("22334455-6677-8899-aabb-ccddeeff0011"),
+			}},
+	}
+
+	testsuite.serverFactory.SurgeProtectionServer.NewListBlockedActorsPager = func(capacityID string, options *core.SurgeProtectionClientListBlockedActorsOptions) (resp azfake.PagerResponder[core.SurgeProtectionClientListBlockedActorsResponse]) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		resp = azfake.PagerResponder[core.SurgeProtectionClientListBlockedActorsResponse]{}
+		resp.AddPage(http.StatusOK, core.SurgeProtectionClientListBlockedActorsResponse{BlockedActors: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewSurgeProtectionClient()
+	pager := client.NewListBlockedActorsPager(exampleCapacityID, &core.SurgeProtectionClientListBlockedActorsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.BlockedActors))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestSurgeProtection_GetBlockedActor() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a blocked actor example"},
+	})
+	var exampleCapacityID string
+	var exampleBlockedActorID string
+	exampleCapacityID = "96f3f0ff-4fe2-4712-b61b-05a456ba9357"
+	exampleBlockedActorID = "11223344-5566-7788-99aa-bbccddeeff00"
+
+	exampleRes := core.BlockedActor{
+		ActorDetails: &core.WorkspaceActorDetails{
+			ActorType:   to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+			WorkspaceID: to.Ptr("a1f2c3d4-e5f6-7890-abcd-1234567890ef"),
+		},
+		ExpirationPolicy: &core.ExpireAfterDateBlockedActorExpirationPolicy{
+			PolicyType:          to.Ptr(core.BlockedActorExpirationPolicyTypeExpireAfterDate),
+			ExpireAfterDateTime: to.Ptr("2026-07-15T18:00:00Z"),
+		},
+		ID: to.Ptr("11223344-5566-7788-99aa-bbccddeeff00"),
+	}
+
+	testsuite.serverFactory.SurgeProtectionServer.GetBlockedActor = func(ctx context.Context, capacityID string, blockedActorID string, options *core.SurgeProtectionClientGetBlockedActorOptions) (resp azfake.Responder[core.SurgeProtectionClientGetBlockedActorResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().Equal(exampleBlockedActorID, blockedActorID)
+		resp = azfake.Responder[core.SurgeProtectionClientGetBlockedActorResponse]{}
+		resp.SetResponse(http.StatusOK, core.SurgeProtectionClientGetBlockedActorResponse{BlockedActor: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewSurgeProtectionClient()
+	res, err := client.GetBlockedActor(ctx, exampleCapacityID, exampleBlockedActorID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.BlockedActor))
+}
+
+func (testsuite *FakeTestSuite) TestSurgeProtection_UpdateBlockedActor() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update a blocked actor example"},
+	})
+	var exampleCapacityID string
+	var exampleBlockedActorID string
+	var exampleUpdateBlockedActorRequest core.UpdateBlockedActorRequest
+	exampleCapacityID = "96f3f0ff-4fe2-4712-b61b-05a456ba9357"
+	exampleBlockedActorID = "11223344-5566-7788-99aa-bbccddeeff00"
+	exampleUpdateBlockedActorRequest = core.UpdateBlockedActorRequest{
+		ExpirationPolicy: &core.NeverExpireBlockedActorExpirationPolicy{
+			PolicyType: to.Ptr(core.BlockedActorExpirationPolicyTypeNeverExpire),
+		},
+	}
+
+	exampleRes := core.BlockedActor{
+		ActorDetails: &core.WorkspaceActorDetails{
+			ActorType:   to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+			WorkspaceID: to.Ptr("a1f2c3d4-e5f6-7890-abcd-1234567890ef"),
+		},
+		ExpirationPolicy: &core.NeverExpireBlockedActorExpirationPolicy{
+			PolicyType: to.Ptr(core.BlockedActorExpirationPolicyTypeNeverExpire),
+		},
+		ID: to.Ptr("11223344-5566-7788-99aa-bbccddeeff00"),
+	}
+
+	testsuite.serverFactory.SurgeProtectionServer.UpdateBlockedActor = func(ctx context.Context, capacityID string, blockedActorID string, updateBlockedActorRequest core.UpdateBlockedActorRequest, options *core.SurgeProtectionClientUpdateBlockedActorOptions) (resp azfake.Responder[core.SurgeProtectionClientUpdateBlockedActorResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().Equal(exampleBlockedActorID, blockedActorID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateBlockedActorRequest, updateBlockedActorRequest))
+		resp = azfake.Responder[core.SurgeProtectionClientUpdateBlockedActorResponse]{}
+		resp.SetResponse(http.StatusOK, core.SurgeProtectionClientUpdateBlockedActorResponse{BlockedActor: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewSurgeProtectionClient()
+	res, err := client.UpdateBlockedActor(ctx, exampleCapacityID, exampleBlockedActorID, exampleUpdateBlockedActorRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.BlockedActor))
+}
+
+func (testsuite *FakeTestSuite) TestSurgeProtection_DeleteBlockedActor() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete a blocked actor example"},
+	})
+	var exampleCapacityID string
+	var exampleBlockedActorID string
+	exampleCapacityID = "96f3f0ff-4fe2-4712-b61b-05a456ba9357"
+	exampleBlockedActorID = "11223344-5566-7788-99aa-bbccddeeff00"
+
+	testsuite.serverFactory.SurgeProtectionServer.DeleteBlockedActor = func(ctx context.Context, capacityID string, blockedActorID string, options *core.SurgeProtectionClientDeleteBlockedActorOptions) (resp azfake.Responder[core.SurgeProtectionClientDeleteBlockedActorResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().Equal(exampleBlockedActorID, blockedActorID)
+		resp = azfake.Responder[core.SurgeProtectionClientDeleteBlockedActorResponse]{}
+		resp.SetResponse(http.StatusOK, core.SurgeProtectionClientDeleteBlockedActorResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewSurgeProtectionClient()
+	_, err = client.DeleteBlockedActor(ctx, exampleCapacityID, exampleBlockedActorID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestSurgeProtection_CreateMissionCriticalActor() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a mission critical actor that already exists example"},
+	})
+	var exampleCapacityID string
+	var exampleCreateMissionCriticalActorRequest core.CreateMissionCriticalActorRequest
+	exampleCapacityID = "96f3f0ff-4fe2-4712-b61b-05a456ba9357"
+	exampleCreateMissionCriticalActorRequest = core.CreateMissionCriticalActorRequest{
+		ActorDetails: &core.WorkspaceActorDetails{
+			ActorType:   to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+			WorkspaceID: to.Ptr("b2c3d4e5-f6a7-8901-bcde-2345678901fa"),
+		},
+	}
+
+	exampleRes := core.MissionCriticalActor{
+		ActorDetails: &core.WorkspaceActorDetails{
+			ActorType:   to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+			WorkspaceID: to.Ptr("b2c3d4e5-f6a7-8901-bcde-2345678901fa"),
+		},
+		ID: to.Ptr("33445566-7788-99aa-bbcc-ddeeff001122"),
+	}
+
+	testsuite.serverFactory.SurgeProtectionServer.CreateMissionCriticalActor = func(ctx context.Context, capacityID string, createMissionCriticalActorRequest core.CreateMissionCriticalActorRequest, options *core.SurgeProtectionClientCreateMissionCriticalActorOptions) (resp azfake.Responder[core.SurgeProtectionClientCreateMissionCriticalActorResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateMissionCriticalActorRequest, createMissionCriticalActorRequest))
+		resp = azfake.Responder[core.SurgeProtectionClientCreateMissionCriticalActorResponse]{}
+		resp.SetResponse(http.StatusOK, core.SurgeProtectionClientCreateMissionCriticalActorResponse{MissionCriticalActor: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewSurgeProtectionClient()
+	res, err := client.CreateMissionCriticalActor(ctx, exampleCapacityID, exampleCreateMissionCriticalActorRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.MissionCriticalActor))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a new mission critical actor example"},
+	})
+	exampleCapacityID = "96f3f0ff-4fe2-4712-b61b-05a456ba9357"
+	exampleCreateMissionCriticalActorRequest = core.CreateMissionCriticalActorRequest{
+		ActorDetails: &core.WorkspaceActorDetails{
+			ActorType:   to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+			WorkspaceID: to.Ptr("b2c3d4e5-f6a7-8901-bcde-2345678901fa"),
+		},
+	}
+
+	testsuite.serverFactory.SurgeProtectionServer.CreateMissionCriticalActor = func(ctx context.Context, capacityID string, createMissionCriticalActorRequest core.CreateMissionCriticalActorRequest, options *core.SurgeProtectionClientCreateMissionCriticalActorOptions) (resp azfake.Responder[core.SurgeProtectionClientCreateMissionCriticalActorResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateMissionCriticalActorRequest, createMissionCriticalActorRequest))
+		resp = azfake.Responder[core.SurgeProtectionClientCreateMissionCriticalActorResponse]{}
+		resp.SetResponse(http.StatusOK, core.SurgeProtectionClientCreateMissionCriticalActorResponse{}, nil)
+		return
+	}
+
+	_, err = client.CreateMissionCriticalActor(ctx, exampleCapacityID, exampleCreateMissionCriticalActorRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestSurgeProtection_ListMissionCriticalActors() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List mission critical actors example"},
+	})
+	var exampleCapacityID string
+	exampleCapacityID = "96f3f0ff-4fe2-4712-b61b-05a456ba9357"
+
+	exampleRes := core.MissionCriticalActors{
+		ContinuationToken: to.Ptr("MiwxMDAwMDAsMQ%3D%3D"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/capacities/96f3f0ff-4fe2-4712-b61b-05a456ba9357/surgeProtection/missionCriticalActors?continuationToken='MiwxMDAwMDAsMQ%3D%3D'"),
+		Value: []core.MissionCriticalActor{
+			{
+				ActorDetails: &core.WorkspaceActorDetails{
+					ActorType:   to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+					WorkspaceID: to.Ptr("b2c3d4e5-f6a7-8901-bcde-2345678901fa"),
+				},
+				ID: to.Ptr("33445566-7788-99aa-bbcc-ddeeff001122"),
+			},
+			{
+				ActorDetails: &core.WorkspaceActorDetails{
+					ActorType:   to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+					WorkspaceID: to.Ptr("d4e5f6a7-b8c9-0123-def4-567890abcdef"),
+				},
+				ID: to.Ptr("44556677-8899-aabb-ccdd-eeff00112233"),
+			}},
+	}
+
+	testsuite.serverFactory.SurgeProtectionServer.NewListMissionCriticalActorsPager = func(capacityID string, options *core.SurgeProtectionClientListMissionCriticalActorsOptions) (resp azfake.PagerResponder[core.SurgeProtectionClientListMissionCriticalActorsResponse]) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		resp = azfake.PagerResponder[core.SurgeProtectionClientListMissionCriticalActorsResponse]{}
+		resp.AddPage(http.StatusOK, core.SurgeProtectionClientListMissionCriticalActorsResponse{MissionCriticalActors: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewSurgeProtectionClient()
+	pager := client.NewListMissionCriticalActorsPager(exampleCapacityID, &core.SurgeProtectionClientListMissionCriticalActorsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.MissionCriticalActors))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestSurgeProtection_GetMissionCriticalActor() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a mission critical actor example"},
+	})
+	var exampleCapacityID string
+	var exampleMissionCriticalActorID string
+	exampleCapacityID = "96f3f0ff-4fe2-4712-b61b-05a456ba9357"
+	exampleMissionCriticalActorID = "33445566-7788-99aa-bbcc-ddeeff001122"
+
+	exampleRes := core.MissionCriticalActor{
+		ActorDetails: &core.WorkspaceActorDetails{
+			ActorType:   to.Ptr(core.SurgeProtectionActorTypeWorkspace),
+			WorkspaceID: to.Ptr("b2c3d4e5-f6a7-8901-bcde-2345678901fa"),
+		},
+		ID: to.Ptr("33445566-7788-99aa-bbcc-ddeeff001122"),
+	}
+
+	testsuite.serverFactory.SurgeProtectionServer.GetMissionCriticalActor = func(ctx context.Context, capacityID string, missionCriticalActorID string, options *core.SurgeProtectionClientGetMissionCriticalActorOptions) (resp azfake.Responder[core.SurgeProtectionClientGetMissionCriticalActorResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().Equal(exampleMissionCriticalActorID, missionCriticalActorID)
+		resp = azfake.Responder[core.SurgeProtectionClientGetMissionCriticalActorResponse]{}
+		resp.SetResponse(http.StatusOK, core.SurgeProtectionClientGetMissionCriticalActorResponse{MissionCriticalActor: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewSurgeProtectionClient()
+	res, err := client.GetMissionCriticalActor(ctx, exampleCapacityID, exampleMissionCriticalActorID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.MissionCriticalActor))
+}
+
+func (testsuite *FakeTestSuite) TestSurgeProtection_DeleteMissionCriticalActor() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete a mission critical actor example"},
+	})
+	var exampleCapacityID string
+	var exampleMissionCriticalActorID string
+	exampleCapacityID = "96f3f0ff-4fe2-4712-b61b-05a456ba9357"
+	exampleMissionCriticalActorID = "33445566-7788-99aa-bbcc-ddeeff001122"
+
+	testsuite.serverFactory.SurgeProtectionServer.DeleteMissionCriticalActor = func(ctx context.Context, capacityID string, missionCriticalActorID string, options *core.SurgeProtectionClientDeleteMissionCriticalActorOptions) (resp azfake.Responder[core.SurgeProtectionClientDeleteMissionCriticalActorResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().Equal(exampleMissionCriticalActorID, missionCriticalActorID)
+		resp = azfake.Responder[core.SurgeProtectionClientDeleteMissionCriticalActorResponse]{}
+		resp.SetResponse(http.StatusOK, core.SurgeProtectionClientDeleteMissionCriticalActorResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewSurgeProtectionClient()
+	_, err = client.DeleteMissionCriticalActor(ctx, exampleCapacityID, exampleMissionCriticalActorID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestSurgeProtection_CreateActorAutoDetectionRule() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create an actor auto-detection rule with an hours block duration"},
+	})
+	var exampleCapacityID string
+	var exampleCreateActorAutoDetectionRuleRequest core.CreateActorAutoDetectionRuleRequest
+	exampleCapacityID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCreateActorAutoDetectionRuleRequest = core.CreateActorAutoDetectionRuleRequest{
+		ActorsSubjectToRule: &core.ActorAutoDetectionRuleAllWorkspaces{
+			Type: to.Ptr(core.ActorAutoDetectionRuleActorsSubjectToRuleKindAllWorkspaces),
+		},
+		BlockDuration: &core.ActorAutoDetectionRuleHoursBlockDuration{
+			Type:  to.Ptr(core.ActorAutoDetectionRuleBlockDurationKindHours),
+			Hours: to.Ptr[int32](24),
+		},
+		CapacityUnitsConsumptionThresholdPercentage: to.Ptr[int32](25),
+	}
+
+	testsuite.serverFactory.SurgeProtectionServer.CreateActorAutoDetectionRule = func(ctx context.Context, capacityID string, createActorAutoDetectionRuleRequest core.CreateActorAutoDetectionRuleRequest, options *core.SurgeProtectionClientCreateActorAutoDetectionRuleOptions) (resp azfake.Responder[core.SurgeProtectionClientCreateActorAutoDetectionRuleResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateActorAutoDetectionRuleRequest, createActorAutoDetectionRuleRequest))
+		resp = azfake.Responder[core.SurgeProtectionClientCreateActorAutoDetectionRuleResponse]{}
+		resp.SetResponse(http.StatusCreated, core.SurgeProtectionClientCreateActorAutoDetectionRuleResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewSurgeProtectionClient()
+	_, err = client.CreateActorAutoDetectionRule(ctx, exampleCapacityID, exampleCreateActorAutoDetectionRuleRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create an actor auto-detection rule with an indefinite block duration"},
+	})
+	exampleCapacityID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCreateActorAutoDetectionRuleRequest = core.CreateActorAutoDetectionRuleRequest{
+		ActorsSubjectToRule: &core.ActorAutoDetectionRuleAllWorkspaces{
+			Type: to.Ptr(core.ActorAutoDetectionRuleActorsSubjectToRuleKindAllWorkspaces),
+		},
+		BlockDuration: &core.ActorAutoDetectionRuleIndefiniteBlockDuration{
+			Type: to.Ptr(core.ActorAutoDetectionRuleBlockDurationKindIndefinite),
+		},
+		CapacityUnitsConsumptionThresholdPercentage: to.Ptr[int32](50),
+	}
+
+	testsuite.serverFactory.SurgeProtectionServer.CreateActorAutoDetectionRule = func(ctx context.Context, capacityID string, createActorAutoDetectionRuleRequest core.CreateActorAutoDetectionRuleRequest, options *core.SurgeProtectionClientCreateActorAutoDetectionRuleOptions) (resp azfake.Responder[core.SurgeProtectionClientCreateActorAutoDetectionRuleResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateActorAutoDetectionRuleRequest, createActorAutoDetectionRuleRequest))
+		resp = azfake.Responder[core.SurgeProtectionClientCreateActorAutoDetectionRuleResponse]{}
+		resp.SetResponse(http.StatusCreated, core.SurgeProtectionClientCreateActorAutoDetectionRuleResponse{}, nil)
+		return
+	}
+
+	_, err = client.CreateActorAutoDetectionRule(ctx, exampleCapacityID, exampleCreateActorAutoDetectionRuleRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestSurgeProtection_ListActorAutoDetectionRules() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List actor auto-detection rules example"},
+	})
+	var exampleCapacityID string
+	exampleCapacityID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+
+	exampleRes := core.ListActorAutoDetectionRulesResponse{
+		Value: []core.ActorAutoDetectionRule{
+			{
+				ActorsSubjectToRule: &core.ActorAutoDetectionRuleAllWorkspaces{
+					Type: to.Ptr(core.ActorAutoDetectionRuleActorsSubjectToRuleKindAllWorkspaces),
+				},
+				BlockDuration: &core.ActorAutoDetectionRuleHoursBlockDuration{
+					Type:  to.Ptr(core.ActorAutoDetectionRuleBlockDurationKindHours),
+					Hours: to.Ptr[int32](24),
+				},
+				CapacityUnitsConsumptionThresholdPercentage: to.Ptr[int32](25),
+				ID: to.Ptr("a1f0c3e4-5b6d-7890-abcd-ef1234567890"),
+			}},
+	}
+
+	testsuite.serverFactory.SurgeProtectionServer.NewListActorAutoDetectionRulesPager = func(capacityID string, options *core.SurgeProtectionClientListActorAutoDetectionRulesOptions) (resp azfake.PagerResponder[core.SurgeProtectionClientListActorAutoDetectionRulesResponse]) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		resp = azfake.PagerResponder[core.SurgeProtectionClientListActorAutoDetectionRulesResponse]{}
+		resp.AddPage(http.StatusOK, core.SurgeProtectionClientListActorAutoDetectionRulesResponse{ListActorAutoDetectionRulesResponse: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewSurgeProtectionClient()
+	pager := client.NewListActorAutoDetectionRulesPager(exampleCapacityID, &core.SurgeProtectionClientListActorAutoDetectionRulesOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.ListActorAutoDetectionRulesResponse))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestSurgeProtection_GetActorAutoDetectionRule() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get an actor auto-detection rule example"},
+	})
+	var exampleCapacityID string
+	var exampleActorAutoDetectionRuleID string
+	exampleCapacityID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleActorAutoDetectionRuleID = "a1f0c3e4-5b6d-7890-abcd-ef1234567890"
+
+	exampleRes := core.ActorAutoDetectionRule{
+		ActorsSubjectToRule: &core.ActorAutoDetectionRuleAllWorkspaces{
+			Type: to.Ptr(core.ActorAutoDetectionRuleActorsSubjectToRuleKindAllWorkspaces),
+		},
+		BlockDuration: &core.ActorAutoDetectionRuleHoursBlockDuration{
+			Type:  to.Ptr(core.ActorAutoDetectionRuleBlockDurationKindHours),
+			Hours: to.Ptr[int32](24),
+		},
+		CapacityUnitsConsumptionThresholdPercentage: to.Ptr[int32](25),
+		ID: to.Ptr("a1f0c3e4-5b6d-7890-abcd-ef1234567890"),
+	}
+
+	testsuite.serverFactory.SurgeProtectionServer.GetActorAutoDetectionRule = func(ctx context.Context, capacityID string, actorAutoDetectionRuleID string, options *core.SurgeProtectionClientGetActorAutoDetectionRuleOptions) (resp azfake.Responder[core.SurgeProtectionClientGetActorAutoDetectionRuleResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().Equal(exampleActorAutoDetectionRuleID, actorAutoDetectionRuleID)
+		resp = azfake.Responder[core.SurgeProtectionClientGetActorAutoDetectionRuleResponse]{}
+		resp.SetResponse(http.StatusOK, core.SurgeProtectionClientGetActorAutoDetectionRuleResponse{ActorAutoDetectionRule: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewSurgeProtectionClient()
+	res, err := client.GetActorAutoDetectionRule(ctx, exampleCapacityID, exampleActorAutoDetectionRuleID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ActorAutoDetectionRule))
+}
+
+func (testsuite *FakeTestSuite) TestSurgeProtection_UpdateActorAutoDetectionRule() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update an actor auto-detection rule example"},
+	})
+	var exampleCapacityID string
+	var exampleActorAutoDetectionRuleID string
+	var exampleUpdateActorAutoDetectionRuleRequest core.UpdateActorAutoDetectionRuleRequest
+	exampleCapacityID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleActorAutoDetectionRuleID = "a1f0c3e4-5b6d-7890-abcd-ef1234567890"
+	exampleUpdateActorAutoDetectionRuleRequest = core.UpdateActorAutoDetectionRuleRequest{
+		BlockDuration: &core.ActorAutoDetectionRuleHoursBlockDuration{
+			Type:  to.Ptr(core.ActorAutoDetectionRuleBlockDurationKindHours),
+			Hours: to.Ptr[int32](48),
+		},
+		CapacityUnitsConsumptionThresholdPercentage: to.Ptr[int32](15),
+	}
+
+	exampleRes := core.ActorAutoDetectionRule{
+		ActorsSubjectToRule: &core.ActorAutoDetectionRuleAllWorkspaces{
+			Type: to.Ptr(core.ActorAutoDetectionRuleActorsSubjectToRuleKindAllWorkspaces),
+		},
+		BlockDuration: &core.ActorAutoDetectionRuleHoursBlockDuration{
+			Type:  to.Ptr(core.ActorAutoDetectionRuleBlockDurationKindHours),
+			Hours: to.Ptr[int32](48),
+		},
+		CapacityUnitsConsumptionThresholdPercentage: to.Ptr[int32](15),
+		ID: to.Ptr("a1f0c3e4-5b6d-7890-abcd-ef1234567890"),
+	}
+
+	testsuite.serverFactory.SurgeProtectionServer.UpdateActorAutoDetectionRule = func(ctx context.Context, capacityID string, actorAutoDetectionRuleID string, updateActorAutoDetectionRuleRequest core.UpdateActorAutoDetectionRuleRequest, options *core.SurgeProtectionClientUpdateActorAutoDetectionRuleOptions) (resp azfake.Responder[core.SurgeProtectionClientUpdateActorAutoDetectionRuleResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().Equal(exampleActorAutoDetectionRuleID, actorAutoDetectionRuleID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateActorAutoDetectionRuleRequest, updateActorAutoDetectionRuleRequest))
+		resp = azfake.Responder[core.SurgeProtectionClientUpdateActorAutoDetectionRuleResponse]{}
+		resp.SetResponse(http.StatusOK, core.SurgeProtectionClientUpdateActorAutoDetectionRuleResponse{ActorAutoDetectionRule: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewSurgeProtectionClient()
+	res, err := client.UpdateActorAutoDetectionRule(ctx, exampleCapacityID, exampleActorAutoDetectionRuleID, exampleUpdateActorAutoDetectionRuleRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ActorAutoDetectionRule))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update an actor auto-detection rule with an indefinite block duration"},
+	})
+	exampleCapacityID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleActorAutoDetectionRuleID = "a1f0c3e4-5b6d-7890-abcd-ef1234567890"
+	exampleUpdateActorAutoDetectionRuleRequest = core.UpdateActorAutoDetectionRuleRequest{
+		BlockDuration: &core.ActorAutoDetectionRuleIndefiniteBlockDuration{
+			Type: to.Ptr(core.ActorAutoDetectionRuleBlockDurationKindIndefinite),
+		},
+	}
+
+	exampleRes = core.ActorAutoDetectionRule{
+		ActorsSubjectToRule: &core.ActorAutoDetectionRuleAllWorkspaces{
+			Type: to.Ptr(core.ActorAutoDetectionRuleActorsSubjectToRuleKindAllWorkspaces),
+		},
+		BlockDuration: &core.ActorAutoDetectionRuleIndefiniteBlockDuration{
+			Type: to.Ptr(core.ActorAutoDetectionRuleBlockDurationKindIndefinite),
+		},
+		CapacityUnitsConsumptionThresholdPercentage: to.Ptr[int32](25),
+		ID: to.Ptr("a1f0c3e4-5b6d-7890-abcd-ef1234567890"),
+	}
+
+	testsuite.serverFactory.SurgeProtectionServer.UpdateActorAutoDetectionRule = func(ctx context.Context, capacityID string, actorAutoDetectionRuleID string, updateActorAutoDetectionRuleRequest core.UpdateActorAutoDetectionRuleRequest, options *core.SurgeProtectionClientUpdateActorAutoDetectionRuleOptions) (resp azfake.Responder[core.SurgeProtectionClientUpdateActorAutoDetectionRuleResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().Equal(exampleActorAutoDetectionRuleID, actorAutoDetectionRuleID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateActorAutoDetectionRuleRequest, updateActorAutoDetectionRuleRequest))
+		resp = azfake.Responder[core.SurgeProtectionClientUpdateActorAutoDetectionRuleResponse]{}
+		resp.SetResponse(http.StatusOK, core.SurgeProtectionClientUpdateActorAutoDetectionRuleResponse{ActorAutoDetectionRule: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.UpdateActorAutoDetectionRule(ctx, exampleCapacityID, exampleActorAutoDetectionRuleID, exampleUpdateActorAutoDetectionRuleRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ActorAutoDetectionRule))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update only an actor auto-detection rule threshold"},
+	})
+	exampleCapacityID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleActorAutoDetectionRuleID = "a1f0c3e4-5b6d-7890-abcd-ef1234567890"
+	exampleUpdateActorAutoDetectionRuleRequest = core.UpdateActorAutoDetectionRuleRequest{
+		CapacityUnitsConsumptionThresholdPercentage: to.Ptr[int32](40),
+	}
+
+	exampleRes = core.ActorAutoDetectionRule{
+		ActorsSubjectToRule: &core.ActorAutoDetectionRuleAllWorkspaces{
+			Type: to.Ptr(core.ActorAutoDetectionRuleActorsSubjectToRuleKindAllWorkspaces),
+		},
+		BlockDuration: &core.ActorAutoDetectionRuleHoursBlockDuration{
+			Type:  to.Ptr(core.ActorAutoDetectionRuleBlockDurationKindHours),
+			Hours: to.Ptr[int32](24),
+		},
+		CapacityUnitsConsumptionThresholdPercentage: to.Ptr[int32](40),
+		ID: to.Ptr("a1f0c3e4-5b6d-7890-abcd-ef1234567890"),
+	}
+
+	testsuite.serverFactory.SurgeProtectionServer.UpdateActorAutoDetectionRule = func(ctx context.Context, capacityID string, actorAutoDetectionRuleID string, updateActorAutoDetectionRuleRequest core.UpdateActorAutoDetectionRuleRequest, options *core.SurgeProtectionClientUpdateActorAutoDetectionRuleOptions) (resp azfake.Responder[core.SurgeProtectionClientUpdateActorAutoDetectionRuleResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().Equal(exampleActorAutoDetectionRuleID, actorAutoDetectionRuleID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateActorAutoDetectionRuleRequest, updateActorAutoDetectionRuleRequest))
+		resp = azfake.Responder[core.SurgeProtectionClientUpdateActorAutoDetectionRuleResponse]{}
+		resp.SetResponse(http.StatusOK, core.SurgeProtectionClientUpdateActorAutoDetectionRuleResponse{ActorAutoDetectionRule: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.UpdateActorAutoDetectionRule(ctx, exampleCapacityID, exampleActorAutoDetectionRuleID, exampleUpdateActorAutoDetectionRuleRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ActorAutoDetectionRule))
+}
+
+func (testsuite *FakeTestSuite) TestSurgeProtection_DeleteActorAutoDetectionRule() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete an actor auto-detection rule example"},
+	})
+	var exampleCapacityID string
+	var exampleActorAutoDetectionRuleID string
+	exampleCapacityID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleActorAutoDetectionRuleID = "a1f0c3e4-5b6d-7890-abcd-ef1234567890"
+
+	testsuite.serverFactory.SurgeProtectionServer.DeleteActorAutoDetectionRule = func(ctx context.Context, capacityID string, actorAutoDetectionRuleID string, options *core.SurgeProtectionClientDeleteActorAutoDetectionRuleOptions) (resp azfake.Responder[core.SurgeProtectionClientDeleteActorAutoDetectionRuleResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleCapacityID, capacityID)
+		testsuite.Require().Equal(exampleActorAutoDetectionRuleID, actorAutoDetectionRuleID)
+		resp = azfake.Responder[core.SurgeProtectionClientDeleteActorAutoDetectionRuleResponse]{}
+		resp.SetResponse(http.StatusOK, core.SurgeProtectionClientDeleteActorAutoDetectionRuleResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewSurgeProtectionClient()
+	_, err = client.DeleteActorAutoDetectionRule(ctx, exampleCapacityID, exampleActorAutoDetectionRuleID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestLongRunningOperations_GetOperationState() {
@@ -8244,10 +9002,41 @@ func (testsuite *FakeTestSuite) TestDeploymentPipelines_ListDeploymentPipelineSt
 func (testsuite *FakeTestSuite) TestDeploymentPipelines_DeployStageContent() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Example of deploying all Fabric items (such as reports or dashboards) from a deployment pipeline stage"},
+		"example-id": {"Example of deploying Fabric items from a deployment pipeline stage using a deployment plan"},
 	})
 	var exampleDeploymentPipelineID string
 	var exampleDeployRequest core.DeployRequest
+	exampleDeploymentPipelineID = "a5ded933-57b7-41f4-b072-ed4c1f9d5824"
+	exampleDeployRequest = core.DeployRequest{
+		Note: to.Ptr("Deploying with orchestrated deployment plan"),
+		Options: &core.DeploymentOptions{
+			DeploymentPlan: &core.DeploymentPlanReferenceByItemID{
+				ReferenceType: to.Ptr(core.DeploymentPlanReferenceTypeByItemID),
+				ItemID:        to.Ptr("b2c3d4e5-f6a7-8901-bcde-f12345678901"),
+			},
+		},
+		SourceStageID: to.Ptr("db1577e0-0132-4d6d-92b9-952c359988f2"),
+		TargetStageID: to.Ptr("f1c39546-6282-4590-8af3-847a6226ad16"),
+	}
+
+	testsuite.serverFactory.DeploymentPipelinesServer.BeginDeployStageContent = func(ctx context.Context, deploymentPipelineID string, deployRequest core.DeployRequest, options *core.DeploymentPipelinesClientBeginDeployStageContentOptions) (resp azfake.PollerResponder[core.DeploymentPipelinesClientDeployStageContentResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleDeploymentPipelineID, deploymentPipelineID)
+		testsuite.Require().True(reflect.DeepEqual(exampleDeployRequest, deployRequest))
+		resp = azfake.PollerResponder[core.DeploymentPipelinesClientDeployStageContentResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, core.DeploymentPipelinesClientDeployStageContentResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewDeploymentPipelinesClient()
+	poller, err := client.BeginDeployStageContent(ctx, exampleDeploymentPipelineID, exampleDeployRequest, &core.DeploymentPipelinesClientBeginDeployStageContentOptions{Beta: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Example of deploying all Fabric items (such as reports or dashboards) from a deployment pipeline stage"},
+	})
 	exampleDeploymentPipelineID = "a5ded933-57b7-41f4-b072-ed4c1f9d5824"
 	exampleDeployRequest = core.DeployRequest{
 		Note:          to.Ptr("Deploying business ready items"),
@@ -8263,8 +9052,7 @@ func (testsuite *FakeTestSuite) TestDeploymentPipelines_DeployStageContent() {
 		return
 	}
 
-	client := testsuite.clientFactory.NewDeploymentPipelinesClient()
-	poller, err := client.BeginDeployStageContent(ctx, exampleDeploymentPipelineID, exampleDeployRequest, nil)
+	poller, err = client.BeginDeployStageContent(ctx, exampleDeploymentPipelineID, exampleDeployRequest, &core.DeploymentPipelinesClientBeginDeployStageContentOptions{Beta: nil})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
@@ -8309,7 +9097,7 @@ func (testsuite *FakeTestSuite) TestDeploymentPipelines_DeployStageContent() {
 		return
 	}
 
-	poller, err = client.BeginDeployStageContent(ctx, exampleDeploymentPipelineID, exampleDeployRequest, nil)
+	poller, err = client.BeginDeployStageContent(ctx, exampleDeploymentPipelineID, exampleDeployRequest, &core.DeploymentPipelinesClientBeginDeployStageContentOptions{Beta: nil})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
@@ -8348,7 +9136,7 @@ func (testsuite *FakeTestSuite) TestDeploymentPipelines_DeployStageContent() {
 		return
 	}
 
-	poller, err = client.BeginDeployStageContent(ctx, exampleDeploymentPipelineID, exampleDeployRequest, nil)
+	poller, err = client.BeginDeployStageContent(ctx, exampleDeploymentPipelineID, exampleDeployRequest, &core.DeploymentPipelinesClientBeginDeployStageContentOptions{Beta: nil})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
@@ -10006,6 +10794,7 @@ func (testsuite *FakeTestSuite) TestConnections_ListConnections() {
 				DisplayName:  to.Ptr("ContosoConnection1"),
 				GatewayID:    to.Ptr("8f72eea3-d989-4a5a-aeed-02b3aaa2ddd0"),
 				ID:           to.Ptr("6952a7b2-aea3-414f-9d85-6c0fe5d34539"),
+				MyRole:       to.Ptr(core.ConnectionRoleOwner),
 				PrivacyLevel: to.Ptr(core.PrivacyLevelPublic),
 			},
 			&core.OnPremisesGatewayConnection{
@@ -10030,6 +10819,7 @@ func (testsuite *FakeTestSuite) TestConnections_ListConnections() {
 				DisplayName:  to.Ptr("ContosoConnection2"),
 				GatewayID:    to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
 				ID:           to.Ptr("f6a39b76-9816-4e4b-b93a-f42e405017b7"),
+				MyRole:       to.Ptr(core.ConnectionRoleUser),
 				PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 			},
 			&core.StreamingVirtualNetworkGatewayConnection{
@@ -10047,6 +10837,7 @@ func (testsuite *FakeTestSuite) TestConnections_ListConnections() {
 				DisplayName:  to.Ptr("ContosoStreamingVirtualNetworkGatewayConnection"),
 				GatewayID:    to.Ptr("3f8d6a4b-1c2e-4f5a-9b7c-2d6e8f1a3b9d"),
 				ID:           to.Ptr("a3b4c5d6-7e8f-4a5b-9c0d-1e2f3a4b5c6d"),
+				MyRole:       to.Ptr(core.ConnectionRolePendingOwner),
 				PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 			}},
 	}
@@ -10344,6 +11135,7 @@ func (testsuite *FakeTestSuite) TestConnections_GetConnection() {
 			DisplayName:  to.Ptr("ContosoConnection"),
 			GatewayID:    to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
 			ID:           to.Ptr("f6a39b76-9816-4e4b-b93a-f42e405017b7"),
+			MyRole:       to.Ptr(core.ConnectionRoleOwner),
 			PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 		},
 	}
@@ -10401,6 +11193,7 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 			},
 			GatewayID:    to.Ptr("429a773e-5633-45ee-8584-a192bd79c16a"),
 			ID:           to.Ptr("ef8f408d-2ab7-4a18-b662-9251febda49c"),
+			MyRole:       to.Ptr(core.ConnectionRoleOwner),
 			PrivacyLevel: to.Ptr(core.PrivacyLevelPrivate),
 		},
 	}
@@ -10466,6 +11259,7 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 			DisplayName:  to.Ptr("ContosoSalesOnPremisesConnection"),
 			GatewayID:    to.Ptr("4f8b5d6e-8e99-4817-8b9e-6b6a613be707"),
 			ID:           to.Ptr("70b17680-48f1-4729-9df6-02576647dc3a"),
+			MyRole:       to.Ptr(core.ConnectionRoleOwner),
 			PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 		},
 	}
@@ -10514,6 +11308,7 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 			},
 			GatewayID:    to.Ptr("8f72eea3-d989-4a5a-aeed-02b3aaa2ddd0"),
 			ID:           to.Ptr("7a0369b2-58c4-4b67-b3f3-92156a95f1cd"),
+			MyRole:       to.Ptr(core.ConnectionRoleOwner),
 			PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 		},
 	}
@@ -10563,6 +11358,7 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 			DisplayName:  to.Ptr("ContosoCloudConnection"),
 			GatewayID:    to.Ptr("8f72eea3-d989-4a5a-aeed-02b3aaa2ddd0"),
 			ID:           to.Ptr("fa968eee-8075-48f6-8c6d-41260ee1396d"),
+			MyRole:       to.Ptr(core.ConnectionRoleOwner),
 			PrivacyLevel: to.Ptr(core.PrivacyLevelPublic),
 		},
 	}
@@ -10608,6 +11404,7 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 			DisplayName:  to.Ptr("ContosoMarketingStreamingVirtualNetworkGatewayConnection"),
 			GatewayID:    to.Ptr("befccff4-3ee6-40d7-b8f1-a0a9fd684a85"),
 			ID:           to.Ptr("6b571614-2e98-4bfd-b9ed-1cb8d3ffc396"),
+			MyRole:       to.Ptr(core.ConnectionRoleOwner),
 			PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 		},
 	}
@@ -10661,6 +11458,7 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnection() {
 			DisplayName:  to.Ptr("ContosoMarketingVirtualNetworkGatewayConnection"),
 			GatewayID:    to.Ptr("befccff4-3ee6-40d7-b8f1-a0a9fd684a85"),
 			ID:           to.Ptr("6b571614-2e98-4bfd-b9ed-1cb8d3ffc396"),
+			MyRole:       to.Ptr(core.ConnectionRoleOwner),
 			PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 		},
 	}
@@ -10858,6 +11656,14 @@ func (testsuite *FakeTestSuite) TestConnections_ListConnectionRoleAssignments() 
 					ID:   to.Ptr("1dfa1747-ce76-4caf-99c8-360b95f9f17a"),
 				},
 				Role: to.Ptr(core.ConnectionRoleUserWithReshare),
+			},
+			{
+				ID: to.Ptr("7f2c9a10-4d3e-4b8a-9c1f-2e6d8b0a5c4e"),
+				Principal: &core.UserPrincipal{
+					Type: to.Ptr(core.PrincipalTypeUser),
+					ID:   to.Ptr("7f2c9a10-4d3e-4b8a-9c1f-2e6d8b0a5c4e"),
+				},
+				Role: to.Ptr(core.ConnectionRolePendingOwner),
 			}},
 	}
 
@@ -10954,7 +11760,7 @@ func (testsuite *FakeTestSuite) TestConnections_AddConnectionRoleAssignment() {
 			Type: to.Ptr(core.PrincipalTypeUser),
 			ID:   to.Ptr("6a002b3d-e4ec-43df-8c08-e8eb7547d9dd"),
 		},
-		Role: to.Ptr(core.ConnectionRoleOwner),
+		Role: to.Ptr(core.AssignableConnectionRoleOwner),
 	}
 
 	testsuite.serverFactory.ConnectionsServer.AddConnectionRoleAssignment = func(ctx context.Context, connectionID string, addConnectionRoleAssignmentRequest core.AddConnectionRoleAssignmentRequest, options *core.ConnectionsClientAddConnectionRoleAssignmentOptions) (resp azfake.Responder[core.ConnectionsClientAddConnectionRoleAssignmentResponse], errResp azfake.ErrorResponder) {
@@ -11014,7 +11820,7 @@ func (testsuite *FakeTestSuite) TestConnections_UpdateConnectionRoleAssignment()
 	exampleConnectionID = "fe8e181d-dbb8-471a-99f0-fdbf0a2ad4fd"
 	exampleConnectionRoleAssignmentID = "43970761-afc9-4428-ae6e-3b08bef098ff"
 	exampleUpdateConnectionRoleAssignmentRequest = core.UpdateConnectionRoleAssignmentRequest{
-		Role: to.Ptr(core.ConnectionRoleUserWithReshare),
+		Role: to.Ptr(core.AssignableConnectionRoleUserWithReshare),
 	}
 
 	exampleRes := core.ConnectionRoleAssignment{

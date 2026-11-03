@@ -238,6 +238,10 @@ func (client *ItemsClient) getDataAgentHandleResponse(resp *http.Response) (Item
 // When you get a DataAgent's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the DataAgent.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
+// LIMITATIONS To retrieve the definition of a Data agent item protected by an encrypted sensitivity label, the caller must
+// have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -259,6 +263,10 @@ func (client *ItemsClient) BeginGetDataAgentDefinition(ctx context.Context, work
 // When you get a DataAgent's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the DataAgent.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
+// LIMITATIONS To retrieve the definition of a Data agent item protected by an encrypted sensitivity label, the caller must
+// have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -689,6 +697,9 @@ func (client *ItemsClient) beginCreateDataAgent(ctx context.Context, workspaceID
 // PERMISSIONS The caller must have read and write permissions for the DataAgent.
 //
 // # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
+//
+// LIMITATIONS To retrieve the definition of a Data agent item protected by an encrypted sensitivity label, the caller must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in Microsoft Purview [/purview/purview].
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

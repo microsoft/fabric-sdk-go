@@ -49,6 +49,18 @@ type StagingServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	DeleteDatasourceFewshot func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fewShotID string, options *dataagent.StagingClientDeleteDatasourceFewshotOptions) (resp azfake.Responder[dataagent.StagingClientDeleteDatasourceFewshotResponse], errResp azfake.ErrorResponder)
 
+	// DeleteDatasourceTopic is the fake for method StagingClient.DeleteDatasourceTopic
+	// HTTP status codes to indicate success: http.StatusOK
+	DeleteDatasourceTopic func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fileName string, options *dataagent.StagingClientDeleteDatasourceTopicOptions) (resp azfake.Responder[dataagent.StagingClientDeleteDatasourceTopicResponse], errResp azfake.ErrorResponder)
+
+	// DownloadDatasourceTopic is the fake for method StagingClient.DownloadDatasourceTopic
+	// HTTP status codes to indicate success: http.StatusOK
+	DownloadDatasourceTopic func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fileName string, options *dataagent.StagingClientDownloadDatasourceTopicOptions) (resp azfake.Responder[dataagent.StagingClientDownloadDatasourceTopicResponse], errResp azfake.ErrorResponder)
+
+	// BeginFormatDatasourceTopic is the fake for method StagingClient.BeginFormatDatasourceTopic
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted
+	BeginFormatDatasourceTopic func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fileName string, options *dataagent.StagingClientBeginFormatDatasourceTopicOptions) (resp azfake.PollerResponder[dataagent.StagingClientFormatDatasourceTopicResponse], errResp azfake.ErrorResponder)
+
 	// GetDatasource is the fake for method StagingClient.GetDatasource
 	// HTTP status codes to indicate success: http.StatusOK
 	GetDatasource func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, options *dataagent.StagingClientGetDatasourceOptions) (resp azfake.Responder[dataagent.StagingClientGetDatasourceResponse], errResp azfake.ErrorResponder)
@@ -68,6 +80,10 @@ type StagingServer struct {
 	// NewListDatasourceFewshotsPager is the fake for method StagingClient.NewListDatasourceFewshotsPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListDatasourceFewshotsPager func(workspaceID string, dataAgentID string, datasourceID string, options *dataagent.StagingClientListDatasourceFewshotsOptions) (resp azfake.PagerResponder[dataagent.StagingClientListDatasourceFewshotsResponse])
+
+	// NewListDatasourceTopicsPager is the fake for method StagingClient.NewListDatasourceTopicsPager
+	// HTTP status codes to indicate success: http.StatusOK
+	NewListDatasourceTopicsPager func(workspaceID string, dataAgentID string, datasourceID string, options *dataagent.StagingClientListDatasourceTopicsOptions) (resp azfake.PagerResponder[dataagent.StagingClientListDatasourceTopicsResponse])
 
 	// NewListDatasourcesPager is the fake for method StagingClient.NewListDatasourcesPager
 	// HTTP status codes to indicate success: http.StatusOK
@@ -92,6 +108,10 @@ type StagingServer struct {
 	// UpdateSettings is the fake for method StagingClient.UpdateSettings
 	// HTTP status codes to indicate success: http.StatusOK
 	UpdateSettings func(ctx context.Context, workspaceID string, dataAgentID string, updateDataAgentSettingsRequest dataagent.UpdateDataAgentSettingsRequest, options *dataagent.StagingClientUpdateSettingsOptions) (resp azfake.Responder[dataagent.StagingClientUpdateSettingsResponse], errResp azfake.ErrorResponder)
+
+	// UploadDatasourceTopicWithText is the fake for method StagingClient.UploadDatasourceTopicWithText
+	// HTTP status codes to indicate success: http.StatusOK
+	UploadDatasourceTopicWithText func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fileName string, content string, options *dataagent.StagingClientUploadDatasourceTopicWithTextOptions) (resp azfake.Responder[dataagent.StagingClientUploadDatasourceTopicWithTextResponse], errResp azfake.ErrorResponder)
 }
 
 // NewStagingServerTransport creates a new instance of StagingServerTransport with the provided implementation.
@@ -101,8 +121,10 @@ func NewStagingServerTransport(srv *StagingServer) *StagingServerTransport {
 	return &StagingServerTransport{
 		srv:                            srv,
 		beginCreateDatasource:          newTracker[azfake.PollerResponder[dataagent.StagingClientCreateDatasourceResponse]](),
+		beginFormatDatasourceTopic:     newTracker[azfake.PollerResponder[dataagent.StagingClientFormatDatasourceTopicResponse]](),
 		newListDatasourceElementsPager: newTracker[azfake.PagerResponder[dataagent.StagingClientListDatasourceElementsResponse]](),
 		newListDatasourceFewshotsPager: newTracker[azfake.PagerResponder[dataagent.StagingClientListDatasourceFewshotsResponse]](),
+		newListDatasourceTopicsPager:   newTracker[azfake.PagerResponder[dataagent.StagingClientListDatasourceTopicsResponse]](),
 		newListDatasourcesPager:        newTracker[azfake.PagerResponder[dataagent.StagingClientListDatasourcesResponse]](),
 	}
 }
@@ -112,8 +134,10 @@ func NewStagingServerTransport(srv *StagingServer) *StagingServerTransport {
 type StagingServerTransport struct {
 	srv                            *StagingServer
 	beginCreateDatasource          *tracker[azfake.PollerResponder[dataagent.StagingClientCreateDatasourceResponse]]
+	beginFormatDatasourceTopic     *tracker[azfake.PollerResponder[dataagent.StagingClientFormatDatasourceTopicResponse]]
 	newListDatasourceElementsPager *tracker[azfake.PagerResponder[dataagent.StagingClientListDatasourceElementsResponse]]
 	newListDatasourceFewshotsPager *tracker[azfake.PagerResponder[dataagent.StagingClientListDatasourceFewshotsResponse]]
+	newListDatasourceTopicsPager   *tracker[azfake.PagerResponder[dataagent.StagingClientListDatasourceTopicsResponse]]
 	newListDatasourcesPager        *tracker[azfake.PagerResponder[dataagent.StagingClientListDatasourcesResponse]]
 }
 
@@ -154,6 +178,12 @@ func (s *StagingServerTransport) dispatchToMethodFake(req *http.Request, method 
 				res.resp, res.err = s.dispatchDeleteDatasourceElement(req)
 			case "StagingClient.DeleteDatasourceFewshot":
 				res.resp, res.err = s.dispatchDeleteDatasourceFewshot(req)
+			case "StagingClient.DeleteDatasourceTopic":
+				res.resp, res.err = s.dispatchDeleteDatasourceTopic(req)
+			case "StagingClient.DownloadDatasourceTopic":
+				res.resp, res.err = s.dispatchDownloadDatasourceTopic(req)
+			case "StagingClient.BeginFormatDatasourceTopic":
+				res.resp, res.err = s.dispatchBeginFormatDatasourceTopic(req)
 			case "StagingClient.GetDatasource":
 				res.resp, res.err = s.dispatchGetDatasource(req)
 			case "StagingClient.GetDatasourceFewshot":
@@ -164,6 +194,8 @@ func (s *StagingServerTransport) dispatchToMethodFake(req *http.Request, method 
 				res.resp, res.err = s.dispatchNewListDatasourceElementsPager(req)
 			case "StagingClient.NewListDatasourceFewshotsPager":
 				res.resp, res.err = s.dispatchNewListDatasourceFewshotsPager(req)
+			case "StagingClient.NewListDatasourceTopicsPager":
+				res.resp, res.err = s.dispatchNewListDatasourceTopicsPager(req)
 			case "StagingClient.NewListDatasourcesPager":
 				res.resp, res.err = s.dispatchNewListDatasourcesPager(req)
 			case "StagingClient.Reset":
@@ -176,6 +208,8 @@ func (s *StagingServerTransport) dispatchToMethodFake(req *http.Request, method 
 				res.resp, res.err = s.dispatchUpdateDatasourceFewshot(req)
 			case "StagingClient.UpdateSettings":
 				res.resp, res.err = s.dispatchUpdateSettings(req)
+			case "StagingClient.UploadDatasourceTopicWithText":
+				res.resp, res.err = s.dispatchUploadDatasourceTopicWithText(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -441,6 +475,153 @@ func (s *StagingServerTransport) dispatchDeleteDatasourceFewshot(req *http.Reque
 	return resp, nil
 }
 
+func (s *StagingServerTransport) dispatchDeleteDatasourceTopic(req *http.Request) (*http.Response, error) {
+	if s.srv.DeleteDatasourceTopic == nil {
+		return nil, &nonRetriableError{errors.New("fake for method DeleteDatasourceTopic not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataAgents/(?P<dataAgentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/staging/datasources/(?P<datasourceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/topics`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 4 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	qp := req.URL.Query()
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	dataAgentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("dataAgentId")])
+	if err != nil {
+		return nil, err
+	}
+	datasourceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("datasourceId")])
+	if err != nil {
+		return nil, err
+	}
+	fileNameParam, err := url.QueryUnescape(qp.Get("fileName"))
+	if err != nil {
+		return nil, err
+	}
+	ifMatchParam := getOptional(getHeaderValue(req.Header, "If-Match"))
+	var options *dataagent.StagingClientDeleteDatasourceTopicOptions
+	if ifMatchParam != nil {
+		options = &dataagent.StagingClientDeleteDatasourceTopicOptions{
+			IfMatch: ifMatchParam,
+		}
+	}
+	respr, errRespr := s.srv.DeleteDatasourceTopic(req.Context(), workspaceIDParam, dataAgentIDParam, datasourceIDParam, fileNameParam, options)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (s *StagingServerTransport) dispatchDownloadDatasourceTopic(req *http.Request) (*http.Response, error) {
+	if s.srv.DownloadDatasourceTopic == nil {
+		return nil, &nonRetriableError{errors.New("fake for method DownloadDatasourceTopic not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataAgents/(?P<dataAgentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/staging/datasources/(?P<datasourceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/topics/content`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 4 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	qp := req.URL.Query()
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	dataAgentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("dataAgentId")])
+	if err != nil {
+		return nil, err
+	}
+	datasourceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("datasourceId")])
+	if err != nil {
+		return nil, err
+	}
+	fileNameParam, err := url.QueryUnescape(qp.Get("fileName"))
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := s.srv.DownloadDatasourceTopic(req.Context(), workspaceIDParam, dataAgentIDParam, datasourceIDParam, fileNameParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, &server.ResponseOptions{
+		Body:        server.GetResponse(respr).Body,
+		ContentType: req.Header.Get("Content-Type"),
+	})
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (s *StagingServerTransport) dispatchBeginFormatDatasourceTopic(req *http.Request) (*http.Response, error) {
+	if s.srv.BeginFormatDatasourceTopic == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginFormatDatasourceTopic not implemented")}
+	}
+	beginFormatDatasourceTopic := s.beginFormatDatasourceTopic.get(req)
+	if beginFormatDatasourceTopic == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataAgents/(?P<dataAgentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/staging/datasources/(?P<datasourceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/topics/format`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 4 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		dataAgentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("dataAgentId")])
+		if err != nil {
+			return nil, err
+		}
+		datasourceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("datasourceId")])
+		if err != nil {
+			return nil, err
+		}
+		fileNameParam, err := url.QueryUnescape(qp.Get("fileName"))
+		if err != nil {
+			return nil, err
+		}
+		respr, errRespr := s.srv.BeginFormatDatasourceTopic(req.Context(), workspaceIDParam, dataAgentIDParam, datasourceIDParam, fileNameParam, nil)
+		if respErr := server.GetError(errRespr, req); respErr != nil {
+			return nil, respErr
+		}
+		beginFormatDatasourceTopic = &respr
+		s.beginFormatDatasourceTopic.add(req, beginFormatDatasourceTopic)
+	}
+
+	resp, err := server.PollerResponderNext(beginFormatDatasourceTopic, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if !contains([]int{http.StatusOK, http.StatusAccepted}, resp.StatusCode) {
+		s.beginFormatDatasourceTopic.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted", resp.StatusCode)}
+	}
+	if !server.PollerResponderMore(beginFormatDatasourceTopic) {
+		s.beginFormatDatasourceTopic.remove(req)
+	}
+
+	return resp, nil
+}
+
 func (s *StagingServerTransport) dispatchGetDatasource(req *http.Request) (*http.Response, error) {
 	if s.srv.GetDatasource == nil {
 		return nil, &nonRetriableError{errors.New("fake for method GetDatasource not implemented")}
@@ -668,6 +849,63 @@ func (s *StagingServerTransport) dispatchNewListDatasourceFewshotsPager(req *htt
 	}
 	if !server.PagerResponderMore(newListDatasourceFewshotsPager) {
 		s.newListDatasourceFewshotsPager.remove(req)
+	}
+	return resp, nil
+}
+
+func (s *StagingServerTransport) dispatchNewListDatasourceTopicsPager(req *http.Request) (*http.Response, error) {
+	if s.srv.NewListDatasourceTopicsPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListDatasourceTopicsPager not implemented")}
+	}
+	newListDatasourceTopicsPager := s.newListDatasourceTopicsPager.get(req)
+	if newListDatasourceTopicsPager == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataAgents/(?P<dataAgentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/staging/datasources/(?P<datasourceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/topics`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 4 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		dataAgentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("dataAgentId")])
+		if err != nil {
+			return nil, err
+		}
+		datasourceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("datasourceId")])
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *dataagent.StagingClientListDatasourceTopicsOptions
+		if continuationTokenParam != nil {
+			options = &dataagent.StagingClientListDatasourceTopicsOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := s.srv.NewListDatasourceTopicsPager(workspaceIDParam, dataAgentIDParam, datasourceIDParam, options)
+		newListDatasourceTopicsPager = &resp
+		s.newListDatasourceTopicsPager.add(req, newListDatasourceTopicsPager)
+		server.PagerResponderInjectNextLinks(newListDatasourceTopicsPager, req, func(page *dataagent.StagingClientListDatasourceTopicsResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
+	}
+	resp, err := server.PagerResponderNext(newListDatasourceTopicsPager, req)
+	if err != nil {
+		return nil, err
+	}
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		s.newListDatasourceTopicsPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
+	}
+	if !server.PagerResponderMore(newListDatasourceTopicsPager) {
+		s.newListDatasourceTopicsPager.remove(req)
 	}
 	return resp, nil
 }
@@ -921,6 +1159,59 @@ func (s *StagingServerTransport) dispatchUpdateSettings(req *http.Request) (*htt
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
 	}
 	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).SettingsResponse, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (s *StagingServerTransport) dispatchUploadDatasourceTopicWithText(req *http.Request) (*http.Response, error) {
+	if s.srv.UploadDatasourceTopicWithText == nil {
+		return nil, &nonRetriableError{errors.New("fake for method UploadDatasourceTopicWithText not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataAgents/(?P<dataAgentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/staging/datasources/(?P<datasourceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/topics`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 4 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	qp := req.URL.Query()
+	body, err := server.UnmarshalRequestAsText(req)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	dataAgentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("dataAgentId")])
+	if err != nil {
+		return nil, err
+	}
+	datasourceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("datasourceId")])
+	if err != nil {
+		return nil, err
+	}
+	fileNameParam, err := url.QueryUnescape(qp.Get("fileName"))
+	if err != nil {
+		return nil, err
+	}
+	ifMatchParam := getOptional(getHeaderValue(req.Header, "If-Match"))
+	var options *dataagent.StagingClientUploadDatasourceTopicWithTextOptions
+	if ifMatchParam != nil {
+		options = &dataagent.StagingClientUploadDatasourceTopicWithTextOptions{
+			IfMatch: ifMatchParam,
+		}
+	}
+	respr, errRespr := s.srv.UploadDatasourceTopicWithText(req.Context(), workspaceIDParam, dataAgentIDParam, datasourceIDParam, fileNameParam, body, options)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
 	if err != nil {
 		return nil, err
 	}

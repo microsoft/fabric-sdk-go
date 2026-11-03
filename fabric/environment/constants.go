@@ -120,6 +120,8 @@ const (
 	ItemTypeDataflow ItemType = "Dataflow"
 	// ItemTypeDatamart - PowerBI datamart.
 	ItemTypeDatamart ItemType = "Datamart"
+	// ItemTypeDeploymentPlan - A Deployment plan.
+	ItemTypeDeploymentPlan ItemType = "DeploymentPlan"
 	// ItemTypeDigitalTwinBuilder - A DigitalTwinBuilder.
 	ItemTypeDigitalTwinBuilder ItemType = "DigitalTwinBuilder"
 	// ItemTypeDigitalTwinBuilderFlow - A Digital Twin Builder Flow.
@@ -160,6 +162,8 @@ const (
 	ItemTypeMirroredDatabase ItemType = "MirroredDatabase"
 	// ItemTypeMirroredWarehouse - A mirrored warehouse.
 	ItemTypeMirroredWarehouse ItemType = "MirroredWarehouse"
+	// ItemTypeMonitoring - A Monitoring item.
+	ItemTypeMonitoring ItemType = "Monitoring"
 	// ItemTypeMountedDataFactory - A MountedDataFactory.
 	ItemTypeMountedDataFactory ItemType = "MountedDataFactory"
 	// ItemTypeNotebook - A notebook.
@@ -217,6 +221,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
 		ItemTypeDatamart,
+		ItemTypeDeploymentPlan,
 		ItemTypeDigitalTwinBuilder,
 		ItemTypeDigitalTwinBuilderFlow,
 		ItemTypeEnvironment,
@@ -237,6 +242,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeMirroredCatalog,
 		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
+		ItemTypeMonitoring,
 		ItemTypeMountedDataFactory,
 		ItemTypeNotebook,
 		ItemTypeOntology,
@@ -367,5 +373,35 @@ func PossibleSensitivityLabelApplyStrategyValues() []SensitivityLabelApplyStrate
 	return []SensitivityLabelApplyStrategy{
 		SensitivityLabelApplyStrategyApplyOrFail,
 		SensitivityLabelApplyStrategyIgnore,
+	}
+}
+
+// State - The lifecycle state of a pool activation. Additional JobHistoryStatus types may be added over time.
+type State string
+
+const (
+	// StateCancelled - The activation was cancelled.
+	StateCancelled State = "Cancelled"
+	// StateFailed - The activation failed.
+	StateFailed State = "Failed"
+	// StateInProgress - The activation is currently in progress.
+	StateInProgress State = "InProgress"
+	// StateNotStarted - The activation has not yet started.
+	StateNotStarted State = "NotStarted"
+	// StateSucceeded - The activation completed successfully.
+	StateSucceeded State = "Succeeded"
+	// StateUnknown - The activation state is unknown.
+	StateUnknown State = "Unknown"
+)
+
+// PossibleStateValues returns the possible values for the State const type.
+func PossibleStateValues() []State {
+	return []State{
+		StateCancelled,
+		StateFailed,
+		StateInProgress,
+		StateNotStarted,
+		StateSucceeded,
+		StateUnknown,
 	}
 }

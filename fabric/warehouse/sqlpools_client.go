@@ -11,7 +11,6 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
-	"strconv"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -28,11 +27,7 @@ type SQLPoolsClient struct {
 	endpoint string
 }
 
-// GetSQLPoolsConfigurationBeta - > [!NOTE] SQL Pools configuration is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API is part of a Beta release and is provided for evaluation and development purposes only.
-// It may change based on feedback and is not recommended for production use. **When calling this API, callers must specify
-// true as the value for the query parameter beta
-// PERMISSIONS The caller must have admin workspace role.
+// GetSQLPoolsConfiguration - PERMISSIONS The caller must have admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -44,33 +39,32 @@ type SQLPoolsClient struct {
 //
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
-//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
-//   - options - SQLPoolsClientGetSQLPoolsConfigurationBetaOptions contains the optional parameters for the SQLPoolsClient.GetSQLPoolsConfigurationBeta
+//   - options - SQLPoolsClientGetSQLPoolsConfigurationOptions contains the optional parameters for the SQLPoolsClient.GetSQLPoolsConfiguration
 //     method.
-func (client *SQLPoolsClient) GetSQLPoolsConfigurationBeta(ctx context.Context, workspaceID string, beta bool, options *SQLPoolsClientGetSQLPoolsConfigurationBetaOptions) (SQLPoolsClientGetSQLPoolsConfigurationBetaResponse, error) {
+func (client *SQLPoolsClient) GetSQLPoolsConfiguration(ctx context.Context, workspaceID string, options *SQLPoolsClientGetSQLPoolsConfigurationOptions) (SQLPoolsClientGetSQLPoolsConfigurationResponse, error) {
 	var err error
-	const operationName = "warehouse.SQLPoolsClient.GetSQLPoolsConfigurationBeta"
+	const operationName = "warehouse.SQLPoolsClient.GetSQLPoolsConfiguration"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.getSQLPoolsConfigurationBetaCreateRequest(ctx, workspaceID, beta, options)
+	req, err := client.getSQLPoolsConfigurationCreateRequest(ctx, workspaceID, options)
 	if err != nil {
-		return SQLPoolsClientGetSQLPoolsConfigurationBetaResponse{}, err
+		return SQLPoolsClientGetSQLPoolsConfigurationResponse{}, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return SQLPoolsClientGetSQLPoolsConfigurationBetaResponse{}, err
+		return SQLPoolsClientGetSQLPoolsConfigurationResponse{}, err
 	}
 	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
 		err = core.NewResponseError(httpResp)
-		return SQLPoolsClientGetSQLPoolsConfigurationBetaResponse{}, err
+		return SQLPoolsClientGetSQLPoolsConfigurationResponse{}, err
 	}
-	resp, err := client.getSQLPoolsConfigurationBetaHandleResponse(httpResp)
+	resp, err := client.getSQLPoolsConfigurationHandleResponse(httpResp)
 	return resp, err
 }
 
-// getSQLPoolsConfigurationBetaCreateRequest creates the GetSQLPoolsConfigurationBeta request.
-func (client *SQLPoolsClient) getSQLPoolsConfigurationBetaCreateRequest(ctx context.Context, workspaceID string, beta bool, _ *SQLPoolsClientGetSQLPoolsConfigurationBetaOptions) (*policy.Request, error) {
+// getSQLPoolsConfigurationCreateRequest creates the GetSQLPoolsConfiguration request.
+func (client *SQLPoolsClient) getSQLPoolsConfigurationCreateRequest(ctx context.Context, workspaceID string, _ *SQLPoolsClientGetSQLPoolsConfigurationOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/warehouses/sqlPoolsConfiguration"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -80,27 +74,20 @@ func (client *SQLPoolsClient) getSQLPoolsConfigurationBetaCreateRequest(ctx cont
 	if err != nil {
 		return nil, err
 	}
-	reqQP := req.Raw().URL.Query()
-	reqQP.Set("beta", strconv.FormatBool(beta))
-	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }
 
-// getSQLPoolsConfigurationBetaHandleResponse handles the GetSQLPoolsConfigurationBeta response.
-func (client *SQLPoolsClient) getSQLPoolsConfigurationBetaHandleResponse(resp *http.Response) (SQLPoolsClientGetSQLPoolsConfigurationBetaResponse, error) {
-	result := SQLPoolsClientGetSQLPoolsConfigurationBetaResponse{}
+// getSQLPoolsConfigurationHandleResponse handles the GetSQLPoolsConfiguration response.
+func (client *SQLPoolsClient) getSQLPoolsConfigurationHandleResponse(resp *http.Response) (SQLPoolsClientGetSQLPoolsConfigurationResponse, error) {
+	result := SQLPoolsClientGetSQLPoolsConfigurationResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.SQLPoolsConfigurationResponse); err != nil {
-		return SQLPoolsClientGetSQLPoolsConfigurationBetaResponse{}, err
+		return SQLPoolsClientGetSQLPoolsConfigurationResponse{}, err
 	}
 	return result, nil
 }
 
-// UpdateSQLPoolsConfigurationBeta - > [!NOTE] SQL Pools configuration is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API is part of a Beta release and is provided for evaluation and development purposes only.
-// It may change based on feedback and is not recommended for production use. **When calling this API, callers must specify
-// true as the value for the query parameter beta.
-// PERMISSIONS The caller must have admin workspace role.
+// UpdateSQLPoolsConfiguration - PERMISSIONS The caller must have admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -112,33 +99,32 @@ func (client *SQLPoolsClient) getSQLPoolsConfigurationBetaHandleResponse(resp *h
 //
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
-//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
 //   - updateSQLPoolsConfigurationRequest - A SQL pools configuration update request.
-//   - options - SQLPoolsClientUpdateSQLPoolsConfigurationBetaOptions contains the optional parameters for the SQLPoolsClient.UpdateSQLPoolsConfigurationBeta
+//   - options - SQLPoolsClientUpdateSQLPoolsConfigurationOptions contains the optional parameters for the SQLPoolsClient.UpdateSQLPoolsConfiguration
 //     method.
-func (client *SQLPoolsClient) UpdateSQLPoolsConfigurationBeta(ctx context.Context, workspaceID string, beta bool, updateSQLPoolsConfigurationRequest UpdateSQLPoolsConfigurationRequest, options *SQLPoolsClientUpdateSQLPoolsConfigurationBetaOptions) (SQLPoolsClientUpdateSQLPoolsConfigurationBetaResponse, error) {
+func (client *SQLPoolsClient) UpdateSQLPoolsConfiguration(ctx context.Context, workspaceID string, updateSQLPoolsConfigurationRequest UpdateSQLPoolsConfigurationRequest, options *SQLPoolsClientUpdateSQLPoolsConfigurationOptions) (SQLPoolsClientUpdateSQLPoolsConfigurationResponse, error) {
 	var err error
-	const operationName = "warehouse.SQLPoolsClient.UpdateSQLPoolsConfigurationBeta"
+	const operationName = "warehouse.SQLPoolsClient.UpdateSQLPoolsConfiguration"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.updateSQLPoolsConfigurationBetaCreateRequest(ctx, workspaceID, beta, updateSQLPoolsConfigurationRequest, options)
+	req, err := client.updateSQLPoolsConfigurationCreateRequest(ctx, workspaceID, updateSQLPoolsConfigurationRequest, options)
 	if err != nil {
-		return SQLPoolsClientUpdateSQLPoolsConfigurationBetaResponse{}, err
+		return SQLPoolsClientUpdateSQLPoolsConfigurationResponse{}, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return SQLPoolsClientUpdateSQLPoolsConfigurationBetaResponse{}, err
+		return SQLPoolsClientUpdateSQLPoolsConfigurationResponse{}, err
 	}
 	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
 		err = core.NewResponseError(httpResp)
-		return SQLPoolsClientUpdateSQLPoolsConfigurationBetaResponse{}, err
+		return SQLPoolsClientUpdateSQLPoolsConfigurationResponse{}, err
 	}
-	return SQLPoolsClientUpdateSQLPoolsConfigurationBetaResponse{}, nil
+	return SQLPoolsClientUpdateSQLPoolsConfigurationResponse{}, nil
 }
 
-// updateSQLPoolsConfigurationBetaCreateRequest creates the UpdateSQLPoolsConfigurationBeta request.
-func (client *SQLPoolsClient) updateSQLPoolsConfigurationBetaCreateRequest(ctx context.Context, workspaceID string, beta bool, updateSQLPoolsConfigurationRequest UpdateSQLPoolsConfigurationRequest, _ *SQLPoolsClientUpdateSQLPoolsConfigurationBetaOptions) (*policy.Request, error) {
+// updateSQLPoolsConfigurationCreateRequest creates the UpdateSQLPoolsConfiguration request.
+func (client *SQLPoolsClient) updateSQLPoolsConfigurationCreateRequest(ctx context.Context, workspaceID string, updateSQLPoolsConfigurationRequest UpdateSQLPoolsConfigurationRequest, _ *SQLPoolsClientUpdateSQLPoolsConfigurationOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/warehouses/sqlPoolsConfiguration"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -148,9 +134,6 @@ func (client *SQLPoolsClient) updateSQLPoolsConfigurationBetaCreateRequest(ctx c
 	if err != nil {
 		return nil, err
 	}
-	reqQP := req.Raw().URL.Query()
-	reqQP.Set("beta", strconv.FormatBool(beta))
-	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	if err := runtime.MarshalAsJSON(req, updateSQLPoolsConfigurationRequest); err != nil {
 		return nil, err

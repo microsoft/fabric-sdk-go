@@ -31,7 +31,7 @@ type ItemsClient struct {
 }
 
 // BeginCreateWarehouse - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// This API does not support create a warehouse with definition.
+// To create a warehouse with a public definition, see Warehouse definition [/rest/api/fabric/articles/item-management/definitions/warehouse-definition].
 // PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES Warehouse.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
@@ -55,7 +55,7 @@ func (client *ItemsClient) BeginCreateWarehouse(ctx context.Context, workspaceID
 }
 
 // CreateWarehouse - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// This API does not support create a warehouse with definition.
+// To create a warehouse with a public definition, see Warehouse definition [/rest/api/fabric/articles/item-management/definitions/warehouse-definition].
 // PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES Warehouse.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
@@ -306,6 +306,93 @@ func (client *ItemsClient) getWarehouseHandleResponse(resp *http.Response) (Item
 	return result, nil
 }
 
+// BeginGetWarehouseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// When you get a warehouse's public definition, the sensitivity label is not a part of the definition.
+// PERMISSIONS The caller must have read and write permissions for the warehouse.
+// REQUIRED DELEGATED SCOPES Warehouse.ReadWrite.All or Item.ReadWrite.All
+// LIMITATIONS To retrieve the definition of a warehouse item protected by an encrypted sensitivity label, the caller must
+// have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - warehouseID - The warehouse ID.
+//   - options - ItemsClientBeginGetWarehouseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetWarehouseDefinition
+//     method.
+func (client *ItemsClient) BeginGetWarehouseDefinition(ctx context.Context, workspaceID string, warehouseID string, options *ItemsClientBeginGetWarehouseDefinitionOptions) (*runtime.Poller[ItemsClientGetWarehouseDefinitionResponse], error) {
+	return client.beginGetWarehouseDefinition(ctx, workspaceID, warehouseID, options)
+}
+
+// GetWarehouseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// When you get a warehouse's public definition, the sensitivity label is not a part of the definition.
+// PERMISSIONS The caller must have read and write permissions for the warehouse.
+// REQUIRED DELEGATED SCOPES Warehouse.ReadWrite.All or Item.ReadWrite.All
+// LIMITATIONS To retrieve the definition of a warehouse item protected by an encrypted sensitivity label, the caller must
+// have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) getWarehouseDefinition(ctx context.Context, workspaceID string, warehouseID string, options *ItemsClientBeginGetWarehouseDefinitionOptions) (*http.Response, error) {
+	var err error
+	const operationName = "warehouse.ItemsClient.BeginGetWarehouseDefinition"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getWarehouseDefinitionCreateRequest(ctx, workspaceID, warehouseID, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// getWarehouseDefinitionCreateRequest creates the GetWarehouseDefinition request.
+func (client *ItemsClient) getWarehouseDefinitionCreateRequest(ctx context.Context, workspaceID string, warehouseID string, options *ItemsClientBeginGetWarehouseDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/warehouses/{warehouseId}/getDefinition"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if warehouseID == "" {
+		return nil, errors.New("parameter warehouseID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{warehouseId}", url.PathEscape(warehouseID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.Format != nil {
+		reqQP.Set("format", string(*options.Format))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
 // NewListWarehousesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
@@ -446,12 +533,95 @@ func (client *ItemsClient) updateWarehouseHandleResponse(resp *http.Response) (I
 	return result, nil
 }
 
+// BeginUpdateWarehouseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Updating the warehouse's definition does not affect its sensitivity label.
+// PERMISSIONS The caller must have read and write permissions for the warehouse.
+// REQUIRED DELEGATED SCOPES Warehouse.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - warehouseID - The warehouse ID.
+//   - updateWarehouseDefinitionRequest - Update warehouse definition request payload.
+//   - options - ItemsClientBeginUpdateWarehouseDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateWarehouseDefinition
+//     method.
+func (client *ItemsClient) BeginUpdateWarehouseDefinition(ctx context.Context, workspaceID string, warehouseID string, updateWarehouseDefinitionRequest UpdateWarehouseDefinitionRequest, options *ItemsClientBeginUpdateWarehouseDefinitionOptions) (*runtime.Poller[ItemsClientUpdateWarehouseDefinitionResponse], error) {
+	return client.beginUpdateWarehouseDefinition(ctx, workspaceID, warehouseID, updateWarehouseDefinitionRequest, options)
+}
+
+// UpdateWarehouseDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Updating the warehouse's definition does not affect its sensitivity label.
+// PERMISSIONS The caller must have read and write permissions for the warehouse.
+// REQUIRED DELEGATED SCOPES Warehouse.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+func (client *ItemsClient) updateWarehouseDefinition(ctx context.Context, workspaceID string, warehouseID string, updateWarehouseDefinitionRequest UpdateWarehouseDefinitionRequest, options *ItemsClientBeginUpdateWarehouseDefinitionOptions) (*http.Response, error) {
+	var err error
+	const operationName = "warehouse.ItemsClient.BeginUpdateWarehouseDefinition"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateWarehouseDefinitionCreateRequest(ctx, workspaceID, warehouseID, updateWarehouseDefinitionRequest, options)
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK, http.StatusAccepted) {
+		err = core.NewResponseError(httpResp)
+		return nil, err
+	}
+	return httpResp, nil
+}
+
+// updateWarehouseDefinitionCreateRequest creates the UpdateWarehouseDefinition request.
+func (client *ItemsClient) updateWarehouseDefinitionCreateRequest(ctx context.Context, workspaceID string, warehouseID string, updateWarehouseDefinitionRequest UpdateWarehouseDefinitionRequest, options *ItemsClientBeginUpdateWarehouseDefinitionOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/warehouses/{warehouseId}/updateDefinition"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if warehouseID == "" {
+		return nil, errors.New("parameter warehouseID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{warehouseId}", url.PathEscape(warehouseID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.UpdateMetadata != nil {
+		reqQP.Set("updateMetadata", strconv.FormatBool(*options.UpdateMetadata))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateWarehouseDefinitionRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // Custom code starts below
 
 // CreateWarehouse - returns ItemsClientCreateWarehouseResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// This API does not support create a warehouse with definition.
+// To create a warehouse with a public definition, see Warehouse definition [/rest/api/fabric/articles/item-management/definitions/warehouse-definition].
 //
 // PERMISSIONS The caller must have a contributor workspace role.
 //
@@ -517,6 +687,152 @@ func (client *ItemsClient) beginCreateWarehouse(ctx context.Context, workspaceID
 			return nil, err
 		}
 		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientCreateWarehouseResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// GetWarehouseDefinition - returns ItemsClientGetWarehouseDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// When you get a warehouse's public definition, the sensitivity label is not a part of the definition.
+//
+// PERMISSIONS The caller must have read and write permissions for the warehouse.
+//
+// # REQUIRED DELEGATED SCOPES Warehouse.ReadWrite.All or Item.ReadWrite.All
+//
+// LIMITATIONS To retrieve the definition of a warehouse item protected by an encrypted sensitivity label, the caller must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in Microsoft Purview [/purview/purview].
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - warehouseID - The warehouse ID.
+//   - options - ItemsClientBeginGetWarehouseDefinitionOptions contains the optional parameters for the ItemsClient.BeginGetWarehouseDefinition method.
+func (client *ItemsClient) GetWarehouseDefinition(ctx context.Context, workspaceID string, warehouseID string, options *ItemsClientBeginGetWarehouseDefinitionOptions) (ItemsClientGetWarehouseDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginGetWarehouseDefinition(ctx, workspaceID, warehouseID, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientGetWarehouseDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientGetWarehouseDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginGetWarehouseDefinition creates the getWarehouseDefinition request.
+func (client *ItemsClient) beginGetWarehouseDefinition(ctx context.Context, workspaceID string, warehouseID string, options *ItemsClientBeginGetWarehouseDefinitionOptions) (*runtime.Poller[ItemsClientGetWarehouseDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.getWarehouseDefinition(ctx, workspaceID, warehouseID, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientGetWarehouseDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientGetWarehouseDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientGetWarehouseDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientGetWarehouseDefinitionResponse]{
+			Handler: handler,
+			Tracer:  client.internal.Tracer(),
+		})
+	}
+}
+
+// UpdateWarehouseDefinition - returns ItemsClientUpdateWarehouseDefinitionResponse in sync mode.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+//
+// Updating the warehouse's definition does not affect its sensitivity label.
+//
+// PERMISSIONS The caller must have read and write permissions for the warehouse.
+//
+// # REQUIRED DELEGATED SCOPES Warehouse.ReadWrite.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - warehouseID - The warehouse ID.
+//   - updateWarehouseDefinitionRequest - Update warehouse definition request payload.
+//   - options - ItemsClientBeginUpdateWarehouseDefinitionOptions contains the optional parameters for the ItemsClient.BeginUpdateWarehouseDefinition method.
+func (client *ItemsClient) UpdateWarehouseDefinition(ctx context.Context, workspaceID string, warehouseID string, updateWarehouseDefinitionRequest UpdateWarehouseDefinitionRequest, options *ItemsClientBeginUpdateWarehouseDefinitionOptions) (ItemsClientUpdateWarehouseDefinitionResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginUpdateWarehouseDefinition(ctx, workspaceID, warehouseID, updateWarehouseDefinitionRequest, options)).Sync(ctx)
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return ItemsClientUpdateWarehouseDefinitionResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return ItemsClientUpdateWarehouseDefinitionResponse{}, err
+	}
+	return result, err
+}
+
+// beginUpdateWarehouseDefinition creates the updateWarehouseDefinition request.
+func (client *ItemsClient) beginUpdateWarehouseDefinition(ctx context.Context, workspaceID string, warehouseID string, updateWarehouseDefinitionRequest UpdateWarehouseDefinitionRequest, options *ItemsClientBeginUpdateWarehouseDefinitionOptions) (*runtime.Poller[ItemsClientUpdateWarehouseDefinitionResponse], error) {
+	if options == nil || options.ResumeToken == "" {
+		resp, err := client.updateWarehouseDefinition(ctx, workspaceID, warehouseID, updateWarehouseDefinitionRequest, options)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateWarehouseDefinitionResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[ItemsClientUpdateWarehouseDefinitionResponse]{
+			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
+			Handler:       handler,
+			Tracer:        client.internal.Tracer(),
+		})
+	} else {
+		handler, err := locasync.NewPollerHandler[ItemsClientUpdateWarehouseDefinitionResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		if err != nil {
+			var azcoreRespError *azcore.ResponseError
+			if errors.As(err, &azcoreRespError) {
+				return nil, core.NewResponseError(azcoreRespError.RawResponse)
+			}
+			return nil, err
+		}
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[ItemsClientUpdateWarehouseDefinitionResponse]{
 			Handler: handler,
 			Tracer:  client.internal.Tracer(),
 		})

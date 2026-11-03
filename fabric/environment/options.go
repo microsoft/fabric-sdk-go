@@ -84,6 +84,27 @@ type ItemsClientUpdateEnvironmentOptions struct {
 	// placeholder for future optional parameters
 }
 
+// PoolActivationsClientGetPoolActivationOptions contains the optional parameters for the PoolActivationsClient.GetPoolActivation
+// method.
+type PoolActivationsClientGetPoolActivationOptions struct {
+	// placeholder for future optional parameters
+}
+
+// PoolActivationsClientListPoolActivationsOptions contains the optional parameters for the PoolActivationsClient.NewListPoolActivationsPager
+// method.
+type PoolActivationsClientListPoolActivationsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+
+	// An expression that filters the collection. Supported filter: state eq '<state>'. Supported values for <state>: NotStarted,
+	// InProgress, Succeeded, Failed, Cancelled, Unknown.
+	Filter *string
+
+	// The requested number of items per page. The server may return fewer items. If unspecified or exceeds the server maximum,
+	// the server uses its configured default.
+	PageSize *int32
+}
+
 // PublishedClientExportExternalLibrariesOptions contains the optional parameters for the PublishedClient.ExportExternalLibraries
 // method.
 type PublishedClientExportExternalLibrariesOptions struct {
@@ -126,6 +147,11 @@ type StagingClientDeleteCustomLibraryOptions struct {
 // StagingClientExportExternalLibrariesOptions contains the optional parameters for the StagingClient.ExportExternalLibraries
 // method.
 type StagingClientExportExternalLibrariesOptions struct {
+	// placeholder for future optional parameters
+}
+
+// StagingClientGetPublishLogOptions contains the optional parameters for the StagingClient.GetPublishLog method.
+type StagingClientGetPublishLogOptions struct {
 	// placeholder for future optional parameters
 }
 

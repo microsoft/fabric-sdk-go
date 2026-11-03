@@ -93,8 +93,13 @@ func (client *ItemsClient) bindSemanticModelConnectionCreateRequest(ctx context.
 }
 
 // BeginCreateSemanticModel - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// This API requires a definition [/rest/api/fabric/articles/item-management/definitions/semantic-model-definition].
-// PERMISSIONS The caller must have a contributor workspace role.
+// The API supports three creation modes: (1) provide a definition for full control over the model structure, (2) provide
+// a creationPayload with OneLake table URLs to create a DirectLake model, or (3)
+// omit both to create an empty semantic model. Use definition or creationPayload. You can't use both at the same time.
+// PERMISSIONS The caller must have a contributor workspace role. When creating a DirectLake model with a creationPayload
+// that references OneLake tables, the caller must also have access to each
+// referenced source Lakehouse or data item, including when those sources reside in a different workspace (cross-workspace
+// sources).
 // REQUIRED DELEGATED SCOPES SemanticModel.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a semantic model, the user must have the appropriate license. For more information see: Microsoft Fabric license
@@ -117,8 +122,13 @@ func (client *ItemsClient) BeginCreateSemanticModel(ctx context.Context, workspa
 }
 
 // CreateSemanticModel - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// This API requires a definition [/rest/api/fabric/articles/item-management/definitions/semantic-model-definition].
-// PERMISSIONS The caller must have a contributor workspace role.
+// The API supports three creation modes: (1) provide a definition for full control over the model structure, (2) provide
+// a creationPayload with OneLake table URLs to create a DirectLake model, or (3)
+// omit both to create an empty semantic model. Use definition or creationPayload. You can't use both at the same time.
+// PERMISSIONS The caller must have a contributor workspace role. When creating a DirectLake model with a creationPayload
+// that references OneLake tables, the caller must also have access to each
+// referenced source Lakehouse or data item, including when those sources reside in a different workspace (cross-workspace
+// sources).
 // REQUIRED DELEGATED SCOPES SemanticModel.ReadWrite.All or Item.ReadWrite.All
 // LIMITATIONS
 // * To create a semantic model, the user must have the appropriate license. For more information see: Microsoft Fabric license
@@ -299,7 +309,10 @@ func (client *ItemsClient) getSemanticModelHandleResponse(resp *http.Response) (
 // When you get a semantic model's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the semantic model.
 // REQUIRED DELEGATED SCOPES SemanticModel.ReadWrite.All or Item.ReadWrite.All
-// LIMITATIONS This API is blocked for a semantic model with an encrypted sensitivity label.
+// LIMITATIONS To retrieve the definition of a semantic model item protected by an encrypted sensitivity label, the caller
+// must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -321,7 +334,10 @@ func (client *ItemsClient) BeginGetSemanticModelDefinition(ctx context.Context, 
 // When you get a semantic model's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the semantic model.
 // REQUIRED DELEGATED SCOPES SemanticModel.ReadWrite.All or Item.ReadWrite.All
-// LIMITATIONS This API is blocked for a semantic model with an encrypted sensitivity label.
+// LIMITATIONS To retrieve the definition of a semantic model item protected by an encrypted sensitivity label, the caller
+// must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -605,9 +621,11 @@ func (client *ItemsClient) updateSemanticModelDefinitionCreateRequest(ctx contex
 // CreateSemanticModel - returns ItemsClientCreateSemanticModelResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// This API requires a definition [/rest/api/fabric/articles/item-management/definitions/semantic-model-definition].
+// The API supports three creation modes: (1) provide a definition for full control over the model structure, (2) provide a creationPayload with OneLake table URLs to create a DirectLake model, or (3)
+// omit both to create an empty semantic model. Use definition or creationPayload. You can't use both at the same time.
 //
-// PERMISSIONS The caller must have a contributor workspace role.
+// PERMISSIONS The caller must have a contributor workspace role. When creating a DirectLake model with a creationPayload that references OneLake tables, the caller must also have access to each
+// referenced source Lakehouse or data item, including when those sources reside in a different workspace (cross-workspace sources).
 //
 // # REQUIRED DELEGATED SCOPES SemanticModel.ReadWrite.All or Item.ReadWrite.All
 //
@@ -686,7 +704,8 @@ func (client *ItemsClient) beginCreateSemanticModel(ctx context.Context, workspa
 //
 // # REQUIRED DELEGATED SCOPES SemanticModel.ReadWrite.All or Item.ReadWrite.All
 //
-// LIMITATIONS This API is blocked for a semantic model with an encrypted sensitivity label.
+// LIMITATIONS To retrieve the definition of a semantic model item protected by an encrypted sensitivity label, the caller must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in Microsoft Purview [/purview/purview].
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

@@ -794,11 +794,92 @@ type RecoverableItemsClientRecoverItemResponse struct {
 	Items
 }
 
+// SurgeProtectionClientCreateActorAutoDetectionRuleResponse contains the response from method SurgeProtectionClient.CreateActorAutoDetectionRule.
+type SurgeProtectionClientCreateActorAutoDetectionRuleResponse struct {
+	// An actor auto-detection rule on a capacity.
+	ActorAutoDetectionRule
+}
+
+// SurgeProtectionClientCreateBlockedActorResponse contains the response from method SurgeProtectionClient.CreateBlockedActor.
+type SurgeProtectionClientCreateBlockedActorResponse struct {
+	// A blocked actor on a capacity.
+	BlockedActor
+}
+
+// SurgeProtectionClientCreateMissionCriticalActorResponse contains the response from method SurgeProtectionClient.CreateMissionCriticalActor.
+type SurgeProtectionClientCreateMissionCriticalActorResponse struct {
+	// A mission critical actor on a capacity.
+	MissionCriticalActor
+}
+
+// SurgeProtectionClientDeleteActorAutoDetectionRuleResponse contains the response from method SurgeProtectionClient.DeleteActorAutoDetectionRule.
+type SurgeProtectionClientDeleteActorAutoDetectionRuleResponse struct {
+	// placeholder for future response values
+}
+
+// SurgeProtectionClientDeleteBlockedActorResponse contains the response from method SurgeProtectionClient.DeleteBlockedActor.
+type SurgeProtectionClientDeleteBlockedActorResponse struct {
+	// placeholder for future response values
+}
+
+// SurgeProtectionClientDeleteMissionCriticalActorResponse contains the response from method SurgeProtectionClient.DeleteMissionCriticalActor.
+type SurgeProtectionClientDeleteMissionCriticalActorResponse struct {
+	// placeholder for future response values
+}
+
+// SurgeProtectionClientGetActorAutoDetectionRuleResponse contains the response from method SurgeProtectionClient.GetActorAutoDetectionRule.
+type SurgeProtectionClientGetActorAutoDetectionRuleResponse struct {
+	// An actor auto-detection rule on a capacity.
+	ActorAutoDetectionRule
+}
+
+// SurgeProtectionClientGetBlockedActorResponse contains the response from method SurgeProtectionClient.GetBlockedActor.
+type SurgeProtectionClientGetBlockedActorResponse struct {
+	// A blocked actor on a capacity.
+	BlockedActor
+}
+
 // SurgeProtectionClientGetCapacitySurgeProtectionResponse contains the response from method SurgeProtectionClient.GetCapacitySurgeProtection.
 type SurgeProtectionClientGetCapacitySurgeProtectionResponse struct {
 	// Represents the surge protection configuration for a capacity. A capacity with no configured surge protection is represented
 	// by `state` set to `Disabled` with the threshold properties omitted.
 	CapacitySurgeProtection
+}
+
+// SurgeProtectionClientGetMissionCriticalActorResponse contains the response from method SurgeProtectionClient.GetMissionCriticalActor.
+type SurgeProtectionClientGetMissionCriticalActorResponse struct {
+	// A mission critical actor on a capacity.
+	MissionCriticalActor
+}
+
+// SurgeProtectionClientListActorAutoDetectionRulesResponse contains the response from method SurgeProtectionClient.NewListActorAutoDetectionRulesPager.
+type SurgeProtectionClientListActorAutoDetectionRulesResponse struct {
+	// A list of actor auto-detection rules.
+	ListActorAutoDetectionRulesResponse
+}
+
+// SurgeProtectionClientListBlockedActorsResponse contains the response from method SurgeProtectionClient.NewListBlockedActorsPager.
+type SurgeProtectionClientListBlockedActorsResponse struct {
+	// A list of blocked actors.
+	BlockedActors
+}
+
+// SurgeProtectionClientListMissionCriticalActorsResponse contains the response from method SurgeProtectionClient.NewListMissionCriticalActorsPager.
+type SurgeProtectionClientListMissionCriticalActorsResponse struct {
+	// A list of mission critical actors.
+	MissionCriticalActors
+}
+
+// SurgeProtectionClientUpdateActorAutoDetectionRuleResponse contains the response from method SurgeProtectionClient.UpdateActorAutoDetectionRule.
+type SurgeProtectionClientUpdateActorAutoDetectionRuleResponse struct {
+	// An actor auto-detection rule on a capacity.
+	ActorAutoDetectionRule
+}
+
+// SurgeProtectionClientUpdateBlockedActorResponse contains the response from method SurgeProtectionClient.UpdateBlockedActor.
+type SurgeProtectionClientUpdateBlockedActorResponse struct {
+	// A blocked actor on a capacity.
+	BlockedActor
 }
 
 // SurgeProtectionClientUpdateCapacitySurgeProtectionResponse contains the response from method SurgeProtectionClient.UpdateCapacitySurgeProtection.

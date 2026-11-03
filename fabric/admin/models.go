@@ -56,6 +56,15 @@ type ActivePolicySetWithRulesResponse struct {
 	WorkspaceID *string
 }
 
+// AddAdminConnectionRoleAssignmentRequest - The add connection role assignment request for a principal.
+type AddAdminConnectionRoleAssignmentRequest struct {
+	// REQUIRED; The principal. Group principal type is not supported.
+	Principal PrincipalClassification
+
+	// REQUIRED; The connection role of the principal.
+	Role *AssignableAdminConnectionRole
+}
+
 // AllowEffect - Allow effect.
 type AllowEffect struct {
 	// REQUIRED; Effect type. Additional types may be added over time.
@@ -260,6 +269,84 @@ type Condition struct {
 
 // GetCondition implements the ConditionClassification interface for type Condition.
 func (c *Condition) GetCondition() *Condition { return c }
+
+// Connection - The base object of a connection.
+type Connection struct {
+	// REQUIRED; The connection details of the connection.
+	ConnectionDetails *ListConnectionDetails
+
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// REQUIRED; The object ID of the connection.
+	ID *string
+
+	// The recency details about the connection.
+	ConnectionRecency *ConnectionRecency
+
+	// The credential details of the connection.
+	CredentialDetails *ListCredentialDetails
+
+	// The display name of the connection.
+	DisplayName *string
+
+	// The gateway object ID through which the connection is made. For cloud connections, this is the virtual gateway ID.
+	GatewayID *string
+
+	// The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+
+	// READ-ONLY; The calling principal's effective role on the connection. When the principal is part of multiple security groups
+	// with different roles, the highest role is returned. If the principal has no role on the
+	// connection, this property is not returned.
+	MyRole *ConnectionRole
+}
+
+// GetConnection implements the ConnectionClassification interface for type Connection.
+func (c *Connection) GetConnection() *Connection { return c }
+
+// ConnectionRecency - Represents the recency details about the connection.
+type ConnectionRecency struct {
+	// The timestamp when the connection was created in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	CreatedDateTime *time.Time
+
+	// The timestamp when the connection was most recently bound to any item in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	LastBoundDateTime *time.Time
+
+	// The timestamp when the connection credentials were most recently used in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	LastCredentialUsedDateTime *time.Time
+
+	// The timestamp when the connection was most recently bound to any item by the calling user in UTC, using the YYYY-MM-DDTHH:mm:ssZ
+	// format.
+	MyLastBoundDateTime *time.Time
+
+	// The timestamp when the connection credentials were most recently used by the calling user in UTC, using the YYYY-MM-DDTHH:mm:ssZ
+	// format.
+	MyLastCredentialUsedDateTime *time.Time
+}
+
+// ConnectionRoleAssignment - The connection role assignment for a principal.
+type ConnectionRoleAssignment struct {
+	// REQUIRED; The object ID of the connection role assignment.
+	ID *string
+
+	// REQUIRED; The principal.
+	Principal PrincipalClassification
+
+	// REQUIRED; The connection role of the principal.
+	Role *ConnectionRole
+}
+
+type ConnectionRoleAssignments struct {
+	// REQUIRED; A list of connection role assignments.
+	Value []ConnectionRoleAssignment
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
 
 // ConnectionRuleEndpointMetadata - Represents a single endpoint-level exception rule that allows outbound communication to
 // a specific external domain or host. This object is used within the allowedEndpoints array of a connection rule
@@ -971,6 +1058,42 @@ type ItemsChangeLabelResponse struct {
 	ItemsChangeLabelStatus []ItemChangeLabelStatus
 }
 
+// ListConnectionDetails - The connection details output for list operations.
+type ListConnectionDetails struct {
+	// REQUIRED; The path of the connection.
+	Path *string
+
+	// REQUIRED; The type of the connection.
+	Type *string
+}
+
+type ListConnectionsResponse struct {
+	// REQUIRED; A list of connections.
+	Value []ConnectionClassification
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
+// ListCredentialDetails - The credential details returned when fetching a connection.
+type ListCredentialDetails struct {
+	// The connection encryption setting that is used during the test connection.
+	ConnectionEncryption *ConnectionEncryption
+
+	// The credential type of the connection.
+	CredentialType *CredentialType
+
+	// The single sign-on type of the connection.
+	SingleSignOnType *SingleSignOnType
+
+	// Whether the connection should skip the test connection during creation and update. True - Skip the test connection, False
+	// - Do not skip the test connection.
+	SkipTestConnection *bool
+}
+
 // ManagedPrivateEndpoint - Managed private endpoint.
 type ManagedPrivateEndpoint struct {
 	// Endpoint connection state of provisioned endpoints.
@@ -1077,6 +1200,100 @@ func (n *NoneOfPredicate) GetPredicate() *Predicate {
 	}
 }
 
+// OnPremisesGatewayConnection - A connection that connects through on-premises data gateway.
+type OnPremisesGatewayConnection struct {
+	// REQUIRED; The connection details of the connection.
+	ConnectionDetails *ListConnectionDetails
+
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// REQUIRED; The object ID of the connection.
+	ID *string
+
+	// The recency details about the connection.
+	ConnectionRecency *ConnectionRecency
+
+	// The credential details of the connection.
+	CredentialDetails *ListCredentialDetails
+
+	// The display name of the connection.
+	DisplayName *string
+
+	// The gateway object ID through which the connection is made. For cloud connections, this is the virtual gateway ID.
+	GatewayID *string
+
+	// The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+
+	// READ-ONLY; The calling principal's effective role on the connection. When the principal is part of multiple security groups
+	// with different roles, the highest role is returned. If the principal has no role on the
+	// connection, this property is not returned.
+	MyRole *ConnectionRole
+}
+
+// GetConnection implements the ConnectionClassification interface for type OnPremisesGatewayConnection.
+func (o *OnPremisesGatewayConnection) GetConnection() *Connection {
+	return &Connection{
+		ConnectionDetails: o.ConnectionDetails,
+		ConnectionRecency: o.ConnectionRecency,
+		ConnectivityType:  o.ConnectivityType,
+		CredentialDetails: o.CredentialDetails,
+		DisplayName:       o.DisplayName,
+		GatewayID:         o.GatewayID,
+		ID:                o.ID,
+		MyRole:            o.MyRole,
+		PrivacyLevel:      o.PrivacyLevel,
+	}
+}
+
+// OnPremisesGatewayPersonalConnection - A connection that connects through a personal on-premises data gateway.
+type OnPremisesGatewayPersonalConnection struct {
+	// REQUIRED; The connection details of the connection.
+	ConnectionDetails *ListConnectionDetails
+
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// REQUIRED; The object ID of the connection.
+	ID *string
+
+	// The recency details about the connection.
+	ConnectionRecency *ConnectionRecency
+
+	// The credential details of the connection.
+	CredentialDetails *ListCredentialDetails
+
+	// The display name of the connection.
+	DisplayName *string
+
+	// The gateway object ID through which the connection is made. For cloud connections, this is the virtual gateway ID.
+	GatewayID *string
+
+	// The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+
+	// READ-ONLY; The calling principal's effective role on the connection. When the principal is part of multiple security groups
+	// with different roles, the highest role is returned. If the principal has no role on the
+	// connection, this property is not returned.
+	MyRole *ConnectionRole
+}
+
+// GetConnection implements the ConnectionClassification interface for type OnPremisesGatewayPersonalConnection.
+func (o *OnPremisesGatewayPersonalConnection) GetConnection() *Connection {
+	return &Connection{
+		ConnectionDetails: o.ConnectionDetails,
+		ConnectionRecency: o.ConnectionRecency,
+		ConnectivityType:  o.ConnectivityType,
+		CredentialDetails: o.CredentialDetails,
+		DisplayName:       o.DisplayName,
+		GatewayID:         o.GatewayID,
+		ID:                o.ID,
+		MyRole:            o.MyRole,
+		PrivacyLevel:      o.PrivacyLevel,
+	}
+}
+
 // OutboundConnectionRule - Defines an outbound access rule for a specific cloud connection.
 type OutboundConnectionRule struct {
 	// REQUIRED; Specifies the cloud connection type to which the rule applies. The behavior and applicability of other rule properties
@@ -1104,6 +1321,56 @@ type OutboundConnectionRule struct {
 	// denied by a more specific rule. This field provides fine-grained control over
 	// each connection type and complements the global fallback behavior defined by defaultAction.
 	DefaultAction *ConnectionAccessActionType
+}
+
+// PersonalCloudConnection - A connection that connects through the cloud and cannot be shared.
+type PersonalCloudConnection struct {
+	// REQUIRED; The connection details of the connection.
+	ConnectionDetails *ListConnectionDetails
+
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// REQUIRED; The object ID of the connection.
+	ID *string
+
+	// Allow this connection to be utilized with either on-premises data gateways or VNet data gateways.
+	AllowConnectionUsageInGateway *bool
+
+	// The recency details about the connection.
+	ConnectionRecency *ConnectionRecency
+
+	// The credential details of the connection.
+	CredentialDetails *ListCredentialDetails
+
+	// The display name of the connection.
+	DisplayName *string
+
+	// The gateway object ID through which the connection is made. For cloud connections, this is the virtual gateway ID.
+	GatewayID *string
+
+	// The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+
+	// READ-ONLY; The calling principal's effective role on the connection. When the principal is part of multiple security groups
+	// with different roles, the highest role is returned. If the principal has no role on the
+	// connection, this property is not returned.
+	MyRole *ConnectionRole
+}
+
+// GetConnection implements the ConnectionClassification interface for type PersonalCloudConnection.
+func (p *PersonalCloudConnection) GetConnection() *Connection {
+	return &Connection{
+		ConnectionDetails: p.ConnectionDetails,
+		ConnectionRecency: p.ConnectionRecency,
+		ConnectivityType:  p.ConnectivityType,
+		CredentialDetails: p.CredentialDetails,
+		DisplayName:       p.DisplayName,
+		GatewayID:         p.GatewayID,
+		ID:                p.ID,
+		MyRole:            p.MyRole,
+		PrivacyLevel:      p.PrivacyLevel,
+	}
 }
 
 // PolicyRule - Policy rule object.
@@ -1274,6 +1541,59 @@ type SetLabelsRequest struct {
 	DelegatedPrincipal PrincipalClassification
 }
 
+// ShareableCloudConnection - A connection that connects through the cloud.
+type ShareableCloudConnection struct {
+	// REQUIRED; The connection details of the connection.
+	ConnectionDetails *ListConnectionDetails
+
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// REQUIRED; The object ID of the connection.
+	ID *string
+
+	// Allow this connection to be utilized with either on-premises data gateways or VNet data gateways.
+	AllowConnectionUsageInGateway *bool
+
+	// Allow this connection to be used with items that allow user-controlled code such as Notebook.
+	AllowUsageInUserControlledCode *bool
+
+	// The recency details about the connection.
+	ConnectionRecency *ConnectionRecency
+
+	// The credential details of the connection.
+	CredentialDetails *ListCredentialDetails
+
+	// The display name of the connection.
+	DisplayName *string
+
+	// The gateway object ID through which the connection is made. For cloud connections, this is the virtual gateway ID.
+	GatewayID *string
+
+	// The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+
+	// READ-ONLY; The calling principal's effective role on the connection. When the principal is part of multiple security groups
+	// with different roles, the highest role is returned. If the principal has no role on the
+	// connection, this property is not returned.
+	MyRole *ConnectionRole
+}
+
+// GetConnection implements the ConnectionClassification interface for type ShareableCloudConnection.
+func (s *ShareableCloudConnection) GetConnection() *Connection {
+	return &Connection{
+		ConnectionDetails: s.ConnectionDetails,
+		ConnectionRecency: s.ConnectionRecency,
+		ConnectivityType:  s.ConnectivityType,
+		CredentialDetails: s.CredentialDetails,
+		DisplayName:       s.DisplayName,
+		GatewayID:         s.GatewayID,
+		ID:                s.ID,
+		MyRole:            s.MyRole,
+		PrivacyLevel:      s.PrivacyLevel,
+	}
+}
+
 // StaticCondition - Static boolean condition.
 type StaticCondition struct {
 	// REQUIRED; Condition type. Additional types may be added over time.
@@ -1287,6 +1607,53 @@ type StaticCondition struct {
 func (s *StaticCondition) GetCondition() *Condition {
 	return &Condition{
 		Type: s.Type,
+	}
+}
+
+// StreamingVirtualNetworkGatewayConnection - A connection that connects through a streaming virtual network data gateway.
+type StreamingVirtualNetworkGatewayConnection struct {
+	// REQUIRED; The connection details of the connection.
+	ConnectionDetails *ListConnectionDetails
+
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// REQUIRED; The object ID of the connection.
+	ID *string
+
+	// The recency details about the connection.
+	ConnectionRecency *ConnectionRecency
+
+	// The credential details of the connection.
+	CredentialDetails *ListCredentialDetails
+
+	// The display name of the connection.
+	DisplayName *string
+
+	// The gateway object ID through which the connection is made. For cloud connections, this is the virtual gateway ID.
+	GatewayID *string
+
+	// The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+
+	// READ-ONLY; The calling principal's effective role on the connection. When the principal is part of multiple security groups
+	// with different roles, the highest role is returned. If the principal has no role on the
+	// connection, this property is not returned.
+	MyRole *ConnectionRole
+}
+
+// GetConnection implements the ConnectionClassification interface for type StreamingVirtualNetworkGatewayConnection.
+func (s *StreamingVirtualNetworkGatewayConnection) GetConnection() *Connection {
+	return &Connection{
+		ConnectionDetails: s.ConnectionDetails,
+		ConnectionRecency: s.ConnectionRecency,
+		ConnectivityType:  s.ConnectivityType,
+		CredentialDetails: s.CredentialDetails,
+		DisplayName:       s.DisplayName,
+		GatewayID:         s.GatewayID,
+		ID:                s.ID,
+		MyRole:            s.MyRole,
+		PrivacyLevel:      s.PrivacyLevel,
 	}
 }
 
@@ -1433,6 +1800,12 @@ type UnassignDomainWorkspacesByIDsRequest struct {
 	WorkspacesIDs []string
 }
 
+// UpdateAdminConnectionRoleAssignmentRequest - An update connection role assignment request payload.
+type UpdateAdminConnectionRoleAssignmentRequest struct {
+	// REQUIRED; The connection role of the principal.
+	Role *AssignableAdminConnectionRole
+}
+
 // UpdateCapacityTenantSettingOverrideRequest - Capacity tenant setting override update request.
 type UpdateCapacityTenantSettingOverrideRequest struct {
 	// REQUIRED; The status of the tenant setting. False - Disabled, True - Enabled.
@@ -1545,6 +1918,53 @@ func (u *UserPrincipal) GetPrincipal() *Principal {
 type UserPrincipalUserDetails struct {
 	// READ-ONLY; The user principal name.
 	UserPrincipalName *string
+}
+
+// VirtualNetworkGatewayConnection - A connection that connects through a virtual network data gateway.
+type VirtualNetworkGatewayConnection struct {
+	// REQUIRED; The connection details of the connection.
+	ConnectionDetails *ListConnectionDetails
+
+	// REQUIRED; The connectivity type of the connection.
+	ConnectivityType *ConnectivityType
+
+	// REQUIRED; The object ID of the connection.
+	ID *string
+
+	// The recency details about the connection.
+	ConnectionRecency *ConnectionRecency
+
+	// The credential details of the connection.
+	CredentialDetails *ListCredentialDetails
+
+	// The display name of the connection.
+	DisplayName *string
+
+	// The gateway object ID through which the connection is made. For cloud connections, this is the virtual gateway ID.
+	GatewayID *string
+
+	// The privacy level of the connection.
+	PrivacyLevel *PrivacyLevel
+
+	// READ-ONLY; The calling principal's effective role on the connection. When the principal is part of multiple security groups
+	// with different roles, the highest role is returned. If the principal has no role on the
+	// connection, this property is not returned.
+	MyRole *ConnectionRole
+}
+
+// GetConnection implements the ConnectionClassification interface for type VirtualNetworkGatewayConnection.
+func (v *VirtualNetworkGatewayConnection) GetConnection() *Connection {
+	return &Connection{
+		ConnectionDetails: v.ConnectionDetails,
+		ConnectionRecency: v.ConnectionRecency,
+		ConnectivityType:  v.ConnectivityType,
+		CredentialDetails: v.CredentialDetails,
+		DisplayName:       v.DisplayName,
+		GatewayID:         v.GatewayID,
+		ID:                v.ID,
+		MyRole:            v.MyRole,
+		PrivacyLevel:      v.PrivacyLevel,
+	}
 }
 
 // WorkloadAssignmentInfo - Workload assignment information. Contains details about a workload and its assignment status across
