@@ -162,9 +162,9 @@ func (d *DayOfMonth) GetMonthlyOccurrence() *MonthlyOccurrence {
 
 // DefinitionResponse - The response payload for a DataBuildToolJob public definition.
 type DefinitionResponse struct {
-	// READ-ONLY; The DataBuildToolJob public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/data-build-tool-job-definition]
-	// for more details on the structure of the
-	// DataBuildToolJob definition.
+	// READ-ONLY; The DataBuildToolJob public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/dbtjob-definition]
+	// for more details on the structure of the DataBuildToolJob
+	// definition.
 	Definition *PublicDefinition
 }
 
@@ -331,9 +331,9 @@ type Properties struct {
 	OneLakeRootPath *string
 }
 
-// PublicDefinition - The DataBuildToolJob public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/data-build-tool-job-definition]
-// for more details on the structure of the
-// DataBuildToolJob definition.
+// PublicDefinition - The DataBuildToolJob public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/dbtjob-definition]
+// for more details on the structure of the DataBuildToolJob
+// definition.
 type PublicDefinition struct {
 	// REQUIRED; A list of definition parts.
 	Parts []PublicDefinitionPart
@@ -452,9 +452,9 @@ type ServicePrincipalProfilePrincipalServicePrincipalProfileDetails struct {
 
 // UpdateDataBuildToolJobDefinitionRequest - The request payload for updating a DataBuildToolJob public definition.
 type UpdateDataBuildToolJobDefinitionRequest struct {
-	// REQUIRED; The DataBuildToolJob public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/data-build-tool-job-definition]
-	// for more details on the structure of the
-	// DataBuildToolJob definition.
+	// REQUIRED; The DataBuildToolJob public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/dbtjob-definition]
+	// for more details on the structure of the DataBuildToolJob
+	// definition.
 	Definition *PublicDefinition
 }
 

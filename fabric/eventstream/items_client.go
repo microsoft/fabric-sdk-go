@@ -236,7 +236,10 @@ func (client *ItemsClient) getEventstreamHandleResponse(resp *http.Response) (It
 // When you get an eventstream public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the eventstream.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
-// LIMITATIONS This API is blocked for an eventstream with an encrypted sensitivity label.
+// LIMITATIONS To retrieve the definition of an eventstream item protected by an encrypted sensitivity label, the caller must
+// have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -258,7 +261,10 @@ func (client *ItemsClient) BeginGetEventstreamDefinition(ctx context.Context, wo
 // When you get an eventstream public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the eventstream.
 // REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
-// LIMITATIONS This API is blocked for an eventstream with an encrypted sensitivity label.
+// LIMITATIONS To retrieve the definition of an eventstream item protected by an encrypted sensitivity label, the caller must
+// have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -621,7 +627,8 @@ func (client *ItemsClient) beginCreateEventstream(ctx context.Context, workspace
 //
 // # REQUIRED DELEGATED SCOPES Eventstream.ReadWrite.All or Item.ReadWrite.All
 //
-// LIMITATIONS This API is blocked for an eventstream with an encrypted sensitivity label.
+// LIMITATIONS To retrieve the definition of an eventstream item protected by an encrypted sensitivity label, the caller must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in Microsoft Purview [/purview/purview].
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

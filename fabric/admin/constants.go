@@ -6,6 +6,23 @@
 
 package admin
 
+// AssignableAdminConnectionRole - A connection role. Additional connection roles may be added over time.
+type AssignableAdminConnectionRole string
+
+const (
+	// AssignableAdminConnectionRoleOwner - Enables the principal to gain ownership of the connection. The principal is initially
+	// assigned the 'PendingOwner' role and to complete the transition to 'Owner', the principal must update the connection credentials
+	// using [Update Connection API](/rest/api/fabric/core/connections/update-connection).
+	AssignableAdminConnectionRoleOwner AssignableAdminConnectionRole = "Owner"
+)
+
+// PossibleAssignableAdminConnectionRoleValues returns the possible values for the AssignableAdminConnectionRole const type.
+func PossibleAssignableAdminConnectionRoleValues() []AssignableAdminConnectionRole {
+	return []AssignableAdminConnectionRole{
+		AssignableAdminConnectionRoleOwner,
+	}
+}
+
 // AssignmentMethod - Specifies whether the assigned label was set by an automated process or manually. Additional tenant
 // setting property types may be added over time.
 type AssignmentMethod string
@@ -82,6 +99,54 @@ func PossibleConnectionAccessActionTypeValues() []ConnectionAccessActionType {
 	}
 }
 
+// ConnectionEncryption - The connection encryption type of the connection. Additional connection encryption values may be
+// added over time.
+type ConnectionEncryption string
+
+const (
+	// ConnectionEncryptionAny - The connection attempt is first made using an encrypted connection, then falls back to unencrypted
+	// connection if unsuccessful.
+	ConnectionEncryptionAny ConnectionEncryption = "Any"
+	// ConnectionEncryptionEncrypted - The connection attempt is made using an encrypted connection.
+	ConnectionEncryptionEncrypted ConnectionEncryption = "Encrypted"
+	// ConnectionEncryptionNotEncrypted - The connection attempt is made using an unencrypted connection.
+	ConnectionEncryptionNotEncrypted ConnectionEncryption = "NotEncrypted"
+)
+
+// PossibleConnectionEncryptionValues returns the possible values for the ConnectionEncryption const type.
+func PossibleConnectionEncryptionValues() []ConnectionEncryption {
+	return []ConnectionEncryption{
+		ConnectionEncryptionAny,
+		ConnectionEncryptionEncrypted,
+		ConnectionEncryptionNotEncrypted,
+	}
+}
+
+// ConnectionRole - A connection role. Additional connection roles may be added over time.
+type ConnectionRole string
+
+const (
+	// ConnectionRoleOwner - Enables ownership access for the connection.
+	ConnectionRoleOwner ConnectionRole = "Owner"
+	// ConnectionRolePendingOwner - Ownership of the connection is not yet effective; the principal must update the connection
+	// credentials (using [Update Connection API](/rest/api/fabric/core/connections/update-connection)) to make it effective.
+	ConnectionRolePendingOwner ConnectionRole = "PendingOwner"
+	// ConnectionRoleUser - Enables user access for the connection.
+	ConnectionRoleUser ConnectionRole = "User"
+	// ConnectionRoleUserWithReshare - Enables user with resharing access for the connection.
+	ConnectionRoleUserWithReshare ConnectionRole = "UserWithReshare"
+)
+
+// PossibleConnectionRoleValues returns the possible values for the ConnectionRole const type.
+func PossibleConnectionRoleValues() []ConnectionRole {
+	return []ConnectionRole{
+		ConnectionRoleOwner,
+		ConnectionRolePendingOwner,
+		ConnectionRoleUser,
+		ConnectionRoleUserWithReshare,
+	}
+}
+
 // ConnectionStatus - Private endpoint connection status. Additional connection status may be added over time.
 type ConnectionStatus string
 
@@ -106,6 +171,43 @@ func PossibleConnectionStatusValues() []ConnectionStatus {
 	}
 }
 
+// ConnectivityType - The connectivity type of the connection. Additional connectivity types may be added over time.
+type ConnectivityType string
+
+const (
+	// ConnectivityTypeAutomatic - The connection connects through the cloud using an implicit data connection. This option is
+	// only available for specific scenarios like semantic models that use Single Sign-On (SSO).”
+	ConnectivityTypeAutomatic ConnectivityType = "Automatic"
+	// ConnectivityTypeNone - The connection is not bound
+	ConnectivityTypeNone ConnectivityType = "None"
+	// ConnectivityTypeOnPremisesGateway - The connection connects through an on-premises data gateway.
+	ConnectivityTypeOnPremisesGateway ConnectivityType = "OnPremisesGateway"
+	// ConnectivityTypeOnPremisesGatewayPersonal - The connection connects through a personal on-premises data gateway.
+	ConnectivityTypeOnPremisesGatewayPersonal ConnectivityType = "OnPremisesGatewayPersonal"
+	// ConnectivityTypePersonalCloud - The connection connects through the cloud and cannot be shared with others.
+	ConnectivityTypePersonalCloud ConnectivityType = "PersonalCloud"
+	// ConnectivityTypeShareableCloud - The connection connects through the cloud and can be shared with others.
+	ConnectivityTypeShareableCloud ConnectivityType = "ShareableCloud"
+	// ConnectivityTypeStreamingVirtualNetworkGateway - The connection connects through a streaming virtual network data gateway.
+	ConnectivityTypeStreamingVirtualNetworkGateway ConnectivityType = "StreamingVirtualNetworkGateway"
+	// ConnectivityTypeVirtualNetworkGateway - The connection connects through a virtual network data gateway.
+	ConnectivityTypeVirtualNetworkGateway ConnectivityType = "VirtualNetworkGateway"
+)
+
+// PossibleConnectivityTypeValues returns the possible values for the ConnectivityType const type.
+func PossibleConnectivityTypeValues() []ConnectivityType {
+	return []ConnectivityType{
+		ConnectivityTypeAutomatic,
+		ConnectivityTypeNone,
+		ConnectivityTypeOnPremisesGateway,
+		ConnectivityTypeOnPremisesGatewayPersonal,
+		ConnectivityTypePersonalCloud,
+		ConnectivityTypeShareableCloud,
+		ConnectivityTypeStreamingVirtualNetworkGateway,
+		ConnectivityTypeVirtualNetworkGateway,
+	}
+}
+
 // ContributorsScopeType - The contributor scope. Additional contributor scopes may be added over time.
 type ContributorsScopeType string
 
@@ -124,6 +226,49 @@ func PossibleContributorsScopeTypeValues() []ContributorsScopeType {
 		ContributorsScopeTypeAdminsOnly,
 		ContributorsScopeTypeAllTenant,
 		ContributorsScopeTypeSpecificUsersAndGroups,
+	}
+}
+
+// CredentialType - The credential type of the connection. Additional credential types may be added over time.
+type CredentialType string
+
+const (
+	// CredentialTypeAnonymous - Connection uses anonymous authentication to connect.
+	CredentialTypeAnonymous CredentialType = "Anonymous"
+	// CredentialTypeBasic - Connection uses basic authentication to connect.
+	CredentialTypeBasic CredentialType = "Basic"
+	// CredentialTypeKey - Connection uses key authentication to connect.
+	CredentialTypeKey CredentialType = "Key"
+	// CredentialTypeKeyPair - Connection uses key pair authentication to connect.
+	CredentialTypeKeyPair CredentialType = "KeyPair"
+	// CredentialTypeOAuth2 - Connection uses OAuth 2.0 authentication to connect.
+	CredentialTypeOAuth2 CredentialType = "OAuth2"
+	// CredentialTypeServicePrincipal - Connection uses service principal authentication to connect.
+	CredentialTypeServicePrincipal CredentialType = "ServicePrincipal"
+	// CredentialTypeSharedAccessSignature - Connection uses shared access signature (SAS) authentication to connect.
+	CredentialTypeSharedAccessSignature CredentialType = "SharedAccessSignature"
+	// CredentialTypeWindows - Connection uses Windows authentication to connect. Only supported for on-premises gateways.
+	CredentialTypeWindows CredentialType = "Windows"
+	// CredentialTypeWindowsWithoutImpersonation - Connection uses Windows (without the option for impersonation) authentication
+	// to connect. Only supported for on-premises gateways (personal mode).
+	CredentialTypeWindowsWithoutImpersonation CredentialType = "WindowsWithoutImpersonation"
+	// CredentialTypeWorkspaceIdentity - Connection uses workspace identity authentication to connect.
+	CredentialTypeWorkspaceIdentity CredentialType = "WorkspaceIdentity"
+)
+
+// PossibleCredentialTypeValues returns the possible values for the CredentialType const type.
+func PossibleCredentialTypeValues() []CredentialType {
+	return []CredentialType{
+		CredentialTypeAnonymous,
+		CredentialTypeBasic,
+		CredentialTypeKey,
+		CredentialTypeKeyPair,
+		CredentialTypeOAuth2,
+		CredentialTypeServicePrincipal,
+		CredentialTypeSharedAccessSignature,
+		CredentialTypeWindows,
+		CredentialTypeWindowsWithoutImpersonation,
+		CredentialTypeWorkspaceIdentity,
 	}
 }
 
@@ -360,6 +505,8 @@ const (
 	ItemTypeDataflow ItemType = "Dataflow"
 	// ItemTypeDatamart - PowerBI datamart.
 	ItemTypeDatamart ItemType = "Datamart"
+	// ItemTypeDeploymentPlan - A Deployment plan.
+	ItemTypeDeploymentPlan ItemType = "DeploymentPlan"
 	// ItemTypeDigitalTwinBuilder - A DigitalTwinBuilder.
 	ItemTypeDigitalTwinBuilder ItemType = "DigitalTwinBuilder"
 	// ItemTypeDigitalTwinBuilderFlow - A Digital Twin Builder Flow.
@@ -400,6 +547,8 @@ const (
 	ItemTypeMirroredDatabase ItemType = "MirroredDatabase"
 	// ItemTypeMirroredWarehouse - A mirrored warehouse.
 	ItemTypeMirroredWarehouse ItemType = "MirroredWarehouse"
+	// ItemTypeMonitoring - A Monitoring item.
+	ItemTypeMonitoring ItemType = "Monitoring"
 	// ItemTypeMountedDataFactory - A MountedDataFactory.
 	ItemTypeMountedDataFactory ItemType = "MountedDataFactory"
 	// ItemTypeNotebook - A notebook.
@@ -457,6 +606,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeDataPipeline,
 		ItemTypeDataflow,
 		ItemTypeDatamart,
+		ItemTypeDeploymentPlan,
 		ItemTypeDigitalTwinBuilder,
 		ItemTypeDigitalTwinBuilderFlow,
 		ItemTypeEnvironment,
@@ -477,6 +627,7 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeMirroredCatalog,
 		ItemTypeMirroredDatabase,
 		ItemTypeMirroredWarehouse,
+		ItemTypeMonitoring,
 		ItemTypeMountedDataFactory,
 		ItemTypeNotebook,
 		ItemTypeOntology,
@@ -584,6 +735,33 @@ func PossiblePrincipalTypeValues() []PrincipalType {
 	}
 }
 
+// PrivacyLevel - The privacy level setting of the connection. Additional privacy levels may be added over time.
+type PrivacyLevel string
+
+const (
+	// PrivacyLevelNone - No privacy level setting is configured.
+	PrivacyLevelNone PrivacyLevel = "None"
+	// PrivacyLevelOrganizational - Connections set to organizational can fold in to private and other organizational connections.
+	// They can't fold in to public connections. Visibility is set to a trusted group.
+	PrivacyLevelOrganizational PrivacyLevel = "Organizational"
+	// PrivacyLevelPrivate - Connections set to private contain sensitive or confidential information. Visibility can be restricted
+	// to authorized users. Data from a private connection won't fold in to other connections, including other private connections.
+	PrivacyLevelPrivate PrivacyLevel = "Private"
+	// PrivacyLevelPublic - Files, internet connections, and workbook data can be set to public. Data can fold in to other connections.
+	// Visibility is available to everyone.
+	PrivacyLevelPublic PrivacyLevel = "Public"
+)
+
+// PossiblePrivacyLevelValues returns the possible values for the PrivacyLevel const type.
+func PossiblePrivacyLevelValues() []PrivacyLevel {
+	return []PrivacyLevel{
+		PrivacyLevelNone,
+		PrivacyLevelOrganizational,
+		PrivacyLevelPrivate,
+		PrivacyLevelPublic,
+	}
+}
+
 // PrivateEndpointProvisioningState - PrivateEndpointProvisioningState type. Additional Provisioning state may be added over
 // time.
 type PrivateEndpointProvisioningState string
@@ -644,6 +822,34 @@ func PossibleSharingLinksRemovalStatusValues() []SharingLinksRemovalStatus {
 	return []SharingLinksRemovalStatus{
 		SharingLinksRemovalStatusNotFound,
 		SharingLinksRemovalStatusSucceeded,
+	}
+}
+
+// SingleSignOnType - The single sign-on type of the connection. Additional single sign on types may be added over time.
+type SingleSignOnType string
+
+const (
+	// SingleSignOnTypeKerberos - Connection uses Kerberos single sign-on to connect.
+	SingleSignOnTypeKerberos SingleSignOnType = "Kerberos"
+	// SingleSignOnTypeKerberosDirectQueryAndRefresh - Connection uses Kerberos DirectQuery and Refresh single sign-on to connect.
+	SingleSignOnTypeKerberosDirectQueryAndRefresh SingleSignOnType = "KerberosDirectQueryAndRefresh"
+	// SingleSignOnTypeMicrosoftEntraID - Connection uses Microsoft Entra ID single sign-on to connect.
+	SingleSignOnTypeMicrosoftEntraID SingleSignOnType = "MicrosoftEntraID"
+	// SingleSignOnTypeNone - Connection does not use single sign-on to connect.
+	SingleSignOnTypeNone SingleSignOnType = "None"
+	// SingleSignOnTypeSecurityAssertionMarkupLanguage - Connection uses Security Assertion Markup Language (SAML) single sign-on
+	// to connect.
+	SingleSignOnTypeSecurityAssertionMarkupLanguage SingleSignOnType = "SecurityAssertionMarkupLanguage"
+)
+
+// PossibleSingleSignOnTypeValues returns the possible values for the SingleSignOnType const type.
+func PossibleSingleSignOnTypeValues() []SingleSignOnType {
+	return []SingleSignOnType{
+		SingleSignOnTypeKerberos,
+		SingleSignOnTypeKerberosDirectQueryAndRefresh,
+		SingleSignOnTypeMicrosoftEntraID,
+		SingleSignOnTypeNone,
+		SingleSignOnTypeSecurityAssertionMarkupLanguage,
 	}
 }
 

@@ -71,6 +71,12 @@ type ItemsClientUpdateDataAgentOptions struct {
 	// placeholder for future optional parameters
 }
 
+// PublishedClientDownloadDatasourceTopicOptions contains the optional parameters for the PublishedClient.DownloadDatasourceTopic
+// method.
+type PublishedClientDownloadDatasourceTopicOptions struct {
+	// placeholder for future optional parameters
+}
+
 // PublishedClientGetDatasourceFewshotOptions contains the optional parameters for the PublishedClient.GetDatasourceFewshot
 // method.
 type PublishedClientGetDatasourceFewshotOptions struct {
@@ -104,6 +110,13 @@ type PublishedClientListDatasourceFewshotsOptions struct {
 	ContinuationToken *string
 }
 
+// PublishedClientListDatasourceTopicsOptions contains the optional parameters for the PublishedClient.NewListDatasourceTopicsPager
+// method.
+type PublishedClientListDatasourceTopicsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
 // PublishedClientListDatasourcesOptions contains the optional parameters for the PublishedClient.NewListDatasourcesPager
 // method.
 type PublishedClientListDatasourcesOptions struct {
@@ -114,6 +127,13 @@ type PublishedClientListDatasourcesOptions struct {
 // StagingClientBeginCreateDatasourceOptions contains the optional parameters for the StagingClient.BeginCreateDatasource
 // method.
 type StagingClientBeginCreateDatasourceOptions struct {
+	// Resumes the long-running operation from the provided token.
+	ResumeToken string
+}
+
+// StagingClientBeginFormatDatasourceTopicOptions contains the optional parameters for the StagingClient.BeginFormatDatasourceTopic
+// method.
+type StagingClientBeginFormatDatasourceTopicOptions struct {
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }
@@ -144,6 +164,20 @@ type StagingClientDeleteDatasourceFewshotOptions struct {
 
 // StagingClientDeleteDatasourceOptions contains the optional parameters for the StagingClient.DeleteDatasource method.
 type StagingClientDeleteDatasourceOptions struct {
+	// placeholder for future optional parameters
+}
+
+// StagingClientDeleteDatasourceTopicOptions contains the optional parameters for the StagingClient.DeleteDatasourceTopic
+// method.
+type StagingClientDeleteDatasourceTopicOptions struct {
+	// An ETag value. The ETag must be specified in quotes. If provided, the call will succeed only if the resource's ETag matches
+	// the provided ETag.
+	IfMatch *string
+}
+
+// StagingClientDownloadDatasourceTopicOptions contains the optional parameters for the StagingClient.DownloadDatasourceTopic
+// method.
+type StagingClientDownloadDatasourceTopicOptions struct {
 	// placeholder for future optional parameters
 }
 
@@ -179,6 +213,13 @@ type StagingClientListDatasourceFewshotsOptions struct {
 	ContinuationToken *string
 }
 
+// StagingClientListDatasourceTopicsOptions contains the optional parameters for the StagingClient.NewListDatasourceTopicsPager
+// method.
+type StagingClientListDatasourceTopicsOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
 // StagingClientListDatasourcesOptions contains the optional parameters for the StagingClient.NewListDatasourcesPager method.
 type StagingClientListDatasourcesOptions struct {
 	// A token for retrieving the next page of results.
@@ -210,4 +251,12 @@ type StagingClientUpdateDatasourceOptions struct {
 // StagingClientUpdateSettingsOptions contains the optional parameters for the StagingClient.UpdateSettings method.
 type StagingClientUpdateSettingsOptions struct {
 	// placeholder for future optional parameters
+}
+
+// StagingClientUploadDatasourceTopicWithTextOptions contains the optional parameters for the StagingClient.UploadDatasourceTopicWithText
+// method.
+type StagingClientUploadDatasourceTopicWithTextOptions struct {
+	// An ETag value. The ETag must be specified in quotes. If provided, the call will succeed only if the resource's ETag matches
+	// the provided ETag.
+	IfMatch *string
 }

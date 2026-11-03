@@ -242,6 +242,10 @@ func (client *ItemsClient) getVariableLibraryHandleResponse(resp *http.Response)
 // When you get a VariableLibrary's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the variable library.
 // REQUIRED DELEGATED SCOPES VariableLibrary.ReadWrite.All or Item.ReadWrite.All
+// LIMITATIONS To retrieve the definition of a variable library item protected by an encrypted sensitivity label, the caller
+// must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -263,6 +267,10 @@ func (client *ItemsClient) BeginGetVariableLibraryDefinition(ctx context.Context
 // When you get a VariableLibrary's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the variable library.
 // REQUIRED DELEGATED SCOPES VariableLibrary.ReadWrite.All or Item.ReadWrite.All
+// LIMITATIONS To retrieve the definition of a variable library item protected by an encrypted sensitivity label, the caller
+// must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -627,6 +635,9 @@ func (client *ItemsClient) beginCreateVariableLibrary(ctx context.Context, works
 // PERMISSIONS The caller must have read and write permissions for the variable library.
 //
 // # REQUIRED DELEGATED SCOPES VariableLibrary.ReadWrite.All or Item.ReadWrite.All
+//
+// LIMITATIONS To retrieve the definition of a variable library item protected by an encrypted sensitivity label, the caller must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in Microsoft Purview [/purview/purview].
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

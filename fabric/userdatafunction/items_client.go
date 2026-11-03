@@ -31,12 +31,12 @@ type ItemsClient struct {
 }
 
 // BeginCreateUserDataFunction - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create UserDataFunction with a public definition, refer to UserDataFunction [/rest/api/fabric/articles/item-management/definitions/user-data-function]
+// To create a UserDataFunction with a public definition, refer to the UserDataFunction [/rest/api/fabric/articles/item-management/definitions/user-data-function-definition]
 // article.
-// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
-// * To create a UserDataFunction the workspace must be on a supported Fabric capacity. For more information see: Microsoft
+// * To create a UserDataFunction, the workspace must be on a supported Fabric capacity. For more information see: Microsoft
 // Fabric license types
 // [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -57,12 +57,12 @@ func (client *ItemsClient) BeginCreateUserDataFunction(ctx context.Context, work
 }
 
 // CreateUserDataFunction - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create UserDataFunction with a public definition, refer to UserDataFunction [/rest/api/fabric/articles/item-management/definitions/user-data-function]
+// To create a UserDataFunction with a public definition, refer to the UserDataFunction [/rest/api/fabric/articles/item-management/definitions/user-data-function-definition]
 // article.
-// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
+// PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
-// * To create a UserDataFunction the workspace must be on a supported Fabric capacity. For more information see: Microsoft
+// * To create a UserDataFunction, the workspace must be on a supported Fabric capacity. For more information see: Microsoft
 // Fabric license types
 // [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -242,6 +242,10 @@ func (client *ItemsClient) getUserDataFunctionHandleResponse(resp *http.Response
 // When you get a UserDataFunction's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the UserDataFunction.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
+// LIMITATIONS To retrieve the definition of a user data function item protected by an encrypted sensitivity label, the caller
+// must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -263,6 +267,10 @@ func (client *ItemsClient) BeginGetUserDataFunctionDefinition(ctx context.Contex
 // When you get a UserDataFunction's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the UserDataFunction.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
+// LIMITATIONS To retrieve the definition of a user data function item protected by an encrypted sensitivity label, the caller
+// must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -546,14 +554,15 @@ func (client *ItemsClient) updateUserDataFunctionDefinitionCreateRequest(ctx con
 // CreateUserDataFunction - returns ItemsClientCreateUserDataFunctionResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// To create UserDataFunction with a public definition, refer to UserDataFunction [/rest/api/fabric/articles/item-management/definitions/user-data-function] article.
+// To create a UserDataFunction with a public definition, refer to the UserDataFunction [/rest/api/fabric/articles/item-management/definitions/user-data-function-definition] article.
 //
-// PERMISSIONS THE CALLER MUST HAVE A CONTRIBUTOR WORKSPACE ROLE.
-// REQUIRED DELEGATED SCOPES Item.ReadWrite.All
+// PERMISSIONS The caller must have a contributor workspace role.
+//
+// # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 //
 // LIMITATIONS
 //
-//   - To create a UserDataFunction the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric license types
+//   - To create a UserDataFunction, the workspace must be on a supported Fabric capacity. For more information see: Microsoft Fabric license types
 //     [/fabric/enterprise/licenses#microsoft-fabric-license-types].
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
@@ -626,6 +635,9 @@ func (client *ItemsClient) beginCreateUserDataFunction(ctx context.Context, work
 // PERMISSIONS The caller must have read and write permissions for the UserDataFunction.
 //
 // # REQUIRED DELEGATED SCOPES Item.ReadWrite.All
+//
+// LIMITATIONS To retrieve the definition of a user data function item protected by an encrypted sensitivity label, the caller must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in Microsoft Purview [/purview/purview].
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

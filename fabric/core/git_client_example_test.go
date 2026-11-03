@@ -293,7 +293,7 @@ func ExampleGitClient_BeginUpdateFromGit_updateAWorkspaceFromGitWithOptionsExamp
 		},
 		RemoteCommitHash: to.Ptr("7d03b2918bf6aa62f96d0a4307293f3853201705"),
 		WorkspaceHead:    to.Ptr("eaa737b48cda41b37ffefac772ea48f6fed3eac4"),
-	}, nil)
+	}, &core.GitClientBeginUpdateFromGitOptions{Beta: nil})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -324,7 +324,42 @@ func ExampleGitClient_BeginUpdateFromGit_updateAWorkspaceUsingDataFromAGitExampl
 		},
 		RemoteCommitHash: to.Ptr("7d03b2918bf6aa62f96d0a4307293f3853201705"),
 		WorkspaceHead:    to.Ptr("eaa737b48cda41b37ffefac772ea48f6fed3eac4"),
-	}, nil)
+	}, &core.GitClientBeginUpdateFromGitOptions{Beta: nil})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleGitClient_BeginUpdateFromGit_updateAWorkspaceUsingDataFromAGitWithADeploymentPlanExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewGitClient().BeginUpdateFromGit(ctx, "1565e6a3-c020-4c0c-dda7-92bafe99eec5", core.UpdateFromGitRequest{
+		ConflictResolution: &core.WorkspaceConflictResolution{
+			ConflictResolutionPolicy: to.Ptr(core.ConflictResolutionPolicyPreferWorkspace),
+			ConflictResolutionType:   to.Ptr(core.ConflictResolutionTypeWorkspace),
+		},
+		Options: &core.UpdateOptions{
+			AllowOverrideItems: to.Ptr(true),
+			DeploymentPlan: &core.DeploymentPlanReferenceByLogicalID{
+				ReferenceType: to.Ptr(core.DeploymentPlanReferenceTypeByLogicalID),
+				LogicalID:     to.Ptr("a1b2c3d4-e5f6-7890-abcd-ef1234567890"),
+			},
+		},
+		RemoteCommitHash: to.Ptr("7d03b2918bf6aa62f96d0a4307293f3853201705"),
+		WorkspaceHead:    to.Ptr("eaa737b48cda41b37ffefac772ea48f6fed3eac4"),
+	}, &core.GitClientBeginUpdateFromGitOptions{Beta: nil})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

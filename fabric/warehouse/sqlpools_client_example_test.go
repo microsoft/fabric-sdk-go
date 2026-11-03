@@ -17,7 +17,7 @@ import (
 )
 
 // Generated from example definition
-func ExampleSQLPoolsClient_GetSQLPoolsConfigurationBeta() {
+func ExampleSQLPoolsClient_GetSQLPoolsConfiguration() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -27,7 +27,7 @@ func ExampleSQLPoolsClient_GetSQLPoolsConfigurationBeta() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewSQLPoolsClient().GetSQLPoolsConfigurationBeta(ctx, "a97f3e88-9f0a-4183-b1d9-31e6eb00e778", true, nil)
+	res, err := clientFactory.NewSQLPoolsClient().GetSQLPoolsConfiguration(ctx, "a97f3e88-9f0a-4183-b1d9-31e6eb00e778", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -76,7 +76,7 @@ func ExampleSQLPoolsClient_GetSQLPoolsConfigurationBeta() {
 }
 
 // Generated from example definition
-func ExampleSQLPoolsClient_UpdateSQLPoolsConfigurationBeta_disableSqlPoolsAndDeleteAllExistingPoolsBetaExample() {
+func ExampleSQLPoolsClient_UpdateSQLPoolsConfiguration_disableSqlPoolsAndDeleteAllExistingPoolsExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -86,7 +86,7 @@ func ExampleSQLPoolsClient_UpdateSQLPoolsConfigurationBeta_disableSqlPoolsAndDel
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewSQLPoolsClient().UpdateSQLPoolsConfigurationBeta(ctx, "a97f3e88-9f0a-4183-b1d9-31e6eb00e778", true, warehouse.UpdateSQLPoolsConfigurationRequest{
+	_, err = clientFactory.NewSQLPoolsClient().UpdateSQLPoolsConfiguration(ctx, "a97f3e88-9f0a-4183-b1d9-31e6eb00e778", warehouse.UpdateSQLPoolsConfigurationRequest{
 		CustomSQLPools:        []warehouse.CustomSQLPool{},
 		CustomSQLPoolsEnabled: to.Ptr(false),
 	}, nil)
@@ -96,7 +96,7 @@ func ExampleSQLPoolsClient_UpdateSQLPoolsConfigurationBeta_disableSqlPoolsAndDel
 }
 
 // Generated from example definition
-func ExampleSQLPoolsClient_UpdateSQLPoolsConfigurationBeta_enableSqlPoolsAndSetupPoolsConfigurationBetaExample() {
+func ExampleSQLPoolsClient_UpdateSQLPoolsConfiguration_enableSqlPoolsAndSetupPoolsConfigurationExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -106,7 +106,7 @@ func ExampleSQLPoolsClient_UpdateSQLPoolsConfigurationBeta_enableSqlPoolsAndSetu
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewSQLPoolsClient().UpdateSQLPoolsConfigurationBeta(ctx, "a97f3e88-9f0a-4183-b1d9-31e6eb00e778", true, warehouse.UpdateSQLPoolsConfigurationRequest{
+	_, err = clientFactory.NewSQLPoolsClient().UpdateSQLPoolsConfiguration(ctx, "a97f3e88-9f0a-4183-b1d9-31e6eb00e778", warehouse.UpdateSQLPoolsConfigurationRequest{
 		CustomSQLPools: []warehouse.CustomSQLPool{
 			{
 				Name: to.Ptr("ETL"),
@@ -146,7 +146,7 @@ func ExampleSQLPoolsClient_UpdateSQLPoolsConfigurationBeta_enableSqlPoolsAndSetu
 }
 
 // Generated from example definition
-func ExampleSQLPoolsClient_UpdateSQLPoolsConfigurationBeta_updateSqlPoolsBetaExample() {
+func ExampleSQLPoolsClient_UpdateSQLPoolsConfiguration_updateSqlPoolsExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -156,7 +156,7 @@ func ExampleSQLPoolsClient_UpdateSQLPoolsConfigurationBeta_updateSqlPoolsBetaExa
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewSQLPoolsClient().UpdateSQLPoolsConfigurationBeta(ctx, "a97f3e88-9f0a-4183-b1d9-31e6eb00e778", true, warehouse.UpdateSQLPoolsConfigurationRequest{
+	_, err = clientFactory.NewSQLPoolsClient().UpdateSQLPoolsConfiguration(ctx, "a97f3e88-9f0a-4183-b1d9-31e6eb00e778", warehouse.UpdateSQLPoolsConfigurationRequest{
 		CustomSQLPools: []warehouse.CustomSQLPool{
 			{
 				Name:                  to.Ptr("ETL"),

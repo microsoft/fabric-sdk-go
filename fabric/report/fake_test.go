@@ -143,6 +143,36 @@ func (testsuite *FakeTestSuite) TestItems_CreateReport() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create a report with creation payload example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCreateReportRequest = report.CreateReportRequest{
+		Description: to.Ptr("An empty report connected to a semantic model."),
+		CreationPayload: &report.CreationPayload{
+			SemanticModelReference: &report.ItemReferenceByID{
+				ReferenceType: to.Ptr(report.ItemReferenceTypeByID),
+				ItemID:        to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+				WorkspaceID:   to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+			},
+		},
+		DisplayName: to.Ptr("Sales Dashboard"),
+	}
+
+	testsuite.serverFactory.ItemsServer.BeginCreateReport = func(ctx context.Context, workspaceID string, createReportRequest report.CreateReportRequest, options *report.ItemsClientBeginCreateReportOptions) (resp azfake.PollerResponder[report.ItemsClientCreateReportResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateReportRequest, createReportRequest))
+		resp = azfake.PollerResponder[report.ItemsClientCreateReportResponse]{}
+		resp.SetTerminalResponse(http.StatusCreated, report.ItemsClientCreateReportResponse{}, nil)
+		return
+	}
+
+	poller, err = client.BeginCreateReport(ctx, exampleWorkspaceID, exampleCreateReportRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
 
 func (testsuite *FakeTestSuite) TestItems_GetReport() {

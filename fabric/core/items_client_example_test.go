@@ -1011,7 +1011,7 @@ func ExampleItemsClient_BeginBulkImportItemDefinitions_bulkImportItemDefinitions
 		Options: &core.BulkImportItemDefinitionsRequestOptions{
 			AllowPairingByName: to.Ptr(false),
 		},
-	}, nil)
+	}, &core.ItemsClientBeginBulkImportItemDefinitionsOptions{Beta: nil})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -1039,6 +1039,55 @@ func ExampleItemsClient_BeginBulkImportItemDefinitions_bulkImportItemDefinitions
 	// 			ItemType: to.Ptr(core.ItemTypeSemanticModel),
 	// 			OperationStatus: to.Ptr(core.ImportItemDefinitionOperationStatusSucceeded),
 	// 			OperationType: to.Ptr(core.ItemDefinitionOperationTypeUpdate),
+	// 	}},
+	// }
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginBulkImportItemDefinitions_bulkImportItemDefinitionsWithDeploymentPlanExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginBulkImportItemDefinitions(ctx, "24d305d1-9db8-4785-b038-714e07e7394f", core.BulkImportItemDefinitionsRequest{
+		DefinitionParts: []core.ItemDefinitionPart{
+			{
+				Path:        to.Ptr("/Folder1/Folder2/MyReport.Report/.platform"),
+				Payload:     to.Ptr("ewogICIkc2NoZW1hIjogImh0dHBzOi8vZGV2ZWxvcGVyLm1pY3Jvc29mdC5jb20vanNvbi1zY2hlbWFzL2ZhYnJpYy9naXRJbnRlZ3JhdGlvbi9wbGF0Zm9ybVByb3BlcnRpZXMvMi4wLjAvc2NoZW1hLmpzb24iLAogICJtZXRhZGF0YSI6IHsKICAgICJ0eXBlIjogIlJlcG9ydCIsCiAgICAiZGlzcGxheU5hbWUiOiAiTXlSZXBvcnQiCiAgfSwKICAiY29uZmlnIjogewogICAgInZlcnNpb24iOiAiMi4wIiwKICAgICJsb2dpY2FsSWQiOiAiODg0MzZlNjUtNmVkMS04MTg1LTQ5ZmYtZjYxMDc3ZmM3M2Q0IgogIH0KfQ=="),
+				PayloadType: to.Ptr(core.PayloadTypeInlineBase64),
+			}},
+		Options: &core.BulkImportItemDefinitionsRequestOptions{
+			AllowPairingByName: to.Ptr(true),
+			DeploymentPlan: &core.DeploymentPlanReferenceByLogicalID{
+				ReferenceType: to.Ptr(core.DeploymentPlanReferenceTypeByLogicalID),
+				LogicalID:     to.Ptr("a1b2c3d4-e5f6-7890-abcd-ef1234567890"),
+			},
+		},
+	}, &core.ItemsClientBeginBulkImportItemDefinitionsOptions{Beta: to.Ptr(true)})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	res, err := poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.BulkImportItemDefinitionsResponse = core.BulkImportItemDefinitionsResponse{
+	// 	ImportItemDefinitionsDetails: []core.ImportItemDefinitionsDetails{
+	// 		{
+	// 			ItemDisplayName: to.Ptr("MyReport"),
+	// 			ItemID: to.Ptr("3546052c-ae64-4526-b1a8-52af7761426f"),
+	// 			ItemLogicalID: to.Ptr("88436e65-6ed1-8185-49ff-f61077fc73d4"),
+	// 			ItemType: to.Ptr(core.ItemTypeReport),
+	// 			OperationStatus: to.Ptr(core.ImportItemDefinitionOperationStatusSucceeded),
+	// 			OperationType: to.Ptr(core.ItemDefinitionOperationTypeCreate),
 	// 	}},
 	// }
 }
@@ -1076,7 +1125,7 @@ func ExampleItemsClient_BeginBulkImportItemDefinitions_bulkImportItemDefinitions
 					},
 				}},
 		},
-	}, nil)
+	}, &core.ItemsClientBeginBulkImportItemDefinitionsOptions{Beta: to.Ptr(true)})
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

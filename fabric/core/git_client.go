@@ -846,7 +846,11 @@ func (client *GitClient) updateConnectionSettingsHandleResponse(resp *http.Respo
 	return result, nil
 }
 
-// BeginUpdateFromGit - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// BeginUpdateFromGit - > [!NOTE] Deployment plan support in this API is part of a Beta release and is provided for evaluation
+// and development purposes only. It may change based on feedback and is not recommended for
+// production use. All other functionality of this API is generally available. To use deployment plan support, callers must
+// specify true as the value for the query parameter beta.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To use this API, the caller's Git credentials must be configured using Update My Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials]
 // API. You can use the Get My Git Credentials
 // [/rest/api/fabric/core/git/get-my-git-credentials] API to check the Git credentials configuration.
@@ -873,7 +877,11 @@ func (client *GitClient) BeginUpdateFromGit(ctx context.Context, workspaceID str
 	return client.beginUpdateFromGit(ctx, workspaceID, updateFromGitRequest, options)
 }
 
-// UpdateFromGit - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// UpdateFromGit - > [!NOTE] Deployment plan support in this API is part of a Beta release and is provided for evaluation
+// and development purposes only. It may change based on feedback and is not recommended for
+// production use. All other functionality of this API is generally available. To use deployment plan support, callers must
+// specify true as the value for the query parameter beta.
+// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // To use this API, the caller's Git credentials must be configured using Update My Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials]
 // API. You can use the Get My Git Credentials
 // [/rest/api/fabric/core/git/get-my-git-credentials] API to check the Git credentials configuration.
@@ -915,7 +923,7 @@ func (client *GitClient) updateFromGit(ctx context.Context, workspaceID string, 
 }
 
 // updateFromGitCreateRequest creates the UpdateFromGit request.
-func (client *GitClient) updateFromGitCreateRequest(ctx context.Context, workspaceID string, updateFromGitRequest UpdateFromGitRequest, _ *GitClientBeginUpdateFromGitOptions) (*policy.Request, error) {
+func (client *GitClient) updateFromGitCreateRequest(ctx context.Context, workspaceID string, updateFromGitRequest UpdateFromGitRequest, options *GitClientBeginUpdateFromGitOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/git/updateFromGit"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -925,6 +933,11 @@ func (client *GitClient) updateFromGitCreateRequest(ctx context.Context, workspa
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.Beta != nil {
+		reqQP.Set("beta", strconv.FormatBool(*options.Beta))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	if err := runtime.MarshalAsJSON(req, updateFromGitRequest); err != nil {
 		return nil, err
@@ -1230,6 +1243,9 @@ func (client *GitClient) beginInitializeConnection(ctx context.Context, workspac
 }
 
 // UpdateFromGit - returns GitClientUpdateFromGitResponse in sync mode.
+// >  [!NOTE] Deployment plan support in this API is part of a Beta release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for
+// production use. All other functionality of this API is generally available. To use deployment plan support, callers must specify true as the value for the query parameter beta.
+//
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
 // To use this API, the caller's Git credentials must be configured using Update My Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials] API. You can use the Get My Git Credentials

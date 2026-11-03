@@ -58,7 +58,7 @@ func ExampleItemsClient_NewListSemanticModelsPager() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_BeginCreateSemanticModel() {
+func ExampleItemsClient_BeginCreateSemanticModel_createASemanticModelExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -88,6 +88,60 @@ func ExampleItemsClient_BeginCreateSemanticModel() {
 					PayloadType: to.Ptr(semanticmodel.PayloadTypeInlineBase64),
 				}},
 		},
+		DisplayName: to.Ptr("SemanticModel 1"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginCreateSemanticModel_createASemanticModelWithOneLakeTablesExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := semanticmodel.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginCreateSemanticModel(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", semanticmodel.CreateSemanticModelRequest{
+		Description: to.Ptr("A semantic model connected to lakehouse tables."),
+		CreationPayload: &semanticmodel.CreationPayload{
+			OneLakeTables: []string{
+				"https://onelake.dfs.fabric.microsoft.com/aaaa0000-bb11-2222-33cc-444444dddddd/cccc0000-dd11-2222-33ee-444444ffffff/Tables/dim_customer",
+				"https://onelake.dfs.fabric.microsoft.com/aaaa0000-bb11-2222-33cc-444444dddddd/cccc0000-dd11-2222-33ee-444444ffffff/Tables/sales/dim_product",
+				"https://onelake.dfs.fabric.microsoft.com/1111aaaa-bb22-3333-44cc-555555eeeeee/2222bbbb-cc33-4444-55dd-666666ffffff/Tables/dim_region"},
+		},
+		DisplayName: to.Ptr("Sales Analytics Model"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginCreateSemanticModel_createAnEmptySemanticModelExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := semanticmodel.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginCreateSemanticModel(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", semanticmodel.CreateSemanticModelRequest{
+		Description: to.Ptr("An empty semantic model."),
 		DisplayName: to.Ptr("SemanticModel 1"),
 	}, nil)
 	if err != nil {

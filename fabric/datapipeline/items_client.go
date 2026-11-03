@@ -233,6 +233,10 @@ func (client *ItemsClient) getDataPipelineHandleResponse(resp *http.Response) (I
 // When you get a DataPipeline's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the data pipeline.
 // REQUIRED DELEGATED SCOPES DataPipeline.ReadWrite.All or Item.ReadWrite.All
+// LIMITATIONS To retrieve the definition of a data pipeline item protected by an encrypted sensitivity label, the caller
+// must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -254,6 +258,10 @@ func (client *ItemsClient) BeginGetDataPipelineDefinition(ctx context.Context, w
 // When you get a DataPipeline's public definition, the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the data pipeline.
 // REQUIRED DELEGATED SCOPES DataPipeline.ReadWrite.All or Item.ReadWrite.All
+// LIMITATIONS To retrieve the definition of a data pipeline item protected by an encrypted sensitivity label, the caller
+// must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -614,6 +622,9 @@ func (client *ItemsClient) beginCreateDataPipeline(ctx context.Context, workspac
 // PERMISSIONS The caller must have read and write permissions for the data pipeline.
 //
 // # REQUIRED DELEGATED SCOPES DataPipeline.ReadWrite.All or Item.ReadWrite.All
+//
+// LIMITATIONS To retrieve the definition of a data pipeline item protected by an encrypted sensitivity label, the caller must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in Microsoft Purview [/purview/purview].
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

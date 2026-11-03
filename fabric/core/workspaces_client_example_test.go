@@ -292,6 +292,11 @@ func ExampleWorkspacesClient_GetWorkspace_getAWorkspaceExample() {
 	// 	},
 	// 	WorkspaceIdentity: &core.WorkspaceIdentity{
 	// 		ApplicationID: to.Ptr("00a4a8f9-78d3-41b3-b87a-6ae5271c8d0d"),
+	// 		IdentityReference: &core.ItemReferenceByID{
+	// 			ReferenceType: to.Ptr(core.ItemReferenceTypeByID),
+	// 			ItemID: to.Ptr("4a1d86e3-d740-4610-b32d-7bae87d33e9d"),
+	// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
+	// 		},
 	// 		ServicePrincipalID: to.Ptr("5ba4ae58-d402-45c6-a848-0253e834fd78"),
 	// 	},
 	// }
@@ -330,6 +335,11 @@ func ExampleWorkspacesClient_GetWorkspace_getAWorkspaceWithPreferWorkspaceSpecif
 	// 	},
 	// 	WorkspaceIdentity: &core.WorkspaceIdentity{
 	// 		ApplicationID: to.Ptr("00a4a8f9-78d3-41b3-b87a-6ae5271c8d0d"),
+	// 		IdentityReference: &core.ItemReferenceByID{
+	// 			ReferenceType: to.Ptr(core.ItemReferenceTypeByID),
+	// 			ItemID: to.Ptr("4a1d86e3-d740-4610-b32d-7bae87d33e9d"),
+	// 			WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
+	// 		},
 	// 		ServicePrincipalID: to.Ptr("5ba4ae58-d402-45c6-a848-0253e834fd78"),
 	// 	},
 	// }
@@ -687,6 +697,11 @@ func ExampleWorkspacesClient_BeginProvisionIdentity() {
 	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
 	// res.WorkspaceIdentity = core.WorkspaceIdentity{
 	// 	ApplicationID: to.Ptr("00a4a8f9-78d3-41b3-b87a-6ae5271c8d0d"),
+	// 	IdentityReference: &core.ItemReferenceByID{
+	// 		ReferenceType: to.Ptr(core.ItemReferenceTypeByID),
+	// 		ItemID: to.Ptr("4a1d86e3-d740-4610-b32d-7bae87d33e9d"),
+	// 		WorkspaceID: to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff227"),
+	// 	},
 	// 	ServicePrincipalID: to.Ptr("5ba4ae58-d402-45c6-a848-0253e834fd78"),
 	// }
 }

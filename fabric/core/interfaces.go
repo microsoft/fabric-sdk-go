@@ -6,6 +6,24 @@
 
 package core
 
+// ActorAutoDetectionRuleActorsSubjectToRuleClassification provides polymorphic access to related types.
+// Call the interface's GetActorAutoDetectionRuleActorsSubjectToRule() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *ActorAutoDetectionRuleActorsSubjectToRule, *ActorAutoDetectionRuleAllWorkspaces
+type ActorAutoDetectionRuleActorsSubjectToRuleClassification interface {
+	// GetActorAutoDetectionRuleActorsSubjectToRule returns the ActorAutoDetectionRuleActorsSubjectToRule content of the underlying type.
+	GetActorAutoDetectionRuleActorsSubjectToRule() *ActorAutoDetectionRuleActorsSubjectToRule
+}
+
+// ActorAutoDetectionRuleBlockDurationClassification provides polymorphic access to related types.
+// Call the interface's GetActorAutoDetectionRuleBlockDuration() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *ActorAutoDetectionRuleBlockDuration, *ActorAutoDetectionRuleHoursBlockDuration, *ActorAutoDetectionRuleIndefiniteBlockDuration
+type ActorAutoDetectionRuleBlockDurationClassification interface {
+	// GetActorAutoDetectionRuleBlockDuration returns the ActorAutoDetectionRuleBlockDuration content of the underlying type.
+	GetActorAutoDetectionRuleBlockDuration() *ActorAutoDetectionRuleBlockDuration
+}
+
 // BaseExternalDataShareRecipientClassification provides polymorphic access to related types.
 // Call the interface's GetBaseExternalDataShareRecipient() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
@@ -13,6 +31,15 @@ package core
 type BaseExternalDataShareRecipientClassification interface {
 	// GetBaseExternalDataShareRecipient returns the BaseExternalDataShareRecipient content of the underlying type.
 	GetBaseExternalDataShareRecipient() *BaseExternalDataShareRecipient
+}
+
+// BlockedActorExpirationPolicyClassification provides polymorphic access to related types.
+// Call the interface's GetBlockedActorExpirationPolicy() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *BlockedActorExpirationPolicy, *ExpireAfterDateBlockedActorExpirationPolicy, *NeverExpireBlockedActorExpirationPolicy
+type BlockedActorExpirationPolicyClassification interface {
+	// GetBlockedActorExpirationPolicy returns the BlockedActorExpirationPolicy content of the underlying type.
+	GetBlockedActorExpirationPolicy() *BlockedActorExpirationPolicy
 }
 
 // CatalogEntryClassification provides polymorphic access to related types.
@@ -72,6 +99,15 @@ type CreateGatewayRequestClassification interface {
 type CredentialsClassification interface {
 	// GetCredentials returns the Credentials content of the underlying type.
 	GetCredentials() *Credentials
+}
+
+// DeploymentPlanReferenceClassification provides polymorphic access to related types.
+// Call the interface's GetDeploymentPlanReference() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *DeploymentPlanReference, *DeploymentPlanReferenceByItemID, *DeploymentPlanReferenceByLogicalID
+type DeploymentPlanReferenceClassification interface {
+	// GetDeploymentPlanReference returns the DeploymentPlanReference content of the underlying type.
+	GetDeploymentPlanReference() *DeploymentPlanReference
 }
 
 // ExternalDataShareAcceptRequestPayloadClassification provides polymorphic access to related types.
@@ -163,6 +199,15 @@ type PrincipalClassification interface {
 type ScheduleConfigClassification interface {
 	// GetScheduleConfig returns the ScheduleConfig content of the underlying type.
 	GetScheduleConfig() *ScheduleConfig
+}
+
+// SurgeProtectionActorDetailsClassification provides polymorphic access to related types.
+// Call the interface's GetSurgeProtectionActorDetails() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *SurgeProtectionActorDetails, *WorkspaceActorDetails
+type SurgeProtectionActorDetailsClassification interface {
+	// GetSurgeProtectionActorDetails returns the SurgeProtectionActorDetails content of the underlying type.
+	GetSurgeProtectionActorDetails() *SurgeProtectionActorDetails
 }
 
 // TagScopeClassification provides polymorphic access to related types.

@@ -64,6 +64,7 @@ func ExampleConnectionsClient_NewListConnectionsPager() {
 		// 			DisplayName: to.Ptr("ContosoConnection1"),
 		// 			GatewayID: to.Ptr("8f72eea3-d989-4a5a-aeed-02b3aaa2ddd0"),
 		// 			ID: to.Ptr("6952a7b2-aea3-414f-9d85-6c0fe5d34539"),
+		// 			MyRole: to.Ptr(core.ConnectionRoleOwner),
 		// 			PrivacyLevel: to.Ptr(core.PrivacyLevelPublic),
 		// 		},
 		// 		&core.OnPremisesGatewayConnection{
@@ -88,6 +89,7 @@ func ExampleConnectionsClient_NewListConnectionsPager() {
 		// 			DisplayName: to.Ptr("ContosoConnection2"),
 		// 			GatewayID: to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
 		// 			ID: to.Ptr("f6a39b76-9816-4e4b-b93a-f42e405017b7"),
+		// 			MyRole: to.Ptr(core.ConnectionRoleUser),
 		// 			PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 		// 		},
 		// 		&core.StreamingVirtualNetworkGatewayConnection{
@@ -105,6 +107,7 @@ func ExampleConnectionsClient_NewListConnectionsPager() {
 		// 			DisplayName: to.Ptr("ContosoStreamingVirtualNetworkGatewayConnection"),
 		// 			GatewayID: to.Ptr("3f8d6a4b-1c2e-4f5a-9b7c-2d6e8f1a3b9d"),
 		// 			ID: to.Ptr("a3b4c5d6-7e8f-4a5b-9c0d-1e2f3a4b5c6d"),
+		// 			MyRole: to.Ptr(core.ConnectionRolePendingOwner),
 		// 			PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 		// 	}},
 		// }
@@ -397,6 +400,7 @@ func ExampleConnectionsClient_GetConnection() {
 	// 		DisplayName: to.Ptr("ContosoConnection"),
 	// 		GatewayID: to.Ptr("58376c10-5f61-4024-887e-748df4beae45"),
 	// 		ID: to.Ptr("f6a39b76-9816-4e4b-b93a-f42e405017b7"),
+	// 		MyRole: to.Ptr(core.ConnectionRoleOwner),
 	// 		PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 	// 	},
 	// 	                        }
@@ -450,6 +454,7 @@ func ExampleConnectionsClient_UpdateConnection_onPremisesGatewayPersonalModeExam
 	// 		},
 	// 		GatewayID: to.Ptr("429a773e-5633-45ee-8584-a192bd79c16a"),
 	// 		ID: to.Ptr("ef8f408d-2ab7-4a18-b662-9251febda49c"),
+	// 		MyRole: to.Ptr(core.ConnectionRoleOwner),
 	// 		PrivacyLevel: to.Ptr(core.PrivacyLevelPrivate),
 	// 	},
 	// 	                        }
@@ -514,6 +519,7 @@ func ExampleConnectionsClient_UpdateConnection_onPremisesGatewayExample() {
 	// 		DisplayName: to.Ptr("ContosoSalesOnPremisesConnection"),
 	// 		GatewayID: to.Ptr("4f8b5d6e-8e99-4817-8b9e-6b6a613be707"),
 	// 		ID: to.Ptr("70b17680-48f1-4729-9df6-02576647dc3a"),
+	// 		MyRole: to.Ptr(core.ConnectionRoleOwner),
 	// 		PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 	// 	},
 	// 	                        }
@@ -562,6 +568,7 @@ func ExampleConnectionsClient_UpdateConnection_personalCloudExample() {
 	// 		},
 	// 		GatewayID: to.Ptr("8f72eea3-d989-4a5a-aeed-02b3aaa2ddd0"),
 	// 		ID: to.Ptr("7a0369b2-58c4-4b67-b3f3-92156a95f1cd"),
+	// 		MyRole: to.Ptr(core.ConnectionRoleOwner),
 	// 		PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 	// 	},
 	// 	                        }
@@ -611,6 +618,7 @@ func ExampleConnectionsClient_UpdateConnection_shareableCloudExample() {
 	// 		DisplayName: to.Ptr("ContosoCloudConnection"),
 	// 		GatewayID: to.Ptr("8f72eea3-d989-4a5a-aeed-02b3aaa2ddd0"),
 	// 		ID: to.Ptr("fa968eee-8075-48f6-8c6d-41260ee1396d"),
+	// 		MyRole: to.Ptr(core.ConnectionRoleOwner),
 	// 		PrivacyLevel: to.Ptr(core.PrivacyLevelPublic),
 	// 	},
 	// 	                        }
@@ -656,6 +664,7 @@ func ExampleConnectionsClient_UpdateConnection_streamingVirtualNetworkGatewayExa
 	// 		DisplayName: to.Ptr("ContosoMarketingStreamingVirtualNetworkGatewayConnection"),
 	// 		GatewayID: to.Ptr("befccff4-3ee6-40d7-b8f1-a0a9fd684a85"),
 	// 		ID: to.Ptr("6b571614-2e98-4bfd-b9ed-1cb8d3ffc396"),
+	// 		MyRole: to.Ptr(core.ConnectionRoleOwner),
 	// 		PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 	// 	},
 	// 	                        }
@@ -709,6 +718,7 @@ func ExampleConnectionsClient_UpdateConnection_virtualNetworkGatewayExample() {
 	// 		DisplayName: to.Ptr("ContosoMarketingVirtualNetworkGatewayConnection"),
 	// 		GatewayID: to.Ptr("befccff4-3ee6-40d7-b8f1-a0a9fd684a85"),
 	// 		ID: to.Ptr("6b571614-2e98-4bfd-b9ed-1cb8d3ffc396"),
+	// 		MyRole: to.Ptr(core.ConnectionRoleOwner),
 	// 		PrivacyLevel: to.Ptr(core.PrivacyLevelOrganizational),
 	// 	},
 	// 	                        }
@@ -910,6 +920,14 @@ func ExampleConnectionsClient_NewListConnectionRoleAssignmentsPager_listConnecti
 		// 				ID: to.Ptr("1dfa1747-ce76-4caf-99c8-360b95f9f17a"),
 		// 			},
 		// 			Role: to.Ptr(core.ConnectionRoleUserWithReshare),
+		// 		},
+		// 		{
+		// 			ID: to.Ptr("7f2c9a10-4d3e-4b8a-9c1f-2e6d8b0a5c4e"),
+		// 			Principal: &core.UserPrincipal{
+		// 				Type: to.Ptr(core.PrincipalTypeUser),
+		// 				ID: to.Ptr("7f2c9a10-4d3e-4b8a-9c1f-2e6d8b0a5c4e"),
+		// 			},
+		// 			Role: to.Ptr(core.ConnectionRolePendingOwner),
 		// 	}},
 		// }
 	}
@@ -993,7 +1011,7 @@ func ExampleConnectionsClient_AddConnectionRoleAssignment() {
 			Type: to.Ptr(core.PrincipalTypeUser),
 			ID:   to.Ptr("6a002b3d-e4ec-43df-8c08-e8eb7547d9dd"),
 		},
-		Role: to.Ptr(core.ConnectionRoleOwner),
+		Role: to.Ptr(core.AssignableConnectionRoleOwner),
 	}, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
@@ -1040,7 +1058,7 @@ func ExampleConnectionsClient_UpdateConnectionRoleAssignment() {
 		log.Fatalf("failed to create client: %v", err)
 	}
 	res, err := clientFactory.NewConnectionsClient().UpdateConnectionRoleAssignment(ctx, "fe8e181d-dbb8-471a-99f0-fdbf0a2ad4fd", "43970761-afc9-4428-ae6e-3b08bef098ff", core.UpdateConnectionRoleAssignmentRequest{
-		Role: to.Ptr(core.ConnectionRoleUserWithReshare),
+		Role: to.Ptr(core.AssignableConnectionRoleUserWithReshare),
 	}, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)

@@ -29,13 +29,101 @@ type AcceptExternalDataShareInvitationResponse struct {
 	Value []ExternalDataShareShortcutInfo
 }
 
+// ActorAutoDetectionRule - An actor auto-detection rule on a capacity.
+type ActorAutoDetectionRule struct {
+	// REQUIRED; The actors that are subject to the rule.
+	ActorsSubjectToRule ActorAutoDetectionRuleActorsSubjectToRuleClassification
+
+	// REQUIRED; The duration for which an automatically blocked actor remains blocked.
+	BlockDuration ActorAutoDetectionRuleBlockDurationClassification
+
+	// REQUIRED; The capacity unit consumption threshold per actor as a percentage of total capacity units over a rolling 24-hour
+	// window.
+	CapacityUnitsConsumptionThresholdPercentage *int32
+
+	// READ-ONLY; The actor auto-detection rule ID.
+	ID *string
+}
+
+// ActorAutoDetectionRuleActorsSubjectToRule - The base type that identifies which actors are subject to an actor auto-detection
+// rule.
+type ActorAutoDetectionRuleActorsSubjectToRule struct {
+	// REQUIRED; The kind of actors that are subject to the rule.
+	Type *ActorAutoDetectionRuleActorsSubjectToRuleKind
+}
+
+// GetActorAutoDetectionRuleActorsSubjectToRule implements the ActorAutoDetectionRuleActorsSubjectToRuleClassification interface
+// for type ActorAutoDetectionRuleActorsSubjectToRule.
+func (a *ActorAutoDetectionRuleActorsSubjectToRule) GetActorAutoDetectionRuleActorsSubjectToRule() *ActorAutoDetectionRuleActorsSubjectToRule {
+	return a
+}
+
+// ActorAutoDetectionRuleAllWorkspaces - An actor selection that applies an actor auto-detection rule to all workspaces on
+// the capacity.
+type ActorAutoDetectionRuleAllWorkspaces struct {
+	// REQUIRED; The kind of actors that are subject to the rule.
+	Type *ActorAutoDetectionRuleActorsSubjectToRuleKind
+}
+
+// GetActorAutoDetectionRuleActorsSubjectToRule implements the ActorAutoDetectionRuleActorsSubjectToRuleClassification interface
+// for type ActorAutoDetectionRuleAllWorkspaces.
+func (a *ActorAutoDetectionRuleAllWorkspaces) GetActorAutoDetectionRuleActorsSubjectToRule() *ActorAutoDetectionRuleActorsSubjectToRule {
+	return &ActorAutoDetectionRuleActorsSubjectToRule{
+		Type: a.Type,
+	}
+}
+
+// ActorAutoDetectionRuleBlockDuration - The base type that describes how long an automatically blocked actor remains blocked.
+type ActorAutoDetectionRuleBlockDuration struct {
+	// REQUIRED; The kind of block duration.
+	Type *ActorAutoDetectionRuleBlockDurationKind
+}
+
+// GetActorAutoDetectionRuleBlockDuration implements the ActorAutoDetectionRuleBlockDurationClassification interface for type
+// ActorAutoDetectionRuleBlockDuration.
+func (a *ActorAutoDetectionRuleBlockDuration) GetActorAutoDetectionRuleBlockDuration() *ActorAutoDetectionRuleBlockDuration {
+	return a
+}
+
+// ActorAutoDetectionRuleHoursBlockDuration - An actor auto-detection rule block duration measured in hours.
+type ActorAutoDetectionRuleHoursBlockDuration struct {
+	// REQUIRED; The number of hours the actor remains blocked.
+	Hours *int32
+
+	// REQUIRED; The kind of block duration.
+	Type *ActorAutoDetectionRuleBlockDurationKind
+}
+
+// GetActorAutoDetectionRuleBlockDuration implements the ActorAutoDetectionRuleBlockDurationClassification interface for type
+// ActorAutoDetectionRuleHoursBlockDuration.
+func (a *ActorAutoDetectionRuleHoursBlockDuration) GetActorAutoDetectionRuleBlockDuration() *ActorAutoDetectionRuleBlockDuration {
+	return &ActorAutoDetectionRuleBlockDuration{
+		Type: a.Type,
+	}
+}
+
+// ActorAutoDetectionRuleIndefiniteBlockDuration - An actor auto-detection rule block duration that remains in effect until
+// an admin manually unblocks the actor.
+type ActorAutoDetectionRuleIndefiniteBlockDuration struct {
+	// REQUIRED; The kind of block duration.
+	Type *ActorAutoDetectionRuleBlockDurationKind
+}
+
+// GetActorAutoDetectionRuleBlockDuration implements the ActorAutoDetectionRuleBlockDurationClassification interface for type
+// ActorAutoDetectionRuleIndefiniteBlockDuration.
+func (a *ActorAutoDetectionRuleIndefiniteBlockDuration) GetActorAutoDetectionRuleBlockDuration() *ActorAutoDetectionRuleBlockDuration {
+	return &ActorAutoDetectionRuleBlockDuration{
+		Type: a.Type,
+	}
+}
+
 // AddConnectionRoleAssignmentRequest - The add connection role assignment request for a principal.
 type AddConnectionRoleAssignmentRequest struct {
 	// REQUIRED; The principal.
 	Principal PrincipalClassification
 
 	// REQUIRED; The connection role of the principal.
-	Role *ConnectionRole
+	Role *AssignableConnectionRole
 }
 
 // AddDeploymentPipelineRoleAssignmentRequest - Add deployment pipeline role assignment request payload.
@@ -261,6 +349,41 @@ func (b *BasicCredentials) GetCredentials() *Credentials {
 	}
 }
 
+// BlockedActor - A blocked actor on a capacity.
+type BlockedActor struct {
+	// REQUIRED; Defines when the block expires.
+	ExpirationPolicy BlockedActorExpirationPolicyClassification
+
+	// READ-ONLY; The actor that is blocked.
+	ActorDetails SurgeProtectionActorDetailsClassification
+
+	// READ-ONLY; The blocked actor ID.
+	ID *string
+}
+
+// BlockedActorExpirationPolicy - Defines when a blocked actor expires.
+type BlockedActorExpirationPolicy struct {
+	// REQUIRED; The type of expiration policy.
+	PolicyType *BlockedActorExpirationPolicyType
+}
+
+// GetBlockedActorExpirationPolicy implements the BlockedActorExpirationPolicyClassification interface for type BlockedActorExpirationPolicy.
+func (b *BlockedActorExpirationPolicy) GetBlockedActorExpirationPolicy() *BlockedActorExpirationPolicy {
+	return b
+}
+
+// BlockedActors - A list of blocked actors.
+type BlockedActors struct {
+	// REQUIRED; A list of blocked actors.
+	Value []BlockedActor
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
 // BulkCreateShortcutResponse - A collection of CreateShortcutResponse that corresponds to the requested shortcut creation
 // requests.
 type BulkCreateShortcutResponse struct {
@@ -310,6 +433,13 @@ type BulkImportItemDefinitionsRequestOptions struct {
 	// due to a name duplication conflict.
 	// Default value is false
 	AllowPairingByName *bool
+
+	// A reference to a deployment plan item to orchestrate the deployment. When provided, the plan controls item deployment ordering
+	// and executes pre/post deployment actions. When absent or null, the
+	// operation behaves as today. Currently, only the ByLogicalId reference type is supported. Deployment plan support is currently
+	// in Beta. This property can be used only when the query parameter beta is
+	// set to true and may change based on feedback.
+	DeploymentPlan DeploymentPlanReferenceClassification
 
 	// Per-item options. Each entry targets its item by logical ID and applies its options to that item.
 	ItemOptionsByLogicalID []ItemOptionsByLogicalIDEntry
@@ -619,6 +749,11 @@ type Connection struct {
 
 	// The privacy level of the connection.
 	PrivacyLevel *PrivacyLevel
+
+	// READ-ONLY; The calling principal's effective role on the connection. When the principal is part of multiple security groups
+	// with different roles, the highest role is returned. If the principal has no role on the
+	// connection, this property is not returned.
+	MyRole *ConnectionRole
 }
 
 // GetConnection implements the ConnectionClassification interface for type Connection.
@@ -953,6 +1088,28 @@ type CreatableShortcutTarget struct {
 	S3Compatible *S3Compatible
 }
 
+// CreateActorAutoDetectionRuleRequest - The request payload for creating an actor auto-detection rule.
+type CreateActorAutoDetectionRuleRequest struct {
+	// REQUIRED; The actors that are subject to the rule.
+	ActorsSubjectToRule ActorAutoDetectionRuleActorsSubjectToRuleClassification
+
+	// REQUIRED; The duration for which an automatically blocked actor remains blocked.
+	BlockDuration ActorAutoDetectionRuleBlockDurationClassification
+
+	// REQUIRED; The capacity unit consumption threshold per actor as a percentage of total capacity units over a rolling 24-hour
+	// window.
+	CapacityUnitsConsumptionThresholdPercentage *int32
+}
+
+// CreateBlockedActorRequest - The request payload for creating a blocked actor on a capacity.
+type CreateBlockedActorRequest struct {
+	// REQUIRED; The actor to block.
+	ActorDetails SurgeProtectionActorDetailsClassification
+
+	// REQUIRED; Defines when the block expires.
+	ExpirationPolicy BlockedActorExpirationPolicyClassification
+}
+
 type CreateCloudConnectionRequest struct {
 	// REQUIRED; The connection details of the connection.
 	ConnectionDetails *CreateConnectionDetails
@@ -1146,6 +1303,12 @@ type CreateManagedPrivateEndpointRequest struct {
 
 	// Sub-resource pointing to Private-link resoure [/azure/private-link/private-endpoint-overview#private-link-resource].
 	TargetSubresourceType *string
+}
+
+// CreateMissionCriticalActorRequest - The request payload for creating a mission critical actor on a capacity.
+type CreateMissionCriticalActorRequest struct {
+	// REQUIRED; The actor to shield from surge-protection rejection.
+	ActorDetails SurgeProtectionActorDetailsClassification
 }
 
 type CreateOnPremisesConnectionRequest struct {
@@ -1694,6 +1857,13 @@ type DeploymentOptions struct {
 	// Indicates whether cross region deployment is enabled. True - enabled, False - disabled. Default value is false.
 	AllowCrossRegionDeployment *bool
 
+	// A reference to a deployment plan item to orchestrate the deployment. When provided, the plan controls item deployment ordering
+	// and executes pre/post deployment actions. When absent or null, the
+	// operation behaves as today. Currently, only the ByItemId reference type is supported. Deployment plan support is currently
+	// in Beta. This property can be used only when the query parameter beta is set
+	// to true and may change based on feedback.
+	DeploymentPlan DeploymentPlanReferenceClassification
+
 	// Per-item deployment options. Each entry targets its item by source item ID and applies its options to that item.
 	ItemOptionsBySourceItemID []ItemOptionsBySourceItemIDEntry
 }
@@ -1965,6 +2135,47 @@ type DeploymentPipelines struct {
 	Value []DeploymentPipeline
 }
 
+// DeploymentPlanReference - A reference to a deployment plan item.
+type DeploymentPlanReference struct {
+	// REQUIRED; The deployment plan reference type.
+	ReferenceType *DeploymentPlanReferenceType
+}
+
+// GetDeploymentPlanReference implements the DeploymentPlanReferenceClassification interface for type DeploymentPlanReference.
+func (d *DeploymentPlanReference) GetDeploymentPlanReference() *DeploymentPlanReference { return d }
+
+// DeploymentPlanReferenceByItemID - A deployment plan reference by item ID.
+type DeploymentPlanReferenceByItemID struct {
+	// REQUIRED; The item ID of the deployment plan item.
+	ItemID *string
+
+	// REQUIRED; The deployment plan reference type.
+	ReferenceType *DeploymentPlanReferenceType
+}
+
+// GetDeploymentPlanReference implements the DeploymentPlanReferenceClassification interface for type DeploymentPlanReferenceByItemID.
+func (d *DeploymentPlanReferenceByItemID) GetDeploymentPlanReference() *DeploymentPlanReference {
+	return &DeploymentPlanReference{
+		ReferenceType: d.ReferenceType,
+	}
+}
+
+// DeploymentPlanReferenceByLogicalID - A deployment plan reference by logical ID.
+type DeploymentPlanReferenceByLogicalID struct {
+	// REQUIRED; The logical ID of the deployment plan item.
+	LogicalID *string
+
+	// REQUIRED; The deployment plan reference type.
+	ReferenceType *DeploymentPlanReferenceType
+}
+
+// GetDeploymentPlanReference implements the DeploymentPlanReferenceClassification interface for type DeploymentPlanReferenceByLogicalID.
+func (d *DeploymentPlanReferenceByLogicalID) GetDeploymentPlanReference() *DeploymentPlanReference {
+	return &DeploymentPlanReference{
+		ReferenceType: d.ReferenceType,
+	}
+}
+
 // DeploymentSourceAndTarget - Source and target items.
 type DeploymentSourceAndTarget struct {
 	// READ-ONLY; The ID of the Fabric item that's deployed from the source stage.
@@ -2119,6 +2330,23 @@ type ErrorResponseDetails struct {
 
 	// READ-ONLY; The error related resource details.
 	RelatedResource *ErrorRelatedResource
+}
+
+// ExpireAfterDateBlockedActorExpirationPolicy - An expiration policy where the block expires at the date and time specified
+// in expireAfterDateTime.
+type ExpireAfterDateBlockedActorExpirationPolicy struct {
+	// REQUIRED; The date and time at which the block expires. Expressed in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	ExpireAfterDateTime *string
+
+	// REQUIRED; The type of expiration policy.
+	PolicyType *BlockedActorExpirationPolicyType
+}
+
+// GetBlockedActorExpirationPolicy implements the BlockedActorExpirationPolicyClassification interface for type ExpireAfterDateBlockedActorExpirationPolicy.
+func (e *ExpireAfterDateBlockedActorExpirationPolicy) GetBlockedActorExpirationPolicy() *BlockedActorExpirationPolicy {
+	return &BlockedActorExpirationPolicy{
+		PolicyType: e.PolicyType,
+	}
 }
 
 // ExportItemIdentifier - The item identifier.
@@ -3136,6 +3364,18 @@ func (l *LakehouseOneLakeDiagnosticSettingsDestination) GetOneLakeDiagnosticSett
 	}
 }
 
+// ListActorAutoDetectionRulesResponse - A list of actor auto-detection rules.
+type ListActorAutoDetectionRulesResponse struct {
+	// READ-ONLY; A list of actor auto-detection rules.
+	Value []ActorAutoDetectionRule
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
 // ListConnectionDetails - The connection details output for list operations.
 type ListConnectionDetails struct {
 	// REQUIRED; The path of the connection.
@@ -3260,9 +3500,27 @@ type MicrosoftEntraMember struct {
 
 	// REQUIRED; The tenant id.
 	TenantID *string
+}
 
-	// The type of Microsoft Entra ID object. Additional objectType types may be added over time.
-	ObjectType *ObjectType
+// MissionCriticalActor - A mission critical actor on a capacity.
+type MissionCriticalActor struct {
+	// READ-ONLY; The actor that is shielded from surge-protection rejection.
+	ActorDetails SurgeProtectionActorDetailsClassification
+
+	// READ-ONLY; The mission critical actor ID.
+	ID *string
+}
+
+// MissionCriticalActors - A list of mission critical actors.
+type MissionCriticalActors struct {
+	// REQUIRED; A list of mission critical actors.
+	Value []MissionCriticalActor
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
 }
 
 // ModifyAccessTimeTrackingRequest - Modify OneLake access time tracking request.
@@ -3344,6 +3602,19 @@ type NetworkRules struct {
 	// Allow, which may unintentionally open network access. Always explicitly specify
 	// this field in every PUT request body.
 	DefaultAction *NetworkAccessRule
+}
+
+// NeverExpireBlockedActorExpirationPolicy - An expiration policy where the block does not expire automatically.
+type NeverExpireBlockedActorExpirationPolicy struct {
+	// REQUIRED; The type of expiration policy.
+	PolicyType *BlockedActorExpirationPolicyType
+}
+
+// GetBlockedActorExpirationPolicy implements the BlockedActorExpirationPolicyClassification interface for type NeverExpireBlockedActorExpirationPolicy.
+func (n *NeverExpireBlockedActorExpirationPolicy) GetBlockedActorExpirationPolicy() *BlockedActorExpirationPolicy {
+	return &BlockedActorExpirationPolicy{
+		PolicyType: n.PolicyType,
+	}
 }
 
 // NoneGitCredentialsResponse - Not configured Git credentials.
@@ -3434,6 +3705,11 @@ type OnPremisesGatewayConnection struct {
 
 	// The privacy level of the connection.
 	PrivacyLevel *PrivacyLevel
+
+	// READ-ONLY; The calling principal's effective role on the connection. When the principal is part of multiple security groups
+	// with different roles, the highest role is returned. If the principal has no role on the
+	// connection, this property is not returned.
+	MyRole *ConnectionRole
 }
 
 // GetConnection implements the ConnectionClassification interface for type OnPremisesGatewayConnection.
@@ -3446,6 +3722,7 @@ func (o *OnPremisesGatewayConnection) GetConnection() *Connection {
 		DisplayName:       o.DisplayName,
 		GatewayID:         o.GatewayID,
 		ID:                o.ID,
+		MyRole:            o.MyRole,
 		PrivacyLevel:      o.PrivacyLevel,
 	}
 }
@@ -3524,6 +3801,11 @@ type OnPremisesGatewayPersonalConnection struct {
 
 	// The privacy level of the connection.
 	PrivacyLevel *PrivacyLevel
+
+	// READ-ONLY; The calling principal's effective role on the connection. When the principal is part of multiple security groups
+	// with different roles, the highest role is returned. If the principal has no role on the
+	// connection, this property is not returned.
+	MyRole *ConnectionRole
 }
 
 // GetConnection implements the ConnectionClassification interface for type OnPremisesGatewayPersonalConnection.
@@ -3536,6 +3818,7 @@ func (o *OnPremisesGatewayPersonalConnection) GetConnection() *Connection {
 		DisplayName:       o.DisplayName,
 		GatewayID:         o.GatewayID,
 		ID:                o.ID,
+		MyRole:            o.MyRole,
 		PrivacyLevel:      o.PrivacyLevel,
 	}
 }
@@ -3774,6 +4057,11 @@ type PersonalCloudConnection struct {
 
 	// The privacy level of the connection.
 	PrivacyLevel *PrivacyLevel
+
+	// READ-ONLY; The calling principal's effective role on the connection. When the principal is part of multiple security groups
+	// with different roles, the highest role is returned. If the principal has no role on the
+	// connection, this property is not returned.
+	MyRole *ConnectionRole
 }
 
 // GetConnection implements the ConnectionClassification interface for type PersonalCloudConnection.
@@ -3786,6 +4074,7 @@ func (p *PersonalCloudConnection) GetConnection() *Connection {
 		DisplayName:       p.DisplayName,
 		GatewayID:         p.GatewayID,
 		ID:                p.ID,
+		MyRole:            p.MyRole,
 		PrivacyLevel:      p.PrivacyLevel,
 	}
 }
@@ -4124,6 +4413,11 @@ type ShareableCloudConnection struct {
 
 	// The privacy level of the connection.
 	PrivacyLevel *PrivacyLevel
+
+	// READ-ONLY; The calling principal's effective role on the connection. When the principal is part of multiple security groups
+	// with different roles, the highest role is returned. If the principal has no role on the
+	// connection, this property is not returned.
+	MyRole *ConnectionRole
 }
 
 // GetConnection implements the ConnectionClassification interface for type ShareableCloudConnection.
@@ -4136,6 +4430,7 @@ func (s *ShareableCloudConnection) GetConnection() *Connection {
 		DisplayName:       s.DisplayName,
 		GatewayID:         s.GatewayID,
 		ID:                s.ID,
+		MyRole:            s.MyRole,
 		PrivacyLevel:      s.PrivacyLevel,
 	}
 }
@@ -4288,6 +4583,11 @@ type StreamingVirtualNetworkGatewayConnection struct {
 
 	// The privacy level of the connection.
 	PrivacyLevel *PrivacyLevel
+
+	// READ-ONLY; The calling principal's effective role on the connection. When the principal is part of multiple security groups
+	// with different roles, the highest role is returned. If the principal has no role on the
+	// connection, this property is not returned.
+	MyRole *ConnectionRole
 }
 
 // GetConnection implements the ConnectionClassification interface for type StreamingVirtualNetworkGatewayConnection.
@@ -4300,8 +4600,20 @@ func (s *StreamingVirtualNetworkGatewayConnection) GetConnection() *Connection {
 		DisplayName:       s.DisplayName,
 		GatewayID:         s.GatewayID,
 		ID:                s.ID,
+		MyRole:            s.MyRole,
 		PrivacyLevel:      s.PrivacyLevel,
 	}
+}
+
+// SurgeProtectionActorDetails - The details of the actor.
+type SurgeProtectionActorDetails struct {
+	// REQUIRED; The type of the actor.
+	ActorType *SurgeProtectionActorType
+}
+
+// GetSurgeProtectionActorDetails implements the SurgeProtectionActorDetailsClassification interface for type SurgeProtectionActorDetails.
+func (s *SurgeProtectionActorDetails) GetSurgeProtectionActorDetails() *SurgeProtectionActorDetails {
+	return s
 }
 
 // Tag - Represents a tag.
@@ -4409,6 +4721,24 @@ type UnapplyWorkspaceTagsRequest struct {
 	Tags []string
 }
 
+// UpdateActorAutoDetectionRuleRequest - The request payload for updating an actor auto-detection rule.
+type UpdateActorAutoDetectionRuleRequest struct {
+	// The duration for which an automatically blocked actor remains blocked. When provided, this property replaces the entire
+	// block-duration configuration. Omit this property to leave the existing value
+	// unchanged.
+	BlockDuration ActorAutoDetectionRuleBlockDurationClassification
+
+	// The capacity unit consumption threshold per actor as a percentage of total capacity units over a rolling 24-hour window.
+	// Omit this property to leave the existing value unchanged.
+	CapacityUnitsConsumptionThresholdPercentage *int32
+}
+
+// UpdateBlockedActorRequest - The request payload for updating a blocked actor on a capacity.
+type UpdateBlockedActorRequest struct {
+	// REQUIRED; Defines when the block expires.
+	ExpirationPolicy BlockedActorExpirationPolicyClassification
+}
+
 // UpdateCapacityOverageConfigurationRequest - The overage configuration update request payload. At least one property must
 // be provided. When state is set to Disabled, thresholdCapacityUnitHours is automatically reset to 0. When state is set to
 // Enabled, a thresholdCapacityUnitHours greater than 0 must be supplied (either in the same request or already configured).
@@ -4453,7 +4783,7 @@ func (u *UpdateConnectionRequest) GetUpdateConnectionRequest() *UpdateConnection
 // UpdateConnectionRoleAssignmentRequest - An update connection role assignment request payload.
 type UpdateConnectionRoleAssignmentRequest struct {
 	// REQUIRED; The connection role of the principal.
-	Role *ConnectionRole
+	Role *AssignableConnectionRole
 }
 
 // UpdateCredentialDetails - The credential details input for updating a connection.
@@ -4736,6 +5066,13 @@ type UpdateOptions struct {
 	// override items is not specified or is provided as false, the update operation
 	// will not start. Default value is false.
 	AllowOverrideItems *bool
+
+	// A reference to a deployment plan item to orchestrate the deployment. When provided, the plan controls item deployment ordering
+	// and executes pre/post deployment actions. When absent or null, the
+	// operation behaves as today. Currently, only the ByLogicalId reference type is supported. Deployment plan support is currently
+	// in Beta. This property can be used only when the query parameter beta is
+	// set to true and may change based on feedback.
+	DeploymentPlan DeploymentPlanReferenceClassification
 
 	// Per-item update options. Each entry targets its item by logical ID and applies its options to that item.
 	ItemOptionsByLogicalID []ItemOptionsByLogicalIDEntry
@@ -5025,6 +5362,11 @@ type VirtualNetworkGatewayConnection struct {
 
 	// The privacy level of the connection.
 	PrivacyLevel *PrivacyLevel
+
+	// READ-ONLY; The calling principal's effective role on the connection. When the principal is part of multiple security groups
+	// with different roles, the highest role is returned. If the principal has no role on the
+	// connection, this property is not returned.
+	MyRole *ConnectionRole
 }
 
 // GetConnection implements the ConnectionClassification interface for type VirtualNetworkGatewayConnection.
@@ -5037,6 +5379,7 @@ func (v *VirtualNetworkGatewayConnection) GetConnection() *Connection {
 		DisplayName:       v.DisplayName,
 		GatewayID:         v.GatewayID,
 		ID:                v.ID,
+		MyRole:            v.MyRole,
 		PrivacyLevel:      v.PrivacyLevel,
 	}
 }
@@ -5137,6 +5480,22 @@ type Workspace struct {
 	Type *WorkspaceType
 }
 
+// WorkspaceActorDetails - The details of a workspace actor.
+type WorkspaceActorDetails struct {
+	// REQUIRED; The type of the actor.
+	ActorType *SurgeProtectionActorType
+
+	// REQUIRED; The workspace ID.
+	WorkspaceID *string
+}
+
+// GetSurgeProtectionActorDetails implements the SurgeProtectionActorDetailsClassification interface for type WorkspaceActorDetails.
+func (w *WorkspaceActorDetails) GetSurgeProtectionActorDetails() *SurgeProtectionActorDetails {
+	return &SurgeProtectionActorDetails{
+		ActorType: w.ActorType,
+	}
+}
+
 // WorkspaceAppliedTag - Represents an applied tag.
 type WorkspaceAppliedTag struct {
 	// REQUIRED; The name of the tag.
@@ -5223,6 +5582,9 @@ type WorkspaceIdentity struct {
 
 	// READ-ONLY; The service principal ID.
 	ServicePrincipalID *string
+
+	// READ-ONLY; The item reference for the workspace identity. Only ItemReferenceById is supported.
+	IdentityReference ItemReferenceClassification
 }
 
 // WorkspaceIdentityCredentials - Credentials for WorkspaceIdentity CredentialType.

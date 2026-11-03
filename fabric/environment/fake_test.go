@@ -653,6 +653,29 @@ func (testsuite *FakeTestSuite) TestStaging_ExportExternalLibraries() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
+func (testsuite *FakeTestSuite) TestStaging_GetPublishLog() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get environment publish log example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEnvironmentID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleEnvironmentID = "5b218778-e7a5-4d73-8187-f10824047715"
+
+	testsuite.serverFactory.StagingServer.GetPublishLog = func(ctx context.Context, workspaceID string, environmentID string, options *environment.StagingClientGetPublishLogOptions) (resp azfake.Responder[environment.StagingClientGetPublishLogResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
+		resp = azfake.Responder[environment.StagingClientGetPublishLogResponse]{}
+		resp.SetResponse(http.StatusOK, environment.StagingClientGetPublishLogResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	_, err = client.GetPublishLog(ctx, exampleWorkspaceID, exampleEnvironmentID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
 func (testsuite *FakeTestSuite) TestPublished_GetSparkComputeBeta() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -1453,4 +1476,122 @@ func (testsuite *FakeTestSuite) TestItems_CancelPublishEnvironment() {
 	res, err := client.CancelPublishEnvironment(ctx, exampleWorkspaceID, exampleEnvironmentID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Properties))
+}
+
+func (testsuite *FakeTestSuite) TestPoolActivations_ListPoolActivations() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List pool activations example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEnvironmentID string
+	exampleWorkspaceID = "11111111-2222-3333-4444-555555555555"
+	exampleEnvironmentID = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+
+	exampleRes := environment.PoolActivations{
+		ContinuationToken: to.Ptr("eyJjb250aW51YXRpb24iOiJ0b2tlbiJ9"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/workspaces/11111111-2222-3333-4444-555555555555/environments/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/poolActivations?continuationToken=eyJjb250aW51YXRpb24iOiJ0b2tlbiJ9"),
+		Value: []environment.PoolActivation{
+			{
+				ClusterIdleTimeout:     to.Ptr("PT30M"),
+				CustomLivePoolLifespan: to.Ptr("PT12H"),
+				MaxClustersToHydrate:   to.Ptr[int32](5),
+				Name:                   to.Ptr("WeekdayMorningActivation"),
+				CapacityID:             to.Ptr("99999999-8888-7777-6666-555555555555"),
+				EndDateTime:            to.Ptr("2025-06-01T18:00:05Z"),
+				IsRecurring:            to.Ptr(true),
+				JobInstanceID:          to.Ptr("a1b2c3d4-e5f6-7890-abcd-ef1234567890"),
+				JobType:                to.Ptr("SparkPool"),
+				RuntimeVersion:         to.Ptr("1.3"),
+				ScheduledEndDateTime:   to.Ptr("2025-06-01T18:00:00Z"),
+				ScheduledStartDateTime: to.Ptr("2025-06-01T08:00:00Z"),
+				StartDateTime:          to.Ptr("2025-06-01T08:00:12Z"),
+				State:                  to.Ptr(environment.StateSucceeded),
+			}},
+	}
+
+	testsuite.serverFactory.PoolActivationsServer.NewListPoolActivationsPager = func(workspaceID string, environmentID string, options *environment.PoolActivationsClientListPoolActivationsOptions) (resp azfake.PagerResponder[environment.PoolActivationsClientListPoolActivationsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
+		resp = azfake.PagerResponder[environment.PoolActivationsClientListPoolActivationsResponse]{}
+		resp.AddPage(http.StatusOK, environment.PoolActivationsClientListPoolActivationsResponse{PoolActivations: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewPoolActivationsClient()
+	pager := client.NewListPoolActivationsPager(exampleWorkspaceID, exampleEnvironmentID, &environment.PoolActivationsClientListPoolActivationsOptions{ContinuationToken: nil,
+		PageSize: nil,
+		Filter:   nil,
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.PoolActivations))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestPoolActivations_GetPoolActivation() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get pool activation example"},
+	})
+	var exampleWorkspaceID string
+	var exampleEnvironmentID string
+	var exampleActivationID string
+	exampleWorkspaceID = "11111111-2222-3333-4444-555555555555"
+	exampleEnvironmentID = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+	exampleActivationID = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+
+	exampleRes := environment.PoolActivationDetails{
+		ClusterIdleTimeout:     to.Ptr("PT30M"),
+		CustomLivePoolLifespan: to.Ptr("PT12H"),
+		MaxClustersToHydrate:   to.Ptr[int32](5),
+		Name:                   to.Ptr("WeekdayMorningActivation"),
+		CapacityID:             to.Ptr("99999999-8888-7777-6666-555555555555"),
+		EndDateTime:            to.Ptr("2025-06-01T08:05:30Z"),
+		IsRecurring:            to.Ptr(true),
+		JobInstanceID:          to.Ptr("a1b2c3d4-e5f6-7890-abcd-ef1234567890"),
+		JobType:                to.Ptr("SparkPool"),
+		RuntimeVersion:         to.Ptr("1.3"),
+		ScheduledEndDateTime:   to.Ptr("2025-06-01T18:00:00Z"),
+		ScheduledStartDateTime: to.Ptr("2025-06-01T08:00:00Z"),
+		StartDateTime:          to.Ptr("2025-06-01T08:00:12Z"),
+		State:                  to.Ptr(environment.StateFailed),
+		PoolName:               to.Ptr("ProductionPool"),
+		ResourceStatusSummary: &environment.ResourceStatusSummary{
+			Acquired:    to.Ptr[int32](0),
+			Cancelled:   to.Ptr[int32](0),
+			Deactivated: to.Ptr[int32](0),
+			Expired:     to.Ptr[int32](0),
+			Failed:      to.Ptr[int32](5),
+			Ready:       to.Ptr[int32](0),
+			Starting:    to.Ptr[int32](0),
+			Stopping:    to.Ptr[int32](0),
+		},
+		SparkConfiguration: &environment.SparkConfiguration{
+			DriverCores:                to.Ptr[int32](4),
+			DriverMemory:               to.Ptr("28g"),
+			ExecutorCores:              to.Ptr[int32](4),
+			ExecutorMemory:             to.Ptr("28g"),
+			IsDynamicAllocationEnabled: to.Ptr(false),
+			NumExecutors:               to.Ptr[int32](5),
+		},
+	}
+
+	testsuite.serverFactory.PoolActivationsServer.GetPoolActivation = func(ctx context.Context, workspaceID string, environmentID string, activationID string, options *environment.PoolActivationsClientGetPoolActivationOptions) (resp azfake.Responder[environment.PoolActivationsClientGetPoolActivationResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEnvironmentID, environmentID)
+		testsuite.Require().Equal(exampleActivationID, activationID)
+		resp = azfake.Responder[environment.PoolActivationsClientGetPoolActivationResponse]{}
+		resp.SetResponse(http.StatusOK, environment.PoolActivationsClientGetPoolActivationResponse{PoolActivationDetails: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewPoolActivationsClient()
+	res, err := client.GetPoolActivation(ctx, exampleWorkspaceID, exampleEnvironmentID, exampleActivationID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.PoolActivationDetails))
 }

@@ -26,7 +26,7 @@ type Client struct {
 // NewClient creates a new instance of Client with the specified values.
 // The parameter values will be propagated to any client created from this factory.
 //   - credential - used to authorize requests. Usually a credential from azidentity.
-//   - endpoint - pass nil to accept the default values.
+//   - endpoint - overrides the selected environment's endpoint, but not its audience; pass nil to use the environment's endpoint.
 //   - options - pass nil to accept the default values.
 func NewClient(credential azcore.TokenCredential, endpoint *string, options *ClientOptions) (*Client, error) {
 	sc, err := iruntime.NewServiceClient(credential, Version, endpoint, (*iruntime.ClientOptions)(options))

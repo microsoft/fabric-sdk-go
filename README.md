@@ -51,37 +51,68 @@ if err != nil {
 
 Explore all [Credential Types](https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/azidentity#readme-credential-types) from `azidentity` module to choose the ones that best suit your needs.
 
-### Cloud configuration
+### Fabric environments
 
-The default client options target Public cloud. For any other environment, define a `cloud.Configuration` with a Fabric service entry and pass the same configuration to both the `azidentity` credential options and the Fabric client options. The credential uses `ActiveDirectoryAuthorityHost`; the Fabric client uses the configured endpoint and token audience.
+Choose the Fabric environment that hosts your resources. Each environment defines an API endpoint and a token audience. Clients use Public by default.
 
-The Azure SDK built-in configurations don't include Fabric service values. The following example configures Public cloud by using `fabric.ServiceName`:
+| Environment | API endpoint | Token audience |
+| --- | --- | --- |
+| `fabric.EnvironmentPublic` | `https://api.fabric.microsoft.com` | `https://api.fabric.microsoft.com` |
+| `fabric.EnvironmentGCCHigh` | `https://highapi.fabric.microsoft.us` | `https://api.fabric.microsoft.us` |
+
+To use GCC High, set `fabric.ClientOptions.Environment` when creating a client or client factory. The SDK requests tokens for the selected environment's audience using its `/.default` scope. The audience is not configurable, and unsupported environment values return an error.
+
+For GCC High:
 
 ```go
-public := cloud.Configuration{
-  ActiveDirectoryAuthorityHost: cloud.AzurePublic.ActiveDirectoryAuthorityHost,
-  Services: map[cloud.ServiceName]cloud.ServiceConfiguration{
-    fabric.ServiceName: {
-      Endpoint: "https://api.fabric.microsoft.com",
-      Audience: "https://api.fabric.microsoft.com",
-    },
-  },
-}
+import (
+  "github.com/Azure/azure-sdk-for-go/sdk/azcore"
+  "github.com/Azure/azure-sdk-for-go/sdk/azcore/cloud"
+  "github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+  "github.com/microsoft/fabric-sdk-go/fabric"
+)
+```
 
+```go
 cred, err := azidentity.NewDefaultAzureCredential(&azidentity.DefaultAzureCredentialOptions{
-  ClientOptions: azcore.ClientOptions{Cloud: public},
+  ClientOptions: azcore.ClientOptions{Cloud: cloud.AzureGovernment},
 })
 if err != nil {
   // handle error
 }
 
 client, err := fabric.NewClient(cred, nil, &fabric.ClientOptions{
-  ClientOptions: azcore.ClientOptions{Cloud: public},
+  Environment: fabric.EnvironmentGCCHigh,
 })
 if err != nil {
   // handle error
 }
 ```
+
+Configure your credential to authenticate with the Microsoft Entra authority for your environment, as shown with `cloud.AzureGovernment` above. For Azure CLI credentials, sign in to the matching Azure cloud. Selecting a Fabric environment does not change the credential's authentication settings.
+
+#### Custom base URL
+
+To specify a base URL, pass it as the `endpoint` argument to `fabric.NewClient` or `NewClientFactory`. Pass `nil` to use the selected environment's endpoint. Specifying a base URL changes where requests are sent, but **does not change the token audience**.
+
+This example sets the base URL to the Public endpoint:
+
+```go
+cred, err := azidentity.NewDefaultAzureCredential(nil)
+if err != nil {
+  // handle error
+}
+
+endpoint := "https://api.fabric.microsoft.com"
+client, err := fabric.NewClient(cred, &endpoint, nil)
+if err != nil {
+  // handle error
+}
+```
+
+With no environment specified, the client uses the Public audience. Factories created with `NewClientFactoryWithClient` inherit the Fabric client's endpoint and authentication pipeline.
+
+Use `Environment` and the `endpoint` argument to configure the Fabric service, not `ClientOptions.Cloud.Services`. Custom Fabric service entries in that collection return an error.
 
 > [!NOTE]
 > `DefaultAzureCredential` is intended to simplify getting started with the SDK by handling common scenarios with reasonable default behaviors. Developers who want more control or whose scenario isn't served by the default settings should use other credential types. Read more in the [Key concept](https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/azidentity#readme-key-concepts) section.

@@ -212,6 +212,64 @@ func (client *StagingClient) exportExternalLibrariesCreateRequest(ctx context.Co
 	return req, nil
 }
 
+// GetPublishLog - Downloads the driver stdout log as UTF-8 plain text for the latest environment publish run — whether it
+// succeeded or failed. The log is only available when the latest publish operation executed a
+// Spark job and that job has completed.
+// PERMISSIONS The caller must have write permissions for the environment item.
+// REQUIRED DELEGATED SCOPES Item.ReadWrite.All or Environment.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - environmentID - The environment ID.
+//   - options - StagingClientGetPublishLogOptions contains the optional parameters for the StagingClient.GetPublishLog method.
+func (client *StagingClient) GetPublishLog(ctx context.Context, workspaceID string, environmentID string, options *StagingClientGetPublishLogOptions) (StagingClientGetPublishLogResponse, error) {
+	var err error
+	const operationName = "environment.StagingClient.GetPublishLog"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getPublishLogCreateRequest(ctx, workspaceID, environmentID, options)
+	if err != nil {
+		return StagingClientGetPublishLogResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return StagingClientGetPublishLogResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return StagingClientGetPublishLogResponse{}, err
+	}
+	return StagingClientGetPublishLogResponse{Body: httpResp.Body}, nil
+}
+
+// getPublishLogCreateRequest creates the GetPublishLog request.
+func (client *StagingClient) getPublishLogCreateRequest(ctx context.Context, workspaceID string, environmentID string, _ *StagingClientGetPublishLogOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/environments/{environmentId}/staging/publish/log"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if environmentID == "" {
+		return nil, errors.New("parameter environmentID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{environmentId}", url.PathEscape(environmentID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	runtime.SkipBodyDownload(req)
+	req.Raw().Header["Accept"] = []string{"application/octet-stream"}
+	return req, nil
+}
+
 // GetSparkCompute - > [!NOTE] This API is a release version of a beta version due to be deprecated on March 31, 2027. When
 // calling this API - callers must set the query parameter beta to the value false.
 // PERMISSIONS Read permission for the environment item.

@@ -25,6 +25,10 @@ import (
 
 // PublishedServer is a fake server for instances of the dataagent.PublishedClient type.
 type PublishedServer struct {
+	// DownloadDatasourceTopic is the fake for method PublishedClient.DownloadDatasourceTopic
+	// HTTP status codes to indicate success: http.StatusOK
+	DownloadDatasourceTopic func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fileName string, options *dataagent.PublishedClientDownloadDatasourceTopicOptions) (resp azfake.Responder[dataagent.PublishedClientDownloadDatasourceTopicResponse], errResp azfake.ErrorResponder)
+
 	// GetDatasource is the fake for method PublishedClient.GetDatasource
 	// HTTP status codes to indicate success: http.StatusOK
 	GetDatasource func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, options *dataagent.PublishedClientGetDatasourceOptions) (resp azfake.Responder[dataagent.PublishedClientGetDatasourceResponse], errResp azfake.ErrorResponder)
@@ -45,6 +49,10 @@ type PublishedServer struct {
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListDatasourceFewshotsPager func(workspaceID string, dataAgentID string, datasourceID string, options *dataagent.PublishedClientListDatasourceFewshotsOptions) (resp azfake.PagerResponder[dataagent.PublishedClientListDatasourceFewshotsResponse])
 
+	// NewListDatasourceTopicsPager is the fake for method PublishedClient.NewListDatasourceTopicsPager
+	// HTTP status codes to indicate success: http.StatusOK
+	NewListDatasourceTopicsPager func(workspaceID string, dataAgentID string, datasourceID string, options *dataagent.PublishedClientListDatasourceTopicsOptions) (resp azfake.PagerResponder[dataagent.PublishedClientListDatasourceTopicsResponse])
+
 	// NewListDatasourcesPager is the fake for method PublishedClient.NewListDatasourcesPager
 	// HTTP status codes to indicate success: http.StatusOK
 	NewListDatasourcesPager func(workspaceID string, dataAgentID string, options *dataagent.PublishedClientListDatasourcesOptions) (resp azfake.PagerResponder[dataagent.PublishedClientListDatasourcesResponse])
@@ -58,6 +66,7 @@ func NewPublishedServerTransport(srv *PublishedServer) *PublishedServerTransport
 		srv:                            srv,
 		newListDatasourceElementsPager: newTracker[azfake.PagerResponder[dataagent.PublishedClientListDatasourceElementsResponse]](),
 		newListDatasourceFewshotsPager: newTracker[azfake.PagerResponder[dataagent.PublishedClientListDatasourceFewshotsResponse]](),
+		newListDatasourceTopicsPager:   newTracker[azfake.PagerResponder[dataagent.PublishedClientListDatasourceTopicsResponse]](),
 		newListDatasourcesPager:        newTracker[azfake.PagerResponder[dataagent.PublishedClientListDatasourcesResponse]](),
 	}
 }
@@ -68,6 +77,7 @@ type PublishedServerTransport struct {
 	srv                            *PublishedServer
 	newListDatasourceElementsPager *tracker[azfake.PagerResponder[dataagent.PublishedClientListDatasourceElementsResponse]]
 	newListDatasourceFewshotsPager *tracker[azfake.PagerResponder[dataagent.PublishedClientListDatasourceFewshotsResponse]]
+	newListDatasourceTopicsPager   *tracker[azfake.PagerResponder[dataagent.PublishedClientListDatasourceTopicsResponse]]
 	newListDatasourcesPager        *tracker[azfake.PagerResponder[dataagent.PublishedClientListDatasourcesResponse]]
 }
 
@@ -96,6 +106,8 @@ func (p *PublishedServerTransport) dispatchToMethodFake(req *http.Request, metho
 		}
 		if !intercepted {
 			switch method {
+			case "PublishedClient.DownloadDatasourceTopic":
+				res.resp, res.err = p.dispatchDownloadDatasourceTopic(req)
 			case "PublishedClient.GetDatasource":
 				res.resp, res.err = p.dispatchGetDatasource(req)
 			case "PublishedClient.GetDatasourceFewshot":
@@ -106,6 +118,8 @@ func (p *PublishedServerTransport) dispatchToMethodFake(req *http.Request, metho
 				res.resp, res.err = p.dispatchNewListDatasourceElementsPager(req)
 			case "PublishedClient.NewListDatasourceFewshotsPager":
 				res.resp, res.err = p.dispatchNewListDatasourceFewshotsPager(req)
+			case "PublishedClient.NewListDatasourceTopicsPager":
+				res.resp, res.err = p.dispatchNewListDatasourceTopicsPager(req)
 			case "PublishedClient.NewListDatasourcesPager":
 				res.resp, res.err = p.dispatchNewListDatasourcesPager(req)
 			default:
@@ -125,6 +139,51 @@ func (p *PublishedServerTransport) dispatchToMethodFake(req *http.Request, metho
 	case res := <-resultChan:
 		return res.resp, res.err
 	}
+}
+
+func (p *PublishedServerTransport) dispatchDownloadDatasourceTopic(req *http.Request) (*http.Response, error) {
+	if p.srv.DownloadDatasourceTopic == nil {
+		return nil, &nonRetriableError{errors.New("fake for method DownloadDatasourceTopic not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataAgents/(?P<dataAgentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/datasources/(?P<datasourceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/topics/content`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 4 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	qp := req.URL.Query()
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	dataAgentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("dataAgentId")])
+	if err != nil {
+		return nil, err
+	}
+	datasourceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("datasourceId")])
+	if err != nil {
+		return nil, err
+	}
+	fileNameParam, err := url.QueryUnescape(qp.Get("fileName"))
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := p.srv.DownloadDatasourceTopic(req.Context(), workspaceIDParam, dataAgentIDParam, datasourceIDParam, fileNameParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, &server.ResponseOptions{
+		Body:        server.GetResponse(respr).Body,
+		ContentType: req.Header.Get("Content-Type"),
+	})
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 func (p *PublishedServerTransport) dispatchGetDatasource(req *http.Request) (*http.Response, error) {
@@ -354,6 +413,63 @@ func (p *PublishedServerTransport) dispatchNewListDatasourceFewshotsPager(req *h
 	}
 	if !server.PagerResponderMore(newListDatasourceFewshotsPager) {
 		p.newListDatasourceFewshotsPager.remove(req)
+	}
+	return resp, nil
+}
+
+func (p *PublishedServerTransport) dispatchNewListDatasourceTopicsPager(req *http.Request) (*http.Response, error) {
+	if p.srv.NewListDatasourceTopicsPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListDatasourceTopicsPager not implemented")}
+	}
+	newListDatasourceTopicsPager := p.newListDatasourceTopicsPager.get(req)
+	if newListDatasourceTopicsPager == nil {
+		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/dataAgents/(?P<dataAgentId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/datasources/(?P<datasourceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/topics`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 4 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+		if err != nil {
+			return nil, err
+		}
+		dataAgentIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("dataAgentId")])
+		if err != nil {
+			return nil, err
+		}
+		datasourceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("datasourceId")])
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *dataagent.PublishedClientListDatasourceTopicsOptions
+		if continuationTokenParam != nil {
+			options = &dataagent.PublishedClientListDatasourceTopicsOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := p.srv.NewListDatasourceTopicsPager(workspaceIDParam, dataAgentIDParam, datasourceIDParam, options)
+		newListDatasourceTopicsPager = &resp
+		p.newListDatasourceTopicsPager.add(req, newListDatasourceTopicsPager)
+		server.PagerResponderInjectNextLinks(newListDatasourceTopicsPager, req, func(page *dataagent.PublishedClientListDatasourceTopicsResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
+	}
+	resp, err := server.PagerResponderNext(newListDatasourceTopicsPager, req)
+	if err != nil {
+		return nil, err
+	}
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		p.newListDatasourceTopicsPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
+	}
+	if !server.PagerResponderMore(newListDatasourceTopicsPager) {
+		p.newListDatasourceTopicsPager.remove(req)
 	}
 	return resp, nil
 }

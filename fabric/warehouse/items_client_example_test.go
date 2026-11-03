@@ -131,6 +131,81 @@ func ExampleItemsClient_BeginCreateWarehouse_createAWarehouseExampleWithPayload(
 }
 
 // Generated from example definition
+func ExampleItemsClient_BeginCreateWarehouse_createAWarehouseWithDefinitionDacpacExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := warehouse.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginCreateWarehouse(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", warehouse.CreateWarehouseRequest{
+		Description: to.Ptr("A warehouse description."),
+		Definition: &warehouse.Definition{
+			Format: to.Ptr("dacpac"),
+			Parts: []warehouse.DefinitionPart{
+				{
+					Path:        to.Ptr("definition.dacpac"),
+					Payload:     to.Ptr("UEsDBBQAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAGRlZmluaXRpb24uZGFjcGFj"),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				}},
+		},
+		DisplayName: to.Ptr("Warehouse 1"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginCreateWarehouse_createAWarehouseWithDefinitionSqlprojExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := warehouse.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginCreateWarehouse(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", warehouse.CreateWarehouseRequest{
+		Description: to.Ptr("A warehouse description."),
+		Definition: &warehouse.Definition{
+			Parts: []warehouse.DefinitionPart{
+				{
+					Path:        to.Ptr("sqldw.sqlproj"),
+					Payload:     to.Ptr("PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjxQcm9qZWN0IERlZmF1bHRUYXJnZXRzPSJCdWlsZCI+DQogIDxTZGs+TWljcm9zb2Z0LkJ1aWxkLlNxbC9TZGsNCiAgPC9TZGs+DQo8L1Byb2plY3Q+"),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("dbo/Tables/Table1.sql"),
+					Payload:     to.Ptr("Q1JFQVRFIFRBQkxFIFtkYm9dLltUYWJsZTFdIChbSWRdIElOVCBOT1QgTlVMTCwgW05hbWVdIE5WQVJDSEFSKDEwMCkp"),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".sharedqueries/query.sql"),
+					Payload:     to.Ptr("U0VMRUNUIFtJZF0sIFtOYW1lXSBGUk9NIFtkYm9dLltUYWJsZTFd"),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				}},
+		},
+		DisplayName: to.Ptr("Warehouse 1"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
 func ExampleItemsClient_GetWarehouse() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -262,4 +337,169 @@ func ExampleItemsClient_GetConnectionString() {
 	// res.ConnectionStringResponse = warehouse.ConnectionStringResponse{
 	// 	ConnectionString: to.Ptr("qvrmbuxie7we7glrekxgy6npqu-6xgyei3x2xiejip4iime6knh5m-jh0bi.zcf.datawarehouse.fabric.microsoft.com"),
 	// }
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginGetWarehouseDefinition_getAWarehousePublicDefinitionInDacpacFormatExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := warehouse.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginGetWarehouseDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", &warehouse.ItemsClientBeginGetWarehouseDefinitionOptions{Format: to.Ptr(warehouse.DefinitionFormatDacpac)})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	res, err := poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.DefinitionResponse = warehouse.DefinitionResponse{
+	// 	Definition: &warehouse.Definition{
+	// 		Parts: []warehouse.DefinitionPart{
+	// 			{
+	// 				Path: to.Ptr("definition.dacpac"),
+	// 				Payload: to.Ptr("UEsDBBQAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAGRlZmluaXRpb24uZGFjcGFj"),
+	// 				PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+	// 			},
+	// 			{
+	// 				Path: to.Ptr(".platform"),
+	// 				Payload: to.Ptr("ewogICIkc2NoZW1hIjogImh0dHBzOi8vZGV2ZWxvcGVyLm1pY3Jvc29mdC5jb20vanNvbi1zY2hlbWFzL2ZhYnJpYy9naXRJbnRlZ3JhdGlvbi9wbGF0Zm9ybVByb3BlcnRpZXMvMi4wLjAvc2NoZW1hLmpzb24iLAogICJtZXRhZGF0YSI6IHsKICAgICJ0eXBlIjogIldhcmVob3VzZSIsCiAgICAiZGlzcGxheU5hbWUiOiAiV2FyZWhvdXNlXzEiCiAgfSwKICAiY29uZmlnIjogewogICAgInZlcnNpb24iOiAiMi4wIiwKICAgICJsb2dpY2FsSWQiOiAiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIgogIH0KfQ=="),
+	// 				PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+	// 		}},
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginGetWarehouseDefinition_getAWarehousePublicDefinitionInSqlProjectFormatExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := warehouse.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginGetWarehouseDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", &warehouse.ItemsClientBeginGetWarehouseDefinitionOptions{Format: to.Ptr(warehouse.DefinitionFormatSqlproj)})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	res, err := poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.DefinitionResponse = warehouse.DefinitionResponse{
+	// 	Definition: &warehouse.Definition{
+	// 		Parts: []warehouse.DefinitionPart{
+	// 			{
+	// 				Path: to.Ptr("sqldw.sqlproj"),
+	// 				Payload: to.Ptr("PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjxQcm9qZWN0IERlZmF1bHRUYXJnZXRzPSJCdWlsZCI+DQogIDxTZGs+TWljcm9zb2Z0LkJ1aWxkLlNxbC9TZGsNCiAgPC9TZGs+DQo8L1Byb2plY3Q+"),
+	// 				PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+	// 			},
+	// 			{
+	// 				Path: to.Ptr("dbo/Tables/Table1.sql"),
+	// 				Payload: to.Ptr("Q1JFQVRFIFRBQkxFIFtkYm9dLltUYWJsZTFdIChbSWRdIElOVCBOT1QgTlVMTCwgW05hbWVdIE5WQVJDSEFSKDEwMCkp"),
+	// 				PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+	// 			},
+	// 			{
+	// 				Path: to.Ptr(".sharedqueries/query.sql"),
+	// 				Payload: to.Ptr("U0VMRUNUIFtJZF0sIFtOYW1lXSBGUk9NIFtkYm9dLltUYWJsZTFd"),
+	// 				PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+	// 		}},
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginUpdateWarehouseDefinition_updateAWarehousePublicDefinitionInDacpacFormatExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := warehouse.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginUpdateWarehouseDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", warehouse.UpdateWarehouseDefinitionRequest{
+		Definition: &warehouse.Definition{
+			Format: to.Ptr("dacpac"),
+			Parts: []warehouse.DefinitionPart{
+				{
+					Path:        to.Ptr("definition.dacpac"),
+					Payload:     to.Ptr("UEsDBBQAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAGRlZmluaXRpb24uZGFjcGFj"),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ewogICIkc2NoZW1hIjogImh0dHBzOi8vZGV2ZWxvcGVyLm1pY3Jvc29mdC5jb20vanNvbi1zY2hlbWFzL2ZhYnJpYy9naXRJbnRlZ3JhdGlvbi9wbGF0Zm9ybVByb3BlcnRpZXMvMi4wLjAvc2NoZW1hLmpzb24iLAogICJtZXRhZGF0YSI6IHsKICAgICJ0eXBlIjogIldhcmVob3VzZSIsCiAgICAiZGlzcGxheU5hbWUiOiAiV2FyZWhvdXNlXzEiCiAgfSwKICAiY29uZmlnIjogewogICAgInZlcnNpb24iOiAiMi4wIiwKICAgICJsb2dpY2FsSWQiOiAiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIgogIH0KfQ=="),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				}},
+		},
+	}, &warehouse.ItemsClientBeginUpdateWarehouseDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginUpdateWarehouseDefinition_updateAWarehousePublicDefinitionInSqlProjectFormatExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := warehouse.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginUpdateWarehouseDefinition(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", warehouse.UpdateWarehouseDefinitionRequest{
+		Definition: &warehouse.Definition{
+			Format: to.Ptr("sqlproj"),
+			Parts: []warehouse.DefinitionPart{
+				{
+					Path:        to.Ptr("sqldw.sqlproj"),
+					Payload:     to.Ptr("PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjxQcm9qZWN0IERlZmF1bHRUYXJnZXRzPSJCdWlsZCI+DQogIDxTZGs+TWljcm9zb2Z0LkJ1aWxkLlNxbC9TZGsNCiAgPC9TZGs+DQo8L1Byb2plY3Q+"),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr("dbo/Tables/Table1.sql"),
+					Payload:     to.Ptr("Q1JFQVRFIFRBQkxFIFtkYm9dLltUYWJsZTFdIChbSWRdIElOVCBOT1QgTlVMTCwgW05hbWVdIE5WQVJDSEFSKDEwMCkp"),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".sharedqueries/query.sql"),
+					Payload:     to.Ptr("U0VMRUNUIFtJZF0sIFtOYW1lXSBGUk9NIFtkYm9dLltUYWJsZTFd"),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				},
+				{
+					Path:        to.Ptr(".platform"),
+					Payload:     to.Ptr("ewogICIkc2NoZW1hIjogImh0dHBzOi8vZGV2ZWxvcGVyLm1pY3Jvc29mdC5jb20vanNvbi1zY2hlbWFzL2ZhYnJpYy9naXRJbnRlZ3JhdGlvbi9wbGF0Zm9ybVByb3BlcnRpZXMvMi4wLjAvc2NoZW1hLmpzb24iLAogICJtZXRhZGF0YSI6IHsKICAgICJ0eXBlIjogIldhcmVob3VzZSIsCiAgICAiZGlzcGxheU5hbWUiOiAiV2FyZWhvdXNlXzEiCiAgfSwKICAiY29uZmlnIjogewogICAgInZlcnNpb24iOiAiMi4wIiwKICAgICJsb2dpY2FsSWQiOiAiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIgogIH0KfQ=="),
+					PayloadType: to.Ptr(warehouse.PayloadTypeInlineBase64),
+				}},
+		},
+	}, &warehouse.ItemsClientBeginUpdateWarehouseDefinitionOptions{UpdateMetadata: to.Ptr(true)})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
 }

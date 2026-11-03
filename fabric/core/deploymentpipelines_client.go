@@ -11,6 +11,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -323,7 +324,11 @@ func (client *DeploymentPipelinesClient) deleteDeploymentPipelineRoleAssignmentC
 	return req, nil
 }
 
-// BeginDeployStageContent - To learn about items that are supported in deployment pipelines, see: Supported items [/fabric/cicd/deployment-pipelines/intro-to-deployment-pipelines#supported-items].
+// BeginDeployStageContent - > [!NOTE] Deployment plan support in this API is part of a Beta release and is provided for evaluation
+// and development purposes only. It may change based on feedback and is not recommended for
+// production use. All other functionality of this API is generally available. To use deployment plan support, callers must
+// specify true as the value for the query parameter beta.
+// To learn about items that are supported in deployment pipelines, see: Supported items [/fabric/cicd/deployment-pipelines/intro-to-deployment-pipelines#supported-items].
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must have an admin deployment pipelines role. The user must be at least a contributor on both source
 // and target deployment workspaces. For more information, see: Permissions
@@ -349,7 +354,11 @@ func (client *DeploymentPipelinesClient) BeginDeployStageContent(ctx context.Con
 	return client.beginDeployStageContent(ctx, deploymentPipelineID, deployRequest, options)
 }
 
-// DeployStageContent - To learn about items that are supported in deployment pipelines, see: Supported items [/fabric/cicd/deployment-pipelines/intro-to-deployment-pipelines#supported-items].
+// DeployStageContent - > [!NOTE] Deployment plan support in this API is part of a Beta release and is provided for evaluation
+// and development purposes only. It may change based on feedback and is not recommended for
+// production use. All other functionality of this API is generally available. To use deployment plan support, callers must
+// specify true as the value for the query parameter beta.
+// To learn about items that are supported in deployment pipelines, see: Supported items [/fabric/cicd/deployment-pipelines/intro-to-deployment-pipelines#supported-items].
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must have an admin deployment pipelines role. The user must be at least a contributor on both source
 // and target deployment workspaces. For more information, see: Permissions
@@ -389,7 +398,7 @@ func (client *DeploymentPipelinesClient) deployStageContent(ctx context.Context,
 }
 
 // deployStageContentCreateRequest creates the DeployStageContent request.
-func (client *DeploymentPipelinesClient) deployStageContentCreateRequest(ctx context.Context, deploymentPipelineID string, deployRequest DeployRequest, _ *DeploymentPipelinesClientBeginDeployStageContentOptions) (*policy.Request, error) {
+func (client *DeploymentPipelinesClient) deployStageContentCreateRequest(ctx context.Context, deploymentPipelineID string, deployRequest DeployRequest, options *DeploymentPipelinesClientBeginDeployStageContentOptions) (*policy.Request, error) {
 	urlPath := "/v1/deploymentPipelines/{deploymentPipelineId}/deploy"
 	if deploymentPipelineID == "" {
 		return nil, errors.New("parameter deploymentPipelineID cannot be empty")
@@ -399,6 +408,11 @@ func (client *DeploymentPipelinesClient) deployStageContentCreateRequest(ctx con
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.Beta != nil {
+		reqQP.Set("beta", strconv.FormatBool(*options.Beta))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	if err := runtime.MarshalAsJSON(req, deployRequest); err != nil {
 		return nil, err
@@ -1116,6 +1130,9 @@ func (client *DeploymentPipelinesClient) updateDeploymentPipelineStageHandleResp
 // Custom code starts below
 
 // DeployStageContent - returns DeploymentPipelinesClientDeployStageContentResponse in sync mode.
+// >  [!NOTE] Deployment plan support in this API is part of a Beta release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for
+// production use. All other functionality of this API is generally available. To use deployment plan support, callers must specify true as the value for the query parameter beta.
+//
 // To learn about items that are supported in deployment pipelines, see: Supported items [/fabric/cicd/deployment-pipelines/intro-to-deployment-pipelines#supported-items].
 //
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].

@@ -23,7 +23,7 @@ type ClientFactory struct {
 // NewClientFactory creates a new instance of ClientFactory with the specified values.
 // The parameter values will be propagated to any client created from this factory.
 //   - credential - used to authorize requests. Usually a credential from azidentity.
-//   - endpoint - pass nil to accept the default values.
+//   - endpoint - overrides the selected environment's endpoint, but not its audience; pass nil to use the environment's endpoint.
 //   - options - pass nil to accept the default values.
 func NewClientFactory(credential azcore.TokenCredential, endpoint *string, options *fabric.ClientOptions) (*ClientFactory, error) {
 	sc, err := iruntime.NewServiceClient(credential, fabric.Version, endpoint, (*iruntime.ClientOptions)(options))

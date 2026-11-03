@@ -518,6 +518,78 @@ func ExampleStagingClient_DeleteAllDatasourceFewshots() {
 }
 
 // Generated from example definition
+func ExampleStagingClient_NewListDatasourceTopicsPager() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := dataagent.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewStagingClient().NewListDatasourceTopicsPager("cfafbeb1-8037-4d0c-896e-28571bfff4cf", "5b218778-e7a5-4d73-8187-f10824047715", "a1b2c3d4-e5f6-7890-abcd-ef1234567890", &dataagent.StagingClientListDatasourceTopicsOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.Topics = dataagent.Topics{
+		// 	Value: []dataagent.Topic{
+		// 		{
+		// 			FileName: to.Ptr("company-policies.md"),
+		// 		},
+		// 		{
+		// 			FileName: to.Ptr("product-docs.md"),
+		// 	}},
+		// }
+	}
+}
+
+// Generated from example definition
+func ExampleStagingClient_DeleteDatasourceTopic() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := dataagent.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewStagingClient().DeleteDatasourceTopic(ctx, "cfafbeb1-8037-4d0c-896e-28571bfff4cf", "5b218778-e7a5-4d73-8187-f10824047715", "a1b2c3d4-e5f6-7890-abcd-ef1234567890", "company-policies.md", &dataagent.StagingClientDeleteDatasourceTopicOptions{IfMatch: nil})
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleStagingClient_BeginFormatDatasourceTopic() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := dataagent.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewStagingClient().BeginFormatDatasourceTopic(ctx, "cfafbeb1-8037-4d0c-896e-28571bfff4cf", "5b218778-e7a5-4d73-8187-f10824047715", "a1b2c3d4-e5f6-7890-abcd-ef1234567890", "company-policies.md", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
 func ExampleStagingClient_Reset() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -529,6 +601,23 @@ func ExampleStagingClient_Reset() {
 		log.Fatalf("failed to create client: %v", err)
 	}
 	_, err = clientFactory.NewStagingClient().Reset(ctx, "f089354e-8366-4e18-aea3-4cb4a3a50b48", "41ce06d1-d81b-4ea0-bc6d-2ce3dd2f8e87", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleStagingClient_DownloadDatasourceTopic() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := dataagent.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewStagingClient().DownloadDatasourceTopic(ctx, "cfafbeb1-8037-4d0c-896e-28571bfff4cf", "5b218778-e7a5-4d73-8187-f10824047715", "a1b2c3d4-e5f6-7890-abcd-ef1234567890", "company-policies.md", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

@@ -23,6 +23,12 @@ type ItemsClientGetConnectionStringResponse struct {
 	ConnectionStringResponse
 }
 
+// ItemsClientGetWarehouseDefinitionResponse contains the response from method ItemsClient.BeginGetWarehouseDefinition.
+type ItemsClientGetWarehouseDefinitionResponse struct {
+	// The warehouse public definition response.
+	DefinitionResponse
+}
+
 // ItemsClientGetWarehouseResponse contains the response from method ItemsClient.GetWarehouse.
 type ItemsClientGetWarehouseResponse struct {
 	// A warehouse object.
@@ -33,6 +39,11 @@ type ItemsClientGetWarehouseResponse struct {
 type ItemsClientListWarehousesResponse struct {
 	// A list of warehouses.
 	Warehouses
+}
+
+// ItemsClientUpdateWarehouseDefinitionResponse contains the response from method ItemsClient.BeginUpdateWarehouseDefinition.
+type ItemsClientUpdateWarehouseDefinitionResponse struct {
+	// placeholder for future response values
 }
 
 // ItemsClientUpdateWarehouseResponse contains the response from method ItemsClient.UpdateWarehouse.
@@ -92,13 +103,13 @@ type SQLAuditSettingsClientUpdateSQLAuditSettingsResponse struct {
 	SQLAuditSettings
 }
 
-// SQLPoolsClientGetSQLPoolsConfigurationBetaResponse contains the response from method SQLPoolsClient.GetSQLPoolsConfigurationBeta.
-type SQLPoolsClientGetSQLPoolsConfigurationBetaResponse struct {
+// SQLPoolsClientGetSQLPoolsConfigurationResponse contains the response from method SQLPoolsClient.GetSQLPoolsConfiguration.
+type SQLPoolsClientGetSQLPoolsConfigurationResponse struct {
 	// SQL pools configuration response.
 	SQLPoolsConfigurationResponse
 }
 
-// SQLPoolsClientUpdateSQLPoolsConfigurationBetaResponse contains the response from method SQLPoolsClient.UpdateSQLPoolsConfigurationBeta.
-type SQLPoolsClientUpdateSQLPoolsConfigurationBetaResponse struct {
+// SQLPoolsClientUpdateSQLPoolsConfigurationResponse contains the response from method SQLPoolsClient.UpdateSQLPoolsConfiguration.
+type SQLPoolsClientUpdateSQLPoolsConfigurationResponse struct {
 	// placeholder for future response values
 }

@@ -20,6 +20,11 @@ import (
 type ClientOptions struct {
 	azcore.ClientOptions
 
+	// Environment selects the Fabric endpoint and token audience.
+	// The zero value is the Public environment. A custom endpoint overrides only the endpoint.
+	// Fabric service entries in ClientOptions.Cloud are not supported.
+	Environment Environment
+
 	// UseWorkspacePrivateLinks enables workspace-level private links support.
 	// When enabled, the base URL will include workspace ID for private link routing.
 	// Default: false (private links are disabled by default).
@@ -38,7 +43,7 @@ type ServiceClient struct {
 // NewServiceClient creates a new instance of ServiceClient with the specified values.
 // The parameter values will be propagated to any client created from this factory.
 //   - credential - used to authorize requests. Usually a credential from azidentity.
-//   - endpoint - pass nil to accept the default values.
+//   - endpoint - overrides the selected environment's endpoint, but not its audience; pass nil to use the environment's endpoint.
 //   - options - pass nil to accept the default values.
 func NewServiceClient(credential azcore.TokenCredential, version string, endpoint *string, options *ClientOptions) (*ServiceClient, error) {
 	var useWorkspacePrivateLinks bool = false // Default: private links disabled
@@ -49,18 +54,20 @@ func NewServiceClient(credential azcore.TokenCredential, version string, endpoin
 
 	useWorkspacePrivateLinks = options.UseWorkspacePrivateLinks
 
-	configuration, service, err := resolveCloud(options.Cloud)
+	service, err := resolveEnvironment(options.Environment)
 	if err != nil {
 		return nil, err
 	}
-	options.Cloud = configuration
+	if _, ok := options.Cloud.Services["microsoftFabric"]; ok {
+		return nil, errors.New("Fabric service configuration in ClientOptions.Cloud is not supported; use Environment and the endpoint argument instead")
+	}
 
-	apiEndpoint, err := getEndpoint(endpoint, service.Endpoint)
+	apiEndpoint, err := getEndpoint(endpoint, service.endpoint)
 	if err != nil {
 		return nil, err
 	}
 
-	authPolicy := runtime.NewBearerTokenPolicy(credential, []string{strings.TrimRight(service.Audience, "/") + "/.default"}, nil)
+	authPolicy := runtime.NewBearerTokenPolicy(credential, []string{service.audience + "/.default"}, nil)
 	plOpts := runtime.PipelineOptions{
 		PerRetry: []policy.Policy{authPolicy},
 		Tracing: runtime.TracingOptions{

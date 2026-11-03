@@ -29,6 +29,7 @@ import (
 	dataflowfake "github.com/microsoft/fabric-sdk-go/fabric/dataflow/fake"
 	datamartfake "github.com/microsoft/fabric-sdk-go/fabric/datamart/fake"
 	datapipelinefake "github.com/microsoft/fabric-sdk-go/fabric/datapipeline/fake"
+	deploymentplanfake "github.com/microsoft/fabric-sdk-go/fabric/deploymentplan/fake"
 	digitaltwinbuilderfake "github.com/microsoft/fabric-sdk-go/fabric/digitaltwinbuilder/fake"
 	digitaltwinbuilderflowfake "github.com/microsoft/fabric-sdk-go/fabric/digitaltwinbuilderflow/fake"
 	environmentfake "github.com/microsoft/fabric-sdk-go/fabric/environment/fake"
@@ -49,6 +50,7 @@ import (
 	mirroredwarehousefake "github.com/microsoft/fabric-sdk-go/fabric/mirroredwarehouse/fake"
 	mlexperimentfake "github.com/microsoft/fabric-sdk-go/fabric/mlexperiment/fake"
 	mlmodelfake "github.com/microsoft/fabric-sdk-go/fabric/mlmodel/fake"
+	monitoringfake "github.com/microsoft/fabric-sdk-go/fabric/monitoring/fake"
 	mounteddatafactoryfake "github.com/microsoft/fabric-sdk-go/fabric/mounteddatafactory/fake"
 	notebookfake "github.com/microsoft/fabric-sdk-go/fabric/notebook/fake"
 	ontologyfake "github.com/microsoft/fabric-sdk-go/fabric/ontology/fake"
@@ -89,6 +91,7 @@ type ServerFactory struct {
 	Dataflow                       dataflowfake.ServerFactory
 	Datamart                       datamartfake.ServerFactory
 	DataPipeline                   datapipelinefake.ServerFactory
+	Deployment                     deploymentplanfake.ServerFactory
 	DigitalTwinBuilder             digitaltwinbuilderfake.ServerFactory
 	DigitalTwinBuilderFlow         digitaltwinbuilderflowfake.ServerFactory
 	Environment                    environmentfake.ServerFactory
@@ -109,6 +112,7 @@ type ServerFactory struct {
 	MirroredWarehouse              mirroredwarehousefake.ServerFactory
 	MLExperiment                   mlexperimentfake.ServerFactory
 	MLModel                        mlmodelfake.ServerFactory
+	Monitoring                     monitoringfake.ServerFactory
 	MountedDataFactory             mounteddatafactoryfake.ServerFactory
 	Notebook                       notebookfake.ServerFactory
 	Ontology                       ontologyfake.ServerFactory
@@ -152,6 +156,7 @@ type ServerFactoryTransport struct {
 	trDataflow                       *dataflowfake.ServerFactoryTransport
 	trDatamart                       *datamartfake.ServerFactoryTransport
 	trDataPipeline                   *datapipelinefake.ServerFactoryTransport
+	trDeployment                     *deploymentplanfake.ServerFactoryTransport
 	trDigitalTwinBuilder             *digitaltwinbuilderfake.ServerFactoryTransport
 	trDigitalTwinBuilderFlow         *digitaltwinbuilderflowfake.ServerFactoryTransport
 	trEnvironment                    *environmentfake.ServerFactoryTransport
@@ -172,6 +177,7 @@ type ServerFactoryTransport struct {
 	trMirroredWarehouse              *mirroredwarehousefake.ServerFactoryTransport
 	trMLExperiment                   *mlexperimentfake.ServerFactoryTransport
 	trMLModel                        *mlmodelfake.ServerFactoryTransport
+	trMonitoring                     *monitoringfake.ServerFactoryTransport
 	trMountedDataFactory             *mounteddatafactoryfake.ServerFactoryTransport
 	trNotebook                       *notebookfake.ServerFactoryTransport
 	trOntology                       *ontologyfake.ServerFactoryTransport
@@ -285,6 +291,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return datapipelinefake.NewServerFactoryTransport(&s.srv.DataPipeline)
 		})
 		resp, err = s.trDataPipeline.Do(req)
+	case "deploymentplan":
+		initServer(s, &s.trDeployment, func() *deploymentplanfake.ServerFactoryTransport {
+			return deploymentplanfake.NewServerFactoryTransport(&s.srv.Deployment)
+		})
+		resp, err = s.trDeployment.Do(req)
 	case "digitaltwinbuilder":
 		initServer(s, &s.trDigitalTwinBuilder, func() *digitaltwinbuilderfake.ServerFactoryTransport {
 			return digitaltwinbuilderfake.NewServerFactoryTransport(&s.srv.DigitalTwinBuilder)
@@ -383,6 +394,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return mlmodelfake.NewServerFactoryTransport(&s.srv.MLModel)
 		})
 		resp, err = s.trMLModel.Do(req)
+	case "monitoring":
+		initServer(s, &s.trMonitoring, func() *monitoringfake.ServerFactoryTransport {
+			return monitoringfake.NewServerFactoryTransport(&s.srv.Monitoring)
+		})
+		resp, err = s.trMonitoring.Do(req)
 	case "mounteddatafactory":
 		initServer(s, &s.trMountedDataFactory, func() *mounteddatafactoryfake.ServerFactoryTransport {
 			return mounteddatafactoryfake.NewServerFactoryTransport(&s.srv.MountedDataFactory)

@@ -237,7 +237,10 @@ func (client *ItemsClient) getGraphQLAPIHandleResponse(resp *http.Response) (Ite
 // the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the GraphQLApi .
 // REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
-// LIMITATIONS This API is blocked for a with an encrypted sensitivity label.
+// LIMITATIONS To retrieve the definition of a GraphQL API item protected by an encrypted sensitivity label, the caller must
+// have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -260,7 +263,10 @@ func (client *ItemsClient) BeginGetGraphQLAPIDefinition(ctx context.Context, wor
 // the sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the GraphQLApi .
 // REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
-// LIMITATIONS This API is blocked for a with an encrypted sensitivity label.
+// LIMITATIONS To retrieve the definition of a GraphQL API item protected by an encrypted sensitivity label, the caller must
+// have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -623,7 +629,8 @@ func (client *ItemsClient) beginCreateGraphQLAPI(ctx context.Context, workspaceI
 //
 // # REQUIRED DELEGATED SCOPES GraphQLApi.ReadWrite.All or Item.ReadWrite.All
 //
-// LIMITATIONS This API is blocked for a with an encrypted sensitivity label.
+// LIMITATIONS To retrieve the definition of a GraphQL API item protected by an encrypted sensitivity label, the caller must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in Microsoft Purview [/purview/purview].
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

@@ -18,15 +18,72 @@ import (
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/fake/server"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 
 	"github.com/microsoft/fabric-sdk-go/fabric/core"
 )
 
 // SurgeProtectionServer is a fake server for instances of the core.SurgeProtectionClient type.
 type SurgeProtectionServer struct {
+	// CreateActorAutoDetectionRule is the fake for method SurgeProtectionClient.CreateActorAutoDetectionRule
+	// HTTP status codes to indicate success: http.StatusCreated
+	CreateActorAutoDetectionRule func(ctx context.Context, capacityID string, createActorAutoDetectionRuleRequest core.CreateActorAutoDetectionRuleRequest, options *core.SurgeProtectionClientCreateActorAutoDetectionRuleOptions) (resp azfake.Responder[core.SurgeProtectionClientCreateActorAutoDetectionRuleResponse], errResp azfake.ErrorResponder)
+
+	// CreateBlockedActor is the fake for method SurgeProtectionClient.CreateBlockedActor
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated
+	CreateBlockedActor func(ctx context.Context, capacityID string, createBlockedActorRequest core.CreateBlockedActorRequest, options *core.SurgeProtectionClientCreateBlockedActorOptions) (resp azfake.Responder[core.SurgeProtectionClientCreateBlockedActorResponse], errResp azfake.ErrorResponder)
+
+	// CreateMissionCriticalActor is the fake for method SurgeProtectionClient.CreateMissionCriticalActor
+	// HTTP status codes to indicate success: http.StatusOK, http.StatusCreated
+	CreateMissionCriticalActor func(ctx context.Context, capacityID string, createMissionCriticalActorRequest core.CreateMissionCriticalActorRequest, options *core.SurgeProtectionClientCreateMissionCriticalActorOptions) (resp azfake.Responder[core.SurgeProtectionClientCreateMissionCriticalActorResponse], errResp azfake.ErrorResponder)
+
+	// DeleteActorAutoDetectionRule is the fake for method SurgeProtectionClient.DeleteActorAutoDetectionRule
+	// HTTP status codes to indicate success: http.StatusOK
+	DeleteActorAutoDetectionRule func(ctx context.Context, capacityID string, actorAutoDetectionRuleID string, options *core.SurgeProtectionClientDeleteActorAutoDetectionRuleOptions) (resp azfake.Responder[core.SurgeProtectionClientDeleteActorAutoDetectionRuleResponse], errResp azfake.ErrorResponder)
+
+	// DeleteBlockedActor is the fake for method SurgeProtectionClient.DeleteBlockedActor
+	// HTTP status codes to indicate success: http.StatusOK
+	DeleteBlockedActor func(ctx context.Context, capacityID string, blockedActorID string, options *core.SurgeProtectionClientDeleteBlockedActorOptions) (resp azfake.Responder[core.SurgeProtectionClientDeleteBlockedActorResponse], errResp azfake.ErrorResponder)
+
+	// DeleteMissionCriticalActor is the fake for method SurgeProtectionClient.DeleteMissionCriticalActor
+	// HTTP status codes to indicate success: http.StatusOK
+	DeleteMissionCriticalActor func(ctx context.Context, capacityID string, missionCriticalActorID string, options *core.SurgeProtectionClientDeleteMissionCriticalActorOptions) (resp azfake.Responder[core.SurgeProtectionClientDeleteMissionCriticalActorResponse], errResp azfake.ErrorResponder)
+
+	// GetActorAutoDetectionRule is the fake for method SurgeProtectionClient.GetActorAutoDetectionRule
+	// HTTP status codes to indicate success: http.StatusOK
+	GetActorAutoDetectionRule func(ctx context.Context, capacityID string, actorAutoDetectionRuleID string, options *core.SurgeProtectionClientGetActorAutoDetectionRuleOptions) (resp azfake.Responder[core.SurgeProtectionClientGetActorAutoDetectionRuleResponse], errResp azfake.ErrorResponder)
+
+	// GetBlockedActor is the fake for method SurgeProtectionClient.GetBlockedActor
+	// HTTP status codes to indicate success: http.StatusOK
+	GetBlockedActor func(ctx context.Context, capacityID string, blockedActorID string, options *core.SurgeProtectionClientGetBlockedActorOptions) (resp azfake.Responder[core.SurgeProtectionClientGetBlockedActorResponse], errResp azfake.ErrorResponder)
+
 	// GetCapacitySurgeProtection is the fake for method SurgeProtectionClient.GetCapacitySurgeProtection
 	// HTTP status codes to indicate success: http.StatusOK
 	GetCapacitySurgeProtection func(ctx context.Context, capacityID string, options *core.SurgeProtectionClientGetCapacitySurgeProtectionOptions) (resp azfake.Responder[core.SurgeProtectionClientGetCapacitySurgeProtectionResponse], errResp azfake.ErrorResponder)
+
+	// GetMissionCriticalActor is the fake for method SurgeProtectionClient.GetMissionCriticalActor
+	// HTTP status codes to indicate success: http.StatusOK
+	GetMissionCriticalActor func(ctx context.Context, capacityID string, missionCriticalActorID string, options *core.SurgeProtectionClientGetMissionCriticalActorOptions) (resp azfake.Responder[core.SurgeProtectionClientGetMissionCriticalActorResponse], errResp azfake.ErrorResponder)
+
+	// NewListActorAutoDetectionRulesPager is the fake for method SurgeProtectionClient.NewListActorAutoDetectionRulesPager
+	// HTTP status codes to indicate success: http.StatusOK
+	NewListActorAutoDetectionRulesPager func(capacityID string, options *core.SurgeProtectionClientListActorAutoDetectionRulesOptions) (resp azfake.PagerResponder[core.SurgeProtectionClientListActorAutoDetectionRulesResponse])
+
+	// NewListBlockedActorsPager is the fake for method SurgeProtectionClient.NewListBlockedActorsPager
+	// HTTP status codes to indicate success: http.StatusOK
+	NewListBlockedActorsPager func(capacityID string, options *core.SurgeProtectionClientListBlockedActorsOptions) (resp azfake.PagerResponder[core.SurgeProtectionClientListBlockedActorsResponse])
+
+	// NewListMissionCriticalActorsPager is the fake for method SurgeProtectionClient.NewListMissionCriticalActorsPager
+	// HTTP status codes to indicate success: http.StatusOK
+	NewListMissionCriticalActorsPager func(capacityID string, options *core.SurgeProtectionClientListMissionCriticalActorsOptions) (resp azfake.PagerResponder[core.SurgeProtectionClientListMissionCriticalActorsResponse])
+
+	// UpdateActorAutoDetectionRule is the fake for method SurgeProtectionClient.UpdateActorAutoDetectionRule
+	// HTTP status codes to indicate success: http.StatusOK
+	UpdateActorAutoDetectionRule func(ctx context.Context, capacityID string, actorAutoDetectionRuleID string, updateActorAutoDetectionRuleRequest core.UpdateActorAutoDetectionRuleRequest, options *core.SurgeProtectionClientUpdateActorAutoDetectionRuleOptions) (resp azfake.Responder[core.SurgeProtectionClientUpdateActorAutoDetectionRuleResponse], errResp azfake.ErrorResponder)
+
+	// UpdateBlockedActor is the fake for method SurgeProtectionClient.UpdateBlockedActor
+	// HTTP status codes to indicate success: http.StatusOK
+	UpdateBlockedActor func(ctx context.Context, capacityID string, blockedActorID string, updateBlockedActorRequest core.UpdateBlockedActorRequest, options *core.SurgeProtectionClientUpdateBlockedActorOptions) (resp azfake.Responder[core.SurgeProtectionClientUpdateBlockedActorResponse], errResp azfake.ErrorResponder)
 
 	// UpdateCapacitySurgeProtection is the fake for method SurgeProtectionClient.UpdateCapacitySurgeProtection
 	// HTTP status codes to indicate success: http.StatusOK
@@ -37,13 +94,21 @@ type SurgeProtectionServer struct {
 // The returned SurgeProtectionServerTransport instance is connected to an instance of core.SurgeProtectionClient via the
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewSurgeProtectionServerTransport(srv *SurgeProtectionServer) *SurgeProtectionServerTransport {
-	return &SurgeProtectionServerTransport{srv: srv}
+	return &SurgeProtectionServerTransport{
+		srv:                                 srv,
+		newListActorAutoDetectionRulesPager: newTracker[azfake.PagerResponder[core.SurgeProtectionClientListActorAutoDetectionRulesResponse]](),
+		newListBlockedActorsPager:           newTracker[azfake.PagerResponder[core.SurgeProtectionClientListBlockedActorsResponse]](),
+		newListMissionCriticalActorsPager:   newTracker[azfake.PagerResponder[core.SurgeProtectionClientListMissionCriticalActorsResponse]](),
+	}
 }
 
 // SurgeProtectionServerTransport connects instances of core.SurgeProtectionClient to instances of SurgeProtectionServer.
 // Don't use this type directly, use NewSurgeProtectionServerTransport instead.
 type SurgeProtectionServerTransport struct {
-	srv *SurgeProtectionServer
+	srv                                 *SurgeProtectionServer
+	newListActorAutoDetectionRulesPager *tracker[azfake.PagerResponder[core.SurgeProtectionClientListActorAutoDetectionRulesResponse]]
+	newListBlockedActorsPager           *tracker[azfake.PagerResponder[core.SurgeProtectionClientListBlockedActorsResponse]]
+	newListMissionCriticalActorsPager   *tracker[azfake.PagerResponder[core.SurgeProtectionClientListMissionCriticalActorsResponse]]
 }
 
 // Do implements the policy.Transporter interface for SurgeProtectionServerTransport.
@@ -71,8 +136,36 @@ func (s *SurgeProtectionServerTransport) dispatchToMethodFake(req *http.Request,
 		}
 		if !intercepted {
 			switch method {
+			case "SurgeProtectionClient.CreateActorAutoDetectionRule":
+				res.resp, res.err = s.dispatchCreateActorAutoDetectionRule(req)
+			case "SurgeProtectionClient.CreateBlockedActor":
+				res.resp, res.err = s.dispatchCreateBlockedActor(req)
+			case "SurgeProtectionClient.CreateMissionCriticalActor":
+				res.resp, res.err = s.dispatchCreateMissionCriticalActor(req)
+			case "SurgeProtectionClient.DeleteActorAutoDetectionRule":
+				res.resp, res.err = s.dispatchDeleteActorAutoDetectionRule(req)
+			case "SurgeProtectionClient.DeleteBlockedActor":
+				res.resp, res.err = s.dispatchDeleteBlockedActor(req)
+			case "SurgeProtectionClient.DeleteMissionCriticalActor":
+				res.resp, res.err = s.dispatchDeleteMissionCriticalActor(req)
+			case "SurgeProtectionClient.GetActorAutoDetectionRule":
+				res.resp, res.err = s.dispatchGetActorAutoDetectionRule(req)
+			case "SurgeProtectionClient.GetBlockedActor":
+				res.resp, res.err = s.dispatchGetBlockedActor(req)
 			case "SurgeProtectionClient.GetCapacitySurgeProtection":
 				res.resp, res.err = s.dispatchGetCapacitySurgeProtection(req)
+			case "SurgeProtectionClient.GetMissionCriticalActor":
+				res.resp, res.err = s.dispatchGetMissionCriticalActor(req)
+			case "SurgeProtectionClient.NewListActorAutoDetectionRulesPager":
+				res.resp, res.err = s.dispatchNewListActorAutoDetectionRulesPager(req)
+			case "SurgeProtectionClient.NewListBlockedActorsPager":
+				res.resp, res.err = s.dispatchNewListBlockedActorsPager(req)
+			case "SurgeProtectionClient.NewListMissionCriticalActorsPager":
+				res.resp, res.err = s.dispatchNewListMissionCriticalActorsPager(req)
+			case "SurgeProtectionClient.UpdateActorAutoDetectionRule":
+				res.resp, res.err = s.dispatchUpdateActorAutoDetectionRule(req)
+			case "SurgeProtectionClient.UpdateBlockedActor":
+				res.resp, res.err = s.dispatchUpdateBlockedActor(req)
 			case "SurgeProtectionClient.UpdateCapacitySurgeProtection":
 				res.resp, res.err = s.dispatchUpdateCapacitySurgeProtection(req)
 			default:
@@ -92,6 +185,270 @@ func (s *SurgeProtectionServerTransport) dispatchToMethodFake(req *http.Request,
 	case res := <-resultChan:
 		return res.resp, res.err
 	}
+}
+
+func (s *SurgeProtectionServerTransport) dispatchCreateActorAutoDetectionRule(req *http.Request) (*http.Response, error) {
+	if s.srv.CreateActorAutoDetectionRule == nil {
+		return nil, &nonRetriableError{errors.New("fake for method CreateActorAutoDetectionRule not implemented")}
+	}
+	const regexStr = `/v1/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/surgeProtection/actorAutoDetectionRules`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.CreateActorAutoDetectionRuleRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := s.srv.CreateActorAutoDetectionRule(req.Context(), capacityIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusCreated}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusCreated", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).ActorAutoDetectionRule, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (s *SurgeProtectionServerTransport) dispatchCreateBlockedActor(req *http.Request) (*http.Response, error) {
+	if s.srv.CreateBlockedActor == nil {
+		return nil, &nonRetriableError{errors.New("fake for method CreateBlockedActor not implemented")}
+	}
+	const regexStr = `/v1/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/surgeProtection/blockedActors`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.CreateBlockedActorRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := s.srv.CreateBlockedActor(req.Context(), capacityIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK, http.StatusCreated}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusCreated", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).BlockedActor, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (s *SurgeProtectionServerTransport) dispatchCreateMissionCriticalActor(req *http.Request) (*http.Response, error) {
+	if s.srv.CreateMissionCriticalActor == nil {
+		return nil, &nonRetriableError{errors.New("fake for method CreateMissionCriticalActor not implemented")}
+	}
+	const regexStr = `/v1/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/surgeProtection/missionCriticalActors`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.CreateMissionCriticalActorRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := s.srv.CreateMissionCriticalActor(req.Context(), capacityIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK, http.StatusCreated}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusCreated", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).MissionCriticalActor, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (s *SurgeProtectionServerTransport) dispatchDeleteActorAutoDetectionRule(req *http.Request) (*http.Response, error) {
+	if s.srv.DeleteActorAutoDetectionRule == nil {
+		return nil, &nonRetriableError{errors.New("fake for method DeleteActorAutoDetectionRule not implemented")}
+	}
+	const regexStr = `/v1/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/surgeProtection/actorAutoDetectionRules/(?P<actorAutoDetectionRuleId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+	if err != nil {
+		return nil, err
+	}
+	actorAutoDetectionRuleIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("actorAutoDetectionRuleId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := s.srv.DeleteActorAutoDetectionRule(req.Context(), capacityIDParam, actorAutoDetectionRuleIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (s *SurgeProtectionServerTransport) dispatchDeleteBlockedActor(req *http.Request) (*http.Response, error) {
+	if s.srv.DeleteBlockedActor == nil {
+		return nil, &nonRetriableError{errors.New("fake for method DeleteBlockedActor not implemented")}
+	}
+	const regexStr = `/v1/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/surgeProtection/blockedActors/(?P<blockedActorId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+	if err != nil {
+		return nil, err
+	}
+	blockedActorIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("blockedActorId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := s.srv.DeleteBlockedActor(req.Context(), capacityIDParam, blockedActorIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (s *SurgeProtectionServerTransport) dispatchDeleteMissionCriticalActor(req *http.Request) (*http.Response, error) {
+	if s.srv.DeleteMissionCriticalActor == nil {
+		return nil, &nonRetriableError{errors.New("fake for method DeleteMissionCriticalActor not implemented")}
+	}
+	const regexStr = `/v1/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/surgeProtection/missionCriticalActors/(?P<missionCriticalActorId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+	if err != nil {
+		return nil, err
+	}
+	missionCriticalActorIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("missionCriticalActorId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := s.srv.DeleteMissionCriticalActor(req.Context(), capacityIDParam, missionCriticalActorIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (s *SurgeProtectionServerTransport) dispatchGetActorAutoDetectionRule(req *http.Request) (*http.Response, error) {
+	if s.srv.GetActorAutoDetectionRule == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetActorAutoDetectionRule not implemented")}
+	}
+	const regexStr = `/v1/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/surgeProtection/actorAutoDetectionRules/(?P<actorAutoDetectionRuleId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+	if err != nil {
+		return nil, err
+	}
+	actorAutoDetectionRuleIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("actorAutoDetectionRuleId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := s.srv.GetActorAutoDetectionRule(req.Context(), capacityIDParam, actorAutoDetectionRuleIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).ActorAutoDetectionRule, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (s *SurgeProtectionServerTransport) dispatchGetBlockedActor(req *http.Request) (*http.Response, error) {
+	if s.srv.GetBlockedActor == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetBlockedActor not implemented")}
+	}
+	const regexStr = `/v1/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/surgeProtection/blockedActors/(?P<blockedActorId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+	if err != nil {
+		return nil, err
+	}
+	blockedActorIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("blockedActorId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := s.srv.GetBlockedActor(req.Context(), capacityIDParam, blockedActorIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).BlockedActor, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 func (s *SurgeProtectionServerTransport) dispatchGetCapacitySurgeProtection(req *http.Request) (*http.Response, error) {
@@ -117,6 +474,260 @@ func (s *SurgeProtectionServerTransport) dispatchGetCapacitySurgeProtection(req 
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
 	}
 	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).CapacitySurgeProtection, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (s *SurgeProtectionServerTransport) dispatchGetMissionCriticalActor(req *http.Request) (*http.Response, error) {
+	if s.srv.GetMissionCriticalActor == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetMissionCriticalActor not implemented")}
+	}
+	const regexStr = `/v1/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/surgeProtection/missionCriticalActors/(?P<missionCriticalActorId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+	if err != nil {
+		return nil, err
+	}
+	missionCriticalActorIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("missionCriticalActorId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := s.srv.GetMissionCriticalActor(req.Context(), capacityIDParam, missionCriticalActorIDParam, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).MissionCriticalActor, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (s *SurgeProtectionServerTransport) dispatchNewListActorAutoDetectionRulesPager(req *http.Request) (*http.Response, error) {
+	if s.srv.NewListActorAutoDetectionRulesPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListActorAutoDetectionRulesPager not implemented")}
+	}
+	newListActorAutoDetectionRulesPager := s.newListActorAutoDetectionRulesPager.get(req)
+	if newListActorAutoDetectionRulesPager == nil {
+		const regexStr = `/v1/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/surgeProtection/actorAutoDetectionRules`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *core.SurgeProtectionClientListActorAutoDetectionRulesOptions
+		if continuationTokenParam != nil {
+			options = &core.SurgeProtectionClientListActorAutoDetectionRulesOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := s.srv.NewListActorAutoDetectionRulesPager(capacityIDParam, options)
+		newListActorAutoDetectionRulesPager = &resp
+		s.newListActorAutoDetectionRulesPager.add(req, newListActorAutoDetectionRulesPager)
+		server.PagerResponderInjectNextLinks(newListActorAutoDetectionRulesPager, req, func(page *core.SurgeProtectionClientListActorAutoDetectionRulesResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
+	}
+	resp, err := server.PagerResponderNext(newListActorAutoDetectionRulesPager, req)
+	if err != nil {
+		return nil, err
+	}
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		s.newListActorAutoDetectionRulesPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
+	}
+	if !server.PagerResponderMore(newListActorAutoDetectionRulesPager) {
+		s.newListActorAutoDetectionRulesPager.remove(req)
+	}
+	return resp, nil
+}
+
+func (s *SurgeProtectionServerTransport) dispatchNewListBlockedActorsPager(req *http.Request) (*http.Response, error) {
+	if s.srv.NewListBlockedActorsPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListBlockedActorsPager not implemented")}
+	}
+	newListBlockedActorsPager := s.newListBlockedActorsPager.get(req)
+	if newListBlockedActorsPager == nil {
+		const regexStr = `/v1/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/surgeProtection/blockedActors`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *core.SurgeProtectionClientListBlockedActorsOptions
+		if continuationTokenParam != nil {
+			options = &core.SurgeProtectionClientListBlockedActorsOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := s.srv.NewListBlockedActorsPager(capacityIDParam, options)
+		newListBlockedActorsPager = &resp
+		s.newListBlockedActorsPager.add(req, newListBlockedActorsPager)
+		server.PagerResponderInjectNextLinks(newListBlockedActorsPager, req, func(page *core.SurgeProtectionClientListBlockedActorsResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
+	}
+	resp, err := server.PagerResponderNext(newListBlockedActorsPager, req)
+	if err != nil {
+		return nil, err
+	}
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		s.newListBlockedActorsPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
+	}
+	if !server.PagerResponderMore(newListBlockedActorsPager) {
+		s.newListBlockedActorsPager.remove(req)
+	}
+	return resp, nil
+}
+
+func (s *SurgeProtectionServerTransport) dispatchNewListMissionCriticalActorsPager(req *http.Request) (*http.Response, error) {
+	if s.srv.NewListMissionCriticalActorsPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListMissionCriticalActorsPager not implemented")}
+	}
+	newListMissionCriticalActorsPager := s.newListMissionCriticalActorsPager.get(req)
+	if newListMissionCriticalActorsPager == nil {
+		const regexStr = `/v1/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/surgeProtection/missionCriticalActors`
+		regex := regexp.MustCompile(regexStr)
+		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+		if len(matches) < 2 {
+			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+		}
+		qp := req.URL.Query()
+		capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
+		if err != nil {
+			return nil, err
+		}
+		continuationTokenParam := getOptional(continuationTokenUnescaped)
+		var options *core.SurgeProtectionClientListMissionCriticalActorsOptions
+		if continuationTokenParam != nil {
+			options = &core.SurgeProtectionClientListMissionCriticalActorsOptions{
+				ContinuationToken: continuationTokenParam,
+			}
+		}
+		resp := s.srv.NewListMissionCriticalActorsPager(capacityIDParam, options)
+		newListMissionCriticalActorsPager = &resp
+		s.newListMissionCriticalActorsPager.add(req, newListMissionCriticalActorsPager)
+		server.PagerResponderInjectNextLinks(newListMissionCriticalActorsPager, req, func(page *core.SurgeProtectionClientListMissionCriticalActorsResponse, createLink func() string) {
+			page.ContinuationURI = to.Ptr(createLink())
+		})
+	}
+	resp, err := server.PagerResponderNext(newListMissionCriticalActorsPager, req)
+	if err != nil {
+		return nil, err
+	}
+	if !contains([]int{http.StatusOK}, resp.StatusCode) {
+		s.newListMissionCriticalActorsPager.remove(req)
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
+	}
+	if !server.PagerResponderMore(newListMissionCriticalActorsPager) {
+		s.newListMissionCriticalActorsPager.remove(req)
+	}
+	return resp, nil
+}
+
+func (s *SurgeProtectionServerTransport) dispatchUpdateActorAutoDetectionRule(req *http.Request) (*http.Response, error) {
+	if s.srv.UpdateActorAutoDetectionRule == nil {
+		return nil, &nonRetriableError{errors.New("fake for method UpdateActorAutoDetectionRule not implemented")}
+	}
+	const regexStr = `/v1/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/surgeProtection/actorAutoDetectionRules/(?P<actorAutoDetectionRuleId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.UpdateActorAutoDetectionRuleRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+	if err != nil {
+		return nil, err
+	}
+	actorAutoDetectionRuleIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("actorAutoDetectionRuleId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := s.srv.UpdateActorAutoDetectionRule(req.Context(), capacityIDParam, actorAutoDetectionRuleIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).ActorAutoDetectionRule, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (s *SurgeProtectionServerTransport) dispatchUpdateBlockedActor(req *http.Request) (*http.Response, error) {
+	if s.srv.UpdateBlockedActor == nil {
+		return nil, &nonRetriableError{errors.New("fake for method UpdateBlockedActor not implemented")}
+	}
+	const regexStr = `/v1/capacities/(?P<capacityId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/surgeProtection/blockedActors/(?P<blockedActorId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 3 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	body, err := server.UnmarshalRequestAsJSON[core.UpdateBlockedActorRequest](req)
+	if err != nil {
+		return nil, err
+	}
+	capacityIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("capacityId")])
+	if err != nil {
+		return nil, err
+	}
+	blockedActorIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("blockedActorId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := s.srv.UpdateBlockedActor(req.Context(), capacityIDParam, blockedActorIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.MarshalResponseAsJSON(respContent, server.GetResponse(respr).BlockedActor, req)
 	if err != nil {
 		return nil, err
 	}

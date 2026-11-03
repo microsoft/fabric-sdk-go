@@ -58,7 +58,7 @@ func ExampleItemsClient_NewListReportsPager() {
 }
 
 // Generated from example definition
-func ExampleItemsClient_BeginCreateReport() {
+func ExampleItemsClient_BeginCreateReport_createAReportExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -89,6 +89,37 @@ func ExampleItemsClient_BeginCreateReport() {
 				}},
 		},
 		DisplayName: to.Ptr("Report 1"),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	_, err = poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to pull the result: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleItemsClient_BeginCreateReport_createAReportWithCreationPayloadExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := report.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	poller, err := clientFactory.NewItemsClient().BeginCreateReport(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", report.CreateReportRequest{
+		Description: to.Ptr("An empty report connected to a semantic model."),
+		CreationPayload: &report.CreationPayload{
+			SemanticModelReference: &report.ItemReferenceByID{
+				ReferenceType: to.Ptr(report.ItemReferenceTypeByID),
+				ItemID:        to.Ptr("5b218778-e7a5-4d73-8187-f10824047715"),
+				WorkspaceID:   to.Ptr("cfafbeb1-8037-4d0c-896e-a46fb27ff229"),
+			},
+		},
+		DisplayName: to.Ptr("Sales Dashboard"),
 	}, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)

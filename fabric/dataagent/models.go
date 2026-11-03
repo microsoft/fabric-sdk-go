@@ -527,6 +527,24 @@ type SettingsResponse struct {
 	AiInstructions *string
 }
 
+// Topic - The metadata for a DataAgent topic file.
+type Topic struct {
+	// READ-ONLY; The file name of the topic. Must end with the .md extension and be unique within the datasource.
+	FileName *string
+}
+
+// Topics - A paginated list of DataAgent topics.
+type Topics struct {
+	// READ-ONLY; A list of topics.
+	Value []Topic
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
 // UpdateDataAgentDatasourceRequest - Update DataAgent datasource request payload. Only provided fields are updated.
 type UpdateDataAgentDatasourceRequest struct {
 	// The description of the datasource.

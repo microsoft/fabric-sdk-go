@@ -18,6 +18,7 @@ import (
 
 // ServerFactory is a fake server for instances of the admin.ClientFactory type.
 type ServerFactory struct {
+	ConnectionsServer                ConnectionsServer
 	DomainsServer                    DomainsServer
 	ExternalDataSharesProviderServer ExternalDataSharesProviderServer
 	ItemsServer                      ItemsServer
@@ -36,6 +37,7 @@ type ServerFactory struct {
 type ServerFactoryTransport struct {
 	srv                                *ServerFactory
 	trMu                               sync.Mutex
+	trConnectionsServer                *ConnectionsServerTransport
 	trDomainsServer                    *DomainsServerTransport
 	trExternalDataSharesProviderServer *ExternalDataSharesProviderServerTransport
 	trItemsServer                      *ItemsServerTransport
@@ -72,6 +74,9 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	var err error
 
 	switch client {
+	case "ConnectionsClient":
+		initServer(s, &s.trConnectionsServer, func() *ConnectionsServerTransport { return NewConnectionsServerTransport(&s.srv.ConnectionsServer) })
+		resp, err = s.trConnectionsServer.Do(req)
 	case "DomainsClient":
 		initServer(s, &s.trDomainsServer, func() *DomainsServerTransport { return NewDomainsServerTransport(&s.srv.DomainsServer) })
 		resp, err = s.trDomainsServer.Do(req)

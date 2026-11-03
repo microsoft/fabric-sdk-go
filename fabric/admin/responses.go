@@ -6,6 +6,53 @@
 
 package admin
 
+// ConnectionsClientAddConnectionRoleAssignmentResponse contains the response from method ConnectionsClient.AddConnectionRoleAssignment.
+type ConnectionsClientAddConnectionRoleAssignmentResponse struct {
+	// The connection role assignment for a principal.
+	ConnectionRoleAssignment
+
+	// Location contains the information returned from the Location header response.
+	Location *string
+}
+
+// ConnectionsClientDeleteConnectionResponse contains the response from method ConnectionsClient.DeleteConnection.
+type ConnectionsClientDeleteConnectionResponse struct {
+	// placeholder for future response values
+}
+
+// ConnectionsClientDeleteConnectionRoleAssignmentResponse contains the response from method ConnectionsClient.DeleteConnectionRoleAssignment.
+type ConnectionsClientDeleteConnectionRoleAssignmentResponse struct {
+	// placeholder for future response values
+}
+
+// ConnectionsClientGetConnectionResponse contains the response from method ConnectionsClient.GetConnection.
+type ConnectionsClientGetConnectionResponse struct {
+	// The base object of a connection.
+	ConnectionClassification
+}
+
+// ConnectionsClientGetConnectionRoleAssignmentResponse contains the response from method ConnectionsClient.GetConnectionRoleAssignment.
+type ConnectionsClientGetConnectionRoleAssignmentResponse struct {
+	// The connection role assignment for a principal.
+	ConnectionRoleAssignment
+}
+
+// ConnectionsClientListConnectionRoleAssignmentsResponse contains the response from method ConnectionsClient.NewListConnectionRoleAssignmentsPager.
+type ConnectionsClientListConnectionRoleAssignmentsResponse struct {
+	ConnectionRoleAssignments
+}
+
+// ConnectionsClientListConnectionsResponse contains the response from method ConnectionsClient.NewListConnectionsPager.
+type ConnectionsClientListConnectionsResponse struct {
+	ListConnectionsResponse
+}
+
+// ConnectionsClientUpdateConnectionRoleAssignmentResponse contains the response from method ConnectionsClient.UpdateConnectionRoleAssignment.
+type ConnectionsClientUpdateConnectionRoleAssignmentResponse struct {
+	// The connection role assignment for a principal.
+	ConnectionRoleAssignment
+}
+
 // DomainsClientAssignDomainWorkspacesByCapacitiesResponse contains the response from method DomainsClient.BeginAssignDomainWorkspacesByCapacities.
 type DomainsClientAssignDomainWorkspacesByCapacitiesResponse struct {
 	// placeholder for future response values

@@ -6,6 +6,16 @@
 
 package admin
 
+// UnmarshalJSON implements the json.Unmarshaller interface for type ConnectionsClientGetConnectionResponse.
+func (c *ConnectionsClientGetConnectionResponse) UnmarshalJSON(data []byte) error {
+	res, err := unmarshalConnectionClassification(data)
+	if err != nil {
+		return err
+	}
+	c.ConnectionClassification = res
+	return nil
+}
+
 // UnmarshalJSON implements the json.Unmarshaller interface for type WorkloadsClientCreateWorkloadAssignmentResponse.
 func (w *WorkloadsClientCreateWorkloadAssignmentResponse) UnmarshalJSON(data []byte) error {
 	res, err := unmarshalBaseWorkloadAssignmentClassification(data)

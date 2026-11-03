@@ -235,8 +235,12 @@ func (client *ItemsClient) bulkExportItemDefinitionsCreateRequest(ctx context.Co
 	return req, nil
 }
 
-// BeginBulkImportItemDefinitions - Imports item definitions for multiple items into a workspace in a single operation. This
-// API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation]. Each item
+// BeginBulkImportItemDefinitions - > [!NOTE] Deployment plan support in this API is part of a Beta release and is provided
+// for evaluation and development purposes only. It may change based on feedback and is not recommended for
+// production use. All other functionality of this API is generally available. To use deployment plan support, callers must
+// specify true as the value for the query parameter beta.
+// Imports item definitions for multiple items into a workspace in a single operation. This API supports long running operations
+// (LRO) [/rest/api/fabric/articles/long-running-operation]. Each item
 // definition in the request will be processed, creating new items or updating existing ones as determined by the system based
 // on whether the item already exists. To see the supported item types, see
 // Item definition overview [/rest/api/fabric/articles/item-management/definitions/item-definition-overview].
@@ -267,8 +271,12 @@ func (client *ItemsClient) BeginBulkImportItemDefinitions(ctx context.Context, w
 	return client.beginBulkImportItemDefinitions(ctx, workspaceID, bulkImportItemDefinitionsRequest, options)
 }
 
-// BulkImportItemDefinitions - Imports item definitions for multiple items into a workspace in a single operation. This API
-// supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation]. Each item
+// BulkImportItemDefinitions - > [!NOTE] Deployment plan support in this API is part of a Beta release and is provided for
+// evaluation and development purposes only. It may change based on feedback and is not recommended for
+// production use. All other functionality of this API is generally available. To use deployment plan support, callers must
+// specify true as the value for the query parameter beta.
+// Imports item definitions for multiple items into a workspace in a single operation. This API supports long running operations
+// (LRO) [/rest/api/fabric/articles/long-running-operation]. Each item
 // definition in the request will be processed, creating new items or updating existing ones as determined by the system based
 // on whether the item already exists. To see the supported item types, see
 // Item definition overview [/rest/api/fabric/articles/item-management/definitions/item-definition-overview].
@@ -313,7 +321,7 @@ func (client *ItemsClient) bulkImportItemDefinitions(ctx context.Context, worksp
 }
 
 // bulkImportItemDefinitionsCreateRequest creates the BulkImportItemDefinitions request.
-func (client *ItemsClient) bulkImportItemDefinitionsCreateRequest(ctx context.Context, workspaceID string, bulkImportItemDefinitionsRequest BulkImportItemDefinitionsRequest, _ *ItemsClientBeginBulkImportItemDefinitionsOptions) (*policy.Request, error) {
+func (client *ItemsClient) bulkImportItemDefinitionsCreateRequest(ctx context.Context, workspaceID string, bulkImportItemDefinitionsRequest BulkImportItemDefinitionsRequest, options *ItemsClientBeginBulkImportItemDefinitionsOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/items/bulkImportDefinitions"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -323,6 +331,11 @@ func (client *ItemsClient) bulkImportItemDefinitionsCreateRequest(ctx context.Co
 	if err != nil {
 		return nil, err
 	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.Beta != nil {
+		reqQP.Set("beta", strconv.FormatBool(*options.Beta))
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	if err := runtime.MarshalAsJSON(req, bulkImportItemDefinitionsRequest); err != nil {
 		return nil, err
@@ -750,8 +763,10 @@ func (client *ItemsClient) getItemHandleResponse(resp *http.Response) (ItemsClie
 //
 // for more information about scopes, see Scopes article [/rest/api/fabric/articles/scopes].
 //
-// LIMITATIONS This API is blocked for an item with a protected sensitivity label, unless the caller has the usage rights
-// to delete the sensitivity label.
+// LIMITATIONS To retrieve the definition of an item protected by an encrypted sensitivity label, the caller must have sufficient
+// usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -784,8 +799,10 @@ func (client *ItemsClient) BeginGetItemDefinition(ctx context.Context, workspace
 //
 // for more information about scopes, see Scopes article [/rest/api/fabric/articles/scopes].
 //
-// LIMITATIONS This API is blocked for an item with a protected sensitivity label, unless the caller has the usage rights
-// to delete the sensitivity label.
+// LIMITATIONS To retrieve the definition of an item protected by an encrypted sensitivity label, the caller must have sufficient
+// usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
+// Microsoft Purview [/purview/purview].
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1580,6 +1597,9 @@ func (client *ItemsClient) beginBulkExportItemDefinitions(ctx context.Context, w
 }
 
 // BulkImportItemDefinitions - returns ItemsClientBulkImportItemDefinitionsResponse in sync mode.
+// >  [!NOTE] Deployment plan support in this API is part of a Beta release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for
+// production use. All other functionality of this API is generally available. To use deployment plan support, callers must specify true as the value for the query parameter beta.
+//
 // Imports item definitions for multiple items into a workspace in a single operation. This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation]. Each item
 // definition in the request will be processed, creating new items or updating existing ones as determined by the system based on whether the item already exists. To see the supported item types, see
 // Item definition overview [/rest/api/fabric/articles/item-management/definitions/item-definition-overview].
@@ -1763,7 +1783,8 @@ func (client *ItemsClient) beginCreateItem(ctx context.Context, workspaceID stri
 //
 //     for more information about scopes, see Scopes article [/rest/api/fabric/articles/scopes].
 //
-// LIMITATIONS This API is blocked for an item with a protected sensitivity label, unless the caller has the usage rights to delete the sensitivity label.
+// LIMITATIONS To retrieve the definition of an item protected by an encrypted sensitivity label, the caller must have sufficient usage rights
+// [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in Microsoft Purview [/purview/purview].
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

@@ -1098,6 +1098,109 @@ func (testsuite *FakeTestSuite) TestStaging_DeleteAllDatasourceFewshots() {
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
+func (testsuite *FakeTestSuite) TestStaging_ListDatasourceTopics() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List staging DataAgent datasource topics example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleDatasourceID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-28571bfff4cf"
+	exampleDataAgentID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleDatasourceID = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+
+	exampleRes := dataagent.Topics{
+		Value: []dataagent.Topic{
+			{
+				FileName: to.Ptr("company-policies.md"),
+			},
+			{
+				FileName: to.Ptr("product-docs.md"),
+			}},
+	}
+
+	testsuite.serverFactory.StagingServer.NewListDatasourceTopicsPager = func(workspaceID string, dataAgentID string, datasourceID string, options *dataagent.StagingClientListDatasourceTopicsOptions) (resp azfake.PagerResponder[dataagent.StagingClientListDatasourceTopicsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleDatasourceID, datasourceID)
+		resp = azfake.PagerResponder[dataagent.StagingClientListDatasourceTopicsResponse]{}
+		resp.AddPage(http.StatusOK, dataagent.StagingClientListDatasourceTopicsResponse{Topics: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	pager := client.NewListDatasourceTopicsPager(exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, &dataagent.StagingClientListDatasourceTopicsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Topics))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestStaging_DeleteDatasourceTopic() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete staging DataAgent datasource topic example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleDatasourceID string
+	var exampleFileName string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-28571bfff4cf"
+	exampleDataAgentID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleDatasourceID = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+	exampleFileName = "company-policies.md"
+
+	testsuite.serverFactory.StagingServer.DeleteDatasourceTopic = func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fileName string, options *dataagent.StagingClientDeleteDatasourceTopicOptions) (resp azfake.Responder[dataagent.StagingClientDeleteDatasourceTopicResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleDatasourceID, datasourceID)
+		testsuite.Require().Equal(exampleFileName, fileName)
+		resp = azfake.Responder[dataagent.StagingClientDeleteDatasourceTopicResponse]{}
+		resp.SetResponse(http.StatusOK, dataagent.StagingClientDeleteDatasourceTopicResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	_, err = client.DeleteDatasourceTopic(ctx, exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, exampleFileName, &dataagent.StagingClientDeleteDatasourceTopicOptions{IfMatch: nil})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestStaging_FormatDatasourceTopic() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Format staging DataAgent datasource topic example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleDatasourceID string
+	var exampleFileName string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-28571bfff4cf"
+	exampleDataAgentID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleDatasourceID = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+	exampleFileName = "company-policies.md"
+
+	testsuite.serverFactory.StagingServer.BeginFormatDatasourceTopic = func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fileName string, options *dataagent.StagingClientBeginFormatDatasourceTopicOptions) (resp azfake.PollerResponder[dataagent.StagingClientFormatDatasourceTopicResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleDatasourceID, datasourceID)
+		testsuite.Require().Equal(exampleFileName, fileName)
+		resp = azfake.PollerResponder[dataagent.StagingClientFormatDatasourceTopicResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, dataagent.StagingClientFormatDatasourceTopicResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	poller, err := client.BeginFormatDatasourceTopic(ctx, exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, exampleFileName, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	_, err = poller.PollUntilDone(ctx, nil)
+	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
+}
+
 func (testsuite *FakeTestSuite) TestStaging_Reset() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
@@ -1118,6 +1221,35 @@ func (testsuite *FakeTestSuite) TestStaging_Reset() {
 
 	client := testsuite.clientFactory.NewStagingClient()
 	_, err = client.Reset(ctx, exampleWorkspaceID, exampleDataAgentID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestStaging_DownloadDatasourceTopic() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Download staging DataAgent datasource topic example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleDatasourceID string
+	var exampleFileName string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-28571bfff4cf"
+	exampleDataAgentID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleDatasourceID = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+	exampleFileName = "company-policies.md"
+
+	testsuite.serverFactory.StagingServer.DownloadDatasourceTopic = func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fileName string, options *dataagent.StagingClientDownloadDatasourceTopicOptions) (resp azfake.Responder[dataagent.StagingClientDownloadDatasourceTopicResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleDatasourceID, datasourceID)
+		testsuite.Require().Equal(exampleFileName, fileName)
+		resp = azfake.Responder[dataagent.StagingClientDownloadDatasourceTopicResponse]{}
+		resp.SetResponse(http.StatusOK, dataagent.StagingClientDownloadDatasourceTopicResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewStagingClient()
+	_, err = client.DownloadDatasourceTopic(ctx, exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, exampleFileName, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 
@@ -1400,4 +1532,76 @@ func (testsuite *FakeTestSuite) TestPublished_GetDatasourceFewshot() {
 	res, err := client.GetDatasourceFewshot(ctx, exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, exampleFewShotID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Fewshot))
+}
+
+func (testsuite *FakeTestSuite) TestPublished_ListDatasourceTopics() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List published DataAgent datasource topics example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleDatasourceID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-28571bfff4cf"
+	exampleDataAgentID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleDatasourceID = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+
+	exampleRes := dataagent.Topics{
+		Value: []dataagent.Topic{
+			{
+				FileName: to.Ptr("company-policies.md"),
+			},
+			{
+				FileName: to.Ptr("product-docs.md"),
+			}},
+	}
+
+	testsuite.serverFactory.PublishedServer.NewListDatasourceTopicsPager = func(workspaceID string, dataAgentID string, datasourceID string, options *dataagent.PublishedClientListDatasourceTopicsOptions) (resp azfake.PagerResponder[dataagent.PublishedClientListDatasourceTopicsResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleDatasourceID, datasourceID)
+		resp = azfake.PagerResponder[dataagent.PublishedClientListDatasourceTopicsResponse]{}
+		resp.AddPage(http.StatusOK, dataagent.PublishedClientListDatasourceTopicsResponse{Topics: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewPublishedClient()
+	pager := client.NewListDatasourceTopicsPager(exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, &dataagent.PublishedClientListDatasourceTopicsOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.Topics))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestPublished_DownloadDatasourceTopic() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Download published DataAgent datasource topic example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleDatasourceID string
+	var exampleFileName string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-28571bfff4cf"
+	exampleDataAgentID = "5b218778-e7a5-4d73-8187-f10824047715"
+	exampleDatasourceID = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+	exampleFileName = "company-policies.md"
+
+	testsuite.serverFactory.PublishedServer.DownloadDatasourceTopic = func(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fileName string, options *dataagent.PublishedClientDownloadDatasourceTopicOptions) (resp azfake.Responder[dataagent.PublishedClientDownloadDatasourceTopicResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleDatasourceID, datasourceID)
+		testsuite.Require().Equal(exampleFileName, fileName)
+		resp = azfake.Responder[dataagent.PublishedClientDownloadDatasourceTopicResponse]{}
+		resp.SetResponse(http.StatusOK, dataagent.PublishedClientDownloadDatasourceTopicResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewPublishedClient()
+	_, err = client.DownloadDatasourceTopic(ctx, exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, exampleFileName, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
 }

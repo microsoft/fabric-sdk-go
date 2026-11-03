@@ -28,6 +28,73 @@ type PublishedClient struct {
 	endpoint string
 }
 
+// DownloadDatasourceTopic - > [!NOTE] Data Agent configuration management is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// Returns the raw markdown content of the topic file.
+// PERMISSIONS The caller must have read permissions for the DataAgent.
+// REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All or DataAgent.Read.All or DataAgent.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataAgentID - The DataAgent ID.
+//   - datasourceID - The datasource ID.
+//   - fileName - The topic file name (e.g., "company-policies.md"). Must end with the .md extension.
+//   - options - PublishedClientDownloadDatasourceTopicOptions contains the optional parameters for the PublishedClient.DownloadDatasourceTopic
+//     method.
+func (client *PublishedClient) DownloadDatasourceTopic(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fileName string, options *PublishedClientDownloadDatasourceTopicOptions) (PublishedClientDownloadDatasourceTopicResponse, error) {
+	var err error
+	const operationName = "dataagent.PublishedClient.DownloadDatasourceTopic"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.downloadDatasourceTopicCreateRequest(ctx, workspaceID, dataAgentID, datasourceID, fileName, options)
+	if err != nil {
+		return PublishedClientDownloadDatasourceTopicResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return PublishedClientDownloadDatasourceTopicResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return PublishedClientDownloadDatasourceTopicResponse{}, err
+	}
+	return PublishedClientDownloadDatasourceTopicResponse{Body: httpResp.Body}, nil
+}
+
+// downloadDatasourceTopicCreateRequest creates the DownloadDatasourceTopic request.
+func (client *PublishedClient) downloadDatasourceTopicCreateRequest(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, fileName string, _ *PublishedClientDownloadDatasourceTopicOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/dataAgents/{dataAgentId}/datasources/{datasourceId}/topics/content"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if dataAgentID == "" {
+		return nil, errors.New("parameter dataAgentID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{dataAgentId}", url.PathEscape(dataAgentID))
+	if datasourceID == "" {
+		return nil, errors.New("parameter datasourceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{datasourceId}", url.PathEscape(datasourceID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("fileName", fileName)
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	runtime.SkipBodyDownload(req)
+	req.Raw().Header["Accept"] = []string{"application/octet-stream"}
+	return req, nil
+}
+
 // GetDatasource - > [!NOTE] Data Agent configuration management is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // PERMISSIONS The caller must have read permissions for the DataAgent.
 // REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All or DataAgent.Read.All or DataAgent.ReadWrite.All
@@ -398,6 +465,85 @@ func (client *PublishedClient) listDatasourceFewshotsHandleResponse(resp *http.R
 	return result, nil
 }
 
+// NewListDatasourceTopicsPager - > [!NOTE] Data Agent configuration management is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// This API supports pagination [/rest/api/fabric/articles/pagination].
+// Returns a paginated list of topic file names for the specified datasource. To retrieve the content of a specific topic,
+// use the download endpoint with the fileName.
+// PERMISSIONS The caller must have read permissions for the DataAgent.
+// REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All or DataAgent.Read.All or DataAgent.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataAgentID - The DataAgent ID.
+//   - datasourceID - The datasource ID.
+//   - options - PublishedClientListDatasourceTopicsOptions contains the optional parameters for the PublishedClient.NewListDatasourceTopicsPager
+//     method.
+func (client *PublishedClient) NewListDatasourceTopicsPager(workspaceID string, dataAgentID string, datasourceID string, options *PublishedClientListDatasourceTopicsOptions) *runtime.Pager[PublishedClientListDatasourceTopicsResponse] {
+	return runtime.NewPager(runtime.PagingHandler[PublishedClientListDatasourceTopicsResponse]{
+		More: func(page PublishedClientListDatasourceTopicsResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *PublishedClientListDatasourceTopicsResponse) (PublishedClientListDatasourceTopicsResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "dataagent.PublishedClient.NewListDatasourceTopicsPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.listDatasourceTopicsCreateRequest(ctx, workspaceID, dataAgentID, datasourceID, options)
+			}, nil)
+			if err != nil {
+				return PublishedClientListDatasourceTopicsResponse{}, err
+			}
+			return client.listDatasourceTopicsHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
+}
+
+// listDatasourceTopicsCreateRequest creates the ListDatasourceTopics request.
+func (client *PublishedClient) listDatasourceTopicsCreateRequest(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, options *PublishedClientListDatasourceTopicsOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/dataAgents/{dataAgentId}/datasources/{datasourceId}/topics"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if dataAgentID == "" {
+		return nil, errors.New("parameter dataAgentID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{dataAgentId}", url.PathEscape(dataAgentID))
+	if datasourceID == "" {
+		return nil, errors.New("parameter datasourceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{datasourceId}", url.PathEscape(datasourceID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// listDatasourceTopicsHandleResponse handles the ListDatasourceTopics response.
+func (client *PublishedClient) listDatasourceTopicsHandleResponse(resp *http.Response) (PublishedClientListDatasourceTopicsResponse, error) {
+	result := PublishedClientListDatasourceTopicsResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.Topics); err != nil {
+		return PublishedClientListDatasourceTopicsResponse{}, err
+	}
+	return result, nil
+}
+
 // NewListDatasourcesPager - > [!NOTE] Data Agent configuration management is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have read permissions for the DataAgent.
@@ -542,6 +688,44 @@ func (client *PublishedClient) ListDatasourceFewshots(ctx context.Context, works
 			return []Fewshot{}, core.NewResponseError(azcoreRespError.RawResponse)
 		}
 		return []Fewshot{}, err
+	}
+	return list, nil
+}
+
+// ListDatasourceTopics - returns array of Topic from all pages.
+// >  [!NOTE] Data Agent configuration management is currently in Preview (learn more [/fabric/fundamentals/preview]).
+//
+// This API supports pagination [/rest/api/fabric/articles/pagination].
+//
+// Returns a paginated list of topic file names for the specified datasource. To retrieve the content of a specific topic, use the download endpoint with the fileName.
+//
+// PERMISSIONS The caller must have read permissions for the DataAgent.
+//
+// # REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All or DataAgent.Read.All or DataAgent.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - dataAgentID - The DataAgent ID.
+//   - datasourceID - The datasource ID.
+//   - options - PublishedClientListDatasourceTopicsOptions contains the optional parameters for the PublishedClient.NewListDatasourceTopicsPager method.
+func (client *PublishedClient) ListDatasourceTopics(ctx context.Context, workspaceID string, dataAgentID string, datasourceID string, options *PublishedClientListDatasourceTopicsOptions) ([]Topic, error) {
+	pager := client.NewListDatasourceTopicsPager(workspaceID, dataAgentID, datasourceID, options)
+	mapper := func(resp PublishedClientListDatasourceTopicsResponse) []Topic {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []Topic{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []Topic{}, err
 	}
 	return list, nil
 }

@@ -27,11 +27,16 @@ type ConnectionBinding struct {
 
 // CreateSemanticModelRequest - Create semantic model request payload.
 type CreateSemanticModelRequest struct {
-	// REQUIRED; The semantic model public definition.
-	Definition *Definition
-
 	// REQUIRED; The semantic model display name. The display name must follow naming rules according to item type.
 	DisplayName *string
+
+	// The creation payload for creating a semantic model without a full definition. Provide OneLake table URLs to create a DirectLake
+	// model, or omit both definition and creationPayload to create an empty
+	// semantic model. Use definition or creationPayload. You can't use both at the same time.
+	CreationPayload *CreationPayload
+
+	// The semantic model public definition. Use definition or creationPayload. You can't use both at the same time.
+	Definition *Definition
 
 	// The semantic model description. Maximum length is 256 characters.
 	Description *string
@@ -41,6 +46,19 @@ type CreateSemanticModelRequest struct {
 
 	// The sensitivity label settings for the semantic model.
 	SensitivityLabelSettings *SensitivityLabelSettings
+}
+
+// CreationPayload - Creation payload for creating a semantic model without a definition.
+type CreationPayload struct {
+	// REQUIRED; A list of OneLake table URLs to connect the semantic model to (maximum 100). Each URL must follow one of two
+	// formats:
+	// https://onelake.dfs.fabric.microsoft.com/{workspaceId}/{dataItemId}/Tables/{tableName} for a table in the default dbo schema,
+	// or
+	// https://onelake.dfs.fabric.microsoft.com/{workspaceId}/{dataItemId}/Tables/{schemaName}/{tableName} for a table in an explicit
+	// custom schema. URLs may reference different workspaces and data items,
+	// and a single request may mix default-schema and custom-schema URLs. The system infers table names and columns from the
+	// OneLake source.
+	OneLakeTables []string
 }
 
 // Definition - Semantic model public definition object. Refer to this article [/rest/api/fabric/articles/item-management/definitions/semantic-model-definition]
