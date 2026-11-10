@@ -75,6 +75,18 @@ func (a *ActivatorDestinationResponse) GetDestinationResponse() *DestinationResp
 	}
 }
 
+// AdvancedFilter - An advanced condition applied to incoming business events.
+type AdvancedFilter struct {
+	// READ-ONLY; The event attribute or nested event-data path examined by the condition, such as subject or data.order.total.
+	Key *string
+
+	// READ-ONLY; The advanced-filter comparison operator.
+	OperatorType *AdvancedFilterOperatorType
+}
+
+// GetAdvancedFilter implements the AdvancedFilterClassification interface for type AdvancedFilter.
+func (a *AdvancedFilter) GetAdvancedFilter() *AdvancedFilter { return a }
+
 // AggregateOperator - Aggregate operator.
 type AggregateOperator struct {
 	// REQUIRED; A list of the references to the input nodes of the operator.
@@ -880,6 +892,26 @@ type BaseSQLServerCDCSourceProperties struct {
 	StoreOnlyCapturedTablesDdl *bool
 }
 
+// BoolEqualsAdvancedFilter - An advanced filter that matches when the Boolean key value equals the specified Boolean value.
+type BoolEqualsAdvancedFilter struct {
+	// READ-ONLY; The event attribute or nested event-data path examined by the condition, such as subject or data.order.total.
+	Key *string
+
+	// READ-ONLY; The advanced-filter comparison operator.
+	OperatorType *AdvancedFilterOperatorType
+
+	// READ-ONLY; The Boolean value required by the condition.
+	Value *bool
+}
+
+// GetAdvancedFilter implements the AdvancedFilterClassification interface for type BoolEqualsAdvancedFilter.
+func (b *BoolEqualsAdvancedFilter) GetAdvancedFilter() *AdvancedFilter {
+	return &AdvancedFilter{
+		Key:          b.Key,
+		OperatorType: b.OperatorType,
+	}
+}
+
 // BusinessEventsDestinationProperties - Represents the Business Events destination properties.
 type BusinessEventsDestinationProperties struct {
 	// REQUIRED; The identifier of the business event type defined by the target Event Schema Set.
@@ -928,6 +960,60 @@ func (b *BusinessEventsDestinationResponse) GetDestinationResponse() *Destinatio
 		Error:        b.Error,
 		ID:           b.ID,
 		InputNodes:   b.InputNodes,
+		InputSchemas: b.InputSchemas,
+		Name:         b.Name,
+		Status:       b.Status,
+		Type:         b.Type,
+	}
+}
+
+// BusinessEventsSourceProperties - The resolved configuration of a Business Events source.
+type BusinessEventsSourceProperties struct {
+	// READ-ONLY; The existing event-type identifiers selected from the referenced Event Schema Set.
+	BusinessEventTypeIDs []string
+
+	// READ-ONLY; The resolved item ID of the referenced Event Schema Set.
+	ItemID *string
+
+	// READ-ONLY; The resolved workspace ID of the referenced Event Schema Set, including when it equals the Eventstream workspace
+	// ID.
+	WorkspaceID *string
+
+	// READ-ONLY; The additional event conditions. Every condition must match. At most 25 conditions and 25 total comparison entries
+	// are supported. Omission or an empty array means no additional conditions.
+	Filters []AdvancedFilterClassification
+}
+
+// BusinessEventsSourceResponse - A Business Events source response. Source-data preview and source-level pause/resume are
+// not supported.
+type BusinessEventsSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// READ-ONLY; The properties of the Business Events source.
+	Properties *BusinessEventsSourceProperties
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type BusinessEventsSourceResponse.
+func (b *BusinessEventsSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        b.Error,
+		ID:           b.ID,
 		InputSchemas: b.InputSchemas,
 		Name:         b.Name,
 		Status:       b.Status,
@@ -1126,6 +1212,15 @@ func (c *CursorPagination) GetHTTPPagination() *HTTPPagination {
 	}
 }
 
+// CustomConnectorConfiguration - A Custom Stream Connector configuration entry.
+type CustomConnectorConfiguration struct {
+	// The configuration key.
+	Key *string
+
+	// The configuration value.
+	Value *string
+}
+
 // CustomEndpointConnection - Represents a custom endpoint connection.
 type CustomEndpointConnection struct {
 	// REQUIRED; The endpoint connection shape.
@@ -1217,6 +1312,58 @@ type CustomEndpointSourceResponse struct {
 
 // GetSourceResponse implements the SourceResponseClassification interface for type CustomEndpointSourceResponse.
 func (c *CustomEndpointSourceResponse) GetSourceResponse() *SourceResponse {
+	return &SourceResponse{
+		Error:        c.Error,
+		ID:           c.ID,
+		InputSchemas: c.InputSchemas,
+		Name:         c.Name,
+		Status:       c.Status,
+		Type:         c.Type,
+	}
+}
+
+// CustomStreamConnectorSourceProperties - The properties of a Custom Stream Connector source.
+type CustomStreamConnectorSourceProperties struct {
+	// The connector configurations. Values may include placeholders (for example, ${password}) that are resolved server-side
+	// at runtime.
+	Configurations []CustomConnectorConfiguration
+
+	// The data connection identifier used to resolve runtime credentials and connectivity.
+	DataConnectionID *string
+
+	// The identifier of the referenced Custom Stream Connector item.
+	ItemID *string
+
+	// The workspace identifier of the referenced Custom Stream Connector item.
+	WorkspaceID *string
+}
+
+// CustomStreamConnectorSourceResponse - The response for a Custom Stream Connector source.
+type CustomStreamConnectorSourceResponse struct {
+	// REQUIRED; The unique name of the source.
+	Name *string
+
+	// REQUIRED; The properties of the Custom Stream Connector source.
+	Properties *CustomStreamConnectorSourceProperties
+
+	// REQUIRED; The status of the node. Additional node status may be added over time.
+	Status *NodeStatus
+
+	// REQUIRED; The type of the source.
+	Type *SourceType
+
+	// The error information.
+	Error *ErrorInfo
+
+	// The unique identifier of the source.
+	ID *string
+
+	// The input schemas of the source.
+	InputSchemas []InputSchema
+}
+
+// GetSourceResponse implements the SourceResponseClassification interface for type CustomStreamConnectorSourceResponse.
+func (c *CustomStreamConnectorSourceResponse) GetSourceResponse() *SourceResponse {
 	return &SourceResponse{
 		Error:        c.Error,
 		ID:           c.ID,
@@ -2261,6 +2408,41 @@ type InputSchema struct {
 	Schema *Schema
 }
 
+// IsNotNullAdvancedFilter - An advanced filter that matches when the target key exists and is not null in the event.
+type IsNotNullAdvancedFilter struct {
+	// READ-ONLY; The event attribute or nested event-data path examined by the condition, such as subject or data.order.total.
+	Key *string
+
+	// READ-ONLY; The advanced-filter comparison operator.
+	OperatorType *AdvancedFilterOperatorType
+}
+
+// GetAdvancedFilter implements the AdvancedFilterClassification interface for type IsNotNullAdvancedFilter.
+func (i *IsNotNullAdvancedFilter) GetAdvancedFilter() *AdvancedFilter {
+	return &AdvancedFilter{
+		Key:          i.Key,
+		OperatorType: i.OperatorType,
+	}
+}
+
+// IsNullOrUndefinedAdvancedFilter - An advanced filter that matches when the target key is null, missing, or undefined in
+// the event.
+type IsNullOrUndefinedAdvancedFilter struct {
+	// READ-ONLY; The event attribute or nested event-data path examined by the condition, such as subject or data.order.total.
+	Key *string
+
+	// READ-ONLY; The advanced-filter comparison operator.
+	OperatorType *AdvancedFilterOperatorType
+}
+
+// GetAdvancedFilter implements the AdvancedFilterClassification interface for type IsNullOrUndefinedAdvancedFilter.
+func (i *IsNullOrUndefinedAdvancedFilter) GetAdvancedFilter() *AdvancedFilter {
+	return &AdvancedFilter{
+		Key:          i.Key,
+		OperatorType: i.OperatorType,
+	}
+}
+
 // ItemTag - Represents a tag applied on an item.
 type ItemTag struct {
 	// REQUIRED; The name of the tag.
@@ -2888,6 +3070,173 @@ func (n *NotebookDestinationResponse) GetDestinationResponse() *DestinationRespo
 		Name:         n.Name,
 		Status:       n.Status,
 		Type:         n.Type,
+	}
+}
+
+// NumberGreaterThanAdvancedFilter - An advanced filter that matches when the numeric key value is strictly greater than the
+// specified threshold.
+type NumberGreaterThanAdvancedFilter struct {
+	// READ-ONLY; The event attribute or nested event-data path examined by the condition, such as subject or data.order.total.
+	Key *string
+
+	// READ-ONLY; The advanced-filter comparison operator.
+	OperatorType *AdvancedFilterOperatorType
+
+	// READ-ONLY; The exclusive lower numeric threshold.
+	Value *float64
+}
+
+// GetAdvancedFilter implements the AdvancedFilterClassification interface for type NumberGreaterThanAdvancedFilter.
+func (n *NumberGreaterThanAdvancedFilter) GetAdvancedFilter() *AdvancedFilter {
+	return &AdvancedFilter{
+		Key:          n.Key,
+		OperatorType: n.OperatorType,
+	}
+}
+
+// NumberGreaterThanOrEqualsAdvancedFilter - An advanced filter that matches when the numeric key value is greater than or
+// equal to the specified threshold.
+type NumberGreaterThanOrEqualsAdvancedFilter struct {
+	// READ-ONLY; The event attribute or nested event-data path examined by the condition, such as subject or data.order.total.
+	Key *string
+
+	// READ-ONLY; The advanced-filter comparison operator.
+	OperatorType *AdvancedFilterOperatorType
+
+	// READ-ONLY; The inclusive lower numeric threshold.
+	Value *float64
+}
+
+// GetAdvancedFilter implements the AdvancedFilterClassification interface for type NumberGreaterThanOrEqualsAdvancedFilter.
+func (n *NumberGreaterThanOrEqualsAdvancedFilter) GetAdvancedFilter() *AdvancedFilter {
+	return &AdvancedFilter{
+		Key:          n.Key,
+		OperatorType: n.OperatorType,
+	}
+}
+
+// NumberInAdvancedFilter - An advanced filter that matches when the numeric key value equals any of the specified numbers.
+type NumberInAdvancedFilter struct {
+	// READ-ONLY; The event attribute or nested event-data path examined by the condition, such as subject or data.order.total.
+	Key *string
+
+	// READ-ONLY; The advanced-filter comparison operator.
+	OperatorType *AdvancedFilterOperatorType
+
+	// READ-ONLY; The alternatives accepted by numeric equality.
+	Values []float64
+}
+
+// GetAdvancedFilter implements the AdvancedFilterClassification interface for type NumberInAdvancedFilter.
+func (n *NumberInAdvancedFilter) GetAdvancedFilter() *AdvancedFilter {
+	return &AdvancedFilter{
+		Key:          n.Key,
+		OperatorType: n.OperatorType,
+	}
+}
+
+// NumberInRangeAdvancedFilter - An advanced filter that matches when the numeric key value falls within any of the specified
+// inclusive ranges.
+type NumberInRangeAdvancedFilter struct {
+	// READ-ONLY; The event attribute or nested event-data path examined by the condition, such as subject or data.order.total.
+	Key *string
+
+	// READ-ONLY; The advanced-filter comparison operator.
+	OperatorType *AdvancedFilterOperatorType
+
+	// READ-ONLY; The inclusive lower/upper ranges accepted by the condition.
+	Values [][]float64
+}
+
+// GetAdvancedFilter implements the AdvancedFilterClassification interface for type NumberInRangeAdvancedFilter.
+func (n *NumberInRangeAdvancedFilter) GetAdvancedFilter() *AdvancedFilter {
+	return &AdvancedFilter{
+		Key:          n.Key,
+		OperatorType: n.OperatorType,
+	}
+}
+
+// NumberLessThanAdvancedFilter - An advanced filter that matches when the numeric key value is strictly less than the specified
+// threshold.
+type NumberLessThanAdvancedFilter struct {
+	// READ-ONLY; The event attribute or nested event-data path examined by the condition, such as subject or data.order.total.
+	Key *string
+
+	// READ-ONLY; The advanced-filter comparison operator.
+	OperatorType *AdvancedFilterOperatorType
+
+	// READ-ONLY; The exclusive upper numeric threshold.
+	Value *float64
+}
+
+// GetAdvancedFilter implements the AdvancedFilterClassification interface for type NumberLessThanAdvancedFilter.
+func (n *NumberLessThanAdvancedFilter) GetAdvancedFilter() *AdvancedFilter {
+	return &AdvancedFilter{
+		Key:          n.Key,
+		OperatorType: n.OperatorType,
+	}
+}
+
+// NumberLessThanOrEqualsAdvancedFilter - An advanced filter that matches when the numeric key value is less than or equal
+// to the specified threshold.
+type NumberLessThanOrEqualsAdvancedFilter struct {
+	// READ-ONLY; The event attribute or nested event-data path examined by the condition, such as subject or data.order.total.
+	Key *string
+
+	// READ-ONLY; The advanced-filter comparison operator.
+	OperatorType *AdvancedFilterOperatorType
+
+	// READ-ONLY; The inclusive upper numeric threshold.
+	Value *float64
+}
+
+// GetAdvancedFilter implements the AdvancedFilterClassification interface for type NumberLessThanOrEqualsAdvancedFilter.
+func (n *NumberLessThanOrEqualsAdvancedFilter) GetAdvancedFilter() *AdvancedFilter {
+	return &AdvancedFilter{
+		Key:          n.Key,
+		OperatorType: n.OperatorType,
+	}
+}
+
+// NumberNotInAdvancedFilter - An advanced filter that matches when the numeric key value does not equal any of the specified
+// numbers.
+type NumberNotInAdvancedFilter struct {
+	// READ-ONLY; The event attribute or nested event-data path examined by the condition, such as subject or data.order.total.
+	Key *string
+
+	// READ-ONLY; The advanced-filter comparison operator.
+	OperatorType *AdvancedFilterOperatorType
+
+	// READ-ONLY; The alternatives excluded by numeric equality.
+	Values []float64
+}
+
+// GetAdvancedFilter implements the AdvancedFilterClassification interface for type NumberNotInAdvancedFilter.
+func (n *NumberNotInAdvancedFilter) GetAdvancedFilter() *AdvancedFilter {
+	return &AdvancedFilter{
+		Key:          n.Key,
+		OperatorType: n.OperatorType,
+	}
+}
+
+// NumberNotInRangeAdvancedFilter - An advanced filter that matches when the numeric key value does not fall within any of
+// the specified inclusive ranges.
+type NumberNotInRangeAdvancedFilter struct {
+	// READ-ONLY; The event attribute or nested event-data path examined by the condition, such as subject or data.order.total.
+	Key *string
+
+	// READ-ONLY; The advanced-filter comparison operator.
+	OperatorType *AdvancedFilterOperatorType
+
+	// READ-ONLY; The inclusive lower/upper ranges excluded by the condition.
+	Values [][]float64
+}
+
+// GetAdvancedFilter implements the AdvancedFilterClassification interface for type NumberNotInRangeAdvancedFilter.
+func (n *NumberNotInRangeAdvancedFilter) GetAdvancedFilter() *AdvancedFilter {
+	return &AdvancedFilter{
+		Key:          n.Key,
+		OperatorType: n.OperatorType,
 	}
 }
 
@@ -3740,6 +4089,174 @@ type StreamResponse struct {
 
 // GetStreamResponse implements the StreamResponseClassification interface for type StreamResponse.
 func (s *StreamResponse) GetStreamResponse() *StreamResponse { return s }
+
+// StringBeginsWithAdvancedFilter - An advanced filter that matches when the string key value begins with any of the specified
+// prefixes (case-insensitive).
+type StringBeginsWithAdvancedFilter struct {
+	// READ-ONLY; The event attribute or nested event-data path examined by the condition, such as subject or data.order.total.
+	Key *string
+
+	// READ-ONLY; The advanced-filter comparison operator.
+	OperatorType *AdvancedFilterOperatorType
+
+	// READ-ONLY; The accepted text prefixes.
+	Values []string
+}
+
+// GetAdvancedFilter implements the AdvancedFilterClassification interface for type StringBeginsWithAdvancedFilter.
+func (s *StringBeginsWithAdvancedFilter) GetAdvancedFilter() *AdvancedFilter {
+	return &AdvancedFilter{
+		Key:          s.Key,
+		OperatorType: s.OperatorType,
+	}
+}
+
+// StringContainsAdvancedFilter - An advanced filter that matches when the string key value contains any of the specified
+// substrings (case-insensitive).
+type StringContainsAdvancedFilter struct {
+	// READ-ONLY; The event attribute or nested event-data path examined by the condition, such as subject or data.order.total.
+	Key *string
+
+	// READ-ONLY; The advanced-filter comparison operator.
+	OperatorType *AdvancedFilterOperatorType
+
+	// READ-ONLY; The accepted text substrings.
+	Values []string
+}
+
+// GetAdvancedFilter implements the AdvancedFilterClassification interface for type StringContainsAdvancedFilter.
+func (s *StringContainsAdvancedFilter) GetAdvancedFilter() *AdvancedFilter {
+	return &AdvancedFilter{
+		Key:          s.Key,
+		OperatorType: s.OperatorType,
+	}
+}
+
+// StringEndsWithAdvancedFilter - An advanced filter that matches when the string key value ends with any of the specified
+// suffixes (case-insensitive).
+type StringEndsWithAdvancedFilter struct {
+	// READ-ONLY; The event attribute or nested event-data path examined by the condition, such as subject or data.order.total.
+	Key *string
+
+	// READ-ONLY; The advanced-filter comparison operator.
+	OperatorType *AdvancedFilterOperatorType
+
+	// READ-ONLY; The accepted text suffixes.
+	Values []string
+}
+
+// GetAdvancedFilter implements the AdvancedFilterClassification interface for type StringEndsWithAdvancedFilter.
+func (s *StringEndsWithAdvancedFilter) GetAdvancedFilter() *AdvancedFilter {
+	return &AdvancedFilter{
+		Key:          s.Key,
+		OperatorType: s.OperatorType,
+	}
+}
+
+// StringInAdvancedFilter - An advanced filter that matches when the string key value equals any of the specified strings
+// (case-insensitive).
+type StringInAdvancedFilter struct {
+	// READ-ONLY; The event attribute or nested event-data path examined by the condition, such as subject or data.order.total.
+	Key *string
+
+	// READ-ONLY; The advanced-filter comparison operator.
+	OperatorType *AdvancedFilterOperatorType
+
+	// READ-ONLY; The alternatives accepted by text equality.
+	Values []string
+}
+
+// GetAdvancedFilter implements the AdvancedFilterClassification interface for type StringInAdvancedFilter.
+func (s *StringInAdvancedFilter) GetAdvancedFilter() *AdvancedFilter {
+	return &AdvancedFilter{
+		Key:          s.Key,
+		OperatorType: s.OperatorType,
+	}
+}
+
+// StringNotBeginsWithAdvancedFilter - An advanced filter that matches when the string key value does not begin with any of
+// the specified prefixes (case-insensitive).
+type StringNotBeginsWithAdvancedFilter struct {
+	// READ-ONLY; The event attribute or nested event-data path examined by the condition, such as subject or data.order.total.
+	Key *string
+
+	// READ-ONLY; The advanced-filter comparison operator.
+	OperatorType *AdvancedFilterOperatorType
+
+	// READ-ONLY; The excluded text prefixes.
+	Values []string
+}
+
+// GetAdvancedFilter implements the AdvancedFilterClassification interface for type StringNotBeginsWithAdvancedFilter.
+func (s *StringNotBeginsWithAdvancedFilter) GetAdvancedFilter() *AdvancedFilter {
+	return &AdvancedFilter{
+		Key:          s.Key,
+		OperatorType: s.OperatorType,
+	}
+}
+
+// StringNotContainsAdvancedFilter - An advanced filter that matches when the string key value does not contain any of the
+// specified substrings (case-insensitive).
+type StringNotContainsAdvancedFilter struct {
+	// READ-ONLY; The event attribute or nested event-data path examined by the condition, such as subject or data.order.total.
+	Key *string
+
+	// READ-ONLY; The advanced-filter comparison operator.
+	OperatorType *AdvancedFilterOperatorType
+
+	// READ-ONLY; The excluded text substrings.
+	Values []string
+}
+
+// GetAdvancedFilter implements the AdvancedFilterClassification interface for type StringNotContainsAdvancedFilter.
+func (s *StringNotContainsAdvancedFilter) GetAdvancedFilter() *AdvancedFilter {
+	return &AdvancedFilter{
+		Key:          s.Key,
+		OperatorType: s.OperatorType,
+	}
+}
+
+// StringNotEndsWithAdvancedFilter - An advanced filter that matches when the string key value does not end with any of the
+// specified suffixes (case-insensitive).
+type StringNotEndsWithAdvancedFilter struct {
+	// READ-ONLY; The event attribute or nested event-data path examined by the condition, such as subject or data.order.total.
+	Key *string
+
+	// READ-ONLY; The advanced-filter comparison operator.
+	OperatorType *AdvancedFilterOperatorType
+
+	// READ-ONLY; The excluded text suffixes.
+	Values []string
+}
+
+// GetAdvancedFilter implements the AdvancedFilterClassification interface for type StringNotEndsWithAdvancedFilter.
+func (s *StringNotEndsWithAdvancedFilter) GetAdvancedFilter() *AdvancedFilter {
+	return &AdvancedFilter{
+		Key:          s.Key,
+		OperatorType: s.OperatorType,
+	}
+}
+
+// StringNotInAdvancedFilter - An advanced filter that matches when the string key value does not equal any of the specified
+// strings (case-insensitive).
+type StringNotInAdvancedFilter struct {
+	// READ-ONLY; The event attribute or nested event-data path examined by the condition, such as subject or data.order.total.
+	Key *string
+
+	// READ-ONLY; The advanced-filter comparison operator.
+	OperatorType *AdvancedFilterOperatorType
+
+	// READ-ONLY; The alternatives excluded by text equality.
+	Values []string
+}
+
+// GetAdvancedFilter implements the AdvancedFilterClassification interface for type StringNotInAdvancedFilter.
+func (s *StringNotInAdvancedFilter) GetAdvancedFilter() *AdvancedFilter {
+	return &AdvancedFilter{
+		Key:          s.Key,
+		OperatorType: s.OperatorType,
+	}
+}
 
 // TLSSettings - Represents the TLS settings for a source connection.
 type TLSSettings struct {

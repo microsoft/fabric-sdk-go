@@ -26,7 +26,11 @@ type OneLakeDataAccessSecurityClient struct {
 	endpoint string
 }
 
-// CreateOrUpdateDataAccessRoles - REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// CreateOrUpdateDataAccessRoles - PERMISSIONS The caller must have reshare permissions for the item.
+// REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -111,6 +115,9 @@ func (client *OneLakeDataAccessSecurityClient) createOrUpdateDataAccessRolesHand
 // preview.
 // PERMISSIONS The caller must have member or higher role on the workspace.
 // REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -195,6 +202,9 @@ func (client *OneLakeDataAccessSecurityClient) createOrUpdateSingleDataAccessRol
 // DeleteDataAccessRole - When calling this API, callers must specify true as the value for the query parameter preview.
 // PERMISSIONS The caller must have member or higher role on the workspace.
 // REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -256,6 +266,9 @@ func (client *OneLakeDataAccessSecurityClient) deleteDataAccessRoleCreateRequest
 // GetDataAccessRole - When calling this API, callers must specify true as the value for the query parameter preview.
 // PERMISSIONS The caller must have member or higher role on the workspace.
 // REQUIRED DELEGATED SCOPES OneLake.Read.All or OneLake.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 100 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -333,7 +346,11 @@ func (client *OneLakeDataAccessSecurityClient) getDataAccessRoleHandleResponse(r
 	return result, nil
 }
 
-// ListDataAccessRoles - REQUIRED DELEGATED SCOPES OneLake.Read.All or OneLake.ReadWrite.All
+// ListDataAccessRoles - PERMISSIONS The caller must have read permissions for the item.
+// REQUIRED DELEGATED SCOPES OneLake.Read.All or OneLake.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 100 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]

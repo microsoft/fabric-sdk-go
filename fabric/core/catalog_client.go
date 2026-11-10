@@ -34,6 +34,9 @@ type CatalogClient struct {
 //
 // * pageSize must be between 1 and 1000.
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]

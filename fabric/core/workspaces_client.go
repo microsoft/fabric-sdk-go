@@ -39,6 +39,9 @@ type WorkspacesClient struct {
 // * Each workspace is limited to a maximum of 1,000 users or groups in workspace roles (Admin, Member, Contributor, Viewer).
 // The number of users within a group is not limited. The limitation also
 // covers external guests.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -163,12 +166,15 @@ func (client *WorkspacesClient) applyWorkspaceTagsCreateRequest(ctx context.Cont
 // AssignToCapacity - PERMISSIONS
 // * The caller must have contributor permissions or be an capacity Admin.
 // * The caller must have admin workspace role.
-// REQUIRED SCOPE Capacity.ReadWrite.All and Workspace.ReadWrite.All
+// REQUIRED DELEGATED SCOPES Capacity.ReadWrite.All and Workspace.ReadWrite.All
 // LIMITATIONS
 // * Fabric items (non-PowerBI) don't support migration across region. For more information see moving data around [/fabric/admin/portal-workspaces#moving-data-around].
 // * Workspaces with Fabric items (non-PowerBI) can only be assigned to Fabric, Fabric trial or Power BI Premium capacity.
 // For more information see Microsoft Fabric license types
 // [/fabric/enterprise/licenses#microsoft-fabric-license-types].
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -280,6 +286,9 @@ func (client *WorkspacesClient) assignToDomainCreateRequest(ctx context.Context,
 // AssignWorkspaceEncryption - Enables CMK encryption for the workspace or rotates the encryption key for the workspace.
 // PERMISSIONS The caller must have an admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 100 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -462,6 +471,9 @@ func (client *WorkspacesClient) deleteWorkspaceCreateRequest(ctx context.Context
 // DeleteWorkspaceRoleAssignment - The role assignment of the last admin can't be deleted.
 // PERMISSIONS The caller must have admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -516,9 +528,11 @@ func (client *WorkspacesClient) deleteWorkspaceRoleAssignmentCreateRequest(ctx c
 }
 
 // BeginDeprovisionIdentity - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS
-// The caller must have an admin role in the workspace.
+// PERMISSIONS The caller must have an admin role in the workspace.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 10 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -536,9 +550,11 @@ func (client *WorkspacesClient) BeginDeprovisionIdentity(ctx context.Context, wo
 }
 
 // DeprovisionIdentity - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS
-// The caller must have an admin role in the workspace.
+// PERMISSIONS The caller must have an admin role in the workspace.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 10 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -588,6 +604,9 @@ func (client *WorkspacesClient) deprovisionIdentityCreateRequest(ctx context.Con
 // only. It may change based on feedback and is not recommended for production use.
 // PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -650,6 +669,9 @@ func (client *WorkspacesClient) getFirewallRulesHandleResponse(resp *http.Respon
 // integration on the specified workspace.
 // PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -715,6 +737,9 @@ func (client *WorkspacesClient) getGitOutboundPolicyHandleResponse(resp *http.Re
 // purposes only. It may change based on feedback and is not recommended for production use.
 // PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -775,6 +800,9 @@ func (client *WorkspacesClient) getInboundAzureResourceRulesHandleResponse(resp 
 
 // GetInboundExternalDataSharesPolicy - PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -838,6 +866,9 @@ func (client *WorkspacesClient) getInboundExternalDataSharesPolicyHandleResponse
 
 // GetNetworkCommunicationPolicy - PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -906,6 +937,9 @@ func (client *WorkspacesClient) getNetworkCommunicationPolicyHandleResponse(resp
 // restricted.
 // PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1105,6 +1139,9 @@ func (client *WorkspacesClient) getWorkspaceHandleResponse(resp *http.Response) 
 // GetWorkspaceEncryption - Returns the CMK encryption settings and status for the specified workspace.
 // PERMISSIONS The caller must have viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 100 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1165,6 +1202,9 @@ func (client *WorkspacesClient) getWorkspaceEncryptionHandleResponse(resp *http.
 
 // GetWorkspaceRoleAssignment - PERMISSIONS The caller must have member or higher role on the workspace.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1231,6 +1271,9 @@ func (client *WorkspacesClient) getWorkspaceRoleAssignmentHandleResponse(resp *h
 // NewListWorkspaceRoleAssignmentsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have member or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1364,9 +1407,11 @@ func (client *WorkspacesClient) listWorkspacesHandleResponse(resp *http.Response
 }
 
 // BeginProvisionIdentity - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS
-// The caller must have an admin role in the workspace.
+// PERMISSIONS The caller must have an admin role in the workspace.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 10 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1384,9 +1429,11 @@ func (client *WorkspacesClient) BeginProvisionIdentity(ctx context.Context, work
 }
 
 // ProvisionIdentity - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// PERMISSIONS
-// The caller must have an admin role in the workspace.
+// PERMISSIONS The caller must have an admin role in the workspace.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 10 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1435,6 +1482,9 @@ func (client *WorkspacesClient) provisionIdentityCreateRequest(ctx context.Conte
 // ResetWorkspaceEncryption - After reset, the workspace data remains encrypted using Fabric's default Microsoft-managed keys.
 // PERMISSIONS The caller must have an admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 100 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1492,6 +1542,9 @@ func (client *WorkspacesClient) resetWorkspaceEncryptionCreateRequest(ctx contex
 // provide all IP firewall rules in the request body.
 // PERMISSIONS The caller must have admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1554,6 +1607,9 @@ func (client *WorkspacesClient) setFirewallRulesCreateRequest(ctx context.Contex
 // defaultAction in every PUT request body.
 // PERMISSIONS The caller must have admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1676,9 +1732,7 @@ func (client *WorkspacesClient) setInboundAzureResourceRulesCreateRequest(ctx co
 	return req, nil
 }
 
-// SetInboundExternalDataSharesPolicy - > [!NOTE] This API is part of a Preview release and is provided for evaluation and
-// development purposes only. It may change based on feedback and is not recommended for production use.
-// PERMISSIONS The caller must have admin workspace role.
+// SetInboundExternalDataSharesPolicy - PERMISSIONS The caller must have admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
@@ -1754,6 +1808,9 @@ func (client *WorkspacesClient) setInboundExternalDataSharesPolicyHandleResponse
 // PUT request body.
 // PERMISSIONS The caller must have admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1833,6 +1890,9 @@ func (client *WorkspacesClient) setNetworkCommunicationPolicyHandleResponse(resp
 // request body.
 // PERMISSIONS The caller must have admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -2028,6 +2088,9 @@ func (client *WorkspacesClient) unapplyWorkspaceTagsCreateRequest(ctx context.Co
 
 // UnassignFromCapacity - PERMISSIONS The caller must have admin role on the workspace.
 // REQUIRED DELEGATED SCOPES Capacity.ReadWrite.All and Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // LIMITATIONS Workspaces with Fabric items (non-PowerBI) cannot be unassigned from capacity of supported type. For more information
 // see: moving data around
 // [/fabric/admin/portal-workspaces#moving-data-around].
@@ -2199,6 +2262,9 @@ func (client *WorkspacesClient) updateWorkspaceHandleResponse(resp *http.Respons
 // UpdateWorkspaceRoleAssignment - The role assignment of the last admin can't be changed.
 // PERMISSIONS The caller must have admin role on the workspace.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -2271,10 +2337,12 @@ func (client *WorkspacesClient) updateWorkspaceRoleAssignmentHandleResponse(resp
 // DeprovisionIdentity - returns WorkspacesClientDeprovisionIdentityResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// PERMISSIONS
-// The caller must have an admin role in the workspace.
+// PERMISSIONS The caller must have an admin role in the workspace.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+//
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 10 calls/min |
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
@@ -2340,10 +2408,12 @@ func (client *WorkspacesClient) beginDeprovisionIdentity(ctx context.Context, wo
 // ProvisionIdentity - returns WorkspacesClientProvisionIdentityResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// PERMISSIONS
-// The caller must have an admin role in the workspace.
+// PERMISSIONS The caller must have an admin role in the workspace.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+//
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 10 calls/min |
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
@@ -2412,6 +2482,9 @@ func (client *WorkspacesClient) beginProvisionIdentity(ctx context.Context, work
 // PERMISSIONS The caller must have member or higher workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+//
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 200 calls/min |
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

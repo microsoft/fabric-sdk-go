@@ -509,6 +509,29 @@ func unmarshalOneLakeDiagnosticSettingsDestinationInfoClassification(rawMsg json
 	return b, nil
 }
 
+func unmarshalOneLakeFileSoftDeleteSettingsClassification(rawMsg json.RawMessage) (OneLakeFileSoftDeleteSettingsClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b OneLakeFileSoftDeleteSettingsClassification
+	switch m["status"] {
+	case string(OneLakeFileSoftDeleteStatusDisabled):
+		b = &DisabledOneLakeFileSoftDeleteSettings{}
+	case string(OneLakeFileSoftDeleteStatusEnabled):
+		b = &EnabledOneLakeFileSoftDeleteSettings{}
+	default:
+		b = &OneLakeFileSoftDeleteSettings{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
 func unmarshalPrincipalClassification(rawMsg json.RawMessage) (PrincipalClassification, error) {
 	if rawMsg == nil || string(rawMsg) == "null" {
 		return nil, nil

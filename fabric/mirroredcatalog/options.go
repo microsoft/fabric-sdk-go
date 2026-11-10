@@ -6,8 +6,8 @@
 
 package mirroredcatalog
 
-// DiscoveryClientListScopesBetaOptions contains the optional parameters for the DiscoveryClient.NewListScopesBetaPager method.
-type DiscoveryClientListScopesBetaOptions struct {
+// DiscoveryClientListScopesOptions contains the optional parameters for the DiscoveryClient.NewListScopesPager method.
+type DiscoveryClientListScopesOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
 
@@ -20,8 +20,8 @@ type DiscoveryClientListScopesBetaOptions struct {
 	Recursive *bool
 }
 
-// DiscoveryClientListTablesBetaOptions contains the optional parameters for the DiscoveryClient.NewListTablesBetaPager method.
-type DiscoveryClientListTablesBetaOptions struct {
+// DiscoveryClientListTablesOptions contains the optional parameters for the DiscoveryClient.NewListTablesPager method.
+type DiscoveryClientListTablesOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
 
@@ -89,22 +89,22 @@ type ItemsClientUpdateMirroredCatalogOptions struct {
 	// placeholder for future optional parameters
 }
 
-// MonitoringClientMirroringStatusBetaOptions contains the optional parameters for the MonitoringClient.MirroringStatusBeta
+// MonitoringClientGetMirroringStatusOptions contains the optional parameters for the MonitoringClient.GetMirroringStatus
 // method.
-type MonitoringClientMirroringStatusBetaOptions struct {
+type MonitoringClientGetMirroringStatusOptions struct {
 	// placeholder for future optional parameters
 }
 
-// MonitoringClientTablesMirroringStatusBetaOptions contains the optional parameters for the MonitoringClient.NewTablesMirroringStatusBetaPager
+// MonitoringClientListTablesMirroringStatusOptions contains the optional parameters for the MonitoringClient.NewListTablesMirroringStatusPager
 // method.
-type MonitoringClientTablesMirroringStatusBetaOptions struct {
+type MonitoringClientListTablesMirroringStatusOptions struct {
 	// A token for retrieving the next page of results.
 	ContinuationToken *string
 }
 
-// RefreshClientBeginRefreshCatalogMetadataBetaOptions contains the optional parameters for the RefreshClient.BeginRefreshCatalogMetadataBeta
+// RefreshClientBeginRefreshCatalogMetadataOptions contains the optional parameters for the RefreshClient.BeginRefreshCatalogMetadata
 // method.
-type RefreshClientBeginRefreshCatalogMetadataBetaOptions struct {
+type RefreshClientBeginRefreshCatalogMetadataOptions struct {
 	// Resumes the long-running operation from the provided token.
 	ResumeToken string
 }

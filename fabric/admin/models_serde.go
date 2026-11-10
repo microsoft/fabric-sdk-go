@@ -1188,49 +1188,6 @@ func (d *Domain) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// MarshalJSON implements the json.Marshaller interface for type DomainPreview.
-func (d DomainPreview) MarshalJSON() ([]byte, error) {
-	objectMap := make(map[string]any)
-	populate(objectMap, "contributorsScope", d.ContributorsScope)
-	populate(objectMap, "description", d.Description)
-	populate(objectMap, "displayName", d.DisplayName)
-	populate(objectMap, "id", d.ID)
-	populate(objectMap, "parentDomainId", d.ParentDomainID)
-	return json.Marshal(objectMap)
-}
-
-// UnmarshalJSON implements the json.Unmarshaller interface for type DomainPreview.
-func (d *DomainPreview) UnmarshalJSON(data []byte) error {
-	var rawMsg map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawMsg); err != nil {
-		return fmt.Errorf("unmarshalling type %T: %v", d, err)
-	}
-	for key, val := range rawMsg {
-		var err error
-		switch key {
-		case "contributorsScope":
-			err = unpopulate(val, "ContributorsScope", &d.ContributorsScope)
-			delete(rawMsg, key)
-		case "description":
-			err = unpopulate(val, "Description", &d.Description)
-			delete(rawMsg, key)
-		case "displayName":
-			err = unpopulate(val, "DisplayName", &d.DisplayName)
-			delete(rawMsg, key)
-		case "id":
-			err = unpopulate(val, "ID", &d.ID)
-			delete(rawMsg, key)
-		case "parentDomainId":
-			err = unpopulate(val, "ParentDomainID", &d.ParentDomainID)
-			delete(rawMsg, key)
-		}
-		if err != nil {
-			return fmt.Errorf("unmarshalling type %T: %v", d, err)
-		}
-	}
-	return nil
-}
-
 // MarshalJSON implements the json.Marshaller interface for type DomainRoleAssignment.
 func (d DomainRoleAssignment) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -1594,33 +1551,6 @@ func (d DomainsResponse) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements the json.Unmarshaller interface for type DomainsResponse.
 func (d *DomainsResponse) UnmarshalJSON(data []byte) error {
-	var rawMsg map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawMsg); err != nil {
-		return fmt.Errorf("unmarshalling type %T: %v", d, err)
-	}
-	for key, val := range rawMsg {
-		var err error
-		switch key {
-		case "domains":
-			err = unpopulate(val, "Domains", &d.Domains)
-			delete(rawMsg, key)
-		}
-		if err != nil {
-			return fmt.Errorf("unmarshalling type %T: %v", d, err)
-		}
-	}
-	return nil
-}
-
-// MarshalJSON implements the json.Marshaller interface for type DomainsResponsePreview.
-func (d DomainsResponsePreview) MarshalJSON() ([]byte, error) {
-	objectMap := make(map[string]any)
-	populate(objectMap, "domains", d.Domains)
-	return json.Marshal(objectMap)
-}
-
-// UnmarshalJSON implements the json.Unmarshaller interface for type DomainsResponsePreview.
-func (d *DomainsResponsePreview) UnmarshalJSON(data []byte) error {
 	var rawMsg map[string]json.RawMessage
 	if err := json.Unmarshal(data, &rawMsg); err != nil {
 		return fmt.Errorf("unmarshalling type %T: %v", d, err)
@@ -4249,41 +4179,6 @@ func (u *UpdateDomainRequest) UnmarshalJSON(data []byte) error {
 		switch key {
 		case "defaultLabelId":
 			err = unpopulate(val, "DefaultLabelID", &u.DefaultLabelID)
-			delete(rawMsg, key)
-		case "description":
-			err = unpopulate(val, "Description", &u.Description)
-			delete(rawMsg, key)
-		case "displayName":
-			err = unpopulate(val, "DisplayName", &u.DisplayName)
-			delete(rawMsg, key)
-		}
-		if err != nil {
-			return fmt.Errorf("unmarshalling type %T: %v", u, err)
-		}
-	}
-	return nil
-}
-
-// MarshalJSON implements the json.Marshaller interface for type UpdateDomainRequestPreview.
-func (u UpdateDomainRequestPreview) MarshalJSON() ([]byte, error) {
-	objectMap := make(map[string]any)
-	populate(objectMap, "contributorsScope", u.ContributorsScope)
-	populate(objectMap, "description", u.Description)
-	populate(objectMap, "displayName", u.DisplayName)
-	return json.Marshal(objectMap)
-}
-
-// UnmarshalJSON implements the json.Unmarshaller interface for type UpdateDomainRequestPreview.
-func (u *UpdateDomainRequestPreview) UnmarshalJSON(data []byte) error {
-	var rawMsg map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawMsg); err != nil {
-		return fmt.Errorf("unmarshalling type %T: %v", u, err)
-	}
-	for key, val := range rawMsg {
-		var err error
-		switch key {
-		case "contributorsScope":
-			err = unpopulate(val, "ContributorsScope", &u.ContributorsScope)
 			delete(rawMsg, key)
 		case "description":
 			err = unpopulate(val, "Description", &u.Description)

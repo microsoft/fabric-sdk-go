@@ -11,7 +11,6 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
-	"strconv"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -29,10 +28,7 @@ type MonitoringClient struct {
 	endpoint string
 }
 
-// MirroringStatusBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes
-// only. It may change based on feedback and is not recommended for production use.
-// When calling this API, callers must specify true as the value for the query parameter beta.
-// Returns the overall mirroring status of the MirroredCatalog.
+// GetMirroringStatus - Returns the overall mirroring status of the MirroredCatalog.
 // PERMISSIONS The caller must have read permissions for the mirrored catalog.
 // REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -46,33 +42,32 @@ type MonitoringClient struct {
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - mirroredCatalogID - The MirroredCatalog ID.
-//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
-//   - options - MonitoringClientMirroringStatusBetaOptions contains the optional parameters for the MonitoringClient.MirroringStatusBeta
+//   - options - MonitoringClientGetMirroringStatusOptions contains the optional parameters for the MonitoringClient.GetMirroringStatus
 //     method.
-func (client *MonitoringClient) MirroringStatusBeta(ctx context.Context, workspaceID string, mirroredCatalogID string, beta bool, options *MonitoringClientMirroringStatusBetaOptions) (MonitoringClientMirroringStatusBetaResponse, error) {
+func (client *MonitoringClient) GetMirroringStatus(ctx context.Context, workspaceID string, mirroredCatalogID string, options *MonitoringClientGetMirroringStatusOptions) (MonitoringClientGetMirroringStatusResponse, error) {
 	var err error
-	const operationName = "mirroredcatalog.MonitoringClient.MirroringStatusBeta"
+	const operationName = "mirroredcatalog.MonitoringClient.GetMirroringStatus"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.mirroringStatusBetaCreateRequest(ctx, workspaceID, mirroredCatalogID, beta, options)
+	req, err := client.getMirroringStatusCreateRequest(ctx, workspaceID, mirroredCatalogID, options)
 	if err != nil {
-		return MonitoringClientMirroringStatusBetaResponse{}, err
+		return MonitoringClientGetMirroringStatusResponse{}, err
 	}
 	httpResp, err := client.internal.Pipeline().Do(req)
 	if err != nil {
-		return MonitoringClientMirroringStatusBetaResponse{}, err
+		return MonitoringClientGetMirroringStatusResponse{}, err
 	}
 	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
 		err = core.NewResponseError(httpResp)
-		return MonitoringClientMirroringStatusBetaResponse{}, err
+		return MonitoringClientGetMirroringStatusResponse{}, err
 	}
-	resp, err := client.mirroringStatusBetaHandleResponse(httpResp)
+	resp, err := client.getMirroringStatusHandleResponse(httpResp)
 	return resp, err
 }
 
-// mirroringStatusBetaCreateRequest creates the MirroringStatusBeta request.
-func (client *MonitoringClient) mirroringStatusBetaCreateRequest(ctx context.Context, workspaceID string, mirroredCatalogID string, beta bool, _ *MonitoringClientMirroringStatusBetaOptions) (*policy.Request, error) {
+// getMirroringStatusCreateRequest creates the GetMirroringStatus request.
+func (client *MonitoringClient) getMirroringStatusCreateRequest(ctx context.Context, workspaceID string, mirroredCatalogID string, _ *MonitoringClientGetMirroringStatusOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/mirroredCatalogs/{mirroredCatalogId}/mirroringStatus"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -86,26 +81,20 @@ func (client *MonitoringClient) mirroringStatusBetaCreateRequest(ctx context.Con
 	if err != nil {
 		return nil, err
 	}
-	reqQP := req.Raw().URL.Query()
-	reqQP.Set("beta", strconv.FormatBool(beta))
-	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }
 
-// mirroringStatusBetaHandleResponse handles the MirroringStatusBeta response.
-func (client *MonitoringClient) mirroringStatusBetaHandleResponse(resp *http.Response) (MonitoringClientMirroringStatusBetaResponse, error) {
-	result := MonitoringClientMirroringStatusBetaResponse{}
+// getMirroringStatusHandleResponse handles the GetMirroringStatus response.
+func (client *MonitoringClient) getMirroringStatusHandleResponse(resp *http.Response) (MonitoringClientGetMirroringStatusResponse, error) {
+	result := MonitoringClientGetMirroringStatusResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.MirroringStatusResponse); err != nil {
-		return MonitoringClientMirroringStatusBetaResponse{}, err
+		return MonitoringClientGetMirroringStatusResponse{}, err
 	}
 	return result, nil
 }
 
-// NewTablesMirroringStatusBetaPager - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use.
-// When calling this API, callers must specify true as the value for the query parameter beta.
-// This API supports pagination [/rest/api/fabric/articles/pagination].
+// NewListTablesMirroringStatusPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // Returns the per-table mirroring status for the MirroredCatalog. This API shows the mirroring status of each table in the
 // source catalog.
 // PERMISSIONS The caller must have read permissions for the mirrored catalog.
@@ -120,34 +109,33 @@ func (client *MonitoringClient) mirroringStatusBetaHandleResponse(resp *http.Res
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - mirroredCatalogID - The MirroredCatalog ID.
-//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
-//   - options - MonitoringClientTablesMirroringStatusBetaOptions contains the optional parameters for the MonitoringClient.NewTablesMirroringStatusBetaPager
+//   - options - MonitoringClientListTablesMirroringStatusOptions contains the optional parameters for the MonitoringClient.NewListTablesMirroringStatusPager
 //     method.
-func (client *MonitoringClient) NewTablesMirroringStatusBetaPager(workspaceID string, mirroredCatalogID string, beta bool, options *MonitoringClientTablesMirroringStatusBetaOptions) *runtime.Pager[MonitoringClientTablesMirroringStatusBetaResponse] {
-	return runtime.NewPager(runtime.PagingHandler[MonitoringClientTablesMirroringStatusBetaResponse]{
-		More: func(page MonitoringClientTablesMirroringStatusBetaResponse) bool {
+func (client *MonitoringClient) NewListTablesMirroringStatusPager(workspaceID string, mirroredCatalogID string, options *MonitoringClientListTablesMirroringStatusOptions) *runtime.Pager[MonitoringClientListTablesMirroringStatusResponse] {
+	return runtime.NewPager(runtime.PagingHandler[MonitoringClientListTablesMirroringStatusResponse]{
+		More: func(page MonitoringClientListTablesMirroringStatusResponse) bool {
 			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
 		},
-		Fetcher: func(ctx context.Context, page *MonitoringClientTablesMirroringStatusBetaResponse) (MonitoringClientTablesMirroringStatusBetaResponse, error) {
-			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "mirroredcatalog.MonitoringClient.NewTablesMirroringStatusBetaPager")
+		Fetcher: func(ctx context.Context, page *MonitoringClientListTablesMirroringStatusResponse) (MonitoringClientListTablesMirroringStatusResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "mirroredcatalog.MonitoringClient.NewListTablesMirroringStatusPager")
 			nextLink := ""
 			if page != nil {
 				nextLink = *page.ContinuationURI
 			}
 			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
-				return client.tablesMirroringStatusBetaCreateRequest(ctx, workspaceID, mirroredCatalogID, beta, options)
+				return client.listTablesMirroringStatusCreateRequest(ctx, workspaceID, mirroredCatalogID, options)
 			}, nil)
 			if err != nil {
-				return MonitoringClientTablesMirroringStatusBetaResponse{}, err
+				return MonitoringClientListTablesMirroringStatusResponse{}, err
 			}
-			return client.tablesMirroringStatusBetaHandleResponse(resp)
+			return client.listTablesMirroringStatusHandleResponse(resp)
 		},
 		Tracer: client.internal.Tracer(),
 	})
 }
 
-// tablesMirroringStatusBetaCreateRequest creates the TablesMirroringStatusBeta request.
-func (client *MonitoringClient) tablesMirroringStatusBetaCreateRequest(ctx context.Context, workspaceID string, mirroredCatalogID string, beta bool, options *MonitoringClientTablesMirroringStatusBetaOptions) (*policy.Request, error) {
+// listTablesMirroringStatusCreateRequest creates the ListTablesMirroringStatus request.
+func (client *MonitoringClient) listTablesMirroringStatusCreateRequest(ctx context.Context, workspaceID string, mirroredCatalogID string, options *MonitoringClientListTablesMirroringStatusOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/mirroredCatalogs/{mirroredCatalogId}/tablesMirroringStatus"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -162,7 +150,6 @@ func (client *MonitoringClient) tablesMirroringStatusBetaCreateRequest(ctx conte
 		return nil, err
 	}
 	reqQP := req.Raw().URL.Query()
-	reqQP.Set("beta", strconv.FormatBool(beta))
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
 	}
@@ -171,22 +158,18 @@ func (client *MonitoringClient) tablesMirroringStatusBetaCreateRequest(ctx conte
 	return req, nil
 }
 
-// tablesMirroringStatusBetaHandleResponse handles the TablesMirroringStatusBeta response.
-func (client *MonitoringClient) tablesMirroringStatusBetaHandleResponse(resp *http.Response) (MonitoringClientTablesMirroringStatusBetaResponse, error) {
-	result := MonitoringClientTablesMirroringStatusBetaResponse{}
+// listTablesMirroringStatusHandleResponse handles the ListTablesMirroringStatus response.
+func (client *MonitoringClient) listTablesMirroringStatusHandleResponse(resp *http.Response) (MonitoringClientListTablesMirroringStatusResponse, error) {
+	result := MonitoringClientListTablesMirroringStatusResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.TablesMirroringStatusResponse); err != nil {
-		return MonitoringClientTablesMirroringStatusBetaResponse{}, err
+		return MonitoringClientListTablesMirroringStatusResponse{}, err
 	}
 	return result, nil
 }
 
 // Custom code starts below
 
-// TablesMirroringStatusBeta - returns array of TableMirroringStatus from all pages.
-// >  [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
-//
-// When calling this API, callers must specify true as the value for the query parameter beta.
-//
+// ListTablesMirroringStatus - returns array of TableMirroringStatus from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
 // Returns the per-table mirroring status for the MirroredCatalog. This API shows the mirroring status of each table in the source catalog.
@@ -204,11 +187,10 @@ func (client *MonitoringClient) tablesMirroringStatusBetaHandleResponse(resp *ht
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - mirroredCatalogID - The MirroredCatalog ID.
-//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
-//   - options - MonitoringClientTablesMirroringStatusBetaOptions contains the optional parameters for the MonitoringClient.NewTablesMirroringStatusBetaPager method.
-func (client *MonitoringClient) TablesMirroringStatusBeta(ctx context.Context, workspaceID string, mirroredCatalogID string, beta bool, options *MonitoringClientTablesMirroringStatusBetaOptions) ([]TableMirroringStatus, error) {
-	pager := client.NewTablesMirroringStatusBetaPager(workspaceID, mirroredCatalogID, beta, options)
-	mapper := func(resp MonitoringClientTablesMirroringStatusBetaResponse) []TableMirroringStatus {
+//   - options - MonitoringClientListTablesMirroringStatusOptions contains the optional parameters for the MonitoringClient.NewListTablesMirroringStatusPager method.
+func (client *MonitoringClient) ListTablesMirroringStatus(ctx context.Context, workspaceID string, mirroredCatalogID string, options *MonitoringClientListTablesMirroringStatusOptions) ([]TableMirroringStatus, error) {
+	pager := client.NewListTablesMirroringStatusPager(workspaceID, mirroredCatalogID, options)
+	mapper := func(resp MonitoringClientListTablesMirroringStatusResponse) []TableMirroringStatus {
 		return resp.Value
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()

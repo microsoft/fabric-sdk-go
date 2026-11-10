@@ -45,6 +45,9 @@ type ItemsClient struct {
 //
 // for more information about scopes, see: scopes article [/rest/api/fabric/articles/scopes].
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -81,6 +84,9 @@ func (client *ItemsClient) BeginAssociateIdentityBeta(ctx context.Context, works
 //
 // for more information about scopes, see: scopes article [/rest/api/fabric/articles/scopes].
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -152,6 +158,9 @@ func (client *ItemsClient) associateIdentityBetaCreateRequest(ctx context.Contex
 // * If the request includes one or more Fabric item types, the workspace must be assigned to a Fabric capacity (F SKU, including
 // Fabric Trial). Power BI Premium capacities are supported only for Power
 // BI items and aren't sufficient for Fabric items.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 10 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -185,6 +194,9 @@ func (client *ItemsClient) BeginBulkExportItemDefinitions(ctx context.Context, w
 // * If the request includes one or more Fabric item types, the workspace must be assigned to a Fabric capacity (F SKU, including
 // Fabric Trial). Power BI Premium capacities are supported only for Power
 // BI items and aren't sufficient for Fabric items.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 10 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -252,6 +264,9 @@ func (client *ItemsClient) bulkExportItemDefinitionsCreateRequest(ctx context.Co
 // * If the request includes one or more Fabric item types, the workspace must be assigned to a Fabric capacity (F SKU, including
 // Fabric Trial). Power BI Premium capacities are supported only for Power
 // BI items and aren't sufficient for Fabric items.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 10 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -288,6 +303,9 @@ func (client *ItemsClient) BeginBulkImportItemDefinitions(ctx context.Context, w
 // * If the request includes one or more Fabric item types, the workspace must be assigned to a Fabric capacity (F SKU, including
 // Fabric Trial). Power BI Premium capacities are supported only for Power
 // BI items and aren't sufficient for Fabric items.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 10 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -348,6 +366,9 @@ func (client *ItemsClient) bulkImportItemDefinitionsCreateRequest(ctx context.Co
 // PERMISSIONS The caller must have contributor or higher role on the workspace.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
 // LIMITATIONS A single request can't contain more than 50 items.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -603,6 +624,9 @@ func (client *ItemsClient) deleteItemCreateRequest(ctx context.Context, workspac
 // Returns all items that are downstream of the specified item, including the relation edges and referenced workspaces.
 // PERMISSIONS The caller must have read permissions for the item.
 // REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -767,6 +791,9 @@ func (client *ItemsClient) getItemHandleResponse(resp *http.Response) (ItemsClie
 // usage rights
 // [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
 // Microsoft Purview [/purview/purview].
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -803,6 +830,9 @@ func (client *ItemsClient) BeginGetItemDefinition(ctx context.Context, workspace
 // usage rights
 // [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in
 // Microsoft Purview [/purview/purview].
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -865,6 +895,9 @@ func (client *ItemsClient) getItemDefinitionCreateRequest(ctx context.Context, w
 // Returns all items that are upstream of the specified item, including the relation edges and referenced workspaces.
 // PERMISSIONS The caller must have read permissions for the item.
 // REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -943,6 +976,9 @@ func (client *ItemsClient) getUpstreamRelationsBetaHandleResponse(resp *http.Res
 //
 // LIMITATIONS This API is blocked for an item with a protected sensitivity label, unless the caller has the usage rights
 // to delete the sensitivity label.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1095,6 +1131,9 @@ func (client *ItemsClient) listItemsHandleResponse(resp *http.Response) (ItemsCl
 // You can't move a child item without its parent item.
 // PERMISSIONS The caller must have contributor or higher role on the workspace.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1256,6 +1295,9 @@ func (client *ItemsClient) updateItemHandleResponse(resp *http.Response) (ItemsC
 //
 // for more information about scopes, see scopes article [/rest/api/fabric/articles/scopes].
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1289,6 +1331,9 @@ func (client *ItemsClient) BeginUpdateItemDefinition(ctx context.Context, worksp
 //
 // for more information about scopes, see scopes article [/rest/api/fabric/articles/scopes].
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1362,6 +1407,9 @@ func (client *ItemsClient) updateItemDefinitionCreateRequest(ctx context.Context
 // * The logical ID can't be an empty GUID (00000000-0000-0000-0000-000000000000).
 // * The logical ID must be unique within the workspace.
 // * The operation isn't supported while a CI/CD operation is active in the workspace.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1449,6 +1497,9 @@ func (client *ItemsClient) updateLogicalIDHandleResponse(resp *http.Response) (I
 //
 //     for more information about scopes, see: scopes article [/rest/api/fabric/articles/scopes].
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 200 calls/min |
+//
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
@@ -1533,6 +1584,9 @@ func (client *ItemsClient) beginAssociateIdentityBeta(ctx context.Context, works
 //   - If the request includes one or more Fabric item types, the workspace must be assigned to a Fabric capacity (F SKU, including Fabric Trial). Power BI Premium capacities are supported only for Power
 //     BI items and aren't sufficient for Fabric items.
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 10 calls/min |
+//
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
@@ -1615,6 +1669,9 @@ func (client *ItemsClient) beginBulkExportItemDefinitions(ctx context.Context, w
 //   - The maximum supported request payload size is 128 MB.
 //   - If the request includes one or more Fabric item types, the workspace must be assigned to a Fabric capacity (F SKU, including Fabric Trial). Power BI Premium capacities are supported only for Power
 //     BI items and aren't sufficient for Fabric items.
+//
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 10 calls/min |
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
@@ -1786,6 +1843,9 @@ func (client *ItemsClient) beginCreateItem(ctx context.Context, workspaceID stri
 // LIMITATIONS To retrieve the definition of an item protected by an encrypted sensitivity label, the caller must have sufficient usage rights
 // [/fabric/enterprise/powerbi/service-security-sensitivity-label-change-enforcement] to remove the label, as configured in Microsoft Purview [/purview/purview].
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 200 calls/min |
+//
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
@@ -1865,6 +1925,9 @@ func (client *ItemsClient) beginGetItemDefinition(ctx context.Context, workspace
 //
 //     for more information about scopes, see scopes article [/rest/api/fabric/articles/scopes].
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 200 calls/min |
+//
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
@@ -1943,6 +2006,9 @@ func (client *ItemsClient) beginUpdateItemDefinition(ctx context.Context, worksp
 //     for more information about scopes, see Scopes article [/rest/api/fabric/articles/scopes].
 //
 // LIMITATIONS This API is blocked for an item with a protected sensitivity label, unless the caller has the usage rights to delete the sensitivity label.
+//
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 200 calls/min |
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

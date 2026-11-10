@@ -38,6 +38,9 @@ type GitClient struct {
 // [/rest/api/fabric/core/git/connect] and Initialize Connection [/rest/api/fabric/core/git/initialize-connection] APIs.
 // PERMISSIONS The caller must have a contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.GitCommit.All.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -65,6 +68,9 @@ func (client *GitClient) BeginCommitToGit(ctx context.Context, workspaceID strin
 // [/rest/api/fabric/core/git/connect] and Initialize Connection [/rest/api/fabric/core/git/initialize-connection] APIs.
 // PERMISSIONS The caller must have a contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.GitCommit.All.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -125,6 +131,9 @@ func (client *GitClient) commitToGitCreateRequest(ctx context.Context, workspace
 // For configured connection Git credentials, the caller must have permission for the connection.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
 // LIMITATIONS When using Automatic credentials source, this API is blocked for GitHub provider and for Service Principal.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -182,6 +191,9 @@ func (client *GitClient) connectCreateRequest(ctx context.Context, workspaceID s
 // Creates a branching relation between a branch workspace and its base workspace.
 // PERMISSIONS The caller must have an admin role on the branch workspace and a contributor or higher role on the base workspace.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -250,6 +262,9 @@ func (client *GitClient) createWorkspaceRelationHandleResponse(resp *http.Respon
 // can be either a base workspace or a branch workspace.
 // PERMISSIONS The caller must have an admin workspace role on the specified workspace.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -305,6 +320,9 @@ func (client *GitClient) deleteWorkspaceRelationCreateRequest(ctx context.Contex
 
 // Disconnect - PERMISSIONS The caller must have an admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -354,6 +372,9 @@ func (client *GitClient) disconnectCreateRequest(ctx context.Context, workspaceI
 
 // GetConnection - PERMISSIONS The caller must have a contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -417,6 +438,9 @@ func (client *GitClient) getConnectionHandleResponse(resp *http.Response) (GitCl
 // Returns the connection settings for a Git-connected workspace.
 // PERMISSIONS The caller must have a contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -480,6 +504,9 @@ func (client *GitClient) getConnectionSettingsHandleResponse(resp *http.Response
 // Git Credentials [/rest/api/fabric/core/git/update-my-git-credentials] API.
 // PERMISSIONS The caller must have a contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -546,6 +573,9 @@ func (client *GitClient) getMyGitCredentialsHandleResponse(resp *http.Response) 
 // [/rest/api/fabric/core/git/get-my-git-credentials] API to check the Git credentials configuration.
 // PERMISSIONS The caller must have a contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.GitUpdate.All or Workspace.GitCommit.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -570,6 +600,9 @@ func (client *GitClient) BeginGetStatus(ctx context.Context, workspaceID string,
 // [/rest/api/fabric/core/git/get-my-git-credentials] API to check the Git credentials configuration.
 // PERMISSIONS The caller must have a contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.GitUpdate.All or Workspace.GitCommit.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -631,6 +664,9 @@ func (client *GitClient) getStatusCreateRequest(ctx context.Context, workspaceID
 // [/rest/api/fabric/core/git/update-from-git].
 // PERMISSIONS The caller must have an admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -658,6 +694,9 @@ func (client *GitClient) BeginInitializeConnection(ctx context.Context, workspac
 // [/rest/api/fabric/core/git/update-from-git].
 // PERMISSIONS The caller must have an admin workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -714,6 +753,9 @@ func (client *GitClient) initializeConnectionCreateRequest(ctx context.Context, 
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have a viewer or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -784,6 +826,9 @@ func (client *GitClient) listWorkspaceRelationsHandleResponse(resp *http.Respons
 // omitted properties remain unchanged.
 // PERMISSIONS The caller must have an admin role for the workspace.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -859,6 +904,9 @@ func (client *GitClient) updateConnectionSettingsHandleResponse(resp *http.Respo
 // [/rest/api/fabric/core/git/initialize-connection] APIs, it will perform a full update of the entire workspace.
 // PERMISSIONS The caller must have a contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.GitUpdate.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -890,6 +938,9 @@ func (client *GitClient) BeginUpdateFromGit(ctx context.Context, workspaceID str
 // [/rest/api/fabric/core/git/initialize-connection] APIs, it will perform a full update of the entire workspace.
 // PERMISSIONS The caller must have a contributor or higher workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.GitUpdate.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -952,6 +1003,9 @@ func (client *GitClient) updateFromGitCreateRequest(ctx context.Context, workspa
 // For configured connection Git credentials, the caller must have permission for the connection.
 // REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
 // LIMITATIONS When using Automatic credentials source, this API is blocked for GitHub provider and for Service Principal.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1030,6 +1084,9 @@ func (client *GitClient) updateMyGitCredentialsHandleResponse(resp *http.Respons
 //
 // REQUIRED DELEGATED SCOPES Workspace.GitCommit.All.
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 50 calls/min |
+//
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
@@ -1106,6 +1163,9 @@ func (client *GitClient) beginCommitToGit(ctx context.Context, workspaceID strin
 //
 // # REQUIRED DELEGATED SCOPES Workspace.GitUpdate.All or Workspace.GitCommit.All
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 50 calls/min |
+//
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
@@ -1180,6 +1240,9 @@ func (client *GitClient) beginGetStatus(ctx context.Context, workspaceID string,
 // PERMISSIONS The caller must have an admin workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.ReadWrite.All
+//
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 50 calls/min |
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
@@ -1258,6 +1321,9 @@ func (client *GitClient) beginInitializeConnection(ctx context.Context, workspac
 //
 // # REQUIRED DELEGATED SCOPES Workspace.GitUpdate.All
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 50 calls/min |
+//
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
@@ -1329,6 +1395,9 @@ func (client *GitClient) beginUpdateFromGit(ctx context.Context, workspaceID str
 // PERMISSIONS The caller must have a viewer or higher workspace role.
 //
 // # REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
+//
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 50 calls/min |
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

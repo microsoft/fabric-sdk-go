@@ -16,7 +16,7 @@ import (
 )
 
 // Generated from example definition
-func ExampleMonitoringClient_MirroringStatusBeta_mirroringStatusExample() {
+func ExampleMonitoringClient_GetMirroringStatus_mirroringStatusExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -26,7 +26,7 @@ func ExampleMonitoringClient_MirroringStatusBeta_mirroringStatusExample() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewMonitoringClient().MirroringStatusBeta(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", true, nil)
+	res, err := clientFactory.NewMonitoringClient().GetMirroringStatus(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -40,7 +40,7 @@ func ExampleMonitoringClient_MirroringStatusBeta_mirroringStatusExample() {
 }
 
 // Generated from example definition
-func ExampleMonitoringClient_MirroringStatusBeta_mirroringStatusWithErrorExample() {
+func ExampleMonitoringClient_GetMirroringStatus_mirroringStatusWithErrorExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -50,7 +50,7 @@ func ExampleMonitoringClient_MirroringStatusBeta_mirroringStatusWithErrorExample
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewMonitoringClient().MirroringStatusBeta(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", true, nil)
+	res, err := clientFactory.NewMonitoringClient().GetMirroringStatus(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -68,7 +68,7 @@ func ExampleMonitoringClient_MirroringStatusBeta_mirroringStatusWithErrorExample
 }
 
 // Generated from example definition
-func ExampleMonitoringClient_NewTablesMirroringStatusBetaPager() {
+func ExampleMonitoringClient_NewListTablesMirroringStatusPager() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -78,7 +78,7 @@ func ExampleMonitoringClient_NewTablesMirroringStatusBetaPager() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewMonitoringClient().NewTablesMirroringStatusBetaPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", true, &mirroredcatalog.MonitoringClientTablesMirroringStatusBetaOptions{ContinuationToken: nil})
+	pager := clientFactory.NewMonitoringClient().NewListTablesMirroringStatusPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", &mirroredcatalog.MonitoringClientListTablesMirroringStatusOptions{ContinuationToken: nil})
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
 		if err != nil {

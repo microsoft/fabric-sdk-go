@@ -16,7 +16,7 @@ import (
 )
 
 // Generated from example definition
-func ExampleRefreshClient_BeginRefreshCatalogMetadataBeta() {
+func ExampleRefreshClient_BeginRefreshCatalogMetadata() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -26,7 +26,7 @@ func ExampleRefreshClient_BeginRefreshCatalogMetadataBeta() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	poller, err := clientFactory.NewRefreshClient().BeginRefreshCatalogMetadataBeta(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", true, nil)
+	poller, err := clientFactory.NewRefreshClient().BeginRefreshCatalogMetadata(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "5b218778-e7a5-4d73-8187-f10824047715", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

@@ -47,6 +47,14 @@ func NewClientFactoryWithClient(client fabric.Client) *ClientFactory {
 	}
 }
 
+// NewFeedbackClient creates a new instance of FeedbackClient.
+func (c *ClientFactory) NewFeedbackClient() *FeedbackClient {
+	return &FeedbackClient{
+		internal: c.internal.WithClientName("dataagent.FeedbackClient"),
+		endpoint: c.endpoint,
+	}
+}
+
 // NewItemsClient creates a new instance of ItemsClient.
 func (c *ClientFactory) NewItemsClient() *ItemsClient {
 	return &ItemsClient{

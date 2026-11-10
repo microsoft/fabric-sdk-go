@@ -13,7 +13,6 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
-	"strconv"
 	"strings"
 
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
@@ -25,9 +24,9 @@ import (
 
 // RefreshServer is a fake server for instances of the mirroredcatalog.RefreshClient type.
 type RefreshServer struct {
-	// BeginRefreshCatalogMetadataBeta is the fake for method RefreshClient.BeginRefreshCatalogMetadataBeta
+	// BeginRefreshCatalogMetadata is the fake for method RefreshClient.BeginRefreshCatalogMetadata
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
-	BeginRefreshCatalogMetadataBeta func(ctx context.Context, workspaceID string, mirroredCatalogID string, beta bool, options *mirroredcatalog.RefreshClientBeginRefreshCatalogMetadataBetaOptions) (resp azfake.PollerResponder[mirroredcatalog.RefreshClientRefreshCatalogMetadataBetaResponse], errResp azfake.ErrorResponder)
+	BeginRefreshCatalogMetadata func(ctx context.Context, workspaceID string, mirroredCatalogID string, options *mirroredcatalog.RefreshClientBeginRefreshCatalogMetadataOptions) (resp azfake.PollerResponder[mirroredcatalog.RefreshClientRefreshCatalogMetadataResponse], errResp azfake.ErrorResponder)
 }
 
 // NewRefreshServerTransport creates a new instance of RefreshServerTransport with the provided implementation.
@@ -35,16 +34,16 @@ type RefreshServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewRefreshServerTransport(srv *RefreshServer) *RefreshServerTransport {
 	return &RefreshServerTransport{
-		srv:                             srv,
-		beginRefreshCatalogMetadataBeta: newTracker[azfake.PollerResponder[mirroredcatalog.RefreshClientRefreshCatalogMetadataBetaResponse]](),
+		srv:                         srv,
+		beginRefreshCatalogMetadata: newTracker[azfake.PollerResponder[mirroredcatalog.RefreshClientRefreshCatalogMetadataResponse]](),
 	}
 }
 
 // RefreshServerTransport connects instances of mirroredcatalog.RefreshClient to instances of RefreshServer.
 // Don't use this type directly, use NewRefreshServerTransport instead.
 type RefreshServerTransport struct {
-	srv                             *RefreshServer
-	beginRefreshCatalogMetadataBeta *tracker[azfake.PollerResponder[mirroredcatalog.RefreshClientRefreshCatalogMetadataBetaResponse]]
+	srv                         *RefreshServer
+	beginRefreshCatalogMetadata *tracker[azfake.PollerResponder[mirroredcatalog.RefreshClientRefreshCatalogMetadataResponse]]
 }
 
 // Do implements the policy.Transporter interface for RefreshServerTransport.
@@ -72,8 +71,8 @@ func (r *RefreshServerTransport) dispatchToMethodFake(req *http.Request, method 
 		}
 		if !intercepted {
 			switch method {
-			case "RefreshClient.BeginRefreshCatalogMetadataBeta":
-				res.resp, res.err = r.dispatchBeginRefreshCatalogMetadataBeta(req)
+			case "RefreshClient.BeginRefreshCatalogMetadata":
+				res.resp, res.err = r.dispatchBeginRefreshCatalogMetadata(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -93,19 +92,18 @@ func (r *RefreshServerTransport) dispatchToMethodFake(req *http.Request, method 
 	}
 }
 
-func (r *RefreshServerTransport) dispatchBeginRefreshCatalogMetadataBeta(req *http.Request) (*http.Response, error) {
-	if r.srv.BeginRefreshCatalogMetadataBeta == nil {
-		return nil, &nonRetriableError{errors.New("fake for method BeginRefreshCatalogMetadataBeta not implemented")}
+func (r *RefreshServerTransport) dispatchBeginRefreshCatalogMetadata(req *http.Request) (*http.Response, error) {
+	if r.srv.BeginRefreshCatalogMetadata == nil {
+		return nil, &nonRetriableError{errors.New("fake for method BeginRefreshCatalogMetadata not implemented")}
 	}
-	beginRefreshCatalogMetadataBeta := r.beginRefreshCatalogMetadataBeta.get(req)
-	if beginRefreshCatalogMetadataBeta == nil {
+	beginRefreshCatalogMetadata := r.beginRefreshCatalogMetadata.get(req)
+	if beginRefreshCatalogMetadata == nil {
 		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/mirroredCatalogs/(?P<mirroredCatalogId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/refreshCatalogMetadata`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
 		if len(matches) < 3 {
 			return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 		}
-		qp := req.URL.Query()
 		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 		if err != nil {
 			return nil, err
@@ -114,33 +112,25 @@ func (r *RefreshServerTransport) dispatchBeginRefreshCatalogMetadataBeta(req *ht
 		if err != nil {
 			return nil, err
 		}
-		betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
-		if err != nil {
-			return nil, err
-		}
-		betaParam, err := strconv.ParseBool(betaUnescaped)
-		if err != nil {
-			return nil, err
-		}
-		respr, errRespr := r.srv.BeginRefreshCatalogMetadataBeta(req.Context(), workspaceIDParam, mirroredCatalogIDParam, betaParam, nil)
+		respr, errRespr := r.srv.BeginRefreshCatalogMetadata(req.Context(), workspaceIDParam, mirroredCatalogIDParam, nil)
 		if respErr := server.GetError(errRespr, req); respErr != nil {
 			return nil, respErr
 		}
-		beginRefreshCatalogMetadataBeta = &respr
-		r.beginRefreshCatalogMetadataBeta.add(req, beginRefreshCatalogMetadataBeta)
+		beginRefreshCatalogMetadata = &respr
+		r.beginRefreshCatalogMetadata.add(req, beginRefreshCatalogMetadata)
 	}
 
-	resp, err := server.PollerResponderNext(beginRefreshCatalogMetadataBeta, req)
+	resp, err := server.PollerResponderNext(beginRefreshCatalogMetadata, req)
 	if err != nil {
 		return nil, err
 	}
 
 	if !contains([]int{http.StatusOK, http.StatusAccepted, http.StatusNoContent}, resp.StatusCode) {
-		r.beginRefreshCatalogMetadataBeta.remove(req)
+		r.beginRefreshCatalogMetadata.remove(req)
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK, http.StatusAccepted, http.StatusNoContent", resp.StatusCode)}
 	}
-	if !server.PollerResponderMore(beginRefreshCatalogMetadataBeta) {
-		r.beginRefreshCatalogMetadataBeta.remove(req)
+	if !server.PollerResponderMore(beginRefreshCatalogMetadata) {
+		r.beginRefreshCatalogMetadata.remove(req)
 	}
 
 	return resp, nil

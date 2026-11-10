@@ -18,6 +18,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 
 	"reflect"
+	"time"
 
 	"github.com/stretchr/testify/suite"
 
@@ -492,5 +493,275 @@ func (testsuite *FakeTestSuite) TestBackgroundJobs_RunOnDemandExecute() {
 
 	client := testsuite.clientFactory.NewBackgroundJobsClient()
 	_, err = client.RunOnDemandExecute(ctx, exampleWorkspaceID, exampleCopyJobID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestBackgroundJobs_GetExecuteJobInstance() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get CopyJob execute job instance example"},
+	})
+	var exampleWorkspaceID string
+	var exampleCopyJobID string
+	var exampleJobInstanceID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCopyJobID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+	exampleJobInstanceID = "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"
+
+	exampleRes := copyjob.ExecuteJobInstance{
+		ID:             to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+		InvokeType:     to.Ptr(copyjob.InvokeTypeScheduled),
+		ItemID:         to.Ptr("dddddddd-9999-0000-1111-eeeeeeeeeeee"),
+		JobType:        to.Ptr("execute"),
+		RootActivityID: to.Ptr("11111111-2222-3333-4444-555555555555"),
+		StartTimeUTC:   to.Ptr("2026-03-28T06:35:00.7812154"),
+		Status:         to.Ptr(copyjob.ItemJobStatusInProgress),
+	}
+
+	testsuite.serverFactory.BackgroundJobsServer.GetExecuteJobInstance = func(ctx context.Context, workspaceID string, copyJobID string, jobInstanceID string, options *copyjob.BackgroundJobsClientGetExecuteJobInstanceOptions) (resp azfake.Responder[copyjob.BackgroundJobsClientGetExecuteJobInstanceResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleCopyJobID, copyJobID)
+		testsuite.Require().Equal(exampleJobInstanceID, jobInstanceID)
+		resp = azfake.Responder[copyjob.BackgroundJobsClientGetExecuteJobInstanceResponse]{}
+		resp.SetResponse(http.StatusOK, copyjob.BackgroundJobsClientGetExecuteJobInstanceResponse{ExecuteJobInstance: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewBackgroundJobsClient()
+	res, err := client.GetExecuteJobInstance(ctx, exampleWorkspaceID, exampleCopyJobID, exampleJobInstanceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ExecuteJobInstance))
+}
+
+func (testsuite *FakeTestSuite) TestBackgroundJobs_ListExecuteSchedules() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"List CopyJob execute schedules example"},
+	})
+	var exampleWorkspaceID string
+	var exampleCopyJobID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCopyJobID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+
+	exampleRes := copyjob.ExecuteSchedules{
+		Value: []copyjob.ExecuteSchedule{
+			{
+				Configuration: &copyjob.CronScheduleConfig{
+					Type:            to.Ptr(copyjob.ScheduleTypeCron),
+					EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-30T23:59:00.000Z"); return t }()),
+					LocalTimeZoneID: to.Ptr("Central Standard Time"),
+					StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T00:00:00.000Z"); return t }()),
+					Interval:        to.Ptr[int32](10),
+				},
+				CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T05:35:20.536Z"); return t }()),
+				Enabled:         to.Ptr(true),
+				ID:              to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+				Owner: &copyjob.UserPrincipal{
+					Type: to.Ptr(copyjob.PrincipalTypeUser),
+					ID:   to.Ptr("33dd33dd-ee44-ff55-aa66-77bb77bb77bb"),
+				},
+			},
+			{
+				Configuration: &copyjob.DailyScheduleConfig{
+					Type:            to.Ptr(copyjob.ScheduleTypeDaily),
+					EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-04-30T23:59:00.000Z"); return t }()),
+					LocalTimeZoneID: to.Ptr("Central Standard Time"),
+					StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-29T00:00:00.000Z"); return t }()),
+					Times: []string{
+						"09:00",
+						"17:00"},
+				},
+				CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-29T08:15:42.123Z"); return t }()),
+				Enabled:         to.Ptr(false),
+				ID:              to.Ptr("cccccccc-2222-3333-4444-dddddddddddd"),
+				Owner: &copyjob.UserPrincipal{
+					Type: to.Ptr(copyjob.PrincipalTypeUser),
+					ID:   to.Ptr("44ee44ee-ff55-aa66-bb77-88cc88cc88cc"),
+				},
+			}},
+	}
+
+	testsuite.serverFactory.BackgroundJobsServer.NewListExecuteSchedulesPager = func(workspaceID string, copyJobID string, options *copyjob.BackgroundJobsClientListExecuteSchedulesOptions) (resp azfake.PagerResponder[copyjob.BackgroundJobsClientListExecuteSchedulesResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleCopyJobID, copyJobID)
+		resp = azfake.PagerResponder[copyjob.BackgroundJobsClientListExecuteSchedulesResponse]{}
+		resp.AddPage(http.StatusOK, copyjob.BackgroundJobsClientListExecuteSchedulesResponse{ExecuteSchedules: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewBackgroundJobsClient()
+	pager := client.NewListExecuteSchedulesPager(exampleWorkspaceID, exampleCopyJobID, &copyjob.BackgroundJobsClientListExecuteSchedulesOptions{ContinuationToken: nil})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.ExecuteSchedules))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestBackgroundJobs_ScheduleExecute() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Create CopyJob execute schedule example"},
+	})
+	var exampleWorkspaceID string
+	var exampleCopyJobID string
+	var exampleCreateScheduleRequest copyjob.CreateCopyJobExecuteScheduleRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCopyJobID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+	exampleCreateScheduleRequest = copyjob.CreateCopyJobExecuteScheduleRequest{
+		Configuration: &copyjob.CronScheduleConfig{
+			Type:            to.Ptr(copyjob.ScheduleTypeCron),
+			EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-30T23:59:00.000Z"); return t }()),
+			LocalTimeZoneID: to.Ptr("Central Standard Time"),
+			StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T00:00:00.000Z"); return t }()),
+			Interval:        to.Ptr[int32](10),
+		},
+		Enabled: to.Ptr(true),
+	}
+
+	testsuite.serverFactory.BackgroundJobsServer.ScheduleExecute = func(ctx context.Context, workspaceID string, copyJobID string, createScheduleRequest copyjob.CreateCopyJobExecuteScheduleRequest, options *copyjob.BackgroundJobsClientScheduleExecuteOptions) (resp azfake.Responder[copyjob.BackgroundJobsClientScheduleExecuteResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleCopyJobID, copyJobID)
+		testsuite.Require().True(reflect.DeepEqual(exampleCreateScheduleRequest, createScheduleRequest))
+		resp = azfake.Responder[copyjob.BackgroundJobsClientScheduleExecuteResponse]{}
+		resp.SetResponse(http.StatusCreated, copyjob.BackgroundJobsClientScheduleExecuteResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewBackgroundJobsClient()
+	_, err = client.ScheduleExecute(ctx, exampleWorkspaceID, exampleCopyJobID, exampleCreateScheduleRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestBackgroundJobs_GetExecuteSchedule() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get CopyJob execute schedule example"},
+	})
+	var exampleWorkspaceID string
+	var exampleCopyJobID string
+	var exampleScheduleID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCopyJobID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+	exampleScheduleID = "bbbbbbbb-1111-2222-3333-cccccccccccc"
+
+	exampleRes := copyjob.ExecuteSchedule{
+		Configuration: &copyjob.CronScheduleConfig{
+			Type:            to.Ptr(copyjob.ScheduleTypeCron),
+			EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-30T23:59:00.000Z"); return t }()),
+			LocalTimeZoneID: to.Ptr("Central Standard Time"),
+			StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T00:00:00.000Z"); return t }()),
+			Interval:        to.Ptr[int32](10),
+		},
+		CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T05:35:20.536Z"); return t }()),
+		Enabled:         to.Ptr(true),
+		ID:              to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+		Owner: &copyjob.UserPrincipal{
+			Type: to.Ptr(copyjob.PrincipalTypeUser),
+			ID:   to.Ptr("33dd33dd-ee44-ff55-aa66-77bb77bb77bb"),
+		},
+	}
+
+	testsuite.serverFactory.BackgroundJobsServer.GetExecuteSchedule = func(ctx context.Context, workspaceID string, copyJobID string, scheduleID string, options *copyjob.BackgroundJobsClientGetExecuteScheduleOptions) (resp azfake.Responder[copyjob.BackgroundJobsClientGetExecuteScheduleResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleCopyJobID, copyJobID)
+		testsuite.Require().Equal(exampleScheduleID, scheduleID)
+		resp = azfake.Responder[copyjob.BackgroundJobsClientGetExecuteScheduleResponse]{}
+		resp.SetResponse(http.StatusOK, copyjob.BackgroundJobsClientGetExecuteScheduleResponse{ExecuteSchedule: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewBackgroundJobsClient()
+	res, err := client.GetExecuteSchedule(ctx, exampleWorkspaceID, exampleCopyJobID, exampleScheduleID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ExecuteSchedule))
+}
+
+func (testsuite *FakeTestSuite) TestBackgroundJobs_UpdateExecuteSchedule() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Update CopyJob execute schedule example"},
+	})
+	var exampleWorkspaceID string
+	var exampleCopyJobID string
+	var exampleScheduleID string
+	var exampleUpdateScheduleRequest copyjob.UpdateCopyJobExecuteScheduleRequest
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCopyJobID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+	exampleScheduleID = "bbbbbbbb-1111-2222-3333-cccccccccccc"
+	exampleUpdateScheduleRequest = copyjob.UpdateCopyJobExecuteScheduleRequest{
+		Configuration: &copyjob.DailyScheduleConfig{
+			Type:            to.Ptr(copyjob.ScheduleTypeDaily),
+			EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-04-30T23:59:00.000Z"); return t }()),
+			LocalTimeZoneID: to.Ptr("Central Standard Time"),
+			StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T00:00:00.000Z"); return t }()),
+			Times: []string{
+				"09:00",
+				"17:00"},
+		},
+		Enabled: to.Ptr(false),
+	}
+
+	exampleRes := copyjob.ExecuteSchedule{
+		Configuration: &copyjob.DailyScheduleConfig{
+			Type:            to.Ptr(copyjob.ScheduleTypeDaily),
+			EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-04-30T23:59:00.000Z"); return t }()),
+			LocalTimeZoneID: to.Ptr("Central Standard Time"),
+			StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T00:00:00.000Z"); return t }()),
+			Times: []string{
+				"09:00",
+				"17:00"},
+		},
+		CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T05:35:20.536Z"); return t }()),
+		Enabled:         to.Ptr(false),
+		ID:              to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+		Owner: &copyjob.UserPrincipal{
+			Type: to.Ptr(copyjob.PrincipalTypeUser),
+			ID:   to.Ptr("33dd33dd-ee44-ff55-aa66-77bb77bb77bb"),
+		},
+	}
+
+	testsuite.serverFactory.BackgroundJobsServer.UpdateExecuteSchedule = func(ctx context.Context, workspaceID string, copyJobID string, scheduleID string, updateScheduleRequest copyjob.UpdateCopyJobExecuteScheduleRequest, options *copyjob.BackgroundJobsClientUpdateExecuteScheduleOptions) (resp azfake.Responder[copyjob.BackgroundJobsClientUpdateExecuteScheduleResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleCopyJobID, copyJobID)
+		testsuite.Require().Equal(exampleScheduleID, scheduleID)
+		testsuite.Require().True(reflect.DeepEqual(exampleUpdateScheduleRequest, updateScheduleRequest))
+		resp = azfake.Responder[copyjob.BackgroundJobsClientUpdateExecuteScheduleResponse]{}
+		resp.SetResponse(http.StatusOK, copyjob.BackgroundJobsClientUpdateExecuteScheduleResponse{ExecuteSchedule: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewBackgroundJobsClient()
+	res, err := client.UpdateExecuteSchedule(ctx, exampleWorkspaceID, exampleCopyJobID, exampleScheduleID, exampleUpdateScheduleRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.ExecuteSchedule))
+}
+
+func (testsuite *FakeTestSuite) TestBackgroundJobs_DeleteExecuteSchedule() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Delete CopyJob execute schedule example"},
+	})
+	var exampleWorkspaceID string
+	var exampleCopyJobID string
+	var exampleScheduleID string
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleCopyJobID = "dddddddd-9999-0000-1111-eeeeeeeeeeee"
+	exampleScheduleID = "bbbbbbbb-1111-2222-3333-cccccccccccc"
+
+	testsuite.serverFactory.BackgroundJobsServer.DeleteExecuteSchedule = func(ctx context.Context, workspaceID string, copyJobID string, scheduleID string, options *copyjob.BackgroundJobsClientDeleteExecuteScheduleOptions) (resp azfake.Responder[copyjob.BackgroundJobsClientDeleteExecuteScheduleResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleCopyJobID, copyJobID)
+		testsuite.Require().Equal(exampleScheduleID, scheduleID)
+		resp = azfake.Responder[copyjob.BackgroundJobsClientDeleteExecuteScheduleResponse]{}
+		resp.SetResponse(http.StatusOK, copyjob.BackgroundJobsClientDeleteExecuteScheduleResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewBackgroundJobsClient()
+	_, err = client.DeleteExecuteSchedule(ctx, exampleWorkspaceID, exampleCopyJobID, exampleScheduleID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }

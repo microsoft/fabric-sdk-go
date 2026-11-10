@@ -6,6 +6,44 @@
 
 package dataagent
 
+// FeedbackClientDownloadAttachmentsBetaOptions contains the optional parameters for the FeedbackClient.DownloadAttachmentsBeta
+// method.
+type FeedbackClientDownloadAttachmentsBetaOptions struct {
+	// The language of the retention notice in README.txt. Use a BCP 47 language tag, such as en or en-US, with a maximum length
+	// of 35 characters. If omitted, the default is en. Invalid tags return 400
+	// InvalidInput.
+	Language *string
+}
+
+// FeedbackClientGetFeedbackBetaOptions contains the optional parameters for the FeedbackClient.GetFeedbackBeta method.
+type FeedbackClientGetFeedbackBetaOptions struct {
+	// placeholder for future optional parameters
+}
+
+// FeedbackClientSearchFeedbackBetaOptions contains the optional parameters for the FeedbackClient.NewSearchFeedbackBetaPager
+// method.
+type FeedbackClientSearchFeedbackBetaOptions struct {
+	// A token returned by the preceding page to retrieve the next page of results. Use it exactly as returned, without interpreting
+	// or changing it. The token is valid for 24 hours and can be used only with
+	// the same tenant, signed-in user, workspace, Fabric data agent, and resolved MetaOS title identifier. Changing that title
+	// invalidates outstanding tokens; republishing with the same title does not
+	// itself invalidate them. When using the token, don't send a request body or page size. The API reuses the original query
+	// and page size.
+	ContinuationToken *string
+
+	// The maximum number of feedback records to return for the initial request. The value must be an integer from 1 through 9,999.
+	// The default is 50 only when this parameter is omitted. Malformed,
+	// overflowing, repeated, or empty values return InvalidInput. Large values can increase latency and the risk of throttling.
+	// Omit this parameter when using a continuation token.
+	PageSize *int32
+
+	// The filters and sort options for the first page of feedback. If omitted, no query criteria limit the results. JSON properties
+	// that the API doesn't recognize in the body or filter object, and control
+	// characters such as newlines or tabs in search or filter values, return 400 InvalidInput. Query parameters that the API
+	// doesn't recognize are ignored. Don't send a body when using a continuation token.
+	QueryFeedbackRequest *QueryFeedbackRequest
+}
+
 // ItemsClientBeginCreateDataAgentOptions contains the optional parameters for the ItemsClient.BeginCreateDataAgent method.
 type ItemsClientBeginCreateDataAgentOptions struct {
 	// Resumes the long-running operation from the provided token.

@@ -1605,3 +1605,205 @@ func (testsuite *FakeTestSuite) TestPublished_DownloadDatasourceTopic() {
 	_, err = client.DownloadDatasourceTopic(ctx, exampleWorkspaceID, exampleDataAgentID, exampleDatasourceID, exampleFileName, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
+
+func (testsuite *FakeTestSuite) TestFeedback_SearchFeedbackBeta() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Query feedback example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleBeta bool
+	exampleWorkspaceID = "00000000-0000-0000-0000-000000000001"
+	exampleDataAgentID = "00000000-0000-0000-0000-000000000002"
+	exampleBeta = true
+
+	exampleRes := dataagent.FeedbackPage{
+		ContinuationToken: to.Ptr("opaque-token"),
+		ContinuationURI:   to.Ptr("https://api.fabric.microsoft.com/v1/workspaces/00000000-0000-0000-0000-000000000001/dataAgents/00000000-0000-0000-0000-000000000002/feedback/search?beta=true&continuationToken=opaque-token"),
+		Value: []dataagent.FeedbackSummary{
+			{
+				AiContext: &dataagent.FeedbackAiContextSummary{
+					Prompt:          to.Ptr("What were last quarter's sales?"),
+					ResponseMessage: to.Ptr("The total was ..."),
+				},
+				App:               to.Ptr("Fabric"),
+				Channel:           to.Ptr("Fabric"),
+				Comment:           to.Ptr("The answer used an outdated value."),
+				FeedbackSubType:   to.Ptr("IncorrectAnswer"),
+				FeedbackType:      to.Ptr("Frown"),
+				HasAttachments:    to.Ptr(true),
+				ID:                to.Ptr("fb_2026-07-15:001"),
+				Platform:          to.Ptr("Web"),
+				Product:           to.Ptr("DataAgent"),
+				SubmittedDateTime: to.Ptr("2026-07-15T14:32:10Z"),
+				Submitter: &dataagent.UserPrincipal{
+					Type:        to.Ptr(dataagent.PrincipalTypeUser),
+					DisplayName: to.Ptr("Alex Wilber"),
+					ID:          to.Ptr("8f6b2d41-3c5a-4e19-9b7f-1a2c3d4e5f60"),
+					UserDetails: &dataagent.UserPrincipalUserDetails{
+						UserPrincipalName: to.Ptr("AlexW@example.com"),
+					},
+				},
+			},
+			{
+				AiContext: &dataagent.FeedbackAiContextSummary{
+					Prompt:          to.Ptr("Summarize revenue by region."),
+					ResponseMessage: to.Ptr("Here is the revenue by region ..."),
+				},
+				App:               to.Ptr("Fabric"),
+				Channel:           to.Ptr("Fabric"),
+				Comment:           to.Ptr("Great, this saved me a lot of time."),
+				FeedbackSubType:   to.Ptr("Helpful"),
+				FeedbackType:      to.Ptr("Smile"),
+				HasAttachments:    to.Ptr(false),
+				ID:                to.Ptr("fb_2026-07-14:087"),
+				Platform:          to.Ptr("Web"),
+				Product:           to.Ptr("DataAgent"),
+				SubmittedDateTime: to.Ptr("2026-07-14T09:05:44Z"),
+				Submitter: &dataagent.UserPrincipal{
+					Type:        to.Ptr(dataagent.PrincipalTypeUser),
+					DisplayName: to.Ptr("Dana Lee"),
+					ID:          to.Ptr("d2b7a9e4-6f13-4c88-a0e5-7b9c1d3e2f44"),
+					UserDetails: &dataagent.UserPrincipalUserDetails{
+						UserPrincipalName: to.Ptr("DanaL@example.com"),
+					},
+				},
+			}},
+	}
+
+	testsuite.serverFactory.FeedbackServer.NewSearchFeedbackBetaPager = func(workspaceID string, dataAgentID string, beta bool, options *dataagent.FeedbackClientSearchFeedbackBetaOptions) (resp azfake.PagerResponder[dataagent.FeedbackClientSearchFeedbackBetaResponse]) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.PagerResponder[dataagent.FeedbackClientSearchFeedbackBetaResponse]{}
+		resp.AddPage(http.StatusOK, dataagent.FeedbackClientSearchFeedbackBetaResponse{FeedbackPage: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewFeedbackClient()
+	pager := client.NewSearchFeedbackBetaPager(exampleWorkspaceID, exampleDataAgentID, exampleBeta, &dataagent.FeedbackClientSearchFeedbackBetaOptions{PageSize: to.Ptr[int32](50),
+		ContinuationToken: nil,
+		QueryFeedbackRequest: &dataagent.QueryFeedbackRequest{
+			EndSubmittedDateTime: to.Ptr("2026-08-01T00:00:00Z"),
+			Filter: &dataagent.FeedbackFilter{
+				Channels: []string{
+					"Fabric"},
+				FeedbackTypes: []string{
+					"Frown"},
+				Platforms: []string{
+					"Web"},
+				Products: []string{
+					"DataAgent"},
+			},
+			Search:                 to.Ptr("incorrect result"),
+			SortBy:                 to.Ptr(dataagent.FeedbackSortBySubmittedDateTime),
+			SortOrder:              to.Ptr(dataagent.FeedbackSortOrderDescending),
+			StartSubmittedDateTime: to.Ptr("2026-07-01T00:00:00-04:00"),
+		},
+	})
+	for pager.More() {
+		nextResult, err := pager.NextPage(ctx)
+		testsuite.Require().NoError(err, "Failed to advance page for example ")
+		testsuite.Require().True(reflect.DeepEqual(exampleRes, nextResult.FeedbackPage))
+		if err == nil {
+			break
+		}
+	}
+}
+
+func (testsuite *FakeTestSuite) TestFeedback_GetFeedbackBeta() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get feedback example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleFeedbackID string
+	var exampleBeta bool
+	exampleWorkspaceID = "00000000-0000-0000-0000-000000000001"
+	exampleDataAgentID = "00000000-0000-0000-0000-000000000002"
+	exampleFeedbackID = "fb_2026-07-15:001"
+	exampleBeta = true
+
+	exampleRes := dataagent.Feedback{
+		AiContext: &dataagent.FeedbackAiContext{
+			ChatHistory: []dataagent.FeedbackChatHistoryItem{
+				{
+					Message: to.Ptr("Show last quarter's sales."),
+					User:    to.Ptr("User"),
+				},
+				{
+					Message: to.Ptr("The total was ..."),
+					User:    to.Ptr("Copilot"),
+				}},
+			Prompt:          to.Ptr("What were last quarter's sales?"),
+			ResponseMessage: to.Ptr("The total was ..."),
+		},
+		App:               to.Ptr("Fabric"),
+		Channel:           to.Ptr("Fabric"),
+		Comment:           to.Ptr("The answer used an outdated value."),
+		FeedbackSubType:   to.Ptr("IncorrectAnswer"),
+		FeedbackType:      to.Ptr("Frown"),
+		HasAttachments:    to.Ptr(true),
+		ID:                to.Ptr("fb_2026-07-15:001"),
+		Platform:          to.Ptr("Web"),
+		Product:           to.Ptr("DataAgent"),
+		SubmittedDateTime: to.Ptr("2026-07-15T14:32:10Z"),
+		Submitter: &dataagent.UserPrincipal{
+			Type:        to.Ptr(dataagent.PrincipalTypeUser),
+			DisplayName: to.Ptr("Alex Wilber"),
+			ID:          to.Ptr("8f6b2d41-3c5a-4e19-9b7f-1a2c3d4e5f60"),
+			UserDetails: &dataagent.UserPrincipalUserDetails{
+				UserPrincipalName: to.Ptr("AlexW@example.com"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.FeedbackServer.GetFeedbackBeta = func(ctx context.Context, workspaceID string, dataAgentID string, feedbackID string, beta bool, options *dataagent.FeedbackClientGetFeedbackBetaOptions) (resp azfake.Responder[dataagent.FeedbackClientGetFeedbackBetaResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleFeedbackID, feedbackID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		resp = azfake.Responder[dataagent.FeedbackClientGetFeedbackBetaResponse]{}
+		resp.SetResponse(http.StatusOK, dataagent.FeedbackClientGetFeedbackBetaResponse{Feedback: exampleRes}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewFeedbackClient()
+	res, err := client.GetFeedbackBeta(ctx, exampleWorkspaceID, exampleDataAgentID, exampleFeedbackID, exampleBeta, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Feedback))
+}
+
+func (testsuite *FakeTestSuite) TestFeedback_DownloadAttachmentsBeta() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Download feedback attachments example"},
+	})
+	var exampleWorkspaceID string
+	var exampleDataAgentID string
+	var exampleFeedbackID string
+	var exampleBeta bool
+	var exampleAllowDownloadWithoutSensitivityLabel bool
+	exampleWorkspaceID = "00000000-0000-0000-0000-000000000001"
+	exampleDataAgentID = "00000000-0000-0000-0000-000000000002"
+	exampleFeedbackID = "fb_2026-07-15:001"
+	exampleBeta = true
+	exampleAllowDownloadWithoutSensitivityLabel = true
+
+	testsuite.serverFactory.FeedbackServer.DownloadAttachmentsBeta = func(ctx context.Context, workspaceID string, dataAgentID string, feedbackID string, beta bool, allowDownloadWithoutSensitivityLabel bool, options *dataagent.FeedbackClientDownloadAttachmentsBetaOptions) (resp azfake.Responder[dataagent.FeedbackClientDownloadAttachmentsBetaResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleDataAgentID, dataAgentID)
+		testsuite.Require().Equal(exampleFeedbackID, feedbackID)
+		testsuite.Require().Equal(exampleBeta, beta)
+		testsuite.Require().Equal(exampleAllowDownloadWithoutSensitivityLabel, allowDownloadWithoutSensitivityLabel)
+		resp = azfake.Responder[dataagent.FeedbackClientDownloadAttachmentsBetaResponse]{}
+		resp.SetResponse(http.StatusOK, dataagent.FeedbackClientDownloadAttachmentsBetaResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewFeedbackClient()
+	_, err = client.DownloadAttachmentsBeta(ctx, exampleWorkspaceID, exampleDataAgentID, exampleFeedbackID, exampleBeta, exampleAllowDownloadWithoutSensitivityLabel, &dataagent.FeedbackClientDownloadAttachmentsBetaOptions{Language: to.Ptr("en")})
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}

@@ -62,6 +62,29 @@ func unmarshalCreateGatewayRequestClassification(rawMsg json.RawMessage) (core.C
 	return b, nil
 }
 
+func unmarshalModifyOneLakeFileSoftDeleteRequestClassification(rawMsg json.RawMessage) (core.ModifyOneLakeFileSoftDeleteRequestClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b core.ModifyOneLakeFileSoftDeleteRequestClassification
+	switch m["status"] {
+	case string(core.OneLakeFileSoftDeleteStatusDisabled):
+		b = &core.DisableOneLakeFileSoftDeleteRequest{}
+	case string(core.OneLakeFileSoftDeleteStatusEnabled):
+		b = &core.EnableOneLakeFileSoftDeleteRequest{}
+	default:
+		b = &core.ModifyOneLakeFileSoftDeleteRequest{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
 func unmarshalUpdateConnectionRequestClassification(rawMsg json.RawMessage) (core.UpdateConnectionRequestClassification, error) {
 	if rawMsg == nil || string(rawMsg) == "null" {
 		return nil, nil

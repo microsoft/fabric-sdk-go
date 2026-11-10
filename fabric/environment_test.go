@@ -64,7 +64,7 @@ func TestClientFactoriesUseEnvironment(t *testing.T) {
 			name:        "GCCHigh",
 			environment: fabric.EnvironmentGCCHigh,
 			wantHost:    "highapi.fabric.microsoft.us",
-			wantScope:   "https://api.fabric.microsoft.us/.default",
+			wantScope:   "https://high.analysis.usgovcloudapi.net/powerbi/api/.default",
 		},
 		{
 			name:      "default Public with custom endpoint",
@@ -84,14 +84,14 @@ func TestClientFactoriesUseEnvironment(t *testing.T) {
 			environment: fabric.EnvironmentGCCHigh,
 			endpoint:    "https://override.example.com/",
 			wantHost:    "override.example.com",
-			wantScope:   "https://api.fabric.microsoft.us/.default",
+			wantScope:   "https://high.analysis.usgovcloudapi.net/powerbi/api/.default",
 		},
 		{
 			name:        "Azure cloud does not override Fabric environment",
 			environment: fabric.EnvironmentGCCHigh,
 			cloud:       cloud.AzurePublic,
 			wantHost:    "highapi.fabric.microsoft.us",
-			wantScope:   "https://api.fabric.microsoft.us/.default",
+			wantScope:   "https://high.analysis.usgovcloudapi.net/powerbi/api/.default",
 		},
 		{
 			name: "unrelated cloud service audience is not used",
@@ -106,7 +106,15 @@ func TestClientFactoriesUseEnvironment(t *testing.T) {
 			environment:  fabric.EnvironmentGCCHigh,
 			privateLinks: true,
 			wantHost:     "12345678123412341234123456789abc.z12.w.highapi.fabric.microsoft.us",
-			wantScope:    "https://api.fabric.microsoft.us/.default",
+			wantScope:    "https://high.analysis.usgovcloudapi.net/powerbi/api/.default",
+		},
+		{
+			name:         "GCCHigh private links with custom endpoint",
+			environment:  fabric.EnvironmentGCCHigh,
+			endpoint:     "https://override.example.com",
+			privateLinks: true,
+			wantHost:     "12345678123412341234123456789abc.z12.w.override.example.com",
+			wantScope:    "https://high.analysis.usgovcloudapi.net/powerbi/api/.default",
 		},
 		{
 			name:         "Public private links with custom endpoint",

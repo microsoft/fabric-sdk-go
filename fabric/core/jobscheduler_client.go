@@ -28,13 +28,17 @@ type JobSchedulerClient struct {
 	endpoint string
 }
 
-// CancelItemJobInstance - REQUIRED DELEGATED SCOPES For item APIs use these scope types:
+// CancelItemJobInstance - PERMISSIONS The caller must have execute permissions for the item.
+// REQUIRED DELEGATED SCOPES For item APIs use these scope types:
 // * Generic scope: Item.Execute.All
 //
 // * Specific scope: itemType.Execute.All (for example: Notebook.Execute.All)
 //
 // for more information about scopes, see scopes article [/rest/api/fabric/articles/scopes].
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -111,7 +115,11 @@ func (client *JobSchedulerClient) cancelItemJobInstanceHandleResponse(resp *http
 	return result, nil
 }
 
-// CreateItemSchedule - REQUIRED DELEGATED SCOPES: Item.Execute.All and Item.ReadWrite.All
+// CreateItemSchedule - PERMISSIONS The caller must have read and write permissions for the item.
+// REQUIRED DELEGATED SCOPES Item.Execute.All and Item.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -187,13 +195,17 @@ func (client *JobSchedulerClient) createItemScheduleHandleResponse(resp *http.Re
 	return result, nil
 }
 
-// DeleteItemSchedule - REQUIRED DELEGATED SCOPES For item APIs use these scope types:
+// DeleteItemSchedule - PERMISSIONS The caller must have read and write permissions for the item.
+// REQUIRED DELEGATED SCOPES For item APIs use these scope types:
 // * Generic scope: Item.ReadWrite.All
 //
 // * Specific scope: itemType.ReadWrite.All (for example: Notebook.ReadWrite.All)
 //
 // for more information about scopes, see scopes article [/rest/api/fabric/articles/scopes].
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -332,13 +344,17 @@ func (client *JobSchedulerClient) getItemJobInstanceHandleResponse(resp *http.Re
 	return result, nil
 }
 
-// GetItemSchedule - REQUIRED DELEGATED SCOPES For item APIs use these scope types:
+// GetItemSchedule - PERMISSIONS The caller must have read permissions for the item.
+// REQUIRED DELEGATED SCOPES For item APIs use these scope types:
 // * Generic scope: Item.Read.All or Item.ReadWrite.All
 //
 // * Specific scope: itemType.Read.All or itemType.ReadWrite.All (for example: Notebook.Read.All)
 //
 // for more information about scopes, see scopes article [/rest/api/fabric/articles/scopes].
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -497,6 +513,9 @@ func (client *JobSchedulerClient) listItemJobInstancesHandleResponse(resp *http.
 //
 // for more information about scopes, see scopes article [/rest/api/fabric/articles/scopes].
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -645,7 +664,11 @@ func (client *JobSchedulerClient) runOnDemandItemJobCreateRequest(ctx context.Co
 	return req, nil
 }
 
-// UpdateItemSchedule - REQUIRED DELEGATED SCOPES: Item.Execute.All and Item.ReadWrite.All
+// UpdateItemSchedule - PERMISSIONS The caller must have read and write permissions for the item.
+// REQUIRED DELEGATED SCOPES Item.Execute.All and Item.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -774,6 +797,9 @@ func (client *JobSchedulerClient) ListItemJobInstances(ctx context.Context, work
 //   - Specific scope: itemType.ReadWrite.All or itemType.Read.All (for example: Notebook.ReadWrite.All)
 //
 //     for more information about scopes, see scopes article [/rest/api/fabric/articles/scopes].
+//
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 200 calls/min |
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

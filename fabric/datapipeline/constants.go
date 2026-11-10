@@ -208,6 +208,10 @@ const (
 	ItemTypeSQLEndpoint ItemType = "SQLEndpoint"
 	// ItemTypeSemanticModel - PowerBI semantic model.
 	ItemTypeSemanticModel ItemType = "SemanticModel"
+	// ItemTypeShare - A share.
+	ItemTypeShare ItemType = "Share"
+	// ItemTypeShareSubscription - A Share Subscription.
+	ItemTypeShareSubscription ItemType = "ShareSubscription"
 	// ItemTypeSnowflakeDatabase - A Snowflake Database to store Iceberg tables created from Snowflake account.
 	ItemTypeSnowflakeDatabase ItemType = "SnowflakeDatabase"
 	// ItemTypeSparkJobDefinition - A spark job definition.
@@ -273,6 +277,8 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeSQLDatabase,
 		ItemTypeSQLEndpoint,
 		ItemTypeSemanticModel,
+		ItemTypeShare,
+		ItemTypeShareSubscription,
 		ItemTypeSnowflakeDatabase,
 		ItemTypeSparkJobDefinition,
 		ItemTypeUserDataFunction,

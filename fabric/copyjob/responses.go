@@ -6,15 +6,50 @@
 
 package copyjob
 
+// BackgroundJobsClientDeleteExecuteScheduleResponse contains the response from method BackgroundJobsClient.DeleteExecuteSchedule.
+type BackgroundJobsClientDeleteExecuteScheduleResponse struct {
+	// placeholder for future response values
+}
+
+// BackgroundJobsClientGetExecuteJobInstanceResponse contains the response from method BackgroundJobsClient.GetExecuteJobInstance.
+type BackgroundJobsClientGetExecuteJobInstanceResponse struct {
+	// A CopyJob execute job instance.
+	ExecuteJobInstance
+}
+
+// BackgroundJobsClientGetExecuteScheduleResponse contains the response from method BackgroundJobsClient.GetExecuteSchedule.
+type BackgroundJobsClientGetExecuteScheduleResponse struct {
+	// A CopyJob execute schedule.
+	ExecuteSchedule
+}
+
 // BackgroundJobsClientListExecuteJobInstancesResponse contains the response from method BackgroundJobsClient.NewListExecuteJobInstancesPager.
 type BackgroundJobsClientListExecuteJobInstancesResponse struct {
 	// A list of CopyJob execute job instances.
 	ExecuteJobInstances
 }
 
+// BackgroundJobsClientListExecuteSchedulesResponse contains the response from method BackgroundJobsClient.NewListExecuteSchedulesPager.
+type BackgroundJobsClientListExecuteSchedulesResponse struct {
+	// A list of CopyJob execute schedules.
+	ExecuteSchedules
+}
+
 // BackgroundJobsClientRunOnDemandExecuteResponse contains the response from method BackgroundJobsClient.RunOnDemandExecute.
 type BackgroundJobsClientRunOnDemandExecuteResponse struct {
 	// placeholder for future response values
+}
+
+// BackgroundJobsClientScheduleExecuteResponse contains the response from method BackgroundJobsClient.ScheduleExecute.
+type BackgroundJobsClientScheduleExecuteResponse struct {
+	// A CopyJob execute schedule.
+	ExecuteSchedule
+}
+
+// BackgroundJobsClientUpdateExecuteScheduleResponse contains the response from method BackgroundJobsClient.UpdateExecuteSchedule.
+type BackgroundJobsClientUpdateExecuteScheduleResponse struct {
+	// A CopyJob execute schedule.
+	ExecuteSchedule
 }
 
 // ItemsClientCreateCopyJobResponse contains the response from method ItemsClient.BeginCreateCopyJob.

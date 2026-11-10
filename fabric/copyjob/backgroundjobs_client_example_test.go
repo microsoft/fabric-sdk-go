@@ -10,6 +10,9 @@ import (
 	"context"
 	"log"
 
+	"time"
+
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 
 	"github.com/microsoft/fabric-sdk-go/fabric/copyjob"
@@ -65,6 +68,225 @@ func ExampleBackgroundJobsClient_RunOnDemandExecute() {
 		log.Fatalf("failed to create client: %v", err)
 	}
 	_, err = clientFactory.NewBackgroundJobsClient().RunOnDemandExecute(ctx, "a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1", "dddddddd-9999-0000-1111-eeeeeeeeeeee", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleBackgroundJobsClient_GetExecuteJobInstance() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := copyjob.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewBackgroundJobsClient().GetExecuteJobInstance(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "dddddddd-9999-0000-1111-eeeeeeeeeeee", "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.ExecuteJobInstance = copyjob.ExecuteJobInstance{
+	// 	ID: to.Ptr("aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb"),
+	// 	InvokeType: to.Ptr(copyjob.InvokeTypeScheduled),
+	// 	ItemID: to.Ptr("dddddddd-9999-0000-1111-eeeeeeeeeeee"),
+	// 	JobType: to.Ptr("execute"),
+	// 	RootActivityID: to.Ptr("11111111-2222-3333-4444-555555555555"),
+	// 	StartTimeUTC: to.Ptr("2026-03-28T06:35:00.7812154"),
+	// 	Status: to.Ptr(copyjob.ItemJobStatusInProgress),
+	// }
+}
+
+// Generated from example definition
+func ExampleBackgroundJobsClient_NewListExecuteSchedulesPager() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := copyjob.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	pager := clientFactory.NewBackgroundJobsClient().NewListExecuteSchedulesPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", "dddddddd-9999-0000-1111-eeeeeeeeeeee", &copyjob.BackgroundJobsClientListExecuteSchedulesOptions{ContinuationToken: nil})
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			log.Fatalf("failed to advance page: %v", err)
+		}
+		for _, v := range page.Value {
+			// You could use page here. We use blank identifier for just demo purposes.
+			_ = v
+		}
+		// If the HTTP response code is 200 as defined in example definition, your page structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+		// page.ExecuteSchedules = copyjob.ExecuteSchedules{
+		// 	Value: []copyjob.ExecuteSchedule{
+		// 		{
+		// 			Configuration: &copyjob.CronScheduleConfig{
+		// 				Type: to.Ptr(copyjob.ScheduleTypeCron),
+		// 				EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-30T23:59:00.000Z"); return t}()),
+		// 				LocalTimeZoneID: to.Ptr("Central Standard Time"),
+		// 				StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T00:00:00.000Z"); return t}()),
+		// 				Interval: to.Ptr[int32](10),
+		// 			},
+		// 			CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T05:35:20.536Z"); return t}()),
+		// 			Enabled: to.Ptr(true),
+		// 			ID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+		// 			Owner: &copyjob.UserPrincipal{
+		// 				Type: to.Ptr(copyjob.PrincipalTypeUser),
+		// 				ID: to.Ptr("33dd33dd-ee44-ff55-aa66-77bb77bb77bb"),
+		// 			},
+		// 		},
+		// 		{
+		// 			Configuration: &copyjob.DailyScheduleConfig{
+		// 				Type: to.Ptr(copyjob.ScheduleTypeDaily),
+		// 				EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-04-30T23:59:00.000Z"); return t}()),
+		// 				LocalTimeZoneID: to.Ptr("Central Standard Time"),
+		// 				StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-29T00:00:00.000Z"); return t}()),
+		// 				Times: []string{
+		// 					"09:00",
+		// 					"17:00"},
+		// 				},
+		// 				CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-29T08:15:42.123Z"); return t}()),
+		// 				Enabled: to.Ptr(false),
+		// 				ID: to.Ptr("cccccccc-2222-3333-4444-dddddddddddd"),
+		// 				Owner: &copyjob.UserPrincipal{
+		// 					Type: to.Ptr(copyjob.PrincipalTypeUser),
+		// 					ID: to.Ptr("44ee44ee-ff55-aa66-bb77-88cc88cc88cc"),
+		// 				},
+		// 		}},
+		// 	}
+	}
+}
+
+// Generated from example definition
+func ExampleBackgroundJobsClient_ScheduleExecute() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := copyjob.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewBackgroundJobsClient().ScheduleExecute(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "dddddddd-9999-0000-1111-eeeeeeeeeeee", copyjob.CreateCopyJobExecuteScheduleRequest{
+		Configuration: &copyjob.CronScheduleConfig{
+			Type:            to.Ptr(copyjob.ScheduleTypeCron),
+			EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-30T23:59:00.000Z"); return t }()),
+			LocalTimeZoneID: to.Ptr("Central Standard Time"),
+			StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T00:00:00.000Z"); return t }()),
+			Interval:        to.Ptr[int32](10),
+		},
+		Enabled: to.Ptr(true),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleBackgroundJobsClient_GetExecuteSchedule() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := copyjob.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewBackgroundJobsClient().GetExecuteSchedule(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "dddddddd-9999-0000-1111-eeeeeeeeeeee", "bbbbbbbb-1111-2222-3333-cccccccccccc", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.ExecuteSchedule = copyjob.ExecuteSchedule{
+	// 	Configuration: &copyjob.CronScheduleConfig{
+	// 		Type: to.Ptr(copyjob.ScheduleTypeCron),
+	// 		EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-30T23:59:00.000Z"); return t}()),
+	// 		LocalTimeZoneID: to.Ptr("Central Standard Time"),
+	// 		StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T00:00:00.000Z"); return t}()),
+	// 		Interval: to.Ptr[int32](10),
+	// 	},
+	// 	CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T05:35:20.536Z"); return t}()),
+	// 	Enabled: to.Ptr(true),
+	// 	ID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+	// 	Owner: &copyjob.UserPrincipal{
+	// 		Type: to.Ptr(copyjob.PrincipalTypeUser),
+	// 		ID: to.Ptr("33dd33dd-ee44-ff55-aa66-77bb77bb77bb"),
+	// 	},
+	// }
+}
+
+// Generated from example definition
+func ExampleBackgroundJobsClient_UpdateExecuteSchedule() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := copyjob.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewBackgroundJobsClient().UpdateExecuteSchedule(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "dddddddd-9999-0000-1111-eeeeeeeeeeee", "bbbbbbbb-1111-2222-3333-cccccccccccc", copyjob.UpdateCopyJobExecuteScheduleRequest{
+		Configuration: &copyjob.DailyScheduleConfig{
+			Type:            to.Ptr(copyjob.ScheduleTypeDaily),
+			EndDateTime:     to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-04-30T23:59:00.000Z"); return t }()),
+			LocalTimeZoneID: to.Ptr("Central Standard Time"),
+			StartDateTime:   to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T00:00:00.000Z"); return t }()),
+			Times: []string{
+				"09:00",
+				"17:00"},
+		},
+		Enabled: to.Ptr(false),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.ExecuteSchedule = copyjob.ExecuteSchedule{
+	// 	Configuration: &copyjob.DailyScheduleConfig{
+	// 		Type: to.Ptr(copyjob.ScheduleTypeDaily),
+	// 		EndDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-04-30T23:59:00.000Z"); return t}()),
+	// 		LocalTimeZoneID: to.Ptr("Central Standard Time"),
+	// 		StartDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T00:00:00.000Z"); return t}()),
+	// 		Times: []string{
+	// 			"09:00",
+	// 			"17:00"},
+	// 		},
+	// 		CreatedDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-28T05:35:20.536Z"); return t}()),
+	// 		Enabled: to.Ptr(false),
+	// 		ID: to.Ptr("bbbbbbbb-1111-2222-3333-cccccccccccc"),
+	// 		Owner: &copyjob.UserPrincipal{
+	// 			Type: to.Ptr(copyjob.PrincipalTypeUser),
+	// 			ID: to.Ptr("33dd33dd-ee44-ff55-aa66-77bb77bb77bb"),
+	// 		},
+	// 	}
+}
+
+// Generated from example definition
+func ExampleBackgroundJobsClient_DeleteExecuteSchedule() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := copyjob.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewBackgroundJobsClient().DeleteExecuteSchedule(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "dddddddd-9999-0000-1111-eeeeeeeeeeee", "bbbbbbbb-1111-2222-3333-cccccccccccc", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}

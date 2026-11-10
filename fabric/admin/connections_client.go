@@ -408,7 +408,11 @@ func (client *ConnectionsClient) listConnectionRoleAssignmentsHandleResponse(res
 // NewListConnectionsPager - > [!NOTE] Fabric tenant admin connection management is currently in Preview (learn more [/fabric/fundamentals/preview]).
 // PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
-// LIMITATIONS None.
+// LIMITATIONS This endpoint is limited to 10 requests per minute per tenant and caller identity type (user or service principal).
+// Requests from different service principals in the same tenant share the
+// per-minute allowance. Each request for a continuation page counts as a separate request. Coordinate and pace requests,
+// including pagination, across applications in the same tenant. On HTTP 429, wait
+// for the number of seconds specified in Retry-After before retrying.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -584,7 +588,9 @@ func (client *ConnectionsClient) ListConnectionRoleAssignments(ctx context.Conte
 //
 // # REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
 //
-// LIMITATIONS None.
+// LIMITATIONS This endpoint is limited to 10 requests per minute per tenant and caller identity type (user or service principal). Requests from different service principals in the same tenant share the
+// per-minute allowance. Each request for a continuation page counts as a separate request. Coordinate and pace requests, including pagination, across applications in the same tenant. On HTTP 429, wait
+// for the number of seconds specified in Retry-After before retrying.
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

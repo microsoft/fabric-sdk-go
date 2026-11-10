@@ -18,6 +18,7 @@ import (
 
 // ServerFactory is a fake server for instances of the dataagent.ClientFactory type.
 type ServerFactory struct {
+	FeedbackServer  FeedbackServer
 	ItemsServer     ItemsServer
 	PublishedServer PublishedServer
 	StagingServer   StagingServer
@@ -28,6 +29,7 @@ type ServerFactory struct {
 type ServerFactoryTransport struct {
 	srv               *ServerFactory
 	trMu              sync.Mutex
+	trFeedbackServer  *FeedbackServerTransport
 	trItemsServer     *ItemsServerTransport
 	trPublishedServer *PublishedServerTransport
 	trStagingServer   *StagingServerTransport
@@ -56,6 +58,9 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 	var err error
 
 	switch client {
+	case "FeedbackClient":
+		initServer(s, &s.trFeedbackServer, func() *FeedbackServerTransport { return NewFeedbackServerTransport(&s.srv.FeedbackServer) })
+		resp, err = s.trFeedbackServer.Do(req)
 	case "ItemsClient":
 		initServer(s, &s.trItemsServer, func() *ItemsServerTransport { return NewItemsServerTransport(&s.srv.ItemsServer) })
 		resp, err = s.trItemsServer.Do(req)

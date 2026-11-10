@@ -8,6 +8,82 @@ package eventstream
 
 import "encoding/json"
 
+func unmarshalAdvancedFilterClassification(rawMsg json.RawMessage) (AdvancedFilterClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var m map[string]any
+	if err := json.Unmarshal(rawMsg, &m); err != nil {
+		return nil, err
+	}
+	var b AdvancedFilterClassification
+	switch m["operatorType"] {
+	case string(AdvancedFilterOperatorTypeBoolEquals):
+		b = &BoolEqualsAdvancedFilter{}
+	case string(AdvancedFilterOperatorTypeIsNotNull):
+		b = &IsNotNullAdvancedFilter{}
+	case string(AdvancedFilterOperatorTypeIsNullOrUndefined):
+		b = &IsNullOrUndefinedAdvancedFilter{}
+	case string(AdvancedFilterOperatorTypeNumberGreaterThan):
+		b = &NumberGreaterThanAdvancedFilter{}
+	case string(AdvancedFilterOperatorTypeNumberGreaterThanOrEquals):
+		b = &NumberGreaterThanOrEqualsAdvancedFilter{}
+	case string(AdvancedFilterOperatorTypeNumberIn):
+		b = &NumberInAdvancedFilter{}
+	case string(AdvancedFilterOperatorTypeNumberInRange):
+		b = &NumberInRangeAdvancedFilter{}
+	case string(AdvancedFilterOperatorTypeNumberLessThan):
+		b = &NumberLessThanAdvancedFilter{}
+	case string(AdvancedFilterOperatorTypeNumberLessThanOrEquals):
+		b = &NumberLessThanOrEqualsAdvancedFilter{}
+	case string(AdvancedFilterOperatorTypeNumberNotIn):
+		b = &NumberNotInAdvancedFilter{}
+	case string(AdvancedFilterOperatorTypeNumberNotInRange):
+		b = &NumberNotInRangeAdvancedFilter{}
+	case string(AdvancedFilterOperatorTypeStringBeginsWith):
+		b = &StringBeginsWithAdvancedFilter{}
+	case string(AdvancedFilterOperatorTypeStringContains):
+		b = &StringContainsAdvancedFilter{}
+	case string(AdvancedFilterOperatorTypeStringEndsWith):
+		b = &StringEndsWithAdvancedFilter{}
+	case string(AdvancedFilterOperatorTypeStringIn):
+		b = &StringInAdvancedFilter{}
+	case string(AdvancedFilterOperatorTypeStringNotBeginsWith):
+		b = &StringNotBeginsWithAdvancedFilter{}
+	case string(AdvancedFilterOperatorTypeStringNotContains):
+		b = &StringNotContainsAdvancedFilter{}
+	case string(AdvancedFilterOperatorTypeStringNotEndsWith):
+		b = &StringNotEndsWithAdvancedFilter{}
+	case string(AdvancedFilterOperatorTypeStringNotIn):
+		b = &StringNotInAdvancedFilter{}
+	default:
+		b = &AdvancedFilter{}
+	}
+	if err := json.Unmarshal(rawMsg, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func unmarshalAdvancedFilterClassificationArray(rawMsg json.RawMessage) ([]AdvancedFilterClassification, error) {
+	if rawMsg == nil || string(rawMsg) == "null" {
+		return nil, nil
+	}
+	var rawMessages []json.RawMessage
+	if err := json.Unmarshal(rawMsg, &rawMessages); err != nil {
+		return nil, err
+	}
+	fArray := make([]AdvancedFilterClassification, len(rawMessages))
+	for index, rawMessage := range rawMessages {
+		f, err := unmarshalAdvancedFilterClassification(rawMessage)
+		if err != nil {
+			return nil, err
+		}
+		fArray[index] = f
+	}
+	return fArray, nil
+}
+
 func unmarshalCertificateResourceClassification(rawMsg json.RawMessage) (CertificateResourceClassification, error) {
 	if rawMsg == nil || string(rawMsg) == "null" {
 		return nil, nil
@@ -432,12 +508,16 @@ func unmarshalSourceResponseClassification(rawMsg json.RawMessage) (SourceRespon
 		b = &AzureSQLMIDBCDCSourceResponse{}
 	case string(SourceTypeAzureServiceBus):
 		b = &AzureServiceBusSourceResponse{}
+	case string(SourceTypeBusinessEvents):
+		b = &BusinessEventsSourceResponse{}
 	case string(SourceTypeConfluentCloud):
 		b = &ConfluentCloudSourceResponse{}
 	case string(SourceTypeCribl):
 		b = &CriblSourceResponse{}
 	case string(SourceTypeCustomEndpoint):
 		b = &CustomEndpointSourceResponse{}
+	case string(SourceTypeCustomStreamConnector):
+		b = &CustomStreamConnectorSourceResponse{}
 	case string(SourceTypeFabricAnomalyDetectionEvents):
 		b = &FabricAnomalyDetectionEventsSourceResponse{}
 	case string(SourceTypeFabricCapacityOperationEvents):

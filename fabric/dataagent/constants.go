@@ -140,6 +140,39 @@ func PossibleElementTypeValues() []ElementType {
 	}
 }
 
+// FeedbackSortBy - The property used to sort feedback. Additional FeedbackSortBy types may be added over time.
+type FeedbackSortBy string
+
+const (
+	// FeedbackSortBySubmittedDateTime - Sorts by the time the feedback was submitted.
+	FeedbackSortBySubmittedDateTime FeedbackSortBy = "SubmittedDateTime"
+)
+
+// PossibleFeedbackSortByValues returns the possible values for the FeedbackSortBy const type.
+func PossibleFeedbackSortByValues() []FeedbackSortBy {
+	return []FeedbackSortBy{
+		FeedbackSortBySubmittedDateTime,
+	}
+}
+
+// FeedbackSortOrder - The sort order applied to feedback results. Additional FeedbackSortOrder types may be added over time.
+type FeedbackSortOrder string
+
+const (
+	// FeedbackSortOrderAscending - Sorts from oldest to newest.
+	FeedbackSortOrderAscending FeedbackSortOrder = "Ascending"
+	// FeedbackSortOrderDescending - Sorts from newest to oldest.
+	FeedbackSortOrderDescending FeedbackSortOrder = "Descending"
+)
+
+// PossibleFeedbackSortOrderValues returns the possible values for the FeedbackSortOrder const type.
+func PossibleFeedbackSortOrderValues() []FeedbackSortOrder {
+	return []FeedbackSortOrder{
+		FeedbackSortOrderAscending,
+		FeedbackSortOrderDescending,
+	}
+}
+
 // FewshotValidationStatusValue - The validation result for a fewshot. Additional FewshotValidationStatusValue types may be
 // added over time.
 type FewshotValidationStatusValue string
@@ -322,6 +355,10 @@ const (
 	ItemTypeSQLEndpoint ItemType = "SQLEndpoint"
 	// ItemTypeSemanticModel - PowerBI semantic model.
 	ItemTypeSemanticModel ItemType = "SemanticModel"
+	// ItemTypeShare - A share.
+	ItemTypeShare ItemType = "Share"
+	// ItemTypeShareSubscription - A Share Subscription.
+	ItemTypeShareSubscription ItemType = "ShareSubscription"
 	// ItemTypeSnowflakeDatabase - A Snowflake Database to store Iceberg tables created from Snowflake account.
 	ItemTypeSnowflakeDatabase ItemType = "SnowflakeDatabase"
 	// ItemTypeSparkJobDefinition - A spark job definition.
@@ -387,6 +424,8 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeSQLDatabase,
 		ItemTypeSQLEndpoint,
 		ItemTypeSemanticModel,
+		ItemTypeShare,
+		ItemTypeShareSubscription,
 		ItemTypeSnowflakeDatabase,
 		ItemTypeSparkJobDefinition,
 		ItemTypeUserDataFunction,

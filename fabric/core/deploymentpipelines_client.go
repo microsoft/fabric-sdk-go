@@ -31,6 +31,9 @@ type DeploymentPipelinesClient struct {
 
 // AddDeploymentPipelineRoleAssignment - PERMISSIONS The caller must have an admin deployment pipelines role.
 // REQUIRED DELEGATED SCOPES Pipeline.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -100,6 +103,9 @@ func (client *DeploymentPipelinesClient) addDeploymentPipelineRoleAssignmentHand
 // * The specified deployment pipeline stage must not be assigned to any other workspace.
 // * Only workspace admins can assign it to a deployment pipeline stage.
 // * The specified workspace isn't assigned to any other deployment pipeline stage.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -161,6 +167,9 @@ func (client *DeploymentPipelinesClient) assignWorkspaceToStageCreateRequest(ctx
 // information see: Service principals can create workspaces, connections, and deployment pipelines
 // [/fabric/admin/service-admin-portal-developer#service-principals-can-create-workspaces-connections-and-deployment-pipelines].
 // REQUIRED DELEGATED SCOPES Pipeline.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -221,6 +230,9 @@ func (client *DeploymentPipelinesClient) createDeploymentPipelineHandleResponse(
 // DeleteDeploymentPipeline - PERMISSIONS The caller must have an admin deployment pipelines role.
 // This operation will fail if there's an active deployment operation.
 // REQUIRED DELEGATED SCOPES Pipeline.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -335,6 +347,9 @@ func (client *DeploymentPipelinesClient) deleteDeploymentPipelineRoleAssignmentC
 // [https://go.microsoft.com/fwlink/?linkid=2235654].
 // REQUIRED DELEGATED SCOPES Pipeline.Deploy
 // LIMITATIONS Maximum 300 deployed items per request.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 10 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -365,6 +380,9 @@ func (client *DeploymentPipelinesClient) BeginDeployStageContent(ctx context.Con
 // [https://go.microsoft.com/fwlink/?linkid=2235654].
 // REQUIRED DELEGATED SCOPES Pipeline.Deploy
 // LIMITATIONS Maximum 300 deployed items per request.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 10 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -422,6 +440,9 @@ func (client *DeploymentPipelinesClient) deployStageContentCreateRequest(ctx con
 
 // GetDeploymentPipeline - PERMISSIONS The caller must have an admin deployment pipelines role.
 // REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -482,6 +503,9 @@ func (client *DeploymentPipelinesClient) getDeploymentPipelineHandleResponse(res
 
 // GetDeploymentPipelineOperation - PERMISSIONS The caller must have an admin deployment pipelines role.
 // REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -547,6 +571,9 @@ func (client *DeploymentPipelinesClient) getDeploymentPipelineOperationHandleRes
 
 // GetDeploymentPipelineStage - PERMISSIONS The caller must have an admin deployment pipelines role.
 // REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -612,6 +639,9 @@ func (client *DeploymentPipelinesClient) getDeploymentPipelineStageHandleRespons
 
 // NewListDeploymentPipelineOperationsPager - PERMISSIONS The caller must have an admin deployment pipelines role.
 // REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -677,6 +707,9 @@ func (client *DeploymentPipelinesClient) listDeploymentPipelineOperationsHandleR
 
 // NewListDeploymentPipelineRoleAssignmentsPager - PERMISSIONS The caller must have an admin deployment pipelines role.
 // REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -746,6 +779,9 @@ func (client *DeploymentPipelinesClient) listDeploymentPipelineRoleAssignmentsHa
 // assigned to the specified stage. For more information, see: Permissions
 // [https://go.microsoft.com/fwlink/?linkid=2235654].
 // REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -816,6 +852,9 @@ func (client *DeploymentPipelinesClient) listDeploymentPipelineStageItemsHandleR
 
 // NewListDeploymentPipelineStagesPager - PERMISSIONS The caller must have an admin deployment pipelines role.
 // REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -879,7 +918,11 @@ func (client *DeploymentPipelinesClient) listDeploymentPipelineStagesHandleRespo
 	return result, nil
 }
 
-// NewListDeploymentPipelinesPager - REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
+// NewListDeploymentPipelinesPager - PERMISSIONS The caller must have access to the deployment pipelines.
+// REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -941,6 +984,9 @@ func (client *DeploymentPipelinesClient) listDeploymentPipelinesHandleResponse(r
 // UnassignWorkspaceFromStage - This operation will fail if there's an active deployment operation.
 // PERMISSIONS The caller must have an admin deployment pipelines role.
 // REQUIRED DELEGATED SCOPES Pipeline.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -996,6 +1042,9 @@ func (client *DeploymentPipelinesClient) unassignWorkspaceFromStageCreateRequest
 
 // UpdateDeploymentPipeline - PERMISSIONS The caller must have an admin deployment pipelines role.
 // REQUIRED DELEGATED SCOPES Pipeline.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1060,6 +1109,9 @@ func (client *DeploymentPipelinesClient) updateDeploymentPipelineHandleResponse(
 
 // UpdateDeploymentPipelineStage - PERMISSIONS The caller must have an admin deployment pipelines role.
 // REQUIRED DELEGATED SCOPES Pipeline.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1144,6 +1196,9 @@ func (client *DeploymentPipelinesClient) updateDeploymentPipelineStageHandleResp
 //
 // LIMITATIONS Maximum 300 deployed items per request.
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 10 calls/min |
+//
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
@@ -1212,6 +1267,9 @@ func (client *DeploymentPipelinesClient) beginDeployStageContent(ctx context.Con
 //
 // # REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 50 calls/min |
+//
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
@@ -1241,6 +1299,9 @@ func (client *DeploymentPipelinesClient) ListDeploymentPipelineOperations(ctx co
 // PERMISSIONS The caller must have an admin deployment pipelines role.
 //
 // # REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
+//
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 50 calls/min |
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
@@ -1275,6 +1336,9 @@ func (client *DeploymentPipelinesClient) ListDeploymentPipelineRoleAssignments(c
 //
 // # REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 50 calls/min |
+//
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
@@ -1306,6 +1370,9 @@ func (client *DeploymentPipelinesClient) ListDeploymentPipelineStageItems(ctx co
 //
 // # REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 50 calls/min |
+//
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
@@ -1332,7 +1399,12 @@ func (client *DeploymentPipelinesClient) ListDeploymentPipelineStages(ctx contex
 }
 
 // ListDeploymentPipelines - returns array of DeploymentPipeline from all pages.
-// REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
+// PERMISSIONS The caller must have access to the deployment pipelines.
+//
+// # REQUIRED DELEGATED SCOPES Pipeline.Read.All or Pipeline.ReadWrite.All
+//
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 50 calls/min |
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

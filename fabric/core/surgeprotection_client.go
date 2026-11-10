@@ -550,6 +550,9 @@ func (client *SurgeProtectionClient) getBlockedActorHandleResponse(resp *http.Re
 // configured surge protection returns state set to Disabled with the threshold properties omitted.
 // PERMISSIONS The caller must have administrator permissions on the capacity.
 // REQUIRED DELEGATED SCOPES Capacity.Read.All or Capacity.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1027,6 +1030,9 @@ func (client *SurgeProtectionClient) updateBlockedActorHandleResponse(resp *http
 // UpdateCapacitySurgeProtection - Updates the surge protection configuration for the specified capacity.
 // PERMISSIONS The caller must have administrator permissions on the capacity.
 // REQUIRED DELEGATED SCOPES Capacity.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]

@@ -7098,6 +7098,10 @@ func (testsuite *FakeTestSuite) TestOneLakeSettings_GetSettings() {
 			},
 			Status: to.Ptr("Enabled"),
 		},
+		FileSoftDelete: &core.EnabledOneLakeFileSoftDeleteSettings{
+			Status:                to.Ptr(core.OneLakeFileSoftDeleteStatusEnabled),
+			RetentionPeriodInDays: to.Ptr[int32](7),
+		},
 		ImmutabilityPolicies: []core.ImmutabilityPolicy{
 			{
 				RetentionDays: to.Ptr[int32](30),
@@ -7131,6 +7135,9 @@ func (testsuite *FakeTestSuite) TestOneLakeSettings_GetSettings() {
 	exampleRes = core.GetOneLakeSettingsResponse{
 		Diagnostics: &core.OneLakeDiagnosticSettings{
 			Status: to.Ptr("Disabled"),
+		},
+		FileSoftDelete: &core.DisabledOneLakeFileSoftDeleteSettings{
+			Status: to.Ptr(core.OneLakeFileSoftDeleteStatusDisabled),
 		},
 		Lifecycle: &core.GetOneLakeSettingsResponseLifecycle{
 			DefaultTier: to.Ptr(core.OneLakeAccessTierHot),
@@ -7167,6 +7174,10 @@ func (testsuite *FakeTestSuite) TestOneLakeSettings_GetSettings() {
 			},
 			Status: to.Ptr("Enabled"),
 		},
+		FileSoftDelete: &core.EnabledOneLakeFileSoftDeleteSettings{
+			Status:                to.Ptr(core.OneLakeFileSoftDeleteStatusEnabled),
+			RetentionPeriodInDays: to.Ptr[int32](7),
+		},
 		Lifecycle: &core.GetOneLakeSettingsResponseLifecycle{
 			DefaultTier: to.Ptr(core.OneLakeAccessTierCool),
 			Policy:      to.Ptr(core.OneLakeLifecyclePolicyStatusActive),
@@ -7202,6 +7213,10 @@ func (testsuite *FakeTestSuite) TestOneLakeSettings_GetSettings() {
 			},
 			Status: to.Ptr("Enabled"),
 		},
+		FileSoftDelete: &core.EnabledOneLakeFileSoftDeleteSettings{
+			Status:                to.Ptr(core.OneLakeFileSoftDeleteStatusEnabled),
+			RetentionPeriodInDays: to.Ptr[int32](30),
+		},
 		ImmutabilityPolicies: []core.ImmutabilityPolicy{
 			{
 				RetentionDays: to.Ptr[int32](30),
@@ -7233,6 +7248,10 @@ func (testsuite *FakeTestSuite) TestOneLakeSettings_GetSettings() {
 	exampleRes = core.GetOneLakeSettingsResponse{
 		Diagnostics: &core.OneLakeDiagnosticSettings{
 			Status: to.Ptr("Disabled"),
+		},
+		FileSoftDelete: &core.EnabledOneLakeFileSoftDeleteSettings{
+			Status:                to.Ptr(core.OneLakeFileSoftDeleteStatusEnabled),
+			RetentionPeriodInDays: to.Ptr[int32](7),
 		},
 		Lifecycle: &core.GetOneLakeSettingsResponseLifecycle{
 			DefaultTier: to.Ptr(core.OneLakeAccessTierHot),
@@ -7499,6 +7518,52 @@ func (testsuite *FakeTestSuite) TestOneLakeSettings_ModifyAccessTimeTracking() {
 	}
 
 	_, err = client.ModifyAccessTimeTracking(ctx, exampleWorkspaceID, exampleModifyAccessTimeTrackingRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+}
+
+func (testsuite *FakeTestSuite) TestOneLakeSettings_ModifyFileSoftDelete() {
+	// From example
+	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Disable file soft-delete example"},
+	})
+	var exampleWorkspaceID string
+	var exampleModifyOneLakeFileSoftDeleteRequest core.ModifyOneLakeFileSoftDeleteRequestClassification
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
+	exampleModifyOneLakeFileSoftDeleteRequest = &core.DisableOneLakeFileSoftDeleteRequest{
+		Status: to.Ptr(core.OneLakeFileSoftDeleteStatusDisabled),
+	}
+
+	testsuite.serverFactory.OneLakeSettingsServer.ModifyFileSoftDelete = func(ctx context.Context, workspaceID string, modifyOneLakeFileSoftDeleteRequest core.ModifyOneLakeFileSoftDeleteRequestClassification, options *core.OneLakeSettingsClientModifyFileSoftDeleteOptions) (resp azfake.Responder[core.OneLakeSettingsClientModifyFileSoftDeleteResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleModifyOneLakeFileSoftDeleteRequest, modifyOneLakeFileSoftDeleteRequest))
+		resp = azfake.Responder[core.OneLakeSettingsClientModifyFileSoftDeleteResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeSettingsClientModifyFileSoftDeleteResponse{}, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewOneLakeSettingsClient()
+	_, err = client.ModifyFileSoftDelete(ctx, exampleWorkspaceID, exampleModifyOneLakeFileSoftDeleteRequest, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Enable file soft-delete with a custom retention period example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff227"
+	exampleModifyOneLakeFileSoftDeleteRequest = &core.EnableOneLakeFileSoftDeleteRequest{
+		Status:                to.Ptr(core.OneLakeFileSoftDeleteStatusEnabled),
+		RetentionPeriodInDays: to.Ptr[int32](14),
+	}
+
+	testsuite.serverFactory.OneLakeSettingsServer.ModifyFileSoftDelete = func(ctx context.Context, workspaceID string, modifyOneLakeFileSoftDeleteRequest core.ModifyOneLakeFileSoftDeleteRequestClassification, options *core.OneLakeSettingsClientModifyFileSoftDeleteOptions) (resp azfake.Responder[core.OneLakeSettingsClientModifyFileSoftDeleteResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().True(reflect.DeepEqual(exampleModifyOneLakeFileSoftDeleteRequest, modifyOneLakeFileSoftDeleteRequest))
+		resp = azfake.Responder[core.OneLakeSettingsClientModifyFileSoftDeleteResponse]{}
+		resp.SetResponse(http.StatusOK, core.OneLakeSettingsClientModifyFileSoftDeleteResponse{}, nil)
+		return
+	}
+
+	_, err = client.ModifyFileSoftDelete(ctx, exampleWorkspaceID, exampleModifyOneLakeFileSoftDeleteRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 }
 

@@ -6,6 +6,19 @@
 
 package eventstream
 
+// AdvancedFilterClassification provides polymorphic access to related types.
+// Call the interface's GetAdvancedFilter() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *AdvancedFilter, *BoolEqualsAdvancedFilter, *IsNotNullAdvancedFilter, *IsNullOrUndefinedAdvancedFilter, *NumberGreaterThanAdvancedFilter,
+// - *NumberGreaterThanOrEqualsAdvancedFilter, *NumberInAdvancedFilter, *NumberInRangeAdvancedFilter, *NumberLessThanAdvancedFilter,
+// - *NumberLessThanOrEqualsAdvancedFilter, *NumberNotInAdvancedFilter, *NumberNotInRangeAdvancedFilter, *StringBeginsWithAdvancedFilter,
+// - *StringContainsAdvancedFilter, *StringEndsWithAdvancedFilter, *StringInAdvancedFilter, *StringNotBeginsWithAdvancedFilter,
+// - *StringNotContainsAdvancedFilter, *StringNotEndsWithAdvancedFilter, *StringNotInAdvancedFilter
+type AdvancedFilterClassification interface {
+	// GetAdvancedFilter returns the AdvancedFilter content of the underlying type.
+	GetAdvancedFilter() *AdvancedFilter
+}
+
 // CertificateResourceClassification provides polymorphic access to related types.
 // Call the interface's GetCertificateResource() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
@@ -122,13 +135,14 @@ type SolacePubSubSourcePropertiesClassification interface {
 // - *AmazonKinesisSourceResponse, *AmazonMSKKafkaSourceResponse, *ApacheKafkaSourceResponse, *AzureBlobStorageEventsSourceResponse,
 // - *AzureCosmosDBCDCSourceResponse, *AzureDataExplorerSourceResponse, *AzureEventGridNamespaceSourceResponse, *AzureEventHubExtendedSourceResponse,
 // - *AzureEventHubSourceResponse, *AzureIoTHubExtendedSourceResponse, *AzureIoTHubSourceResponse, *AzureSQLDBCDCSourceResponse,
-// - *AzureSQLMIDBCDCSourceResponse, *AzureServiceBusSourceResponse, *ConfluentCloudSourceResponse, *CriblSourceResponse,
-// - *CustomEndpointSourceResponse, *FabricAnomalyDetectionEventsSourceResponse, *FabricCapacityOperationEventsSourceResponse,
-// - *FabricCapacityOverviewEventsSourceResponse, *FabricJobEventsSourceResponse, *FabricOneLakeEventsSourceResponse, *FabricWorkspaceItemEventsSourceResponse,
-// - *GooglePubSubSourceResponse, *HTTPSourceResponse, *LakehouseChangeFeedSourceResponse, *MirroredDatabaseChangeFeedSourceResponse,
-// - *MongoDBCDCSourceResponse, *MqttSourceResponse, *MySQLCDCSourceResponse, *OracleDBCDCSourceResponse, *PostgreSQLCDCSourceResponse,
-// - *RealTimeWeatherSourceResponse, *ReferenceLakehouseSourceResponse, *SAPDatasphereSourceResponse, *SQLServerOnVMDBCDCSourceResponse,
-// - *SampleDataSourceResponse, *SolacePubSubSourceResponse, *SourceResponse
+// - *AzureSQLMIDBCDCSourceResponse, *AzureServiceBusSourceResponse, *BusinessEventsSourceResponse, *ConfluentCloudSourceResponse,
+// - *CriblSourceResponse, *CustomEndpointSourceResponse, *CustomStreamConnectorSourceResponse, *FabricAnomalyDetectionEventsSourceResponse,
+// - *FabricCapacityOperationEventsSourceResponse, *FabricCapacityOverviewEventsSourceResponse, *FabricJobEventsSourceResponse,
+// - *FabricOneLakeEventsSourceResponse, *FabricWorkspaceItemEventsSourceResponse, *GooglePubSubSourceResponse, *HTTPSourceResponse,
+// - *LakehouseChangeFeedSourceResponse, *MirroredDatabaseChangeFeedSourceResponse, *MongoDBCDCSourceResponse, *MqttSourceResponse,
+// - *MySQLCDCSourceResponse, *OracleDBCDCSourceResponse, *PostgreSQLCDCSourceResponse, *RealTimeWeatherSourceResponse, *ReferenceLakehouseSourceResponse,
+// - *SAPDatasphereSourceResponse, *SQLServerOnVMDBCDCSourceResponse, *SampleDataSourceResponse, *SolacePubSubSourceResponse,
+// - *SourceResponse
 type SourceResponseClassification interface {
 	// GetSourceResponse returns the SourceResponse content of the underlying type.
 	GetSourceResponse() *SourceResponse
