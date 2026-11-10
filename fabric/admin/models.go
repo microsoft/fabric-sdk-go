@@ -497,23 +497,6 @@ type Domain struct {
 	ParentDomainID *string
 }
 
-type DomainPreview struct {
-	// REQUIRED; The name of the domain.
-	DisplayName *string
-
-	// REQUIRED; The domain object ID.
-	ID *string
-
-	// The domain contributors scope.
-	ContributorsScope *ContributorsScopeType
-
-	// The description of the domain.
-	Description *string
-
-	// The domain parent object ID.
-	ParentDomainID *string
-}
-
 // DomainRoleAssignment - Represents a domain role assignment.
 type DomainRoleAssignment struct {
 	// REQUIRED; The principal.
@@ -650,12 +633,6 @@ type DomainWorkspaces struct {
 type DomainsResponse struct {
 	// The list of domains.
 	Domains []Domain
-}
-
-// DomainsResponsePreview - This is a response wrapper for a list of all domains.
-type DomainsResponsePreview struct {
-	// The list of domains.
-	Domains []DomainPreview
 }
 
 // DynamicCondition - Dynamic condition that evaluates a target property using a predicate.
@@ -1832,17 +1809,6 @@ type UpdateDomainRequest struct {
 	// The domain default sensitivity label.
 	// To remove the defaultLabelId from a domain, set its value to an empty UUID in your request: "00000000-0000-0000-0000-000000000000".
 	DefaultLabelID *string
-
-	// The domain description. The description cannot contain more than 256 characters.
-	Description *string
-
-	// The domain display name. The display name cannot contain more than 40 characters.
-	DisplayName *string
-}
-
-type UpdateDomainRequestPreview struct {
-	// The domain contributors scope.
-	ContributorsScope *ContributorsScopeType
 
 	// The domain description. The description cannot contain more than 256 characters.
 	Description *string

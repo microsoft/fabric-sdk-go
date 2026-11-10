@@ -41,6 +41,10 @@ type OneLakeSettingsServer struct {
 	// HTTP status codes to indicate success: http.StatusOK, http.StatusAccepted, http.StatusNoContent
 	BeginModifyDiagnostics func(ctx context.Context, workspaceID string, options *core.OneLakeSettingsClientBeginModifyDiagnosticsOptions) (resp azfake.PollerResponder[core.OneLakeSettingsClientModifyDiagnosticsResponse], errResp azfake.ErrorResponder)
 
+	// ModifyFileSoftDelete is the fake for method OneLakeSettingsClient.ModifyFileSoftDelete
+	// HTTP status codes to indicate success: http.StatusOK
+	ModifyFileSoftDelete func(ctx context.Context, workspaceID string, modifyOneLakeFileSoftDeleteRequest core.ModifyOneLakeFileSoftDeleteRequestClassification, options *core.OneLakeSettingsClientModifyFileSoftDeleteOptions) (resp azfake.Responder[core.OneLakeSettingsClientModifyFileSoftDeleteResponse], errResp azfake.ErrorResponder)
+
 	// ModifyImmutabilityPolicy is the fake for method OneLakeSettingsClient.ModifyImmutabilityPolicy
 	// HTTP status codes to indicate success: http.StatusOK
 	ModifyImmutabilityPolicy func(ctx context.Context, workspaceID string, immutabilityPolicyRequest core.ImmutabilityPolicyRequest, options *core.OneLakeSettingsClientModifyImmutabilityPolicyOptions) (resp azfake.Responder[core.OneLakeSettingsClientModifyImmutabilityPolicyResponse], errResp azfake.ErrorResponder)
@@ -96,6 +100,8 @@ func (o *OneLakeSettingsServerTransport) dispatchToMethodFake(req *http.Request,
 				res.resp, res.err = o.dispatchModifyDefaultTier(req)
 			case "OneLakeSettingsClient.BeginModifyDiagnostics":
 				res.resp, res.err = o.dispatchBeginModifyDiagnostics(req)
+			case "OneLakeSettingsClient.ModifyFileSoftDelete":
+				res.resp, res.err = o.dispatchModifyFileSoftDelete(req)
 			case "OneLakeSettingsClient.ModifyImmutabilityPolicy":
 				res.resp, res.err = o.dispatchModifyImmutabilityPolicy(req)
 			default:
@@ -266,6 +272,43 @@ func (o *OneLakeSettingsServerTransport) dispatchBeginModifyDiagnostics(req *htt
 		o.beginModifyDiagnostics.remove(req)
 	}
 
+	return resp, nil
+}
+
+func (o *OneLakeSettingsServerTransport) dispatchModifyFileSoftDelete(req *http.Request) (*http.Response, error) {
+	if o.srv.ModifyFileSoftDelete == nil {
+		return nil, &nonRetriableError{errors.New("fake for method ModifyFileSoftDelete not implemented")}
+	}
+	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/onelake/settings/modifyFileSoftDelete`
+	regex := regexp.MustCompile(regexStr)
+	matches := regex.FindStringSubmatch(req.URL.EscapedPath())
+	if len(matches) < 2 {
+		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
+	}
+	raw, err := readRequestBody(req)
+	if err != nil {
+		return nil, err
+	}
+	body, err := unmarshalModifyOneLakeFileSoftDeleteRequestClassification(raw)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
+	if err != nil {
+		return nil, err
+	}
+	respr, errRespr := o.srv.ModifyFileSoftDelete(req.Context(), workspaceIDParam, body, nil)
+	if respErr := server.GetError(errRespr, req); respErr != nil {
+		return nil, respErr
+	}
+	respContent := server.GetResponseContent(respr)
+	if !contains([]int{http.StatusOK}, respContent.HTTPStatus) {
+		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", respContent.HTTPStatus)}
+	}
+	resp, err := server.NewResponse(respContent, req, nil)
+	if err != nil {
+		return nil, err
+	}
 	return resp, nil
 }
 

@@ -176,7 +176,7 @@ func (client *ItemsClient) listItemAccessDetailsHandleResponse(resp *http.Respon
 // NewListItemsPager - > [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes
 // only. It may change based on feedback and is not recommended for production use.
 // This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records can be returned per request.
-// With the continuous token provided in the response, you can get the next
+// With the continuation token provided in the response, you can get the next
 // 10,000 records.
 // Page order:
 // 1. Fabric items
@@ -188,7 +188,11 @@ func (client *ItemsClient) listItemAccessDetailsHandleResponse(resp *http.Respon
 // 7. Dataflows
 // PERMISSIONS The caller must be a Fabric administrator or authenticate using a service principal.
 // REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
-// LIMITATIONS Maximum 200 requests per hour.
+// LIMITATIONS This endpoint is limited to 10 requests per minute per tenant and caller identity type (user or service principal),
+// as well as a maximum of 200 requests per hour per tenant. Requests from
+// different service principals in the same tenant share the per-minute allowance. Each request for a continuation page counts
+// as a separate request. Coordinate and pace requests, including pagination,
+// across applications in the same tenant. On HTTP 429, wait for the number of seconds specified in Retry-After before retrying.
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -263,7 +267,7 @@ func (client *ItemsClient) listItemsHandleResponse(resp *http.Response) (ItemsCl
 // ListItems - returns array of Item from all pages.
 // >  [!NOTE] This API is part of a Preview release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
 //
-// This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records can be returned per request. With the continuous token provided in the response, you can get the next
+// This API supports pagination [/rest/api/fabric/articles/pagination]. A maximum of 10,000 records can be returned per request. With the continuation token provided in the response, you can get the next
 // 10,000 records.
 //
 // Page order:
@@ -280,7 +284,9 @@ func (client *ItemsClient) listItemsHandleResponse(resp *http.Response) (ItemsCl
 //
 // # REQUIRED DELEGATED SCOPES Tenant.Read.All or Tenant.ReadWrite.All
 //
-// LIMITATIONS Maximum 200 requests per hour.
+// LIMITATIONS This endpoint is limited to 10 requests per minute per tenant and caller identity type (user or service principal), as well as a maximum of 200 requests per hour per tenant. Requests from
+// different service principals in the same tenant share the per-minute allowance. Each request for a continuation page counts as a separate request. Coordinate and pace requests, including pagination,
+// across applications in the same tenant. On HTTP 429, wait for the number of seconds specified in Retry-After before retrying.
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

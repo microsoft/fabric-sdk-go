@@ -736,6 +736,11 @@ type OneLakeSettingsClientModifyDiagnosticsResponse struct {
 	// placeholder for future response values
 }
 
+// OneLakeSettingsClientModifyFileSoftDeleteResponse contains the response from method OneLakeSettingsClient.ModifyFileSoftDelete.
+type OneLakeSettingsClientModifyFileSoftDeleteResponse struct {
+	// placeholder for future response values
+}
+
 // OneLakeSettingsClientModifyImmutabilityPolicyResponse contains the response from method OneLakeSettingsClient.ModifyImmutabilityPolicy.
 type OneLakeSettingsClientModifyImmutabilityPolicyResponse struct {
 	// placeholder for future response values

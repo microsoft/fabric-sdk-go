@@ -6,6 +6,24 @@
 
 package copyjob
 
+// BackgroundJobsClientDeleteExecuteScheduleOptions contains the optional parameters for the BackgroundJobsClient.DeleteExecuteSchedule
+// method.
+type BackgroundJobsClientDeleteExecuteScheduleOptions struct {
+	// placeholder for future optional parameters
+}
+
+// BackgroundJobsClientGetExecuteJobInstanceOptions contains the optional parameters for the BackgroundJobsClient.GetExecuteJobInstance
+// method.
+type BackgroundJobsClientGetExecuteJobInstanceOptions struct {
+	// placeholder for future optional parameters
+}
+
+// BackgroundJobsClientGetExecuteScheduleOptions contains the optional parameters for the BackgroundJobsClient.GetExecuteSchedule
+// method.
+type BackgroundJobsClientGetExecuteScheduleOptions struct {
+	// placeholder for future optional parameters
+}
+
 // BackgroundJobsClientListExecuteJobInstancesOptions contains the optional parameters for the BackgroundJobsClient.NewListExecuteJobInstancesPager
 // method.
 type BackgroundJobsClientListExecuteJobInstancesOptions struct {
@@ -13,9 +31,28 @@ type BackgroundJobsClientListExecuteJobInstancesOptions struct {
 	ContinuationToken *string
 }
 
+// BackgroundJobsClientListExecuteSchedulesOptions contains the optional parameters for the BackgroundJobsClient.NewListExecuteSchedulesPager
+// method.
+type BackgroundJobsClientListExecuteSchedulesOptions struct {
+	// A token for retrieving the next page of results.
+	ContinuationToken *string
+}
+
 // BackgroundJobsClientRunOnDemandExecuteOptions contains the optional parameters for the BackgroundJobsClient.RunOnDemandExecute
 // method.
 type BackgroundJobsClientRunOnDemandExecuteOptions struct {
+	// placeholder for future optional parameters
+}
+
+// BackgroundJobsClientScheduleExecuteOptions contains the optional parameters for the BackgroundJobsClient.ScheduleExecute
+// method.
+type BackgroundJobsClientScheduleExecuteOptions struct {
+	// placeholder for future optional parameters
+}
+
+// BackgroundJobsClientUpdateExecuteScheduleOptions contains the optional parameters for the BackgroundJobsClient.UpdateExecuteSchedule
+// method.
+type BackgroundJobsClientUpdateExecuteScheduleOptions struct {
 	// placeholder for future optional parameters
 }
 

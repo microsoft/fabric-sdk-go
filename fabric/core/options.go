@@ -826,6 +826,12 @@ type OneLakeSettingsClientModifyDefaultTierOptions struct {
 	// placeholder for future optional parameters
 }
 
+// OneLakeSettingsClientModifyFileSoftDeleteOptions contains the optional parameters for the OneLakeSettingsClient.ModifyFileSoftDelete
+// method.
+type OneLakeSettingsClientModifyFileSoftDeleteOptions struct {
+	// placeholder for future optional parameters
+}
+
 // OneLakeSettingsClientModifyImmutabilityPolicyOptions contains the optional parameters for the OneLakeSettingsClient.ModifyImmutabilityPolicy
 // method.
 type OneLakeSettingsClientModifyImmutabilityPolicyOptions struct {

@@ -46,6 +46,10 @@ func ExampleOneLakeSettingsClient_GetSettings_getOneLakeSettingsWithAllSettingsE
 	// 		},
 	// 		Status: to.Ptr("Enabled"),
 	// 	},
+	// 	FileSoftDelete: &core.EnabledOneLakeFileSoftDeleteSettings{
+	// 		Status: to.Ptr(core.OneLakeFileSoftDeleteStatusEnabled),
+	// 		RetentionPeriodInDays: to.Ptr[int32](7),
+	// 	},
 	// 	ImmutabilityPolicies: []core.ImmutabilityPolicy{
 	// 		{
 	// 			RetentionDays: to.Ptr[int32](30),
@@ -80,6 +84,9 @@ func ExampleOneLakeSettingsClient_GetSettings_getOneLakeSettingsWithDiagnosticsD
 	// res.GetOneLakeSettingsResponse = core.GetOneLakeSettingsResponse{
 	// 	Diagnostics: &core.OneLakeDiagnosticSettings{
 	// 		Status: to.Ptr("Disabled"),
+	// 	},
+	// 	FileSoftDelete: &core.DisabledOneLakeFileSoftDeleteSettings{
+	// 		Status: to.Ptr(core.OneLakeFileSoftDeleteStatusDisabled),
 	// 	},
 	// 	Lifecycle: &core.GetOneLakeSettingsResponseLifecycle{
 	// 		DefaultTier: to.Ptr(core.OneLakeAccessTierHot),
@@ -118,6 +125,10 @@ func ExampleOneLakeSettingsClient_GetSettings_getOneLakeSettingsWithDiagnosticsE
 	// 		},
 	// 		Status: to.Ptr("Enabled"),
 	// 	},
+	// 	FileSoftDelete: &core.EnabledOneLakeFileSoftDeleteSettings{
+	// 		Status: to.Ptr(core.OneLakeFileSoftDeleteStatusEnabled),
+	// 		RetentionPeriodInDays: to.Ptr[int32](7),
+	// 	},
 	// 	Lifecycle: &core.GetOneLakeSettingsResponseLifecycle{
 	// 		DefaultTier: to.Ptr(core.OneLakeAccessTierCool),
 	// 		Policy: to.Ptr(core.OneLakeLifecyclePolicyStatusActive),
@@ -155,6 +166,10 @@ func ExampleOneLakeSettingsClient_GetSettings_getOneLakeSettingsWithImmutability
 	// 		},
 	// 		Status: to.Ptr("Enabled"),
 	// 	},
+	// 	FileSoftDelete: &core.EnabledOneLakeFileSoftDeleteSettings{
+	// 		Status: to.Ptr(core.OneLakeFileSoftDeleteStatusEnabled),
+	// 		RetentionPeriodInDays: to.Ptr[int32](30),
+	// 	},
 	// 	ImmutabilityPolicies: []core.ImmutabilityPolicy{
 	// 		{
 	// 			RetentionDays: to.Ptr[int32](30),
@@ -188,6 +203,10 @@ func ExampleOneLakeSettingsClient_GetSettings_getOneLakeSettingsWithoutImmutabil
 	// res.GetOneLakeSettingsResponse = core.GetOneLakeSettingsResponse{
 	// 	Diagnostics: &core.OneLakeDiagnosticSettings{
 	// 		Status: to.Ptr("Disabled"),
+	// 	},
+	// 	FileSoftDelete: &core.EnabledOneLakeFileSoftDeleteSettings{
+	// 		Status: to.Ptr(core.OneLakeFileSoftDeleteStatusEnabled),
+	// 		RetentionPeriodInDays: to.Ptr[int32](7),
 	// 	},
 	// 	Lifecycle: &core.GetOneLakeSettingsResponseLifecycle{
 	// 		DefaultTier: to.Ptr(core.OneLakeAccessTierHot),
@@ -429,6 +448,45 @@ func ExampleOneLakeSettingsClient_ModifyAccessTimeTracking_enableAccessTimeTrack
 	}
 	_, err = clientFactory.NewOneLakeSettingsClient().ModifyAccessTimeTracking(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff227", core.ModifyAccessTimeTrackingRequest{
 		Status: to.Ptr(core.AccessTimeTrackingStatusEnabled),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleOneLakeSettingsClient_ModifyFileSoftDelete_disableFileSoftDeleteExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewOneLakeSettingsClient().ModifyFileSoftDelete(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff227", &core.DisableOneLakeFileSoftDeleteRequest{
+		Status: to.Ptr(core.OneLakeFileSoftDeleteStatusDisabled),
+	}, nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+}
+
+// Generated from example definition
+func ExampleOneLakeSettingsClient_ModifyFileSoftDelete_enableFileSoftDeleteWithACustomRetentionPeriodExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := core.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	_, err = clientFactory.NewOneLakeSettingsClient().ModifyFileSoftDelete(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff227", &core.EnableOneLakeFileSoftDeleteRequest{
+		Status:                to.Ptr(core.OneLakeFileSoftDeleteStatusEnabled),
+		RetentionPeriodInDays: to.Ptr[int32](14),
 	}, nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)

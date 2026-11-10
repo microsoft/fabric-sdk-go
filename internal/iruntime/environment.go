@@ -27,7 +27,7 @@ func resolveEnvironment(environment Environment) (environmentConfiguration, erro
 	case EnvironmentGCCHigh:
 		return environmentConfiguration{
 			endpoint: "https://highapi.fabric.microsoft.us",
-			audience: "https://api.fabric.microsoft.us",
+			audience: "https://high.analysis.usgovcloudapi.net/powerbi/api",
 		}, nil
 	default:
 		return environmentConfiguration{}, fmt.Errorf("unsupported Fabric environment %d", environment)

@@ -29,8 +29,10 @@ type OneLakeSettingsClient struct {
 }
 
 // GetSettings - PERMISSIONS The caller must have an admin workspace role.
-// REQUIRED DELEGATED SCOPES
-// OneLake.Read.All or OneLake.ReadWrite.All
+// REQUIRED DELEGATED SCOPES OneLake.Read.All or OneLake.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -94,6 +96,9 @@ func (client *OneLakeSettingsClient) getSettingsHandleResponse(resp *http.Respon
 // such as checking properties, metadata, or tags, do not. Changes take effect immediately.
 // PERMISSIONS The caller must have an admin workspace role.
 // REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -150,6 +155,9 @@ func (client *OneLakeSettingsClient) modifyAccessTimeTrackingCreateRequest(ctx c
 // for any transactions resulting from movement between tiers.
 // PERMISSIONS The caller must have an admin workspace role.
 // REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -218,9 +226,10 @@ func (client *OneLakeSettingsClient) modifyDefaultTierHandleResponse(resp *http.
 //
 // * The caller must have contributor or above workspace role on the destination workspace.
 //
-// # REQUIRED DELEGATED SCOPES
-//
-// OneLake.ReadWrite.All
+// REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -243,9 +252,10 @@ func (client *OneLakeSettingsClient) BeginModifyDiagnostics(ctx context.Context,
 //
 // * The caller must have contributor or above workspace role on the destination workspace.
 //
-// # REQUIRED DELEGATED SCOPES
-//
-// OneLake.ReadWrite.All
+// REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -297,6 +307,74 @@ func (client *OneLakeSettingsClient) modifyDiagnosticsCreateRequest(ctx context.
 	return req, nil
 }
 
+// ModifyFileSoftDelete - Modifies the file soft-delete retention settings for OneLake files in the workspace. When enabled,
+// deleted files are retained for the specified period before permanent deletion. When disabled, files
+// deleted after disabling bypass retention and are permanently removed immediately. Files already in a soft-deleted state
+// retain their existing expiry.
+// Repeating the same complete settings requests the same target configuration, but is not a no-op. Keeping the status Enabled
+// while changing the retention period changes the policy.
+// This operation completes synchronously when the requested policy has been applied to the workspace's main storage account.
+// Audit-storage synchronization is an internal OneLake concern, outside this
+// operation's completion contract. A failed response does not guarantee that the policy is unchanged; retrying the same complete
+// settings requests the same target configuration.
+// PERMISSIONS The caller must have an admin workspace role.
+// REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// LIMITATIONS
+// * This setting does not affect the retention period for mirrored items.
+// * An updated retention period applies only to data deleted after the change - files already in a soft-deleted state retain
+// their original expiry.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - modifyOneLakeFileSoftDeleteRequest - The file soft-delete settings to apply.
+//   - options - OneLakeSettingsClientModifyFileSoftDeleteOptions contains the optional parameters for the OneLakeSettingsClient.ModifyFileSoftDelete
+//     method.
+func (client *OneLakeSettingsClient) ModifyFileSoftDelete(ctx context.Context, workspaceID string, modifyOneLakeFileSoftDeleteRequest ModifyOneLakeFileSoftDeleteRequestClassification, options *OneLakeSettingsClientModifyFileSoftDeleteOptions) (OneLakeSettingsClientModifyFileSoftDeleteResponse, error) {
+	var err error
+	const operationName = "core.OneLakeSettingsClient.ModifyFileSoftDelete"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.modifyFileSoftDeleteCreateRequest(ctx, workspaceID, modifyOneLakeFileSoftDeleteRequest, options)
+	if err != nil {
+		return OneLakeSettingsClientModifyFileSoftDeleteResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return OneLakeSettingsClientModifyFileSoftDeleteResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = NewResponseError(httpResp)
+		return OneLakeSettingsClientModifyFileSoftDeleteResponse{}, err
+	}
+	return OneLakeSettingsClientModifyFileSoftDeleteResponse{}, nil
+}
+
+// modifyFileSoftDeleteCreateRequest creates the ModifyFileSoftDelete request.
+func (client *OneLakeSettingsClient) modifyFileSoftDeleteCreateRequest(ctx context.Context, workspaceID string, modifyOneLakeFileSoftDeleteRequest ModifyOneLakeFileSoftDeleteRequestClassification, _ *OneLakeSettingsClientModifyFileSoftDeleteOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/onelake/settings/modifyFileSoftDelete"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, modifyOneLakeFileSoftDeleteRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // ModifyImmutabilityPolicy - Set immutability policy for data stored in OneLake. Currently, this feature supports configuring
 // a retention period specifically for diagnostic logs within a workspace, ensuring they remain unaltered
 // once written.
@@ -305,6 +383,9 @@ func (client *OneLakeSettingsClient) modifyDiagnosticsCreateRequest(ctx context.
 // LIMITATIONS Can be applied only if:
 // * The current workspace is storing diagnostic logs from other workspaces.
 // * There is already a retention period applied to the diagnostics logs in the workspace
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -368,9 +449,10 @@ func (client *OneLakeSettingsClient) modifyImmutabilityPolicyCreateRequest(ctx c
 //
 //   - The caller must have contributor or above workspace role on the destination workspace.
 //
-//     REQUIRED DELEGATED SCOPES
+// # REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
 //
-// # OneLake.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 50 calls/min |
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

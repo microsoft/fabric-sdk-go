@@ -17,140 +17,6 @@ import (
 )
 
 // Generated from example definition
-func ExampleDomainsClient_ListDomainsPreview_getAllNonEmptyDomainsExample() {
-	cred, err := azidentity.NewDefaultAzureCredential(nil)
-	if err != nil {
-		log.Fatalf("failed to obtain a credential: %v", err)
-	}
-	ctx := context.Background()
-	clientFactory, err := admin.NewClientFactory(cred, nil, nil)
-	if err != nil {
-		log.Fatalf("failed to create client: %v", err)
-	}
-	res, err := clientFactory.NewDomainsClient().ListDomainsPreview(ctx, true, &admin.DomainsClientListDomainsPreviewOptions{NonEmptyOnly: to.Ptr(true)})
-	if err != nil {
-		log.Fatalf("failed to finish the request: %v", err)
-	}
-	// You could use response here. We use blank identifier for just demo purposes.
-	_ = res
-	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
-	// res.DomainsResponsePreview = admin.DomainsResponsePreview{
-	// 	Domains: []admin.DomainPreview{
-	// 		{
-	// 			Description: to.Ptr("This domain is used for identifying financial data and reports."),
-	// 			DisplayName: to.Ptr("Finance"),
-	// 			ID: to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
-	// 			ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAdminsOnly),
-	// 		},
-	// 		{
-	// 			Description: to.Ptr(""),
-	// 			DisplayName: to.Ptr("Human resources"),
-	// 			ID: to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
-	// 			ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
-	// 		},
-	// 		{
-	// 			Description: to.Ptr(""),
-	// 			DisplayName: to.Ptr("HR Sales"),
-	// 			ID: to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
-	// 			ParentDomainID: to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
-	// 			ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
-	// 		},
-	// 		{
-	// 			DisplayName: to.Ptr("Marketing"),
-	// 			ID: to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
-	// 			ContributorsScope: to.Ptr(admin.ContributorsScopeTypeSpecificUsersAndGroups),
-	// 	}},
-	// }
-}
-
-// Generated from example definition
-func ExampleDomainsClient_ListDomainsPreview_getInfoForAllDomainsExample() {
-	cred, err := azidentity.NewDefaultAzureCredential(nil)
-	if err != nil {
-		log.Fatalf("failed to obtain a credential: %v", err)
-	}
-	ctx := context.Background()
-	clientFactory, err := admin.NewClientFactory(cred, nil, nil)
-	if err != nil {
-		log.Fatalf("failed to create client: %v", err)
-	}
-	res, err := clientFactory.NewDomainsClient().ListDomainsPreview(ctx, true, &admin.DomainsClientListDomainsPreviewOptions{NonEmptyOnly: nil})
-	if err != nil {
-		log.Fatalf("failed to finish the request: %v", err)
-	}
-	// You could use response here. We use blank identifier for just demo purposes.
-	_ = res
-	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
-	// res.DomainsResponsePreview = admin.DomainsResponsePreview{
-	// 	Domains: []admin.DomainPreview{
-	// 		{
-	// 			Description: to.Ptr("This domain is used for identifying financial data and reports."),
-	// 			DisplayName: to.Ptr("Finance"),
-	// 			ID: to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
-	// 			ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAdminsOnly),
-	// 		},
-	// 		{
-	// 			Description: to.Ptr(""),
-	// 			DisplayName: to.Ptr("Human resources"),
-	// 			ID: to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
-	// 			ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
-	// 		},
-	// 		{
-	// 			Description: to.Ptr(""),
-	// 			DisplayName: to.Ptr("HR Sales"),
-	// 			ID: to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
-	// 			ParentDomainID: to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
-	// 			ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
-	// 		},
-	// 		{
-	// 			DisplayName: to.Ptr("Marketing"),
-	// 			ID: to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
-	// 			ContributorsScope: to.Ptr(admin.ContributorsScopeTypeSpecificUsersAndGroups),
-	// 		},
-	// 		{
-	// 			Description: to.Ptr("Admins only"),
-	// 			DisplayName: to.Ptr("AdminsOnly"),
-	// 			ID: to.Ptr("17df435d-9efd-48c1-a937-7d6fd70ab26a"),
-	// 			ParentDomainID: to.Ptr("f2f6a374-789e-4d1d-9cc7-6e0b934fc529"),
-	// 			ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
-	// 		},
-	// 		{
-	// 			Description: to.Ptr(""),
-	// 			DisplayName: to.Ptr("Root"),
-	// 			ID: to.Ptr("fb765fe3-d404-4f24-9d67-5916449c4c50"),
-	// 			ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
-	// 		},
-	// 		{
-	// 			Description: to.Ptr("This domain is used for identifying legal data and reports."),
-	// 			DisplayName: to.Ptr("Legal"),
-	// 			ID: to.Ptr("bda31be4-7efe-4272-8b85-e1b2ff0f0592"),
-	// 			ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
-	// 	}},
-	// }
-}
-
-// Generated from example definition
-func ExampleDomainsClient_CreateDomainPreview() {
-	cred, err := azidentity.NewDefaultAzureCredential(nil)
-	if err != nil {
-		log.Fatalf("failed to obtain a credential: %v", err)
-	}
-	ctx := context.Background()
-	clientFactory, err := admin.NewClientFactory(cred, nil, nil)
-	if err != nil {
-		log.Fatalf("failed to create client: %v", err)
-	}
-	_, err = clientFactory.NewDomainsClient().CreateDomainPreview(ctx, true, admin.CreateDomainRequest{
-		Description:    to.Ptr("This domain is used for identifying financial data and reports."),
-		DisplayName:    to.Ptr("Finance"),
-		ParentDomainID: to.Ptr("5f6552c3-816c-43e7-8289-842f8b35f9df"),
-	}, nil)
-	if err != nil {
-		log.Fatalf("failed to finish the request: %v", err)
-	}
-}
-
-// Generated from example definition
 func ExampleDomainsClient_ListDomains_getAllNonEmptyDomainsExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -161,7 +27,7 @@ func ExampleDomainsClient_ListDomains_getAllNonEmptyDomainsExample() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewDomainsClient().ListDomains(ctx, false, &admin.DomainsClientListDomainsOptions{NonEmptyOnly: to.Ptr(true),
+	res, err := clientFactory.NewDomainsClient().ListDomains(ctx, &admin.DomainsClientListDomainsOptions{NonEmptyOnly: to.Ptr(true),
 		WithAssignedWorkspacesOnly: nil,
 	})
 	if err != nil {
@@ -207,7 +73,7 @@ func ExampleDomainsClient_ListDomains_getInfoForAllDomainsExample() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewDomainsClient().ListDomains(ctx, false, &admin.DomainsClientListDomainsOptions{NonEmptyOnly: nil,
+	res, err := clientFactory.NewDomainsClient().ListDomains(ctx, &admin.DomainsClientListDomainsOptions{NonEmptyOnly: nil,
 		WithAssignedWorkspacesOnly: nil,
 	})
 	if err != nil {
@@ -269,7 +135,7 @@ func ExampleDomainsClient_CreateDomain() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	_, err = clientFactory.NewDomainsClient().CreateDomain(ctx, false, admin.CreateDomainRequest{
+	_, err = clientFactory.NewDomainsClient().CreateDomain(ctx, admin.CreateDomainRequest{
 		Description:    to.Ptr("This domain is used for identifying financial data and reports."),
 		DisplayName:    to.Ptr("Finance"),
 		ParentDomainID: to.Ptr("5f6552c3-816c-43e7-8289-842f8b35f9df"),
@@ -277,62 +143,6 @@ func ExampleDomainsClient_CreateDomain() {
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
-}
-
-// Generated from example definition
-func ExampleDomainsClient_GetDomainPreview() {
-	cred, err := azidentity.NewDefaultAzureCredential(nil)
-	if err != nil {
-		log.Fatalf("failed to obtain a credential: %v", err)
-	}
-	ctx := context.Background()
-	clientFactory, err := admin.NewClientFactory(cred, nil, nil)
-	if err != nil {
-		log.Fatalf("failed to create client: %v", err)
-	}
-	res, err := clientFactory.NewDomainsClient().GetDomainPreview(ctx, "f2f6a374-789e-4d1d-9cc7-6e0b934fc529", true, nil)
-	if err != nil {
-		log.Fatalf("failed to finish the request: %v", err)
-	}
-	// You could use response here. We use blank identifier for just demo purposes.
-	_ = res
-	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
-	// res.DomainPreview = admin.DomainPreview{
-	// 	Description: to.Ptr("This domain is used for identifying financial data and reports."),
-	// 	DisplayName: to.Ptr("Finance"),
-	// 	ID: to.Ptr("f2f6a374-789e-4d1d-9cc7-6e0b934fc529"),
-	// 	ContributorsScope: to.Ptr(admin.ContributorsScopeTypeSpecificUsersAndGroups),
-	// }
-}
-
-// Generated from example definition
-func ExampleDomainsClient_UpdateDomainPreview() {
-	cred, err := azidentity.NewDefaultAzureCredential(nil)
-	if err != nil {
-		log.Fatalf("failed to obtain a credential: %v", err)
-	}
-	ctx := context.Background()
-	clientFactory, err := admin.NewClientFactory(cred, nil, nil)
-	if err != nil {
-		log.Fatalf("failed to create client: %v", err)
-	}
-	res, err := clientFactory.NewDomainsClient().UpdateDomainPreview(ctx, "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f", true, admin.UpdateDomainRequestPreview{
-		Description:       to.Ptr("Domain's new description"),
-		DisplayName:       to.Ptr("Domain's new name"),
-		ContributorsScope: to.Ptr(admin.ContributorsScopeTypeSpecificUsersAndGroups),
-	}, nil)
-	if err != nil {
-		log.Fatalf("failed to finish the request: %v", err)
-	}
-	// You could use response here. We use blank identifier for just demo purposes.
-	_ = res
-	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
-	// res.DomainPreview = admin.DomainPreview{
-	// 	Description: to.Ptr("Domain's new description"),
-	// 	DisplayName: to.Ptr("Domain's new name"),
-	// 	ID: to.Ptr("f2f6a374-789e-4d1d-9cc7-6e0b934fc529"),
-	// 	ContributorsScope: to.Ptr(admin.ContributorsScopeTypeSpecificUsersAndGroups),
-	// }
 }
 
 // Generated from example definition
@@ -363,7 +173,7 @@ func ExampleDomainsClient_GetDomain() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewDomainsClient().GetDomain(ctx, "f2f6a374-789e-4d1d-9cc7-6e0b934fc529", false, nil)
+	res, err := clientFactory.NewDomainsClient().GetDomain(ctx, "f2f6a374-789e-4d1d-9cc7-6e0b934fc529", nil)
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
@@ -389,7 +199,7 @@ func ExampleDomainsClient_UpdateDomain() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	res, err := clientFactory.NewDomainsClient().UpdateDomain(ctx, "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f", false, admin.UpdateDomainRequest{
+	res, err := clientFactory.NewDomainsClient().UpdateDomain(ctx, "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f", admin.UpdateDomainRequest{
 		Description:    to.Ptr("Domain's new description"),
 		DisplayName:    to.Ptr("Domain's new name"),
 		DefaultLabelID: to.Ptr("d9a6c724-a08f-429d-9fa9-9659c5181b7f"),

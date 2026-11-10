@@ -17,7 +17,7 @@ import (
 )
 
 // Generated from example definition
-func ExampleDiscoveryClient_NewListScopesBetaPager_listScopesExample() {
+func ExampleDiscoveryClient_NewListScopesPager_listScopesExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -27,7 +27,7 @@ func ExampleDiscoveryClient_NewListScopesBetaPager_listScopesExample() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewDiscoveryClient().NewListScopesBetaPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", true, "4eb6b767-e786-45ed-b7cf-d25023e52222", &mirroredcatalog.DiscoveryClientListScopesBetaOptions{Parent: []string{},
+	pager := clientFactory.NewDiscoveryClient().NewListScopesPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", "4eb6b767-e786-45ed-b7cf-d25023e52222", &mirroredcatalog.DiscoveryClientListScopesOptions{Parent: []string{},
 		Recursive:         to.Ptr(true),
 		ContinuationToken: nil,
 	})
@@ -98,7 +98,7 @@ func ExampleDiscoveryClient_NewListScopesBetaPager_listScopesExample() {
 }
 
 // Generated from example definition
-func ExampleDiscoveryClient_NewListScopesBetaPager_listScopesWithParentExample() {
+func ExampleDiscoveryClient_NewListScopesPager_listScopesWithParentExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -108,7 +108,7 @@ func ExampleDiscoveryClient_NewListScopesBetaPager_listScopesWithParentExample()
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewDiscoveryClient().NewListScopesBetaPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", true, "4eb6b767-e786-45ed-b7cf-d25023e52222", &mirroredcatalog.DiscoveryClientListScopesBetaOptions{Parent: []string{
+	pager := clientFactory.NewDiscoveryClient().NewListScopesPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", "4eb6b767-e786-45ed-b7cf-d25023e52222", &mirroredcatalog.DiscoveryClientListScopesOptions{Parent: []string{
 		"Accounting"},
 		Recursive:         nil,
 		ContinuationToken: nil,
@@ -137,7 +137,7 @@ func ExampleDiscoveryClient_NewListScopesBetaPager_listScopesWithParentExample()
 }
 
 // Generated from example definition
-func ExampleDiscoveryClient_NewListTablesBetaPager() {
+func ExampleDiscoveryClient_NewListTablesPager() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -147,7 +147,7 @@ func ExampleDiscoveryClient_NewListTablesBetaPager() {
 	if err != nil {
 		log.Fatalf("failed to create client: %v", err)
 	}
-	pager := clientFactory.NewDiscoveryClient().NewListTablesBetaPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", true, "4eb6b767-e786-45ed-b7cf-d25023e52222", &mirroredcatalog.DiscoveryClientListTablesBetaOptions{Scope: []string{
+	pager := clientFactory.NewDiscoveryClient().NewListTablesPager("cfafbeb1-8037-4d0c-896e-a46fb27ff229", "4eb6b767-e786-45ed-b7cf-d25023e52222", &mirroredcatalog.DiscoveryClientListTablesOptions{Scope: []string{
 		"Accounting",
 		"US"},
 		ContinuationToken: nil,

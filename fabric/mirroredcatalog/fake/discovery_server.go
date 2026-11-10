@@ -25,13 +25,13 @@ import (
 
 // DiscoveryServer is a fake server for instances of the mirroredcatalog.DiscoveryClient type.
 type DiscoveryServer struct {
-	// NewListScopesBetaPager is the fake for method DiscoveryClient.NewListScopesBetaPager
+	// NewListScopesPager is the fake for method DiscoveryClient.NewListScopesPager
 	// HTTP status codes to indicate success: http.StatusOK
-	NewListScopesBetaPager func(workspaceID string, beta bool, connectionID string, options *mirroredcatalog.DiscoveryClientListScopesBetaOptions) (resp azfake.PagerResponder[mirroredcatalog.DiscoveryClientListScopesBetaResponse])
+	NewListScopesPager func(workspaceID string, connectionID string, options *mirroredcatalog.DiscoveryClientListScopesOptions) (resp azfake.PagerResponder[mirroredcatalog.DiscoveryClientListScopesResponse])
 
-	// NewListTablesBetaPager is the fake for method DiscoveryClient.NewListTablesBetaPager
+	// NewListTablesPager is the fake for method DiscoveryClient.NewListTablesPager
 	// HTTP status codes to indicate success: http.StatusOK
-	NewListTablesBetaPager func(workspaceID string, beta bool, connectionID string, options *mirroredcatalog.DiscoveryClientListTablesBetaOptions) (resp azfake.PagerResponder[mirroredcatalog.DiscoveryClientListTablesBetaResponse])
+	NewListTablesPager func(workspaceID string, connectionID string, options *mirroredcatalog.DiscoveryClientListTablesOptions) (resp azfake.PagerResponder[mirroredcatalog.DiscoveryClientListTablesResponse])
 }
 
 // NewDiscoveryServerTransport creates a new instance of DiscoveryServerTransport with the provided implementation.
@@ -39,18 +39,18 @@ type DiscoveryServer struct {
 // azcore.ClientOptions.Transporter field in the client's constructor parameters.
 func NewDiscoveryServerTransport(srv *DiscoveryServer) *DiscoveryServerTransport {
 	return &DiscoveryServerTransport{
-		srv:                    srv,
-		newListScopesBetaPager: newTracker[azfake.PagerResponder[mirroredcatalog.DiscoveryClientListScopesBetaResponse]](),
-		newListTablesBetaPager: newTracker[azfake.PagerResponder[mirroredcatalog.DiscoveryClientListTablesBetaResponse]](),
+		srv:                srv,
+		newListScopesPager: newTracker[azfake.PagerResponder[mirroredcatalog.DiscoveryClientListScopesResponse]](),
+		newListTablesPager: newTracker[azfake.PagerResponder[mirroredcatalog.DiscoveryClientListTablesResponse]](),
 	}
 }
 
 // DiscoveryServerTransport connects instances of mirroredcatalog.DiscoveryClient to instances of DiscoveryServer.
 // Don't use this type directly, use NewDiscoveryServerTransport instead.
 type DiscoveryServerTransport struct {
-	srv                    *DiscoveryServer
-	newListScopesBetaPager *tracker[azfake.PagerResponder[mirroredcatalog.DiscoveryClientListScopesBetaResponse]]
-	newListTablesBetaPager *tracker[azfake.PagerResponder[mirroredcatalog.DiscoveryClientListTablesBetaResponse]]
+	srv                *DiscoveryServer
+	newListScopesPager *tracker[azfake.PagerResponder[mirroredcatalog.DiscoveryClientListScopesResponse]]
+	newListTablesPager *tracker[azfake.PagerResponder[mirroredcatalog.DiscoveryClientListTablesResponse]]
 }
 
 // Do implements the policy.Transporter interface for DiscoveryServerTransport.
@@ -78,10 +78,10 @@ func (d *DiscoveryServerTransport) dispatchToMethodFake(req *http.Request, metho
 		}
 		if !intercepted {
 			switch method {
-			case "DiscoveryClient.NewListScopesBetaPager":
-				res.resp, res.err = d.dispatchNewListScopesBetaPager(req)
-			case "DiscoveryClient.NewListTablesBetaPager":
-				res.resp, res.err = d.dispatchNewListTablesBetaPager(req)
+			case "DiscoveryClient.NewListScopesPager":
+				res.resp, res.err = d.dispatchNewListScopesPager(req)
+			case "DiscoveryClient.NewListTablesPager":
+				res.resp, res.err = d.dispatchNewListTablesPager(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -101,12 +101,12 @@ func (d *DiscoveryServerTransport) dispatchToMethodFake(req *http.Request, metho
 	}
 }
 
-func (d *DiscoveryServerTransport) dispatchNewListScopesBetaPager(req *http.Request) (*http.Response, error) {
-	if d.srv.NewListScopesBetaPager == nil {
-		return nil, &nonRetriableError{errors.New("fake for method NewListScopesBetaPager not implemented")}
+func (d *DiscoveryServerTransport) dispatchNewListScopesPager(req *http.Request) (*http.Response, error) {
+	if d.srv.NewListScopesPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListScopesPager not implemented")}
 	}
-	newListScopesBetaPager := d.newListScopesBetaPager.get(req)
-	if newListScopesBetaPager == nil {
+	newListScopesPager := d.newListScopesPager.get(req)
+	if newListScopesPager == nil {
 		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/catalogmirroring/scopes`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
@@ -115,14 +115,6 @@ func (d *DiscoveryServerTransport) dispatchNewListScopesBetaPager(req *http.Requ
 		}
 		qp := req.URL.Query()
 		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
-		if err != nil {
-			return nil, err
-		}
-		betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
-		if err != nil {
-			return nil, err
-		}
-		betaParam, err := strconv.ParseBool(betaUnescaped)
 		if err != nil {
 			return nil, err
 		}
@@ -152,41 +144,41 @@ func (d *DiscoveryServerTransport) dispatchNewListScopesBetaPager(req *http.Requ
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
-		var options *mirroredcatalog.DiscoveryClientListScopesBetaOptions
+		var options *mirroredcatalog.DiscoveryClientListScopesOptions
 		if len(parentParam) > 0 || recursiveParam != nil || continuationTokenParam != nil {
-			options = &mirroredcatalog.DiscoveryClientListScopesBetaOptions{
+			options = &mirroredcatalog.DiscoveryClientListScopesOptions{
 				Parent:            parentParam,
 				Recursive:         recursiveParam,
 				ContinuationToken: continuationTokenParam,
 			}
 		}
-		resp := d.srv.NewListScopesBetaPager(workspaceIDParam, betaParam, connectionIDParam, options)
-		newListScopesBetaPager = &resp
-		d.newListScopesBetaPager.add(req, newListScopesBetaPager)
-		server.PagerResponderInjectNextLinks(newListScopesBetaPager, req, func(page *mirroredcatalog.DiscoveryClientListScopesBetaResponse, createLink func() string) {
+		resp := d.srv.NewListScopesPager(workspaceIDParam, connectionIDParam, options)
+		newListScopesPager = &resp
+		d.newListScopesPager.add(req, newListScopesPager)
+		server.PagerResponderInjectNextLinks(newListScopesPager, req, func(page *mirroredcatalog.DiscoveryClientListScopesResponse, createLink func() string) {
 			page.ContinuationURI = to.Ptr(createLink())
 		})
 	}
-	resp, err := server.PagerResponderNext(newListScopesBetaPager, req)
+	resp, err := server.PagerResponderNext(newListScopesPager, req)
 	if err != nil {
 		return nil, err
 	}
 	if !contains([]int{http.StatusOK}, resp.StatusCode) {
-		d.newListScopesBetaPager.remove(req)
+		d.newListScopesPager.remove(req)
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
 	}
-	if !server.PagerResponderMore(newListScopesBetaPager) {
-		d.newListScopesBetaPager.remove(req)
+	if !server.PagerResponderMore(newListScopesPager) {
+		d.newListScopesPager.remove(req)
 	}
 	return resp, nil
 }
 
-func (d *DiscoveryServerTransport) dispatchNewListTablesBetaPager(req *http.Request) (*http.Response, error) {
-	if d.srv.NewListTablesBetaPager == nil {
-		return nil, &nonRetriableError{errors.New("fake for method NewListTablesBetaPager not implemented")}
+func (d *DiscoveryServerTransport) dispatchNewListTablesPager(req *http.Request) (*http.Response, error) {
+	if d.srv.NewListTablesPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListTablesPager not implemented")}
 	}
-	newListTablesBetaPager := d.newListTablesBetaPager.get(req)
-	if newListTablesBetaPager == nil {
+	newListTablesPager := d.newListTablesPager.get(req)
+	if newListTablesPager == nil {
 		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/catalogmirroring/tables`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
@@ -195,14 +187,6 @@ func (d *DiscoveryServerTransport) dispatchNewListTablesBetaPager(req *http.Requ
 		}
 		qp := req.URL.Query()
 		workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
-		if err != nil {
-			return nil, err
-		}
-		betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
-		if err != nil {
-			return nil, err
-		}
-		betaParam, err := strconv.ParseBool(betaUnescaped)
 		if err != nil {
 			return nil, err
 		}
@@ -224,30 +208,30 @@ func (d *DiscoveryServerTransport) dispatchNewListTablesBetaPager(req *http.Requ
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
-		var options *mirroredcatalog.DiscoveryClientListTablesBetaOptions
+		var options *mirroredcatalog.DiscoveryClientListTablesOptions
 		if len(scopeParam) > 0 || continuationTokenParam != nil {
-			options = &mirroredcatalog.DiscoveryClientListTablesBetaOptions{
+			options = &mirroredcatalog.DiscoveryClientListTablesOptions{
 				Scope:             scopeParam,
 				ContinuationToken: continuationTokenParam,
 			}
 		}
-		resp := d.srv.NewListTablesBetaPager(workspaceIDParam, betaParam, connectionIDParam, options)
-		newListTablesBetaPager = &resp
-		d.newListTablesBetaPager.add(req, newListTablesBetaPager)
-		server.PagerResponderInjectNextLinks(newListTablesBetaPager, req, func(page *mirroredcatalog.DiscoveryClientListTablesBetaResponse, createLink func() string) {
+		resp := d.srv.NewListTablesPager(workspaceIDParam, connectionIDParam, options)
+		newListTablesPager = &resp
+		d.newListTablesPager.add(req, newListTablesPager)
+		server.PagerResponderInjectNextLinks(newListTablesPager, req, func(page *mirroredcatalog.DiscoveryClientListTablesResponse, createLink func() string) {
 			page.ContinuationURI = to.Ptr(createLink())
 		})
 	}
-	resp, err := server.PagerResponderNext(newListTablesBetaPager, req)
+	resp, err := server.PagerResponderNext(newListTablesPager, req)
 	if err != nil {
 		return nil, err
 	}
 	if !contains([]int{http.StatusOK}, resp.StatusCode) {
-		d.newListTablesBetaPager.remove(req)
+		d.newListTablesPager.remove(req)
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
 	}
-	if !server.PagerResponderMore(newListTablesBetaPager) {
-		d.newListTablesBetaPager.remove(req)
+	if !server.PagerResponderMore(newListTablesPager) {
+		d.newListTablesPager.remove(req)
 	}
 	return resp, nil
 }

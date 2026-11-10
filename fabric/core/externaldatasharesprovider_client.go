@@ -38,6 +38,9 @@ type ExternalDataSharesProviderClient struct {
 // REQUIRED TENANT SETTINGS To use this API, enable the External data sharing admin switch for the calling principal.
 // LIMITATIONS Maximum 10 requests per minute.
 // Supported item types: See External data sharing in Microsoft Fabric - Supported item types [/fabric/governance/external-data-sharing-overview#supported-fabric-item-types].
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 10 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]

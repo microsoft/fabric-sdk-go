@@ -79,11 +79,6 @@ type DomainsClientCreateDomainOptions struct {
 	// placeholder for future optional parameters
 }
 
-// DomainsClientCreateDomainPreviewOptions contains the optional parameters for the DomainsClient.CreateDomainPreview method.
-type DomainsClientCreateDomainPreviewOptions struct {
-	// placeholder for future optional parameters
-}
-
 // DomainsClientDeleteDomainOptions contains the optional parameters for the DomainsClient.DeleteDomain method.
 type DomainsClientDeleteDomainOptions struct {
 	// placeholder for future optional parameters
@@ -91,11 +86,6 @@ type DomainsClientDeleteDomainOptions struct {
 
 // DomainsClientGetDomainOptions contains the optional parameters for the DomainsClient.GetDomain method.
 type DomainsClientGetDomainOptions struct {
-	// placeholder for future optional parameters
-}
-
-// DomainsClientGetDomainPreviewOptions contains the optional parameters for the DomainsClient.GetDomainPreview method.
-type DomainsClientGetDomainPreviewOptions struct {
 	// placeholder for future optional parameters
 }
 
@@ -115,13 +105,6 @@ type DomainsClientListDomainsOptions struct {
 	// When true, only return domains that have at least one workspace assigned to them, or to any of their subdomains. Default:
 	// false.
 	WithAssignedWorkspacesOnly *bool
-}
-
-// DomainsClientListDomainsPreviewOptions contains the optional parameters for the DomainsClient.ListDomainsPreview method.
-type DomainsClientListDomainsPreviewOptions struct {
-	// When true, only return domains with workspaces assigned that contain one or more items the user has at least read access
-	// to. Default: false.
-	NonEmptyOnly *bool
 }
 
 // DomainsClientListRoleAssignmentsOptions contains the optional parameters for the DomainsClient.NewListRoleAssignmentsPager
@@ -164,11 +147,6 @@ type DomainsClientUnassignDomainWorkspacesByIDsOptions struct {
 
 // DomainsClientUpdateDomainOptions contains the optional parameters for the DomainsClient.UpdateDomain method.
 type DomainsClientUpdateDomainOptions struct {
-	// placeholder for future optional parameters
-}
-
-// DomainsClientUpdateDomainPreviewOptions contains the optional parameters for the DomainsClient.UpdateDomainPreview method.
-type DomainsClientUpdateDomainPreviewOptions struct {
 	// placeholder for future optional parameters
 }
 

@@ -208,27 +208,6 @@ func PossibleConnectivityTypeValues() []ConnectivityType {
 	}
 }
 
-// ContributorsScopeType - The contributor scope. Additional contributor scopes may be added over time.
-type ContributorsScopeType string
-
-const (
-	// ContributorsScopeTypeAdminsOnly - Tenant and domain admins only.
-	ContributorsScopeTypeAdminsOnly ContributorsScopeType = "AdminsOnly"
-	// ContributorsScopeTypeAllTenant - All the tenant's users.
-	ContributorsScopeTypeAllTenant ContributorsScopeType = "AllTenant"
-	// ContributorsScopeTypeSpecificUsersAndGroups - Specific users and groups.
-	ContributorsScopeTypeSpecificUsersAndGroups ContributorsScopeType = "SpecificUsersAndGroups"
-)
-
-// PossibleContributorsScopeTypeValues returns the possible values for the ContributorsScopeType const type.
-func PossibleContributorsScopeTypeValues() []ContributorsScopeType {
-	return []ContributorsScopeType{
-		ContributorsScopeTypeAdminsOnly,
-		ContributorsScopeTypeAllTenant,
-		ContributorsScopeTypeSpecificUsersAndGroups,
-	}
-}
-
 // CredentialType - The credential type of the connection. Additional credential types may be added over time.
 type CredentialType string
 
@@ -577,6 +556,10 @@ const (
 	ItemTypeSQLEndpoint ItemType = "SQLEndpoint"
 	// ItemTypeSemanticModel - PowerBI semantic model.
 	ItemTypeSemanticModel ItemType = "SemanticModel"
+	// ItemTypeShare - A share.
+	ItemTypeShare ItemType = "Share"
+	// ItemTypeShareSubscription - A Share Subscription.
+	ItemTypeShareSubscription ItemType = "ShareSubscription"
 	// ItemTypeSnowflakeDatabase - A Snowflake Database to store Iceberg tables created from Snowflake account.
 	ItemTypeSnowflakeDatabase ItemType = "SnowflakeDatabase"
 	// ItemTypeSparkJobDefinition - A spark job definition.
@@ -642,6 +625,8 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeSQLDatabase,
 		ItemTypeSQLEndpoint,
 		ItemTypeSemanticModel,
+		ItemTypeShare,
+		ItemTypeShareSubscription,
 		ItemTypeSnowflakeDatabase,
 		ItemTypeSparkJobDefinition,
 		ItemTypeUserDataFunction,

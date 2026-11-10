@@ -28,6 +28,206 @@ type BackgroundJobsClient struct {
 	endpoint string
 }
 
+// DeleteExecuteSchedule - PERMISSIONS The caller must have write permission on the CopyJob item.
+// REQUIRED DELEGATED SCOPES CopyJob.ReadWrite.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - copyJobID - The CopyJob ID.
+//   - scheduleID - The CopyJob schedule ID.
+//   - options - BackgroundJobsClientDeleteExecuteScheduleOptions contains the optional parameters for the BackgroundJobsClient.DeleteExecuteSchedule
+//     method.
+func (client *BackgroundJobsClient) DeleteExecuteSchedule(ctx context.Context, workspaceID string, copyJobID string, scheduleID string, options *BackgroundJobsClientDeleteExecuteScheduleOptions) (BackgroundJobsClientDeleteExecuteScheduleResponse, error) {
+	var err error
+	const operationName = "copyjob.BackgroundJobsClient.DeleteExecuteSchedule"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.deleteExecuteScheduleCreateRequest(ctx, workspaceID, copyJobID, scheduleID, options)
+	if err != nil {
+		return BackgroundJobsClientDeleteExecuteScheduleResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return BackgroundJobsClientDeleteExecuteScheduleResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return BackgroundJobsClientDeleteExecuteScheduleResponse{}, err
+	}
+	return BackgroundJobsClientDeleteExecuteScheduleResponse{}, nil
+}
+
+// deleteExecuteScheduleCreateRequest creates the DeleteExecuteSchedule request.
+func (client *BackgroundJobsClient) deleteExecuteScheduleCreateRequest(ctx context.Context, workspaceID string, copyJobID string, scheduleID string, _ *BackgroundJobsClientDeleteExecuteScheduleOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/copyJobs/{copyJobId}/jobs/execute/schedules/{scheduleId}"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if copyJobID == "" {
+		return nil, errors.New("parameter copyJobID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{copyJobId}", url.PathEscape(copyJobID))
+	if scheduleID == "" {
+		return nil, errors.New("parameter scheduleID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{scheduleId}", url.PathEscape(scheduleID))
+	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// GetExecuteJobInstance - PERMISSIONS The caller must have read permission on the CopyJob item.
+// REQUIRED DELEGATED SCOPES CopyJob.Read.All or CopyJob.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - copyJobID - The CopyJob ID.
+//   - jobInstanceID - The job instance ID.
+//   - options - BackgroundJobsClientGetExecuteJobInstanceOptions contains the optional parameters for the BackgroundJobsClient.GetExecuteJobInstance
+//     method.
+func (client *BackgroundJobsClient) GetExecuteJobInstance(ctx context.Context, workspaceID string, copyJobID string, jobInstanceID string, options *BackgroundJobsClientGetExecuteJobInstanceOptions) (BackgroundJobsClientGetExecuteJobInstanceResponse, error) {
+	var err error
+	const operationName = "copyjob.BackgroundJobsClient.GetExecuteJobInstance"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getExecuteJobInstanceCreateRequest(ctx, workspaceID, copyJobID, jobInstanceID, options)
+	if err != nil {
+		return BackgroundJobsClientGetExecuteJobInstanceResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return BackgroundJobsClientGetExecuteJobInstanceResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return BackgroundJobsClientGetExecuteJobInstanceResponse{}, err
+	}
+	resp, err := client.getExecuteJobInstanceHandleResponse(httpResp)
+	return resp, err
+}
+
+// getExecuteJobInstanceCreateRequest creates the GetExecuteJobInstance request.
+func (client *BackgroundJobsClient) getExecuteJobInstanceCreateRequest(ctx context.Context, workspaceID string, copyJobID string, jobInstanceID string, _ *BackgroundJobsClientGetExecuteJobInstanceOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/copyJobs/{copyJobId}/jobs/execute/instances/{jobInstanceId}"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if copyJobID == "" {
+		return nil, errors.New("parameter copyJobID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{copyJobId}", url.PathEscape(copyJobID))
+	if jobInstanceID == "" {
+		return nil, errors.New("parameter jobInstanceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{jobInstanceId}", url.PathEscape(jobInstanceID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getExecuteJobInstanceHandleResponse handles the GetExecuteJobInstance response.
+func (client *BackgroundJobsClient) getExecuteJobInstanceHandleResponse(resp *http.Response) (BackgroundJobsClientGetExecuteJobInstanceResponse, error) {
+	result := BackgroundJobsClientGetExecuteJobInstanceResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.ExecuteJobInstance); err != nil {
+		return BackgroundJobsClientGetExecuteJobInstanceResponse{}, err
+	}
+	return result, nil
+}
+
+// GetExecuteSchedule - PERMISSIONS The caller must have read permission on the CopyJob item.
+// REQUIRED DELEGATED SCOPES CopyJob.Read.All or CopyJob.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - copyJobID - The CopyJob ID.
+//   - scheduleID - The CopyJob schedule ID.
+//   - options - BackgroundJobsClientGetExecuteScheduleOptions contains the optional parameters for the BackgroundJobsClient.GetExecuteSchedule
+//     method.
+func (client *BackgroundJobsClient) GetExecuteSchedule(ctx context.Context, workspaceID string, copyJobID string, scheduleID string, options *BackgroundJobsClientGetExecuteScheduleOptions) (BackgroundJobsClientGetExecuteScheduleResponse, error) {
+	var err error
+	const operationName = "copyjob.BackgroundJobsClient.GetExecuteSchedule"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.getExecuteScheduleCreateRequest(ctx, workspaceID, copyJobID, scheduleID, options)
+	if err != nil {
+		return BackgroundJobsClientGetExecuteScheduleResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return BackgroundJobsClientGetExecuteScheduleResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return BackgroundJobsClientGetExecuteScheduleResponse{}, err
+	}
+	resp, err := client.getExecuteScheduleHandleResponse(httpResp)
+	return resp, err
+}
+
+// getExecuteScheduleCreateRequest creates the GetExecuteSchedule request.
+func (client *BackgroundJobsClient) getExecuteScheduleCreateRequest(ctx context.Context, workspaceID string, copyJobID string, scheduleID string, _ *BackgroundJobsClientGetExecuteScheduleOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/copyJobs/{copyJobId}/jobs/execute/schedules/{scheduleId}"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if copyJobID == "" {
+		return nil, errors.New("parameter copyJobID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{copyJobId}", url.PathEscape(copyJobID))
+	if scheduleID == "" {
+		return nil, errors.New("parameter scheduleID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{scheduleId}", url.PathEscape(scheduleID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// getExecuteScheduleHandleResponse handles the GetExecuteSchedule response.
+func (client *BackgroundJobsClient) getExecuteScheduleHandleResponse(resp *http.Response) (BackgroundJobsClientGetExecuteScheduleResponse, error) {
+	result := BackgroundJobsClientGetExecuteScheduleResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.ExecuteSchedule); err != nil {
+		return BackgroundJobsClientGetExecuteScheduleResponse{}, err
+	}
+	return result, nil
+}
+
 // NewListExecuteJobInstancesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES CopyJob.Read.All or CopyJob.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
@@ -99,6 +299,77 @@ func (client *BackgroundJobsClient) listExecuteJobInstancesHandleResponse(resp *
 	return result, nil
 }
 
+// NewListExecuteSchedulesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
+// PERMISSIONS The caller must have read permission on the CopyJob item.
+// REQUIRED DELEGATED SCOPES CopyJob.Read.All or CopyJob.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - copyJobID - The CopyJob ID.
+//   - options - BackgroundJobsClientListExecuteSchedulesOptions contains the optional parameters for the BackgroundJobsClient.NewListExecuteSchedulesPager
+//     method.
+func (client *BackgroundJobsClient) NewListExecuteSchedulesPager(workspaceID string, copyJobID string, options *BackgroundJobsClientListExecuteSchedulesOptions) *runtime.Pager[BackgroundJobsClientListExecuteSchedulesResponse] {
+	return runtime.NewPager(runtime.PagingHandler[BackgroundJobsClientListExecuteSchedulesResponse]{
+		More: func(page BackgroundJobsClientListExecuteSchedulesResponse) bool {
+			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
+		},
+		Fetcher: func(ctx context.Context, page *BackgroundJobsClientListExecuteSchedulesResponse) (BackgroundJobsClientListExecuteSchedulesResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "copyjob.BackgroundJobsClient.NewListExecuteSchedulesPager")
+			nextLink := ""
+			if page != nil {
+				nextLink = *page.ContinuationURI
+			}
+			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
+				return client.listExecuteSchedulesCreateRequest(ctx, workspaceID, copyJobID, options)
+			}, nil)
+			if err != nil {
+				return BackgroundJobsClientListExecuteSchedulesResponse{}, err
+			}
+			return client.listExecuteSchedulesHandleResponse(resp)
+		},
+		Tracer: client.internal.Tracer(),
+	})
+}
+
+// listExecuteSchedulesCreateRequest creates the ListExecuteSchedules request.
+func (client *BackgroundJobsClient) listExecuteSchedulesCreateRequest(ctx context.Context, workspaceID string, copyJobID string, options *BackgroundJobsClientListExecuteSchedulesOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/copyJobs/{copyJobId}/jobs/execute/schedules"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if copyJobID == "" {
+		return nil, errors.New("parameter copyJobID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{copyJobId}", url.PathEscape(copyJobID))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	if options != nil && options.ContinuationToken != nil {
+		reqQP.Set("continuationToken", *options.ContinuationToken)
+	}
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, nil
+}
+
+// listExecuteSchedulesHandleResponse handles the ListExecuteSchedules response.
+func (client *BackgroundJobsClient) listExecuteSchedulesHandleResponse(resp *http.Response) (BackgroundJobsClientListExecuteSchedulesResponse, error) {
+	result := BackgroundJobsClientListExecuteSchedulesResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.ExecuteSchedules); err != nil {
+		return BackgroundJobsClientListExecuteSchedulesResponse{}, err
+	}
+	return result, nil
+}
+
 // RunOnDemandExecute - PERMISSIONS The caller must have a member or higher workspace role.
 // REQUIRED DELEGATED SCOPES
 // * Specific scope: CopyJob.Execute.All or Item.Execute.All
@@ -156,6 +427,151 @@ func (client *BackgroundJobsClient) runOnDemandExecuteCreateRequest(ctx context.
 	return req, nil
 }
 
+// ScheduleExecute - PERMISSIONS The caller must have write and execute permissions on the CopyJob item.
+// REQUIRED DELEGATED SCOPES (CopyJob.Execute.All or Item.Execute.All) and (CopyJob.ReadWrite.All or Item.ReadWrite.All)
+// LIMITATIONS A CopyJob is subject to the platform limit on schedules per item across all job types. Disabled schedules count
+// toward the limit.
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - copyJobID - The CopyJob ID.
+//   - createScheduleRequest - The request payload for creating a CopyJob execute schedule.
+//   - options - BackgroundJobsClientScheduleExecuteOptions contains the optional parameters for the BackgroundJobsClient.ScheduleExecute
+//     method.
+func (client *BackgroundJobsClient) ScheduleExecute(ctx context.Context, workspaceID string, copyJobID string, createScheduleRequest CreateCopyJobExecuteScheduleRequest, options *BackgroundJobsClientScheduleExecuteOptions) (BackgroundJobsClientScheduleExecuteResponse, error) {
+	var err error
+	const operationName = "copyjob.BackgroundJobsClient.ScheduleExecute"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.scheduleExecuteCreateRequest(ctx, workspaceID, copyJobID, createScheduleRequest, options)
+	if err != nil {
+		return BackgroundJobsClientScheduleExecuteResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return BackgroundJobsClientScheduleExecuteResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusCreated) {
+		err = core.NewResponseError(httpResp)
+		return BackgroundJobsClientScheduleExecuteResponse{}, err
+	}
+	resp, err := client.scheduleExecuteHandleResponse(httpResp)
+	return resp, err
+}
+
+// scheduleExecuteCreateRequest creates the ScheduleExecute request.
+func (client *BackgroundJobsClient) scheduleExecuteCreateRequest(ctx context.Context, workspaceID string, copyJobID string, createScheduleRequest CreateCopyJobExecuteScheduleRequest, _ *BackgroundJobsClientScheduleExecuteOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/copyJobs/{copyJobId}/jobs/execute/schedules"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if copyJobID == "" {
+		return nil, errors.New("parameter copyJobID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{copyJobId}", url.PathEscape(copyJobID))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, createScheduleRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// scheduleExecuteHandleResponse handles the ScheduleExecute response.
+func (client *BackgroundJobsClient) scheduleExecuteHandleResponse(resp *http.Response) (BackgroundJobsClientScheduleExecuteResponse, error) {
+	result := BackgroundJobsClientScheduleExecuteResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.ExecuteSchedule); err != nil {
+		return BackgroundJobsClientScheduleExecuteResponse{}, err
+	}
+	return result, nil
+}
+
+// UpdateExecuteSchedule - PERMISSIONS The caller must have write and execute permissions on the CopyJob item.
+// REQUIRED DELEGATED SCOPES (CopyJob.Execute.All or Item.Execute.All) and (CopyJob.ReadWrite.All or Item.ReadWrite.All)
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
+// listed in this section.
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
+// and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+// INTERFACE
+// If the operation fails it returns an *core.ResponseError type.
+//
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - copyJobID - The CopyJob ID.
+//   - scheduleID - The CopyJob schedule ID.
+//   - updateScheduleRequest - The request payload for updating a CopyJob execute schedule.
+//   - options - BackgroundJobsClientUpdateExecuteScheduleOptions contains the optional parameters for the BackgroundJobsClient.UpdateExecuteSchedule
+//     method.
+func (client *BackgroundJobsClient) UpdateExecuteSchedule(ctx context.Context, workspaceID string, copyJobID string, scheduleID string, updateScheduleRequest UpdateCopyJobExecuteScheduleRequest, options *BackgroundJobsClientUpdateExecuteScheduleOptions) (BackgroundJobsClientUpdateExecuteScheduleResponse, error) {
+	var err error
+	const operationName = "copyjob.BackgroundJobsClient.UpdateExecuteSchedule"
+	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
+	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
+	defer func() { endSpan(err) }()
+	req, err := client.updateExecuteScheduleCreateRequest(ctx, workspaceID, copyJobID, scheduleID, updateScheduleRequest, options)
+	if err != nil {
+		return BackgroundJobsClientUpdateExecuteScheduleResponse{}, err
+	}
+	httpResp, err := client.internal.Pipeline().Do(req)
+	if err != nil {
+		return BackgroundJobsClientUpdateExecuteScheduleResponse{}, err
+	}
+	if !runtime.HasStatusCode(httpResp, http.StatusOK) {
+		err = core.NewResponseError(httpResp)
+		return BackgroundJobsClientUpdateExecuteScheduleResponse{}, err
+	}
+	resp, err := client.updateExecuteScheduleHandleResponse(httpResp)
+	return resp, err
+}
+
+// updateExecuteScheduleCreateRequest creates the UpdateExecuteSchedule request.
+func (client *BackgroundJobsClient) updateExecuteScheduleCreateRequest(ctx context.Context, workspaceID string, copyJobID string, scheduleID string, updateScheduleRequest UpdateCopyJobExecuteScheduleRequest, _ *BackgroundJobsClientUpdateExecuteScheduleOptions) (*policy.Request, error) {
+	urlPath := "/v1/workspaces/{workspaceId}/copyJobs/{copyJobId}/jobs/execute/schedules/{scheduleId}"
+	if workspaceID == "" {
+		return nil, errors.New("parameter workspaceID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{workspaceId}", url.PathEscape(workspaceID))
+	if copyJobID == "" {
+		return nil, errors.New("parameter copyJobID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{copyJobId}", url.PathEscape(copyJobID))
+	if scheduleID == "" {
+		return nil, errors.New("parameter scheduleID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{scheduleId}", url.PathEscape(scheduleID))
+	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	if err := runtime.MarshalAsJSON(req, updateScheduleRequest); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+// updateExecuteScheduleHandleResponse handles the UpdateExecuteSchedule response.
+func (client *BackgroundJobsClient) updateExecuteScheduleHandleResponse(resp *http.Response) (BackgroundJobsClientUpdateExecuteScheduleResponse, error) {
+	result := BackgroundJobsClientUpdateExecuteScheduleResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.ExecuteSchedule); err != nil {
+		return BackgroundJobsClientUpdateExecuteScheduleResponse{}, err
+	}
+	return result, nil
+}
+
 // Custom code starts below
 
 // ListExecuteJobInstances - returns array of ExecuteJobInstance from all pages.
@@ -187,6 +603,39 @@ func (client *BackgroundJobsClient) ListExecuteJobInstances(ctx context.Context,
 			return []ExecuteJobInstance{}, core.NewResponseError(azcoreRespError.RawResponse)
 		}
 		return []ExecuteJobInstance{}, err
+	}
+	return list, nil
+}
+
+// ListExecuteSchedules - returns array of ExecuteSchedule from all pages.
+// This API supports pagination [/rest/api/fabric/articles/pagination].
+//
+// PERMISSIONS The caller must have read permission on the CopyJob item.
+//
+// # REQUIRED DELEGATED SCOPES CopyJob.Read.All or CopyJob.ReadWrite.All or Item.Read.All or Item.ReadWrite.All
+//
+// MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
+//
+// | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
+// [/entra/identity/managed-identities-azure-resources/overview] | Yes |
+//
+// INTERFACE
+// Generated from API version v1
+//   - workspaceID - The workspace ID.
+//   - copyJobID - The CopyJob ID.
+//   - options - BackgroundJobsClientListExecuteSchedulesOptions contains the optional parameters for the BackgroundJobsClient.NewListExecuteSchedulesPager method.
+func (client *BackgroundJobsClient) ListExecuteSchedules(ctx context.Context, workspaceID string, copyJobID string, options *BackgroundJobsClientListExecuteSchedulesOptions) ([]ExecuteSchedule, error) {
+	pager := client.NewListExecuteSchedulesPager(workspaceID, copyJobID, options)
+	mapper := func(resp BackgroundJobsClientListExecuteSchedulesResponse) []ExecuteSchedule {
+		return resp.Value
+	}
+	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
+	if err != nil {
+		var azcoreRespError *azcore.ResponseError
+		if errors.As(err, &azcoreRespError) {
+			return []ExecuteSchedule{}, core.NewResponseError(azcoreRespError.RawResponse)
+		}
+		return []ExecuteSchedule{}, err
 	}
 	return list, nil
 }

@@ -11,7 +11,6 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
-	"strconv"
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -30,10 +29,7 @@ type RefreshClient struct {
 	endpoint string
 }
 
-// BeginRefreshCatalogMetadataBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use.
-// When calling this API, callers must specify true as the value for the query parameter beta.
-// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// BeginRefreshCatalogMetadata - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Refreshes the catalog metadata from the source Iceberg REST Catalog, synchronizing namespace and table changes.
 // PERMISSIONS The caller must have read and write permissions for the mirrored catalog.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
@@ -48,17 +44,13 @@ type RefreshClient struct {
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - mirroredCatalogID - The MirroredCatalog ID.
-//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
-//   - options - RefreshClientBeginRefreshCatalogMetadataBetaOptions contains the optional parameters for the RefreshClient.BeginRefreshCatalogMetadataBeta
+//   - options - RefreshClientBeginRefreshCatalogMetadataOptions contains the optional parameters for the RefreshClient.BeginRefreshCatalogMetadata
 //     method.
-func (client *RefreshClient) BeginRefreshCatalogMetadataBeta(ctx context.Context, workspaceID string, mirroredCatalogID string, beta bool, options *RefreshClientBeginRefreshCatalogMetadataBetaOptions) (*runtime.Poller[RefreshClientRefreshCatalogMetadataBetaResponse], error) {
-	return client.beginRefreshCatalogMetadataBeta(ctx, workspaceID, mirroredCatalogID, beta, options)
+func (client *RefreshClient) BeginRefreshCatalogMetadata(ctx context.Context, workspaceID string, mirroredCatalogID string, options *RefreshClientBeginRefreshCatalogMetadataOptions) (*runtime.Poller[RefreshClientRefreshCatalogMetadataResponse], error) {
+	return client.beginRefreshCatalogMetadata(ctx, workspaceID, mirroredCatalogID, options)
 }
 
-// RefreshCatalogMetadataBeta - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development
-// purposes only. It may change based on feedback and is not recommended for production use.
-// When calling this API, callers must specify true as the value for the query parameter beta.
-// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// RefreshCatalogMetadata - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // Refreshes the catalog metadata from the source Iceberg REST Catalog, synchronizing namespace and table changes.
 // PERMISSIONS The caller must have read and write permissions for the mirrored catalog.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
@@ -71,13 +63,13 @@ func (client *RefreshClient) BeginRefreshCatalogMetadataBeta(ctx context.Context
 // If the operation fails it returns an *core.ResponseError type.
 //
 // Generated from API version v1
-func (client *RefreshClient) refreshCatalogMetadataBeta(ctx context.Context, workspaceID string, mirroredCatalogID string, beta bool, options *RefreshClientBeginRefreshCatalogMetadataBetaOptions) (*http.Response, error) {
+func (client *RefreshClient) refreshCatalogMetadata(ctx context.Context, workspaceID string, mirroredCatalogID string, options *RefreshClientBeginRefreshCatalogMetadataOptions) (*http.Response, error) {
 	var err error
-	const operationName = "mirroredcatalog.RefreshClient.BeginRefreshCatalogMetadataBeta"
+	const operationName = "mirroredcatalog.RefreshClient.BeginRefreshCatalogMetadata"
 	ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, operationName)
 	ctx, endSpan := runtime.StartSpan(ctx, operationName, client.internal.Tracer(), nil)
 	defer func() { endSpan(err) }()
-	req, err := client.refreshCatalogMetadataBetaCreateRequest(ctx, workspaceID, mirroredCatalogID, beta, options)
+	req, err := client.refreshCatalogMetadataCreateRequest(ctx, workspaceID, mirroredCatalogID, options)
 	if err != nil {
 		return nil, err
 	}
@@ -92,8 +84,8 @@ func (client *RefreshClient) refreshCatalogMetadataBeta(ctx context.Context, wor
 	return httpResp, nil
 }
 
-// refreshCatalogMetadataBetaCreateRequest creates the RefreshCatalogMetadataBeta request.
-func (client *RefreshClient) refreshCatalogMetadataBetaCreateRequest(ctx context.Context, workspaceID string, mirroredCatalogID string, beta bool, _ *RefreshClientBeginRefreshCatalogMetadataBetaOptions) (*policy.Request, error) {
+// refreshCatalogMetadataCreateRequest creates the RefreshCatalogMetadata request.
+func (client *RefreshClient) refreshCatalogMetadataCreateRequest(ctx context.Context, workspaceID string, mirroredCatalogID string, _ *RefreshClientBeginRefreshCatalogMetadataOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/mirroredCatalogs/{mirroredCatalogId}/refreshCatalogMetadata"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -107,20 +99,13 @@ func (client *RefreshClient) refreshCatalogMetadataBetaCreateRequest(ctx context
 	if err != nil {
 		return nil, err
 	}
-	reqQP := req.Raw().URL.Query()
-	reqQP.Set("beta", strconv.FormatBool(beta))
-	req.Raw().URL.RawQuery = reqQP.Encode()
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }
 
 // Custom code starts below
 
-// RefreshCatalogMetadataBeta - returns RefreshClientRefreshCatalogMetadataBetaResponse in sync mode.
-// >  [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
-//
-// When calling this API, callers must specify true as the value for the query parameter beta.
-//
+// RefreshCatalogMetadata - returns RefreshClientRefreshCatalogMetadataResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
 // Refreshes the catalog metadata from the source Iceberg REST Catalog, synchronizing namespace and table changes.
@@ -138,24 +123,23 @@ func (client *RefreshClient) refreshCatalogMetadataBetaCreateRequest(ctx context
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
 //   - mirroredCatalogID - The MirroredCatalog ID.
-//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
-//   - options - RefreshClientBeginRefreshCatalogMetadataBetaOptions contains the optional parameters for the RefreshClient.BeginRefreshCatalogMetadataBeta method.
-func (client *RefreshClient) RefreshCatalogMetadataBeta(ctx context.Context, workspaceID string, mirroredCatalogID string, beta bool, options *RefreshClientBeginRefreshCatalogMetadataBetaOptions) (RefreshClientRefreshCatalogMetadataBetaResponse, error) {
-	result, err := iruntime.NewLRO(client.BeginRefreshCatalogMetadataBeta(ctx, workspaceID, mirroredCatalogID, beta, options)).Sync(ctx)
+//   - options - RefreshClientBeginRefreshCatalogMetadataOptions contains the optional parameters for the RefreshClient.BeginRefreshCatalogMetadata method.
+func (client *RefreshClient) RefreshCatalogMetadata(ctx context.Context, workspaceID string, mirroredCatalogID string, options *RefreshClientBeginRefreshCatalogMetadataOptions) (RefreshClientRefreshCatalogMetadataResponse, error) {
+	result, err := iruntime.NewLRO(client.BeginRefreshCatalogMetadata(ctx, workspaceID, mirroredCatalogID, options)).Sync(ctx)
 	if err != nil {
 		var azcoreRespError *azcore.ResponseError
 		if errors.As(err, &azcoreRespError) {
-			return RefreshClientRefreshCatalogMetadataBetaResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
+			return RefreshClientRefreshCatalogMetadataResponse{}, core.NewResponseError(azcoreRespError.RawResponse)
 		}
-		return RefreshClientRefreshCatalogMetadataBetaResponse{}, err
+		return RefreshClientRefreshCatalogMetadataResponse{}, err
 	}
 	return result, err
 }
 
-// beginRefreshCatalogMetadataBeta creates the refreshCatalogMetadataBeta request.
-func (client *RefreshClient) beginRefreshCatalogMetadataBeta(ctx context.Context, workspaceID string, mirroredCatalogID string, beta bool, options *RefreshClientBeginRefreshCatalogMetadataBetaOptions) (*runtime.Poller[RefreshClientRefreshCatalogMetadataBetaResponse], error) {
+// beginRefreshCatalogMetadata creates the refreshCatalogMetadata request.
+func (client *RefreshClient) beginRefreshCatalogMetadata(ctx context.Context, workspaceID string, mirroredCatalogID string, options *RefreshClientBeginRefreshCatalogMetadataOptions) (*runtime.Poller[RefreshClientRefreshCatalogMetadataResponse], error) {
 	if options == nil || options.ResumeToken == "" {
-		resp, err := client.refreshCatalogMetadataBeta(ctx, workspaceID, mirroredCatalogID, beta, options)
+		resp, err := client.refreshCatalogMetadata(ctx, workspaceID, mirroredCatalogID, options)
 		if err != nil {
 			var azcoreRespError *azcore.ResponseError
 			if errors.As(err, &azcoreRespError) {
@@ -163,7 +147,7 @@ func (client *RefreshClient) beginRefreshCatalogMetadataBeta(ctx context.Context
 			}
 			return nil, err
 		}
-		handler, err := locasync.NewPollerHandler[RefreshClientRefreshCatalogMetadataBetaResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
+		handler, err := locasync.NewPollerHandler[RefreshClientRefreshCatalogMetadataResponse](client.internal.Pipeline(), resp, runtime.FinalStateViaAzureAsyncOp)
 		if err != nil {
 			var azcoreRespError *azcore.ResponseError
 			if errors.As(err, &azcoreRespError) {
@@ -171,13 +155,13 @@ func (client *RefreshClient) beginRefreshCatalogMetadataBeta(ctx context.Context
 			}
 			return nil, err
 		}
-		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[RefreshClientRefreshCatalogMetadataBetaResponse]{
+		return runtime.NewPoller(resp, client.internal.Pipeline(), &runtime.NewPollerOptions[RefreshClientRefreshCatalogMetadataResponse]{
 			FinalStateVia: runtime.FinalStateViaAzureAsyncOp,
 			Handler:       handler,
 			Tracer:        client.internal.Tracer(),
 		})
 	} else {
-		handler, err := locasync.NewPollerHandler[RefreshClientRefreshCatalogMetadataBetaResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
+		handler, err := locasync.NewPollerHandler[RefreshClientRefreshCatalogMetadataResponse](client.internal.Pipeline(), nil, runtime.FinalStateViaAzureAsyncOp)
 		if err != nil {
 			var azcoreRespError *azcore.ResponseError
 			if errors.As(err, &azcoreRespError) {
@@ -185,7 +169,7 @@ func (client *RefreshClient) beginRefreshCatalogMetadataBeta(ctx context.Context
 			}
 			return nil, err
 		}
-		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[RefreshClientRefreshCatalogMetadataBetaResponse]{
+		return runtime.NewPollerFromResumeToken(options.ResumeToken, client.internal.Pipeline(), &runtime.NewPollerFromResumeTokenOptions[RefreshClientRefreshCatalogMetadataResponse]{
 			Handler: handler,
 			Tracer:  client.internal.Tracer(),
 		})

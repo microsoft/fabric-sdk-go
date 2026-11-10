@@ -28,7 +28,11 @@ type OneLakeShortcutsClient struct {
 	endpoint string
 }
 
-// CreateShortcut - REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// CreateShortcut - PERMISSIONS The caller must have read and write permissions for the item.
+// REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -107,7 +111,11 @@ func (client *OneLakeShortcutsClient) createShortcutHandleResponse(resp *http.Re
 }
 
 // BeginCreatesShortcutsInBulk - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have read and write permissions for the item.
 // REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -128,7 +136,11 @@ func (client *OneLakeShortcutsClient) BeginCreatesShortcutsInBulk(ctx context.Co
 }
 
 // CreatesShortcutsInBulk - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have read and write permissions for the item.
 // REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -186,7 +198,11 @@ func (client *OneLakeShortcutsClient) createsShortcutsInBulkCreateRequest(ctx co
 	return req, nil
 }
 
-// DeleteShortcut - REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// DeleteShortcut - PERMISSIONS The caller must have read and write permissions for the item.
+// REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -252,7 +268,11 @@ func (client *OneLakeShortcutsClient) deleteShortcutCreateRequest(ctx context.Co
 	return req, nil
 }
 
-// GetShortcut - REQUIRED DELEGATED SCOPES OneLake.Read.All or OneLake.ReadWrite.All
+// GetShortcut - PERMISSIONS The caller must have read permissions for the item.
+// REQUIRED DELEGATED SCOPES OneLake.Read.All or OneLake.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -327,7 +347,11 @@ func (client *OneLakeShortcutsClient) getShortcutHandleResponse(resp *http.Respo
 	return result, nil
 }
 
-// NewListShortcutsPager - REQUIRED DELEGATED SCOPES OneLake.Read.All or OneLake.ReadWrite.All
+// NewListShortcutsPager - PERMISSIONS The caller must have read permissions for the item.
+// REQUIRED DELEGATED SCOPES OneLake.Read.All or OneLake.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -400,7 +424,11 @@ func (client *OneLakeShortcutsClient) listShortcutsHandleResponse(resp *http.Res
 }
 
 // BeginResetShortcutCache - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have a contributor or higher role for the workspace.
 // REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -418,7 +446,11 @@ func (client *OneLakeShortcutsClient) BeginResetShortcutCache(ctx context.Contex
 }
 
 // ResetShortcutCache - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// PERMISSIONS The caller must have a contributor or higher role for the workspace.
 // REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 200 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -469,7 +501,12 @@ func (client *OneLakeShortcutsClient) resetShortcutCacheCreateRequest(ctx contex
 // CreatesShortcutsInBulk - returns OneLakeShortcutsClientCreatesShortcutsInBulkResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
+// PERMISSIONS The caller must have read and write permissions for the item.
+//
 // # REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+//
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 200 calls/min |
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
@@ -537,7 +574,12 @@ func (client *OneLakeShortcutsClient) beginCreatesShortcutsInBulk(ctx context.Co
 // ResetShortcutCache - returns OneLakeShortcutsClientResetShortcutCacheResponse in sync mode.
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
+// PERMISSIONS The caller must have a contributor or higher role for the workspace.
+//
 // # REQUIRED DELEGATED SCOPES OneLake.ReadWrite.All
+//
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 200 calls/min |
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
@@ -601,7 +643,12 @@ func (client *OneLakeShortcutsClient) beginResetShortcutCache(ctx context.Contex
 }
 
 // ListShortcuts - returns array of ShortcutTransformFlagged from all pages.
-// REQUIRED DELEGATED SCOPES OneLake.Read.All or OneLake.ReadWrite.All
+// PERMISSIONS The caller must have read permissions for the item.
+//
+// # REQUIRED DELEGATED SCOPES OneLake.Read.All or OneLake.ReadWrite.All
+//
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 200 calls/min |
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

@@ -365,44 +365,39 @@ func (testsuite *FakeTestSuite) TestItems_UpdateMirroredCatalogDefinition() {
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
 
-func (testsuite *FakeTestSuite) TestRefresh_RefreshCatalogMetadataBeta() {
+func (testsuite *FakeTestSuite) TestRefresh_RefreshCatalogMetadata() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Refresh Catalog Metadata example"},
 	})
 	var exampleWorkspaceID string
 	var exampleMirroredCatalogID string
-	var exampleBeta bool
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
 	exampleMirroredCatalogID = "5b218778-e7a5-4d73-8187-f10824047715"
-	exampleBeta = true
 
-	testsuite.serverFactory.RefreshServer.BeginRefreshCatalogMetadataBeta = func(ctx context.Context, workspaceID string, mirroredCatalogID string, beta bool, options *mirroredcatalog.RefreshClientBeginRefreshCatalogMetadataBetaOptions) (resp azfake.PollerResponder[mirroredcatalog.RefreshClientRefreshCatalogMetadataBetaResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.RefreshServer.BeginRefreshCatalogMetadata = func(ctx context.Context, workspaceID string, mirroredCatalogID string, options *mirroredcatalog.RefreshClientBeginRefreshCatalogMetadataOptions) (resp azfake.PollerResponder[mirroredcatalog.RefreshClientRefreshCatalogMetadataResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleMirroredCatalogID, mirroredCatalogID)
-		testsuite.Require().Equal(exampleBeta, beta)
-		resp = azfake.PollerResponder[mirroredcatalog.RefreshClientRefreshCatalogMetadataBetaResponse]{}
-		resp.SetTerminalResponse(http.StatusOK, mirroredcatalog.RefreshClientRefreshCatalogMetadataBetaResponse{}, nil)
+		resp = azfake.PollerResponder[mirroredcatalog.RefreshClientRefreshCatalogMetadataResponse]{}
+		resp.SetTerminalResponse(http.StatusOK, mirroredcatalog.RefreshClientRefreshCatalogMetadataResponse{}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewRefreshClient()
-	poller, err := client.BeginRefreshCatalogMetadataBeta(ctx, exampleWorkspaceID, exampleMirroredCatalogID, exampleBeta, nil)
+	poller, err := client.BeginRefreshCatalogMetadata(ctx, exampleWorkspaceID, exampleMirroredCatalogID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	_, err = poller.PollUntilDone(ctx, nil)
 	testsuite.Require().NoError(err, "Failed to get LRO result for example ")
 }
 
-func (testsuite *FakeTestSuite) TestDiscovery_ListScopesBeta() {
+func (testsuite *FakeTestSuite) TestDiscovery_ListScopes() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"List Scopes example"},
 	})
 	var exampleWorkspaceID string
-	var exampleBeta bool
 	var exampleConnectionID string
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
-	exampleBeta = true
 	exampleConnectionID = "4eb6b767-e786-45ed-b7cf-d25023e52222"
 
 	exampleRes := mirroredcatalog.ScopesResponse{
@@ -458,17 +453,16 @@ func (testsuite *FakeTestSuite) TestDiscovery_ListScopesBeta() {
 			}},
 	}
 
-	testsuite.serverFactory.DiscoveryServer.NewListScopesBetaPager = func(workspaceID string, beta bool, connectionID string, options *mirroredcatalog.DiscoveryClientListScopesBetaOptions) (resp azfake.PagerResponder[mirroredcatalog.DiscoveryClientListScopesBetaResponse]) {
+	testsuite.serverFactory.DiscoveryServer.NewListScopesPager = func(workspaceID string, connectionID string, options *mirroredcatalog.DiscoveryClientListScopesOptions) (resp azfake.PagerResponder[mirroredcatalog.DiscoveryClientListScopesResponse]) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
-		testsuite.Require().Equal(exampleBeta, beta)
 		testsuite.Require().Equal(exampleConnectionID, connectionID)
-		resp = azfake.PagerResponder[mirroredcatalog.DiscoveryClientListScopesBetaResponse]{}
-		resp.AddPage(http.StatusOK, mirroredcatalog.DiscoveryClientListScopesBetaResponse{ScopesResponse: exampleRes}, nil)
+		resp = azfake.PagerResponder[mirroredcatalog.DiscoveryClientListScopesResponse]{}
+		resp.AddPage(http.StatusOK, mirroredcatalog.DiscoveryClientListScopesResponse{ScopesResponse: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewDiscoveryClient()
-	pager := client.NewListScopesBetaPager(exampleWorkspaceID, exampleBeta, exampleConnectionID, &mirroredcatalog.DiscoveryClientListScopesBetaOptions{Parent: []string{},
+	pager := client.NewListScopesPager(exampleWorkspaceID, exampleConnectionID, &mirroredcatalog.DiscoveryClientListScopesOptions{Parent: []string{},
 		Recursive:         to.Ptr(true),
 		ContinuationToken: nil,
 	})
@@ -486,7 +480,6 @@ func (testsuite *FakeTestSuite) TestDiscovery_ListScopesBeta() {
 		"example-id": {"List Scopes with parent example"},
 	})
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
-	exampleBeta = true
 	exampleConnectionID = "4eb6b767-e786-45ed-b7cf-d25023e52222"
 
 	exampleRes = mirroredcatalog.ScopesResponse{
@@ -500,16 +493,15 @@ func (testsuite *FakeTestSuite) TestDiscovery_ListScopesBeta() {
 			}},
 	}
 
-	testsuite.serverFactory.DiscoveryServer.NewListScopesBetaPager = func(workspaceID string, beta bool, connectionID string, options *mirroredcatalog.DiscoveryClientListScopesBetaOptions) (resp azfake.PagerResponder[mirroredcatalog.DiscoveryClientListScopesBetaResponse]) {
+	testsuite.serverFactory.DiscoveryServer.NewListScopesPager = func(workspaceID string, connectionID string, options *mirroredcatalog.DiscoveryClientListScopesOptions) (resp azfake.PagerResponder[mirroredcatalog.DiscoveryClientListScopesResponse]) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
-		testsuite.Require().Equal(exampleBeta, beta)
 		testsuite.Require().Equal(exampleConnectionID, connectionID)
-		resp = azfake.PagerResponder[mirroredcatalog.DiscoveryClientListScopesBetaResponse]{}
-		resp.AddPage(http.StatusOK, mirroredcatalog.DiscoveryClientListScopesBetaResponse{ScopesResponse: exampleRes}, nil)
+		resp = azfake.PagerResponder[mirroredcatalog.DiscoveryClientListScopesResponse]{}
+		resp.AddPage(http.StatusOK, mirroredcatalog.DiscoveryClientListScopesResponse{ScopesResponse: exampleRes}, nil)
 		return
 	}
 
-	pager = client.NewListScopesBetaPager(exampleWorkspaceID, exampleBeta, exampleConnectionID, &mirroredcatalog.DiscoveryClientListScopesBetaOptions{Parent: []string{
+	pager = client.NewListScopesPager(exampleWorkspaceID, exampleConnectionID, &mirroredcatalog.DiscoveryClientListScopesOptions{Parent: []string{
 		"Accounting"},
 		Recursive:         nil,
 		ContinuationToken: nil,
@@ -524,16 +516,14 @@ func (testsuite *FakeTestSuite) TestDiscovery_ListScopesBeta() {
 	}
 }
 
-func (testsuite *FakeTestSuite) TestDiscovery_ListTablesBeta() {
+func (testsuite *FakeTestSuite) TestDiscovery_ListTables() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"List Tables example"},
 	})
 	var exampleWorkspaceID string
-	var exampleBeta bool
 	var exampleConnectionID string
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
-	exampleBeta = true
 	exampleConnectionID = "4eb6b767-e786-45ed-b7cf-d25023e52222"
 
 	exampleRes := mirroredcatalog.TablesResponse{
@@ -568,17 +558,16 @@ func (testsuite *FakeTestSuite) TestDiscovery_ListTablesBeta() {
 			}},
 	}
 
-	testsuite.serverFactory.DiscoveryServer.NewListTablesBetaPager = func(workspaceID string, beta bool, connectionID string, options *mirroredcatalog.DiscoveryClientListTablesBetaOptions) (resp azfake.PagerResponder[mirroredcatalog.DiscoveryClientListTablesBetaResponse]) {
+	testsuite.serverFactory.DiscoveryServer.NewListTablesPager = func(workspaceID string, connectionID string, options *mirroredcatalog.DiscoveryClientListTablesOptions) (resp azfake.PagerResponder[mirroredcatalog.DiscoveryClientListTablesResponse]) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
-		testsuite.Require().Equal(exampleBeta, beta)
 		testsuite.Require().Equal(exampleConnectionID, connectionID)
-		resp = azfake.PagerResponder[mirroredcatalog.DiscoveryClientListTablesBetaResponse]{}
-		resp.AddPage(http.StatusOK, mirroredcatalog.DiscoveryClientListTablesBetaResponse{TablesResponse: exampleRes}, nil)
+		resp = azfake.PagerResponder[mirroredcatalog.DiscoveryClientListTablesResponse]{}
+		resp.AddPage(http.StatusOK, mirroredcatalog.DiscoveryClientListTablesResponse{TablesResponse: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewDiscoveryClient()
-	pager := client.NewListTablesBetaPager(exampleWorkspaceID, exampleBeta, exampleConnectionID, &mirroredcatalog.DiscoveryClientListTablesBetaOptions{Scope: []string{
+	pager := client.NewListTablesPager(exampleWorkspaceID, exampleConnectionID, &mirroredcatalog.DiscoveryClientListTablesOptions{Scope: []string{
 		"Accounting",
 		"US"},
 		ContinuationToken: nil,
@@ -593,34 +582,31 @@ func (testsuite *FakeTestSuite) TestDiscovery_ListTablesBeta() {
 	}
 }
 
-func (testsuite *FakeTestSuite) TestMonitoring_MirroringStatusBeta() {
+func (testsuite *FakeTestSuite) TestMonitoring_GetMirroringStatus() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Mirroring Status example"},
 	})
 	var exampleWorkspaceID string
 	var exampleMirroredCatalogID string
-	var exampleBeta bool
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
 	exampleMirroredCatalogID = "5b218778-e7a5-4d73-8187-f10824047715"
-	exampleBeta = true
 
 	exampleRes := mirroredcatalog.MirroringStatusResponse{
 		LastSyncDateTime: to.Ptr(func() time.Time { t, _ := time.Parse(time.RFC3339Nano, "2026-03-19T02:12:58.540Z"); return t }()),
 		Status:           to.Ptr(mirroredcatalog.ItemMirroringStateRunning),
 	}
 
-	testsuite.serverFactory.MonitoringServer.MirroringStatusBeta = func(ctx context.Context, workspaceID string, mirroredCatalogID string, beta bool, options *mirroredcatalog.MonitoringClientMirroringStatusBetaOptions) (resp azfake.Responder[mirroredcatalog.MonitoringClientMirroringStatusBetaResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.MonitoringServer.GetMirroringStatus = func(ctx context.Context, workspaceID string, mirroredCatalogID string, options *mirroredcatalog.MonitoringClientGetMirroringStatusOptions) (resp azfake.Responder[mirroredcatalog.MonitoringClientGetMirroringStatusResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleMirroredCatalogID, mirroredCatalogID)
-		testsuite.Require().Equal(exampleBeta, beta)
-		resp = azfake.Responder[mirroredcatalog.MonitoringClientMirroringStatusBetaResponse]{}
-		resp.SetResponse(http.StatusOK, mirroredcatalog.MonitoringClientMirroringStatusBetaResponse{MirroringStatusResponse: exampleRes}, nil)
+		resp = azfake.Responder[mirroredcatalog.MonitoringClientGetMirroringStatusResponse]{}
+		resp.SetResponse(http.StatusOK, mirroredcatalog.MonitoringClientGetMirroringStatusResponse{MirroringStatusResponse: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewMonitoringClient()
-	res, err := client.MirroringStatusBeta(ctx, exampleWorkspaceID, exampleMirroredCatalogID, exampleBeta, nil)
+	res, err := client.GetMirroringStatus(ctx, exampleWorkspaceID, exampleMirroredCatalogID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.MirroringStatusResponse))
 
@@ -630,7 +616,6 @@ func (testsuite *FakeTestSuite) TestMonitoring_MirroringStatusBeta() {
 	})
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
 	exampleMirroredCatalogID = "5b218778-e7a5-4d73-8187-f10824047715"
-	exampleBeta = true
 
 	exampleRes = mirroredcatalog.MirroringStatusResponse{
 		Error: &mirroredcatalog.ErrorResponse{
@@ -641,31 +626,28 @@ func (testsuite *FakeTestSuite) TestMonitoring_MirroringStatusBeta() {
 		Status:           to.Ptr(mirroredcatalog.ItemMirroringStateFailed),
 	}
 
-	testsuite.serverFactory.MonitoringServer.MirroringStatusBeta = func(ctx context.Context, workspaceID string, mirroredCatalogID string, beta bool, options *mirroredcatalog.MonitoringClientMirroringStatusBetaOptions) (resp azfake.Responder[mirroredcatalog.MonitoringClientMirroringStatusBetaResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.MonitoringServer.GetMirroringStatus = func(ctx context.Context, workspaceID string, mirroredCatalogID string, options *mirroredcatalog.MonitoringClientGetMirroringStatusOptions) (resp azfake.Responder[mirroredcatalog.MonitoringClientGetMirroringStatusResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleMirroredCatalogID, mirroredCatalogID)
-		testsuite.Require().Equal(exampleBeta, beta)
-		resp = azfake.Responder[mirroredcatalog.MonitoringClientMirroringStatusBetaResponse]{}
-		resp.SetResponse(http.StatusOK, mirroredcatalog.MonitoringClientMirroringStatusBetaResponse{MirroringStatusResponse: exampleRes}, nil)
+		resp = azfake.Responder[mirroredcatalog.MonitoringClientGetMirroringStatusResponse]{}
+		resp.SetResponse(http.StatusOK, mirroredcatalog.MonitoringClientGetMirroringStatusResponse{MirroringStatusResponse: exampleRes}, nil)
 		return
 	}
 
-	res, err = client.MirroringStatusBeta(ctx, exampleWorkspaceID, exampleMirroredCatalogID, exampleBeta, nil)
+	res, err = client.GetMirroringStatus(ctx, exampleWorkspaceID, exampleMirroredCatalogID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.MirroringStatusResponse))
 }
 
-func (testsuite *FakeTestSuite) TestMonitoring_TablesMirroringStatusBeta() {
+func (testsuite *FakeTestSuite) TestMonitoring_ListTablesMirroringStatus() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Tables Mirroring Status example"},
 	})
 	var exampleWorkspaceID string
 	var exampleMirroredCatalogID string
-	var exampleBeta bool
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
 	exampleMirroredCatalogID = "5b218778-e7a5-4d73-8187-f10824047715"
-	exampleBeta = true
 
 	exampleRes := mirroredcatalog.TablesMirroringStatusResponse{
 		Value: []mirroredcatalog.TableMirroringStatus{
@@ -700,17 +682,16 @@ func (testsuite *FakeTestSuite) TestMonitoring_TablesMirroringStatusBeta() {
 			}},
 	}
 
-	testsuite.serverFactory.MonitoringServer.NewTablesMirroringStatusBetaPager = func(workspaceID string, mirroredCatalogID string, beta bool, options *mirroredcatalog.MonitoringClientTablesMirroringStatusBetaOptions) (resp azfake.PagerResponder[mirroredcatalog.MonitoringClientTablesMirroringStatusBetaResponse]) {
+	testsuite.serverFactory.MonitoringServer.NewListTablesMirroringStatusPager = func(workspaceID string, mirroredCatalogID string, options *mirroredcatalog.MonitoringClientListTablesMirroringStatusOptions) (resp azfake.PagerResponder[mirroredcatalog.MonitoringClientListTablesMirroringStatusResponse]) {
 		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
 		testsuite.Require().Equal(exampleMirroredCatalogID, mirroredCatalogID)
-		testsuite.Require().Equal(exampleBeta, beta)
-		resp = azfake.PagerResponder[mirroredcatalog.MonitoringClientTablesMirroringStatusBetaResponse]{}
-		resp.AddPage(http.StatusOK, mirroredcatalog.MonitoringClientTablesMirroringStatusBetaResponse{TablesMirroringStatusResponse: exampleRes}, nil)
+		resp = azfake.PagerResponder[mirroredcatalog.MonitoringClientListTablesMirroringStatusResponse]{}
+		resp.AddPage(http.StatusOK, mirroredcatalog.MonitoringClientListTablesMirroringStatusResponse{TablesMirroringStatusResponse: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewMonitoringClient()
-	pager := client.NewTablesMirroringStatusBetaPager(exampleWorkspaceID, exampleMirroredCatalogID, exampleBeta, &mirroredcatalog.MonitoringClientTablesMirroringStatusBetaOptions{ContinuationToken: nil})
+	pager := client.NewListTablesMirroringStatusPager(exampleWorkspaceID, exampleMirroredCatalogID, &mirroredcatalog.MonitoringClientListTablesMirroringStatusOptions{ContinuationToken: nil})
 	for pager.More() {
 		nextResult, err := pager.NextPage(ctx)
 		testsuite.Require().NoError(err, "Failed to advance page for example ")

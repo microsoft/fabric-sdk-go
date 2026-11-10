@@ -2197,6 +2197,37 @@ type DeploymentSourceAndTarget struct {
 	TargetItemID *string
 }
 
+// DisableOneLakeFileSoftDeleteRequest - This request disables file soft-delete. A supplied retentionPeriodInDays value is
+// ignored, and the previously configured retention period is not retained.
+type DisableOneLakeFileSoftDeleteRequest struct {
+	// REQUIRED; The file soft-delete status that identifies the request variant. When set to Disabled, the retention period configuration
+	// is not retained and must be provided again when set back to Enabled.
+	Status *OneLakeFileSoftDeleteStatus
+}
+
+// GetModifyOneLakeFileSoftDeleteRequest implements the ModifyOneLakeFileSoftDeleteRequestClassification interface for type
+// DisableOneLakeFileSoftDeleteRequest.
+func (d *DisableOneLakeFileSoftDeleteRequest) GetModifyOneLakeFileSoftDeleteRequest() *ModifyOneLakeFileSoftDeleteRequest {
+	return &ModifyOneLakeFileSoftDeleteRequest{
+		Status: d.Status,
+	}
+}
+
+// DisabledOneLakeFileSoftDeleteSettings - This object represents disabled file soft-delete settings for a workspace. The
+// retention period is omitted.
+type DisabledOneLakeFileSoftDeleteSettings struct {
+	// REQUIRED; The file soft-delete status that identifies the settings variant. When set to Disabled, the retention period
+	// configuration is not retained and must be provided again when set back to Enabled.
+	Status *OneLakeFileSoftDeleteStatus
+}
+
+// GetOneLakeFileSoftDeleteSettings implements the OneLakeFileSoftDeleteSettingsClassification interface for type DisabledOneLakeFileSoftDeleteSettings.
+func (d *DisabledOneLakeFileSoftDeleteSettings) GetOneLakeFileSoftDeleteSettings() *OneLakeFileSoftDeleteSettings {
+	return &OneLakeFileSoftDeleteSettings{
+		Status: d.Status,
+	}
+}
+
 // Domain - Represents a domain.
 type Domain struct {
 	// REQUIRED; The description of the domain.
@@ -2238,6 +2269,42 @@ type Domains struct {
 
 	// The URI of the next result set batch. If there are no more records, it's removed from the response.
 	ContinuationURI *string
+}
+
+// EnableOneLakeFileSoftDeleteRequest - This request enables file soft-delete with the specified retention period.
+type EnableOneLakeFileSoftDeleteRequest struct {
+	// REQUIRED; The number of days deleted files are retained before permanent deletion. Valid range is 1 to 365 days.
+	RetentionPeriodInDays *int32
+
+	// REQUIRED; The file soft-delete status that identifies the request variant. When set to Disabled, the retention period configuration
+	// is not retained and must be provided again when set back to Enabled.
+	Status *OneLakeFileSoftDeleteStatus
+}
+
+// GetModifyOneLakeFileSoftDeleteRequest implements the ModifyOneLakeFileSoftDeleteRequestClassification interface for type
+// EnableOneLakeFileSoftDeleteRequest.
+func (e *EnableOneLakeFileSoftDeleteRequest) GetModifyOneLakeFileSoftDeleteRequest() *ModifyOneLakeFileSoftDeleteRequest {
+	return &ModifyOneLakeFileSoftDeleteRequest{
+		Status: e.Status,
+	}
+}
+
+// EnabledOneLakeFileSoftDeleteSettings - This object contains the enabled file soft-delete settings and retention period
+// for a workspace.
+type EnabledOneLakeFileSoftDeleteSettings struct {
+	// REQUIRED; The number of days deleted files are retained before permanent deletion. Valid range is 1 to 365 days.
+	RetentionPeriodInDays *int32
+
+	// REQUIRED; The file soft-delete status that identifies the settings variant. When set to Disabled, the retention period
+	// configuration is not retained and must be provided again when set back to Enabled.
+	Status *OneLakeFileSoftDeleteStatus
+}
+
+// GetOneLakeFileSoftDeleteSettings implements the OneLakeFileSoftDeleteSettingsClassification interface for type EnabledOneLakeFileSoftDeleteSettings.
+func (e *EnabledOneLakeFileSoftDeleteSettings) GetOneLakeFileSoftDeleteSettings() *OneLakeFileSoftDeleteSettings {
+	return &OneLakeFileSoftDeleteSettings{
+		Status: e.Status,
+	}
 }
 
 // EncryptionDetail - Workspace encryption details.
@@ -2617,6 +2684,11 @@ type GatewayStatusResponse struct {
 type GetOneLakeSettingsResponse struct {
 	// REQUIRED; OneLake diagnostic settings object.
 	Diagnostics *OneLakeDiagnosticSettings
+
+	// File soft-delete settings for the workspace, when available. Omitted when the public feature is disabled, capacity or backend
+	// settings are unavailable, or the soft-delete lookup fails. An omitted
+	// property does not imply that soft-delete is disabled or unconfigured.
+	FileSoftDelete OneLakeFileSoftDeleteSettingsClassification
 
 	// Immutability settings of the workspace.
 	ImmutabilityPolicies []ImmutabilityPolicy
@@ -3529,6 +3601,19 @@ type ModifyAccessTimeTrackingRequest struct {
 	Status *AccessTimeTrackingStatus
 }
 
+// ModifyOneLakeFileSoftDeleteRequest - This request specifies the file soft-delete settings to apply.
+type ModifyOneLakeFileSoftDeleteRequest struct {
+	// REQUIRED; The file soft-delete status that identifies the request variant. When set to Disabled, the retention period configuration
+	// is not retained and must be provided again when set back to Enabled.
+	Status *OneLakeFileSoftDeleteStatus
+}
+
+// GetModifyOneLakeFileSoftDeleteRequest implements the ModifyOneLakeFileSoftDeleteRequestClassification interface for type
+// ModifyOneLakeFileSoftDeleteRequest.
+func (m *ModifyOneLakeFileSoftDeleteRequest) GetModifyOneLakeFileSoftDeleteRequest() *ModifyOneLakeFileSoftDeleteRequest {
+	return m
+}
+
 // ModifyOneLakeWorkspaceDefaultTierResponse - Response for modifying the default OneLake access tier.
 type ModifyOneLakeWorkspaceDefaultTierResponse struct {
 	// REQUIRED; The new default access tier for the workspace.
@@ -3914,6 +3999,18 @@ type OneLakeEndpoints struct {
 	// preferWorkspaceSpecificEndpoints or the workspace has public access disabled, the workspace-specific endpoint is provided
 	// to allow for access over private links.
 	DfsEndpoint *string
+}
+
+// OneLakeFileSoftDeleteSettings - This object contains the file soft-delete settings for a workspace.
+type OneLakeFileSoftDeleteSettings struct {
+	// REQUIRED; The file soft-delete status that identifies the settings variant. When set to Disabled, the retention period
+	// configuration is not retained and must be provided again when set back to Enabled.
+	Status *OneLakeFileSoftDeleteStatus
+}
+
+// GetOneLakeFileSoftDeleteSettings implements the OneLakeFileSoftDeleteSettingsClassification interface for type OneLakeFileSoftDeleteSettings.
+func (o *OneLakeFileSoftDeleteSettings) GetOneLakeFileSoftDeleteSettings() *OneLakeFileSoftDeleteSettings {
+	return o
 }
 
 // OneLakeWorkspaceLifecyclePolicyResponse - The OneLake workspace lifecycle policy response. Contains the policy properties

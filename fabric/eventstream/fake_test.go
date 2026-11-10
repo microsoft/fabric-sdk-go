@@ -863,6 +863,26 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 					StartPosition:     to.Ptr(eventstream.StartPositionEarliest),
 				},
 			},
+			&eventstream.CustomStreamConnectorSourceResponse{
+				Name:   to.Ptr("CustomStreamConnectorSource"),
+				ID:     to.Ptr("6e731a67-4fe0-47e4-9d1a-f1e8bbdd74a4"),
+				Status: to.Ptr(eventstream.NodeStatusRunning),
+				Type:   to.Ptr(eventstream.SourceTypeCustomStreamConnector),
+				Properties: &eventstream.CustomStreamConnectorSourceProperties{
+					Configurations: []eventstream.CustomConnectorConfiguration{
+						{
+							Key:   to.Ptr("topic"),
+							Value: to.Ptr("orders"),
+						},
+						{
+							Key:   to.Ptr("api.key"),
+							Value: to.Ptr("${key}"),
+						}},
+					DataConnectionID: to.Ptr("67a65f1d-6f20-4f80-aef0-a67730de7a2f"),
+					ItemID:           to.Ptr("ee579458-85ea-4652-bd77-5c7d7c298b2a"),
+					WorkspaceID:      to.Ptr("9625b495-17b3-4d6c-aeea-a81ae76ba369"),
+				},
+			},
 			&eventstream.AzureIoTHubSourceResponse{
 				Name:   to.Ptr("AzureIoTHubSource"),
 				ID:     to.Ptr("e2886002-d696-4c05-969c-51361365cc24"),
@@ -1470,6 +1490,72 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamTopology() {
 	res, err := client.GetEventstreamTopology(ctx, exampleWorkspaceID, exampleEventstreamID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.TopologyResponse))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get an eventstream topology with a Business Events source example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleEventstreamID = "8c500070-073f-4a88-b478-8fabe1941c52"
+
+	exampleRes = eventstream.TopologyResponse{
+		Destinations: []eventstream.DestinationResponseClassification{},
+		Operators:    []eventstream.OperatorClassification{},
+		Sources: []eventstream.SourceResponseClassification{
+			&eventstream.BusinessEventsSourceResponse{
+				Name:   to.Ptr("CommerceBusinessEvents"),
+				ID:     to.Ptr("97554164-1b8f-410b-bb72-750f6e88f1c6"),
+				Status: to.Ptr(eventstream.NodeStatusRunning),
+				Type:   to.Ptr(eventstream.SourceTypeBusinessEvents),
+				Properties: &eventstream.BusinessEventsSourceProperties{
+					BusinessEventTypeIDs: []string{
+						"Contoso.Commerce.OrderPlaced",
+						"Contoso.Commerce.OrderUpdated"},
+					Filters: []eventstream.AdvancedFilterClassification{
+						&eventstream.NumberGreaterThanOrEqualsAdvancedFilter{
+							Key:          to.Ptr("data.order.total"),
+							OperatorType: to.Ptr(eventstream.AdvancedFilterOperatorTypeNumberGreaterThanOrEquals),
+							Value:        to.Ptr[float64](100),
+						},
+						&eventstream.StringInAdvancedFilter{
+							Key:          to.Ptr("data.order.country"),
+							OperatorType: to.Ptr(eventstream.AdvancedFilterOperatorTypeStringIn),
+							Values: []string{
+								"US",
+								"CA"},
+						},
+						&eventstream.IsNotNullAdvancedFilter{
+							Key:          to.Ptr("data.order.customerId"),
+							OperatorType: to.Ptr(eventstream.AdvancedFilterOperatorTypeIsNotNull),
+						}},
+					ItemID:      to.Ptr("443ae150-734c-4bbf-8e7c-f53668b270b3"),
+					WorkspaceID: to.Ptr("2a764774-08a3-4a46-9638-45703873bf3b"),
+				},
+			}},
+		Streams: []eventstream.StreamResponseClassification{
+			&eventstream.DefaultStreamResponse{
+				Name: to.Ptr("CommerceEventsStream"),
+				Type: to.Ptr(eventstream.StreamTypeDefaultStream),
+				ID:   to.Ptr("804ed856-90df-47e9-95b5-85b1ebda48d1"),
+				InputNodes: []eventstream.NodeReference{
+					{
+						Name: to.Ptr("CommerceBusinessEvents"),
+					}},
+				Properties: map[string]any{},
+			}},
+	}
+
+	testsuite.serverFactory.TopologyServer.GetEventstreamTopology = func(ctx context.Context, workspaceID string, eventstreamID string, options *eventstream.TopologyClientGetEventstreamTopologyOptions) (resp azfake.Responder[eventstream.TopologyClientGetEventstreamTopologyResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEventstreamID, eventstreamID)
+		resp = azfake.Responder[eventstream.TopologyClientGetEventstreamTopologyResponse]{}
+		resp.SetResponse(http.StatusOK, eventstream.TopologyClientGetEventstreamTopologyResponse{TopologyResponse: exampleRes}, nil)
+		return
+	}
+
+	res, err = client.GetEventstreamTopology(ctx, exampleWorkspaceID, exampleEventstreamID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.TopologyResponse))
 }
 
 func (testsuite *FakeTestSuite) TestTopology_PauseEventstream() {
@@ -1526,16 +1612,71 @@ func (testsuite *FakeTestSuite) TestTopology_ResumeEventstream() {
 func (testsuite *FakeTestSuite) TestTopology_GetEventstreamSource() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Get a Reference Lakehouse eventstream source example"},
+		"example-id": {"Get a Business Events eventstream source example"},
 	})
 	var exampleWorkspaceID string
 	var exampleEventstreamID string
 	var exampleSourceID string
 	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
 	exampleEventstreamID = "8c500070-073f-4a88-b478-8fabe1941c52"
-	exampleSourceID = "f2886002-d696-4c05-969c-51361365cc25"
+	exampleSourceID = "97554164-1b8f-410b-bb72-750f6e88f1c6"
 
 	exampleRes := eventstream.TopologyClientGetEventstreamSourceResponse{
+		SourceResponseClassification: &eventstream.BusinessEventsSourceResponse{
+			Name:   to.Ptr("CommerceBusinessEvents"),
+			ID:     to.Ptr("97554164-1b8f-410b-bb72-750f6e88f1c6"),
+			Status: to.Ptr(eventstream.NodeStatusRunning),
+			Type:   to.Ptr(eventstream.SourceTypeBusinessEvents),
+			Properties: &eventstream.BusinessEventsSourceProperties{
+				BusinessEventTypeIDs: []string{
+					"Contoso.Commerce.OrderPlaced",
+					"Contoso.Commerce.OrderUpdated"},
+				Filters: []eventstream.AdvancedFilterClassification{
+					&eventstream.NumberGreaterThanOrEqualsAdvancedFilter{
+						Key:          to.Ptr("data.order.total"),
+						OperatorType: to.Ptr(eventstream.AdvancedFilterOperatorTypeNumberGreaterThanOrEquals),
+						Value:        to.Ptr[float64](100),
+					},
+					&eventstream.StringInAdvancedFilter{
+						Key:          to.Ptr("data.order.country"),
+						OperatorType: to.Ptr(eventstream.AdvancedFilterOperatorTypeStringIn),
+						Values: []string{
+							"US",
+							"CA"},
+					},
+					&eventstream.IsNotNullAdvancedFilter{
+						Key:          to.Ptr("data.order.customerId"),
+						OperatorType: to.Ptr(eventstream.AdvancedFilterOperatorTypeIsNotNull),
+					}},
+				ItemID:      to.Ptr("443ae150-734c-4bbf-8e7c-f53668b270b3"),
+				WorkspaceID: to.Ptr("2a764774-08a3-4a46-9638-45703873bf3b"),
+			},
+		},
+	}
+
+	testsuite.serverFactory.TopologyServer.GetEventstreamSource = func(ctx context.Context, workspaceID string, eventstreamID string, sourceID string, options *eventstream.TopologyClientGetEventstreamSourceOptions) (resp azfake.Responder[eventstream.TopologyClientGetEventstreamSourceResponse], errResp azfake.ErrorResponder) {
+		testsuite.Require().Equal(exampleWorkspaceID, workspaceID)
+		testsuite.Require().Equal(exampleEventstreamID, eventstreamID)
+		testsuite.Require().Equal(exampleSourceID, sourceID)
+		resp = azfake.Responder[eventstream.TopologyClientGetEventstreamSourceResponse]{}
+		resp.SetResponse(http.StatusOK, exampleRes, nil)
+		return
+	}
+
+	client := testsuite.clientFactory.NewTopologyClient()
+	res, err := client.GetEventstreamSource(ctx, exampleWorkspaceID, exampleEventstreamID, exampleSourceID, nil)
+	testsuite.Require().NoError(err, "Failed to get result for example ")
+	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
+
+	// From example
+	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
+		"example-id": {"Get a Reference Lakehouse eventstream source example"},
+	})
+	exampleWorkspaceID = "cfafbeb1-8037-4d0c-896e-a46fb27ff229"
+	exampleEventstreamID = "8c500070-073f-4a88-b478-8fabe1941c52"
+	exampleSourceID = "f2886002-d696-4c05-969c-51361365cc25"
+
+	exampleRes = eventstream.TopologyClientGetEventstreamSourceResponse{
 		SourceResponseClassification: &eventstream.ReferenceLakehouseSourceResponse{
 			Name:   to.Ptr("ReferenceLakehouseSource"),
 			ID:     to.Ptr("f2886002-d696-4c05-969c-51361365cc25"),
@@ -1563,8 +1704,7 @@ func (testsuite *FakeTestSuite) TestTopology_GetEventstreamSource() {
 		return
 	}
 
-	client := testsuite.clientFactory.NewTopologyClient()
-	res, err := client.GetEventstreamSource(ctx, exampleWorkspaceID, exampleEventstreamID, exampleSourceID, nil)
+	res, err = client.GetEventstreamSource(ctx, exampleWorkspaceID, exampleEventstreamID, exampleSourceID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res))
 

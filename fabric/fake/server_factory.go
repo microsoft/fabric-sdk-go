@@ -23,6 +23,7 @@ import (
 	copyjobfake "github.com/microsoft/fabric-sdk-go/fabric/copyjob/fake"
 	corefake "github.com/microsoft/fabric-sdk-go/fabric/core/fake"
 	cosmosdbdatabasefake "github.com/microsoft/fabric-sdk-go/fabric/cosmosdbdatabase/fake"
+	customstreamconnectorfake "github.com/microsoft/fabric-sdk-go/fabric/customstreamconnector/fake"
 	dashboardfake "github.com/microsoft/fabric-sdk-go/fabric/dashboard/fake"
 	dataagentfake "github.com/microsoft/fabric-sdk-go/fabric/dataagent/fake"
 	databuildtooljobfake "github.com/microsoft/fabric-sdk-go/fabric/databuildtooljob/fake"
@@ -64,6 +65,8 @@ import (
 	reflexfake "github.com/microsoft/fabric-sdk-go/fabric/reflex/fake"
 	reportfake "github.com/microsoft/fabric-sdk-go/fabric/report/fake"
 	semanticmodelfake "github.com/microsoft/fabric-sdk-go/fabric/semanticmodel/fake"
+	sharefake "github.com/microsoft/fabric-sdk-go/fabric/share/fake"
+	sharesubscriptionfake "github.com/microsoft/fabric-sdk-go/fabric/sharesubscription/fake"
 	snowflakedatabasefake "github.com/microsoft/fabric-sdk-go/fabric/snowflakedatabase/fake"
 	sparkfake "github.com/microsoft/fabric-sdk-go/fabric/spark/fake"
 	sparkjobdefinitionfake "github.com/microsoft/fabric-sdk-go/fabric/sparkjobdefinition/fake"
@@ -85,6 +88,7 @@ type ServerFactory struct {
 	CopyJob                        copyjobfake.ServerFactory
 	Core                           corefake.ServerFactory
 	Cosmos                         cosmosdbdatabasefake.ServerFactory
+	CustomStreamConnector          customstreamconnectorfake.ServerFactory
 	Dashboard                      dashboardfake.ServerFactory
 	DataAgent                      dataagentfake.ServerFactory
 	DataBuildToolJob               databuildtooljobfake.ServerFactory
@@ -126,6 +130,8 @@ type ServerFactory struct {
 	Reflex                         reflexfake.ServerFactory
 	Report                         reportfake.ServerFactory
 	SemanticModel                  semanticmodelfake.ServerFactory
+	Share                          sharefake.ServerFactory
+	ShareSubscription              sharesubscriptionfake.ServerFactory
 	SnowflakeDatabase              snowflakedatabasefake.ServerFactory
 	Spark                          sparkfake.ServerFactory
 	SparkJobDefinition             sparkjobdefinitionfake.ServerFactory
@@ -150,6 +156,7 @@ type ServerFactoryTransport struct {
 	trCopyJob                        *copyjobfake.ServerFactoryTransport
 	trCore                           *corefake.ServerFactoryTransport
 	trCosmos                         *cosmosdbdatabasefake.ServerFactoryTransport
+	trCustomStreamConnector          *customstreamconnectorfake.ServerFactoryTransport
 	trDashboard                      *dashboardfake.ServerFactoryTransport
 	trDataAgent                      *dataagentfake.ServerFactoryTransport
 	trDataBuildToolJob               *databuildtooljobfake.ServerFactoryTransport
@@ -191,6 +198,8 @@ type ServerFactoryTransport struct {
 	trReflex                         *reflexfake.ServerFactoryTransport
 	trReport                         *reportfake.ServerFactoryTransport
 	trSemanticModel                  *semanticmodelfake.ServerFactoryTransport
+	trShare                          *sharefake.ServerFactoryTransport
+	trShareSubscription              *sharesubscriptionfake.ServerFactoryTransport
 	trSnowflakeDatabase              *snowflakedatabasefake.ServerFactoryTransport
 	trSpark                          *sparkfake.ServerFactoryTransport
 	trSparkJobDefinition             *sparkjobdefinitionfake.ServerFactoryTransport
@@ -261,6 +270,11 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return cosmosdbdatabasefake.NewServerFactoryTransport(&s.srv.Cosmos)
 		})
 		resp, err = s.trCosmos.Do(req)
+	case "customstreamconnector":
+		initServer(s, &s.trCustomStreamConnector, func() *customstreamconnectorfake.ServerFactoryTransport {
+			return customstreamconnectorfake.NewServerFactoryTransport(&s.srv.CustomStreamConnector)
+		})
+		resp, err = s.trCustomStreamConnector.Do(req)
 	case "dashboard":
 		initServer(s, &s.trDashboard, func() *dashboardfake.ServerFactoryTransport {
 			return dashboardfake.NewServerFactoryTransport(&s.srv.Dashboard)
@@ -456,6 +470,14 @@ func (s *ServerFactoryTransport) Do(req *http.Request) (*http.Response, error) {
 			return semanticmodelfake.NewServerFactoryTransport(&s.srv.SemanticModel)
 		})
 		resp, err = s.trSemanticModel.Do(req)
+	case "share":
+		initServer(s, &s.trShare, func() *sharefake.ServerFactoryTransport { return sharefake.NewServerFactoryTransport(&s.srv.Share) })
+		resp, err = s.trShare.Do(req)
+	case "sharesubscription":
+		initServer(s, &s.trShareSubscription, func() *sharesubscriptionfake.ServerFactoryTransport {
+			return sharesubscriptionfake.NewServerFactoryTransport(&s.srv.ShareSubscription)
+		})
+		resp, err = s.trShareSubscription.Do(req)
 	case "snowflakedatabase":
 		initServer(s, &s.trSnowflakeDatabase, func() *snowflakedatabasefake.ServerFactoryTransport {
 			return snowflakedatabasefake.NewServerFactoryTransport(&s.srv.SnowflakeDatabase)

@@ -100,6 +100,9 @@ func (client *GatewaysClient) addGatewayRoleAssignmentHandleResponse(resp *http.
 // BeginCheckGatewayMemberStatus - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must have permission for the gateway.
 // REQUIRED DELEGATED SCOPES Gateway.Read.All or Gateway.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 10 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -120,6 +123,9 @@ func (client *GatewaysClient) BeginCheckGatewayMemberStatus(ctx context.Context,
 // CheckGatewayMemberStatus - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must have permission for the gateway.
 // REQUIRED DELEGATED SCOPES Gateway.Read.All or Gateway.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 10 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -172,6 +178,9 @@ func (client *GatewaysClient) checkGatewayMemberStatusCreateRequest(ctx context.
 // BeginCheckGatewayStatus - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must have permission for the gateway.
 // REQUIRED DELEGATED SCOPES Gateway.Read.All or Gateway.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 10 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -191,6 +200,9 @@ func (client *GatewaysClient) BeginCheckGatewayStatus(ctx context.Context, gatew
 // CheckGatewayStatus - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 // PERMISSIONS The caller must have permission for the gateway.
 // REQUIRED DELEGATED SCOPES Gateway.Read.All or Gateway.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 10 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -236,7 +248,11 @@ func (client *GatewaysClient) checkGatewayStatusCreateRequest(ctx context.Contex
 	return req, nil
 }
 
-// CreateGateway - REQUIRED DELEGATED SCOPES Gateway.ReadWrite.All
+// CreateGateway - PERMISSIONS The caller must have permission to create gateways.
+// REQUIRED DELEGATED SCOPES Gateway.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -295,6 +311,9 @@ func (client *GatewaysClient) createGatewayHandleResponse(resp *http.Response) (
 
 // DeleteGateway - PERMISSIONS The caller must have admin permission for the gateway.
 // REQUIRED DELEGATED SCOPES Gateway.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 10 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -456,6 +475,9 @@ func (client *GatewaysClient) deleteGatewayRoleAssignmentCreateRequest(ctx conte
 
 // GetGateway - PERMISSIONS The caller must have permissions for the gateway.
 // REQUIRED DELEGATED SCOPES Gateway.Read.All or Gateway.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -583,6 +605,9 @@ func (client *GatewaysClient) getGatewayRoleAssignmentHandleResponse(resp *http.
 // ListGatewayMembers - PERMISSIONS
 // * The caller must have permission for the gateway.
 // REQUIRED DELEGATED SCOPES Gateway.Read.All or Gateway.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -645,6 +670,9 @@ func (client *GatewaysClient) listGatewayMembersHandleResponse(resp *http.Respon
 // PERMISSIONS
 // * The caller must have ConnectionCreator or higher role on the gateway.
 // REQUIRED DELEGATED SCOPES Gateway.Read.All or Gateway.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -710,6 +738,9 @@ func (client *GatewaysClient) listGatewayRoleAssignmentsHandleResponse(resp *htt
 
 // NewListGatewaysPager - PERMISSIONS The caller must have permissions for the gateway.
 // REQUIRED DELEGATED SCOPES Gateway.Read.All or Gateway.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -841,6 +872,9 @@ func (client *GatewaysClient) restartGatewayCreateRequest(ctx context.Context, g
 // PERMISSIONS The caller must have admin permission for the gateway.
 // REQUIRED DELEGATED SCOPES Gateway.ReadWrite.All
 // LIMITATIONS This operation is only supported for vnet data gateway.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 10 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -861,6 +895,9 @@ func (client *GatewaysClient) BeginShutdownGateway(ctx context.Context, gatewayI
 // PERMISSIONS The caller must have admin permission for the gateway.
 // REQUIRED DELEGATED SCOPES Gateway.ReadWrite.All
 // LIMITATIONS This operation is only supported for vnet data gateway.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 10 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -908,6 +945,9 @@ func (client *GatewaysClient) shutdownGatewayCreateRequest(ctx context.Context, 
 
 // UpdateGateway - PERMISSIONS The caller must have admin permission for the gateway.
 // REQUIRED DELEGATED SCOPES Gateway.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -1118,6 +1158,9 @@ func (client *GatewaysClient) updateGatewayRoleAssignmentHandleResponse(resp *ht
 //
 // # REQUIRED DELEGATED SCOPES Gateway.Read.All or Gateway.ReadWrite.All
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 10 calls/min |
+//
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
@@ -1186,6 +1229,9 @@ func (client *GatewaysClient) beginCheckGatewayMemberStatus(ctx context.Context,
 // PERMISSIONS The caller must have permission for the gateway.
 //
 // # REQUIRED DELEGATED SCOPES Gateway.Read.All or Gateway.ReadWrite.All
+//
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 10 calls/min |
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
@@ -1327,6 +1373,9 @@ func (client *GatewaysClient) beginRestartGateway(ctx context.Context, gatewayID
 //
 // LIMITATIONS This operation is only supported for vnet data gateway.
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 10 calls/min |
+//
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
@@ -1397,6 +1446,9 @@ func (client *GatewaysClient) beginShutdownGateway(ctx context.Context, gatewayI
 //
 // # REQUIRED DELEGATED SCOPES Gateway.Read.All or Gateway.ReadWrite.All
 //
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 50 calls/min |
+//
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object] and Managed identities
@@ -1426,6 +1478,9 @@ func (client *GatewaysClient) ListGatewayRoleAssignments(ctx context.Context, ga
 // PERMISSIONS The caller must have permissions for the gateway.
 //
 // # REQUIRED DELEGATED SCOPES Gateway.Read.All or Gateway.ReadWrite.All
+//
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 50 calls/min |
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

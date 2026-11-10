@@ -235,6 +235,166 @@ func (f *FabricItemDatasource) GetDatasourceResponse() *DatasourceResponse {
 	}
 }
 
+// Feedback - The full projection of a single feedback record returned by the get feedback operation. All properties are read-only.
+// The id and hasAttachments properties are always present in successful responses;
+// other properties can be null because the provider model permits null values.
+type Feedback struct {
+	// READ-ONLY; Indicates whether an attachment bundle is available for the feedback record.
+	HasAttachments *bool
+
+	// READ-ONLY; The feedback record ID. This is an opaque provider identifier with a maximum length of 200 characters and is
+	// not a Fabric resource identifier.
+	ID *string
+
+	// READ-ONLY; The AI context associated with the feedback, including the prompt, response, and optional chat history. This
+	// can contain sensitive content.
+	AiContext *FeedbackAiContext
+
+	// READ-ONLY; The source application that submitted the feedback.
+	App *string
+
+	// READ-ONLY; The provider-defined feedback channel.
+	Channel *string
+
+	// READ-ONLY; The free-text feedback comment. This can contain personal information.
+	Comment *string
+
+	// READ-ONLY; The provider-defined feedback subtype.
+	FeedbackSubType *string
+
+	// READ-ONLY; The provider-defined feedback type, such as Smile or Frown. This is not a closed set of values.
+	FeedbackType *string
+
+	// READ-ONLY; The provider-defined feedback platform.
+	Platform *string
+
+	// READ-ONLY; The provider-defined feedback product.
+	Product *string
+
+	// READ-ONLY; The time the feedback was submitted as an RFC 3339 timestamp. Fractional seconds can be included. The value
+	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	SubmittedDateTime *string
+
+	// READ-ONLY; The principal that submitted the feedback. This contains personal information.
+	Submitter PrincipalClassification
+}
+
+// FeedbackAiContext - The AI context associated with a feedback record, including the optional chat history. This object
+// and each of its properties are optional and can contain sensitive content.
+type FeedbackAiContext struct {
+	// READ-ONLY; The chat history associated with the feedback. This is present only in the individual feedback resource.
+	ChatHistory []FeedbackChatHistoryItem
+
+	// READ-ONLY; The prompt submitted to the AI. This can contain sensitive content.
+	Prompt *string
+
+	// READ-ONLY; The response message returned by the AI. This can contain sensitive content.
+	ResponseMessage *string
+}
+
+// FeedbackAiContextSummary - The AI context summary associated with a feedback record. This object and each of its properties
+// are optional and can contain sensitive content.
+type FeedbackAiContextSummary struct {
+	// READ-ONLY; The prompt submitted to the AI. This can contain sensitive content.
+	Prompt *string
+
+	// READ-ONLY; The response message returned by the AI. This can contain sensitive content.
+	ResponseMessage *string
+}
+
+// FeedbackChatHistoryItem - A single entry in a feedback chat history. Both properties are optional because the provider
+// model permits null values.
+type FeedbackChatHistoryItem struct {
+	// READ-ONLY; The chat message content. This can contain sensitive content.
+	Message *string
+
+	// READ-ONLY; The speaker label for the chat entry, such as User or Copilot. This is not documented as a user identity.
+	User *string
+}
+
+// FeedbackFilter - A typed allowlist of feedback filters. Values within a single property are combined with a logical OR,
+// and different properties are combined with a logical AND. Unknown properties and control
+// characters in filter values return InvalidInput.
+type FeedbackFilter struct {
+	// The feedback channels to include. A maximum of 100 values is accepted. Each value must contain at least one non-whitespace
+	// character, be no longer than 256 characters, and contain no control
+	// characters such as newlines or tabs. Invalid values return InvalidInput. Values within the array are combined with a logical
+	// OR.
+	Channels []string
+
+	// The feedback types to include. A maximum of 100 values is accepted. Each value must contain at least one non-whitespace
+	// character, be no longer than 256 characters, and contain no control characters
+	// such as newlines or tabs. Invalid values return InvalidInput. Values within the array are combined with a logical OR.
+	FeedbackTypes []string
+
+	// The feedback platforms to include. A maximum of 100 values is accepted. Each value must contain at least one non-whitespace
+	// character, be no longer than 256 characters, and contain no control
+	// characters such as newlines or tabs. Invalid values return InvalidInput. Values within the array are combined with a logical
+	// OR.
+	Platforms []string
+
+	// The feedback products to include. A maximum of 100 values is accepted. Each value must contain at least one non-whitespace
+	// character, be no longer than 256 characters, and contain no control
+	// characters such as newlines or tabs. Invalid values return InvalidInput. Values within the array are combined with a logical
+	// OR.
+	Products []string
+}
+
+// FeedbackPage - A paginated list of feedback summaries for a DataAgent.
+type FeedbackPage struct {
+	// READ-ONLY; The list of feedback summaries in the current page.
+	Value []FeedbackSummary
+
+	// The token for the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationToken *string
+
+	// The URI of the next result set batch. If there are no more records, it's removed from the response.
+	ContinuationURI *string
+}
+
+// FeedbackSummary - A summary projection of a single feedback record. All properties are read-only. The id and hasAttachments
+// properties are always present in successful responses; other properties can be null because
+// the provider model permits null values.
+type FeedbackSummary struct {
+	// READ-ONLY; Indicates whether an attachment bundle is available for the feedback record.
+	HasAttachments *bool
+
+	// READ-ONLY; The feedback record ID. This is an opaque provider identifier with a maximum length of 200 characters and is
+	// not a Fabric resource identifier.
+	ID *string
+
+	// READ-ONLY; The AI context associated with the feedback, including the prompt and response. This can contain sensitive content.
+	AiContext *FeedbackAiContextSummary
+
+	// READ-ONLY; The source application that submitted the feedback.
+	App *string
+
+	// READ-ONLY; The provider-defined feedback channel.
+	Channel *string
+
+	// READ-ONLY; The free-text feedback comment. This can contain personal information.
+	Comment *string
+
+	// READ-ONLY; The provider-defined feedback subtype.
+	FeedbackSubType *string
+
+	// READ-ONLY; The provider-defined feedback type, such as Smile or Frown. This is not a closed set of values.
+	FeedbackType *string
+
+	// READ-ONLY; The provider-defined feedback platform.
+	Platform *string
+
+	// READ-ONLY; The provider-defined feedback product.
+	Product *string
+
+	// READ-ONLY; The time the feedback was submitted as an RFC 3339 timestamp. Fractional seconds can be included. The value
+	// is in UTC, using the YYYY-MM-DDTHH:mm:ssZ format.
+	SubmittedDateTime *string
+
+	// READ-ONLY; The principal that submitted the feedback. This contains personal information.
+	Submitter PrincipalClassification
+}
+
 // Fewshot - A DataAgent fewshot.
 type Fewshot struct {
 	// REQUIRED; The fewshot ID.
@@ -443,6 +603,33 @@ type PublishDataAgentRequest struct {
 type PublishDataAgentResponse struct {
 	// The publish description.
 	PublishedDescription *string
+}
+
+// QueryFeedbackRequest - The request payload used to filter, sort, and paginate feedback for a DataAgent. All properties
+// are optional; omitted criteria do not constrain the results. Unknown JSON properties in this object or
+// its filter object return InvalidInput; unrecognized query parameters are ignored.
+type QueryFeedbackRequest struct {
+	// The inclusive upper bound for the feedback submission time. Provide an RFC 3339 timestamp with Z or a numeric UTC offset,
+	// for example, 2026-08-01T00:00:00Z.
+	EndSubmittedDateTime *string
+
+	// The typed allowlist of filters applied to the feedback query.
+	Filter *FeedbackFilter
+
+	// An optional free-text search term with a maximum length of 200 characters. Control characters, including newlines and tabs,
+	// return InvalidInput. The provider searches the feedback comment, feedback
+	// ID, submitter email, and submitter user ID. Matching, tokenization, and case behavior are provider-defined.
+	Search *string
+
+	// The property used to sort the feedback.
+	SortBy *FeedbackSortBy
+
+	// The sort order applied to the feedback. If not specified, the default is Descending.
+	SortOrder *FeedbackSortOrder
+
+	// The inclusive lower bound for the feedback submission time. Provide an RFC 3339 timestamp with Z or a numeric UTC offset,
+	// for example, 2026-07-01T00:00:00-04:00.
+	StartSubmittedDateTime *string
 }
 
 // SensitivityLabel - Represents a sensitivity label applied to an item.

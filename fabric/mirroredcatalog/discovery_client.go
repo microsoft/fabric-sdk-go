@@ -29,10 +29,7 @@ type DiscoveryClient struct {
 	endpoint string
 }
 
-// NewListScopesBetaPager - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes
-// only. It may change based on feedback and is not recommended for production use.
-// When calling this API, callers must specify true as the value for the query parameter beta.
-// This API supports pagination [/rest/api/fabric/articles/pagination].
+// NewListScopesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // Returns a hierarchical list of namespaces from the source catalog. This API is used to browse and select the scope when
 // creating or updating a MirroredCatalog.
 // PERMISSIONS The caller must have a viewer workspace role.
@@ -46,35 +43,34 @@ type DiscoveryClient struct {
 //
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
-//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
 //   - connectionID - The connection ID to the catalog.
-//   - options - DiscoveryClientListScopesBetaOptions contains the optional parameters for the DiscoveryClient.NewListScopesBetaPager
+//   - options - DiscoveryClientListScopesOptions contains the optional parameters for the DiscoveryClient.NewListScopesPager
 //     method.
-func (client *DiscoveryClient) NewListScopesBetaPager(workspaceID string, beta bool, connectionID string, options *DiscoveryClientListScopesBetaOptions) *runtime.Pager[DiscoveryClientListScopesBetaResponse] {
-	return runtime.NewPager(runtime.PagingHandler[DiscoveryClientListScopesBetaResponse]{
-		More: func(page DiscoveryClientListScopesBetaResponse) bool {
+func (client *DiscoveryClient) NewListScopesPager(workspaceID string, connectionID string, options *DiscoveryClientListScopesOptions) *runtime.Pager[DiscoveryClientListScopesResponse] {
+	return runtime.NewPager(runtime.PagingHandler[DiscoveryClientListScopesResponse]{
+		More: func(page DiscoveryClientListScopesResponse) bool {
 			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
 		},
-		Fetcher: func(ctx context.Context, page *DiscoveryClientListScopesBetaResponse) (DiscoveryClientListScopesBetaResponse, error) {
-			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "mirroredcatalog.DiscoveryClient.NewListScopesBetaPager")
+		Fetcher: func(ctx context.Context, page *DiscoveryClientListScopesResponse) (DiscoveryClientListScopesResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "mirroredcatalog.DiscoveryClient.NewListScopesPager")
 			nextLink := ""
 			if page != nil {
 				nextLink = *page.ContinuationURI
 			}
 			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
-				return client.listScopesBetaCreateRequest(ctx, workspaceID, beta, connectionID, options)
+				return client.listScopesCreateRequest(ctx, workspaceID, connectionID, options)
 			}, nil)
 			if err != nil {
-				return DiscoveryClientListScopesBetaResponse{}, err
+				return DiscoveryClientListScopesResponse{}, err
 			}
-			return client.listScopesBetaHandleResponse(resp)
+			return client.listScopesHandleResponse(resp)
 		},
 		Tracer: client.internal.Tracer(),
 	})
 }
 
-// listScopesBetaCreateRequest creates the ListScopesBeta request.
-func (client *DiscoveryClient) listScopesBetaCreateRequest(ctx context.Context, workspaceID string, beta bool, connectionID string, options *DiscoveryClientListScopesBetaOptions) (*policy.Request, error) {
+// listScopesCreateRequest creates the ListScopes request.
+func (client *DiscoveryClient) listScopesCreateRequest(ctx context.Context, workspaceID string, connectionID string, options *DiscoveryClientListScopesOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/catalogmirroring/scopes"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -85,7 +81,6 @@ func (client *DiscoveryClient) listScopesBetaCreateRequest(ctx context.Context, 
 		return nil, err
 	}
 	reqQP := req.Raw().URL.Query()
-	reqQP.Set("beta", strconv.FormatBool(beta))
 	reqQP.Set("connectionId", connectionID)
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
@@ -103,19 +98,16 @@ func (client *DiscoveryClient) listScopesBetaCreateRequest(ctx context.Context, 
 	return req, nil
 }
 
-// listScopesBetaHandleResponse handles the ListScopesBeta response.
-func (client *DiscoveryClient) listScopesBetaHandleResponse(resp *http.Response) (DiscoveryClientListScopesBetaResponse, error) {
-	result := DiscoveryClientListScopesBetaResponse{}
+// listScopesHandleResponse handles the ListScopes response.
+func (client *DiscoveryClient) listScopesHandleResponse(resp *http.Response) (DiscoveryClientListScopesResponse, error) {
+	result := DiscoveryClientListScopesResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.ScopesResponse); err != nil {
-		return DiscoveryClientListScopesBetaResponse{}, err
+		return DiscoveryClientListScopesResponse{}, err
 	}
 	return result, nil
 }
 
-// NewListTablesBetaPager - > [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes
-// only. It may change based on feedback and is not recommended for production use.
-// When calling this API, callers must specify true as the value for the query parameter beta.
-// This API supports pagination [/rest/api/fabric/articles/pagination].
+// NewListTablesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
 // Returns a list of tables within a specified namespace scope from the source catalog. This API is used to browse tables
 // when configuring partial mirroring with table-level selection.
 // PERMISSIONS The caller must have a viewer workspace role.
@@ -129,35 +121,34 @@ func (client *DiscoveryClient) listScopesBetaHandleResponse(resp *http.Response)
 //
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
-//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
 //   - connectionID - The connection ID to the catalog.
-//   - options - DiscoveryClientListTablesBetaOptions contains the optional parameters for the DiscoveryClient.NewListTablesBetaPager
+//   - options - DiscoveryClientListTablesOptions contains the optional parameters for the DiscoveryClient.NewListTablesPager
 //     method.
-func (client *DiscoveryClient) NewListTablesBetaPager(workspaceID string, beta bool, connectionID string, options *DiscoveryClientListTablesBetaOptions) *runtime.Pager[DiscoveryClientListTablesBetaResponse] {
-	return runtime.NewPager(runtime.PagingHandler[DiscoveryClientListTablesBetaResponse]{
-		More: func(page DiscoveryClientListTablesBetaResponse) bool {
+func (client *DiscoveryClient) NewListTablesPager(workspaceID string, connectionID string, options *DiscoveryClientListTablesOptions) *runtime.Pager[DiscoveryClientListTablesResponse] {
+	return runtime.NewPager(runtime.PagingHandler[DiscoveryClientListTablesResponse]{
+		More: func(page DiscoveryClientListTablesResponse) bool {
 			return page.ContinuationURI != nil && len(*page.ContinuationURI) > 0
 		},
-		Fetcher: func(ctx context.Context, page *DiscoveryClientListTablesBetaResponse) (DiscoveryClientListTablesBetaResponse, error) {
-			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "mirroredcatalog.DiscoveryClient.NewListTablesBetaPager")
+		Fetcher: func(ctx context.Context, page *DiscoveryClientListTablesResponse) (DiscoveryClientListTablesResponse, error) {
+			ctx = context.WithValue(ctx, runtime.CtxAPINameKey{}, "mirroredcatalog.DiscoveryClient.NewListTablesPager")
 			nextLink := ""
 			if page != nil {
 				nextLink = *page.ContinuationURI
 			}
 			resp, err := runtime.FetcherForNextLink(ctx, client.internal.Pipeline(), nextLink, func(ctx context.Context) (*policy.Request, error) {
-				return client.listTablesBetaCreateRequest(ctx, workspaceID, beta, connectionID, options)
+				return client.listTablesCreateRequest(ctx, workspaceID, connectionID, options)
 			}, nil)
 			if err != nil {
-				return DiscoveryClientListTablesBetaResponse{}, err
+				return DiscoveryClientListTablesResponse{}, err
 			}
-			return client.listTablesBetaHandleResponse(resp)
+			return client.listTablesHandleResponse(resp)
 		},
 		Tracer: client.internal.Tracer(),
 	})
 }
 
-// listTablesBetaCreateRequest creates the ListTablesBeta request.
-func (client *DiscoveryClient) listTablesBetaCreateRequest(ctx context.Context, workspaceID string, beta bool, connectionID string, options *DiscoveryClientListTablesBetaOptions) (*policy.Request, error) {
+// listTablesCreateRequest creates the ListTables request.
+func (client *DiscoveryClient) listTablesCreateRequest(ctx context.Context, workspaceID string, connectionID string, options *DiscoveryClientListTablesOptions) (*policy.Request, error) {
 	urlPath := "/v1/workspaces/{workspaceId}/catalogmirroring/tables"
 	if workspaceID == "" {
 		return nil, errors.New("parameter workspaceID cannot be empty")
@@ -168,7 +159,6 @@ func (client *DiscoveryClient) listTablesBetaCreateRequest(ctx context.Context, 
 		return nil, err
 	}
 	reqQP := req.Raw().URL.Query()
-	reqQP.Set("beta", strconv.FormatBool(beta))
 	reqQP.Set("connectionId", connectionID)
 	if options != nil && options.ContinuationToken != nil {
 		reqQP.Set("continuationToken", *options.ContinuationToken)
@@ -183,22 +173,18 @@ func (client *DiscoveryClient) listTablesBetaCreateRequest(ctx context.Context, 
 	return req, nil
 }
 
-// listTablesBetaHandleResponse handles the ListTablesBeta response.
-func (client *DiscoveryClient) listTablesBetaHandleResponse(resp *http.Response) (DiscoveryClientListTablesBetaResponse, error) {
-	result := DiscoveryClientListTablesBetaResponse{}
+// listTablesHandleResponse handles the ListTables response.
+func (client *DiscoveryClient) listTablesHandleResponse(resp *http.Response) (DiscoveryClientListTablesResponse, error) {
+	result := DiscoveryClientListTablesResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.TablesResponse); err != nil {
-		return DiscoveryClientListTablesBetaResponse{}, err
+		return DiscoveryClientListTablesResponse{}, err
 	}
 	return result, nil
 }
 
 // Custom code starts below
 
-// ListScopesBeta - returns array of Scope from all pages.
-// >  [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
-//
-// When calling this API, callers must specify true as the value for the query parameter beta.
-//
+// ListScopes - returns array of Scope from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
 // Returns a hierarchical list of namespaces from the source catalog. This API is used to browse and select the scope when creating or updating a MirroredCatalog.
@@ -215,12 +201,11 @@ func (client *DiscoveryClient) listTablesBetaHandleResponse(resp *http.Response)
 // INTERFACE
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
-//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
 //   - connectionID - The connection ID to the catalog.
-//   - options - DiscoveryClientListScopesBetaOptions contains the optional parameters for the DiscoveryClient.NewListScopesBetaPager method.
-func (client *DiscoveryClient) ListScopesBeta(ctx context.Context, workspaceID string, beta bool, connectionID string, options *DiscoveryClientListScopesBetaOptions) ([]Scope, error) {
-	pager := client.NewListScopesBetaPager(workspaceID, beta, connectionID, options)
-	mapper := func(resp DiscoveryClientListScopesBetaResponse) []Scope {
+//   - options - DiscoveryClientListScopesOptions contains the optional parameters for the DiscoveryClient.NewListScopesPager method.
+func (client *DiscoveryClient) ListScopes(ctx context.Context, workspaceID string, connectionID string, options *DiscoveryClientListScopesOptions) ([]Scope, error) {
+	pager := client.NewListScopesPager(workspaceID, connectionID, options)
+	mapper := func(resp DiscoveryClientListScopesResponse) []Scope {
 		return resp.Value
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()
@@ -234,11 +219,7 @@ func (client *DiscoveryClient) ListScopesBeta(ctx context.Context, workspaceID s
 	return list, nil
 }
 
-// ListTablesBeta - returns array of TableInfo from all pages.
-// >  [!NOTE] This API is part of a Beta release and is provided for evaluation and development purposes only. It may change based on feedback and is not recommended for production use.
-//
-// When calling this API, callers must specify true as the value for the query parameter beta.
-//
+// ListTables - returns array of TableInfo from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
 // Returns a list of tables within a specified namespace scope from the source catalog. This API is used to browse tables when configuring partial mirroring with table-level selection.
@@ -255,12 +236,11 @@ func (client *DiscoveryClient) ListScopesBeta(ctx context.Context, workspaceID s
 // INTERFACE
 // Generated from API version v1
 //   - workspaceID - The workspace ID.
-//   - beta - This required parameter must be set to true to access this API, which is currently in beta.
 //   - connectionID - The connection ID to the catalog.
-//   - options - DiscoveryClientListTablesBetaOptions contains the optional parameters for the DiscoveryClient.NewListTablesBetaPager method.
-func (client *DiscoveryClient) ListTablesBeta(ctx context.Context, workspaceID string, beta bool, connectionID string, options *DiscoveryClientListTablesBetaOptions) ([]TableInfo, error) {
-	pager := client.NewListTablesBetaPager(workspaceID, beta, connectionID, options)
-	mapper := func(resp DiscoveryClientListTablesBetaResponse) []TableInfo {
+//   - options - DiscoveryClientListTablesOptions contains the optional parameters for the DiscoveryClient.NewListTablesPager method.
+func (client *DiscoveryClient) ListTables(ctx context.Context, workspaceID string, connectionID string, options *DiscoveryClientListTablesOptions) ([]TableInfo, error) {
+	pager := client.NewListTablesPager(workspaceID, connectionID, options)
+	mapper := func(resp DiscoveryClientListTablesResponse) []TableInfo {
 		return resp.Value
 	}
 	list, err := iruntime.NewPageIterator(ctx, pager, mapper).Get()

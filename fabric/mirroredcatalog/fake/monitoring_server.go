@@ -13,7 +13,6 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
-	"strconv"
 	"strings"
 
 	azfake "github.com/Azure/azure-sdk-for-go/sdk/azcore/fake"
@@ -26,13 +25,13 @@ import (
 
 // MonitoringServer is a fake server for instances of the mirroredcatalog.MonitoringClient type.
 type MonitoringServer struct {
-	// MirroringStatusBeta is the fake for method MonitoringClient.MirroringStatusBeta
+	// GetMirroringStatus is the fake for method MonitoringClient.GetMirroringStatus
 	// HTTP status codes to indicate success: http.StatusOK
-	MirroringStatusBeta func(ctx context.Context, workspaceID string, mirroredCatalogID string, beta bool, options *mirroredcatalog.MonitoringClientMirroringStatusBetaOptions) (resp azfake.Responder[mirroredcatalog.MonitoringClientMirroringStatusBetaResponse], errResp azfake.ErrorResponder)
+	GetMirroringStatus func(ctx context.Context, workspaceID string, mirroredCatalogID string, options *mirroredcatalog.MonitoringClientGetMirroringStatusOptions) (resp azfake.Responder[mirroredcatalog.MonitoringClientGetMirroringStatusResponse], errResp azfake.ErrorResponder)
 
-	// NewTablesMirroringStatusBetaPager is the fake for method MonitoringClient.NewTablesMirroringStatusBetaPager
+	// NewListTablesMirroringStatusPager is the fake for method MonitoringClient.NewListTablesMirroringStatusPager
 	// HTTP status codes to indicate success: http.StatusOK
-	NewTablesMirroringStatusBetaPager func(workspaceID string, mirroredCatalogID string, beta bool, options *mirroredcatalog.MonitoringClientTablesMirroringStatusBetaOptions) (resp azfake.PagerResponder[mirroredcatalog.MonitoringClientTablesMirroringStatusBetaResponse])
+	NewListTablesMirroringStatusPager func(workspaceID string, mirroredCatalogID string, options *mirroredcatalog.MonitoringClientListTablesMirroringStatusOptions) (resp azfake.PagerResponder[mirroredcatalog.MonitoringClientListTablesMirroringStatusResponse])
 }
 
 // NewMonitoringServerTransport creates a new instance of MonitoringServerTransport with the provided implementation.
@@ -41,7 +40,7 @@ type MonitoringServer struct {
 func NewMonitoringServerTransport(srv *MonitoringServer) *MonitoringServerTransport {
 	return &MonitoringServerTransport{
 		srv:                               srv,
-		newTablesMirroringStatusBetaPager: newTracker[azfake.PagerResponder[mirroredcatalog.MonitoringClientTablesMirroringStatusBetaResponse]](),
+		newListTablesMirroringStatusPager: newTracker[azfake.PagerResponder[mirroredcatalog.MonitoringClientListTablesMirroringStatusResponse]](),
 	}
 }
 
@@ -49,7 +48,7 @@ func NewMonitoringServerTransport(srv *MonitoringServer) *MonitoringServerTransp
 // Don't use this type directly, use NewMonitoringServerTransport instead.
 type MonitoringServerTransport struct {
 	srv                               *MonitoringServer
-	newTablesMirroringStatusBetaPager *tracker[azfake.PagerResponder[mirroredcatalog.MonitoringClientTablesMirroringStatusBetaResponse]]
+	newListTablesMirroringStatusPager *tracker[azfake.PagerResponder[mirroredcatalog.MonitoringClientListTablesMirroringStatusResponse]]
 }
 
 // Do implements the policy.Transporter interface for MonitoringServerTransport.
@@ -77,10 +76,10 @@ func (m *MonitoringServerTransport) dispatchToMethodFake(req *http.Request, meth
 		}
 		if !intercepted {
 			switch method {
-			case "MonitoringClient.MirroringStatusBeta":
-				res.resp, res.err = m.dispatchMirroringStatusBeta(req)
-			case "MonitoringClient.NewTablesMirroringStatusBetaPager":
-				res.resp, res.err = m.dispatchNewTablesMirroringStatusBetaPager(req)
+			case "MonitoringClient.GetMirroringStatus":
+				res.resp, res.err = m.dispatchGetMirroringStatus(req)
+			case "MonitoringClient.NewListTablesMirroringStatusPager":
+				res.resp, res.err = m.dispatchNewListTablesMirroringStatusPager(req)
 			default:
 				res.err = fmt.Errorf("unhandled API %s", method)
 			}
@@ -100,9 +99,9 @@ func (m *MonitoringServerTransport) dispatchToMethodFake(req *http.Request, meth
 	}
 }
 
-func (m *MonitoringServerTransport) dispatchMirroringStatusBeta(req *http.Request) (*http.Response, error) {
-	if m.srv.MirroringStatusBeta == nil {
-		return nil, &nonRetriableError{errors.New("fake for method MirroringStatusBeta not implemented")}
+func (m *MonitoringServerTransport) dispatchGetMirroringStatus(req *http.Request) (*http.Response, error) {
+	if m.srv.GetMirroringStatus == nil {
+		return nil, &nonRetriableError{errors.New("fake for method GetMirroringStatus not implemented")}
 	}
 	const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/mirroredCatalogs/(?P<mirroredCatalogId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/mirroringStatus`
 	regex := regexp.MustCompile(regexStr)
@@ -110,7 +109,6 @@ func (m *MonitoringServerTransport) dispatchMirroringStatusBeta(req *http.Reques
 	if len(matches) < 3 {
 		return nil, fmt.Errorf("failed to parse path %s", req.URL.Path)
 	}
-	qp := req.URL.Query()
 	workspaceIDParam, err := url.PathUnescape(matches[regex.SubexpIndex("workspaceId")])
 	if err != nil {
 		return nil, err
@@ -119,15 +117,7 @@ func (m *MonitoringServerTransport) dispatchMirroringStatusBeta(req *http.Reques
 	if err != nil {
 		return nil, err
 	}
-	betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
-	if err != nil {
-		return nil, err
-	}
-	betaParam, err := strconv.ParseBool(betaUnescaped)
-	if err != nil {
-		return nil, err
-	}
-	respr, errRespr := m.srv.MirroringStatusBeta(req.Context(), workspaceIDParam, mirroredCatalogIDParam, betaParam, nil)
+	respr, errRespr := m.srv.GetMirroringStatus(req.Context(), workspaceIDParam, mirroredCatalogIDParam, nil)
 	if respErr := server.GetError(errRespr, req); respErr != nil {
 		return nil, respErr
 	}
@@ -142,12 +132,12 @@ func (m *MonitoringServerTransport) dispatchMirroringStatusBeta(req *http.Reques
 	return resp, nil
 }
 
-func (m *MonitoringServerTransport) dispatchNewTablesMirroringStatusBetaPager(req *http.Request) (*http.Response, error) {
-	if m.srv.NewTablesMirroringStatusBetaPager == nil {
-		return nil, &nonRetriableError{errors.New("fake for method NewTablesMirroringStatusBetaPager not implemented")}
+func (m *MonitoringServerTransport) dispatchNewListTablesMirroringStatusPager(req *http.Request) (*http.Response, error) {
+	if m.srv.NewListTablesMirroringStatusPager == nil {
+		return nil, &nonRetriableError{errors.New("fake for method NewListTablesMirroringStatusPager not implemented")}
 	}
-	newTablesMirroringStatusBetaPager := m.newTablesMirroringStatusBetaPager.get(req)
-	if newTablesMirroringStatusBetaPager == nil {
+	newListTablesMirroringStatusPager := m.newListTablesMirroringStatusPager.get(req)
+	if newListTablesMirroringStatusPager == nil {
 		const regexStr = `/v1/workspaces/(?P<workspaceId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/mirroredCatalogs/(?P<mirroredCatalogId>[!#&$-;=?-\[\]_a-zA-Z0-9~%@]+)/tablesMirroringStatus`
 		regex := regexp.MustCompile(regexStr)
 		matches := regex.FindStringSubmatch(req.URL.EscapedPath())
@@ -163,42 +153,34 @@ func (m *MonitoringServerTransport) dispatchNewTablesMirroringStatusBetaPager(re
 		if err != nil {
 			return nil, err
 		}
-		betaUnescaped, err := url.QueryUnescape(qp.Get("beta"))
-		if err != nil {
-			return nil, err
-		}
-		betaParam, err := strconv.ParseBool(betaUnescaped)
-		if err != nil {
-			return nil, err
-		}
 		continuationTokenUnescaped, err := url.QueryUnescape(qp.Get("continuationToken"))
 		if err != nil {
 			return nil, err
 		}
 		continuationTokenParam := getOptional(continuationTokenUnescaped)
-		var options *mirroredcatalog.MonitoringClientTablesMirroringStatusBetaOptions
+		var options *mirroredcatalog.MonitoringClientListTablesMirroringStatusOptions
 		if continuationTokenParam != nil {
-			options = &mirroredcatalog.MonitoringClientTablesMirroringStatusBetaOptions{
+			options = &mirroredcatalog.MonitoringClientListTablesMirroringStatusOptions{
 				ContinuationToken: continuationTokenParam,
 			}
 		}
-		resp := m.srv.NewTablesMirroringStatusBetaPager(workspaceIDParam, mirroredCatalogIDParam, betaParam, options)
-		newTablesMirroringStatusBetaPager = &resp
-		m.newTablesMirroringStatusBetaPager.add(req, newTablesMirroringStatusBetaPager)
-		server.PagerResponderInjectNextLinks(newTablesMirroringStatusBetaPager, req, func(page *mirroredcatalog.MonitoringClientTablesMirroringStatusBetaResponse, createLink func() string) {
+		resp := m.srv.NewListTablesMirroringStatusPager(workspaceIDParam, mirroredCatalogIDParam, options)
+		newListTablesMirroringStatusPager = &resp
+		m.newListTablesMirroringStatusPager.add(req, newListTablesMirroringStatusPager)
+		server.PagerResponderInjectNextLinks(newListTablesMirroringStatusPager, req, func(page *mirroredcatalog.MonitoringClientListTablesMirroringStatusResponse, createLink func() string) {
 			page.ContinuationURI = to.Ptr(createLink())
 		})
 	}
-	resp, err := server.PagerResponderNext(newTablesMirroringStatusBetaPager, req)
+	resp, err := server.PagerResponderNext(newListTablesMirroringStatusPager, req)
 	if err != nil {
 		return nil, err
 	}
 	if !contains([]int{http.StatusOK}, resp.StatusCode) {
-		m.newTablesMirroringStatusBetaPager.remove(req)
+		m.newListTablesMirroringStatusPager.remove(req)
 		return nil, &nonRetriableError{fmt.Errorf("unexpected status code %d. acceptable values are http.StatusOK", resp.StatusCode)}
 	}
-	if !server.PagerResponderMore(newTablesMirroringStatusBetaPager) {
-		m.newTablesMirroringStatusBetaPager.remove(req)
+	if !server.PagerResponderMore(newListTablesMirroringStatusPager) {
+		m.newListTablesMirroringStatusPager.remove(req)
 	}
 	return resp, nil
 }

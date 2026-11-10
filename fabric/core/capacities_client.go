@@ -29,6 +29,9 @@ type CapacitiesClient struct {
 
 // GetCapacity - PERMISSIONS The caller must have administrator or contributor permissions on the capacity.
 // REQUIRED DELEGATED SCOPES Capacity.Read.All or Capacity.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -90,6 +93,9 @@ func (client *CapacitiesClient) getCapacityHandleResponse(resp *http.Response) (
 // PERMISSIONS The caller must have admin permissions on the capacity.
 // REQUIRED DELEGATED SCOPES Capacity.Read.All or Capacity.ReadWrite.All
 // LIMITATIONS None.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -149,7 +155,11 @@ func (client *CapacitiesClient) getOverageConfigurationHandleResponse(resp *http
 }
 
 // NewListCapacitiesPager - This API supports pagination [/rest/api/fabric/articles/pagination].
+// PERMISSIONS The caller must have administrator or contributor permissions on the capacity.
 // REQUIRED DELEGATED SCOPES Capacity.Read.All or Capacity.ReadWrite.All
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -212,6 +222,9 @@ func (client *CapacitiesClient) listCapacitiesHandleResponse(resp *http.Response
 // PERMISSIONS The caller must have admin permissions on the capacity.
 // REQUIRED DELEGATED SCOPES Capacity.ReadWrite.All
 // LIMITATIONS None.
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works]
+// | 500 calls/min | |
+// API limit | 50 calls/min |
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
 // listed in this section.
 // | Identity | Support | |-|-| | User | Yes | | Service principal [/entra/identity-platform/app-objects-and-service-principals#service-principal-object]
@@ -279,7 +292,12 @@ func (client *CapacitiesClient) updateOverageConfigurationHandleResponse(resp *h
 // ListCapacities - returns array of Capacity from all pages.
 // This API supports pagination [/rest/api/fabric/articles/pagination].
 //
+// PERMISSIONS The caller must have administrator or contributor permissions on the capacity.
+//
 // # REQUIRED DELEGATED SCOPES Capacity.Read.All or Capacity.ReadWrite.All
+//
+// THROTTLING LIMITS | Limit Type | Value | |-|-| | Unified Quota for Platform APIs [https://learn.microsoft.com/en-us/rest/api/fabric/articles/throttling#how-the-quota-model-works] | 500 calls/min | |
+// API limit | 50 calls/min |
 //
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support] listed in this section.
 //

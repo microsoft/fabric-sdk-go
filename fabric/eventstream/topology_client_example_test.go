@@ -19,7 +19,7 @@ import (
 )
 
 // Generated from example definition
-func ExampleTopologyClient_GetEventstreamTopology() {
+func ExampleTopologyClient_GetEventstreamTopology_getAnEventstreamTopologyExample() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
@@ -488,6 +488,26 @@ func ExampleTopologyClient_GetEventstreamTopology() {
 	// 						ConsumerGroupName: to.Ptr("$Default"),
 	// 						DataConnectionID: to.Ptr("7b0d2f83-1b3f-4f3b-a0f9-1d6b2f7b6c21"),
 	// 						StartPosition: to.Ptr(eventstream.StartPositionEarliest),
+	// 					},
+	// 				},
+	// 				&eventstream.CustomStreamConnectorSourceResponse{
+	// 					Name: to.Ptr("CustomStreamConnectorSource"),
+	// 					ID: to.Ptr("6e731a67-4fe0-47e4-9d1a-f1e8bbdd74a4"),
+	// 					Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 					Type: to.Ptr(eventstream.SourceTypeCustomStreamConnector),
+	// 					Properties: &eventstream.CustomStreamConnectorSourceProperties{
+	// 						Configurations: []eventstream.CustomConnectorConfiguration{
+	// 							{
+	// 								Key: to.Ptr("topic"),
+	// 								Value: to.Ptr("orders"),
+	// 							},
+	// 							{
+	// 								Key: to.Ptr("api.key"),
+	// 								Value: to.Ptr("${key}"),
+	// 						}},
+	// 						DataConnectionID: to.Ptr("67a65f1d-6f20-4f80-aef0-a67730de7a2f"),
+	// 						ItemID: to.Ptr("ee579458-85ea-4652-bd77-5c7d7c298b2a"),
+	// 						WorkspaceID: to.Ptr("9625b495-17b3-4d6c-aeea-a81ae76ba369"),
 	// 					},
 	// 				},
 	// 				&eventstream.AzureIoTHubSourceResponse{
@@ -1091,6 +1111,75 @@ func ExampleTopologyClient_GetEventstreamTopology() {
 }
 
 // Generated from example definition
+func ExampleTopologyClient_GetEventstreamTopology_getAnEventstreamTopologyWithABusinessEventsSourceExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := eventstream.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewTopologyClient().GetEventstreamTopology(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "8c500070-073f-4a88-b478-8fabe1941c52", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res.TopologyResponse = eventstream.TopologyResponse{
+	// 	Destinations: []eventstream.DestinationResponseClassification{
+	// 	},
+	// 	Operators: []eventstream.OperatorClassification{
+	// 	},
+	// 	Sources: []eventstream.SourceResponseClassification{
+	// 		&eventstream.BusinessEventsSourceResponse{
+	// 			Name: to.Ptr("CommerceBusinessEvents"),
+	// 			ID: to.Ptr("97554164-1b8f-410b-bb72-750f6e88f1c6"),
+	// 			Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 			Type: to.Ptr(eventstream.SourceTypeBusinessEvents),
+	// 			Properties: &eventstream.BusinessEventsSourceProperties{
+	// 				BusinessEventTypeIDs: []string{
+	// 					"Contoso.Commerce.OrderPlaced",
+	// 					"Contoso.Commerce.OrderUpdated"},
+	// 					Filters: []eventstream.AdvancedFilterClassification{
+	// 						&eventstream.NumberGreaterThanOrEqualsAdvancedFilter{
+	// 							Key: to.Ptr("data.order.total"),
+	// 							OperatorType: to.Ptr(eventstream.AdvancedFilterOperatorTypeNumberGreaterThanOrEquals),
+	// 							Value: to.Ptr[float64](100),
+	// 						},
+	// 						&eventstream.StringInAdvancedFilter{
+	// 							Key: to.Ptr("data.order.country"),
+	// 							OperatorType: to.Ptr(eventstream.AdvancedFilterOperatorTypeStringIn),
+	// 							Values: []string{
+	// 								"US",
+	// 								"CA"},
+	// 							},
+	// 							&eventstream.IsNotNullAdvancedFilter{
+	// 								Key: to.Ptr("data.order.customerId"),
+	// 								OperatorType: to.Ptr(eventstream.AdvancedFilterOperatorTypeIsNotNull),
+	// 						}},
+	// 						ItemID: to.Ptr("443ae150-734c-4bbf-8e7c-f53668b270b3"),
+	// 						WorkspaceID: to.Ptr("2a764774-08a3-4a46-9638-45703873bf3b"),
+	// 					},
+	// 			}},
+	// 			Streams: []eventstream.StreamResponseClassification{
+	// 				&eventstream.DefaultStreamResponse{
+	// 					Name: to.Ptr("CommerceEventsStream"),
+	// 					Type: to.Ptr(eventstream.StreamTypeDefaultStream),
+	// 					ID: to.Ptr("804ed856-90df-47e9-95b5-85b1ebda48d1"),
+	// 					InputNodes: []eventstream.NodeReference{
+	// 						{
+	// 							Name: to.Ptr("CommerceBusinessEvents"),
+	// 					}},
+	// 					Properties: map[string]any{
+	// 					},
+	// 			}},
+	// 		}
+}
+
+// Generated from example definition
 func ExampleTopologyClient_PauseEventstream() {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
@@ -1124,6 +1213,58 @@ func ExampleTopologyClient_ResumeEventstream() {
 	if err != nil {
 		log.Fatalf("failed to finish the request: %v", err)
 	}
+}
+
+// Generated from example definition
+func ExampleTopologyClient_GetEventstreamSource_getABusinessEventsEventstreamSourceExample() {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	ctx := context.Background()
+	clientFactory, err := eventstream.NewClientFactory(cred, nil, nil)
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	res, err := clientFactory.NewTopologyClient().GetEventstreamSource(ctx, "cfafbeb1-8037-4d0c-896e-a46fb27ff229", "8c500070-073f-4a88-b478-8fabe1941c52", "97554164-1b8f-410b-bb72-750f6e88f1c6", nil)
+	if err != nil {
+		log.Fatalf("failed to finish the request: %v", err)
+	}
+	// You could use response here. We use blank identifier for just demo purposes.
+	_ = res
+	// If the HTTP response code is 200 as defined in example definition, your response structure would look as follows. Please pay attention that all the values in the output are fake values for just demo purposes.
+	// res = eventstream.TopologyClientGetEventstreamSourceResponse{
+	// 	                            SourceResponseClassification: &eventstream.BusinessEventsSourceResponse{
+	// 		Name: to.Ptr("CommerceBusinessEvents"),
+	// 		ID: to.Ptr("97554164-1b8f-410b-bb72-750f6e88f1c6"),
+	// 		Status: to.Ptr(eventstream.NodeStatusRunning),
+	// 		Type: to.Ptr(eventstream.SourceTypeBusinessEvents),
+	// 		Properties: &eventstream.BusinessEventsSourceProperties{
+	// 			BusinessEventTypeIDs: []string{
+	// 				"Contoso.Commerce.OrderPlaced",
+	// 				"Contoso.Commerce.OrderUpdated"},
+	// 				Filters: []eventstream.AdvancedFilterClassification{
+	// 					&eventstream.NumberGreaterThanOrEqualsAdvancedFilter{
+	// 						Key: to.Ptr("data.order.total"),
+	// 						OperatorType: to.Ptr(eventstream.AdvancedFilterOperatorTypeNumberGreaterThanOrEquals),
+	// 						Value: to.Ptr[float64](100),
+	// 					},
+	// 					&eventstream.StringInAdvancedFilter{
+	// 						Key: to.Ptr("data.order.country"),
+	// 						OperatorType: to.Ptr(eventstream.AdvancedFilterOperatorTypeStringIn),
+	// 						Values: []string{
+	// 							"US",
+	// 							"CA"},
+	// 						},
+	// 						&eventstream.IsNotNullAdvancedFilter{
+	// 							Key: to.Ptr("data.order.customerId"),
+	// 							OperatorType: to.Ptr(eventstream.AdvancedFilterOperatorTypeIsNotNull),
+	// 					}},
+	// 					ItemID: to.Ptr("443ae150-734c-4bbf-8e7c-f53668b270b3"),
+	// 					WorkspaceID: to.Ptr("2a764774-08a3-4a46-9638-45703873bf3b"),
+	// 				},
+	// 			},
+	// 			                        }
 }
 
 // Generated from example definition

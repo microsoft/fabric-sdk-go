@@ -8,6 +8,26 @@ package dataagent
 
 import "io"
 
+// FeedbackClientDownloadAttachmentsBetaResponse contains the response from method FeedbackClient.DownloadAttachmentsBeta.
+type FeedbackClientDownloadAttachmentsBetaResponse struct {
+	// Body contains the streaming response.
+	Body io.ReadCloser
+}
+
+// FeedbackClientGetFeedbackBetaResponse contains the response from method FeedbackClient.GetFeedbackBeta.
+type FeedbackClientGetFeedbackBetaResponse struct {
+	// The full projection of a single feedback record returned by the get feedback operation. All properties are read-only. The
+	// `id` and `hasAttachments` properties are always present in successful responses; other properties can be null because the
+	// provider model permits null values.
+	Feedback
+}
+
+// FeedbackClientSearchFeedbackBetaResponse contains the response from method FeedbackClient.NewSearchFeedbackBetaPager.
+type FeedbackClientSearchFeedbackBetaResponse struct {
+	// A paginated list of feedback summaries for a DataAgent.
+	FeedbackPage
+}
+
 // ItemsClientCreateDataAgentResponse contains the response from method ItemsClient.BeginCreateDataAgent.
 type ItemsClientCreateDataAgentResponse struct {
 	// A DataAgent object.

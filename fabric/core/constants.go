@@ -1591,6 +1591,10 @@ const (
 	ItemTypeSQLEndpoint ItemType = "SQLEndpoint"
 	// ItemTypeSemanticModel - PowerBI semantic model.
 	ItemTypeSemanticModel ItemType = "SemanticModel"
+	// ItemTypeShare - A share.
+	ItemTypeShare ItemType = "Share"
+	// ItemTypeShareSubscription - A Share Subscription.
+	ItemTypeShareSubscription ItemType = "ShareSubscription"
 	// ItemTypeSnowflakeDatabase - A Snowflake Database to store Iceberg tables created from Snowflake account.
 	ItemTypeSnowflakeDatabase ItemType = "SnowflakeDatabase"
 	// ItemTypeSparkJobDefinition - A spark job definition.
@@ -1656,6 +1660,8 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeSQLDatabase,
 		ItemTypeSQLEndpoint,
 		ItemTypeSemanticModel,
+		ItemTypeShare,
+		ItemTypeShareSubscription,
 		ItemTypeSnowflakeDatabase,
 		ItemTypeSparkJobDefinition,
 		ItemTypeUserDataFunction,
@@ -1765,6 +1771,27 @@ func PossibleOneLakeAccessTierValues() []OneLakeAccessTier {
 		OneLakeAccessTierCold,
 		OneLakeAccessTierCool,
 		OneLakeAccessTierHot,
+	}
+}
+
+// OneLakeFileSoftDeleteStatus - The status of file soft-delete for a workspace. Additional status values may be added over
+// time.
+type OneLakeFileSoftDeleteStatus string
+
+const (
+	// OneLakeFileSoftDeleteStatusDisabled - File soft-delete is disabled. Files deleted after disabling bypass retention and
+	// are permanently removed immediately. Files already in a soft-deleted state retain their existing expiry.
+	OneLakeFileSoftDeleteStatusDisabled OneLakeFileSoftDeleteStatus = "Disabled"
+	// OneLakeFileSoftDeleteStatusEnabled - File soft-delete is enabled. Deleted files are retained for the configured retention
+	// period before permanent deletion.
+	OneLakeFileSoftDeleteStatusEnabled OneLakeFileSoftDeleteStatus = "Enabled"
+)
+
+// PossibleOneLakeFileSoftDeleteStatusValues returns the possible values for the OneLakeFileSoftDeleteStatus const type.
+func PossibleOneLakeFileSoftDeleteStatusValues() []OneLakeFileSoftDeleteStatus {
+	return []OneLakeFileSoftDeleteStatus{
+		OneLakeFileSoftDeleteStatusDisabled,
+		OneLakeFileSoftDeleteStatusEnabled,
 	}
 }
 

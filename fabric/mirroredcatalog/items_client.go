@@ -30,10 +30,10 @@ type ItemsClient struct {
 	endpoint string
 }
 
-// BeginCreateMirroredCatalog - > [!NOTE] MirroredCatalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create MirroredCatalog with a public definition, refer to the MirroredCatalog [/rest/api/fabric/articles/item-management/definitions/mirrored-catalog-definition]
-// article.
+// BeginCreateMirroredCatalog - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Creates a MirroredCatalog in the specified workspace. To create a MirroredCatalog with a public definition, refer to the
+// MirroredCatalog
+// [/rest/api/fabric/articles/item-management/definitions/mirrored-catalog] article.
 // PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
@@ -58,10 +58,10 @@ func (client *ItemsClient) BeginCreateMirroredCatalog(ctx context.Context, works
 	return client.beginCreateMirroredCatalog(ctx, workspaceID, createMirroredCatalogRequest, options)
 }
 
-// CreateMirroredCatalog - > [!NOTE] MirroredCatalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// To create MirroredCatalog with a public definition, refer to the MirroredCatalog [/rest/api/fabric/articles/item-management/definitions/mirrored-catalog-definition]
-// article.
+// CreateMirroredCatalog - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Creates a MirroredCatalog in the specified workspace. To create a MirroredCatalog with a public definition, refer to the
+// MirroredCatalog
+// [/rest/api/fabric/articles/item-management/definitions/mirrored-catalog] article.
 // PERMISSIONS The caller must have a contributor workspace role.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
@@ -117,7 +117,7 @@ func (client *ItemsClient) createMirroredCatalogCreateRequest(ctx context.Contex
 	return req, nil
 }
 
-// DeleteMirroredCatalog - > [!NOTE] MirroredCatalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// DeleteMirroredCatalog - Deletes the specified MirroredCatalog.
 // PERMISSIONS The caller must have write permissions for the mirrored catalog.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -173,7 +173,7 @@ func (client *ItemsClient) deleteMirroredCatalogCreateRequest(ctx context.Contex
 	return req, nil
 }
 
-// GetMirroredCatalog - > [!NOTE] MirroredCatalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// GetMirroredCatalog - Returns properties of the specified MirroredCatalog.
 // PERMISSIONS The caller must have read permissions for the mirrored catalog.
 // REQUIRED DELEGATED SCOPES Item.Read.All or Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -239,9 +239,8 @@ func (client *ItemsClient) getMirroredCatalogHandleResponse(resp *http.Response)
 	return result, nil
 }
 
-// BeginGetMirroredCatalogDefinition - > [!NOTE] MirroredCatalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// When you get a MirroredCatalog's public definition, the sensitivity label is not a part of the definition.
+// BeginGetMirroredCatalogDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Gets the public definition of the specified MirroredCatalog. The sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the mirrored catalog.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS To retrieve the definition of a mirrored catalog item protected by an encrypted sensitivity label, the caller
@@ -265,9 +264,8 @@ func (client *ItemsClient) BeginGetMirroredCatalogDefinition(ctx context.Context
 	return client.beginGetMirroredCatalogDefinition(ctx, workspaceID, mirroredCatalogID, options)
 }
 
-// GetMirroredCatalogDefinition - > [!NOTE] MirroredCatalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// When you get a MirroredCatalog's public definition, the sensitivity label is not a part of the definition.
+// GetMirroredCatalogDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Gets the public definition of the specified MirroredCatalog. The sensitivity label is not a part of the definition.
 // PERMISSIONS The caller must have read and write permissions for the mirrored catalog.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS To retrieve the definition of a mirrored catalog item protected by an encrypted sensitivity label, the caller
@@ -328,8 +326,8 @@ func (client *ItemsClient) getMirroredCatalogDefinitionCreateRequest(ctx context
 	return req, nil
 }
 
-// NewListMirroredCatalogsPager - > [!NOTE] MirroredCatalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API supports pagination [/rest/api/fabric/articles/pagination].
+// NewListMirroredCatalogsPager - This API supports pagination [/rest/api/fabric/articles/pagination].
+// Lists MirroredCatalogs in the specified workspace.
 // PERMISSIONS The caller must have a viewer workspace role.
 // REQUIRED DELEGATED SCOPES Workspace.Read.All or Workspace.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -401,7 +399,7 @@ func (client *ItemsClient) listMirroredCatalogsHandleResponse(resp *http.Respons
 	return result, nil
 }
 
-// UpdateMirroredCatalog - > [!NOTE] MirroredCatalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
+// UpdateMirroredCatalog - Updates the properties of the specified MirroredCatalog.
 // PERMISSIONS The caller must have read and write permissions for the mirrored catalog.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // MICROSOFT ENTRA SUPPORTED IDENTITIES This API supports the Microsoft identities [/rest/api/fabric/articles/identity-support]
@@ -471,9 +469,9 @@ func (client *ItemsClient) updateMirroredCatalogHandleResponse(resp *http.Respon
 	return result, nil
 }
 
-// BeginUpdateMirroredCatalogDefinition - > [!NOTE] MirroredCatalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// Updating the MirroredCatalog's definition, does not affect its sensitivity label.
+// BeginUpdateMirroredCatalogDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Overrides the public definition of the specified MirroredCatalog. Updating the MirroredCatalog's definition does not affect
+// its sensitivity label.
 // PERMISSIONS The caller must have read and write permissions for the mirrored catalog.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
@@ -497,9 +495,9 @@ func (client *ItemsClient) BeginUpdateMirroredCatalogDefinition(ctx context.Cont
 	return client.beginUpdateMirroredCatalogDefinition(ctx, workspaceID, mirroredCatalogID, updateMirroredCatalogDefinitionRequest, options)
 }
 
-// UpdateMirroredCatalogDefinition - > [!NOTE] MirroredCatalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-// This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
-// Updating the MirroredCatalog's definition, does not affect its sensitivity label.
+// UpdateMirroredCatalogDefinition - This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
+// Overrides the public definition of the specified MirroredCatalog. Updating the MirroredCatalog's definition does not affect
+// its sensitivity label.
 // PERMISSIONS The caller must have read and write permissions for the mirrored catalog.
 // REQUIRED DELEGATED SCOPES Item.ReadWrite.All
 // LIMITATIONS
@@ -565,11 +563,10 @@ func (client *ItemsClient) updateMirroredCatalogDefinitionCreateRequest(ctx cont
 // Custom code starts below
 
 // CreateMirroredCatalog - returns ItemsClientCreateMirroredCatalogResponse in sync mode.
-// >  [!NOTE] MirroredCatalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-//
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// To create MirroredCatalog with a public definition, refer to the MirroredCatalog [/rest/api/fabric/articles/item-management/definitions/mirrored-catalog-definition] article.
+// Creates a MirroredCatalog in the specified workspace. To create a MirroredCatalog with a public definition, refer to the MirroredCatalog
+// [/rest/api/fabric/articles/item-management/definitions/mirrored-catalog] article.
 //
 // PERMISSIONS The caller must have a contributor workspace role.
 //
@@ -644,11 +641,9 @@ func (client *ItemsClient) beginCreateMirroredCatalog(ctx context.Context, works
 }
 
 // GetMirroredCatalogDefinition - returns ItemsClientGetMirroredCatalogDefinitionResponse in sync mode.
-// >  [!NOTE] MirroredCatalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-//
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// When you get a MirroredCatalog's public definition, the sensitivity label is not a part of the definition.
+// Gets the public definition of the specified MirroredCatalog. The sensitivity label is not a part of the definition.
 //
 // PERMISSIONS The caller must have read and write permissions for the mirrored catalog.
 //
@@ -720,11 +715,9 @@ func (client *ItemsClient) beginGetMirroredCatalogDefinition(ctx context.Context
 }
 
 // UpdateMirroredCatalogDefinition - returns ItemsClientUpdateMirroredCatalogDefinitionResponse in sync mode.
-// >  [!NOTE] MirroredCatalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-//
 // This API supports long running operations (LRO) [/rest/api/fabric/articles/long-running-operation].
 //
-// Updating the MirroredCatalog's definition, does not affect its sensitivity label.
+// Overrides the public definition of the specified MirroredCatalog. Updating the MirroredCatalog's definition does not affect its sensitivity label.
 //
 // PERMISSIONS The caller must have read and write permissions for the mirrored catalog.
 //
@@ -799,9 +792,9 @@ func (client *ItemsClient) beginUpdateMirroredCatalogDefinition(ctx context.Cont
 }
 
 // ListMirroredCatalogs - returns array of MirroredCatalog from all pages.
-// >  [!NOTE] MirroredCatalog item is currently in Preview (learn more [/fabric/fundamentals/preview]).
-//
 // This API supports pagination [/rest/api/fabric/articles/pagination].
+//
+// Lists MirroredCatalogs in the specified workspace.
 //
 // PERMISSIONS The caller must have a viewer workspace role.
 //

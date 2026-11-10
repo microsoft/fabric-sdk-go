@@ -1681,153 +1681,11 @@ func (testsuite *FakeTestSuite) TestUsers_ListAccessEntities() {
 	}
 }
 
-func (testsuite *FakeTestSuite) TestDomains_ListDomainsPreview() {
-	// From example
-	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Get all non-empty domains example"},
-	})
-	var examplePreview bool
-	examplePreview = true
-
-	exampleRes := admin.DomainsResponsePreview{
-		Domains: []admin.DomainPreview{
-			{
-				Description:       to.Ptr("This domain is used for identifying financial data and reports."),
-				DisplayName:       to.Ptr("Finance"),
-				ID:                to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
-				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAdminsOnly),
-			},
-			{
-				Description:       to.Ptr(""),
-				DisplayName:       to.Ptr("Human resources"),
-				ID:                to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
-				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
-			},
-			{
-				Description:       to.Ptr(""),
-				DisplayName:       to.Ptr("HR Sales"),
-				ID:                to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
-				ParentDomainID:    to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
-				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
-			},
-			{
-				DisplayName:       to.Ptr("Marketing"),
-				ID:                to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
-				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeSpecificUsersAndGroups),
-			}},
-	}
-
-	testsuite.serverFactory.DomainsServer.ListDomainsPreview = func(ctx context.Context, preview bool, options *admin.DomainsClientListDomainsPreviewOptions) (resp azfake.Responder[admin.DomainsClientListDomainsPreviewResponse], errResp azfake.ErrorResponder) {
-		testsuite.Require().Equal(examplePreview, preview)
-		resp = azfake.Responder[admin.DomainsClientListDomainsPreviewResponse]{}
-		resp.SetResponse(http.StatusOK, admin.DomainsClientListDomainsPreviewResponse{DomainsResponsePreview: exampleRes}, nil)
-		return
-	}
-
-	client := testsuite.clientFactory.NewDomainsClient()
-	res, err := client.ListDomainsPreview(ctx, examplePreview, &admin.DomainsClientListDomainsPreviewOptions{NonEmptyOnly: to.Ptr(true)})
-	testsuite.Require().NoError(err, "Failed to get result for example ")
-	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DomainsResponsePreview))
-
-	// From example
-	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Get info for all domains example"},
-	})
-	examplePreview = true
-
-	exampleRes = admin.DomainsResponsePreview{
-		Domains: []admin.DomainPreview{
-			{
-				Description:       to.Ptr("This domain is used for identifying financial data and reports."),
-				DisplayName:       to.Ptr("Finance"),
-				ID:                to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
-				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAdminsOnly),
-			},
-			{
-				Description:       to.Ptr(""),
-				DisplayName:       to.Ptr("Human resources"),
-				ID:                to.Ptr("b0bca781-003c-4041-b1c4-f94d34ba76d4"),
-				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
-			},
-			{
-				Description:       to.Ptr(""),
-				DisplayName:       to.Ptr("HR Sales"),
-				ID:                to.Ptr("6af5a1b6-bc4c-4c0a-b60d-30c68e6e3034"),
-				ParentDomainID:    to.Ptr("bc23d4c6-cc92-4eb6-bcb5-0ff98429bbff"),
-				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
-			},
-			{
-				DisplayName:       to.Ptr("Marketing"),
-				ID:                to.Ptr("6c00e8eb-51d4-46f7-8b90-7e98520ea7a0"),
-				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeSpecificUsersAndGroups),
-			},
-			{
-				Description:       to.Ptr("Admins only"),
-				DisplayName:       to.Ptr("AdminsOnly"),
-				ID:                to.Ptr("17df435d-9efd-48c1-a937-7d6fd70ab26a"),
-				ParentDomainID:    to.Ptr("f2f6a374-789e-4d1d-9cc7-6e0b934fc529"),
-				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
-			},
-			{
-				Description:       to.Ptr(""),
-				DisplayName:       to.Ptr("Root"),
-				ID:                to.Ptr("fb765fe3-d404-4f24-9d67-5916449c4c50"),
-				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
-			},
-			{
-				Description:       to.Ptr("This domain is used for identifying legal data and reports."),
-				DisplayName:       to.Ptr("Legal"),
-				ID:                to.Ptr("bda31be4-7efe-4272-8b85-e1b2ff0f0592"),
-				ContributorsScope: to.Ptr(admin.ContributorsScopeTypeAllTenant),
-			}},
-	}
-
-	testsuite.serverFactory.DomainsServer.ListDomainsPreview = func(ctx context.Context, preview bool, options *admin.DomainsClientListDomainsPreviewOptions) (resp azfake.Responder[admin.DomainsClientListDomainsPreviewResponse], errResp azfake.ErrorResponder) {
-		testsuite.Require().Equal(examplePreview, preview)
-		resp = azfake.Responder[admin.DomainsClientListDomainsPreviewResponse]{}
-		resp.SetResponse(http.StatusOK, admin.DomainsClientListDomainsPreviewResponse{DomainsResponsePreview: exampleRes}, nil)
-		return
-	}
-
-	res, err = client.ListDomainsPreview(ctx, examplePreview, &admin.DomainsClientListDomainsPreviewOptions{NonEmptyOnly: nil})
-	testsuite.Require().NoError(err, "Failed to get result for example ")
-	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DomainsResponsePreview))
-}
-
-func (testsuite *FakeTestSuite) TestDomains_CreateDomainPreview() {
-	// From example
-	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Create a domain example"},
-	})
-	var examplePreview bool
-	var exampleCreateDomainRequest admin.CreateDomainRequest
-	examplePreview = true
-	exampleCreateDomainRequest = admin.CreateDomainRequest{
-		Description:    to.Ptr("This domain is used for identifying financial data and reports."),
-		DisplayName:    to.Ptr("Finance"),
-		ParentDomainID: to.Ptr("5f6552c3-816c-43e7-8289-842f8b35f9df"),
-	}
-
-	testsuite.serverFactory.DomainsServer.CreateDomainPreview = func(ctx context.Context, preview bool, createDomainRequest admin.CreateDomainRequest, options *admin.DomainsClientCreateDomainPreviewOptions) (resp azfake.Responder[admin.DomainsClientCreateDomainPreviewResponse], errResp azfake.ErrorResponder) {
-		testsuite.Require().Equal(examplePreview, preview)
-		testsuite.Require().True(reflect.DeepEqual(exampleCreateDomainRequest, createDomainRequest))
-		resp = azfake.Responder[admin.DomainsClientCreateDomainPreviewResponse]{}
-		resp.SetResponse(http.StatusCreated, admin.DomainsClientCreateDomainPreviewResponse{}, nil)
-		return
-	}
-
-	client := testsuite.clientFactory.NewDomainsClient()
-	_, err = client.CreateDomainPreview(ctx, examplePreview, exampleCreateDomainRequest, nil)
-	testsuite.Require().NoError(err, "Failed to get result for example ")
-}
-
 func (testsuite *FakeTestSuite) TestDomains_ListDomains() {
 	// From example
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Get all non-empty domains example"},
 	})
-	var examplePreview bool
-	examplePreview = false
 
 	exampleRes := admin.DomainsResponse{
 		Domains: []admin.Domain{
@@ -1854,15 +1712,14 @@ func (testsuite *FakeTestSuite) TestDomains_ListDomains() {
 			}},
 	}
 
-	testsuite.serverFactory.DomainsServer.ListDomains = func(ctx context.Context, preview bool, options *admin.DomainsClientListDomainsOptions) (resp azfake.Responder[admin.DomainsClientListDomainsResponse], errResp azfake.ErrorResponder) {
-		testsuite.Require().Equal(examplePreview, preview)
+	testsuite.serverFactory.DomainsServer.ListDomains = func(ctx context.Context, options *admin.DomainsClientListDomainsOptions) (resp azfake.Responder[admin.DomainsClientListDomainsResponse], errResp azfake.ErrorResponder) {
 		resp = azfake.Responder[admin.DomainsClientListDomainsResponse]{}
 		resp.SetResponse(http.StatusOK, admin.DomainsClientListDomainsResponse{DomainsResponse: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewDomainsClient()
-	res, err := client.ListDomains(ctx, examplePreview, &admin.DomainsClientListDomainsOptions{NonEmptyOnly: to.Ptr(true),
+	res, err := client.ListDomains(ctx, &admin.DomainsClientListDomainsOptions{NonEmptyOnly: to.Ptr(true),
 		WithAssignedWorkspacesOnly: nil,
 	})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
@@ -1872,7 +1729,6 @@ func (testsuite *FakeTestSuite) TestDomains_ListDomains() {
 	ctx = runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Get info for all domains example"},
 	})
-	examplePreview = false
 
 	exampleRes = admin.DomainsResponse{
 		Domains: []admin.Domain{
@@ -1915,14 +1771,13 @@ func (testsuite *FakeTestSuite) TestDomains_ListDomains() {
 			}},
 	}
 
-	testsuite.serverFactory.DomainsServer.ListDomains = func(ctx context.Context, preview bool, options *admin.DomainsClientListDomainsOptions) (resp azfake.Responder[admin.DomainsClientListDomainsResponse], errResp azfake.ErrorResponder) {
-		testsuite.Require().Equal(examplePreview, preview)
+	testsuite.serverFactory.DomainsServer.ListDomains = func(ctx context.Context, options *admin.DomainsClientListDomainsOptions) (resp azfake.Responder[admin.DomainsClientListDomainsResponse], errResp azfake.ErrorResponder) {
 		resp = azfake.Responder[admin.DomainsClientListDomainsResponse]{}
 		resp.SetResponse(http.StatusOK, admin.DomainsClientListDomainsResponse{DomainsResponse: exampleRes}, nil)
 		return
 	}
 
-	res, err = client.ListDomains(ctx, examplePreview, &admin.DomainsClientListDomainsOptions{NonEmptyOnly: nil,
+	res, err = client.ListDomains(ctx, &admin.DomainsClientListDomainsOptions{NonEmptyOnly: nil,
 		WithAssignedWorkspacesOnly: nil,
 	})
 	testsuite.Require().NoError(err, "Failed to get result for example ")
@@ -1934,17 +1789,14 @@ func (testsuite *FakeTestSuite) TestDomains_CreateDomain() {
 	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
 		"example-id": {"Create a domain example"},
 	})
-	var examplePreview bool
 	var exampleCreateDomainRequest admin.CreateDomainRequest
-	examplePreview = false
 	exampleCreateDomainRequest = admin.CreateDomainRequest{
 		Description:    to.Ptr("This domain is used for identifying financial data and reports."),
 		DisplayName:    to.Ptr("Finance"),
 		ParentDomainID: to.Ptr("5f6552c3-816c-43e7-8289-842f8b35f9df"),
 	}
 
-	testsuite.serverFactory.DomainsServer.CreateDomain = func(ctx context.Context, preview bool, createDomainRequest admin.CreateDomainRequest, options *admin.DomainsClientCreateDomainOptions) (resp azfake.Responder[admin.DomainsClientCreateDomainResponse], errResp azfake.ErrorResponder) {
-		testsuite.Require().Equal(examplePreview, preview)
+	testsuite.serverFactory.DomainsServer.CreateDomain = func(ctx context.Context, createDomainRequest admin.CreateDomainRequest, options *admin.DomainsClientCreateDomainOptions) (resp azfake.Responder[admin.DomainsClientCreateDomainResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().True(reflect.DeepEqual(exampleCreateDomainRequest, createDomainRequest))
 		resp = azfake.Responder[admin.DomainsClientCreateDomainResponse]{}
 		resp.SetResponse(http.StatusCreated, admin.DomainsClientCreateDomainResponse{}, nil)
@@ -1952,77 +1804,8 @@ func (testsuite *FakeTestSuite) TestDomains_CreateDomain() {
 	}
 
 	client := testsuite.clientFactory.NewDomainsClient()
-	_, err = client.CreateDomain(ctx, examplePreview, exampleCreateDomainRequest, nil)
+	_, err = client.CreateDomain(ctx, exampleCreateDomainRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
-}
-
-func (testsuite *FakeTestSuite) TestDomains_GetDomainPreview() {
-	// From example
-	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Get a domain example"},
-	})
-	var exampleDomainID string
-	var examplePreview bool
-	exampleDomainID = "f2f6a374-789e-4d1d-9cc7-6e0b934fc529"
-	examplePreview = true
-
-	exampleRes := admin.DomainPreview{
-		Description:       to.Ptr("This domain is used for identifying financial data and reports."),
-		DisplayName:       to.Ptr("Finance"),
-		ID:                to.Ptr("f2f6a374-789e-4d1d-9cc7-6e0b934fc529"),
-		ContributorsScope: to.Ptr(admin.ContributorsScopeTypeSpecificUsersAndGroups),
-	}
-
-	testsuite.serverFactory.DomainsServer.GetDomainPreview = func(ctx context.Context, domainID string, preview bool, options *admin.DomainsClientGetDomainPreviewOptions) (resp azfake.Responder[admin.DomainsClientGetDomainPreviewResponse], errResp azfake.ErrorResponder) {
-		testsuite.Require().Equal(exampleDomainID, domainID)
-		testsuite.Require().Equal(examplePreview, preview)
-		resp = azfake.Responder[admin.DomainsClientGetDomainPreviewResponse]{}
-		resp.SetResponse(http.StatusOK, admin.DomainsClientGetDomainPreviewResponse{DomainPreview: exampleRes}, nil)
-		return
-	}
-
-	client := testsuite.clientFactory.NewDomainsClient()
-	res, err := client.GetDomainPreview(ctx, exampleDomainID, examplePreview, nil)
-	testsuite.Require().NoError(err, "Failed to get result for example ")
-	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DomainPreview))
-}
-
-func (testsuite *FakeTestSuite) TestDomains_UpdateDomainPreview() {
-	// From example
-	ctx := runtime.WithHTTPHeader(testsuite.ctx, map[string][]string{
-		"example-id": {"Update a domain example"},
-	})
-	var exampleDomainID string
-	var examplePreview bool
-	var exampleUpdateDomainRequest admin.UpdateDomainRequestPreview
-	exampleDomainID = "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f"
-	examplePreview = true
-	exampleUpdateDomainRequest = admin.UpdateDomainRequestPreview{
-		Description:       to.Ptr("Domain's new description"),
-		DisplayName:       to.Ptr("Domain's new name"),
-		ContributorsScope: to.Ptr(admin.ContributorsScopeTypeSpecificUsersAndGroups),
-	}
-
-	exampleRes := admin.DomainPreview{
-		Description:       to.Ptr("Domain's new description"),
-		DisplayName:       to.Ptr("Domain's new name"),
-		ID:                to.Ptr("f2f6a374-789e-4d1d-9cc7-6e0b934fc529"),
-		ContributorsScope: to.Ptr(admin.ContributorsScopeTypeSpecificUsersAndGroups),
-	}
-
-	testsuite.serverFactory.DomainsServer.UpdateDomainPreview = func(ctx context.Context, domainID string, preview bool, updateDomainRequest admin.UpdateDomainRequestPreview, options *admin.DomainsClientUpdateDomainPreviewOptions) (resp azfake.Responder[admin.DomainsClientUpdateDomainPreviewResponse], errResp azfake.ErrorResponder) {
-		testsuite.Require().Equal(exampleDomainID, domainID)
-		testsuite.Require().Equal(examplePreview, preview)
-		testsuite.Require().True(reflect.DeepEqual(exampleUpdateDomainRequest, updateDomainRequest))
-		resp = azfake.Responder[admin.DomainsClientUpdateDomainPreviewResponse]{}
-		resp.SetResponse(http.StatusOK, admin.DomainsClientUpdateDomainPreviewResponse{DomainPreview: exampleRes}, nil)
-		return
-	}
-
-	client := testsuite.clientFactory.NewDomainsClient()
-	res, err := client.UpdateDomainPreview(ctx, exampleDomainID, examplePreview, exampleUpdateDomainRequest, nil)
-	testsuite.Require().NoError(err, "Failed to get result for example ")
-	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.DomainPreview))
 }
 
 func (testsuite *FakeTestSuite) TestDomains_DeleteDomain() {
@@ -2051,9 +1834,7 @@ func (testsuite *FakeTestSuite) TestDomains_GetDomain() {
 		"example-id": {"Get a domain example"},
 	})
 	var exampleDomainID string
-	var examplePreview bool
 	exampleDomainID = "f2f6a374-789e-4d1d-9cc7-6e0b934fc529"
-	examplePreview = false
 
 	exampleRes := admin.Domain{
 		Description:    to.Ptr("This domain is used for identifying financial data and reports."),
@@ -2062,16 +1843,15 @@ func (testsuite *FakeTestSuite) TestDomains_GetDomain() {
 		DefaultLabelID: to.Ptr("b2b6fdcc-f8d9-44d9-ae14-2d1fccc0a38f"),
 	}
 
-	testsuite.serverFactory.DomainsServer.GetDomain = func(ctx context.Context, domainID string, preview bool, options *admin.DomainsClientGetDomainOptions) (resp azfake.Responder[admin.DomainsClientGetDomainResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.DomainsServer.GetDomain = func(ctx context.Context, domainID string, options *admin.DomainsClientGetDomainOptions) (resp azfake.Responder[admin.DomainsClientGetDomainResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleDomainID, domainID)
-		testsuite.Require().Equal(examplePreview, preview)
 		resp = azfake.Responder[admin.DomainsClientGetDomainResponse]{}
 		resp.SetResponse(http.StatusOK, admin.DomainsClientGetDomainResponse{Domain: exampleRes}, nil)
 		return
 	}
 
 	client := testsuite.clientFactory.NewDomainsClient()
-	res, err := client.GetDomain(ctx, exampleDomainID, examplePreview, nil)
+	res, err := client.GetDomain(ctx, exampleDomainID, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Domain))
 }
@@ -2082,10 +1862,8 @@ func (testsuite *FakeTestSuite) TestDomains_UpdateDomain() {
 		"example-id": {"Update a domain example"},
 	})
 	var exampleDomainID string
-	var examplePreview bool
 	var exampleUpdateDomainRequest admin.UpdateDomainRequest
 	exampleDomainID = "97dd1d38-a4c6-41ed-bc4f-1e383f8ddd0f"
-	examplePreview = false
 	exampleUpdateDomainRequest = admin.UpdateDomainRequest{
 		Description:    to.Ptr("Domain's new description"),
 		DisplayName:    to.Ptr("Domain's new name"),
@@ -2099,9 +1877,8 @@ func (testsuite *FakeTestSuite) TestDomains_UpdateDomain() {
 		DefaultLabelID: to.Ptr("d9a6c724-a08f-429d-9fa9-9659c5181b7f"),
 	}
 
-	testsuite.serverFactory.DomainsServer.UpdateDomain = func(ctx context.Context, domainID string, preview bool, updateDomainRequest admin.UpdateDomainRequest, options *admin.DomainsClientUpdateDomainOptions) (resp azfake.Responder[admin.DomainsClientUpdateDomainResponse], errResp azfake.ErrorResponder) {
+	testsuite.serverFactory.DomainsServer.UpdateDomain = func(ctx context.Context, domainID string, updateDomainRequest admin.UpdateDomainRequest, options *admin.DomainsClientUpdateDomainOptions) (resp azfake.Responder[admin.DomainsClientUpdateDomainResponse], errResp azfake.ErrorResponder) {
 		testsuite.Require().Equal(exampleDomainID, domainID)
-		testsuite.Require().Equal(examplePreview, preview)
 		testsuite.Require().True(reflect.DeepEqual(exampleUpdateDomainRequest, updateDomainRequest))
 		resp = azfake.Responder[admin.DomainsClientUpdateDomainResponse]{}
 		resp.SetResponse(http.StatusOK, admin.DomainsClientUpdateDomainResponse{Domain: exampleRes}, nil)
@@ -2109,7 +1886,7 @@ func (testsuite *FakeTestSuite) TestDomains_UpdateDomain() {
 	}
 
 	client := testsuite.clientFactory.NewDomainsClient()
-	res, err := client.UpdateDomain(ctx, exampleDomainID, examplePreview, exampleUpdateDomainRequest, nil)
+	res, err := client.UpdateDomain(ctx, exampleDomainID, exampleUpdateDomainRequest, nil)
 	testsuite.Require().NoError(err, "Failed to get result for example ")
 	testsuite.Require().True(reflect.DeepEqual(exampleRes, res.Domain))
 }

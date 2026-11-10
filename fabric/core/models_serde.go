@@ -4823,6 +4823,60 @@ func (d *DeploymentSourceAndTarget) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type DisableOneLakeFileSoftDeleteRequest.
+func (d DisableOneLakeFileSoftDeleteRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["status"] = OneLakeFileSoftDeleteStatusDisabled
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type DisableOneLakeFileSoftDeleteRequest.
+func (d *DisableOneLakeFileSoftDeleteRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", d, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "status":
+			err = unpopulate(val, "Status", &d.Status)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", d, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type DisabledOneLakeFileSoftDeleteSettings.
+func (d DisabledOneLakeFileSoftDeleteSettings) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["status"] = OneLakeFileSoftDeleteStatusDisabled
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type DisabledOneLakeFileSoftDeleteSettings.
+func (d *DisabledOneLakeFileSoftDeleteSettings) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", d, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "status":
+			err = unpopulate(val, "Status", &d.Status)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", d, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type Domain.
 func (d Domain) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -4923,6 +4977,68 @@ func (d *Domains) UnmarshalJSON(data []byte) error {
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", d, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type EnableOneLakeFileSoftDeleteRequest.
+func (e EnableOneLakeFileSoftDeleteRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "retentionPeriodInDays", e.RetentionPeriodInDays)
+	objectMap["status"] = OneLakeFileSoftDeleteStatusEnabled
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type EnableOneLakeFileSoftDeleteRequest.
+func (e *EnableOneLakeFileSoftDeleteRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", e, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "retentionPeriodInDays":
+			err = unpopulate(val, "RetentionPeriodInDays", &e.RetentionPeriodInDays)
+			delete(rawMsg, key)
+		case "status":
+			err = unpopulate(val, "Status", &e.Status)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", e, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type EnabledOneLakeFileSoftDeleteSettings.
+func (e EnabledOneLakeFileSoftDeleteSettings) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "retentionPeriodInDays", e.RetentionPeriodInDays)
+	objectMap["status"] = OneLakeFileSoftDeleteStatusEnabled
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type EnabledOneLakeFileSoftDeleteSettings.
+func (e *EnabledOneLakeFileSoftDeleteSettings) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", e, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "retentionPeriodInDays":
+			err = unpopulate(val, "RetentionPeriodInDays", &e.RetentionPeriodInDays)
+			delete(rawMsg, key)
+		case "status":
+			err = unpopulate(val, "Status", &e.Status)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", e, err)
 		}
 	}
 	return nil
@@ -5877,6 +5993,7 @@ func (g *GatewayStatusResponse) UnmarshalJSON(data []byte) error {
 func (g GetOneLakeSettingsResponse) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "diagnostics", g.Diagnostics)
+	populate(objectMap, "fileSoftDelete", g.FileSoftDelete)
 	populate(objectMap, "immutabilityPolicies", g.ImmutabilityPolicies)
 	populate(objectMap, "lifecycle", g.Lifecycle)
 	return json.Marshal(objectMap)
@@ -5893,6 +6010,9 @@ func (g *GetOneLakeSettingsResponse) UnmarshalJSON(data []byte) error {
 		switch key {
 		case "diagnostics":
 			err = unpopulate(val, "Diagnostics", &g.Diagnostics)
+			delete(rawMsg, key)
+		case "fileSoftDelete":
+			g.FileSoftDelete, err = unmarshalOneLakeFileSoftDeleteSettingsClassification(val)
 			delete(rawMsg, key)
 		case "immutabilityPolicies":
 			err = unpopulate(val, "ImmutabilityPolicies", &g.ImmutabilityPolicies)
@@ -8241,6 +8361,33 @@ func (m *ModifyAccessTimeTrackingRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type ModifyOneLakeFileSoftDeleteRequest.
+func (m ModifyOneLakeFileSoftDeleteRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["status"] = m.Status
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type ModifyOneLakeFileSoftDeleteRequest.
+func (m *ModifyOneLakeFileSoftDeleteRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", m, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "status":
+			err = unpopulate(val, "Status", &m.Status)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", m, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type ModifyOneLakeWorkspaceDefaultTierResponse.
 func (m ModifyOneLakeWorkspaceDefaultTierResponse) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -9018,6 +9165,33 @@ func (o *OneLakeEndpoints) UnmarshalJSON(data []byte) error {
 			delete(rawMsg, key)
 		case "dfsEndpoint":
 			err = unpopulate(val, "DfsEndpoint", &o.DfsEndpoint)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", o, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type OneLakeFileSoftDeleteSettings.
+func (o OneLakeFileSoftDeleteSettings) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	objectMap["status"] = o.Status
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type OneLakeFileSoftDeleteSettings.
+func (o *OneLakeFileSoftDeleteSettings) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", o, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "status":
+			err = unpopulate(val, "Status", &o.Status)
 			delete(rawMsg, key)
 		}
 		if err != nil {

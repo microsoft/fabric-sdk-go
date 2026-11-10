@@ -6,6 +6,76 @@
 
 package eventstream
 
+// AdvancedFilterOperatorType - The supported advanced-filter operator. Additional AdvancedFilterOperatorType types may be
+// added over time.
+type AdvancedFilterOperatorType string
+
+const (
+	// AdvancedFilterOperatorTypeBoolEquals - The BoolEquals advanced-filter operator.
+	AdvancedFilterOperatorTypeBoolEquals AdvancedFilterOperatorType = "BoolEquals"
+	// AdvancedFilterOperatorTypeIsNotNull - The IsNotNull advanced-filter operator.
+	AdvancedFilterOperatorTypeIsNotNull AdvancedFilterOperatorType = "IsNotNull"
+	// AdvancedFilterOperatorTypeIsNullOrUndefined - The IsNullOrUndefined advanced-filter operator.
+	AdvancedFilterOperatorTypeIsNullOrUndefined AdvancedFilterOperatorType = "IsNullOrUndefined"
+	// AdvancedFilterOperatorTypeNumberGreaterThan - The NumberGreaterThan advanced-filter operator.
+	AdvancedFilterOperatorTypeNumberGreaterThan AdvancedFilterOperatorType = "NumberGreaterThan"
+	// AdvancedFilterOperatorTypeNumberGreaterThanOrEquals - The NumberGreaterThanOrEquals advanced-filter operator.
+	AdvancedFilterOperatorTypeNumberGreaterThanOrEquals AdvancedFilterOperatorType = "NumberGreaterThanOrEquals"
+	// AdvancedFilterOperatorTypeNumberIn - The NumberIn advanced-filter operator.
+	AdvancedFilterOperatorTypeNumberIn AdvancedFilterOperatorType = "NumberIn"
+	// AdvancedFilterOperatorTypeNumberInRange - The NumberInRange advanced-filter operator.
+	AdvancedFilterOperatorTypeNumberInRange AdvancedFilterOperatorType = "NumberInRange"
+	// AdvancedFilterOperatorTypeNumberLessThan - The NumberLessThan advanced-filter operator.
+	AdvancedFilterOperatorTypeNumberLessThan AdvancedFilterOperatorType = "NumberLessThan"
+	// AdvancedFilterOperatorTypeNumberLessThanOrEquals - The NumberLessThanOrEquals advanced-filter operator.
+	AdvancedFilterOperatorTypeNumberLessThanOrEquals AdvancedFilterOperatorType = "NumberLessThanOrEquals"
+	// AdvancedFilterOperatorTypeNumberNotIn - The NumberNotIn advanced-filter operator.
+	AdvancedFilterOperatorTypeNumberNotIn AdvancedFilterOperatorType = "NumberNotIn"
+	// AdvancedFilterOperatorTypeNumberNotInRange - The NumberNotInRange advanced-filter operator.
+	AdvancedFilterOperatorTypeNumberNotInRange AdvancedFilterOperatorType = "NumberNotInRange"
+	// AdvancedFilterOperatorTypeStringBeginsWith - The StringBeginsWith advanced-filter operator.
+	AdvancedFilterOperatorTypeStringBeginsWith AdvancedFilterOperatorType = "StringBeginsWith"
+	// AdvancedFilterOperatorTypeStringContains - The StringContains advanced-filter operator.
+	AdvancedFilterOperatorTypeStringContains AdvancedFilterOperatorType = "StringContains"
+	// AdvancedFilterOperatorTypeStringEndsWith - The StringEndsWith advanced-filter operator.
+	AdvancedFilterOperatorTypeStringEndsWith AdvancedFilterOperatorType = "StringEndsWith"
+	// AdvancedFilterOperatorTypeStringIn - The StringIn advanced-filter operator.
+	AdvancedFilterOperatorTypeStringIn AdvancedFilterOperatorType = "StringIn"
+	// AdvancedFilterOperatorTypeStringNotBeginsWith - The StringNotBeginsWith advanced-filter operator.
+	AdvancedFilterOperatorTypeStringNotBeginsWith AdvancedFilterOperatorType = "StringNotBeginsWith"
+	// AdvancedFilterOperatorTypeStringNotContains - The StringNotContains advanced-filter operator.
+	AdvancedFilterOperatorTypeStringNotContains AdvancedFilterOperatorType = "StringNotContains"
+	// AdvancedFilterOperatorTypeStringNotEndsWith - The StringNotEndsWith advanced-filter operator.
+	AdvancedFilterOperatorTypeStringNotEndsWith AdvancedFilterOperatorType = "StringNotEndsWith"
+	// AdvancedFilterOperatorTypeStringNotIn - The StringNotIn advanced-filter operator.
+	AdvancedFilterOperatorTypeStringNotIn AdvancedFilterOperatorType = "StringNotIn"
+)
+
+// PossibleAdvancedFilterOperatorTypeValues returns the possible values for the AdvancedFilterOperatorType const type.
+func PossibleAdvancedFilterOperatorTypeValues() []AdvancedFilterOperatorType {
+	return []AdvancedFilterOperatorType{
+		AdvancedFilterOperatorTypeBoolEquals,
+		AdvancedFilterOperatorTypeIsNotNull,
+		AdvancedFilterOperatorTypeIsNullOrUndefined,
+		AdvancedFilterOperatorTypeNumberGreaterThan,
+		AdvancedFilterOperatorTypeNumberGreaterThanOrEquals,
+		AdvancedFilterOperatorTypeNumberIn,
+		AdvancedFilterOperatorTypeNumberInRange,
+		AdvancedFilterOperatorTypeNumberLessThan,
+		AdvancedFilterOperatorTypeNumberLessThanOrEquals,
+		AdvancedFilterOperatorTypeNumberNotIn,
+		AdvancedFilterOperatorTypeNumberNotInRange,
+		AdvancedFilterOperatorTypeStringBeginsWith,
+		AdvancedFilterOperatorTypeStringContains,
+		AdvancedFilterOperatorTypeStringEndsWith,
+		AdvancedFilterOperatorTypeStringIn,
+		AdvancedFilterOperatorTypeStringNotBeginsWith,
+		AdvancedFilterOperatorTypeStringNotContains,
+		AdvancedFilterOperatorTypeStringNotEndsWith,
+		AdvancedFilterOperatorTypeStringNotIn,
+	}
+}
+
 // AggregationFunction - The aggregation function.
 type AggregationFunction string
 
@@ -585,6 +655,10 @@ const (
 	ItemTypeSQLEndpoint ItemType = "SQLEndpoint"
 	// ItemTypeSemanticModel - PowerBI semantic model.
 	ItemTypeSemanticModel ItemType = "SemanticModel"
+	// ItemTypeShare - A share.
+	ItemTypeShare ItemType = "Share"
+	// ItemTypeShareSubscription - A Share Subscription.
+	ItemTypeShareSubscription ItemType = "ShareSubscription"
 	// ItemTypeSnowflakeDatabase - A Snowflake Database to store Iceberg tables created from Snowflake account.
 	ItemTypeSnowflakeDatabase ItemType = "SnowflakeDatabase"
 	// ItemTypeSparkJobDefinition - A spark job definition.
@@ -650,6 +724,8 @@ func PossibleItemTypeValues() []ItemType {
 		ItemTypeSQLDatabase,
 		ItemTypeSQLEndpoint,
 		ItemTypeSemanticModel,
+		ItemTypeShare,
+		ItemTypeShareSubscription,
 		ItemTypeSnowflakeDatabase,
 		ItemTypeSparkJobDefinition,
 		ItemTypeUserDataFunction,
@@ -1175,7 +1251,7 @@ func PossibleSnapshotModeValues() []SnapshotMode {
 	}
 }
 
-// SourceType - Represents the type of the source. Additional source types may be added over time.
+// SourceType - Represents the type of the source. Additional SourceType types may be added over time.
 type SourceType string
 
 const (
@@ -1207,12 +1283,16 @@ const (
 	SourceTypeAzureSQLMIDBCDC SourceType = "AzureSQLMIDBCDC"
 	// SourceTypeAzureServiceBus - The Azure Service Bus source type.
 	SourceTypeAzureServiceBus SourceType = "AzureServiceBus"
+	// SourceTypeBusinessEvents - The Business Events source type.
+	SourceTypeBusinessEvents SourceType = "BusinessEvents"
 	// SourceTypeConfluentCloud - The Confluent Cloud source type.
 	SourceTypeConfluentCloud SourceType = "ConfluentCloud"
 	// SourceTypeCribl - The Cribl source type.
 	SourceTypeCribl SourceType = "Cribl"
 	// SourceTypeCustomEndpoint - The Custom Endpoint source type.
 	SourceTypeCustomEndpoint SourceType = "CustomEndpoint"
+	// SourceTypeCustomStreamConnector - The Custom Stream Connector source type.
+	SourceTypeCustomStreamConnector SourceType = "CustomStreamConnector"
 	// SourceTypeFabricAnomalyDetectionEvents - The Fabric Anomaly Detection Events source type.
 	SourceTypeFabricAnomalyDetectionEvents SourceType = "FabricAnomalyDetectionEvents"
 	// SourceTypeFabricCapacityOperationEvents - The Fabric Capacity Operation Events source type.
@@ -1275,9 +1355,11 @@ func PossibleSourceTypeValues() []SourceType {
 		SourceTypeAzureSQLDBCDC,
 		SourceTypeAzureSQLMIDBCDC,
 		SourceTypeAzureServiceBus,
+		SourceTypeBusinessEvents,
 		SourceTypeConfluentCloud,
 		SourceTypeCribl,
 		SourceTypeCustomEndpoint,
+		SourceTypeCustomStreamConnector,
 		SourceTypeFabricAnomalyDetectionEvents,
 		SourceTypeFabricCapacityOperationEvents,
 		SourceTypeFabricCapacityOverviewEvents,

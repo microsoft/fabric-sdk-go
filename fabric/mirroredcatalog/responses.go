@@ -6,8 +6,8 @@
 
 package mirroredcatalog
 
-// DiscoveryClientListScopesBetaResponse contains the response from method DiscoveryClient.NewListScopesBetaPager.
-type DiscoveryClientListScopesBetaResponse struct {
+// DiscoveryClientListScopesResponse contains the response from method DiscoveryClient.NewListScopesPager.
+type DiscoveryClientListScopesResponse struct {
 	// A list of scopes from the source catalog. When listing from the root level (no `parent` specified), the response contains
 	// a single virtual `(root)` entry with `fullyQualifiedScope: []` as the top-level item in `value`, with all actual namespaces
 	// nested under its `children` array. When `parent` is specified, the child namespaces are returned directly in `value` without
@@ -15,8 +15,8 @@ type DiscoveryClientListScopesBetaResponse struct {
 	ScopesResponse
 }
 
-// DiscoveryClientListTablesBetaResponse contains the response from method DiscoveryClient.NewListTablesBetaPager.
-type DiscoveryClientListTablesBetaResponse struct {
+// DiscoveryClientListTablesResponse contains the response from method DiscoveryClient.NewListTablesPager.
+type DiscoveryClientListTablesResponse struct {
 	// A list of tables from the source catalog.
 	TablesResponse
 }
@@ -61,19 +61,19 @@ type ItemsClientUpdateMirroredCatalogResponse struct {
 	MirroredCatalog
 }
 
-// MonitoringClientMirroringStatusBetaResponse contains the response from method MonitoringClient.MirroringStatusBeta.
-type MonitoringClientMirroringStatusBetaResponse struct {
+// MonitoringClientGetMirroringStatusResponse contains the response from method MonitoringClient.GetMirroringStatus.
+type MonitoringClientGetMirroringStatusResponse struct {
 	// Response containing the overall mirroring status of the mirrored catalog.
 	MirroringStatusResponse
 }
 
-// MonitoringClientTablesMirroringStatusBetaResponse contains the response from method MonitoringClient.NewTablesMirroringStatusBetaPager.
-type MonitoringClientTablesMirroringStatusBetaResponse struct {
+// MonitoringClientListTablesMirroringStatusResponse contains the response from method MonitoringClient.NewListTablesMirroringStatusPager.
+type MonitoringClientListTablesMirroringStatusResponse struct {
 	// Response containing the per-table mirroring status for the mirrored catalog.
 	TablesMirroringStatusResponse
 }
 
-// RefreshClientRefreshCatalogMetadataBetaResponse contains the response from method RefreshClient.BeginRefreshCatalogMetadataBeta.
-type RefreshClientRefreshCatalogMetadataBetaResponse struct {
+// RefreshClientRefreshCatalogMetadataResponse contains the response from method RefreshClient.BeginRefreshCatalogMetadata.
+type RefreshClientRefreshCatalogMetadataResponse struct {
 	// placeholder for future response values
 }

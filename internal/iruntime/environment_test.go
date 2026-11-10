@@ -30,7 +30,7 @@ func TestResolveEnvironment(t *testing.T) {
 			name:        "GCCHigh",
 			environment: EnvironmentGCCHigh,
 			endpoint:    "https://highapi.fabric.microsoft.us",
-			audience:    "https://api.fabric.microsoft.us",
+			audience:    "https://high.analysis.usgovcloudapi.net/powerbi/api",
 		},
 	}
 

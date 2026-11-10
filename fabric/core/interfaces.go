@@ -165,6 +165,15 @@ type ItemReferenceClassification interface {
 	GetItemReference() *ItemReference
 }
 
+// ModifyOneLakeFileSoftDeleteRequestClassification provides polymorphic access to related types.
+// Call the interface's GetModifyOneLakeFileSoftDeleteRequest() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *DisableOneLakeFileSoftDeleteRequest, *EnableOneLakeFileSoftDeleteRequest, *ModifyOneLakeFileSoftDeleteRequest
+type ModifyOneLakeFileSoftDeleteRequestClassification interface {
+	// GetModifyOneLakeFileSoftDeleteRequest returns the ModifyOneLakeFileSoftDeleteRequest content of the underlying type.
+	GetModifyOneLakeFileSoftDeleteRequest() *ModifyOneLakeFileSoftDeleteRequest
+}
+
 // MonthlyOccurrenceClassification provides polymorphic access to related types.
 // Call the interface's GetMonthlyOccurrence() method to access the common type.
 // Use a type switch to determine the concrete type.  The possible types are:
@@ -181,6 +190,15 @@ type MonthlyOccurrenceClassification interface {
 type OneLakeDiagnosticSettingsDestinationInfoClassification interface {
 	// GetOneLakeDiagnosticSettingsDestinationInfo returns the OneLakeDiagnosticSettingsDestinationInfo content of the underlying type.
 	GetOneLakeDiagnosticSettingsDestinationInfo() *OneLakeDiagnosticSettingsDestinationInfo
+}
+
+// OneLakeFileSoftDeleteSettingsClassification provides polymorphic access to related types.
+// Call the interface's GetOneLakeFileSoftDeleteSettings() method to access the common type.
+// Use a type switch to determine the concrete type.  The possible types are:
+// - *DisabledOneLakeFileSoftDeleteSettings, *EnabledOneLakeFileSoftDeleteSettings, *OneLakeFileSoftDeleteSettings
+type OneLakeFileSoftDeleteSettingsClassification interface {
+	// GetOneLakeFileSoftDeleteSettings returns the OneLakeFileSoftDeleteSettings content of the underlying type.
+	GetOneLakeFileSoftDeleteSettings() *OneLakeFileSoftDeleteSettings
 }
 
 // PrincipalClassification provides polymorphic access to related types.

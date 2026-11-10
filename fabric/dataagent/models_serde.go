@@ -514,6 +514,319 @@ func (f *FabricItemDatasource) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON implements the json.Marshaller interface for type Feedback.
+func (f Feedback) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "aiContext", f.AiContext)
+	populate(objectMap, "app", f.App)
+	populate(objectMap, "channel", f.Channel)
+	populate(objectMap, "comment", f.Comment)
+	populate(objectMap, "feedbackSubType", f.FeedbackSubType)
+	populate(objectMap, "feedbackType", f.FeedbackType)
+	populate(objectMap, "hasAttachments", f.HasAttachments)
+	populate(objectMap, "id", f.ID)
+	populate(objectMap, "platform", f.Platform)
+	populate(objectMap, "product", f.Product)
+	populate(objectMap, "submittedDateTime", f.SubmittedDateTime)
+	populate(objectMap, "submitter", f.Submitter)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type Feedback.
+func (f *Feedback) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", f, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "aiContext":
+			err = unpopulate(val, "AiContext", &f.AiContext)
+			delete(rawMsg, key)
+		case "app":
+			err = unpopulate(val, "App", &f.App)
+			delete(rawMsg, key)
+		case "channel":
+			err = unpopulate(val, "Channel", &f.Channel)
+			delete(rawMsg, key)
+		case "comment":
+			err = unpopulate(val, "Comment", &f.Comment)
+			delete(rawMsg, key)
+		case "feedbackSubType":
+			err = unpopulate(val, "FeedbackSubType", &f.FeedbackSubType)
+			delete(rawMsg, key)
+		case "feedbackType":
+			err = unpopulate(val, "FeedbackType", &f.FeedbackType)
+			delete(rawMsg, key)
+		case "hasAttachments":
+			err = unpopulate(val, "HasAttachments", &f.HasAttachments)
+			delete(rawMsg, key)
+		case "id":
+			err = unpopulate(val, "ID", &f.ID)
+			delete(rawMsg, key)
+		case "platform":
+			err = unpopulate(val, "Platform", &f.Platform)
+			delete(rawMsg, key)
+		case "product":
+			err = unpopulate(val, "Product", &f.Product)
+			delete(rawMsg, key)
+		case "submittedDateTime":
+			err = unpopulate(val, "SubmittedDateTime", &f.SubmittedDateTime)
+			delete(rawMsg, key)
+		case "submitter":
+			f.Submitter, err = unmarshalPrincipalClassification(val)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", f, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type FeedbackAiContext.
+func (f FeedbackAiContext) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "chatHistory", f.ChatHistory)
+	populate(objectMap, "prompt", f.Prompt)
+	populate(objectMap, "responseMessage", f.ResponseMessage)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type FeedbackAiContext.
+func (f *FeedbackAiContext) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", f, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "chatHistory":
+			err = unpopulate(val, "ChatHistory", &f.ChatHistory)
+			delete(rawMsg, key)
+		case "prompt":
+			err = unpopulate(val, "Prompt", &f.Prompt)
+			delete(rawMsg, key)
+		case "responseMessage":
+			err = unpopulate(val, "ResponseMessage", &f.ResponseMessage)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", f, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type FeedbackAiContextSummary.
+func (f FeedbackAiContextSummary) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "prompt", f.Prompt)
+	populate(objectMap, "responseMessage", f.ResponseMessage)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type FeedbackAiContextSummary.
+func (f *FeedbackAiContextSummary) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", f, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "prompt":
+			err = unpopulate(val, "Prompt", &f.Prompt)
+			delete(rawMsg, key)
+		case "responseMessage":
+			err = unpopulate(val, "ResponseMessage", &f.ResponseMessage)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", f, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type FeedbackChatHistoryItem.
+func (f FeedbackChatHistoryItem) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "message", f.Message)
+	populate(objectMap, "user", f.User)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type FeedbackChatHistoryItem.
+func (f *FeedbackChatHistoryItem) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", f, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "message":
+			err = unpopulate(val, "Message", &f.Message)
+			delete(rawMsg, key)
+		case "user":
+			err = unpopulate(val, "User", &f.User)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", f, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type FeedbackFilter.
+func (f FeedbackFilter) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "channels", f.Channels)
+	populate(objectMap, "feedbackTypes", f.FeedbackTypes)
+	populate(objectMap, "platforms", f.Platforms)
+	populate(objectMap, "products", f.Products)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type FeedbackFilter.
+func (f *FeedbackFilter) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", f, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "channels":
+			err = unpopulate(val, "Channels", &f.Channels)
+			delete(rawMsg, key)
+		case "feedbackTypes":
+			err = unpopulate(val, "FeedbackTypes", &f.FeedbackTypes)
+			delete(rawMsg, key)
+		case "platforms":
+			err = unpopulate(val, "Platforms", &f.Platforms)
+			delete(rawMsg, key)
+		case "products":
+			err = unpopulate(val, "Products", &f.Products)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", f, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type FeedbackPage.
+func (f FeedbackPage) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "continuationToken", f.ContinuationToken)
+	populate(objectMap, "continuationUri", f.ContinuationURI)
+	populate(objectMap, "value", f.Value)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type FeedbackPage.
+func (f *FeedbackPage) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", f, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "continuationToken":
+			err = unpopulate(val, "ContinuationToken", &f.ContinuationToken)
+			delete(rawMsg, key)
+		case "continuationUri":
+			err = unpopulate(val, "ContinuationURI", &f.ContinuationURI)
+			delete(rawMsg, key)
+		case "value":
+			err = unpopulate(val, "Value", &f.Value)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", f, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type FeedbackSummary.
+func (f FeedbackSummary) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "aiContext", f.AiContext)
+	populate(objectMap, "app", f.App)
+	populate(objectMap, "channel", f.Channel)
+	populate(objectMap, "comment", f.Comment)
+	populate(objectMap, "feedbackSubType", f.FeedbackSubType)
+	populate(objectMap, "feedbackType", f.FeedbackType)
+	populate(objectMap, "hasAttachments", f.HasAttachments)
+	populate(objectMap, "id", f.ID)
+	populate(objectMap, "platform", f.Platform)
+	populate(objectMap, "product", f.Product)
+	populate(objectMap, "submittedDateTime", f.SubmittedDateTime)
+	populate(objectMap, "submitter", f.Submitter)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type FeedbackSummary.
+func (f *FeedbackSummary) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", f, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "aiContext":
+			err = unpopulate(val, "AiContext", &f.AiContext)
+			delete(rawMsg, key)
+		case "app":
+			err = unpopulate(val, "App", &f.App)
+			delete(rawMsg, key)
+		case "channel":
+			err = unpopulate(val, "Channel", &f.Channel)
+			delete(rawMsg, key)
+		case "comment":
+			err = unpopulate(val, "Comment", &f.Comment)
+			delete(rawMsg, key)
+		case "feedbackSubType":
+			err = unpopulate(val, "FeedbackSubType", &f.FeedbackSubType)
+			delete(rawMsg, key)
+		case "feedbackType":
+			err = unpopulate(val, "FeedbackType", &f.FeedbackType)
+			delete(rawMsg, key)
+		case "hasAttachments":
+			err = unpopulate(val, "HasAttachments", &f.HasAttachments)
+			delete(rawMsg, key)
+		case "id":
+			err = unpopulate(val, "ID", &f.ID)
+			delete(rawMsg, key)
+		case "platform":
+			err = unpopulate(val, "Platform", &f.Platform)
+			delete(rawMsg, key)
+		case "product":
+			err = unpopulate(val, "Product", &f.Product)
+			delete(rawMsg, key)
+		case "submittedDateTime":
+			err = unpopulate(val, "SubmittedDateTime", &f.SubmittedDateTime)
+			delete(rawMsg, key)
+		case "submitter":
+			f.Submitter, err = unmarshalPrincipalClassification(val)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", f, err)
+		}
+	}
+	return nil
+}
+
 // MarshalJSON implements the json.Marshaller interface for type Fewshot.
 func (f Fewshot) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
@@ -1033,6 +1346,53 @@ func (p *PublishDataAgentResponse) UnmarshalJSON(data []byte) error {
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", p, err)
+		}
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface for type QueryFeedbackRequest.
+func (q QueryFeedbackRequest) MarshalJSON() ([]byte, error) {
+	objectMap := make(map[string]any)
+	populate(objectMap, "endSubmittedDateTime", q.EndSubmittedDateTime)
+	populate(objectMap, "filter", q.Filter)
+	populate(objectMap, "search", q.Search)
+	populate(objectMap, "sortBy", q.SortBy)
+	populate(objectMap, "sortOrder", q.SortOrder)
+	populate(objectMap, "startSubmittedDateTime", q.StartSubmittedDateTime)
+	return json.Marshal(objectMap)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface for type QueryFeedbackRequest.
+func (q *QueryFeedbackRequest) UnmarshalJSON(data []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", q, err)
+	}
+	for key, val := range rawMsg {
+		var err error
+		switch key {
+		case "endSubmittedDateTime":
+			err = unpopulate(val, "EndSubmittedDateTime", &q.EndSubmittedDateTime)
+			delete(rawMsg, key)
+		case "filter":
+			err = unpopulate(val, "Filter", &q.Filter)
+			delete(rawMsg, key)
+		case "search":
+			err = unpopulate(val, "Search", &q.Search)
+			delete(rawMsg, key)
+		case "sortBy":
+			err = unpopulate(val, "SortBy", &q.SortBy)
+			delete(rawMsg, key)
+		case "sortOrder":
+			err = unpopulate(val, "SortOrder", &q.SortOrder)
+			delete(rawMsg, key)
+		case "startSubmittedDateTime":
+			err = unpopulate(val, "StartSubmittedDateTime", &q.StartSubmittedDateTime)
+			delete(rawMsg, key)
+		}
+		if err != nil {
+			return fmt.Errorf("unmarshalling type %T: %v", q, err)
 		}
 	}
 	return nil

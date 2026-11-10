@@ -68,11 +68,6 @@ type DomainsClientAssignDomainWorkspacesByPrincipalsResponse struct {
 	// placeholder for future response values
 }
 
-// DomainsClientCreateDomainPreviewResponse contains the response from method DomainsClient.CreateDomainPreview.
-type DomainsClientCreateDomainPreviewResponse struct {
-	DomainPreview
-}
-
 // DomainsClientCreateDomainResponse contains the response from method DomainsClient.CreateDomain.
 type DomainsClientCreateDomainResponse struct {
 	Domain
@@ -81,11 +76,6 @@ type DomainsClientCreateDomainResponse struct {
 // DomainsClientDeleteDomainResponse contains the response from method DomainsClient.DeleteDomain.
 type DomainsClientDeleteDomainResponse struct {
 	// placeholder for future response values
-}
-
-// DomainsClientGetDomainPreviewResponse contains the response from method DomainsClient.GetDomainPreview.
-type DomainsClientGetDomainPreviewResponse struct {
-	DomainPreview
 }
 
 // DomainsClientGetDomainResponse contains the response from method DomainsClient.GetDomain.
@@ -97,12 +87,6 @@ type DomainsClientGetDomainResponse struct {
 type DomainsClientListDomainWorkspacesResponse struct {
 	// A response wrapper for a list of all the workspaces assigned to a domain with a continuous token.
 	DomainWorkspaces
-}
-
-// DomainsClientListDomainsPreviewResponse contains the response from method DomainsClient.ListDomainsPreview.
-type DomainsClientListDomainsPreviewResponse struct {
-	// This is a response wrapper for a list of all domains.
-	DomainsResponsePreview
 }
 
 // DomainsClientListDomainsResponse contains the response from method DomainsClient.ListDomains.
@@ -140,11 +124,6 @@ type DomainsClientUnassignAllDomainWorkspacesResponse struct {
 // DomainsClientUnassignDomainWorkspacesByIDsResponse contains the response from method DomainsClient.UnassignDomainWorkspacesByIDs.
 type DomainsClientUnassignDomainWorkspacesByIDsResponse struct {
 	// placeholder for future response values
-}
-
-// DomainsClientUpdateDomainPreviewResponse contains the response from method DomainsClient.UpdateDomainPreview.
-type DomainsClientUpdateDomainPreviewResponse struct {
-	DomainPreview
 }
 
 // DomainsClientUpdateDomainResponse contains the response from method DomainsClient.UpdateDomain.

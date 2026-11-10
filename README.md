@@ -58,7 +58,7 @@ Choose the Fabric environment that hosts your resources. Each environment define
 | Environment | API endpoint | Token audience |
 | --- | --- | --- |
 | `fabric.EnvironmentPublic` | `https://api.fabric.microsoft.com` | `https://api.fabric.microsoft.com` |
-| `fabric.EnvironmentGCCHigh` | `https://highapi.fabric.microsoft.us` | `https://api.fabric.microsoft.us` |
+| `fabric.EnvironmentGCCHigh` | `https://highapi.fabric.microsoft.us` | `https://high.analysis.usgovcloudapi.net/powerbi/api` |
 
 To use GCC High, set `fabric.ClientOptions.Environment` when creating a client or client factory. The SDK requests tokens for the selected environment's audience using its `/.default` scope. The audience is not configurable, and unsupported environment values return an error.
 
